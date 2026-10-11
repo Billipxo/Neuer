@@ -193,7 +193,7 @@ function Pruefungslauf({ anfang }: { anfang: LaufendeSimulation }) {
 
       <footer className="fixed inset-x-0 bottom-0 z-10 border-t border-slate-200 bg-white/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
         <div className="mx-auto grid max-w-xl grid-cols-[auto_1fr_auto] gap-2">
-          <button type="button" className={knopf('sekundaer', 'px-5')} disabled={sim.pos === 0} onClick={() => gehe(sim.pos - 1)} aria-label="Vorherige Frage">
+          <button type="button" className={knopf('sekundaer')} disabled={sim.pos === 0} onClick={() => gehe(sim.pos - 1)} aria-label="Vorherige Frage">
             ‹
           </button>
           {letzte ? (
@@ -205,7 +205,7 @@ function Pruefungslauf({ anfang }: { anfang: LaufendeSimulation }) {
               Weiter ›
             </button>
           )}
-          <button type="button" className={knopf('sekundaer', 'px-5')} onClick={() => setUebersichtOffen(true)} aria-label="Übersicht aller Fragen">
+          <button type="button" className={knopf('sekundaer')} onClick={() => setUebersichtOffen(true)} aria-label="Übersicht aller Fragen">
             ☰
           </button>
         </div>
@@ -293,7 +293,7 @@ function Pruefungslauf({ anfang }: { anfang: LaufendeSimulation }) {
           </button>
           <button
             type="button"
-            className={knopf('leise', 'text-base text-red-700 dark:text-red-400')}
+            className={knopf('gefahr', '', 'mittel')}
             onClick={async () => {
               await loescheLaufendeSimulation(db);
               navigate('/pruefung', { replace: true });

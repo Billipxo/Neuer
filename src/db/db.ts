@@ -10,6 +10,9 @@ import {
   type SimulationErgebnis,
 } from '../types';
 import { abzugleichendeFragen } from '../logic/abgleich';
+import { SICHERUNG_APP, SICHERUNG_VERSION, type Sicherung } from '../logic/austausch';
+import { hatEigeneAngaben, ohneLernstand } from '../logic/leitner';
+import { profilOhneLernstand } from '../logic/motivation';
 
 interface TreiDB extends DBSchema {
   fragen: { key: string; value: GespeicherteFrage; indexes: { thema: string } };
@@ -137,4 +140,80 @@ export async function speichereLaufendeSimulation(db: Db, s: LaufendeSimulation)
 
 export async function loescheLaufendeSimulation(db: Db): Promise<void> {
   await db.delete('meta', 'laufendeSimulation');
+}
+
+// ---------- Mitgelieferte Fassung wiederherstellen ----------
+
+export async function stelleOriginalWiederHer(db: Db, original: Frage): Promise<GespeicherteFrage> {
+  const f: GespeicherteFrage = { ...original, herkunft: 'mitgeliefert', bearbeitet: false };
+  await db.put('fragen', f);
+  return f;
+}
+
+// ---------- Lernstand sichern / wiederherstellen / zurücksetzen ----------
+
+export async function erstelleSicherung(db: Db, jetzt = Date.now()): Promise<Sicherung> {
+  const [profil, fortschritte, simulationen, fragen, geloescht, laufendeSimulation] = await Promise.all([
+    holeProfil(db),
+    db.getAll('fortschritt'),
+    db.getAll('simulationen'),
+    db.getAll('fragen'),
+    geloeschteIds(db),
+    holeLaufendeSimulation(db),
+  ]);
+  return {
+    app: SICHERUNG_APP,
+    version: SICHERUNG_VERSION,
+    erstellt: new Date(jetzt).toISOString(),
+    profil,
+    fortschritte,
+    simulationen,
+    fragen: fragen.filter((f) => f.herkunft === 'eigen' || f.bearbeitet),
+    geloescht: [...geloescht],
+    laufendeSimulation,
+  };
+}
+
+/** Ersetzt den kompletten Lernstand durch die Sicherung; mitgelieferte Fragen werden danach ergänzt. */
+export async function stelleSicherungWiederHer(db: Db, s: Sicherung, mitgeliefert: Frage[]): Promise<void> {
+  const tx = db.transaction(['fragen', 'fortschritt', 'profil', 'simulationen', 'meta'], 'readwrite');
+  const fragen = tx.objectStore('fragen');
+  const fortschritt = tx.objectStore('fortschritt');
+  const profil = tx.objectStore('profil');
+  const simulationen = tx.objectStore('simulationen');
+  const meta = tx.objectStore('meta');
+  await Promise.all([fragen.clear(), fortschritt.clear(), profil.clear(), simulationen.clear(), meta.delete('geloescht'), meta.delete('laufendeSimulation')]);
+  await Promise.all([
+    ...s.fragen.map((f) => fragen.put(f)),
+    ...s.fortschritte.map((f) => fortschritt.put(f)),
+    profil.put({ ...STANDARD_PROFIL, ...s.profil, id: 'profil' }),
+    ...s.simulationen.map((x) => simulationen.put(x)),
+    meta.put({ key: 'geloescht', wert: s.geloescht }),
+    ...(s.laufendeSimulation ? [meta.put({ key: 'laufendeSimulation', wert: s.laufendeSimulation })] : []),
+  ]);
+  await tx.done;
+  await synchronisiereFragen(db, mitgeliefert);
+}
+
+/** Löscht den Lernfortschritt. Fragen, Einstellungen, Notizen, Markierungen und Meldungen bleiben. */
+export async function setzeLernstandZurueck(db: Db): Promise<void> {
+  const alt = await db.getAll('fortschritt');
+  const p = await holeProfil(db);
+  const tx = db.transaction(['fortschritt', 'profil', 'simulationen', 'meta'], 'readwrite');
+  const fortschritt = tx.objectStore('fortschritt');
+  await Promise.all([
+    ...alt.map((f) => (hatEigeneAngaben(f) ? fortschritt.put(ohneLernstand(f)) : fortschritt.delete(f.id))),
+    tx.objectStore('profil').put(profilOhneLernstand(p)),
+    tx.objectStore('simulationen').clear(),
+    tx.objectStore('meta').delete('laufendeSimulation'),
+  ]);
+  await tx.done;
+}
+
+export async function holeLetzteSicherung(db: Db): Promise<number | null> {
+  return ((await db.get('meta', 'letzteSicherung'))?.wert as number | undefined) ?? null;
+}
+
+export async function merkeLetzteSicherung(db: Db, zeit = Date.now()): Promise<void> {
+  await db.put('meta', { key: 'letzteSicherung', wert: zeit });
 }

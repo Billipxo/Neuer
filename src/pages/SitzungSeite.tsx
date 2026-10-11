@@ -257,13 +257,13 @@ function Sitzung({ params }: { params: URLSearchParams }) {
           {frage.typ === 'karte' ? (
             aufgedeckt ? (
               <div className="grid grid-cols-3 gap-2">
-                <button type="button" disabled={speichert} className={knopf('rot', 'px-2 text-base')} onClick={() => abschliessen(KARTEN_ERGEBNIS.nicht, 'nicht')}>
+                <button type="button" disabled={speichert} className={knopf('rot', '', 'kompakt')} onClick={() => abschliessen(KARTEN_ERGEBNIS.nicht, 'nicht')}>
                   Nicht gewusst
                 </button>
-                <button type="button" disabled={speichert} className={knopf('gelb', 'px-2 text-base')} onClick={() => abschliessen(KARTEN_ERGEBNIS.teilweise, 'teilweise')}>
+                <button type="button" disabled={speichert} className={knopf('gelb', '', 'kompakt')} onClick={() => abschliessen(KARTEN_ERGEBNIS.teilweise, 'teilweise')}>
                   Teilweise
                 </button>
-                <button type="button" disabled={speichert} className={knopf('gruen', 'px-2 text-base')} onClick={() => abschliessen(KARTEN_ERGEBNIS.gewusst, 'gewusst')}>
+                <button type="button" disabled={speichert} className={knopf('gruen', '', 'kompakt')} onClick={() => abschliessen(KARTEN_ERGEBNIS.gewusst, 'gewusst')}>
                   Gewusst
                 </button>
               </div>

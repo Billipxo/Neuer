@@ -4,8 +4,10 @@ import { baueAbzeichenKontext, neueAbzeichen, type Abzeichen } from '../logic/ab
 import { naechsterFortschritt, type Ergebnis } from '../logic/leitner';
 import { verarbeiteAntwort, verbucheSimulation, type AntwortEreignis, type Level, type SimulationsEreignis } from '../logic/motivation';
 import { endeZeitpunkt, werteSimulationAus } from '../logic/simulation';
+import type { Sicherung } from '../logic/austausch';
 import type {
   Fortschritt,
+  Frage,
   GespeicherteFrage,
   KartenBewertung,
   LaufendeSimulation,
@@ -18,11 +20,16 @@ import {
   alleSimulationen,
   holeFortschritt,
   holeProfil,
+  loescheFrage,
   loescheLaufendeSimulation,
   oeffneDb,
+  setzeLernstandZurueck,
   speichereFortschritt,
+  speichereFrage,
   speichereProfil,
   speichereSimulation,
+  stelleOriginalWiederHer,
+  stelleSicherungWiederHer,
   synchronisiereFragen,
   type Db,
 } from './db';
@@ -60,6 +67,14 @@ interface Daten extends Zustand {
   antwortSpeichern: (id: string, ergebnis: Ergebnis, karte?: KartenBewertung) => Promise<AntwortRueckmeldung>;
   /** Wertet eine Simulation aus und speichert Ergebnis, Lernstand, XP und Abzeichen. */
   simulationSpeichern: (laufend: LaufendeSimulation) => Promise<SimulationsRueckmeldung>;
+  /** Legt eine Frage an oder speichert Änderungen (gilt danach als „in der App bearbeitet“). */
+  frageSpeichern: (frage: Frage) => Promise<void>;
+  frageLoeschen: (id: string) => Promise<void>;
+  /** Setzt eine mitgelieferte Frage auf die Fassung aus den Projektdateien zurück. */
+  originalWiederherstellen: (id: string) => Promise<void>;
+  fragenImportieren: (fragen: Frage[]) => Promise<void>;
+  sicherungWiederherstellen: (s: Sicherung) => Promise<void>;
+  lernstandZuruecksetzen: () => Promise<void>;
   /** Ändert Markierung, Notiz, Fehlermeldung o. Ä. einer Frage. */
   aendereFortschritt: (id: string, aenderung: Partial<Omit<Fortschritt, 'id'>>) => Promise<void>;
   aendereProfil: (aenderung: Partial<Omit<Profil, 'id'>>) => Promise<void>;
@@ -193,11 +208,42 @@ export function DatenProvider({ children }: { children: ReactNode }) {
     return { ergebnis, ereignis, abzeichen };
   };
 
+  const sortiert = (fragen: GespeicherteFrage[]) =>
+    [...fragen].sort((a, b) => a.id.localeCompare(b.id, 'de', { numeric: true }));
+  const frageErsetzen = (f: GespeicherteFrage) =>
+    setZustand((z) => z && { ...z, fragen: sortiert([...z.fragen.filter((x) => x.id !== f.id), f]) });
+
   const daten: Daten = {
     ...zustand,
     neuLaden: () => laden(db),
     antwortSpeichern,
     simulationSpeichern,
+    frageSpeichern: async (frage) => frageErsetzen(await speichereFrage(db, frage)),
+    frageLoeschen: async (id) => {
+      await loescheFrage(db, id);
+      setZustand((z) => {
+        if (!z) return z;
+        const fortschritte = new Map(z.fortschritte);
+        fortschritte.delete(id);
+        return { ...z, fragen: z.fragen.filter((f) => f.id !== id), fortschritte };
+      });
+    },
+    originalWiederherstellen: async (id) => {
+      const original = MITGELIEFERTE_FRAGEN.find((f) => f.id === id);
+      if (original) frageErsetzen(await stelleOriginalWiederHer(db, original));
+    },
+    fragenImportieren: async (fragen) => {
+      for (const f of fragen) await speichereFrage(db, f);
+      await laden(db);
+    },
+    sicherungWiederherstellen: async (s) => {
+      await stelleSicherungWiederHer(db, s, MITGELIEFERTE_FRAGEN);
+      await laden(db);
+    },
+    lernstandZuruecksetzen: async () => {
+      await setzeLernstandZurueck(db);
+      await laden(db);
+    },
     aendereFortschritt: async (id, aenderung) => {
       const f = { ...(await holeFortschritt(db, id)), ...aenderung };
       await speichereFortschritt(db, f);

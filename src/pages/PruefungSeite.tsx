@@ -176,7 +176,7 @@ function LaufendeKarte({
             Jetzt auswerten
           </button>
         )}
-        <button type="button" className={knopf('leise', 'text-base')} onClick={onVerwerfen}>
+        <button type="button" className={knopf('leise', '', 'mittel')} onClick={onVerwerfen}>
           Verwerfen
         </button>
       </div>

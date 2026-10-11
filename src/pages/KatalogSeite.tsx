@@ -64,9 +64,17 @@ export function KatalogSeite() {
 
   return (
     <Seite titel="Fragenkatalog">
-      <Link to="/mehr" className="-mt-2 mb-3 inline-block text-sm text-slate-500 dark:text-slate-400">
-        ‹ Mehr
-      </Link>
+      <div className="-mt-2 mb-3 flex items-center justify-between">
+        <Link to="/mehr" className="text-sm text-slate-500 dark:text-slate-400">
+          ‹ Mehr
+        </Link>
+        <Link
+          to={`/mehr/neue-frage${filter.thema !== 'alle' ? `?thema=${filter.thema}` : ''}`}
+          className="rounded-full px-3 py-1.5 text-sm font-medium ring-1 ring-slate-300 dark:ring-slate-700"
+        >
+          ✚ Neue Frage
+        </Link>
+      </div>
       <div className="flex gap-2">
         <input
           type="search"
@@ -172,7 +180,7 @@ export function KatalogSeite() {
           {treffer.length} {treffer.length === 1 ? 'Frage' : 'Fragen'}
         </p>
         {treffer.length > 0 && (
-          <button type="button" className={knopf('sekundaer', 'min-h-11 px-4 text-base')} onClick={trefferLernen}>
+          <button type="button" className={knopf('sekundaer', '', 'klein')} onClick={trefferLernen}>
             ▶ {treffer.length > MAX_TREFFER_LERNEN ? `${MAX_TREFFER_LERNEN} davon` : 'Diese'} lernen
           </button>
         )}

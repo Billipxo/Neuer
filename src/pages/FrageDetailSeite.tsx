@@ -2,19 +2,21 @@ import { useState, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { FrageMitLoesung, FrageWerkzeuge } from '../components/FrageTeile';
 import { Karte, Seite } from '../components/Seite';
-import { StatusPunkt, knopf } from '../components/ui';
+import { Dialog, Schalter, StatusPunkt, knopf } from '../components/ui';
 import { useDaten } from '../db/DatenContext';
+import { fuerExport } from '../logic/austausch';
 import { formatDatumZeit, formatFaelligkeit } from '../logic/format';
-import { MAX_BOX } from '../logic/leitner';
+import { MAX_BOX, ohneLernstand } from '../logic/leitner';
 import type { Fortschritt } from '../types';
 
 const KARTE_TEXT = { gewusst: 'gewusst', teilweise: 'teilweise', nicht: 'nicht gewusst' } as const;
 
 export function FrageDetailSeite() {
   const { id = '' } = useParams();
-  const { fragen, fortschritte, aendereFortschritt } = useDaten();
+  const { fragen, fortschritte, aendereFortschritt, frageSpeichern, frageLoeschen, originalWiederherstellen, zeigeHinweis } = useDaten();
   const navigate = useNavigate();
   const location = useLocation();
+  const [loeschenOffen, setLoeschenOffen] = useState(false);
   const frage = fragen.find((f) => f.id === id);
 
   // „Zurück“ führt dorthin, woher man kam (z. B. gefilterter Katalog); ohne Verlauf zum Katalog
@@ -37,16 +39,7 @@ export function FrageDetailSeite() {
 
   const lernstandZuruecksetzen = () => {
     if (!window.confirm('Lernstand dieser Frage zurücksetzen? Markierung, Notiz und Meldung bleiben erhalten.')) return;
-    aendereFortschritt(frage.id, {
-      status: 'neu',
-      box: 0,
-      richtigInFolge: 0,
-      versuche: 0,
-      richtigGesamt: 0,
-      zuletzt: null,
-      faelligAb: 0,
-      kartenBewertung: null,
-    });
+    if (fp) aendereFortschritt(frage.id, ohneLernstand(fp));
   };
 
   return (
@@ -58,6 +51,18 @@ export function FrageDetailSeite() {
           <FrageWerkzeuge frageId={frage.id} />
         </div>
       </Karte>
+
+      <div className="mt-4">
+        <Schalter
+          titel="Geprüft"
+          text="Mit den Kursunterlagen abgeglichen"
+          an={frage.geprueft}
+          onChange={async (geprueft) => {
+            await frageSpeichern({ ...fuerExport(frage), geprueft });
+            zeigeHinweis(geprueft ? '✔' : '○', geprueft ? 'Als geprüft markiert' : 'Haken „geprüft“ entfernt');
+          }}
+        />
+      </div>
 
       {fp?.fehlerMeldung && (
         <Karte className="mt-4 ring-red-300! dark:ring-red-800!">
@@ -99,12 +104,54 @@ export function FrageDetailSeite() {
         >
           ▶ Diese Frage üben
         </Link>
+        <Link to={`/mehr/frage/${encodeURIComponent(frage.id)}/bearbeiten`} className={knopf('sekundaer')}>
+          ✎ Bearbeiten
+        </Link>
+        {frage.herkunft === 'mitgeliefert' && frage.bearbeitet && (
+          <button
+            type="button"
+            className={knopf('leise', '', 'mittel')}
+            onClick={async () => {
+              if (!window.confirm('Deine Änderungen an dieser Frage verwerfen und die mitgelieferte Fassung wiederherstellen?')) return;
+              await originalWiederherstellen(frage.id);
+              zeigeHinweis('↺', 'Originalfassung wiederhergestellt');
+            }}
+          >
+            Originalfassung wiederherstellen
+          </button>
+        )}
         {fp && fp.versuche > 0 && (
-          <button type="button" className={knopf('leise', 'text-base')} onClick={lernstandZuruecksetzen}>
+          <button type="button" className={knopf('leise', '', 'mittel')} onClick={lernstandZuruecksetzen}>
             Lernstand dieser Frage zurücksetzen
           </button>
         )}
+        <button type="button" className={knopf('gefahr', '', 'mittel')} onClick={() => setLoeschenOffen(true)}>
+          🗑 Frage löschen
+        </button>
       </div>
+
+      <Dialog offen={loeschenOffen} titel="Frage löschen?" onSchliessen={() => setLoeschenOffen(false)}>
+        <p className="text-slate-700 dark:text-slate-300">
+          Die Frage und ihr Lernstand werden gelöscht.
+          {frage.herkunft === 'mitgeliefert' && ' Mitgelieferte Fragen kommen auch bei späteren Updates nicht zurück.'}
+        </p>
+        <div className="mt-4 grid gap-2">
+          <button
+            type="button"
+            className={knopf('rot')}
+            onClick={async () => {
+              await frageLoeschen(frage.id);
+              zeigeHinweis('🗑', 'Frage gelöscht');
+              navigate('/mehr/katalog', { replace: true });
+            }}
+          >
+            Löschen
+          </button>
+          <button type="button" className={knopf('leise')} onClick={() => setLoeschenOffen(false)}>
+            Abbrechen
+          </button>
+        </div>
+      </Dialog>
     </Seite>
   );
 }
@@ -135,7 +182,7 @@ function NotizFeld({ frageId, gespeichert }: { frageId: string; gespeichert: str
         className="w-full rounded-xl border border-slate-300 bg-white p-3 text-base dark:border-slate-700 dark:bg-slate-950"
       />
       <div className="mt-2 flex items-center gap-3">
-        <button type="button" className={knopf('sekundaer', 'min-h-11 px-4 text-base')} disabled={!geaendert} onClick={speichern}>
+        <button type="button" className={knopf('sekundaer', '', 'klein')} disabled={!geaendert} onClick={speichern}>
           Notiz speichern
         </button>
         <span className="text-sm text-green-700 dark:text-green-400" role="status">

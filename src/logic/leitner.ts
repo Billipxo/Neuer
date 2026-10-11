@@ -1,4 +1,4 @@
-import type { Fortschritt, KartenBewertung } from '../types';
+import { neuerFortschritt, type Fortschritt, type KartenBewertung } from '../types';
 
 /**
  * Leitner-System
@@ -66,4 +66,14 @@ export const KARTEN_ERGEBNIS: Record<KartenBewertung, Ergebnis> = {
 
 export function istFaellig(f: Fortschritt | undefined, jetzt = Date.now()): boolean {
   return !!f && f.status !== 'neu' && f.faelligAb <= jetzt;
+}
+
+/** Lernstand einer Frage zurück auf „neu“ – Markierung, Notiz und Fehlermeldung bleiben. */
+export function ohneLernstand(f: Fortschritt): Fortschritt {
+  return { ...neuerFortschritt(f.id), markiert: f.markiert, notiz: f.notiz, fehlerMeldung: f.fehlerMeldung };
+}
+
+/** Enthält der Fortschritt etwas, das beim Zurücksetzen erhalten bleiben soll? */
+export function hatEigeneAngaben(f: Fortschritt): boolean {
+  return f.markiert || !!f.notiz || !!f.fehlerMeldung;
 }

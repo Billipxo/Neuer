@@ -280,3 +280,8 @@ export function kalenderWochen(jetzt: number, wochen = 5): KalenderTag[][] {
     }),
   );
 }
+
+/** Profil ohne Lernfortschritt (XP, Serien, Lerntage, Abzeichen) – Einstellungen bleiben. */
+export function profilOhneLernstand(p: Profil): Profil {
+  return { ...p, xp: 0, serieAktuell: 0, bestSerie: 0, lernTage: {}, zielErreichtTage: [], abzeichen: [] };
+}

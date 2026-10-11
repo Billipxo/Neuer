@@ -36,21 +36,25 @@ export function pruefeFrage(roh: unknown): string[] {
     if (!ERLAUBTE_FELDER.has(feld)) fehler.push(`Unbekanntes Feld „${feld}“`);
   }
 
-  if (!istText(f.id)) fehler.push('id ist leer');
-  else if (!/^[a-z0-9][a-z0-9_-]*$/.test(f.id)) fehler.push('id darf nur a-z, 0-9, - und _ enthalten');
-
-  if (!THEMA_IDS.includes(f.thema as never)) fehler.push(`Unbekanntes Thema „${String(f.thema)}“`);
-  if (!FRAGE_TYPEN.includes(f.typ as never)) fehler.push(`Unbekannter Typ „${String(f.typ)}“`);
-  if (!istText(f.frage)) fehler.push('Fragetext ist leer');
-  if (!istText(f.erklaerung)) fehler.push('Erklärung ist leer');
-  if (!istText(f.quelle)) fehler.push('Quelle ist leer');
-  if (!istText(f.stand)) fehler.push('Stand ist leer');
-  if (![1, 2, 3].includes(f.schwierigkeit as number)) fehler.push('schwierigkeit muss 1, 2 oder 3 sein');
-  if (f.bild !== null && !istText(f.bild)) fehler.push('bild muss null oder ein Pfad sein');
-  if (typeof f.geprueft !== 'boolean') fehler.push('geprueft muss true oder false sein');
-  if ('unterthema' in f && typeof f.unterthema !== 'string') fehler.push('unterthema muss Text sein');
+  // Inhalte nur prüfen, wenn das Feld da ist – fehlende Felder sind oben schon gemeldet
+  const hat = (feld: string) => feld in f;
+  if (hat('id')) {
+    if (!istText(f.id)) fehler.push('id ist leer');
+    else if (!/^[a-z0-9][a-z0-9_-]*$/.test(f.id)) fehler.push('id darf nur a-z, 0-9, - und _ enthalten');
+  }
+  if (hat('thema') && !THEMA_IDS.includes(f.thema as never)) fehler.push(`Unbekanntes Thema „${String(f.thema)}“`);
+  if (hat('typ') && !FRAGE_TYPEN.includes(f.typ as never)) fehler.push(`Unbekannter Typ „${String(f.typ)}“`);
+  if (hat('frage') && !istText(f.frage)) fehler.push('Fragetext ist leer');
+  if (hat('erklaerung') && !istText(f.erklaerung)) fehler.push('Erklärung ist leer');
+  if (hat('quelle') && !istText(f.quelle)) fehler.push('Quelle ist leer');
+  if (hat('stand') && !istText(f.stand)) fehler.push('Stand ist leer');
+  if (hat('schwierigkeit') && ![1, 2, 3].includes(f.schwierigkeit as number)) fehler.push('schwierigkeit muss 1, 2 oder 3 sein');
+  if (hat('bild') && f.bild !== null && !istText(f.bild)) fehler.push('bild muss null oder ein Pfad sein');
+  if (hat('geprueft') && typeof f.geprueft !== 'boolean') fehler.push('geprueft muss true oder false sein');
+  if (hat('unterthema') && typeof f.unterthema !== 'string') fehler.push('unterthema muss Text sein');
 
   const antworten = f.antworten;
+  if (!hat('antworten') || !hat('richtig')) return fehler;
   if (!Array.isArray(antworten) || antworten.some((a) => !istText(a))) {
     fehler.push('antworten muss eine Liste von Texten sein');
     return fehler;

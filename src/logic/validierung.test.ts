@@ -23,9 +23,14 @@ describe('pruefeFrage', () => {
 
   it('meldet fehlende Felder und unbekannte Felder', () => {
     const { quelle: _q, ...ohneQuelle } = basis;
-    expect(pruefeFrage({ ...ohneQuelle, extra: 1 })).toEqual(
-      expect.arrayContaining(['Feld „quelle“ fehlt', 'Unbekanntes Feld „extra“']),
-    );
+    expect(pruefeFrage({ ...ohneQuelle, extra: 1 })).toEqual(['Feld „quelle“ fehlt', 'Unbekanntes Feld „extra“']);
+  });
+
+  it('meldet ein fehlendes Feld nicht zusätzlich als leer', () => {
+    expect(pruefeFrage({ id: 'x', thema: 'recht' })).toEqual([
+      'Feld „typ“ fehlt', 'Feld „frage“ fehlt', 'Feld „antworten“ fehlt', 'Feld „richtig“ fehlt', 'Feld „erklaerung“ fehlt',
+      'Feld „quelle“ fehlt', 'Feld „schwierigkeit“ fehlt', 'Feld „bild“ fehlt', 'Feld „geprueft“ fehlt', 'Feld „stand“ fehlt',
+    ]);
   });
 
   it('meldet fehlende richtige Antwort', () => {

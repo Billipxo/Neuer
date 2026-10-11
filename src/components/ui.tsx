@@ -2,7 +2,7 @@ import { useEffect, type ReactNode } from 'react';
 import type { LernStatus } from '../types';
 import type { Verteilung } from '../logic/sitzung';
 
-export type KnopfVariante = 'primaer' | 'sekundaer' | 'gruen' | 'gelb' | 'rot' | 'leise';
+export type KnopfVariante = 'primaer' | 'sekundaer' | 'gruen' | 'gelb' | 'rot' | 'leise' | 'gefahr';
 
 const VARIANTEN: Record<KnopfVariante, string> = {
   primaer: 'bg-marke-400 text-slate-900 hover:bg-marke-500 active:bg-marke-600',
@@ -12,11 +12,25 @@ const VARIANTEN: Record<KnopfVariante, string> = {
   gelb: 'bg-amber-400 text-slate-900 hover:bg-amber-500',
   rot: 'bg-red-600 text-white hover:bg-red-700',
   leise: 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800',
+  /** leiser Knopf für Löschen/Zurücksetzen */
+  gefahr: 'text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10',
 };
 
-/** Klassen für große, daumenfreundliche Knöpfe (auch für Links nutzbar). */
-export function knopf(variante: KnopfVariante = 'primaer', extra = ''): string {
-  return `inline-flex min-h-14 items-center justify-center gap-2 rounded-2xl px-5 text-lg font-semibold transition select-none disabled:pointer-events-none disabled:opacity-40 ${VARIANTEN[variante]} ${extra}`;
+const GROESSEN = {
+  gross: 'min-h-14 px-5 text-lg',
+  mittel: 'min-h-12 px-4 text-base',
+  klein: 'min-h-11 px-4 text-base',
+  /** volle Höhe, wenig Rand – für mehrere Knöpfe nebeneinander */
+  kompakt: 'min-h-14 px-2 text-base leading-tight',
+} as const;
+export type KnopfGroesse = keyof typeof GROESSEN;
+
+/**
+ * Klassen für daumenfreundliche Knöpfe (auch für Links nutzbar).
+ * Größe nur über `groesse` ändern – zusätzliche Größenklassen in `extra` würden von den Grundklassen überstimmt.
+ */
+export function knopf(variante: KnopfVariante = 'primaer', extra = '', groesse: KnopfGroesse = 'gross'): string {
+  return `inline-flex items-center justify-center gap-2 rounded-2xl font-semibold transition select-none disabled:pointer-events-none disabled:opacity-40 ${GROESSEN[groesse]} ${VARIANTEN[variante]} ${extra}`.trim();
 }
 
 export const STATUS_INFO: Record<LernStatus, { text: string; farbe: string }> = {
