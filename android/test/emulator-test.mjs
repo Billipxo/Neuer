@@ -14,8 +14,9 @@ mkdirSync(AUSGABE, { recursive: true });
 
 const protokoll = [];
 const fehler = [];
+const start = Date.now();
 const log = (...teile) => {
-  const zeile = teile.join(' ');
+  const zeile = `[${String(Math.round((Date.now() - start) / 1000)).padStart(3)} s] ${teile.join(' ')}`;
   console.log(zeile);
   protokoll.push(zeile);
 };
@@ -24,8 +25,18 @@ const pruefe = (ok, text) => {
   if (!ok) fehler.push(text);
 };
 
+const schreibeProtokoll = () =>
+  writeFileSync(`${AUSGABE}/protokoll.txt`, [...protokoll, ...fehler.map((f) => `FEHLER: ${f}`)].join('\n') + '\n');
+
 const [geraet] = await android.devices();
 if (!geraet) throw new Error('Kein Android-Gerät gefunden');
+setTimeout(async () => {
+  fehler.push('Zeitüberschreitung: Test hing länger als 6 Minuten');
+  log('Zeitüberschreitung – Vordergrund:', await vordergrund().catch(() => '?'));
+  schreibeProtokoll();
+  console.error('\nFEHLER:\n' + fehler.join('\n'));
+  process.exit(1);
+}, 6 * 60_000).unref();
 log('Gerät:', geraet.model(), '| Android', (await geraet.shell('getprop ro.build.version.release')).toString().trim());
 await geraet.installApk(APK);
 const bild = (name) => geraet.screenshot({ path: `${AUSGABE}/${name}.png` });
@@ -124,11 +135,15 @@ try {
 
   // 7. Sicherung über „Speichern unter“ speichern
   await gehe(seite, '#/mehr/daten');
+  log('   7a. tippe „Sicherung herunterladen“');
   await seite.click('text=Sicherung herunterladen');
+  log('   7b. warte auf „Speichern unter“');
   await warteAufDateienApp('7. Speichern unter');
   log('   Speichern unter offen:', await vordergrund());
   await bild('7-speichern-unter');
+  log('   7c. tippe „Speichern“');
   await geraet.tap({ text: /^(SAVE|Save|SPEICHERN|Speichern)$/ }, { timeout: 30_000 });
+  log('   7d. warte auf Bestätigung in der App');
   const gesichert = await seite
     .waitForSelector('text=Sicherung erstellt', { timeout: 30_000 })
     .then(() => true, () => false);
@@ -137,6 +152,7 @@ try {
   pruefe(gesichert && !!datei, `7. Sicherung gespeichert: ${datei ?? 'keine Datei in Download/'}`);
 
   // 8. Lernstand zurücksetzen und über die Dateiauswahl wiederherstellen
+  log('   8a. setze Lernstand zurück');
   await seite.click('text=Lernstand zurücksetzen …');
   await seite.locator('[role=dialog]').getByRole('button', { name: 'Zurücksetzen', exact: true }).click();
   await seite.locator('[role=dialog]').waitFor({ state: 'detached' });
@@ -144,9 +160,11 @@ try {
   await seite.waitForSelector('text=Weiterlernen');
   const zurueckgesetzt = await heute(seite);
   await gehe(seite, '#/mehr/daten');
+  log('   8b. öffne Dateiauswahl');
   await seite.click('text=📂 Sicherungsdatei wählen');
   await warteAufDateienApp('8. Dateiauswahl');
   await bild('8-dateiauswahl');
+  log('   8c. wähle die Sicherung');
   await geraet.tap({ text: /^trei-lernstand-.*\.json$/ }, { timeout: 30_000 });
   await seite.locator('[role=dialog]').getByRole('button', { name: 'Wiederherstellen', exact: true }).click();
   await seite.waitForSelector('text=Lernstand wiederhergestellt', { timeout: 20_000 });
@@ -159,7 +177,7 @@ try {
   fehler.push(`Abbruch: ${e.message}`);
   await bild('abbruch').catch(() => {});
 } finally {
-  writeFileSync(`${AUSGABE}/protokoll.txt`, [...protokoll, ...fehler.map((f) => `FEHLER: ${f}`)].join('\n') + '\n');
+  schreibeProtokoll();
   await geraet.close();
 }
 
