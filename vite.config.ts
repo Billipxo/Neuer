@@ -19,7 +19,8 @@ export default defineConfig({
       injectRegister: false,
       // Manifest mit Zugangsdaten laden – nötig im passwortgeschützten Ordner (.htaccess)
       useCredentials: true,
-      includeAssets: ['favicon.svg', 'icons/apple-touch-icon.png', 'bilder/**/*'],
+      // Icons und Bilder aus public/ erfasst schon globPatterns – nicht doppelt eintragen
+      includeManifestIcons: false,
       manifest: {
         name: 'TREI-Trainer',
         short_name: 'TREI-Trainer',
@@ -40,7 +41,7 @@ export default defineConfig({
       },
       workbox: {
         // alles für den Offline-Betrieb vorab speichern (Fragen stecken im JavaScript)
-        globPatterns: ['**/*.{js,css,html,svg,png,jpg,jpeg,webp,ico,webmanifest}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,jpg,jpeg,webp,gif,ico}'], // Manifest fügt das Plugin selbst hinzu
         cleanupOutdatedCaches: true,
         navigateFallback: 'index.html',
         maximumFileSizeToCacheInBytes: 8 * 1024 * 1024,

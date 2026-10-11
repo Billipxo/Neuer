@@ -7,11 +7,13 @@
     "frage": "In welchem Höhenbereich über der Standfläche muss sich die Mitte der Messeinrichtung (Zähler) befinden?",
     "antworten": [
       "zwischen 0,40 m und 1,40 m",
-      "zwischen 0,80 m und 1,80 m",
       "zwischen 1,10 m und 2,00 m",
+      "zwischen 0,80 m und 1,80 m",
       "beliebig, solange der Zähler ablesbar ist"
     ],
-    "richtig": [1],
+    "richtig": [
+      2
+    ],
     "erklaerung": "Die Zählerplätze sind so anzuordnen, dass die Mitte der Messeinrichtung zwischen 0,80 m und 1,80 m über dem Fußboden liegt – damit Ablesung, Wechsel und Bedienung möglich sind. Stand prüfen (TAB des Netzbetreibers und VDE-AR-N 4100).",
     "quelle": "VDE-AR-N 4100 (Zählerplatz); TAB Niederspannung",
     "schwierigkeit": 1,
@@ -26,12 +28,16 @@
     "typ": "mehrfach",
     "frage": "Welche Aussagen zum selektiven Hauptleitungsschutzschalter (SH-Schalter) im netzseitigen Anschlussraum des Zählerplatzes treffen zu?",
     "antworten": [
-      "Er löst selektiv zu nachgeschalteten Leitungsschutzschaltern aus.",
+      "Er ist vor der Messeinrichtung angeordnet.",
       "Er ermöglicht das Freischalten der Kundenanlage, ohne die Hausanschlusssicherung ziehen zu müssen.",
-      "Er ersetzt den Fehlerstromschutzschalter (RCD) der Anlage.",
-      "Er ist vor der Messeinrichtung angeordnet."
+      "Er löst selektiv zu nachgeschalteten Leitungsschutzschaltern aus.",
+      "Er ersetzt den Fehlerstromschutzschalter (RCD) der Anlage."
     ],
-    "richtig": [0, 1, 3],
+    "richtig": [
+      0,
+      1,
+      2
+    ],
     "erklaerung": "Der SH-Schalter sitzt netzseitig vor dem Zähler. Er ist selektiv zu den nachgeschalteten LS-Schaltern (die LS lösen bei Fehlern zuerst aus) und dient als Trenn- und Schaltstelle für die Kundenanlage, z. B. beim Zählerwechsel. Einen RCD ersetzt er nicht – er schützt gegen Überstrom, nicht gegen Fehlerströme. Stand prüfen.",
     "quelle": "VDE-AR-N 4100 (Zählerplatz)",
     "schwierigkeit": 2,
@@ -50,6 +56,281 @@
     "erklaerung": "Merksatz: iMSys = mME + SMGW. Einbaufälle und Pflichten (Rollout) ergeben sich aus dem MsbG – Stand prüfen.",
     "quelle": "MsbG § 2",
     "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-003",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "einfach",
+    "frage": "Wofür dient der „Raum für Zusatzanwendungen“ (RfZ) im Zählerschrank nach VDE-AR-N 4100?",
+    "antworten": [
+      "Für Kommunikations- und Steuergeräte wie Smart-Meter-Gateway oder Steuerbox",
+      "Als Ablage für Prüfprotokolle und Unterlagen des Netzbetreibers",
+      "Für die Hausanschlusssicherungen, wenn kein Hausanschlusskasten vorhanden ist",
+      "Für zusätzliche Leitungsschutzschalter der Wohnung"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Der RfZ ist im Zählerschrank für Zusatzgeräte des Messstellen- bzw. Netzbetreibers vorgesehen, z. B. Smart-Meter-Gateway oder Steuerbox für § 14a EnWG. Die Kommunikation wird über den APZ (Abschlusspunkt Zählerplatz) angebunden. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-004",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "mehrfach",
+    "frage": "An welchen Orten dürfen Zählerplätze nicht angeordnet werden?",
+    "antworten": [
+      "In einem allgemein zugänglichen Kellerflur",
+      "Im Hausanschlussraum",
+      "In Räumen mit Badewanne oder Dusche",
+      "Über Treppenstufen"
+    ],
+    "richtig": [
+      2,
+      3
+    ],
+    "erklaerung": "Zählerplätze gehören in leicht zugängliche, trockene Räume, z. B. Hausanschlussraum, Kellerflur oder Treppenhaus. Unzulässig sind u. a. Bade- und Duschräume, Bereiche über Treppenstufen sowie feuer- oder explosionsgefährdete Räume. Die vollständige Liste steht in der VDE-AR-N 4100 – Stand prüfen.",
+    "quelle": "VDE-AR-N 4100 (Zählerplatz)",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-005",
+    "thema": "zaehlerplatz",
+    "unterthema": "Messkonzepte",
+    "typ": "einfach",
+    "frage": "Welche Messeinrichtung wird bei einer PV-Anlage mit Überschusseinspeisung typischerweise am Netzanschlusspunkt eingesetzt?",
+    "antworten": [
+      "Kein Zähler, die eingespeiste Energie wird aus der Modulleistung geschätzt",
+      "Ein Zweirichtungszähler, der Bezug und Einspeisung getrennt erfasst",
+      "Ein Ferraris-Zähler mit Rücklaufsperre, der nur den Bezug zählt",
+      "Nur ein Erzeugungszähler direkt am Ausgang des Wechselrichters"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Bei Überschusseinspeisung wird der Strom zuerst im Haus verbraucht, nur der Überschuss fließt ins Netz. Der Zweirichtungszähler zählt Bezug und Einspeisung in getrennten Registern. Weitere Zähler (z. B. Erzeugungszähler) hängen vom Messkonzept ab, das mit Netz- und Messstellenbetreiber abgestimmt wird.",
+    "quelle": "VDE-AR-N 4100; Messkonzepte des Netzbetreibers",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-006",
+    "thema": "zaehlerplatz",
+    "unterthema": "Moderne Messeinrichtung / iMSys",
+    "typ": "einfach",
+    "frage": "Was ist eine „moderne Messeinrichtung“ (mME) nach dem Messstellenbetriebsgesetz?",
+    "antworten": [
+      "Ein Ferraris-Zähler mit zusätzlichem Impulsausgang für die Fernauslesung",
+      "Ein Smart-Meter-Gateway, das ohne eigenen Zähler die Daten anderer Zähler sammelt",
+      "Ein Zähler, der seine Messwerte selbst per Mobilfunk an den Lieferanten sendet",
+      "Ein digitaler Zähler, der Verbrauch und Nutzungszeit anzeigt und über ein Gateway eingebunden werden kann"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Die mME erfasst den tatsächlichen Verbrauch und die tatsächliche Nutzungszeit, kommuniziert aber selbst nicht nach außen. Erst zusammen mit einem Smart-Meter-Gateway wird daraus ein intelligentes Messsystem (iMSys).",
+    "quelle": "MsbG § 2",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-007",
+    "thema": "zaehlerplatz",
+    "unterthema": "Moderne Messeinrichtung / iMSys",
+    "typ": "einfach",
+    "frage": "Welche Stelle legt die Sicherheitsanforderungen für Smart-Meter-Gateways fest und zertifiziert die Geräte?",
+    "antworten": [
+      "Jeder Hersteller nach eigenen Sicherheitsregeln",
+      "Das Bundesamt für Sicherheit in der Informationstechnik (BSI)",
+      "Die Handwerkskammer, die auch die Zählerplätze abnimmt",
+      "Der jeweilige Netzbetreiber für sein eigenes Netzgebiet"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Smart-Meter-Gateways verarbeiten Messdaten und leiten Steuerbefehle weiter. Damit Datenschutz und IT-Sicherheit gewährleistet sind, gelten Schutzprofile und Technische Richtlinien des BSI; die Gateways brauchen eine BSI-Zertifizierung.",
+    "quelle": "MsbG; BSI TR-03109",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-008",
+    "thema": "zaehlerplatz",
+    "unterthema": "Messstellenbetrieb",
+    "typ": "einfach",
+    "frage": "Wer ist für Einbau, Betrieb und Wartung des Zählers zuständig?",
+    "antworten": [
+      "Das Installationsunternehmen",
+      "Der Stromlieferant",
+      "Der Anschlussnehmer",
+      "Der Messstellenbetreiber"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Zuständig ist der Messstellenbetreiber. Grundzuständig ist meist der örtliche Netzbetreiber bzw. dessen Messstellenbetrieb; der Kunde kann aber einen anderen (wettbewerblichen) Messstellenbetreiber beauftragen. Der Installateur stellt den normgerechten Zählerplatz bereit.",
+    "quelle": "MsbG",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-009",
+    "thema": "zaehlerplatz",
+    "unterthema": "Moderne Messeinrichtung / iMSys",
+    "typ": "mehrfach",
+    "frage": "In welchen Fällen ist der Einbau eines intelligenten Messsystems nach dem Messstellenbetriebsgesetz in der Regel Pflicht?",
+    "antworten": [
+      "Bei steuerbaren Verbrauchseinrichtungen nach § 14a EnWG",
+      "Bei einem Jahresverbrauch über 6.000 kWh",
+      "Bei Erzeugungsanlagen mit mehr als 7 kW installierter Leistung",
+      "In jeder Wohnung, unabhängig vom Verbrauch"
+    ],
+    "richtig": [
+      0,
+      1,
+      2
+    ],
+    "erklaerung": "Das MsbG sieht einen gestaffelten Pflicht-Rollout vor, u. a. bei einem Verbrauch über 6.000 kWh im Jahr, bei steuerbaren Verbrauchseinrichtungen nach § 14a EnWG und bei Erzeugungsanlagen über 7 kW. In kleineren Fällen ist der Einbau optional. Fristen und Grenzen werden immer wieder angepasst – Stand prüfen.",
+    "quelle": "MsbG",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-010",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "einfach",
+    "frage": "Welche Bereiche eines Zählerschranks werden typischerweise plombiert?",
+    "antworten": [
+      "Die Bereiche mit nicht gemessener Energie, z. B. netzseitiger Anschlussraum und Zählerfeld",
+      "Gar keine",
+      "Nur die Tür des Zählerschranks",
+      "Der anlagenseitige Anschlussraum mit den Leitungsschutzschaltern der Wohnung"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Plombiert werden die Teile, in denen nicht gemessene Energie fließt (netzseitiger Anschlussraum mit SH-Schalter, Zählerfeld), damit dort niemand unbemerkt Strom entnehmen kann (NAV § 13). Der anlagenseitige Bereich hinter dem Zähler bleibt zugänglich.",
+    "quelle": "NAV § 13; VDE-AR-N 4100",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-011",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "einfach",
+    "frage": "Warum müssen Zählerplätze in Mehrfamilienhäusern dauerhaft gekennzeichnet werden?",
+    "antworten": [
+      "Nur aus optischen Gründen, eine Vorschrift dazu gibt es nicht",
+      "Damit jeder Zähler eindeutig der zugehörigen Wohnung bzw. Kundenanlage zugeordnet werden kann",
+      "Weil die Kennzeichnung nur bei Zählern mit Wandlermessung vorgeschrieben ist",
+      "Damit der Kunde auf einen Blick seinen aktuellen Stromtarif erkennt"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Eine eindeutige, dauerhafte Kennzeichnung (z. B. Wohnungsbezeichnung) verhindert Verwechslungen bei Abrechnung, Zählerwechsel und Freischalten. Auch die zugehörigen Stromkreisverteiler müssen eindeutig zuzuordnen sein.",
+    "quelle": "VDE-AR-N 4100; TAB",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-012",
+    "thema": "zaehlerplatz",
+    "unterthema": "Messkonzepte",
+    "typ": "einfach",
+    "frage": "Was bedeutet „Überschusseinspeisung“ bei einer PV-Anlage?",
+    "antworten": [
+      "Der gesamte erzeugte Strom wird ins Netz eingespeist, der Bezug läuft über einen eigenen Zähler.",
+      "Die Anlage darf mehr einspeisen, als der Netzanschluss zulässt.",
+      "Der Strom wird zuerst im Gebäude genutzt, nur der nicht benötigte Rest wird ins Netz eingespeist.",
+      "Die Anlage speist nur ein, wenn der Speicher leer ist."
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Bei Überschusseinspeisung deckt die PV-Anlage zuerst den Eigenverbrauch; nur der Überschuss geht ins Netz (Zweirichtungszähler). Bei Volleinspeisung wird der gesamte erzeugte Strom eingespeist und separat gemessen.",
+    "quelle": "EEG; Messkonzepte des Netzbetreibers",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-013",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "einfach",
+    "frage": "Nach welcher Normenreihe werden Zählerplätze und Zählerschränke gebaut?",
+    "antworten": [
+      "DIN 18014",
+      "DIN EN 50160",
+      "DIN VDE 0100-701",
+      "DIN VDE 0603"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Zählerplätze werden nach der Normenreihe DIN VDE 0603 gebaut; VDE-AR-N 4100 und TAB legen fest, welche Ausführungen der Netzbetreiber verlangt. DIN VDE 0100-701 betrifft Räume mit Badewanne oder Dusche, DIN 18014 den Fundamenterder, DIN EN 50160 die Spannungsqualität.",
+    "quelle": "DIN VDE 0603; VDE-AR-N 4100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-k02",
+    "thema": "zaehlerplatz",
+    "unterthema": "Moderne Messeinrichtung / iMSys",
+    "typ": "karte",
+    "frage": "Welche Aufgaben hat das Smart-Meter-Gateway, und wer darf auf die Daten zugreifen?",
+    "antworten": [],
+    "richtig": "Das Smart-Meter-Gateway (SMGW) ist die Kommunikationseinheit des intelligenten Messsystems. Es\n• sammelt die Messwerte der angeschlossenen modernen Messeinrichtungen,\n• überträgt sie verschlüsselt an berechtigte Marktteilnehmer (z. B. Messstellenbetreiber, Netzbetreiber, Lieferant) – jeweils nur die Daten, die für den Zweck nötig sind,\n• stellt dem Kunden seine eigenen Daten zur Verfügung,\n• leitet Steuerbefehle an eine Steuerbox weiter, z. B. für § 14a EnWG oder für Erzeugungsanlagen.\nBetrieben wird es vom Messstellenbetreiber, verwaltet vom Gateway-Administrator. Es ist vom BSI zertifiziert.",
+    "erklaerung": "Fachgespräch: Aufgabe, Datenflüsse und Datenschutz erklären können.",
+    "quelle": "MsbG; BSI TR-03109",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-k03",
+    "thema": "zaehlerplatz",
+    "unterthema": "Messkonzepte",
+    "typ": "karte",
+    "frage": "Skizzieren Sie ein Messkonzept für ein Einfamilienhaus mit PV-Anlage, Batteriespeicher und Wärmepumpe.",
+    "antworten": [],
+    "richtig": "Beispiel:\n• Am Netzanschlusspunkt ein Zweirichtungszähler für Bezug und Einspeisung (Überschusseinspeisung).\n• Der Speicher liegt hinter diesem Zähler und speichert Eigenstrom (oder wird nach Vorgabe des Netzbetreibers zusätzlich gemessen).\n• Die Wärmepumpe läuft entweder über denselben Zähler (z. B. Netzentgeltreduzierung Modul 1) oder über einen eigenen Zähler, z. B. für Modul 2 nach § 14a EnWG.\n• Steuerung über Smart-Meter-Gateway mit Steuerbox oder über ein Energiemanagementsystem.\nWichtig: Das Messkonzept vor der Installation mit Netz- und Messstellenbetreiber abstimmen und bei der Anmeldung angeben.",
+    "erklaerung": "Fachgespräch: ein Konzept skizzieren und begründen können. Die zulässigen Messkonzepte veröffentlicht der Netzbetreiber – Stand prüfen.",
+    "quelle": "VDE-AR-N 4100; EnWG § 14a; Messkonzepte des Netzbetreibers",
+    "schwierigkeit": 3,
     "bild": null,
     "geprueft": false,
     "stand": "2026-10"

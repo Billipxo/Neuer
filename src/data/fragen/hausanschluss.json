@@ -7,11 +7,13 @@
     "frage": "Ab welcher Gebäudegröße ist nach DIN 18012 ein Hausanschlussraum vorzusehen?",
     "antworten": [
       "Ab zwei Wohneinheiten",
-      "In Gebäuden mit mehr als vier Wohneinheiten",
       "In Gebäuden mit mehr als zehn Wohneinheiten",
+      "In Gebäuden mit mehr als vier Wohneinheiten",
       "Nur bei Nichtwohngebäuden"
     ],
-    "richtig": [1],
+    "richtig": [
+      2
+    ],
     "erklaerung": "DIN 18012 fordert einen Hausanschlussraum in Gebäuden mit mehr als vier Wohneinheiten. Bei kleineren Gebäuden genügen eine Hausanschlusswand oder eine Hausanschlussnische. Stand prüfen.",
     "quelle": "DIN 18012",
     "schwierigkeit": 1,
@@ -26,12 +28,16 @@
     "typ": "mehrfach",
     "frage": "Ein Neubau erhält eine Perimeterdämmung unter der Bodenplatte. Welche Aussagen zur Erdungsanlage nach DIN 18014 treffen zu?",
     "antworten": [
-      "Der Erder wird als Ringerder außerhalb der Dämmung im Erdreich verlegt.",
       "Für den Ringerder im Erdreich wird nichtrostender Stahl (z. B. Werkstoff 1.4571) verwendet.",
       "In der Bodenplatte wird zusätzlich ein Funktionspotentialausgleichsleiter verlegt und mit dem Ringerder verbunden.",
-      "Feuerverzinkter Bandstahl darf direkt im Erdreich als Ringerder verlegt werden."
+      "Feuerverzinkter Bandstahl darf direkt im Erdreich als Ringerder verlegt werden.",
+      "Der Erder wird als Ringerder außerhalb der Dämmung im Erdreich verlegt."
     ],
-    "richtig": [0, 1, 2],
+    "richtig": [
+      0,
+      1,
+      3
+    ],
     "erklaerung": "Bei Perimeterdämmung (oder z. B. WU-Beton) hat der Erder in der Bodenplatte keinen ausreichenden Erdkontakt. Darum: Ringerder außerhalb im Erdreich aus korrosionsbeständigem nichtrostendem Stahl, zusätzlich ein Funktionspotentialausgleichsleiter in der Bodenplatte (Maschenweite max. 20 m × 20 m), mehrfach mit dem Ringerder verbunden. Verzinkter Stahl korrodiert im Erdreich und ist dort nicht zulässig. Stand prüfen.",
     "quelle": "DIN 18014",
     "schwierigkeit": 2,
@@ -45,11 +51,265 @@
     "unterthema": "Schutzpotentialausgleich",
     "typ": "einfach",
     "frage": "Welchen Mindestquerschnitt muss ein Schutzpotentialausgleichsleiter aus Kupfer zur Haupterdungsschiene haben?",
-    "antworten": ["2,5 mm²", "4 mm²", "6 mm²", "16 mm²"],
-    "richtig": [2],
+    "antworten": [
+      "2,5 mm²",
+      "4 mm²",
+      "6 mm²",
+      "16 mm²"
+    ],
+    "richtig": [
+      2
+    ],
     "erklaerung": "Nach DIN VDE 0100-540 mindestens 6 mm² Cu (16 mm² Al, 50 mm² Stahl). Zusätzlich gilt: mindestens halb so groß wie der größte Schutzleiter der Anlage, wobei 25 mm² Cu nicht überschritten werden müssen.",
     "quelle": "DIN VDE 0100-540",
     "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-004",
+    "thema": "hausanschluss",
+    "unterthema": "DIN 18012",
+    "typ": "einfach",
+    "frage": "Wo muss nach DIN 18012 ein Hausanschlussraum liegen?",
+    "antworten": [
+      "Im Dachgeschoss, damit die Anschlusseinrichtungen vor Feuchtigkeit und Hochwasser geschützt sind",
+      "In einer der Wohnungen, damit der jeweilige Mieter jederzeit Zugriff auf die Hauptsicherungen hat",
+      "An beliebiger Stelle im Gebäude, solange der Raum abschließbar und ausreichend beleuchtet ist",
+      "An der Außenwand, durch die die Anschlussleitungen eingeführt werden, und über allgemein zugängliche Räume erreichbar"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Der Hausanschlussraum soll an der Außenwand liegen, durch die die Anschlussleitungen ins Gebäude kommen, und über allgemein zugängliche Räume (z. B. Treppenraum, Kellerflur) oder direkt von außen erreichbar sein – für alle Versorger und ohne Zugang über Wohnungen. Stand prüfen.",
+    "quelle": "DIN 18012",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-005",
+    "thema": "hausanschluss",
+    "unterthema": "DIN 18012",
+    "typ": "einfach",
+    "frage": "Welche freie Bedien- und Arbeitsfläche ist vor Hausanschlusseinrichtungen mindestens vorzusehen?",
+    "antworten": [
+      "0,60 m Tiefe",
+      "0,80 m Tiefe",
+      "1,20 m Tiefe",
+      "2,00 m Tiefe"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Vor Hausanschlusseinrichtungen wie dem Hausanschlusskasten ist eine Bedien- und Arbeitsfläche von mindestens 1,20 m Tiefe freizuhalten, damit dort sicher gearbeitet werden kann. Stand prüfen.",
+    "quelle": "DIN 18012",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-006",
+    "thema": "hausanschluss",
+    "unterthema": "Fundamenterder DIN 18014",
+    "typ": "einfach",
+    "frage": "Welche Mindestabmessungen hat ein Fundamenterder aus Stahl, der im Beton liegt?",
+    "antworten": [
+      "Kupferseil mit 6 mm²",
+      "Rundstahl mit 6 mm Durchmesser oder Bandstahl 20 mm × 2 mm",
+      "Rundstahl mit 10 mm Durchmesser oder Bandstahl 30 mm × 3,5 mm",
+      "Es gibt keine Vorgabe, Hauptsache durchgehend verbunden"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "DIN 18014 nennt für den Fundamenterder Rundstahl mit mindestens 10 mm Durchmesser oder Bandstahl mit mindestens 30 mm × 3,5 mm; im Beton darf der Stahl blank oder verzinkt sein. Stand prüfen.",
+    "quelle": "DIN 18014",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-007",
+    "thema": "hausanschluss",
+    "unterthema": "Fundamenterder DIN 18014",
+    "typ": "mehrfach",
+    "frage": "Welche Aussagen zur Ausführung eines Fundamenterders nach DIN 18014 treffen zu?",
+    "antworten": [
+      "Elektrisch leitende Verbindungen werden mit dafür geeigneten Verbindungsteilen (z. B. Klemmverbindern) oder durch Schweißen hergestellt.",
+      "Er muss allseitig von mindestens 5 cm Beton umgeben sein.",
+      "Rödeldraht genügt als elektrisch leitende Verbindung.",
+      "Er wird als geschlossener Ring verlegt, bei großen Gebäuden mit Maschen von höchstens 20 m × 20 m."
+    ],
+    "richtig": [
+      0,
+      1,
+      3
+    ],
+    "erklaerung": "Der Fundamenterder ist ein geschlossener Ring im Fundament der Außenwände bzw. in der Bodenplatte; die Maschenweite darf 20 m × 20 m nicht überschreiten. Mindestens 5 cm Betonüberdeckung schützen ihn vor Korrosion. Verbindungen müssen dauerhaft leitfähig sein (geeignete Verbindungsteile oder Schweißen) – Rödeldraht dient nur der Lagesicherung. Stand prüfen.",
+    "quelle": "DIN 18014",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-008",
+    "thema": "hausanschluss",
+    "unterthema": "Fundamenterder DIN 18014",
+    "typ": "einfach",
+    "frage": "Wie lang muss die Anschlussfahne des Fundamenterders im Hausanschlussraum mindestens sein?",
+    "antworten": [
+      "0,3 m",
+      "0,5 m",
+      "1,5 m",
+      "5 m"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Die Anschlussfahne zur Haupterdungsschiene muss ab der Eintrittsstelle in den Raum mindestens 1,5 m lang sein, damit sie sauber angeschlossen werden kann. Während der Bauphase ist sie vor Beschädigung zu schützen. Stand prüfen.",
+    "quelle": "DIN 18014",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-009",
+    "thema": "hausanschluss",
+    "unterthema": "Fundamenterder DIN 18014",
+    "typ": "einfach",
+    "frage": "Wer plant und errichtet einen Fundamenterder nach DIN 18014 bzw. beaufsichtigt seine Errichtung?",
+    "antworten": [
+      "Der Bauherr selbst, Fachkunde ist nicht erforderlich",
+      "Der Messstellenbetreiber",
+      "Ausschließlich der Netzbetreiber",
+      "Eine Elektrofachkraft oder Blitzschutz-Fachkraft"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "DIN 18014 verlangt, dass Planung und Ausführung von einer Elektrofachkraft oder Blitzschutz-Fachkraft vorgenommen oder beaufsichtigt werden – auch wenn der Rohbauer den Stahl verlegt. Dazu gehören eine Dokumentation (z. B. Fotos, Plan) und eine Durchgangsmessung. Stand prüfen.",
+    "quelle": "DIN 18014",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-010",
+    "thema": "hausanschluss",
+    "unterthema": "Schutzpotentialausgleich",
+    "typ": "mehrfach",
+    "frage": "Welche Teile werden über den Schutzpotentialausgleich mit der Haupterdungsschiene verbunden?",
+    "antworten": [
+      "Metallene Wasser- und Heizungsrohre sowie die Gasinnenleitung",
+      "Anschlussfahne des Fundamenterders bzw. Erdungsleiter",
+      "Die Neutralleiter aller Endstromkreise",
+      "Hauptschutzleiter der Anlage"
+    ],
+    "richtig": [
+      0,
+      1,
+      3
+    ],
+    "erklaerung": "Über die Haupterdungsschiene werden Erder, Hauptschutzleiter und alle fremden leitfähigen Teile, die ins Gebäude führen, auf gleiches Potential gebracht. Neutralleiter von Endstromkreisen gehören nicht an die Haupterdungsschiene – der Neutralleiter ist ein aktiver Leiter.",
+    "quelle": "DIN VDE 0100-410; DIN VDE 0100-540",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-011",
+    "thema": "hausanschluss",
+    "unterthema": "Schutzpotentialausgleich",
+    "typ": "einfach",
+    "frage": "Wo wird der Schutzpotentialausgleichsleiter an eine Gasinnenleitung mit Isolierstück angeschlossen?",
+    "antworten": [
+      "Hausseitig hinter dem Isolierstück",
+      "Gar nicht, Gasleitungen werden nie einbezogen",
+      "Direkt am Gehäuse des Gaszählers",
+      "Netzseitig vor dem Isolierstück"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Das Isolierstück trennt die Gasinnenleitung elektrisch von der Leitung des Gasnetzes. Der Schutzpotentialausgleich wird an der Innenleitung hinter dem Isolierstück (Hausseite) angeschlossen, damit kein Strom über die Gasnetzleitung fließt.",
+    "quelle": "DIN VDE 0100-540; DVGW-TRGI",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-012",
+    "thema": "hausanschluss",
+    "unterthema": "Hauseinführung",
+    "typ": "einfach",
+    "frage": "Welche Anforderung gilt für Hauseinführungen von Anschlussleitungen?",
+    "antworten": [
+      "Sie dürfen nur oberirdisch erfolgen.",
+      "Sie müssen belüftet sein, damit Kondenswasser abtrocknen kann.",
+      "Sie müssen gas- und wasserdicht sein.",
+      "Es gibt keine Anforderungen, das regelt der Rohbauer."
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Hauseinführungen müssen gas- und wasserdicht sein, damit weder Wasser noch Gas (z. B. aus einer beschädigten Gasleitung im Erdreich) ins Gebäude gelangen. Üblich sind geprüfte Hauseinführungssysteme, oft als Mehrsparten-Hauseinführung.",
+    "quelle": "DIN 18012",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-k01",
+    "thema": "hausanschluss",
+    "unterthema": "Schutzpotentialausgleich",
+    "typ": "karte",
+    "frage": "Erklären Sie Zweck und Aufbau des Schutzpotentialausgleichs über die Haupterdungsschiene.",
+    "antworten": [],
+    "richtig": "Zweck: gefährliche Spannungsunterschiede zwischen gleichzeitig berührbaren leitfähigen Teilen verhindern – z. B. wenn bei einem Fehler Spannung auf eine Rohrleitung verschleppt wird.\nAufbau: Haupterdungsschiene, meist im Hausanschlussraum. Daran angeschlossen:\n• Erdungsleiter bzw. Anschlussfahne des Fundamenterders\n• Hauptschutzleiter (PE bzw. PEN der Hauptstromversorgung)\n• metallene Rohrleitungen: Wasser, Heizung, Gasinnenleitung (hinter dem Isolierstück)\n• Metallteile der Gebäudekonstruktion, soweit möglich\n• Schirme von Telekommunikationskabeln und Antennenanlagen nach deren Regeln\nQuerschnitt der Schutzpotentialausgleichsleiter: mindestens 6 mm² Cu bzw. halber Querschnitt des größten Schutzleiters; mehr als 25 mm² Cu sind nicht nötig.",
+    "erklaerung": "Fachgespräch: Zweck, angeschlossene Teile und Mindestquerschnitte nennen.",
+    "quelle": "DIN VDE 0100-410; DIN VDE 0100-540",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-k02",
+    "thema": "hausanschluss",
+    "unterthema": "Fundamenterder DIN 18014",
+    "typ": "karte",
+    "frage": "Was ist bei einem Fundamenterder nach DIN 18014 in Planung, Ausführung und Dokumentation zu beachten?",
+    "antworten": [],
+    "richtig": "Planung: Erder und Anschlussteile in den Bauplänen festlegen; bei Perimeterdämmung oder WU-Beton einen Ringerder außerhalb aus nichtrostendem Stahl plus Funktionspotentialausgleichsleiter in der Bodenplatte vorsehen.\nAusführung: geschlossener Ring, Maschen höchstens 20 m × 20 m, allseitig mindestens 5 cm Beton, dauerhafte Verbindungen (geeignete Verbindungsteile wie Klemmverbinder, oder Schweißen), Anschlussfahnen mindestens 1,5 m lang, Durchführungen abdichten.\nDokumentation: Pläne, Fotos vor dem Betonieren, Durchgangsmessung zwischen den Anschlussteilen mit Protokoll, Übergabe an den Bauherrn.\nVerantwortung: Eine Elektrofachkraft oder Blitzschutz-Fachkraft plant, errichtet oder beaufsichtigt.",
+    "erklaerung": "Fachgespräch: die drei Phasen Planung – Ausführung – Dokumentation erläutern. Werte mit der aktuellen DIN 18014 abgleichen – Stand prüfen.",
+    "quelle": "DIN 18014",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-k03",
+    "thema": "hausanschluss",
+    "unterthema": "DIN 18012",
+    "typ": "karte",
+    "frage": "Welche Arten von Hausanschlusseinrichtungen kennt die DIN 18012, und wann wird welche verwendet?",
+    "antworten": [],
+    "richtig": "• Hausanschlussraum: eigener Raum an der Außenwand, über allgemein zugängliche Bereiche erreichbar – erforderlich in Gebäuden mit mehr als vier Wohneinheiten.\n• Hausanschlusswand: Wand in einem allgemein zugänglichen Raum, auf der die Anschlusseinrichtungen montiert werden – für Gebäude mit bis zu vier Wohneinheiten.\n• Hausanschlussnische: Nische, vor allem für nicht unterkellerte Einfamilienhäuser.\nIn allen Fällen: Platz für die Anschlusseinrichtungen aller Sparten (Strom, Gas, Wasser, Telekommunikation), freie Bedien- und Arbeitsfläche, Haupterdungsschiene in der Nähe, Schutz vor Beschädigung.",
+    "erklaerung": "Fachgespräch: Varianten nennen und zuordnen. Maße und Einsatzgrenzen mit der aktuellen Norm abgleichen – Stand prüfen.",
+    "quelle": "DIN 18012",
+    "schwierigkeit": 2,
     "bild": null,
     "geprueft": false,
     "stand": "2026-10"

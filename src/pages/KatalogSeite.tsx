@@ -19,46 +19,55 @@ import { FRAGE_TYPEN, THEMEN, type ThemaId } from '../types';
 /** Höchstzahl Fragen, wenn man die Treffer als Lernrunde startet */
 const MAX_TREFFER_LERNEN = 100;
 
+const alsUrl = (f: KatalogFilter) => filterZuParams(f).toString();
+
 export function KatalogSeite() {
   const { fragen, fortschritte } = useDaten();
   const navigate = useNavigate();
   const [params, setParams] = useSearchParams();
-  const filter = filterAusParams(params);
-  // Das Suchfeld hat eigenen Zustand (flüssiges Tippen) und wird verzögert in die URL geschrieben.
-  const [suche, setSuche] = useState(filter.suche);
-  /** zuletzt von uns in die URL geschriebener Suchtext */
-  const geschrieben = useRef(filter.suche);
+  // Der Filter lebt im React-Zustand: schnelle Änderungen hintereinander bauen sauber aufeinander auf.
+  // In die URL wird er nur gespiegelt, damit „Zurück“ aus der Detailansicht ihn wiederherstellt.
+  const [filter, setFilter] = useState<KatalogFilter>(() => filterAusParams(params));
+  /**
+   * Von uns geschriebene URL-Zustände, die der Router noch nicht alle gemeldet hat. Er meldet
+   * sie verzögert, bei schnellen Änderungen also kurz noch einen älteren Stand – der ist kein
+   * Wechsel „von außen“ und darf den Filter nicht zurückdrehen.
+   */
+  const unterwegs = useRef(new Set<string>());
+  const zuletztGeschrieben = useRef(alsUrl(filter));
   const [filterOffen, setFilterOffen] = useState(anzahlAktiverFilter(filter) > 0);
   const aktiv = anzahlAktiverFilter(filter);
 
-  const setze = (aenderung: Partial<KatalogFilter>) => {
-    const neu = { ...filter, suche, ...aenderung };
-    geschrieben.current = neu.suche;
-    setParams(filterZuParams(neu), { replace: true });
-  };
+  const setze = (aenderung: Partial<KatalogFilter>) => setFilter((alt) => ({ ...alt, ...aenderung }));
 
+  // Filter → URL
   useEffect(() => {
-    if (suche === filter.suche) return;
-    const t = setTimeout(() => setze({ suche }), 300);
-    return () => clearTimeout(t);
-  }, [suche]); // nur auf Eingaben reagieren, nicht auf Filteränderungen
+    const ziel = alsUrl(filter);
+    if (ziel === zuletztGeschrieben.current) return;
+    zuletztGeschrieben.current = ziel;
+    unterwegs.current.add(ziel);
+    setParams(new URLSearchParams(ziel), { replace: true });
+  }, [filter]); // nur bei Filteränderungen schreiben
 
-  // Suchtext von außen geändert (z. B. Link oder Adresszeile) → ins Suchfeld übernehmen
+  // URL von außen geändert (z. B. Link oder Adresszeile) → Filter übernehmen
   useEffect(() => {
-    if (filter.suche !== geschrieben.current) {
-      geschrieben.current = filter.suche;
-      setSuche(filter.suche);
+    const ist = alsUrl(filterAusParams(params)); // vereinheitlicht, z. B. andere Reihenfolge
+    if (ist === zuletztGeschrieben.current) {
+      unterwegs.current.clear(); // Router ist auf dem neuesten Stand
+      return;
     }
-  }, [filter.suche]);
+    if (unterwegs.current.has(ist)) return; // älterer eigener Stand, Router hinkt hinterher
+    unterwegs.current.clear();
+    zuletztGeschrieben.current = ist;
+    setFilter(filterAusParams(params));
+  }, [params]);
 
-  const treffer = useMemo(
-    () => filtereFragen(fragen, fortschritte, { ...filter, suche }),
-    [fragen, fortschritte, params, suche], // filter ergibt sich aus params
-  );
+  const treffer = useMemo(() => filtereFragen(fragen, fortschritte, filter), [fragen, fortschritte, filter]);
 
   const trefferLernen = () => {
     const ids = mischen(treffer.map((f) => f.id)).slice(0, MAX_TREFFER_LERNEN);
-    const zurueck = `/mehr/katalog${params.toString() ? `?${params}` : ''}`;
+    const query = alsUrl(filter);
+    const zurueck = `/mehr/katalog${query ? `?${query}` : ''}`;
     navigate(`/sitzung?${new URLSearchParams({ ids: ids.join(','), zurueck })}`);
   };
 
@@ -78,8 +87,8 @@ export function KatalogSeite() {
       <div className="flex gap-2">
         <input
           type="search"
-          value={suche}
-          onChange={(e) => setSuche(e.target.value)}
+          value={filter.suche}
+          onChange={(e) => setze({ suche: e.target.value })}
           placeholder="Suchen, z. B. „RCD 30 mA“"
           aria-label="Volltextsuche"
           className="min-h-12 w-full min-w-0 rounded-2xl border border-slate-300 bg-white px-4 text-base dark:border-slate-700 dark:bg-slate-900"
@@ -167,7 +176,7 @@ export function KatalogSeite() {
             <button
               type="button"
               className="text-sm font-medium text-slate-600 underline dark:text-slate-300"
-              onClick={() => setParams(filterZuParams({ ...LEERER_FILTER, suche }), { replace: true })}
+              onClick={() => setFilter((alt) => ({ ...LEERER_FILTER, suche: alt.suche }))}
             >
               Filter zurücksetzen
             </button>
