@@ -2,17 +2,27 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { MITGELIEFERTE_FRAGEN } from '../data/fragen';
 import { baueAbzeichenKontext, neueAbzeichen, type Abzeichen } from '../logic/abzeichen';
 import { naechsterFortschritt, type Ergebnis } from '../logic/leitner';
-import { verarbeiteAntwort, type AntwortEreignis, type Level } from '../logic/motivation';
-import type { Fortschritt, GespeicherteFrage, KartenBewertung, Profil, SimulationErgebnis } from '../types';
+import { verarbeiteAntwort, verbucheSimulation, type AntwortEreignis, type Level, type SimulationsEreignis } from '../logic/motivation';
+import { endeZeitpunkt, werteSimulationAus } from '../logic/simulation';
+import type {
+  Fortschritt,
+  GespeicherteFrage,
+  KartenBewertung,
+  LaufendeSimulation,
+  Profil,
+  SimulationErgebnis,
+} from '../types';
 import {
   alleFortschritte,
   alleFragen,
   alleSimulationen,
   holeFortschritt,
   holeProfil,
+  loescheLaufendeSimulation,
   oeffneDb,
   speichereFortschritt,
   speichereProfil,
+  speichereSimulation,
   synchronisiereFragen,
   type Db,
 } from './db';
@@ -37,11 +47,19 @@ export interface AntwortRueckmeldung {
   abzeichen: Abzeichen[];
 }
 
+export interface SimulationsRueckmeldung {
+  ergebnis: SimulationErgebnis;
+  ereignis: SimulationsEreignis;
+  abzeichen: Abzeichen[];
+}
+
 interface Daten extends Zustand {
   /** Lädt Fragen, Fortschritt, Profil und Simulationen neu aus der Datenbank. */
   neuLaden: () => Promise<void>;
   /** Speichert eine Antwort: Lernstand der Frage, XP, Serie, Tagesziel, Abzeichen. */
   antwortSpeichern: (id: string, ergebnis: Ergebnis, karte?: KartenBewertung) => Promise<AntwortRueckmeldung>;
+  /** Wertet eine Simulation aus und speichert Ergebnis, Lernstand, XP und Abzeichen. */
+  simulationSpeichern: (laufend: LaufendeSimulation) => Promise<SimulationsRueckmeldung>;
   /** Ändert Markierung, Notiz, Fehlermeldung o. Ä. einer Frage. */
   aendereFortschritt: (id: string, aenderung: Partial<Omit<Fortschritt, 'id'>>) => Promise<void>;
   aendereProfil: (aenderung: Partial<Omit<Profil, 'id'>>) => Promise<void>;
@@ -136,10 +154,50 @@ export function DatenProvider({ children }: { children: ReactNode }) {
     return { fortschritt, ereignis, abzeichen };
   };
 
+  const simulationSpeichern: Daten['simulationSpeichern'] = async (laufend) => {
+    const jetzt = Date.now();
+    const stand = aktuell.current!;
+    const nachId = new Map(stand.fragen.map((f) => [f.id, f]));
+    // bei abgelaufener Zeit zählt das Ende des Zeitlimits, auch wenn die App zwischendurch zu war
+    const ergebnisOhneId = werteSimulationAus(laufend, nachId, Math.min(jetzt, endeZeitpunkt(laufend)));
+
+    // Lernstand: beantwortete Fragen zählen wie im Lernmodus, unbeantwortete bleiben unverändert
+    const fortschritte = new Map(stand.fortschritte);
+    for (const d of ergebnisOhneId.details) {
+      if (d.antwort === null) continue;
+      const f = naechsterFortschritt(await holeFortschritt(db, d.id), d.richtig ? 'richtig' : 'falsch', jetzt);
+      await speichereFortschritt(db, f);
+      fortschritte.set(d.id, f);
+    }
+    const ergebnis = { ...ergebnisOhneId, id: await speichereSimulation(db, ergebnisOhneId) };
+    const simulationen = [ergebnis, ...stand.simulationen];
+
+    const { profil: nachSimulation, ereignis } = verbucheSimulation({
+      profil: await holeProfil(db),
+      beantwortet: ergebnis.anzahl - ergebnis.unbeantwortet,
+      bestanden: ergebnis.bestanden,
+      jetzt,
+    });
+    const abzeichen = neueAbzeichen(
+      baueAbzeichenKontext(stand.fragen, fortschritte, nachSimulation, simulationen),
+      nachSimulation.abzeichen,
+    );
+    const profil = { ...nachSimulation, abzeichen: [...nachSimulation.abzeichen, ...abzeichen.map((a) => a.id)] };
+    await speichereProfil(db, profil);
+    await loescheLaufendeSimulation(db);
+    setZustand((z) => z && { ...z, profil, fortschritte, simulationen });
+
+    if (ereignis.tageszielErreicht) zeigeHinweis('🎯', 'Tagesziel erreicht! +50 XP');
+    for (const a of abzeichen) zeigeHinweis(a.icon, `Neues Abzeichen: ${a.titel}`);
+    if (ereignis.aufstieg) setAufstieg(ereignis.levelNachher);
+    return { ergebnis, ereignis, abzeichen };
+  };
+
   const daten: Daten = {
     ...zustand,
     neuLaden: () => laden(db),
     antwortSpeichern,
+    simulationSpeichern,
     aendereFortschritt: async (id, aenderung) => {
       const f = { ...(await holeFortschritt(db, id)), ...aenderung };
       await speichereFortschritt(db, f);

@@ -5,6 +5,7 @@ import {
   type Fortschritt,
   type Frage,
   type GespeicherteFrage,
+  type LaufendeSimulation,
   type Profil,
   type SimulationErgebnis,
 } from '../types';
@@ -122,4 +123,18 @@ export async function speichereSimulation(db: Db, s: SimulationErgebnis): Promis
 
 export async function alleSimulationen(db: Db): Promise<SimulationErgebnis[]> {
   return (await db.getAll('simulationen')).sort((a, b) => b.datum - a.datum);
+}
+
+// ---------- Laufende Simulation (übersteht das Schließen der App) ----------
+
+export async function holeLaufendeSimulation(db: Db): Promise<LaufendeSimulation | null> {
+  return ((await db.get('meta', 'laufendeSimulation'))?.wert as LaufendeSimulation | undefined) ?? null;
+}
+
+export async function speichereLaufendeSimulation(db: Db, s: LaufendeSimulation): Promise<void> {
+  await db.put('meta', { key: 'laufendeSimulation', wert: s });
+}
+
+export async function loescheLaufendeSimulation(db: Db): Promise<void> {
+  await db.delete('meta', 'laufendeSimulation');
 }

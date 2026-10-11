@@ -107,6 +107,15 @@ export interface Profil {
   nurGeprueft: boolean;
 }
 
+/** Antwort in einer Simulation: gewählte Original-Indizes bzw. eingegebener Text */
+export type SimulationsAntwort = number[] | string;
+
+export interface SimulationsDetail {
+  id: string;
+  antwort: SimulationsAntwort | null;
+  richtig: boolean;
+}
+
 export interface SimulationErgebnis {
   id?: number;
   datum: number;
@@ -114,10 +123,27 @@ export interface SimulationErgebnis {
   dauerSek: number;
   anzahl: number;
   richtig: number;
+  /** Prozent richtig, auf eine Nachkommastelle abgerundet */
   prozent: number;
   bestanden: boolean;
+  /** unbeantwortete Fragen (zählen als falsch) */
+  unbeantwortet: number;
   jeThema: Partial<Record<ThemaId, { richtig: number; gesamt: number }>>;
+  /** falsch oder unbeantwortet */
   falscheIds: string[];
+  /** je Frage deine Antwort, für die spätere Durchsicht */
+  details: SimulationsDetail[];
+}
+
+/** Zwischenstand einer laufenden Simulation (übersteht das Schließen der App) */
+export interface LaufendeSimulation {
+  start: number;
+  einstellungen: SimulationsEinstellungen;
+  fragen: { id: string; reihenfolge: number[] }[];
+  antworten: Record<string, SimulationsAntwort>;
+  /** zum späteren Nachsehen gemerkt */
+  gemerkt: string[];
+  pos: number;
 }
 
 export const STANDARD_PROFIL: Profil = {

@@ -9,7 +9,7 @@ const frage = (id: string, thema: ThemaId): Frage => ({
 const fp = (id: string, s: LernStatus): Fortschritt => ({ ...neuerFortschritt(id), status: s });
 const sim = (prozent: number, datum: number): SimulationErgebnis => ({
   datum, prozent, einstellungen: { anzahl: 30, minuten: 60, bestehensgrenze: 70 }, dauerSek: 1, anzahl: 30,
-  richtig: 0, bestanden: prozent >= 70, jeThema: {}, falscheIds: [],
+  richtig: 0, bestanden: prozent >= 70, unbeantwortet: 0, jeThema: {}, falscheIds: [], details: [],
 });
 
 describe('Prüfungsreife', () => {

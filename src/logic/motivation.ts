@@ -120,17 +120,15 @@ export function verarbeiteAntwort(e: {
   const heuteSchonRichtig =
     e.vorher.zuletzt !== null && tagSchluessel(e.vorher.zuletzt) === heuteKey && e.vorher.richtigInFolge > 0;
   const xp = xpFuerAntwort({ schwierigkeit: e.schwierigkeit, ergebnis, serie, heuteSchonRichtig });
-  const heute = (profil.lernTage[heuteKey] ?? 0) + 1;
-  const tageszielErreicht = heute >= profil.tagesziel && !profil.zielErreichtTage.includes(heuteKey);
+  const tag = bucheLerntag(profil, 1, jetzt);
+  const { heute, tageszielErreicht } = tag;
   const xpGesamt = xp.gesamt + (tageszielErreicht ? XP_TAGESZIEL : 0);
 
   const neu: Profil = {
-    ...profil,
+    ...tag.profil,
     xp: profil.xp + xpGesamt,
     serieAktuell: serie,
     bestSerie: Math.max(profil.bestSerie, serie),
-    lernTage: { ...profil.lernTage, [heuteKey]: heute },
-    zielErreichtTage: tageszielErreicht ? [...profil.zielErreichtTage, heuteKey] : profil.zielErreichtTage,
   };
   const levelVorher = levelFuerXp(profil.xp);
   const levelNachher = levelFuerXp(neu.xp);
@@ -142,6 +140,75 @@ export function verarbeiteAntwort(e: {
       serie,
       heute,
       tageszielErreicht,
+      levelVorher,
+      levelNachher,
+      aufstieg: levelNachher.nr > levelVorher.nr,
+    },
+  };
+}
+
+/** Zählt `anzahl` beantwortete Fragen zum heutigen Lerntag und prüft das Tagesziel. */
+export function bucheLerntag(
+  profil: Profil,
+  anzahl: number,
+  jetzt: number,
+): { profil: Profil; heute: number; tageszielErreicht: boolean } {
+  const heuteKey = tagSchluessel(jetzt);
+  const heute = (profil.lernTage[heuteKey] ?? 0) + anzahl;
+  const tageszielErreicht = anzahl > 0 && heute >= profil.tagesziel && !profil.zielErreichtTage.includes(heuteKey);
+  return {
+    heute,
+    tageszielErreicht,
+    profil: {
+      ...profil,
+      lernTage: anzahl > 0 ? { ...profil.lernTage, [heuteKey]: heute } : profil.lernTage,
+      zielErreichtTage: tageszielErreicht ? [...profil.zielErreichtTage, heuteKey] : profil.zielErreichtTage,
+    },
+  };
+}
+
+// ---------- Prüfungssimulation ----------
+
+export const XP_SIMULATION_ABGESCHLOSSEN = 25;
+export const XP_SIMULATION_BESTANDEN = 100;
+
+export interface SimulationsEreignis {
+  xpAbgeschlossen: number;
+  xpBestanden: number;
+  xpTagesziel: number;
+  xpGesamt: number;
+  tageszielErreicht: boolean;
+  levelVorher: Level;
+  levelNachher: Level;
+  aufstieg: boolean;
+}
+
+/**
+ * Bucht eine abgeschlossene Simulation: XP gibt es für die Simulation als Ganzes
+ * (+25 abgeschlossen, +100 bestanden), nicht je Antwort. Beantwortete Fragen zählen zum Tagesziel.
+ */
+export function verbucheSimulation(e: {
+  profil: Profil;
+  beantwortet: number;
+  bestanden: boolean;
+  jetzt: number;
+}): { profil: Profil; ereignis: SimulationsEreignis } {
+  const tag = bucheLerntag(e.profil, e.beantwortet, e.jetzt);
+  const xpAbgeschlossen = XP_SIMULATION_ABGESCHLOSSEN;
+  const xpBestanden = e.bestanden ? XP_SIMULATION_BESTANDEN : 0;
+  const xpTagesziel = tag.tageszielErreicht ? XP_TAGESZIEL : 0;
+  const xpGesamt = xpAbgeschlossen + xpBestanden + xpTagesziel;
+  const profil = { ...tag.profil, xp: e.profil.xp + xpGesamt };
+  const levelVorher = levelFuerXp(e.profil.xp);
+  const levelNachher = levelFuerXp(profil.xp);
+  return {
+    profil,
+    ereignis: {
+      xpAbgeschlossen,
+      xpBestanden,
+      xpTagesziel,
+      xpGesamt,
+      tageszielErreicht: tag.tageszielErreicht,
       levelVorher,
       levelNachher,
       aufstieg: levelNachher.nr > levelVorher.nr,

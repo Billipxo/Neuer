@@ -1,8 +1,9 @@
 import 'fake-indexeddb/auto';
 import { describe, expect, it } from 'vitest';
 import {
-  alleFragen, alleSimulationen, holeFortschritt, holeProfil, loescheFrage, oeffneDb,
-  speichereFortschritt, speichereFrage, speichereProfil, speichereSimulation, synchronisiereFragen,
+  alleFragen, alleSimulationen, holeFortschritt, holeLaufendeSimulation, holeProfil, loescheFrage,
+  loescheLaufendeSimulation, oeffneDb, speichereFortschritt, speichereFrage, speichereLaufendeSimulation,
+  speichereProfil, speichereSimulation, synchronisiereFragen,
 } from './db';
 import type { Frage } from '../types';
 
@@ -60,9 +61,19 @@ describe('Datenbank', () => {
 
   it('speichert Simulationen, neueste zuerst', async () => {
     const db = await neueDb();
-    const s = { einstellungen: { anzahl: 1, minuten: 1, bestehensgrenze: 70 }, dauerSek: 1, anzahl: 1, richtig: 1, prozent: 100, bestanden: true, jeThema: {}, falscheIds: [] };
+    const s = { einstellungen: { anzahl: 1, minuten: 1, bestehensgrenze: 70 }, dauerSek: 1, anzahl: 1, richtig: 1, prozent: 100, bestanden: true, unbeantwortet: 0, jeThema: {}, falscheIds: [], details: [] };
     await speichereSimulation(db, { ...s, datum: 1 });
     await speichereSimulation(db, { ...s, datum: 2 });
     expect((await alleSimulationen(db)).map((x) => x.datum)).toEqual([2, 1]);
+  });
+
+  it('merkt sich eine laufende Simulation bis zum Löschen', async () => {
+    const db = await neueDb();
+    expect(await holeLaufendeSimulation(db)).toBeNull();
+    const laufend = { start: 5, einstellungen: { anzahl: 2, minuten: 10, bestehensgrenze: 70 }, fragen: [{ id: 'a', reihenfolge: [1, 0] }], antworten: { a: [1] }, gemerkt: ['a'], pos: 0 };
+    await speichereLaufendeSimulation(db, laufend);
+    expect(await holeLaufendeSimulation(db)).toEqual(laufend);
+    await loescheLaufendeSimulation(db);
+    expect(await holeLaufendeSimulation(db)).toBeNull();
   });
 });

@@ -15,6 +15,7 @@ import {
   levelStand,
 } from '../logic/motivation';
 import { OHNE_SIMULATION_FAKTOR, pruefungsreife } from '../logic/reife';
+import { formatDatumKurz } from '../logic/format';
 import { statusVerteilung } from '../logic/sitzung';
 import { THEMEN } from '../types';
 
@@ -188,11 +189,46 @@ export function StatistikSeite() {
 
       {/* Simulationen (Schritt 5) */}
       <h2 className="mt-6 mb-2 text-sm font-semibold tracking-wide text-slate-500 uppercase">Prüfungssimulationen</h2>
-      <Karte>
-        <p className="text-sm text-slate-600 dark:text-slate-400">
-          {simulationen.length ? `${simulationen.length} Simulationen` : 'Noch keine Prüfungssimulation gemacht.'}
-        </p>
-      </Karte>
+      {simulationen.length === 0 ? (
+        <Karte>
+          <p className="text-sm text-slate-600 dark:text-slate-400">Noch keine Prüfungssimulation gemacht.</p>
+          <Link to="/pruefung" className="mt-2 inline-block text-sm font-medium underline">
+            Jetzt eine Simulation starten
+          </Link>
+        </Karte>
+      ) : (
+        <>
+          <div className="grid grid-cols-3 gap-3">
+            <Kachel label="Gemacht" wert={simulationen.length} />
+            <Kachel label="Bestanden" wert={simulationen.filter((s) => s.bestanden).length} />
+            <Kachel label="Beste" wert={`${Math.max(...simulationen.map((s) => s.prozent)).toLocaleString('de-DE')} %`} />
+          </div>
+          <Karte className="mt-3">
+            <h3 className="mb-2 text-sm font-medium text-slate-600 dark:text-slate-400">Letzte Simulationen (neueste oben)</h3>
+            <ul className="space-y-3">
+              {simulationen.slice(0, 5).map((s) => (
+                <li key={s.id}>
+                  <Link to={`/pruefung/ergebnis/${s.id}`} className="block">
+                    <div className="mb-1 flex items-baseline justify-between gap-3 text-sm">
+                      <span className="text-slate-600 dark:text-slate-400">{formatDatumKurz(s.datum)}</span>
+                      <span className="font-medium">
+                        {s.prozent.toLocaleString('de-DE')} % {s.bestanden ? '✓ bestanden' : '✗ nicht bestanden'}
+                      </span>
+                    </div>
+                    <Meter
+                      anteil={s.prozent / 100}
+                      label={`${s.prozent} %, Grenze ${s.einstellungen.bestehensgrenze} %`}
+                      markierung={s.einstellungen.bestehensgrenze / 100}
+                      hoehe="h-2"
+                    />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 text-xs text-slate-500 dark:text-slate-400">Der Strich markiert die Bestehensgrenze.</p>
+          </Karte>
+        </>
+      )}
 
       <details className="mt-6 rounded-2xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
         <summary className="cursor-pointer font-semibold">So bekommst du XP</summary>

@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
-import { Seite } from './components/Seite';
 import { useDaten } from './db/DatenContext';
 import { StartSeite } from './pages/StartSeite';
 import { KatalogSeite } from './pages/KatalogSeite';
@@ -12,6 +11,9 @@ import { MehrSeite } from './pages/MehrSeite';
 import { FrageDetailSeite } from './pages/FrageDetailSeite';
 import { EinstellungenSeite } from './pages/EinstellungenSeite';
 import { StatistikSeite } from './pages/StatistikSeite';
+import { PruefungSeite } from './pages/PruefungSeite';
+import { SimulationSeite } from './pages/SimulationSeite';
+import { SimulationErgebnisSeite } from './pages/SimulationErgebnisSeite';
 import { Hinweise, LevelAufstieg } from './components/Feier';
 
 function useTheme() {
@@ -28,17 +30,11 @@ function useTheme() {
   }, [profil.theme]);
 }
 
-const Folgt = ({ titel }: { titel: string }) => (
-  <Seite titel={titel}>
-    <p className="text-slate-500">Kommt in einem der nächsten Schritte.</p>
-  </Seite>
-);
-
 export function App() {
   useTheme();
   const { pathname } = useLocation();
-  // Während einer Lernrunde braucht es die Navigation nicht – mehr Platz für die Frage.
-  const mitNavigation = !pathname.startsWith('/sitzung');
+  // Während einer Lernrunde oder Prüfung braucht es die Navigation nicht – mehr Platz für die Frage.
+  const mitNavigation = !pathname.startsWith('/sitzung') && pathname !== '/pruefung/laeuft';
   return (
     <>
       <Routes>
@@ -46,7 +42,9 @@ export function App() {
         <Route path="/lernen" element={<LernenSeite />} />
         <Route path="/lernen/:thema" element={<ThemaSeite />} />
         <Route path="/sitzung" element={<SitzungSeite />} />
-        <Route path="/pruefung" element={<Folgt titel="Prüfungssimulation" />} />
+        <Route path="/pruefung" element={<PruefungSeite />} />
+        <Route path="/pruefung/laeuft" element={<SimulationSeite />} />
+        <Route path="/pruefung/ergebnis/:id" element={<SimulationErgebnisSeite />} />
         <Route path="/statistik" element={<StatistikSeite />} />
         <Route path="/mehr" element={<MehrSeite />} />
         <Route path="/mehr/katalog" element={<KatalogSeite />} />

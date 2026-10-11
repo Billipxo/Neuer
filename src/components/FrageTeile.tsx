@@ -16,7 +16,7 @@ export function themaTitel(id: string): string {
 }
 
 /** Kopfzeile einer Frage: Thema, Typ, Schwierigkeit, geprüft, Lernstatus */
-export function FrageKopf({ frage }: { frage: Frage }) {
+export function FrageKopf({ frage, ohneStatus = false }: { frage: Frage; ohneStatus?: boolean }) {
   const { fortschritte } = useDaten();
   const status = fortschritte.get(frage.id)?.status ?? 'neu';
   return (
@@ -27,7 +27,7 @@ export function FrageKopf({ frage }: { frage: Frage }) {
         {'★'.repeat(frage.schwierigkeit)}
         <span className="opacity-30">{'★'.repeat(3 - frage.schwierigkeit)}</span>
       </span>
-      <StatusPunkt status={status} />
+      {!ohneStatus && <StatusPunkt status={status} />}
       {!frage.geprueft && (
         <span className="rounded-full bg-amber-100 px-2 py-0.5 font-medium text-amber-800 dark:bg-amber-500/15 dark:text-amber-300">
           ungeprüft

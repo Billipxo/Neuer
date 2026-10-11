@@ -166,18 +166,38 @@ export function Chip({ aktiv, onClick, children }: { aktiv: boolean; onClick: ()
  * Fortschrittsbalken für einen Anteil (0–1) mit Spur in hellerer Stufe derselben Farbe.
  * Der Wert steht immer als Text daneben – der Balken ist Ergänzung, nicht einzige Quelle.
  */
-export function Meter({ anteil, label, hoehe = 'h-2.5' }: { anteil: number; label: string; hoehe?: string }) {
+export function Meter({
+  anteil,
+  label,
+  hoehe = 'h-2.5',
+  markierung,
+}: {
+  anteil: number;
+  label: string;
+  hoehe?: string;
+  /** optionale Markierung (0–1), z. B. die Bestehensgrenze */
+  markierung?: number;
+}) {
   const p = Math.max(0, Math.min(1, anteil));
   return (
-    <div
-      className={`w-full overflow-hidden rounded-full bg-daten-spur ${hoehe}`}
-      role="progressbar"
-      aria-label={label}
-      aria-valuemin={0}
-      aria-valuemax={100}
-      aria-valuenow={Math.round(p * 100)}
-    >
-      <div className="h-full rounded-full bg-daten transition-[width] duration-500" style={{ width: `${p * 100}%` }} />
+    <div className="relative">
+      <div
+        className={`w-full overflow-hidden rounded-full bg-daten-spur ${hoehe}`}
+        role="progressbar"
+        aria-label={label}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={Math.round(p * 100)}
+      >
+        <div className="h-full rounded-full bg-daten transition-[width] duration-500" style={{ width: `${p * 100}%` }} />
+      </div>
+      {markierung !== undefined && (
+        <div
+          aria-hidden
+          className="absolute -top-1 -bottom-1 w-[2px] -translate-x-1/2 rounded-full bg-slate-900 dark:bg-white"
+          style={{ left: `${Math.max(0, Math.min(1, markierung)) * 100}%` }}
+        />
+      )}
     </div>
   );
 }
@@ -203,5 +223,64 @@ export function Kachel({
       {zusatz && <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{zusatz}</p>}
       {children && <div className="mt-3">{children}</div>}
     </div>
+  );
+}
+
+/** Zahl mit −/+ einstellen (große Tasten) */
+export function Stepper({
+  titel,
+  text,
+  wert,
+  min,
+  max,
+  schritt,
+  einheit,
+  onChange,
+}: {
+  titel: string;
+  text?: ReactNode;
+  wert: number;
+  min: number;
+  max: number;
+  schritt: number;
+  einheit?: string;
+  onChange: (wert: number) => void;
+}) {
+  const runde = (w: number) => Math.min(max, Math.max(min, w));
+  const knopfKlassen =
+    'flex size-11 shrink-0 items-center justify-center rounded-full bg-slate-100 text-2xl font-bold disabled:opacity-40 dark:bg-slate-800';
+  return (
+    <div className="flex min-h-16 items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+      <span className="min-w-0 flex-1">
+        <span className="block font-medium">{titel}</span>
+        {text && <span className="block text-sm text-slate-500 dark:text-slate-400">{text}</span>}
+      </span>
+      <button type="button" className={knopfKlassen} aria-label={`${titel} verringern`} disabled={wert <= min} onClick={() => onChange(runde(wert - schritt))}>
+        −
+      </button>
+      <span className="min-w-12 text-center text-xl font-semibold tabular-nums" aria-live="polite">
+        {wert}
+        {einheit && <span className="block text-xs font-normal text-slate-500 dark:text-slate-400">{einheit}</span>}
+      </span>
+      <button type="button" className={knopfKlassen} aria-label={`${titel} erhöhen`} disabled={wert >= max} onClick={() => onChange(runde(wert + schritt))}>
+        +
+      </button>
+    </div>
+  );
+}
+
+/** Bestanden / nicht bestanden – Statusfarbe immer mit Symbol und Text */
+export function BestandenMarke({ bestanden, gross = false }: { bestanden: boolean; gross?: boolean }) {
+  return (
+    <span
+      className={`inline-flex items-center gap-1.5 rounded-full font-semibold ${gross ? 'px-4 py-1.5 text-lg' : 'px-2.5 py-0.5 text-sm'} ${
+        bestanden
+          ? 'bg-green-100 text-green-800 dark:bg-green-500/15 dark:text-green-300'
+          : 'bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300'
+      }`}
+    >
+      <span aria-hidden>{bestanden ? '✓' : '✗'}</span>
+      {bestanden ? 'Bestanden' : 'Nicht bestanden'}
+    </span>
   );
 }

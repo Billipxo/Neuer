@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Seite } from '../components/Seite';
-import { Chip, Schalter } from '../components/ui';
+import { Chip, Schalter, Stepper } from '../components/ui';
 import { useDaten } from '../db/DatenContext';
 import { istGueltigesDatum } from '../logic/datum';
 import { STANDARD_PROFIL, type Profil } from '../types';
@@ -25,33 +25,15 @@ export function EinstellungenSeite() {
 
       <h2 className="mb-2 text-sm font-semibold tracking-wide text-slate-500 uppercase">Ziele</h2>
       <div className="space-y-2">
-        <div className="flex min-h-16 items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
-          <span className="flex-1">
-            <span className="block font-medium">Tagesziel</span>
-            <span className="block text-sm text-slate-500 dark:text-slate-400">Fragen pro Tag (+50 XP beim Erreichen)</span>
-          </span>
-          <button
-            type="button"
-            className="flex size-11 items-center justify-center rounded-full bg-slate-100 text-2xl font-bold disabled:opacity-40 dark:bg-slate-800"
-            aria-label="Tagesziel verringern"
-            disabled={profil.tagesziel <= ZIEL_MIN}
-            onClick={() => aendereProfil({ tagesziel: Math.max(ZIEL_MIN, profil.tagesziel - ZIEL_SCHRITT) })}
-          >
-            −
-          </button>
-          <span className="w-10 text-center text-xl font-semibold tabular-nums" aria-live="polite">
-            {profil.tagesziel}
-          </span>
-          <button
-            type="button"
-            className="flex size-11 items-center justify-center rounded-full bg-slate-100 text-2xl font-bold disabled:opacity-40 dark:bg-slate-800"
-            aria-label="Tagesziel erhöhen"
-            disabled={profil.tagesziel >= ZIEL_MAX}
-            onClick={() => aendereProfil({ tagesziel: Math.min(ZIEL_MAX, profil.tagesziel + ZIEL_SCHRITT) })}
-          >
-            +
-          </button>
-        </div>
+        <Stepper
+          titel="Tagesziel"
+          text="Fragen pro Tag (+50 XP beim Erreichen)"
+          wert={profil.tagesziel}
+          min={ZIEL_MIN}
+          max={ZIEL_MAX}
+          schritt={ZIEL_SCHRITT}
+          onChange={(tagesziel) => aendereProfil({ tagesziel })}
+        />
         <label className="block rounded-2xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
           <span className="block font-medium">Schriftliche Prüfung am</span>
           <span className="block text-sm text-slate-500 dark:text-slate-400">Für Countdown und empfohlenes Tagespensum</span>
