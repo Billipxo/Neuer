@@ -17,6 +17,11 @@ on:
 permissions:
   contents: read
 
+# Ein neuer Push bricht den noch laufenden Test desselben Zweigs ab.
+concurrency:
+  group: android-test-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   emulator:
     runs-on: ubuntu-24.04

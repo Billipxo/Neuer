@@ -51,6 +51,21 @@ try {
   pruefe(seite.url().startsWith('https://appassets.androidplatform.net/'), `1. App gestartet: ${seite.url()}`);
   log('   Startseite:', await heute(seite));
   await bild('1-start');
+  // Passt alles auf den Bildschirm? (untere Navigation sichtbar, nichts ragt seitlich hinaus)
+  const lage = await seite.evaluate(() => {
+    const nav = document.querySelector('nav')?.getBoundingClientRect();
+    return {
+      breite: innerWidth,
+      hoehe: innerHeight,
+      navOben: Math.round(nav?.top ?? -1),
+      navUnten: Math.round(nav?.bottom ?? -1),
+      ueberbreite: document.documentElement.scrollWidth > innerWidth + 1,
+    };
+  });
+  pruefe(
+    lage.navOben > lage.hoehe / 2 && lage.navUnten <= lage.hoehe + 1 && !lage.ueberbreite,
+    `1b. Darstellung ${lage.breite}×${lage.hoehe}: Navigation ${lage.navOben}–${lage.navUnten}, Überbreite: ${lage.ueberbreite}`,
+  );
 
   // 2. Frage beantworten
   await gehe(seite, '#/sitzung?ids=schutz-001');
@@ -70,7 +85,7 @@ try {
   await bild('3-bildfrage');
 
   // 4. Zurück-Taste des Handys geht eine Seite zurück, statt die App zu schließen
-  await geraet.input.press('Back');
+  await geraet.shell('input keyevent KEYCODE_BACK');
   const zurueck = await seite
     .waitForFunction(() => !location.hash.includes('schutz-016'), null, { timeout: 10_000 })
     .then(() => true, () => false);
