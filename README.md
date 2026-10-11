@@ -1,11 +1,364 @@
 # TREI-Trainer
 
-Lern-App für den TREI-Sachkundenachweis. Ausführliche Anleitung folgt.
+Lern-App für den **TREI-Sachkundenachweis** (Lehrgang der HWK zu Köln, 11.01.–03.02.2027;
+schriftliche Prüfung am 30.01.2027). Sie funktioniert wie eine Führerschein-Lern-App:
+Fragen nach Themen üben, Fehler wiederholen, Prüfung simulieren – auf dem Handy, auch
+offline, ohne Konto, ohne Server-Backend und ohne Tracking.
+
+> **Wichtig zu den Fragen:** Die 161 Startfragen sind in eigenen Worten formuliert und
+> **alle als „ungeprüft“ markiert**. Gleiche sie mit den Kursunterlagen ab, bevor du dich
+> auf sie verlässt. Werte, die sich mit neuen Ausgaben von TAB, VDE-Regeln oder Gesetzen
+> ändern können, tragen den Hinweis **„Stand prüfen“**. Maßgeblich sind immer die
+> Kursunterlagen und die aktuellen Normen, TAB und Gesetze.
+
+## Inhalt
+
+1. [Was die App kann](#was-die-app-kann)
+2. [Schnellstart am PC](#schnellstart-am-pc)
+3. [Befehle](#befehle)
+4. [Projektaufbau](#projektaufbau)
+5. [Fragen hinzufügen und pflegen](#fragen-hinzufügen-und-pflegen)
+6. [Lernstand sichern und umziehen](#lernstand-sichern-und-umziehen)
+7. [Veröffentlichen auf All-Inkl](#veröffentlichen-auf-all-inkl-passwortgeschützter-unterordner)
+8. [Auf dem Handy installieren](#auf-dem-handy-installieren)
+9. [Updates einspielen](#updates-einspielen)
+10. [Datenschutz und Speicherung](#datenschutz-und-speicherung)
+11. [Fehlerbehebung](#fehlerbehebung)
+12. [Technik](#technik)
+
+## Was die App kann
+
+**Lernen nach Themen** – jedes Thema hat eine eigene Fragen-Datei:
+
+| | Thema | Datei |
+|---|---|---|
+| a | Recht (EnWG, NAV, Installateurverzeichnis) | `recht.json` |
+| b | TAB & VDE-AR-N 4100 | `tab.json` |
+| c | Hausanschluss & Erdung | `hausanschluss.json` |
+| d | Zählerplatz & Messung | `zaehlerplatz.json` |
+| e | Netzsysteme & Schutz | `schutz.json` |
+| f | Erzeugung & Speicher | `erzeugung.json` |
+| g | Wallbox, Wärmepumpe & § 14a | `verbraucher14a.json` |
+| h | Prüfung & Inbetriebnahme | `pruefung.json` |
+| i | Arbeitssicherheit | `sicherheit.json` |
+| j | Rechenaufgaben | `rechnen.json` |
+
+- **Fragetypen:** Einfachauswahl, Mehrfachauswahl (zählt nur, wenn alles stimmt),
+  Rechenaufgaben mit Toleranz und Rechenweg, Karteikarten für das Fachgespräch
+  (aufdecken, selbst bewerten: gewusst / teilweise / nicht gewusst), optional mit Bild.
+- **Nach jeder Antwort:** richtig oder falsch, die Lösung und eine kurze Erklärung mit
+  Regel bzw. Norm.
+- **Wiederholen:** Jede Frage hat einen Status – neu, falsch (rot), 1× richtig (gelb),
+  gelernt (grün, nach zweimal richtig in Folge). Ein Leitner-System holt Fragen nach 1, 2,
+  4 und 7 Tagen wieder hervor. Dazu „Fehler wiederholen“, Markieren und Volltextsuche.
+- **Prüfungssimulation:** gemischte Fragen mit Zeitlimit, Auswertung je Thema und
+  Verlauf aller Simulationen. Anzahl, Zeit und Bestehensgrenze sind einstellbar
+  (Standard: 30 Fragen, 60 Minuten, 70 %).
+- **Motivation:** XP (mehr für schwere Fragen und Serien), Level von „Azubi“ bis
+  „Eingetragen ins Installateurverzeichnis“, Tagesziel, Lernserie, Abzeichen je Thema,
+  Prüfungsreife, Statistik und ein Countdown bis zur Prüfung mit empfohlenem Tagespensum.
+- **Fragen pflegen:** in der App anlegen, bearbeiten, löschen, als „geprüft“ markieren,
+  Notizen und „Fehler melden“; Import und Export als JSON.
+- **Installierbar und offline nutzbar**, Dark Mode, große Knöpfe.
+
+Das Prüfungsdatum (für Countdown und Tagespensum) lässt sich unter
+*Mehr → Einstellungen* ändern.
+
+## Schnellstart am PC
+
+Voraussetzung: [Node.js](https://nodejs.org/) ab Version 20.19 bzw. 22.12 (am besten die aktuelle LTS-Version).
+
+```bash
+npm install
+npm run dev
+```
+
+Dann <http://localhost:5173> im Browser öffnen.
+
+Auf dem Handy im selben WLAN ansehen: `npm run dev -- --host` und die angezeigte
+Netzwerk-Adresse öffnen. Offline-Modus und Installation funktionieren dabei nicht – die
+brauchen HTTPS (oder `localhost`).
+
+## Befehle
+
+| Befehl | Was er macht |
+|---|---|
+| `npm run dev` | Entwicklungsserver, lädt bei Änderungen automatisch neu |
+| `npm test` | alle automatischen Tests (Vitest) |
+| `npm run pruefe` | Fragen-Dateien prüfen (Schema, doppelte IDs, fehlende Lösung, leere Erklärung …) |
+| `npm run typecheck` | TypeScript-Prüfung |
+| `npm run build` | prüft Fragen und Typen und baut die fertige App nach `dist/` |
+| `npm run preview` | gebaute App lokal ansehen (<http://localhost:4173>, mit Offline-Modus) |
+
+## Projektaufbau
 
 ```
-npm install
-npm run dev      # Entwicklung
-npm test         # Tests
-npm run pruefe   # Fragen-Dateien prüfen
-npm run build    # Build nach dist/
+deploy/            Vorlage für den Passwortschutz auf dem Webspace (.htaccess)
+public/            Icons und Bilder (Bilder zu Fragen in public/bilder/)
+scripts/           Prüfskript für die Fragen-Dateien
+src/data/fragen/   die Fragen – eine JSON-Datei je Thema
+src/logic/         Lernlogik (Bewertung, Leitner, XP/Level, Abzeichen, Simulation …) mit Tests
+src/db/            Speicherung im Browser (IndexedDB)
+src/pages/         Seiten der App
+src/components/    Bausteine der Oberfläche
 ```
+
+## Fragen hinzufügen und pflegen
+
+Es gibt zwei Wege. Beide lassen sich kombinieren.
+
+### Weg A: in der App (z. B. direkt im Kurs)
+
+- **Neue Frage:** *Mehr → Neue Frage.* Eigene Fragen bekommen IDs wie `recht-e001`.
+- **Bestehende Frage:** *Mehr → Fragenkatalog* → Frage antippen. Dort gibt es
+  „✎ Bearbeiten“, „🗑 Frage löschen“, den Schalter „Geprüft“, eine Notiz und
+  „Fehler melden“.
+- Diese Änderungen liegen **nur auf diesem Gerät**. Sichere sie regelmäßig (siehe
+  [Lernstand sichern](#lernstand-sichern-und-umziehen)) oder übernimm sie ins Projekt
+  (siehe unten).
+
+### Weg B: im Projekt (gilt nach dem nächsten Update für alle Geräte)
+
+1. Datei `src/data/fragen/<thema>.json` öffnen – sie enthält eine Liste (`[ … ]`) von Fragen.
+2. Neue Frage nach dem Schema unten anhängen, mit einer **neuen, eindeutigen ID**.
+3. `npm run pruefe` ausführen – es muss „Alles in Ordnung ✔“ erscheinen.
+4. Bauen und veröffentlichen (siehe [Updates einspielen](#updates-einspielen)).
+
+### Schema einer Frage
+
+| Feld | Inhalt |
+|---|---|
+| `id` | eindeutig über alle Dateien; nur `a–z`, `0–9`, `-` und `_`. Üblich: `<thema>-001` für Auswahl- und Rechenfragen, `<thema>-k01` für Karteikarten, `<thema>-e001` für in der App angelegte Fragen |
+| `thema` | Themen-ID, muss zum Dateinamen passen (z. B. `schutz` in `schutz.json`) |
+| `typ` | `einfach`, `mehrfach`, `rechnen` oder `karte` |
+| `frage` | Fragetext |
+| `antworten` | Antworttexte (bei `einfach`/`mehrfach` mindestens zwei, keine doppelten); bei `rechnen` und `karte` eine leere Liste `[]` |
+| `richtig` | die Lösung – Aufbau je nach Typ, siehe unten |
+| `erklaerung` | kurze Erklärung mit Regel bzw. Norm. Kann sich ein Wert ändern, „Stand prüfen“ dazuschreiben – die App hebt das hervor |
+| `quelle` | z. B. `"DIN VDE 0100-600, Tabelle 6.1"` |
+| `schwierigkeit` | `1` (leicht), `2` oder `3` (schwer) – schwere Fragen geben mehr XP |
+| `bild` | `null` oder ein Pfad wie `"bilder/netzsystem-a.svg"` (Datei liegt in `public/bilder/`) |
+| `geprueft` | `true` oder `false` – mit den Kursunterlagen abgeglichen? |
+| `stand` | Stand der Information, z. B. `"2026-10"` |
+| `unterthema` | optional, wird bei der Suche berücksichtigt |
+
+So sieht `richtig` je nach Typ aus:
+
+| Typ | `richtig` | Beispiel |
+|---|---|---|
+| `einfach` | Liste mit der Nummer der richtigen Antwort – gezählt ab **0** | `[2]` = dritte Antwort |
+| `mehrfach` | Liste aller richtigen Antworten | `[0, 2, 3]` |
+| `rechnen` | Ergebnis mit Einheit und Toleranz | `{ "wert": 15.88, "einheit": "A", "toleranz": 0.2, "toleranzArt": "abs" }` |
+| `karte` | Musterantwort als Text, Zeilenumbruch mit `\n` | `"1. Freischalten\n2. …"` |
+
+Bei Rechenaufgaben bedeutet `"toleranzArt": "abs"` eine feste Abweichung in der Einheit
+(± 0,2 A), `"rel"` eine Abweichung in Prozent vom richtigen Wert (`"toleranz": 2` = ± 2 %).
+Der Rechenweg gehört in die `erklaerung`. Eingaben wie `15,9`, `15.9` oder `15,9 A` werden
+in der App alle verstanden.
+
+Vollständiges Beispiel (Einfachauswahl):
+
+```json
+{
+  "id": "pruefung-013",
+  "thema": "pruefung",
+  "typ": "einfach",
+  "frage": "Mit welcher Messspannung wird der Isolationswiderstand eines 230/400-V-Stromkreises gemessen?",
+  "antworten": ["250 V DC", "500 V DC", "1000 V DC", "500 V AC"],
+  "richtig": [1],
+  "erklaerung": "Für Stromkreise bis 500 V Nennspannung (außer SELV/PELV) wird mit 500 V DC gemessen; der Isolationswiderstand muss mindestens 1 MΩ betragen.",
+  "quelle": "DIN VDE 0100-600",
+  "schwierigkeit": 1,
+  "bild": null,
+  "geprueft": false,
+  "stand": "2026-10"
+}
+```
+
+Tipps:
+
+- Die Reihenfolge der Antworten wird in der App gemischt (abschaltbar in den
+  Einstellungen). Trotzdem die richtige Antwort nicht immer an dieselbe Stelle setzen
+  und nicht immer zur längsten machen.
+- Keine Normtexte abschreiben – in eigenen Worten formulieren.
+
+### Bilder
+
+- Bild (SVG, PNG oder JPG) nach `public/bilder/` legen und im Feld `bild` als
+  `"bilder/dateiname.svg"` eintragen. Es wird automatisch für den Offline-Modus gespeichert.
+- In der App kann man beim Bearbeiten auch ein Foto hochladen. Es wird verkleinert und
+  steckt dann als Text (data-URL) direkt in der Frage. Für die Projektdateien ist der
+  Weg über `public/bilder/` besser, weil die JSON-Dateien sonst groß werden.
+
+### Was passiert mit Änderungen auf dem Handy, wenn eine neue Version kommt?
+
+- Neue Fragen aus den Dateien kommen beim nächsten Start automatisch dazu.
+- Mitgelieferte Fragen, die du in der App **nicht** angefasst hast, werden aktualisiert,
+  wenn sich die Datei geändert hat.
+- Fragen, die du in der App **bearbeitet, als geprüft markiert oder gelöscht** hast,
+  bleiben so, wie du sie hast. Zurück zur mitgelieferten Fassung: Frage öffnen →
+  „Originalfassung wiederherstellen“.
+- Lernstand, Notizen, Markierungen und Fehlermeldungen hängen an der ID. **IDs deshalb nie
+  ändern oder für eine andere Frage wiederverwenden.**
+
+### Empfohlener Ablauf zum Prüfen der Fragen
+
+1. *Mehr → Ungeprüfte Fragen* öffnen und Frage für Frage mit den Kursunterlagen vergleichen.
+2. Stimmt die Frage: Schalter „Geprüft“ einschalten. Stimmt etwas nicht: „Fehler melden“
+   (Notiz für später) oder direkt „✎ Bearbeiten“. Gemeldete Fragen findest du unter
+   *Mehr → Gemeldete Fehler*.
+3. Wer nur Geprüftes lernen will: *Mehr → Einstellungen → Nur geprüfte Fragen lernen.*
+4. Korrekturen dauerhaft ins Projekt übernehmen: *Mehr → Daten & Sicherung → Fragen
+   exportieren → „Thema: …“.* Die Datei heißt `<thema>.json` und ersetzt
+   `src/data/fragen/<thema>.json`. Danach `npm run pruefe`, bauen und veröffentlichen.
+   Achtung: Der Export enthält den Stand dieses Geräts – in der App gelöschte Fragen
+   fehlen darin, eigene Fragen des Themas sind dabei.
+
+## Lernstand sichern und umziehen
+
+Alle Daten liegen nur im Browser des Geräts. Deshalb regelmäßig sichern:
+
+- *Mehr → Daten & Sicherung → Sicherung herunterladen* (Datei
+  `trei-lernstand-JJJJ-MM-TT.json`) oder „Teilen …“, z. B. in die eigene Cloud oder per
+  Mail an dich selbst.
+- Die Sicherung enthält Lernstand, XP, Abzeichen, Simulationen, Einstellungen, Notizen,
+  Markierungen, Fehlermeldungen sowie eigene und bearbeitete Fragen.
+- Auf einem neuen Gerät: *Lernstand wiederherstellen* → Datei wählen. Der Lernstand auf
+  diesem Gerät wird dabei ersetzt.
+
+## Veröffentlichen auf All-Inkl (passwortgeschützter Unterordner)
+
+Ziel: Die App liegt als statische Seite unter z. B. `https://deine-domain.de/trei/`, und
+nur wer Benutzername und Passwort kennt, kommt hinein. PHP oder eine Datenbank werden
+nicht gebraucht.
+
+> Zugangsdaten (FTP, KAS, Benutzername/Passwort für den Ordner) gehören **nie** in das
+> Projekt oder ins Git-Repository. Du trägst sie nur im KAS bzw. in der `.htpasswd` auf
+> dem Server ein. `.htpasswd` steht deshalb in der `.gitignore`.
+
+Die Menünamen im KAS (kas.all-inkl.com) können sich mit der Zeit ändern – sinngemäß
+findest du die Punkte trotzdem.
+
+### 1. App bauen
+
+```bash
+npm install
+npm run build
+```
+
+Ergebnis ist der Ordner `dist/` (mit `index.html`, `sw.js`, `manifest.webmanifest`,
+`assets/`, `icons/`, `bilder/` …). Auf den Server kommt **dessen Inhalt**, nicht der Ordner
+`dist` selbst.
+
+### 2. HTTPS einschalten
+
+Ohne HTTPS funktionieren Offline-Modus und Installation nicht, und das Passwort würde
+unverschlüsselt übertragen. Im KAS bei der Domain ein SSL-Zertifikat aktivieren
+(Let's Encrypt ist kostenlos).
+
+### 3. Ordner anlegen und Dateien hochladen
+
+1. Mit einem FTP-Programm (z. B. FileZilla) verbinden – die Zugangsdaten stehen im KAS
+   unter FTP. Am besten verschlüsselt („FTP über explizites TLS“ bzw. SFTP).
+2. Im Verzeichnis der Domain einen Ordner anlegen, z. B. `trei`.
+3. Den **Inhalt** von `dist/` in diesen Ordner hochladen.
+
+### 4. Passwortschutz einrichten
+
+**Weg 1 – mit dem KAS (ohne Zusatzprogramme):**
+
+1. Im KAS unter *Tools → Verzeichnisschutz* einen Schutz für den Ordner `trei` anlegen und
+   dort Benutzername und Passwort selbst festlegen. Das KAS legt `.htaccess` und
+   `.htpasswd` an.
+2. Die vom KAS angelegte `.htaccess` im Ordner `trei` per FTP öffnen und unten den Block
+   `<If "%{HTTPS} != 'on'"> … </If>` sowie die Zeile mit `AddType` aus
+   [`deploy/htaccess-vorlage.txt`](deploy/htaccess-vorlage.txt) anhängen. Damit wird
+   `http://` ohne Passwortabfrage auf `https://` umgeleitet, und das App-Manifest hat den
+   richtigen Dateityp. Änderst du den Verzeichnisschutz später im KAS, prüfe, ob die Zeilen
+   noch da sind.
+
+**Weg 2 – von Hand mit der Vorlage:**
+
+1. `.htpasswd` auf deinem Rechner erzeugen. Unter macOS und Linux gibt es dafür das
+   Programm `htpasswd` (Linux: Paket `apache2-utils`):
+   ```bash
+   htpasswd -c -B .htpasswd DEIN_BENUTZERNAME
+   ```
+   Es fragt das Passwort ab und speichert nur einen Hash davon.
+2. `.htpasswd` hochladen – am besten in einen Ordner **außerhalb** des Domain-Verzeichnisses.
+3. [`deploy/htaccess-vorlage.txt`](deploy/htaccess-vorlage.txt) in den Ordner `trei`
+   hochladen, in `.htaccess` umbenennen und bei `AuthUserFile` den **absoluten** Pfad zur
+   `.htpasswd` eintragen. Bei All-Inkl beginnt er mit `/www/htdocs/` und deiner
+   Account-Kennung (deinem KAS-Login, meist `w0…`).
+
+Die Vorlage wurde mit Apache 2.4 getestet: `http://` wird ohne Passwortabfrage auf
+`https://` umgeleitet, über `https://` fragt der Browser nach Benutzername und Passwort,
+und `.htaccess`/`.htpasswd` lassen sich nicht abrufen.
+
+### 5. Prüfen
+
+- `http://deine-domain.de/trei/` aufrufen → muss ohne Passwortabfrage auf `https://`
+  wechseln.
+- `https://deine-domain.de/trei/` → Passwortabfrage → die App erscheint.
+- Falsches Passwort oder „Abbrechen“ → kein Zugriff.
+- `https://deine-domain.de/trei/.htaccess` → muss gesperrt sein („Forbidden“).
+- In der App kurz warten, bis „Die App funktioniert jetzt auch offline“ erscheint.
+
+## Auf dem Handy installieren
+
+1. `https://deine-domain.de/trei/` im Browser öffnen und anmelden.
+2. Installieren:
+   - **Android (Chrome):** Menü ⋮ → „App installieren“ bzw. „Zum Startbildschirm hinzufügen“.
+   - **iPhone/iPad (Safari):** Teilen-Symbol → „Zum Home-Bildschirm“.
+3. Die App startet danach vom Startbildschirm wie eine normale App – auch ohne Internet.
+
+Auf dem iPhone kann Safari die Daten von Websites löschen, die länger nicht genutzt wurden.
+Als Home-Bildschirm-App ist das praktisch kein Problem – trotzdem regelmäßig sichern.
+
+## Updates einspielen
+
+1. Am PC: `npm run build`.
+2. Den Inhalt von `dist/` erneut in den Ordner `trei` hochladen und vorhandene Dateien
+   überschreiben. `.htaccess` und `.htpasswd` bleiben, wie sie sind. Alte Dateien in
+   `assets/` stören nicht.
+3. Auf dem Handy erscheint „Neue Version verfügbar“ → „Aktualisieren“. Der Lernstand
+   bleibt erhalten.
+
+Hinter dem Passwortschutz gibt es eine Besonderheit: Der Browser vergisst die Anmeldung
+z. B. nach einem Neustart. Die App läuft dann normal weiter, kann aber nicht selbst nach
+Updates sehen. Dann: *Mehr → Einstellungen → Nach Updates suchen* → Benutzername und
+Passwort eingeben → „Aktualisieren“. Unter „Version vom …“ siehst du, welche Version
+gerade läuft.
+
+**Domain oder Adresse nicht wechseln:** Die Daten gehören zur Adresse der App. Ziehst du
+um, vorher eine Sicherung herunterladen und unter der neuen Adresse wiederherstellen.
+
+## Datenschutz und Speicherung
+
+- Kein Login, kein Server-Backend, kein Tracking, keine externen Dienste oder Schriften.
+  Der Webspace liefert nur die App-Dateien aus.
+- Lernstand, Einstellungen und eigene Fragen liegen ausschließlich im Browser des Geräts
+  (IndexedDB). Es wird nichts hochgeladen.
+- Browserdaten löschen oder die App deinstallieren löscht auch den Lernstand – vorher
+  sichern.
+- Unter *Mehr → Daten & Sicherung → Speicher* lässt sich „dauerhafter Speicher“ anfordern,
+  damit der Browser die Daten nicht bei Platzmangel entfernt.
+
+## Fehlerbehebung
+
+| Problem | Lösung |
+|---|---|
+| „500 Internal Server Error“ nach dem Hochladen der `.htaccess` | Pfad bei `AuthUserFile` prüfen (absoluter Pfad, Datei vorhanden). Notfalls Weg 1 über das KAS nehmen. |
+| Browser meldet „zu viele Weiterleitungen“ | Den `<If …>`-Block (4 Zeilen) aus der `.htaccess` löschen und im KAS die Weiterleitung auf HTTPS für die Domain einschalten. |
+| Kein „App installieren“, kein Offline-Modus | Wird die Seite über `https://` aufgerufen? Einmal vollständig online laden und kurz warten. |
+| Update kommt nicht an | *Mehr → Einstellungen → Nach Updates suchen.* |
+| Nach einem Update weiße Seite | App schließen und neu öffnen. Hilft das nicht: Lernstand sichern (falls möglich), Website-Daten im Browser löschen, neu öffnen und Sicherung wiederherstellen. |
+| `npm run build` bricht mit Fehlern in Fragen ab | Die Meldungen von `npm run pruefe` nennen Datei, ID und Problem. |
+
+## Technik
+
+React 19, TypeScript, Vite 7, Tailwind CSS 4, vite-plugin-pwa (Workbox), IndexedDB
+(über `idb`), Vitest. Die Lernlogik in `src/logic/` ist von der Oberfläche getrennt und
+mit Tests abgedeckt – unter anderem Punkte und Level, Leitner-System, Bewertung von
+Mehrfachauswahl und Rechenaufgaben, Abzeichen, Prüfungsreife, Simulation sowie Import,
+Export und Sicherung.
