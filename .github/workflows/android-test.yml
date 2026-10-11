@@ -33,6 +33,8 @@ jobs:
         run: |
           npm ci
           npm install --no-save playwright@1.56.1
+          # Hilfsmodul, mit dem Playwright Tasten drückt und Systemdialoge bedient
+          npx playwright install android
 
       - name: Bauwerkzeuge (Ubuntu-Pakete, wie in android/baue-apk.sh beschrieben)
         run: |
