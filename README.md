@@ -2,8 +2,14 @@
 
 Lern-App für den **TREI-Sachkundenachweis** (Lehrgang der HWK zu Köln, 11.01.–03.02.2027;
 schriftliche Prüfung am 30.01.2027). Sie funktioniert wie eine Führerschein-Lern-App:
-Fragen nach Themen üben, Fehler wiederholen, Prüfung simulieren – auf dem Handy, auch
-offline, ohne Konto, ohne Server-Backend und ohne Tracking.
+Fragen nach Themen üben, Fehler wiederholen, Prüfung simulieren – ohne Internet, ohne
+Konto, ohne Server-Backend und ohne Tracking.
+
+Es gibt drei Varianten mit denselben Fragen und Funktionen:
+
+- **Android-App** (`TREI-Trainer.apk`) – zum Installieren aufs Handy, läuft komplett offline.
+- **Datei für den PC** (`TREI-Trainer.html`) – per Doppelklick im Browser öffnen, läuft offline.
+- **Optional als Web-App** auf eigenem Webspace (z. B. All-Inkl, passwortgeschützt).
 
 > **Wichtig zu den Fragen:** Die 161 Startfragen sind in eigenen Worten formuliert und
 > **alle als „ungeprüft“ markiert**. Gleiche sie mit den Kursunterlagen ab, bevor du dich
@@ -14,17 +20,16 @@ offline, ohne Konto, ohne Server-Backend und ohne Tracking.
 ## Inhalt
 
 1. [Was die App kann](#was-die-app-kann)
-2. [Schnellstart am PC](#schnellstart-am-pc)
-3. [Befehle](#befehle)
-4. [Projektaufbau](#projektaufbau)
-5. [Fragen hinzufügen und pflegen](#fragen-hinzufügen-und-pflegen)
-6. [Lernstand sichern und umziehen](#lernstand-sichern-und-umziehen)
-7. [Veröffentlichen auf All-Inkl](#veröffentlichen-auf-all-inkl-passwortgeschützter-unterordner)
-8. [Auf dem Handy installieren](#auf-dem-handy-installieren)
-9. [Updates einspielen](#updates-einspielen)
-10. [Datenschutz und Speicherung](#datenschutz-und-speicherung)
-11. [Fehlerbehebung](#fehlerbehebung)
-12. [Technik](#technik)
+2. [Ohne Internet nutzen: Android-App und Datei für den PC](#ohne-internet-nutzen-android-app-und-datei-für-den-pc)
+3. [Schnellstart am PC (Entwicklung)](#schnellstart-am-pc-entwicklung)
+4. [Befehle](#befehle)
+5. [Projektaufbau](#projektaufbau)
+6. [Fragen hinzufügen und pflegen](#fragen-hinzufügen-und-pflegen)
+7. [Lernstand sichern und umziehen](#lernstand-sichern-und-umziehen)
+8. [Optional: auf eigenem Webspace (All-Inkl)](#optional-auf-eigenem-webspace-all-inkl)
+9. [Datenschutz und Speicherung](#datenschutz-und-speicherung)
+10. [Fehlerbehebung](#fehlerbehebung)
+11. [Technik](#technik)
 
 ## Was die App kann
 
@@ -59,12 +64,80 @@ offline, ohne Konto, ohne Server-Backend und ohne Tracking.
   Prüfungsreife, Statistik und ein Countdown bis zur Prüfung mit empfohlenem Tagespensum.
 - **Fragen pflegen:** in der App anlegen, bearbeiten, löschen, als „geprüft“ markieren,
   Notizen und „Fehler melden“; Import und Export als JSON.
-- **Installierbar und offline nutzbar**, Dark Mode, große Knöpfe.
+- **Offline nutzbar** als Android-App, als Datei für den PC oder als installierbare Web-App;
+  Dark Mode, große Knöpfe.
 
 Das Prüfungsdatum (für Countdown und Tagespensum) lässt sich unter
 *Mehr → Einstellungen* ändern.
 
-## Schnellstart am PC
+## Ohne Internet nutzen: Android-App und Datei für den PC
+
+Die App braucht keinen Webspace. Beide Offline-Varianten enthalten alle Fragen und
+Funktionen; der Lernstand bleibt auf dem jeweiligen Gerät. Handy und PC haben getrennte
+Lernstände – übertragen lässt er sich mit einer [Sicherung](#lernstand-sichern-und-umziehen).
+
+### Datei für den PC (Windows, Mac, Linux)
+
+```bash
+npm run build:offline
+```
+
+Ergebnis: `dist-offline/index.html` – eine einzige Datei (ca. 600 KB), in der alles steckt:
+Programm, Fragen und Bilder. Umbenennen in z. B. `TREI-Trainer.html`, an einen festen Platz
+legen (etwa *Dokumente*) und per Doppelklick öffnen.
+
+- Am besten mit **Chrome, Edge oder Firefox** öffnen und nicht im privaten Fenster – der
+  Lernstand wird im Browser gespeichert. Datei am Platz lassen und immer mit demselben
+  Browser öffnen.
+- Die Datei lädt nichts aus dem Internet nach.
+- Neue Version: die neue Datei an dieselbe Stelle legen (alte ersetzen). Der Lernstand bleibt.
+
+### Android-App
+
+Gebaut wird mit Werkzeugen aus den Ubuntu-/Debian-Paketen – ohne Android Studio und ohne
+Downloads von Google:
+
+```bash
+sudo apt install default-jdk android-sdk-platform-23 aapt zipalign apksigner dalvik-exchange
+android/baue-apk.sh
+```
+
+Ergebnis: `android/build/TREI-Trainer.apk` (ab Android 6). Das Skript baut zuerst die
+Offline-Datei und packt sie in eine kleine Android-App (`android/src/…/MainActivity.java`),
+die sie in einer WebView anzeigt. Die Seite wird dort unter der dafür reservierten Adresse
+`https://appassets.androidplatform.net/` direkt aus der App beantwortet – es geht nichts ins
+Internet.
+
+**Installieren:** APK aufs Handy bringen (Kabel, Mail an dich selbst, Cloud), antippen,
+für diese Quelle „Unbekannte Apps installieren“ erlauben und „Installieren“ wählen. Meldet
+Google Play Protect eine unbekannte App, „Trotzdem installieren“.
+
+**In der App:** Sicherungen und Exporte werden über „Speichern unter“ abgelegt (z. B. in
+*Downloads* oder Google Drive), Wiederherstellen und Import laufen über die Dateiauswahl.
+Die Zurück-Taste geht eine Seite zurück; Schriftgröße und dunkles Design des Handys werden
+übernommen.
+
+**Signatur und Updates:** Android installiert eine neue Version nur dann über die alte,
+wenn beide mit demselben Schlüssel signiert sind.
+
+- Schlüssel einmal anlegen und gut aufheben – er gehört nie ins Repository (`*.jks` steht
+  in der `.gitignore`):
+  ```bash
+  keytool -genkeypair -keystore trei-trainer.jks -alias trei -keyalg RSA -keysize 3072 \
+    -validity 10000 -dname "CN=TREI-Trainer"
+  TREI_KEYSTORE=trei-trainer.jks TREI_KEYSTORE_PASS='…' android/baue-apk.sh
+  ```
+- Ohne Schlüssel erzeugt das Skript einen Einmal-Schlüssel. Eine so gebaute neue Version
+  installierst du so: in der App *Sicherung herunterladen* → alte App deinstallieren → neue
+  installieren → *Lernstand wiederherstellen*.
+
+**Automatischer Test:** Der GitHub-Workflow `.github/workflows/android-test.yml` baut die App
+bei jeder Änderung und testet sie in einem Android-Emulator (`android/test/emulator-test.mjs`):
+Start, Frage beantworten, Bildfrage, Zurück-Taste, Lernstand nach Neustart, dunkles Design,
+Sicherung speichern und über die Dateiauswahl wiederherstellen. Protokoll und
+Bildschirmfotos liegen als Artefakt „android-test“ am jeweiligen Lauf.
+
+## Schnellstart am PC (Entwicklung)
 
 Voraussetzung: [Node.js](https://nodejs.org/) ab Version 20.19 bzw. 22.12 (am besten die aktuelle LTS-Version).
 
@@ -87,15 +160,19 @@ brauchen HTTPS (oder `localhost`).
 | `npm test` | alle automatischen Tests (Vitest) |
 | `npm run pruefe` | Fragen-Dateien prüfen (Schema, doppelte IDs, fehlende Lösung, leere Erklärung …) |
 | `npm run typecheck` | TypeScript-Prüfung |
-| `npm run build` | prüft Fragen und Typen und baut die fertige App nach `dist/` |
-| `npm run preview` | gebaute App lokal ansehen (<http://localhost:4173>, mit Offline-Modus) |
+| `npm run build` | prüft Fragen und Typen und baut die Web-App nach `dist/` |
+| `npm run build:offline` | baut die Datei für den PC: `dist-offline/index.html` |
+| `android/baue-apk.sh` | baut die Android-App: `android/build/TREI-Trainer.apk` |
+| `npm run preview` | gebaute Web-App lokal ansehen (<http://localhost:4173>, mit Offline-Modus) |
 
 ## Projektaufbau
 
 ```
+.github/workflows/ Android-App im Emulator testen
+android/           Android-App: Manifest, MainActivity (WebView), Symbole, Build-Skript, Test
 deploy/            Vorlage für den Passwortschutz auf dem Webspace (.htaccess)
 public/            Icons und Bilder (Bilder zu Fragen in public/bilder/)
-scripts/           Prüfskript für die Fragen-Dateien
+scripts/           Prüfskript für die Fragen-Dateien, Bilder einbetten (Offline-Datei)
 src/data/fragen/   die Fragen – eine JSON-Datei je Thema
 src/logic/         Lernlogik (Bewertung, Leitner, XP/Level, Abzeichen, Simulation …) mit Tests
 src/db/            Speicherung im Browser (IndexedDB)
@@ -117,12 +194,14 @@ Es gibt zwei Wege. Beide lassen sich kombinieren.
   [Lernstand sichern](#lernstand-sichern-und-umziehen)) oder übernimm sie ins Projekt
   (siehe unten).
 
-### Weg B: im Projekt (gilt nach dem nächsten Update für alle Geräte)
+### Weg B: im Projekt (gilt nach dem nächsten Bauen für alle Geräte)
 
 1. Datei `src/data/fragen/<thema>.json` öffnen – sie enthält eine Liste (`[ … ]`) von Fragen.
 2. Neue Frage nach dem Schema unten anhängen, mit einer **neuen, eindeutigen ID**.
 3. `npm run pruefe` ausführen – es muss „Alles in Ordnung ✔“ erscheinen.
-4. Bauen und veröffentlichen (siehe [Updates einspielen](#updates-einspielen)).
+4. Neu bauen: Android-App mit `android/baue-apk.sh`, PC-Datei mit `npm run build:offline`
+   (bzw. die Web-App, siehe [Webspace](#optional-auf-eigenem-webspace-all-inkl)). Neue Fragen
+   erscheinen nach dem Installieren bzw. Öffnen der neuen Version automatisch.
 
 ### Schema einer Frage
 
@@ -216,17 +295,21 @@ Tipps:
 
 ## Lernstand sichern und umziehen
 
-Alle Daten liegen nur im Browser des Geräts. Deshalb regelmäßig sichern:
+Alle Daten liegen nur auf dem Gerät – in der Android-App bzw. im Browser. Deshalb
+regelmäßig sichern:
 
 - *Mehr → Daten & Sicherung → Sicherung herunterladen* (Datei
-  `trei-lernstand-JJJJ-MM-TT.json`) oder „Teilen …“, z. B. in die eigene Cloud oder per
-  Mail an dich selbst.
+  `trei-lernstand-JJJJ-MM-TT.json`). In der Android-App öffnet sich dabei „Speichern unter“,
+  z. B. für *Downloads* oder Google Drive. In der Web-App gibt es außerdem „Teilen …“.
 - Die Sicherung enthält Lernstand, XP, Abzeichen, Simulationen, Einstellungen, Notizen,
   Markierungen, Fehlermeldungen sowie eigene und bearbeitete Fragen.
-- Auf einem neuen Gerät: *Lernstand wiederherstellen* → Datei wählen. Der Lernstand auf
-  diesem Gerät wird dabei ersetzt.
+- Auf einem neuen Gerät (oder vom Handy auf den PC und umgekehrt): *Lernstand
+  wiederherstellen* → Datei wählen. Der Lernstand auf diesem Gerät wird dabei ersetzt.
 
-## Veröffentlichen auf All-Inkl (passwortgeschützter Unterordner)
+## Optional: auf eigenem Webspace (All-Inkl)
+
+Nur nötig, wenn du die App lieber über eine eigene Internetadresse aufrufen willst – für
+die Offline-Nutzung reichen die [Android-App und die PC-Datei](#ohne-internet-nutzen-android-app-und-datei-für-den-pc).
 
 Ziel: Die App liegt als statische Seite unter z. B. `https://deine-domain.de/trei/`, und
 nur wer Benutzername und Passwort kennt, kommt hinein. PHP oder eine Datenbank werden
@@ -304,7 +387,7 @@ und `.htaccess`/`.htpasswd` lassen sich nicht abrufen.
 - `https://deine-domain.de/trei/.htaccess` → muss gesperrt sein („Forbidden“).
 - In der App kurz warten, bis „Die App funktioniert jetzt auch offline“ erscheint.
 
-## Auf dem Handy installieren
+### 6. Web-App auf dem Handy installieren
 
 1. `https://deine-domain.de/trei/` im Browser öffnen und anmelden.
 2. Installieren:
@@ -315,7 +398,7 @@ und `.htaccess`/`.htpasswd` lassen sich nicht abrufen.
 Auf dem iPhone kann Safari die Daten von Websites löschen, die länger nicht genutzt wurden.
 Als Home-Bildschirm-App ist das praktisch kein Problem – trotzdem regelmäßig sichern.
 
-## Updates einspielen
+### 7. Updates der Web-App einspielen
 
 1. Am PC: `npm run build`.
 2. Den Inhalt von `dist/` erneut in den Ordner `trei` hochladen und vorhandene Dateien
@@ -336,13 +419,13 @@ um, vorher eine Sicherung herunterladen und unter der neuen Adresse wiederherste
 ## Datenschutz und Speicherung
 
 - Kein Login, kein Server-Backend, kein Tracking, keine externen Dienste oder Schriften.
-  Der Webspace liefert nur die App-Dateien aus.
-- Lernstand, Einstellungen und eigene Fragen liegen ausschließlich im Browser des Geräts
-  (IndexedDB). Es wird nichts hochgeladen.
-- Browserdaten löschen oder die App deinstallieren löscht auch den Lernstand – vorher
-  sichern.
-- Unter *Mehr → Daten & Sicherung → Speicher* lässt sich „dauerhafter Speicher“ anfordern,
-  damit der Browser die Daten nicht bei Platzmangel entfernt.
+  Android-App und PC-Datei laden nichts aus dem Internet; ein Webspace liefert nur die
+  App-Dateien aus.
+- Lernstand, Einstellungen und eigene Fragen liegen ausschließlich auf dem Gerät
+  (IndexedDB in der App bzw. im Browser). Es wird nichts hochgeladen.
+- App deinstallieren oder Browserdaten löschen löscht auch den Lernstand – vorher sichern.
+- In der Web-App lässt sich unter *Mehr → Daten & Sicherung → Speicher* „dauerhafter
+  Speicher“ anfordern, damit der Browser die Daten nicht bei Platzmangel entfernt.
 
 ## Fehlerbehebung
 
@@ -353,12 +436,15 @@ um, vorher eine Sicherung herunterladen und unter der neuen Adresse wiederherste
 | Kein „App installieren“, kein Offline-Modus | Wird die Seite über `https://` aufgerufen? Einmal vollständig online laden und kurz warten. |
 | Update kommt nicht an | *Mehr → Einstellungen → Nach Updates suchen.* |
 | Nach einem Update weiße Seite | App schließen und neu öffnen. Hilft das nicht: Lernstand sichern (falls möglich), Website-Daten im Browser löschen, neu öffnen und Sicherung wiederherstellen. |
+| PC-Datei zeigt „Datenbank konnte nicht geöffnet werden“ | Mit Chrome, Edge oder Firefox öffnen, nicht im privaten Fenster. |
+| Android: „App nicht installiert“ bei einer neuen Version | Sie wurde mit einem anderen Schlüssel signiert: *Sicherung herunterladen*, alte App deinstallieren, neue installieren, *Lernstand wiederherstellen*. |
 | `npm run build` bricht mit Fehlern in Fragen ab | Die Meldungen von `npm run pruefe` nennen Datei, ID und Problem. |
 
 ## Technik
 
 React 19, TypeScript, Vite 7, Tailwind CSS 4, vite-plugin-pwa (Workbox), IndexedDB
-(über `idb`), Vitest. Die Lernlogik in `src/logic/` ist von der Oberfläche getrennt und
+(über `idb`), Vitest; für die Offline-Datei vite-plugin-singlefile, für die Android-App eine
+schlichte WebView-Activity in Java. Die Lernlogik in `src/logic/` ist von der Oberfläche getrennt und
 mit Tests abgedeckt – unter anderem Punkte und Level, Leitner-System, Bewertung von
 Mehrfachauswahl und Rechenaufgaben, Abzeichen, Prüfungsreife, Simulation sowie Import,
 Export und Sicherung.
