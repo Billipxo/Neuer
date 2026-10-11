@@ -110,21 +110,30 @@ export function EinstellungenSeite() {
       <h2 className="mt-6 mb-2 text-sm font-semibold tracking-wide text-slate-500 uppercase">App</h2>
       <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
         <p className="font-medium">Version vom {APP_STAND}</p>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Neue Versionen werden automatisch gesucht. Klappt das nicht (z. B. im passwortgeschützten Ordner), hier von Hand
-          suchen – der Browser fragt dann nach Benutzername und Passwort.
-        </p>
-        <button
-          type="button"
-          className={knopf('sekundaer', 'mt-3 w-full', 'mittel')}
-          disabled={update === 'sucht'}
-          onClick={updateSuchen}
-        >
-          {update === 'sucht' ? 'Suche …' : 'Nach Updates suchen'}
-        </button>
-        <p aria-live="polite" className="mt-2 text-sm text-slate-700 empty:hidden dark:text-slate-300">
-          {update && update !== 'sucht' ? UPDATE_TEXT[update] : ''}
-        </p>
+        {__EINZELDATEI__ ? (
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Eine neue Version bekommst du als neue Datei (PC) bzw. neue App (Android). Lade vorher unter „Daten &
+            Sicherung“ eine Sicherung herunter – dann geht nichts verloren.
+          </p>
+        ) : (
+          <>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Neue Versionen werden automatisch gesucht. Klappt das nicht (z. B. im passwortgeschützten Ordner), hier von
+              Hand suchen – der Browser fragt dann nach Benutzername und Passwort.
+            </p>
+            <button
+              type="button"
+              className={knopf('sekundaer', 'mt-3 w-full', 'mittel')}
+              disabled={update === 'sucht'}
+              onClick={updateSuchen}
+            >
+              {update === 'sucht' ? 'Suche …' : 'Nach Updates suchen'}
+            </button>
+            <p aria-live="polite" className="mt-2 text-sm text-slate-700 empty:hidden dark:text-slate-300">
+              {update && update !== 'sucht' ? UPDATE_TEXT[update] : ''}
+            </p>
+          </>
+        )}
       </div>
     </Seite>
   );

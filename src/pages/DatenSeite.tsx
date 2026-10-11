@@ -68,8 +68,8 @@ export function DatenSeite() {
     const name = dateinameMitDatum('trei-lernstand');
     if (teilen) {
       if (!(await dateiTeilen(inhalt, name, 'TREI-Trainer Lernstand'))) return;
-    } else {
-      dateiHerunterladen(inhalt, name);
+    } else if (!(await dateiHerunterladen(inhalt, name))) {
+      return;
     }
     await merkeLetzteSicherung(db);
     setLetzteSicherung(Date.now());
@@ -108,7 +108,7 @@ export function DatenSeite() {
   const exportieren = async (teilen: boolean) => {
     const inhalt = fragenAlsJson(exportListe);
     if (teilen) await dateiTeilen(inhalt, exportName, 'TREI-Trainer Fragen');
-    else dateiHerunterladen(inhalt, exportName);
+    else await dateiHerunterladen(inhalt, exportName);
   };
 
   // ----- Fragen importieren -----
@@ -229,12 +229,20 @@ export function DatenSeite() {
       </Abschnitt>
 
       <Abschnitt titel="Speicher">
-        <p className="text-sm text-slate-700 dark:text-slate-300">
-          Dauerhaft gespeichert:{' '}
-          <strong>{speicher.dauerhaft === null ? 'unbekannt' : speicher.dauerhaft ? 'ja' : 'nein'}</strong>
-          {speicher.belegtMb !== null && ` · belegt ca. ${speicher.belegtMb.toLocaleString('de-DE', { maximumFractionDigits: 1 })} MB`}
-        </p>
-        {speicher.dauerhaft === false && (
+        {__EINZELDATEI__ ? (
+          <p className="text-sm text-slate-700 dark:text-slate-300">
+            Deine Daten liegen nur auf diesem Gerät – am PC im Browser, auf dem Handy in der App. Lade deshalb ab und zu
+            eine Sicherung herunter.
+          </p>
+        ) : (
+          <p className="text-sm text-slate-700 dark:text-slate-300">
+            Dauerhaft gespeichert:{' '}
+            <strong>{speicher.dauerhaft === null ? 'unbekannt' : speicher.dauerhaft ? 'ja' : 'nein'}</strong>
+            {speicher.belegtMb !== null &&
+              ` · belegt ca. ${speicher.belegtMb.toLocaleString('de-DE', { maximumFractionDigits: 1 })} MB`}
+          </p>
+        )}
+        {!__EINZELDATEI__ && speicher.dauerhaft === false && (
           <>
             <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               Ohne dauerhaften Speicher darf der Browser die Daten bei Platzmangel löschen. Als App installiert ist das

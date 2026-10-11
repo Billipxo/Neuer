@@ -130,7 +130,11 @@ export function DatenProvider({ children }: { children: ReactNode }) {
       <div className="p-6">
         <h1 className="text-xl font-bold">Datenbank konnte nicht geöffnet werden</h1>
         <p className="mt-2 text-sm">{fehler}</p>
-        <p className="mt-2 text-sm">Im privaten Modus mancher Browser ist IndexedDB gesperrt.</p>
+        <p className="mt-2 text-sm">
+          {location.protocol === 'file:'
+            ? 'Dieser Browser erlaubt geöffneten Dateien keinen Speicher. Öffne die Datei bitte mit Chrome, Edge oder Firefox.'
+            : 'Im privaten Modus mancher Browser ist IndexedDB gesperrt.'}
+        </p>
       </div>
     );
   }

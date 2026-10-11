@@ -1,9 +1,14 @@
 // Datei-Helfer für den Browser: Speichern, Teilen, Einlesen. Alles bleibt lokal auf dem Gerät.
+import { androidSpeichern } from './android';
 
 const JSON_TYP = 'application/json';
 
-/** Bietet einen Text als Datei zum Herunterladen an. */
-export function dateiHerunterladen(inhalt: string, dateiname: string, typ = JSON_TYP): void {
+/**
+ * Bietet einen Text als Datei zum Speichern an. In der Android-App öffnet sich „Speichern unter“.
+ * Liefert false, wenn dort abgebrochen wurde.
+ */
+export async function dateiHerunterladen(inhalt: string, dateiname: string, typ = JSON_TYP): Promise<boolean> {
+  if (window.TreiAndroid) return androidSpeichern(window.TreiAndroid, inhalt, dateiname, typ);
   const url = URL.createObjectURL(new Blob([inhalt], { type: `${typ};charset=utf-8` }));
   const a = document.createElement('a');
   a.href = url;
@@ -12,6 +17,7 @@ export function dateiHerunterladen(inhalt: string, dateiname: string, typ = JSON
   a.click();
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 10_000);
+  return true;
 }
 
 /** Kann das Gerät Dateien über das Teilen-Menü weitergeben (z. B. in die Cloud oder per Mail)? */

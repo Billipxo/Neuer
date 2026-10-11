@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run pruefe && tsc -b && vite build",
+    "build:offline": "npm run pruefe && tsc -b && vite build --mode einzeldatei",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -30,6 +31,7 @@
     "typescript": "~5.9.0",
     "vite": "^7.3.7",
     "vite-plugin-pwa": "^1.3.0",
+    "vite-plugin-singlefile": "^2.3.3",
     "vitest": "^3.2.4",
     "workbox-build": "^7.4.1",
     "workbox-window": "^7.4.1"

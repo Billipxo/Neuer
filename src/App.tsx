@@ -23,13 +23,19 @@ function useTheme() {
   const { profil } = useDaten();
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    // In der Android-App meldet das Handy selbst, ob es auf dunkles Design gestellt ist.
+    const systemDunkel = () => window.TreiAndroid?.istDunkel() ?? mq.matches;
     const anwenden = () => {
-      const dunkel = profil.theme === 'dunkel' || (profil.theme === 'system' && mq.matches);
+      const dunkel = profil.theme === 'dunkel' || (profil.theme === 'system' && systemDunkel());
       document.documentElement.classList.toggle('dark', dunkel);
     };
     anwenden();
     mq.addEventListener('change', anwenden);
-    return () => mq.removeEventListener('change', anwenden);
+    window.addEventListener('trei-dunkel', anwenden);
+    return () => {
+      mq.removeEventListener('change', anwenden);
+      window.removeEventListener('trei-dunkel', anwenden);
+    };
   }, [profil.theme]);
 }
 
