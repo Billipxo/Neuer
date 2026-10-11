@@ -1,0 +1,332 @@
+[
+  {
+    "id": "pruefung-001",
+    "thema": "pruefung",
+    "unterthema": "Erstprüfung",
+    "typ": "mehrfach",
+    "frage": "Welche Bestandteile gehören zur Erstprüfung nach DIN VDE 0100-600?",
+    "antworten": [
+      "Besichtigen",
+      "Dokumentation der Ergebnisse in einem Prüfbericht",
+      "Ein 24-stündiger Probebetrieb unter Volllast",
+      "Erproben und Messen"
+    ],
+    "richtig": [
+      0,
+      1,
+      3
+    ],
+    "erklaerung": "Die Erstprüfung besteht aus Besichtigen (bei abgeschalteter Anlage, vor dem Erproben und Messen), Erproben und Messen und endet mit dem Prüfbericht. Einen Dauerprobebetrieb fordert die Norm nicht.",
+    "quelle": "DIN VDE 0100-600",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-002",
+    "thema": "pruefung",
+    "unterthema": "Isolationswiderstand",
+    "typ": "einfach",
+    "frage": "Mit welcher Messspannung und welchem Mindestwert wird der Isolationswiderstand eines 230/400-V-Stromkreises geprüft?",
+    "antworten": [
+      "250 V DC, mindestens 0,5 MΩ",
+      "500 V DC, mindestens 1 MΩ",
+      "1000 V DC, mindestens 1 MΩ",
+      "500 V AC, mindestens 0,5 MΩ"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "DIN VDE 0100-600 (Tabelle 6.1): Für Stromkreise bis 500 V Nennspannung (außer SELV/PELV) beträgt die Messgleichspannung 500 V, der Isolationswiderstand muss mindestens 1 MΩ betragen. SELV/PELV: 250 V DC, ≥ 0,5 MΩ.",
+    "quelle": "DIN VDE 0100-600, Tabelle 6.1",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-003",
+    "thema": "pruefung",
+    "unterthema": "Erstprüfung",
+    "typ": "mehrfach",
+    "frage": "Welche Prüfschritte erfolgen bei der Erstprüfung an der noch nicht eingeschalteten Anlage?",
+    "antworten": [
+      "Isolationswiderstand messen",
+      "Auslösezeit der RCDs messen",
+      "Durchgängigkeit der Schutzleiter und Schutzpotentialausgleichsleiter messen",
+      "Besichtigen"
+    ],
+    "richtig": [
+      0,
+      2,
+      3
+    ],
+    "erklaerung": "Besichtigen sowie die Messungen von Durchgängigkeit und Isolationswiderstand erfolgen im spannungsfreien Zustand. Prüfungen der automatischen Abschaltung (Schleifenimpedanz, RCD-Auslösung), Drehfeld und Funktion brauchen dagegen Netzspannung.",
+    "quelle": "DIN VDE 0100-600",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-004",
+    "thema": "pruefung",
+    "unterthema": "Messungen",
+    "typ": "einfach",
+    "frage": "Mit welchem Mindestmessstrom wird die Durchgängigkeit von Schutzleitern gemessen?",
+    "antworten": [
+      "10 mA",
+      "0,2 A",
+      "10 A",
+      "25 A"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Die Niederohmmessung erfolgt mit einem Messgerät nach DIN EN 61557-4: Leerlaufspannung 4 V bis 24 V, Messstrom mindestens 0,2 A.",
+    "quelle": "DIN VDE 0100-600; DIN EN 61557-4",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-005",
+    "thema": "pruefung",
+    "unterthema": "Isolationswiderstand",
+    "typ": "einfach",
+    "frage": "Was ist bei der Isolationsmessung zu tun, wenn Überspannungsschutzgeräte im Stromkreis nicht abgeklemmt werden können?",
+    "antworten": [
+      "Die Isolationsmessung entfällt für diesen Stromkreis ersatzlos, ein Vermerk im Protokoll genügt.",
+      "Die Messspannung auf 250 V DC verringern; der Grenzwert von 1 MΩ bleibt bestehen.",
+      "Mit 500 V DC messen und den Grenzwert auf 0,1 MΩ herabsetzen.",
+      "Mit 1000 V DC messen, damit auch Fehler hinter dem Ableiter sicher erkannt werden."
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Überspannungsschutzgeräte und empfindliche Betriebsmittel verfälschen die Messung oder werden beschädigt. Sie werden vorher getrennt; ist das nicht möglich, darf die Messspannung für diesen Stromkreis auf 250 V DC verringert werden – der Isolationswiderstand muss trotzdem mindestens 1 MΩ betragen. Stand prüfen.",
+    "quelle": "DIN VDE 0100-600",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-006",
+    "thema": "pruefung",
+    "unterthema": "RCD-Prüfung",
+    "typ": "einfach",
+    "frage": "Welche Auslösezeit darf ein unverzögerter RCD bei der Prüfung mit seinem Bemessungsfehlerstrom IΔn höchstens haben?",
+    "antworten": [
+      "40 ms",
+      "300 ms",
+      "1 s",
+      "5 s"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Für unverzögerte RCDs gilt bei IΔn eine Auslösezeit von höchstens 300 ms (bei 5 · IΔn höchstens 40 ms). Selektive RCDs (Typ S) lösen verzögert aus. Außerdem wird geprüft, dass der Auslösestrom höchstens IΔn beträgt und die Berührungsspannung unter 50 V bleibt.",
+    "quelle": "DIN EN 61008-1; DIN VDE 0100-600",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-007",
+    "thema": "pruefung",
+    "unterthema": "Erproben",
+    "typ": "einfach",
+    "frage": "Was wird bei Drehstrom-Steckdosen im Rahmen der Erstprüfung geprüft?",
+    "antworten": [
+      "Dass ein Linksdrehfeld anliegt",
+      "Dass ein Rechtsdrehfeld anliegt",
+      "Dass N und PE in der Steckdose gebrückt sind",
+      "Dass zwischen den Außenleitern 230 V anliegen"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Drehstrom-Steckdosen müssen ein Rechtsdrehfeld haben, damit angeschlossene Motoren in der vorgesehenen Richtung laufen. Zwischen den Außenleitern liegen 400 V; N und PE dürfen in der Steckdose nicht verbunden sein.",
+    "quelle": "DIN VDE 0100-600",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-008",
+    "thema": "pruefung",
+    "unterthema": "Wiederholungsprüfung",
+    "typ": "einfach",
+    "frage": "Welche Prüffrist nennt die DGUV Vorschrift 3 als Richtwert für elektrische Anlagen und ortsfeste Betriebsmittel (allgemein, nicht in Betriebsstätten besonderer Art)?",
+    "antworten": [
+      "6 Monate",
+      "1 Jahr",
+      "4 Jahre",
+      "10 Jahre"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Richtwert für Wiederholungsprüfungen elektrischer Anlagen und ortsfester Betriebsmittel: 4 Jahre; für Betriebsstätten, Räume und Anlagen besonderer Art 1 Jahr. Die tatsächlichen Fristen legt der Unternehmer auf Grundlage einer Gefährdungsbeurteilung fest. Stand prüfen.",
+    "quelle": "DGUV Vorschrift 3, Durchführungsanweisungen (Tabelle 1A)",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-009",
+    "thema": "pruefung",
+    "unterthema": "Messungen",
+    "typ": "einfach",
+    "frage": "Welche Normenreihe gilt für Mess- und Prüfgeräte zum Prüfen der Schutzmaßnahmen?",
+    "antworten": [
+      "VDE-AR-N 4105",
+      "DIN EN 61557 (VDE 0413)",
+      "DIN 18015-1",
+      "DIN VDE 0100-701"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Geräte für Isolations-, Niederohm-, Schleifenimpedanz- und RCD-Prüfungen müssen DIN EN 61557 entsprechen und sollten regelmäßig kalibriert werden.",
+    "quelle": "DIN EN 61557; DIN VDE 0100-600",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-010",
+    "thema": "pruefung",
+    "unterthema": "Isolationswiderstand",
+    "typ": "einfach",
+    "frage": "Mit welcher Messspannung wird der Isolationswiderstand bei Stromkreisen mit einer Nennspannung über 500 V bis 1000 V gemessen?",
+    "antworten": [
+      "250 V DC",
+      "500 V DC",
+      "1000 V DC",
+      "2500 V DC"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "DIN VDE 0100-600, Tabelle 6.1: SELV/PELV 250 V DC (mindestens 0,5 MΩ), bis 500 V Nennspannung 500 V DC (mindestens 1 MΩ), über 500 V 1000 V DC (mindestens 1 MΩ).",
+    "quelle": "DIN VDE 0100-600, Tabelle 6.1",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-011",
+    "thema": "pruefung",
+    "unterthema": "RCD-Prüfung",
+    "typ": "einfach",
+    "frage": "Welche Berührungsspannung darf allgemein bei einem Fehler höchstens dauerhaft anstehen (vereinbarte Grenze UL)?",
+    "antworten": [
+      "25 V",
+      "50 V",
+      "120 V",
+      "230 V"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Die vereinbarte Grenze der dauernd zulässigen Berührungsspannung beträgt allgemein UL = 50 V AC (in besonderen Bereichen, z. B. landwirtschaftlichen Betriebsstätten, 25 V). Prüfgeräte messen sie bei der RCD-Prüfung mit.",
+    "quelle": "DIN VDE 0100-410; DIN VDE 0100-600",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-012",
+    "thema": "pruefung",
+    "unterthema": "Protokoll",
+    "typ": "mehrfach",
+    "frage": "Was gehört in den Prüfbericht einer Erstprüfung?",
+    "antworten": [
+      "Name des Prüfers und verwendete Messgeräte",
+      "Die private Telefonnummer des Prüfers",
+      "Messwerte und Ergebnisse von Besichtigen, Erproben und Messen",
+      "Angaben zur geprüften Anlage und zum Umfang der Prüfung"
+    ],
+    "richtig": [
+      0,
+      2,
+      3
+    ],
+    "erklaerung": "Der Prüfbericht dokumentiert, was wie geprüft wurde, mit welchen Ergebnissen und von wem – mit Datum und Unterschrift. Er wird dem Auftraggeber übergeben; Netzbetreiber verlangen ihn bzw. eine Fertigstellungsanzeige zur Inbetriebsetzung.",
+    "quelle": "DIN VDE 0100-600",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-k01",
+    "thema": "pruefung",
+    "unterthema": "Erstprüfung",
+    "typ": "karte",
+    "frage": "Beschreiben Sie Ablauf und Messungen der Erstprüfung nach DIN VDE 0100-600.",
+    "antworten": [],
+    "richtig": "1. Besichtigen (spannungsfrei): Auswahl und Errichtung der Betriebsmittel, Schutzmaßnahmen, Leiterkennzeichnung, Querschnitte, Schutzeinrichtungen, Brandabschottungen, Zugänglichkeit, Dokumentation.\n2. Erproben und Messen:\n• Durchgängigkeit der Schutz- und Schutzpotentialausgleichsleiter (mindestens 0,2 A)\n• Isolationswiderstand (500 V DC, mindestens 1 MΩ)\n• Schutz durch SELV/PELV oder Schutztrennung, falls vorhanden\n• Automatische Abschaltung: Schleifenimpedanz bzw. Kurzschlussstrom, im TT-System Erdungswiderstand\n• RCD-Prüfung: Auslösestrom, Auslösezeit, Berührungsspannung\n• Drehfeld, Spannungsfall (falls gefordert), Funktionsprüfungen\n3. Bewerten und dokumentieren: Prüfbericht mit Messwerten, Übergabe an den Auftraggeber.",
+    "erklaerung": "Fachgespräch: Reihenfolge begründen – erst spannungsfrei, dann unter Spannung.",
+    "quelle": "DIN VDE 0100-600",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-k02",
+    "thema": "pruefung",
+    "unterthema": "Schleifenimpedanz",
+    "typ": "karte",
+    "frage": "Wie messen Sie die Schleifenimpedanz, und wie bewerten Sie das Ergebnis?",
+    "antworten": [],
+    "richtig": "Gemessen wird die Impedanz der Fehlerschleife (Außenleiter – Fehlerstelle – Schutzleiter bzw. PEN – Stromquelle) am ungünstigsten Punkt jedes Stromkreises, meist an der entferntesten Steckdose, mit einem Messgerät nach DIN EN 61557-3.\nBewertung: Zs · Ia ≤ U₀, also Zs ≤ U₀ / Ia. Ia ist der Strom, der die Abschaltung in der geforderten Zeit bewirkt (z. B. B16: 5 · 16 A = 80 A → Zs ≤ 2,875 Ω).\nWeil die Leiter bei der Messung kalt sind, im Fehlerfall aber warm werden, bewertet man den Messwert mit einem Sicherheitsabschlag (z. B. Faktor 2/3) bzw. nach Tabellen des Geräteherstellers.\nAlternativ zeigt das Gerät den Kurzschlussstrom Ik an: Ik muss größer als Ia sein.",
+    "erklaerung": "Fachgespräch: Messprinzip, Formel und Bewertung erklären.",
+    "quelle": "DIN VDE 0100-410; DIN VDE 0100-600; DIN EN 61557-3",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-k03",
+    "thema": "pruefung",
+    "unterthema": "RCD-Prüfung",
+    "typ": "karte",
+    "frage": "Wie prüfen Sie einen RCD, und welche Werte bewerten Sie?",
+    "antworten": [],
+    "richtig": "Prüftaste: prüft nur die Mechanik der Auslösung – keine Aussage über Auslösestrom, Auslösezeit oder Schutzleiterverbindung. Der Betreiber soll sie regelmäßig betätigen.\nMessung mit einem Prüfgerät nach DIN EN 61557-6 an einer Steckdose bzw. am Stromkreis hinter dem RCD:\n• Berührungsspannung bei IΔn: höchstens 50 V (UL)\n• Auslösestrom: zwischen 0,5 · IΔn und IΔn\n• Auslösezeit bei IΔn: unverzögert höchstens 300 ms (Typ S verzögert nach Herstellerangabe)\n• bei Typ B oder F zusätzlich mit passender Prüfstromform\nErgebnisse im Prüfbericht festhalten.",
+    "erklaerung": "Fachgespräch: Unterschied zwischen Prüftaste und Messung sowie die Grenzwerte erklären. Stand prüfen.",
+    "quelle": "DIN VDE 0100-600; DIN EN 61008-1; DIN EN 61557-6",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-k04",
+    "thema": "pruefung",
+    "unterthema": "Übergabe",
+    "typ": "karte",
+    "frage": "Was gehört zur Übergabe einer fertigen Anlage an den Kunden?",
+    "antworten": [],
+    "richtig": "• Prüfbericht der Erstprüfung mit Messwerten\n• Stromkreisliste bzw. Beschriftung der Verteiler\n• Übersichtsschaltplan, wo nötig Lage verdeckt verlegter Leitungen\n• Bedienungs- und Wartungsanleitungen der Geräte (Wallbox, Wechselrichter, Überspannungsschutz …)\n• Einweisung: RCD-Prüftaste regelmäßig betätigen, Verhalten bei Auslösung, Freischalten\n• Hinweise auf Wiederholungsprüfungen und Registrierungspflichten (z. B. Marktstammdatenregister)\n• Fertigstellungs- bzw. Inbetriebsetzungsmeldung an den Netzbetreiber",
+    "erklaerung": "Fachgespräch: Übergabe als Teil der Verantwortung des Installateurs darstellen.",
+    "quelle": "DIN VDE 0100-600; DIN VDE 0100-510; NAV § 14",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

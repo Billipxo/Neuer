@@ -1,0 +1,335 @@
+[
+  {
+    "id": "tab-001",
+    "thema": "tab",
+    "unterthema": "Geltungsbereich",
+    "typ": "einfach",
+    "frage": "Was regelt die VDE-AR-N 4100?",
+    "antworten": [
+      "Technische Regeln für den Anschluss von Kundenanlagen an das Niederspannungsnetz und deren Betrieb",
+      "Den Anschluss von Erzeugungsanlagen an das Mittelspannungsnetz",
+      "Den Anschluss von Kundenanlagen an das Hochspannungsnetz",
+      "Das Errichten von Niederspannungsanlagen allgemein, unabhängig vom Netzanschluss"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Die VDE-AR-N 4100 ist die Technische Anschlussregel Niederspannung (TAR NS) für Kundenanlagen. Mittelspannung regelt die VDE-AR-N 4110, Hochspannung die VDE-AR-N 4120. Erzeugungsanlagen am Niederspannungsnetz behandelt die VDE-AR-N 4105. Das allgemeine Errichten regelt die Normenreihe DIN VDE 0100.",
+    "quelle": "VDE-AR-N 4100, VDE-AR-N 4105, 4110, 4120",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-002",
+    "thema": "tab",
+    "unterthema": "Hauptstromversorgung",
+    "typ": "einfach",
+    "frage": "Wie groß darf der Spannungsfall in der Hauptstromversorgung zwischen Hausanschlusskasten und Messeinrichtung bei einem Leistungsbedarf bis 100 kVA höchstens sein?",
+    "antworten": [
+      "0,5 %",
+      "1 %",
+      "3 %",
+      "4 %"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Für die Hauptstromversorgung gilt bei Leistungsbedarf bis 100 kVA ein maximaler Spannungsfall von 0,5 %. Für größere Leistungen sind gestaffelt höhere Werte zulässig (z. B. 1 % über 100 bis 250 kVA). Die 3 % bzw. 4 % kennt man vom Spannungsfall in Verbraucheranlagen nach dem Zähler. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100 (Hauptstromversorgung)",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-003",
+    "thema": "tab",
+    "unterthema": "Inbetriebsetzung",
+    "typ": "einfach",
+    "frage": "Wer setzt nach NAV die Kundenanlage hinter dem in den TAB festgelegten Trennpunkt (in der Regel hinter dem Zähler) in Betrieb?",
+    "antworten": [
+      "Der Anschlussnehmer",
+      "Nur der Netzbetreiber",
+      "Das Installationsunternehmen",
+      "Der Messstellenbetreiber"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "NAV § 14: Den Netzanschluss nimmt der Netzbetreiber in Betrieb. Die Anlage bis zu dem in den TAB festgelegten Trennpunkt setzt der Netzbetreiber in Betrieb – oder mit seiner Zustimmung das Installationsunternehmen. Hinter diesem Trennpunkt setzt das Installationsunternehmen die Anlage in Betrieb. Wo der Trennpunkt liegt (z. B. Trennvorrichtung im Zählerplatz), steht in den TAB – Stand prüfen.",
+    "quelle": "NAV § 14",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-004",
+    "thema": "tab",
+    "unterthema": "Grundlagen",
+    "typ": "einfach",
+    "frage": "Auf welcher Rechtsgrundlage darf der Netzbetreiber Technische Anschlussbedingungen (TAB) festlegen?",
+    "antworten": [
+      "NAV § 20",
+      "DIN VDE 0100-600",
+      "DGUV Vorschrift 3",
+      "Bürgerliches Gesetzbuch (Werkvertragsrecht)"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Nach NAV § 20 darf der Netzbetreiber in den TAB weitere technische Anforderungen an den Netzanschluss, die Anlage und deren Betrieb festlegen, soweit das für eine sichere und störungsfreie Versorgung nötig ist. Die Anforderungen müssen den allgemein anerkannten Regeln der Technik entsprechen. Grundlage der TAB Niederspannung ist die VDE-AR-N 4100.",
+    "quelle": "NAV § 20; TAB Niederspannung",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-005",
+    "thema": "tab",
+    "unterthema": "Hauptstromversorgung",
+    "typ": "einfach",
+    "frage": "Was gehört zum Hauptstromversorgungssystem einer Kundenanlage?",
+    "antworten": [
+      "Das Hausanschlusskabel des Netzbetreibers von der Abzweigstelle bis zum Hausanschlusskasten",
+      "Alle Leitungen zwischen Zähler und Stromkreisverteiler, die bereits gemessene Energie führen",
+      "Alle Endstromkreise mit Steckdosen und Beleuchtung hinter den Stromkreisverteilern",
+      "Alle Hauptleitungen und Betriebsmittel hinter der Übergabestelle des Netzbetreibers, die nicht gemessene Energie führen"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Das Hauptstromversorgungssystem beginnt hinter dem Hausanschlusskasten (Übergabestelle) und reicht bis zu den Messeinrichtungen – also der Teil, in dem noch nicht gemessene Energie fließt. Dafür gelten besondere Anforderungen der VDE-AR-N 4100, z. B. an Spannungsfall, Plombierbarkeit und Selektivität. Leitungen hinter dem Zähler gehören zur Verbraucheranlage, das Hausanschlusskabel zum Netzanschluss.",
+    "quelle": "VDE-AR-N 4100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-006",
+    "thema": "tab",
+    "unterthema": "Anmeldung",
+    "typ": "mehrfach",
+    "frage": "Für welche Vorhaben ist in der Regel eine Anmeldung beim Netzbetreiber erforderlich?",
+    "antworten": [
+      "Neuanschluss einer Kundenanlage",
+      "Errichtung einer PV-Anlage auf dem Dach",
+      "Erhöhung der Anschlussleistung, z. B. für eine Wärmepumpe",
+      "Austausch einer defekten Steckdose gegen eine gleichwertige"
+    ],
+    "richtig": [
+      0,
+      1,
+      2
+    ],
+    "erklaerung": "Anmeldepflichtig sind Neuanschlüsse, Änderungen mit Auswirkung auf den Netzanschluss oder die vorzuhaltende Leistung sowie Erzeugungsanlagen und bestimmte Verbrauchsgeräte (z. B. Wärmepumpen, Ladeeinrichtungen). Die Anmeldung läuft über das eingetragene Installationsunternehmen mit den Vordrucken bzw. dem Portal des Netzbetreibers. Reine Instandsetzungen ohne Leistungsänderung sind nicht anmeldepflichtig. Einzelheiten regeln die TAB – Stand prüfen.",
+    "quelle": "NAV § 19; VDE-AR-N 4100; TAB",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-007",
+    "thema": "tab",
+    "unterthema": "Symmetrie",
+    "typ": "einfach",
+    "frage": "Bis zu welcher Bemessungsscheinleistung dürfen Verbrauchsgeräte in der Regel einphasig (zwischen Außenleiter und Neutralleiter) angeschlossen werden?",
+    "antworten": [
+      "3,6 kVA",
+      "4,6 kVA",
+      "7,4 kVA",
+      "11 kVA"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Damit die Außenleiter nicht ungleichmäßig belastet werden (Schieflast), sind einphasig angeschlossene Geräte auf 4,6 kVA begrenzt; größere Geräte werden dreiphasig angeschlossen. Dieselbe Grenze gilt für einphasige Erzeugungsanlagen nach VDE-AR-N 4105. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100; VDE-AR-N 4105",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-008",
+    "thema": "tab",
+    "unterthema": "Inbetriebsetzung",
+    "typ": "einfach",
+    "frage": "Wer beantragt nach NAV die Inbetriebsetzung einer neu errichteten Kundenanlage beim Netzbetreiber?",
+    "antworten": [
+      "Der Messstellenbetreiber, der später den Zähler setzt",
+      "Der Stromlieferant, mit dem der Kunde den Liefervertrag hat",
+      "Das Installationsunternehmen, das die Arbeiten ausgeführt hat",
+      "Die Handwerkskammer, bei der der Betrieb eingetragen ist"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "NAV § 14: Jede Inbetriebsetzung ist über das Installationsunternehmen, das die Arbeiten an der Anlage ausgeführt hat, beim Netzbetreiber zu beantragen – in der Regel mit dessen Vordruck oder Portal (Inbetriebsetzungsauftrag). Danach setzt der Messstellenbetreiber den Zähler.",
+    "quelle": "NAV § 14",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-009",
+    "thema": "tab",
+    "unterthema": "Anmeldung",
+    "typ": "einfach",
+    "frage": "Was gilt nach NAV, wenn ein Kunde zusätzliche Verbrauchsgeräte anschließt und sich dadurch die vorzuhaltende Leistung erhöht?",
+    "antworten": [
+      "Der Kunde muss in jedem Fall einen neuen Netzanschluss beantragen.",
+      "Nur der Stromlieferant muss informiert werden.",
+      "Es ist nichts zu tun, solange die Hausanschlusssicherung nicht auslöst.",
+      "Die Erweiterung ist dem Netzbetreiber mitzuteilen."
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "NAV § 19: Erweiterungen und Änderungen der Anlage sowie zusätzliche Verbrauchsgeräte sind dem Netzbetreiber mitzuteilen, soweit sich dadurch preisliche Bemessungsgrößen ändern oder die vorzuhaltende Leistung steigt. Ob ein stärkerer Netzanschluss nötig ist, entscheidet der Netzbetreiber.",
+    "quelle": "NAV § 19",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-010",
+    "thema": "tab",
+    "unterthema": "Hauptstromversorgung",
+    "typ": "einfach",
+    "frage": "Welcher Spannungsfall ist in der Hauptstromversorgung bei einem Leistungsbedarf über 100 kVA bis 250 kVA zulässig?",
+    "antworten": [
+      "0,5 %",
+      "1 %",
+      "1,25 %",
+      "3 %"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Der zulässige Spannungsfall zwischen Hausanschlusskasten und Messeinrichtung ist nach Leistungsbedarf gestaffelt: bis 100 kVA 0,5 %, über 100 bis 250 kVA 1 %, über 250 bis 400 kVA 1,25 %, über 400 kVA 1,5 %. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100 (Hauptstromversorgung)",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-011",
+    "thema": "tab",
+    "unterthema": "Grundlagen",
+    "typ": "einfach",
+    "frage": "Welche Nennspannung hat das öffentliche Niederspannungsnetz in Deutschland?",
+    "antworten": [
+      "230/400 V, 50 Hz",
+      "220/380 V, 50 Hz",
+      "230/400 V, 60 Hz",
+      "240/415 V, 50 Hz"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Die genormte Nennspannung beträgt 230 V zwischen Außenleiter und Neutralleiter bzw. 400 V zwischen den Außenleitern bei 50 Hz (DIN EN 60038). 220/380 V war der frühere Wert.",
+    "quelle": "DIN EN 60038",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-012",
+    "thema": "tab",
+    "unterthema": "Grundlagen",
+    "typ": "einfach",
+    "frage": "In welchem Bereich muss die Versorgungsspannung nach DIN EN 50160 bei 95 % der 10-Minuten-Mittelwerte einer Woche liegen?",
+    "antworten": [
+      "Nennspannung ± 10 %",
+      "Nennspannung ± 3 %",
+      "Nennspannung ± 15 %",
+      "Nennspannung ± 1 %"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "DIN EN 50160 beschreibt die Merkmale der Spannung in öffentlichen Netzen. Für langsame Spannungsänderungen gilt: 95 % der 10-Minuten-Mittelwerte einer Woche liegen innerhalb ± 10 % der Nennspannung (bei 230 V also 207 V bis 253 V). Stand prüfen.",
+    "quelle": "DIN EN 50160",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-013",
+    "thema": "tab",
+    "unterthema": "Hauptstromversorgung",
+    "typ": "einfach",
+    "frage": "Warum müssen die Überstrom-Schutzeinrichtungen in der Hauptstromversorgung selektiv zueinander sein?",
+    "antworten": [
+      "Damit der Netzbetreiber die Leistung jeder Wohnung über die Sicherungen begrenzen kann",
+      "Damit bei einem Fehler nur die nächstgelegene Schutzeinrichtung auslöst und nicht das ganze Gebäude ausfällt",
+      "Selektivität ist nur bei Fehlerstromschutzschaltern wichtig, nicht bei Überstromschutz",
+      "Damit alle Schutzeinrichtungen gleichzeitig auslösen und sicher abschalten"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Selektivität bedeutet: Es schaltet nur die Schutzeinrichtung ab, die dem Fehler am nächsten liegt. Löst bei einem Fehler in einer Wohnung die Hausanschlusssicherung aus, sind alle Kunden im Gebäude ohne Strom. Darum werden Hausanschlusssicherung, selektiver Hauptleitungsschutzschalter und nachgeschaltete Schutzeinrichtungen aufeinander abgestimmt.",
+    "quelle": "VDE-AR-N 4100; DIN VDE 0100-530",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-k01",
+    "thema": "tab",
+    "unterthema": "Inbetriebsetzung",
+    "typ": "karte",
+    "frage": "Beschreiben Sie den Ablauf vom Antrag bis zur Inbetriebsetzung einer neuen Kundenanlage.",
+    "antworten": [],
+    "richtig": "1. Netzanschlussantrag bzw. Anmeldung beim Netzbetreiber mit Leistungsbedarf und Lageplan (Anschlussnehmer bzw. eingetragenes Installationsunternehmen).\n2. Der Netzbetreiber prüft, legt den Netzanschluss fest und erstellt ggf. ein Angebot (Kosten, Baukostenzuschuss).\n3. Der Netzbetreiber stellt den Netzanschluss bis zur Hausanschlusssicherung her.\n4. Das Installationsunternehmen errichtet Hauptstromversorgung, Zählerplatz und Verbraucheranlage nach DIN VDE 0100, VDE-AR-N 4100 und TAB.\n5. Erstprüfung nach DIN VDE 0100-600 mit Prüfbericht.\n6. Inbetriebsetzungsauftrag an den Netzbetreiber; der Messstellenbetreiber setzt den Zähler.\n7. Das Installationsunternehmen setzt die Anlage hinter der Messeinrichtung in Betrieb und übergibt sie mit Dokumentation an den Kunden.",
+    "erklaerung": "Fachgespräch: Reihenfolge und Zuständigkeiten (Netzbetreiber, Messstellenbetreiber, Installateur) nennen. Formulare und Portale unterscheiden sich je Netzbetreiber – Stand prüfen.",
+    "quelle": "NAV §§ 6, 14; VDE-AR-N 4100; TAB",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-k02",
+    "thema": "tab",
+    "unterthema": "Grundlagen",
+    "typ": "karte",
+    "frage": "Was ist die VDE-AR-N 4100, und wie hängt sie mit den TAB des Netzbetreibers zusammen?",
+    "antworten": [],
+    "richtig": "Die VDE-AR-N 4100 ist die VDE-Anwendungsregel „Technische Regeln für den Anschluss von Kundenanlagen an das Niederspannungsnetz und deren Betrieb“ (TAR Niederspannung). Sie beschreibt bundeseinheitlich die technischen Anforderungen an Netzanschluss, Hauptstromversorgung, Zählerplätze, Steuerung, Betrieb und Anmeldung von Geräten.\nDie Netzbetreiber setzen sie über ihre Technischen Anschlussbedingungen (TAB, Grundlage NAV § 20) um und dürfen dort ergänzende, netzbetreiberspezifische Festlegungen treffen.\nFür Erzeugungsanlagen und Speicher am Niederspannungsnetz gilt zusätzlich die VDE-AR-N 4105.",
+    "erklaerung": "Fachgespräch: Unterschied zwischen Anwendungsregel (VDE) und TAB (Netzbetreiber) sowie die Rolle der NAV erklären können. Aktuelle Ausgabe prüfen.",
+    "quelle": "VDE-AR-N 4100; NAV § 20",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-k03",
+    "thema": "tab",
+    "unterthema": "Hauptstromversorgung",
+    "typ": "karte",
+    "frage": "Worauf achten Sie bei der Planung des Hauptstromversorgungssystems?",
+    "antworten": [],
+    "richtig": "• Bemessung nach Leistungsbedarf (z. B. nach DIN 18015-1) und Anschlussleistung\n• Spannungsfall zwischen Hausanschlusskasten und Zähler begrenzen (bis 100 kVA höchstens 0,5 %)\n• Selektivität: Hausanschlusssicherung, selektiver Hauptleitungsschutzschalter und nachgeschaltete Schutzeinrichtungen abstimmen\n• Teile mit nicht gemessener Energie plombierbar und berührungssicher ausführen\n• Leitungsführung in allgemein zugänglichen Bereichen, kurz und geschützt\n• Netzsystem: in TN-Systemen PEN-Aufteilung nach Vorgabe des Netzbetreibers, danach PE und N getrennt führen\n• Reserve für spätere Erweiterungen wie Wärmepumpe, Wallbox oder PV einplanen",
+    "erklaerung": "Fachgespräch: Anforderungen nennen und begründen. Grenzwerte ändern sich mit neuen Ausgaben – Stand prüfen.",
+    "quelle": "VDE-AR-N 4100; DIN 18015-1",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

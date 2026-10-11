@@ -1,0 +1,30 @@
+# ------------------------------------------------------------------------------
+# TREI-Trainer – Vorlage für den passwortgeschützten App-Ordner (z. B. /trei/)
+#
+# So verwenden (Einzelheiten im README, Abschnitt „Veröffentlichen auf All-Inkl“):
+#  1. Diese Datei in den App-Ordner hochladen und dort in „.htaccess“ umbenennen.
+#  2. Bei AuthUserFile den absoluten Serverpfad zu deiner .htpasswd eintragen.
+#
+# Benutzername und Passwort stehen NICHT in dieser Datei, sondern (verschlüsselt)
+# in der .htpasswd, die du selbst anlegst. Die .htpasswd gehört nie ins Projekt
+# oder ins Git-Repository.
+# ------------------------------------------------------------------------------
+
+# Passwortschutz: Der Browser fragt nach Benutzername und Passwort.
+AuthType Basic
+AuthName "TREI-Trainer"
+AuthUserFile /www/htdocs/DEINE-ACCOUNT-KENNUNG/PFAD/ZUR/.htpasswd
+Require valid-user
+
+# Nur verschlüsselt (https://): Unverschlüsselte Aufrufe werden sofort auf https://
+# umgeleitet – ohne vorher nach dem Passwort zu fragen, damit es nie im Klartext
+# übertragen wird. Ohne HTTPS funktionieren außerdem Offline-Modus und Installation nicht.
+# Meldet der Browser danach „zu viele Weiterleitungen“, diese vier Zeilen löschen
+# und stattdessen im KAS die Weiterleitung auf HTTPS für die Domain einschalten.
+<If "%{HTTPS} != 'on'">
+  Require all denied
+  ErrorDocument 403 https://%{HTTP_HOST}%{REQUEST_URI}
+</If>
+
+# Richtiger Dateityp für das App-Manifest (Installation auf dem Handy)
+AddType application/manifest+json .webmanifest

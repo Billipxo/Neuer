@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  TREI-Trainer als Android-App. Gebaut wird mit android/baue-apk.sh (siehe README).
+  Die App zeigt die Offline-Einzeldatei in einer WebView an; es werden keine Daten ins Internet geschickt.
+  INTERNET steht nur hier, weil die WebView sonst auch die lokal beantwortete Startadresse sperren kann.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.treitrainer.app">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/Thema"
+        android:usesCleartextTraffic="false">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation|uiMode|fontScale|locale|layoutDirection"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

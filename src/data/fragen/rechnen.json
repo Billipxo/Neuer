@@ -1,0 +1,402 @@
+[
+  {
+    "id": "rechnen-001",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Eine Wallbox nimmt an 400 V Drehstrom eine Wirkleistung von 11 kW auf (cos φ = 1). Wie groß ist der Strom je Außenleiter?",
+    "antworten": [],
+    "richtig": {
+      "wert": 15.88,
+      "einheit": "A",
+      "toleranz": 0.2,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "I = P / (√3 · U · cos φ) = 11 000 W / (1,732 · 400 V · 1) ≈ 15,9 A",
+    "quelle": "Grundlagen Drehstrom",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-002",
+    "thema": "rechnen",
+    "unterthema": "Spannungsfall",
+    "typ": "rechnen",
+    "frage": "Ein Wechselstromkreis (230 V, cos φ = 1) aus NYM-J 3×1,5 mm² ist 25 m lang und wird mit 16 A belastet. Wie groß ist der Spannungsfall in Volt? (κ_Cu = 56 m/(Ω·mm²))",
+    "antworten": [],
+    "richtig": {
+      "wert": 9.52,
+      "einheit": "V",
+      "toleranz": 0.1,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "Wechselstrom: Hin- und Rückleiter → ΔU = 2 · l · I · cos φ / (κ · A) = 2 · 25 m · 16 A · 1 / (56 · 1,5 mm²) = 800 / 84 ≈ 9,52 V. Das sind 9,52 V / 230 V ≈ 4,1 %. Der empfohlene Höchstwert von 3 % nach dem Zähler wäre damit überschritten.",
+    "quelle": "DIN VDE 0100-520; DIN 18015-1",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-003",
+    "thema": "rechnen",
+    "unterthema": "Schleifenimpedanz",
+    "typ": "rechnen",
+    "frage": "Ein Stromkreis im TN-System (U₀ = 230 V) ist mit einem LS-Schalter B16 geschützt. Wie groß darf die Schleifenimpedanz Z_S rechnerisch höchstens sein? (Abschaltstrom I_a = 5 · I_n)",
+    "antworten": [],
+    "richtig": {
+      "wert": 2.875,
+      "einheit": "Ω",
+      "toleranz": 0.02,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "I_a = 5 · 16 A = 80 A. Z_S ≤ U₀ / I_a = 230 V / 80 A = 2,875 Ω. In der Praxis wird bei Messung im kalten Zustand oft ein Korrekturfaktor (z. B. 2/3) berücksichtigt, um die Leitererwärmung im Fehlerfall abzubilden – dann ≈ 1,92 Ω.",
+    "quelle": "DIN VDE 0100-410, 411.4.4; DIN VDE 0100-600",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-004",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Ein Wechselstromverbraucher an 230 V nimmt 10 A bei cos φ = 0,8 auf. Wie groß ist die Wirkleistung in Watt?",
+    "antworten": [],
+    "richtig": {
+      "wert": 1840,
+      "einheit": "W",
+      "toleranz": 5,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "P = U · I · cos φ = 230 V · 10 A · 0,8 = 1840 W. Die Scheinleistung beträgt S = U · I = 2300 VA.",
+    "quelle": "Grundlagen Wechselstrom",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-005",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Eine Wallbox lädt mit 22 kW an 400 V Drehstrom (cos φ = 1). Wie groß ist der Strom je Außenleiter?",
+    "antworten": [],
+    "richtig": {
+      "wert": 31.75,
+      "einheit": "A",
+      "toleranz": 0.3,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "I = P / (√3 · U · cos φ) = 22 000 W / (1,732 · 400 V · 1) ≈ 31,75 A. Eine 22-kW-Wallbox wird deshalb typischerweise mit 32 A angeschlossen.",
+    "quelle": "Grundlagen Drehstrom",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-006",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Eine Waschmaschine nimmt an 230 V eine Leistung von 2,3 kW auf (cos φ = 1). Wie groß ist der Strom?",
+    "antworten": [],
+    "richtig": {
+      "wert": 10,
+      "einheit": "A",
+      "toleranz": 0.1,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "I = P / (U · cos φ) = 2300 W / (230 V · 1) = 10 A.",
+    "quelle": "Grundlagen Wechselstrom",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-007",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Ein Drehstrommotor nimmt an 400 V je Außenleiter 16 A bei cos φ = 0,85 auf. Wie groß ist die aufgenommene Wirkleistung in kW?",
+    "antworten": [],
+    "richtig": {
+      "wert": 9.42,
+      "einheit": "kW",
+      "toleranz": 0.05,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "P = √3 · U · I · cos φ = 1,732 · 400 V · 16 A · 0,85 ≈ 9422 W ≈ 9,42 kW.",
+    "quelle": "Grundlagen Drehstrom",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-008",
+    "thema": "rechnen",
+    "unterthema": "Spannungsfall",
+    "typ": "rechnen",
+    "frage": "Eine Drehstromleitung NYM-J 5×6 mm² ist 30 m lang und wird mit 32 A belastet (cos φ = 1). Wie groß ist der Spannungsfall in Volt? (κ_Cu = 56 m/(Ω·mm²))",
+    "antworten": [],
+    "richtig": {
+      "wert": 4.95,
+      "einheit": "V",
+      "toleranz": 0.05,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "Drehstrom: ΔU = √3 · l · I · cos φ / (κ · A) = 1,732 · 30 m · 32 A · 1 / (56 · 6 mm²) = 1662,8 / 336 ≈ 4,95 V. Bezogen auf 400 V sind das etwa 1,24 %.",
+    "quelle": "DIN VDE 0100-520",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-009",
+    "thema": "rechnen",
+    "unterthema": "Spannungsfall",
+    "typ": "rechnen",
+    "frage": "Ein Wechselstromkreis (230 V, cos φ = 1) aus NYM-J 3×1,5 mm² ist 18 m lang und wird mit 10 A belastet. Wie groß ist der Spannungsfall in Prozent? (κ_Cu = 56 m/(Ω·mm²))",
+    "antworten": [],
+    "richtig": {
+      "wert": 1.86,
+      "einheit": "%",
+      "toleranz": 0.05,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "ΔU = 2 · l · I · cos φ / (κ · A) = 2 · 18 m · 10 A / (56 · 1,5 mm²) = 360 / 84 ≈ 4,29 V. Δu = 4,29 V / 230 V · 100 % ≈ 1,86 %. Das liegt unter der Empfehlung von höchstens 3 % zwischen Zähler und Verbraucher (DIN 18015-1) – Stand prüfen.",
+    "quelle": "DIN VDE 0100-520; DIN 18015-1",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-010",
+    "thema": "rechnen",
+    "unterthema": "Querschnitt",
+    "typ": "rechnen",
+    "frage": "Ein Wechselstromkreis (230 V, cos φ = 1) ist 25 m lang und soll 16 A führen. Der Spannungsfall darf 3 % nicht überschreiten. Welcher Querschnitt ist rechnerisch mindestens nötig (in mm²)? (κ_Cu = 56 m/(Ω·mm²))",
+    "antworten": [],
+    "richtig": {
+      "wert": 2.07,
+      "einheit": "mm²",
+      "toleranz": 0.03,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "Zulässig: ΔU = 3 % von 230 V = 6,9 V. A = 2 · l · I · cos φ / (κ · ΔU) = 2 · 25 m · 16 A / (56 · 6,9 V) = 800 / 386,4 ≈ 2,07 mm². Gewählt wird der nächste Normquerschnitt 2,5 mm²; zusätzlich müssen Strombelastbarkeit (Verlegeart, Häufung) und Abschaltbedingung passen.",
+    "quelle": "DIN VDE 0100-520; DIN VDE 0298-4",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-011",
+    "thema": "rechnen",
+    "unterthema": "Leitungswiderstand",
+    "typ": "rechnen",
+    "frage": "Wie groß ist der Widerstand eines 50 m langen Kupferleiters mit 2,5 mm² Querschnitt (nur Hinleiter)? (κ_Cu = 56 m/(Ω·mm²))",
+    "antworten": [],
+    "richtig": {
+      "wert": 0.357,
+      "einheit": "Ω",
+      "toleranz": 0.005,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "R = l / (κ · A) = 50 m / (56 · 2,5 mm²) = 50 / 140 ≈ 0,357 Ω. Für Hin- und Rückleiter (Schleife) wäre es doppelt so viel.",
+    "quelle": "Grundlagen Elektrotechnik",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-012",
+    "thema": "rechnen",
+    "unterthema": "Schleifenimpedanz",
+    "typ": "rechnen",
+    "frage": "Ein Stromkreis im TN-System (U₀ = 230 V) ist mit einem Leitungsschutzschalter C16 geschützt. Wie groß darf die Schleifenimpedanz rechnerisch höchstens sein? (Abschaltstrom Ia = 10 · In)",
+    "antworten": [],
+    "richtig": {
+      "wert": 1.44,
+      "einheit": "Ω",
+      "toleranz": 0.01,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "Ia = 10 · 16 A = 160 A. Zs ≤ U₀ / Ia = 230 V / 160 A ≈ 1,44 Ω. Mit C-Charakteristik ist der zulässige Wert also nur halb so groß wie mit B-Charakteristik (2,875 Ω).",
+    "quelle": "DIN VDE 0100-410",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-013",
+    "thema": "rechnen",
+    "unterthema": "Schleifenimpedanz",
+    "typ": "rechnen",
+    "frage": "Für einen B16-Stromkreis (U₀ = 230 V, Ia = 5 · In) wird beim Messen ein Faktor von 2/3 für die Erwärmung der Leiter im Fehlerfall angesetzt. Welchen Wert darf die gemessene Schleifenimpedanz höchstens haben?",
+    "antworten": [],
+    "richtig": {
+      "wert": 1.92,
+      "einheit": "Ω",
+      "toleranz": 0.01,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "Zs ≤ 2/3 · U₀ / Ia = 2/3 · 230 V / 80 A = 2/3 · 2,875 Ω ≈ 1,92 Ω. Der Faktor berücksichtigt, dass die Leiter beim Messen kalt, im Fehlerfall aber warm (und hochohmiger) sind.",
+    "quelle": "DIN VDE 0100-600; DIN VDE 0100-410",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-014",
+    "thema": "rechnen",
+    "unterthema": "Schleifenimpedanz",
+    "typ": "rechnen",
+    "frage": "Die gemessene Schleifenimpedanz eines Stromkreises beträgt 0,8 Ω (U₀ = 230 V). Wie groß ist der Kurzschlussstrom?",
+    "antworten": [],
+    "richtig": {
+      "wert": 287.5,
+      "einheit": "A",
+      "toleranz": 1,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "Ik = U₀ / Zs = 230 V / 0,8 Ω = 287,5 A. Ein B16 braucht für die unverzögerte Auslösung höchstens 80 A – die Abschaltbedingung ist erfüllt.",
+    "quelle": "DIN VDE 0100-410",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-015",
+    "thema": "rechnen",
+    "unterthema": "Schutzmaßnahmen",
+    "typ": "rechnen",
+    "frage": "Im TT-System wird ein RCD mit IΔn = 300 mA eingesetzt. Wie groß darf der Widerstand RA (Anlagenerder plus Schutzleiter) höchstens sein? (UL = 50 V)",
+    "antworten": [],
+    "richtig": {
+      "wert": 166.67,
+      "einheit": "Ω",
+      "toleranz": 0.5,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "Bedingung: RA · IΔn ≤ 50 V → RA ≤ 50 V / 0,3 A ≈ 166,7 Ω. Mit IΔn = 30 mA wären es 1667 Ω.",
+    "quelle": "DIN VDE 0100-410",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-016",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Ein Heizstab nimmt an 230 V eine Leistung von 3 kW auf. Wie groß ist sein Widerstand?",
+    "antworten": [],
+    "richtig": {
+      "wert": 17.63,
+      "einheit": "Ω",
+      "toleranz": 0.05,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "P = U² / R → R = U² / P = (230 V)² / 3000 W = 52 900 / 3000 ≈ 17,63 Ω.",
+    "quelle": "Grundlagen Elektrotechnik",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-017",
+    "thema": "rechnen",
+    "unterthema": "Energie",
+    "typ": "rechnen",
+    "frage": "Eine Wärmepumpe nimmt im Mittel 2,5 kW auf und läuft 30 Tage lang täglich 6 Stunden. Wie viel elektrische Energie verbraucht sie in diesem Zeitraum (in kWh)?",
+    "antworten": [],
+    "richtig": {
+      "wert": 450,
+      "einheit": "kWh",
+      "toleranz": 1,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "W = P · t = 2,5 kW · 6 h/Tag · 30 Tage = 450 kWh.",
+    "quelle": "Grundlagen Elektrotechnik",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-018",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Ein Verbraucher hat eine Scheinleistung von 4600 VA und eine Wirkleistung von 3680 W. Wie groß ist die Blindleistung (in var)?",
+    "antworten": [],
+    "richtig": {
+      "wert": 2760,
+      "einheit": "var",
+      "toleranz": 5,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "Q = √(S² − P²) = √(4600² − 3680²) = √7 617 600 ≈ 2760 var. Der Leistungsfaktor beträgt cos φ = P / S = 3680 / 4600 = 0,8.",
+    "quelle": "Grundlagen Wechselstrom",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-019",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Für ein Gebäude wird eine gleichzeitig benötigte Leistung von 30 kW bei cos φ = 0,95 an 400 V Drehstrom angesetzt. Wie groß ist der Strom in der Hauptleitung?",
+    "antworten": [],
+    "richtig": {
+      "wert": 45.58,
+      "einheit": "A",
+      "toleranz": 0.3,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "I = P / (√3 · U · cos φ) = 30 000 W / (1,732 · 400 V · 0,95) ≈ 45,58 A.",
+    "quelle": "Grundlagen Drehstrom; DIN 18015-1",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-020",
+    "thema": "rechnen",
+    "unterthema": "Spannungsfall",
+    "typ": "rechnen",
+    "frage": "Eine Hauptleitung (Drehstrom 400 V, cos φ = 1) aus Kupfer mit 16 mm² ist 15 m lang und wird mit 63 A belastet. Wie groß ist der Spannungsfall in Prozent? (κ_Cu = 56 m/(Ω·mm²))",
+    "antworten": [],
+    "richtig": {
+      "wert": 0.46,
+      "einheit": "%",
+      "toleranz": 0.01,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "ΔU = √3 · l · I · cos φ / (κ · A) = 1,732 · 15 m · 63 A / (56 · 16 mm²) = 1636,7 / 896 ≈ 1,83 V. Δu = 1,83 V / 400 V · 100 % ≈ 0,46 %. Bei einem Leistungsbedarf bis 100 kVA sind in der Hauptstromversorgung höchstens 0,5 % zulässig – das passt. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100; DIN VDE 0100-520",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

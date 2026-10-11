@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TREI-Trainer</string>
+    <color name="dunkel">#0f172a</color>
+
+    <style name="Thema" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/dunkel</item>
+        <item name="android:navigationBarColor">@color/dunkel</item>
+        <item name="android:windowBackground">@color/dunkel</item>
+    </style>
+</resources>

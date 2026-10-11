@@ -1,0 +1,405 @@
+[
+  {
+    "id": "schutz-001",
+    "thema": "schutz",
+    "unterthema": "Abschaltbedingungen",
+    "typ": "einfach",
+    "frage": "Welche maximale Abschaltzeit gilt im TN-System für Endstromkreise bis 32 A bei U₀ = 230 V AC?",
+    "antworten": [
+      "0,2 s",
+      "0,4 s",
+      "1 s",
+      "5 s"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Nach DIN VDE 0100-410 (Tabelle 41.1) gilt für 120 V < U₀ ≤ 230 V AC im TN-System 0,4 s, im TT-System 0,2 s. 5 s sind im TN-System für Verteilungsstromkreise und Endstromkreise über 32 A zulässig.",
+    "quelle": "DIN VDE 0100-410, Tabelle 41.1",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-002",
+    "thema": "schutz",
+    "unterthema": "RCD",
+    "typ": "mehrfach",
+    "frage": "Für welche Stromkreise ist ein zusätzlicher Schutz durch RCD mit IΔn ≤ 30 mA gefordert?",
+    "antworten": [
+      "Endstromkreise für Leuchten in Wohnungen",
+      "Endstromkreise im Außenbereich für ortsveränderliche Betriebsmittel bis 32 A",
+      "Die Hauptstromversorgung zwischen HAK und Zählerplatz",
+      "Steckdosen bis 32 A, die für die Benutzung durch Laien vorgesehen sind"
+    ],
+    "richtig": [
+      0,
+      1,
+      3
+    ],
+    "erklaerung": "DIN VDE 0100-410 (Abschnitt 411.3.3) fordert zusätzlichen Schutz durch RCD ≤ 30 mA für Steckdosen bis 32 A für Laien, für Endstromkreise im Außenbereich mit ortsveränderlichen Betriebsmitteln bis 32 A und für Beleuchtungsstromkreise in Wohnungen. Die Hauptstromversorgung wird nicht mit einem 30-mA-RCD geschützt.",
+    "quelle": "DIN VDE 0100-410, 411.3.3",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-003",
+    "thema": "schutz",
+    "unterthema": "TT-System",
+    "typ": "einfach",
+    "frage": "Welche Bedingung muss im TT-System beim Fehlerschutz mit RCD erfüllt sein?",
+    "antworten": [
+      "Z_S · I_a ≤ U₀",
+      "R_A ≤ 2 Ω",
+      "R_A · IΔn ≤ 230 V",
+      "R_A · IΔn ≤ 50 V"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Im TT-System muss gelten: R_A · IΔn ≤ 50 V (R_A = Summe aus Erderwiderstand und Schutzleiterwiderstand zu den Körpern). Die Bedingung Z_S · I_a ≤ U₀ gilt für das TN-System. Beispiel: bei IΔn = 30 mA darf R_A bis 1666 Ω betragen.",
+    "quelle": "DIN VDE 0100-410, 411.5",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-004",
+    "thema": "schutz",
+    "unterthema": "Netzsysteme",
+    "typ": "einfach",
+    "frage": "Was beschreibt der erste Buchstabe bei der Bezeichnung von Netzsystemen (z. B. das erste „T“ in TT)?",
+    "antworten": [
+      "Die Verbindung der Körper der Anlage mit Erde",
+      "Die Erdungsverhältnisse der Stromquelle bzw. des Netzes",
+      "Die Art der Schutzeinrichtung",
+      "Die Anzahl der Außenleiter"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "1. Buchstabe: Beziehung des Netzes zur Erde – T: ein Punkt (meist der Sternpunkt) ist direkt geerdet; I: alle aktiven Teile sind von Erde getrennt oder hochohmig geerdet. 2. Buchstabe: Beziehung der Körper zur Erde – T: Körper direkt geerdet (eigener Anlagenerder); N: Körper mit dem Betriebserder verbunden. Weitere Buchstaben (C, S) sagen, ob N und PE kombiniert (PEN) oder getrennt geführt werden.",
+    "quelle": "DIN VDE 0100-100",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-005",
+    "thema": "schutz",
+    "unterthema": "Abschaltbedingungen",
+    "typ": "einfach",
+    "frage": "Welche Abschaltzeit gilt im TN-System für Verteilungsstromkreise und Endstromkreise über 32 A?",
+    "antworten": [
+      "0,2 s",
+      "0,4 s",
+      "1 s",
+      "5 s"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Nach DIN VDE 0100-410 dürfen Verteilungsstromkreise und Endstromkreise über 32 A im TN-System höchstens 5 s bis zur Abschaltung brauchen. Für Endstromkreise bis 32 A gelten bei U₀ = 230 V 0,4 s.",
+    "quelle": "DIN VDE 0100-410",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-006",
+    "thema": "schutz",
+    "unterthema": "Leitungsschutz",
+    "typ": "einfach",
+    "frage": "In welchem Bereich löst ein Leitungsschutzschalter mit B-Charakteristik unverzögert (magnetisch) aus?",
+    "antworten": [
+      "1,13 × bis 1,45 × In",
+      "3 × bis 5 × In",
+      "5 × bis 10 × In",
+      "10 × bis 20 × In"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Die unverzögerte Auslösung liegt bei B zwischen 3 und 5 × In, bei C zwischen 5 und 10 × In, bei D zwischen 10 und 20 × In. Für den Nachweis der Abschaltbedingung rechnet man mit dem oberen Wert (B16: 5 × 16 A = 80 A). 1,13 und 1,45 × In sind die Prüfströme des thermischen Auslösers.",
+    "quelle": "DIN EN 60898-1",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-007",
+    "thema": "schutz",
+    "unterthema": "RCD",
+    "typ": "einfach",
+    "frage": "Welcher RCD-Typ erfasst zusätzlich zu Wechsel- und pulsierenden Fehlerströmen auch glatte Gleichfehlerströme?",
+    "antworten": [
+      "Typ AC",
+      "Typ A",
+      "Typ F",
+      "Typ B"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Typ AC: nur sinusförmige Wechselfehlerströme (für neue Anlagen in Deutschland nicht mehr üblich). Typ A: zusätzlich pulsierende Gleichfehlerströme. Typ F: zusätzlich Mischfrequenzen, z. B. bei einphasigen Frequenzumrichtern. Typ B: zusätzlich glatte Gleichfehlerströme – z. B. bei Ladeeinrichtungen ohne eigene Gleichfehlerstrom-Erkennung oder Drehstrom-Frequenzumrichtern.",
+    "quelle": "DIN VDE 0100-530; DIN EN 61008-1; DIN EN 62423",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-008",
+    "thema": "schutz",
+    "unterthema": "Selektivität",
+    "typ": "einfach",
+    "frage": "Wie erreicht man Selektivität zwischen zwei hintereinander geschalteten RCDs, z. B. 300 mA vor 30 mA?",
+    "antworten": [
+      "Beide RCDs haben denselben Bemessungsfehlerstrom und denselben Typ.",
+      "Der vorgeschaltete RCD ist ein selektiver Typ (Kennzeichen „S“) mit Auslöseverzögerung.",
+      "Selektivität ist bei RCDs grundsätzlich nicht möglich, nur bei Sicherungen.",
+      "Der nachgeschaltete RCD hat den größeren Bemessungsfehlerstrom."
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Damit bei einem Fehler im Endstromkreis nur der 30-mA-RCD auslöst, muss der vorgeschaltete RCD einen höheren Bemessungsfehlerstrom haben und zeitverzögert sein (selektiver RCD, Kennzeichen S).",
+    "quelle": "DIN VDE 0100-530",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-009",
+    "thema": "schutz",
+    "unterthema": "Überspannungsschutz",
+    "typ": "einfach",
+    "frage": "Welcher Überspannungsschutz wird am Gebäudeeintritt eingesetzt, wenn das Gebäude eine äußere Blitzschutzanlage hat?",
+    "antworten": [
+      "Typ 1 (Blitzstromableiter), meist als Kombiableiter Typ 1+2",
+      "Typ 3 direkt an der Steckdose",
+      "Ein RCD vom Typ B",
+      "Keiner, der äußere Blitzschutz reicht aus"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Bei äußerem Blitzschutz (oder Versorgung über Freileitung) können Teilblitzströme in die Anlage gelangen. Deshalb gehört ein Typ-1-Ableiter an den Gebäudeeintritt bzw. in den Hauptverteiler; Typ 2 schützt in Unterverteilungen, Typ 3 nahe an empfindlichen Geräten. Im Bereich vor dem Zähler sind nur die vom Netzbetreiber zugelassenen Ableiter erlaubt – Stand prüfen.",
+    "quelle": "DIN VDE 0100-443; DIN VDE 0100-534; VDE-AR-N 4100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-010",
+    "thema": "schutz",
+    "unterthema": "Überspannungsschutz",
+    "typ": "einfach",
+    "frage": "Wo werden Überspannungsschutzgeräte vom Typ 3 eingesetzt?",
+    "antworten": [
+      "Ausschließlich in Freileitungen und Kabelverteilerschränken des Netzbetreibers",
+      "In der Nähe der zu schützenden Endgeräte, z. B. in Steckdosenleisten oder Gerätedosen",
+      "Im Hausanschlusskasten, direkt an den Hausanschlusssicherungen des Netzbetreibers",
+      "Vor der Hausanschlusssicherung, damit Blitzströme gar nicht erst ins Gebäude gelangen"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Typ 3 (Geräteschutz) begrenzt Restüberspannungen nahe am Endgerät und wird nur zusammen mit vorgeschalteten Typ-2-Ableitern eingesetzt.",
+    "quelle": "DIN VDE 0100-534",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-011",
+    "thema": "schutz",
+    "unterthema": "Schutzmaßnahmen",
+    "typ": "einfach",
+    "frage": "Was versteht man unter Basisschutz?",
+    "antworten": [
+      "Schutz von Gebäuden und Anlagen gegen direkte und indirekte Blitzeinschläge",
+      "Schutz bei einem Isolationsfehler durch automatische Abschaltung der Stromversorgung",
+      "Schutz gegen elektrischen Schlag beim Berühren aktiver Teile im fehlerfreien Betrieb, z. B. durch Isolierung",
+      "Schutz von Kabeln und Leitungen gegen zu hohe Erwärmung durch Überlast und Kurzschluss"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Basisschutz verhindert das Berühren aktiver Teile im Normalbetrieb (Basisisolierung, Abdeckungen, Umhüllungen). Fehlerschutz greift, wenn die Basisisolierung versagt – z. B. automatische Abschaltung mit Schutzpotentialausgleich. Der RCD mit 30 mA ist zusätzlicher Schutz.",
+    "quelle": "DIN VDE 0100-410",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-012",
+    "thema": "schutz",
+    "unterthema": "Schutzmaßnahmen",
+    "typ": "einfach",
+    "frage": "Woran erkennt man ein Gerät der Schutzklasse II?",
+    "antworten": [
+      "Daran, dass es nur mit Schutzkleinspannung aus einem Sicherheitstransformator betrieben wird",
+      "Am Schutzleiteranschluss mit Erdungszeichen, über den das Gehäuse geerdet wird",
+      "An einer blauen CEE-Steckvorrichtung, die nur für diese Geräte zugelassen ist",
+      "Am Symbol mit zwei ineinanderliegenden Quadraten (doppelte oder verstärkte Isolierung, kein Schutzleiter)"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Schutzklasse I: Schutzleiteranschluss. Schutzklasse II: doppelte oder verstärkte Isolierung, kein Schutzleiter (Symbol: Quadrat im Quadrat). Schutzklasse III: Betrieb mit Schutzkleinspannung (SELV/PELV).",
+    "quelle": "DIN EN 61140",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-013",
+    "thema": "schutz",
+    "unterthema": "Schutzmaßnahmen",
+    "typ": "einfach",
+    "frage": "Welche Spannung darf bei Kleinspannung (SELV/PELV) höchstens anliegen?",
+    "antworten": [
+      "25 V AC bzw. 60 V DC",
+      "50 V AC bzw. 120 V DC",
+      "120 V AC bzw. 300 V DC",
+      "230 V AC bzw. 400 V DC"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Kleinspannung ist auf höchstens 50 V Wechselspannung bzw. 120 V oberschwingungsfreie Gleichspannung begrenzt. Für besondere Bereiche (z. B. Badewanne, Schwimmbecken) gelten teils niedrigere Werte.",
+    "quelle": "DIN VDE 0100-410 (Abschnitt 414)",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-014",
+    "thema": "schutz",
+    "unterthema": "Leitungsschutz",
+    "typ": "mehrfach",
+    "frage": "Welche Aussagen zum Schutz einer Leitung bei Überlast nach DIN VDE 0100-430 treffen zu?",
+    "antworten": [
+      "Es muss gelten: Ib ≤ In ≤ Iz",
+      "Es muss gelten: I2 ≤ 1,45 · Iz",
+      "In muss größer als Iz sein, damit die Schutzeinrichtung nicht vorzeitig auslöst",
+      "Ib ist der Betriebsstrom, Iz die zulässige Strombelastbarkeit der Leitung"
+    ],
+    "richtig": [
+      0,
+      1,
+      3
+    ],
+    "erklaerung": "Der Bemessungsstrom der Schutzeinrichtung (In) muss zwischen Betriebsstrom (Ib) und Strombelastbarkeit der Leitung (Iz – abhängig von Verlegeart, Häufung und Umgebungstemperatur) liegen. Zusätzlich darf der große Prüfstrom I2 höchstens 1,45 · Iz sein; bei LS-Schaltern nach DIN EN 60898 ist das mit In ≤ Iz automatisch erfüllt.",
+    "quelle": "DIN VDE 0100-430",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-015",
+    "thema": "schutz",
+    "unterthema": "Netzsysteme",
+    "typ": "mehrfach",
+    "frage": "Welche Aussagen zum PEN-Leiter treffen zu?",
+    "antworten": [
+      "Der PEN-Leiter darf nicht geschaltet oder einzeln abgesichert werden.",
+      "Bei fester Verlegung muss er mindestens 10 mm² Kupfer haben.",
+      "In Endstromkreisen ist ein PEN-Leiter mit 1,5 mm² zulässig.",
+      "Nach der Aufteilung in PE und N dürfen beide nicht wieder miteinander verbunden werden."
+    ],
+    "richtig": [
+      0,
+      1,
+      3
+    ],
+    "erklaerung": "Der PEN vereint Schutz- und Neutralleiterfunktion; eine Unterbrechung würde Körper unter Spannung setzen. Deshalb darf er nicht geschaltet werden, muss mindestens 10 mm² Cu (16 mm² Al) haben, und nach der Aufteilung bleiben PE und N getrennt. Kennzeichnung: grün-gelb mit blauer Markierung an den Enden.",
+    "quelle": "DIN VDE 0100-540; DIN VDE 0100-460",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-016",
+    "thema": "schutz",
+    "unterthema": "Netzsysteme",
+    "typ": "einfach",
+    "frage": "Die Abbildung zeigt ein Netz mit Kundenanlage. Um welches Netzsystem handelt es sich, und was geschieht an der Stelle A?",
+    "antworten": [
+      "IT-System – an A sitzt der Isolationswächter, der den ersten Fehler meldet",
+      "TN-C-S-System – an A wird der PEN-Leiter in Schutzleiter (PE) und Neutralleiter (N) aufgeteilt",
+      "TT-System – an A ist der Anlagenerder der Kundenanlage mit dem Neutralleiter verbunden",
+      "TN-C-System – an A wird der Neutralleiter über einen Schalter vom PEN getrennt"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Vom Trafo kommt ein PEN-Leiter (TN-C-Teil), der an der Stelle A in PE und N aufgeteilt wird; danach werden beide getrennt geführt (TN-S-Teil). Der Körper des Verbrauchers ist über den PE mit dem Betriebserder verbunden – also ein TN-System. Ab der Aufteilung dürfen PE und N nicht wieder verbunden werden.",
+    "quelle": "DIN VDE 0100-100; DIN VDE 0100-540",
+    "schwierigkeit": 2,
+    "bild": "bilder/netzsystem-a.svg",
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-k01",
+    "thema": "schutz",
+    "unterthema": "Netzsysteme",
+    "typ": "karte",
+    "frage": "Erklären Sie den Unterschied zwischen TN-C-, TN-S- und TT-System und wie im TT-System der Fehlerschutz erreicht wird.",
+    "antworten": [],
+    "richtig": "TN-C: Neutralleiter- und Schutzleiterfunktion in einem Leiter (PEN) – nur bei fester Verlegung ab 10 mm² Cu.\nTN-S: Neutralleiter (N) und Schutzleiter (PE) im ganzen System getrennt.\nTN-C-S: zunächst PEN, ab einem Punkt (z. B. Hausanschlusskasten oder Hauptverteilung) getrennt in PE und N – der übliche Aufbau in Hausinstallationen.\nTT: Der Netzbetreiber erdet den Sternpunkt (Betriebserder), die Körper der Kundenanlage sind über einen eigenen Anlagenerder geerdet. Weil der Fehlerstrom über das Erdreich fließt und klein ist, erfolgt der Fehlerschutz in der Regel mit RCDs; Bedingung: RA · IΔn ≤ 50 V.\nWelches System vorliegt, gibt der Netzbetreiber vor (TAB).",
+    "erklaerung": "Fachgespräch: Systeme unterscheiden und die Abschaltbedingung im TT-System nennen.",
+    "quelle": "DIN VDE 0100-100; DIN VDE 0100-410",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-k02",
+    "thema": "schutz",
+    "unterthema": "Selektivität",
+    "typ": "karte",
+    "frage": "Wie stellen Sie die Selektivität zwischen Hausanschlusssicherung, SH-Schalter und Leitungsschutzschaltern sicher?",
+    "antworten": [],
+    "richtig": "Ziel: Bei einem Fehler löst nur die Schutzeinrichtung direkt vor der Fehlerstelle aus.\n• Kennlinien vergleichen: Die vorgeschaltete Schutzeinrichtung muss bei allen möglichen Fehlerströmen später auslösen.\n• Hausanschlusssicherung (NH, gG) → selektiver Hauptleitungsschutzschalter (SH) → Leitungsschutzschalter: Der SH-Schalter ist so gebaut, dass er zu nachgeschalteten LS-Schaltern selektiv ist und vor der NH-Sicherung abschaltet.\n• Herstellerangaben und Selektivitätstabellen verwenden, Durchlassenergie (I²t) berücksichtigen.\n• Schmelzsicherungen gleicher Betriebsklasse sind bei einem Bemessungsstromverhältnis von etwa 1 : 1,6 selektiv.\n• RCDs: vorgeschaltet selektiver Typ S mit größerem IΔn.",
+    "erklaerung": "Fachgespräch: Prinzip erklären und typische Kombinationen nennen. Herstellerangaben haben Vorrang – Stand prüfen.",
+    "quelle": "DIN VDE 0100-530; VDE-AR-N 4100; Herstellerangaben",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-k03",
+    "thema": "schutz",
+    "unterthema": "Überspannungsschutz",
+    "typ": "karte",
+    "frage": "Beschreiben Sie ein Überspannungsschutzkonzept für ein Einfamilienhaus mit PV-Anlage.",
+    "antworten": [],
+    "richtig": "• Typ 1+2 (Kombiableiter) am Gebäudeeintritt bzw. im Hauptverteiler, wenn ein äußerer Blitzschutz oder ein Freileitungsanschluss vorhanden ist; sonst Typ 2 im Hauptverteiler.\n• Typ 2 zusätzlich in Unterverteilungen, die weiter als etwa 10 m vom vorgeschalteten Ableiter entfernt sind.\n• Typ 3 nahe empfindlicher Geräte.\n• PV-Anlage: Überspannungsschutz auf der AC-Seite und auf der DC-Seite am Wechselrichter, abhängig von Leitungslängen und Blitzschutz; Trennungsabstand zur Blitzschutzanlage beachten.\n• Anschlussleitungen der Ableiter möglichst kurz (Gesamtlänge möglichst höchstens 0,5 m) und gut an den Potentialausgleich angebunden.\n• Im Vorzählerbereich nur vom Netzbetreiber zugelassene Ableiter.",
+    "erklaerung": "Fachgespräch: Stufenkonzept (Typ 1/2/3) und Besonderheiten bei PV erklären. Normen (DIN VDE 0100-443, -534, -712) und TAB beachten – Stand prüfen.",
+    "quelle": "DIN VDE 0100-443; DIN VDE 0100-534; DIN VDE 0100-712",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]
