@@ -17,6 +17,7 @@ import { SimulationErgebnisSeite } from './pages/SimulationErgebnisSeite';
 import { FrageEditorSeite } from './pages/FrageEditorSeite';
 import { DatenSeite } from './pages/DatenSeite';
 import { Hinweise, LevelAufstieg } from './components/Feier';
+import { UpdateHinweis } from './components/UpdateHinweis';
 
 function useTheme() {
   const { profil } = useDaten();
@@ -64,6 +65,7 @@ export function App() {
       {mitNavigation && <Navigation />}
       <Hinweise />
       <LevelAufstieg />
+      <UpdateHinweis />
     </>
   );
 }
