@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useDaten } from '../db/DatenContext';
-import { THEMEN, type Frage } from '../types';
+import { formatToleranz, formatZahl } from '../logic/bewertung';
+import { THEMEN, type Frage, type RechenLoesung } from '../types';
 import { Dialog, StatusPunkt, knopf } from './ui';
 
 export const TYP_TEXT = {
@@ -143,6 +144,71 @@ export function FrageWerkzeuge({ frageId }: { frageId: string }) {
           </button>
         </div>
       </Dialog>
+    </div>
+  );
+}
+
+/** Richtige Lösung je Fragetyp (für Katalog, Detailansicht und Auswertung) */
+export function Loesung({ frage }: { frage: Frage }) {
+  if (frage.typ === 'rechnen') {
+    const l = frage.richtig as RechenLoesung;
+    return (
+      <p className="rounded-2xl bg-green-50 p-3 ring-1 ring-green-300 dark:bg-green-500/10 dark:ring-green-700">
+        Lösung:{' '}
+        <strong>
+          {formatZahl(l.wert)} {l.einheit}
+        </strong>{' '}
+        <span className="text-sm text-slate-500 dark:text-slate-400">({formatToleranz(l)})</span>
+      </p>
+    );
+  }
+  if (frage.typ === 'karte') {
+    return (
+      <div className="rounded-2xl bg-green-50 p-3 ring-1 ring-green-300 dark:bg-green-500/10 dark:ring-green-700">
+        <p className="mb-1 text-sm font-semibold">Musterantwort</p>
+        <p className="leading-relaxed whitespace-pre-line">{frage.richtig as string}</p>
+      </div>
+    );
+  }
+  const richtig = frage.richtig as number[];
+  return (
+    <ul className="space-y-2">
+      {frage.antworten.map((a, i) => {
+        const ok = richtig.includes(i);
+        return (
+          <li
+            key={i}
+            className={`flex items-start gap-3 rounded-2xl border-2 p-3 ${
+              ok ? 'border-green-500 bg-green-50 dark:bg-green-500/10' : 'border-slate-200 dark:border-slate-800'
+            }`}
+          >
+            <span
+              className={`flex size-6 shrink-0 items-center justify-center text-sm font-bold ${
+                ok ? 'rounded-full bg-green-600 text-white' : 'text-slate-400'
+              }`}
+              aria-label={ok ? 'richtig' : 'falsch'}
+            >
+              {ok ? '✓' : '–'}
+            </span>
+            <span className="leading-snug">{a}</span>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+/** Frage komplett mit Lösung und Erklärung */
+export function FrageMitLoesung({ frage }: { frage: Frage }) {
+  return (
+    <div className="space-y-4">
+      <div>
+        <FrageKopf frage={frage} />
+        <FrageBild bild={frage.bild} />
+        <p className="text-lg leading-snug font-semibold">{frage.frage}</p>
+      </div>
+      <Loesung frage={frage} />
+      <Erklaerung frage={frage} />
     </div>
   );
 }

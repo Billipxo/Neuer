@@ -1,6 +1,6 @@
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { Karte, Seite } from '../components/Seite';
-import { AmpelLegende, Ampelbalken } from '../components/ui';
+import { AmpelLegende, Ampelbalken, Schalter } from '../components/ui';
 import { useDaten } from '../db/DatenContext';
 import { statusVerteilung, waehleFragen, type LernModus } from '../logic/sitzung';
 import { THEMEN, THEMA_IDS, type ThemaId } from '../types';
@@ -9,6 +9,7 @@ const MODI: { modus: LernModus; titel: string; text: string; icon: string }[] = 
   { modus: 'empfohlen', titel: 'Weiterlernen', text: 'Falsche und fällige Fragen zuerst, dann neue', icon: '▶' },
   { modus: 'neu', titel: 'Nur neue Fragen', text: 'Noch nie beantwortet', icon: '✨' },
   { modus: 'falsch', titel: 'Fehler wiederholen', text: 'Alle zuletzt falsch beantworteten Fragen', icon: '🔁' },
+  { modus: 'faellig', titel: 'Fällige Wiederholungen', text: 'Laut Leitner-System heute wieder dran', icon: '⏰' },
   { modus: 'markiert', titel: 'Markierte Fragen', text: 'Deine mit ★ markierten Fragen', icon: '★' },
   { modus: 'karten', titel: 'Karteikarten', text: 'Offene Fragen fürs Fachgespräch', icon: '🗂️' },
 ];
@@ -43,7 +44,7 @@ export function ThemaSeite() {
           const hervor = m.modus === 'empfohlen';
           const inhalt = (
             <>
-              <span className="text-2xl" aria-hidden>
+              <span className="w-8 shrink-0 text-center text-2xl" aria-hidden>
                 {m.icon}
               </span>
               <span className="flex-1">
@@ -74,20 +75,14 @@ export function ThemaSeite() {
         })}
       </ul>
 
-      <label className="mt-6 flex min-h-12 items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
-        <input
-          type="checkbox"
-          className="size-6 accent-marke-500"
-          checked={profil.nurGeprueft}
-          onChange={(e) => aendereProfil({ nurGeprueft: e.target.checked })}
+      <div className="mt-6">
+        <Schalter
+          titel="Nur geprüfte Fragen"
+          text={`${themenFragen.filter((f) => f.geprueft).length} von ${themenFragen.length} Fragen sind geprüft`}
+          an={profil.nurGeprueft}
+          onChange={(an) => aendereProfil({ nurGeprueft: an })}
         />
-        <span>
-          <span className="block font-medium">Nur geprüfte Fragen</span>
-          <span className="block text-sm text-slate-500 dark:text-slate-400">
-            {themenFragen.filter((f) => f.geprueft).length} von {themenFragen.length} Fragen sind geprüft
-          </span>
-        </span>
-      </label>
+      </div>
     </Seite>
   );
 }

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Erklaerung, FrageBild, FrageKopf, FrageWerkzeuge } from '../components/FrageTeile';
-import { StatusPunkt, knopf } from '../components/ui';
+import { Erklaerung, FrageBild, FrageKopf, FrageMitLoesung, FrageWerkzeuge } from '../components/FrageTeile';
+import { Dialog, StatusPunkt, knopf } from '../components/ui';
 import { useDaten } from '../db/DatenContext';
 import { bewerteAuswahl, bewerteRechnung, formatToleranz, formatZahl, parseZahl } from '../logic/bewertung';
 import { KARTEN_ERGEBNIS, type Ergebnis } from '../logic/leitner';
@@ -453,6 +453,8 @@ function Zusammenfassung({
 }) {
   const navigate = useNavigate();
   const { fortschritte } = useDaten();
+  const [ansicht, setAnsicht] = useState<string | null>(null);
+  const angezeigt = ansicht ? nachId.get(ansicht) : undefined;
   const gesamt = protokoll.size;
   const richtig = [...protokoll.values()].filter((e) => e === 'richtig').length;
   const nichtRichtig = [...protokoll.entries()].filter(([, e]) => e !== 'richtig').map(([id]) => id);
@@ -485,11 +487,18 @@ function Zusammenfassung({
           <h2 className="mb-2 text-sm font-semibold tracking-wide text-slate-500 uppercase">Noch nicht sicher</h2>
           <ul className="space-y-2">
             {nichtRichtig.map((id) => (
-              <li key={id} className="rounded-2xl bg-white p-3 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
-                <div className="mb-1 text-xs text-slate-500 dark:text-slate-400">
-                  <StatusPunkt status={fortschritte.get(id)?.status ?? 'neu'} />
-                </div>
-                <p className="line-clamp-2 text-sm">{nachId.get(id)?.frage}</p>
+              <li key={id}>
+                <button
+                  type="button"
+                  onClick={() => setAnsicht(id)}
+                  className="block w-full rounded-2xl bg-white p-3 text-left ring-1 ring-slate-200 active:scale-[0.99] dark:bg-slate-900 dark:ring-slate-800"
+                >
+                  <span className="mb-1 flex justify-between text-xs text-slate-500 dark:text-slate-400">
+                    <StatusPunkt status={fortschritte.get(id)?.status ?? 'neu'} />
+                    <span>Lösung ansehen ›</span>
+                  </span>
+                  <span className="line-clamp-2 text-sm">{nachId.get(id)?.frage}</span>
+                </button>
               </li>
             ))}
           </ul>
@@ -509,6 +518,10 @@ function Zusammenfassung({
           Fertig
         </Link>
       </div>
+
+      <Dialog offen={!!angezeigt} titel="Lösung" onSchliessen={() => setAnsicht(null)}>
+        {angezeigt && <FrageMitLoesung frage={angezeigt} />}
+      </Dialog>
     </main>
   );
 }

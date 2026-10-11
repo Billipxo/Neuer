@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Seite } from './components/Seite';
 import { useDaten } from './db/DatenContext';
@@ -8,6 +8,9 @@ import { KatalogSeite } from './pages/KatalogSeite';
 import { LernenSeite } from './pages/LernenSeite';
 import { ThemaSeite } from './pages/ThemaSeite';
 import { SitzungSeite } from './pages/SitzungSeite';
+import { MehrSeite } from './pages/MehrSeite';
+import { FrageDetailSeite } from './pages/FrageDetailSeite';
+import { EinstellungenSeite } from './pages/EinstellungenSeite';
 
 function useTheme() {
   const { profil } = useDaten();
@@ -43,7 +46,11 @@ export function App() {
         <Route path="/sitzung" element={<SitzungSeite />} />
         <Route path="/pruefung" element={<Folgt titel="Prüfungssimulation" />} />
         <Route path="/statistik" element={<Folgt titel="Statistik" />} />
-        <Route path="/mehr" element={<KatalogSeite />} />
+        <Route path="/mehr" element={<MehrSeite />} />
+        <Route path="/mehr/katalog" element={<KatalogSeite />} />
+        <Route path="/mehr/frage/:id" element={<FrageDetailSeite />} />
+        <Route path="/mehr/einstellungen" element={<EinstellungenSeite />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       {mitNavigation && <Navigation />}
     </>
