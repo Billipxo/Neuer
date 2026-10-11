@@ -74,7 +74,11 @@ function Sitzung({ params }: { params: URLSearchParams }) {
   const [ereignis, setEreignis] = useState<AntwortEreignis | null>(null);
   const [xpRunde, setXpRunde] = useState(0);
 
-  useEffect(() => window.scrollTo(0, 0), [pos]);
+  // Geschweifte Klammern sind wichtig: neuere Browser liefern bei scrollTo() ein Promise zurück,
+  // und was ein Effekt zurückgibt, ruft React später als Aufräum-Funktion auf (sonst weiße Seite).
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pos]);
 
   if (warteschlange.length === 0) {
     return (
