@@ -32,6 +32,23 @@ const bild = (name) => geraet.screenshot({ path: `${AUSGABE}/${name}.png` });
 const text = async (seite) => (await seite.locator('main').textContent()).replace(/\s+/g, ' ');
 const heute = async (seite) => (await text(seite)).match(/Heute\s*\d+\s*\/\s*\d+/)?.[0] ?? '(nicht gefunden)';
 const gehe = (seite, ziel) => seite.evaluate((h) => (location.hash = h), ziel);
+/** Systemfenster „Speichern unter“ / Dateiauswahl (com.android.documentsui oder com.google.android.documentsui) */
+const DATEIEN_APP = { pkg: /.*documentsui/ };
+/** Was ist gerade im Vordergrund? Für verständliche Fehlermeldungen. */
+const vordergrund = async () =>
+  (await geraet.shell('dumpsys activity activities | grep -m1 -E "topResumedActivity|mResumedActivity"'))
+    .toString()
+    .trim();
+async function warteAufDateienApp(schritt) {
+  try {
+    await geraet.wait(DATEIEN_APP, { timeout: 30_000 });
+  } catch (e) {
+    log(`   ${schritt}: Vordergrund ist ${await vordergrund()}`);
+    const meldungen = (await geraet.shell('logcat -d -t 400 "*:W"')).toString().split('\n');
+    log(meldungen.filter((z) => /treitrainer|documentsui|ActivityTaskManager|AndroidRuntime/i.test(z)).slice(-15).join('\n'));
+    throw e;
+  }
+}
 
 async function starteApp() {
   await geraet.shell(`am force-stop ${PAKET}`);
@@ -108,7 +125,8 @@ try {
   // 7. Sicherung über „Speichern unter“ speichern
   await gehe(seite, '#/mehr/daten');
   await seite.click('text=Sicherung herunterladen');
-  await geraet.wait({ pkg: /documentsui/ }, { timeout: 30_000 });
+  await warteAufDateienApp('7. Speichern unter');
+  log('   Speichern unter offen:', await vordergrund());
   await bild('7-speichern-unter');
   await geraet.tap({ text: /^(SAVE|Save|SPEICHERN|Speichern)$/ }, { timeout: 30_000 });
   const gesichert = await seite
@@ -127,7 +145,7 @@ try {
   const zurueckgesetzt = await heute(seite);
   await gehe(seite, '#/mehr/daten');
   await seite.click('text=📂 Sicherungsdatei wählen');
-  await geraet.wait({ pkg: /documentsui/ }, { timeout: 30_000 });
+  await warteAufDateienApp('8. Dateiauswahl');
   await bild('8-dateiauswahl');
   await geraet.tap({ text: /^trei-lernstand-.*\.json$/ }, { timeout: 30_000 });
   await seite.locator('[role=dialog]').getByRole('button', { name: 'Wiederherstellen', exact: true }).click();
