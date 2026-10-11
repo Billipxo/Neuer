@@ -1,10 +1,13 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { MITGELIEFERTE_FRAGEN } from '../data/fragen';
+import { baueAbzeichenKontext, neueAbzeichen, type Abzeichen } from '../logic/abzeichen';
 import { naechsterFortschritt, type Ergebnis } from '../logic/leitner';
-import type { Fortschritt, GespeicherteFrage, KartenBewertung, Profil } from '../types';
+import { verarbeiteAntwort, type AntwortEreignis, type Level } from '../logic/motivation';
+import type { Fortschritt, GespeicherteFrage, KartenBewertung, Profil, SimulationErgebnis } from '../types';
 import {
   alleFortschritte,
   alleFragen,
+  alleSimulationen,
   holeFortschritt,
   holeProfil,
   oeffneDb,
@@ -19,28 +22,60 @@ interface Zustand {
   fragen: GespeicherteFrage[];
   fortschritte: Map<string, Fortschritt>;
   profil: Profil;
+  simulationen: SimulationErgebnis[];
+}
+
+export interface Hinweis {
+  id: number;
+  icon: string;
+  text: string;
+}
+
+export interface AntwortRueckmeldung {
+  fortschritt: Fortschritt;
+  ereignis: AntwortEreignis;
+  abzeichen: Abzeichen[];
 }
 
 interface Daten extends Zustand {
-  /** Lädt Fragen, Fortschritt und Profil neu aus der Datenbank. */
+  /** Lädt Fragen, Fortschritt, Profil und Simulationen neu aus der Datenbank. */
   neuLaden: () => Promise<void>;
-  /** Speichert eine Antwort und aktualisiert den Lernstand der Frage. */
-  antwortSpeichern: (id: string, ergebnis: Ergebnis, karte?: KartenBewertung) => Promise<Fortschritt>;
+  /** Speichert eine Antwort: Lernstand der Frage, XP, Serie, Tagesziel, Abzeichen. */
+  antwortSpeichern: (id: string, ergebnis: Ergebnis, karte?: KartenBewertung) => Promise<AntwortRueckmeldung>;
   /** Ändert Markierung, Notiz, Fehlermeldung o. Ä. einer Frage. */
   aendereFortschritt: (id: string, aenderung: Partial<Omit<Fortschritt, 'id'>>) => Promise<void>;
   aendereProfil: (aenderung: Partial<Omit<Profil, 'id'>>) => Promise<void>;
+  /** Kurzer Hinweis oben im Bild (verschwindet von selbst) */
+  zeigeHinweis: (icon: string, text: string) => void;
+  hinweise: Hinweis[];
+  /** Level, zu dem gerade aufgestiegen wurde (für die kurze Animation) */
+  aufstieg: Level | null;
+  schliesseAufstieg: () => void;
 }
 
 const DatenContext = createContext<Daten | null>(null);
 
+const HINWEIS_DAUER_MS = 2800;
+
 export function DatenProvider({ children }: { children: ReactNode }) {
   const [zustand, setZustand] = useState<Zustand | null>(null);
   const [fehler, setFehler] = useState<string | null>(null);
+  const [hinweise, setHinweise] = useState<Hinweis[]>([]);
+  const [aufstieg, setAufstieg] = useState<Level | null>(null);
+  // immer der neueste Zustand, auch in asynchronen Abläufen
+  const aktuell = useRef<Zustand | null>(null);
+  aktuell.current = zustand;
+  const hinweisNr = useRef(0);
 
   const laden = useCallback(async (db: Db) => {
-    const [fragen, fortschritte, profil] = await Promise.all([alleFragen(db), alleFortschritte(db), holeProfil(db)]);
+    const [fragen, fortschritte, profil, simulationen] = await Promise.all([
+      alleFragen(db),
+      alleFortschritte(db),
+      holeProfil(db),
+      alleSimulationen(db),
+    ]);
     fragen.sort((a, b) => a.id.localeCompare(b.id, 'de', { numeric: true }));
-    setZustand({ db, fragen, fortschritte, profil });
+    setZustand({ db, fragen, fortschritte, profil, simulationen });
   }, []);
 
   useEffect(() => {
@@ -51,8 +86,10 @@ export function DatenProvider({ children }: { children: ReactNode }) {
     })().catch((e: unknown) => setFehler(String(e)));
   }, [laden]);
 
-  const fortschrittSetzen = useCallback((f: Fortschritt) => {
-    setZustand((z) => z && { ...z, fortschritte: new Map(z.fortschritte).set(f.id, f) });
+  const zeigeHinweis = useCallback((icon: string, text: string) => {
+    const id = ++hinweisNr.current;
+    setHinweise((h) => [...h, { id, icon, text }]);
+    setTimeout(() => setHinweise((h) => h.filter((x) => x.id !== id)), HINWEIS_DAUER_MS);
   }, []);
 
   if (fehler) {
@@ -67,26 +104,56 @@ export function DatenProvider({ children }: { children: ReactNode }) {
   if (!zustand) return <div className="p-6 text-center text-slate-500">Lade …</div>;
 
   const { db } = zustand;
+
+  const antwortSpeichern: Daten['antwortSpeichern'] = async (id, ergebnis, karte) => {
+    const jetzt = Date.now();
+    const vorher = await holeFortschritt(db, id);
+    let fortschritt = naechsterFortschritt(vorher, ergebnis, jetzt);
+    if (karte) fortschritt = { ...fortschritt, kartenBewertung: karte };
+    await speichereFortschritt(db, fortschritt);
+
+    const stand = aktuell.current!;
+    const frage = stand.fragen.find((f) => f.id === id);
+    const { profil: nachAntwort, ereignis } = verarbeiteAntwort({
+      profil: await holeProfil(db),
+      schwierigkeit: frage?.schwierigkeit ?? 1,
+      vorher,
+      ergebnis,
+      jetzt,
+    });
+    const fortschritte = new Map(stand.fortschritte).set(id, fortschritt);
+    const abzeichen = neueAbzeichen(
+      baueAbzeichenKontext(stand.fragen, fortschritte, nachAntwort, stand.simulationen),
+      nachAntwort.abzeichen,
+    );
+    const profil = { ...nachAntwort, abzeichen: [...nachAntwort.abzeichen, ...abzeichen.map((a) => a.id)] };
+    await speichereProfil(db, profil);
+    setZustand((z) => z && { ...z, profil, fortschritte: new Map(z.fortschritte).set(id, fortschritt) });
+
+    if (ereignis.tageszielErreicht) zeigeHinweis('🎯', 'Tagesziel erreicht! +50 XP');
+    for (const a of abzeichen) zeigeHinweis(a.icon, `Neues Abzeichen: ${a.titel}`);
+    if (ereignis.aufstieg) setAufstieg(ereignis.levelNachher);
+    return { fortschritt, ereignis, abzeichen };
+  };
+
   const daten: Daten = {
     ...zustand,
     neuLaden: () => laden(db),
-    antwortSpeichern: async (id, ergebnis, karte) => {
-      let f = naechsterFortschritt(await holeFortschritt(db, id), ergebnis);
-      if (karte) f = { ...f, kartenBewertung: karte };
-      await speichereFortschritt(db, f);
-      fortschrittSetzen(f);
-      return f;
-    },
+    antwortSpeichern,
     aendereFortschritt: async (id, aenderung) => {
       const f = { ...(await holeFortschritt(db, id)), ...aenderung };
       await speichereFortschritt(db, f);
-      fortschrittSetzen(f);
+      setZustand((z) => z && { ...z, fortschritte: new Map(z.fortschritte).set(f.id, f) });
     },
     aendereProfil: async (aenderung) => {
       const p = { ...(await holeProfil(db)), ...aenderung };
       await speichereProfil(db, p);
       setZustand((z) => z && { ...z, profil: p });
     },
+    zeigeHinweis,
+    hinweise,
+    aufstieg,
+    schliesseAufstieg: () => setAufstieg(null),
   };
 
   return <DatenContext.Provider value={daten}>{children}</DatenContext.Provider>;

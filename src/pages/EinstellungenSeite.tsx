@@ -2,7 +2,8 @@ import { Link } from 'react-router-dom';
 import { Seite } from '../components/Seite';
 import { Chip, Schalter } from '../components/ui';
 import { useDaten } from '../db/DatenContext';
-import type { Profil } from '../types';
+import { istGueltigesDatum } from '../logic/datum';
+import { STANDARD_PROFIL, type Profil } from '../types';
 
 const THEMES: { wert: Profil['theme']; text: string }[] = [
   { wert: 'system', text: 'Wie System' },
@@ -10,6 +11,9 @@ const THEMES: { wert: Profil['theme']; text: string }[] = [
   { wert: 'dunkel', text: '🌙 Dunkel' },
 ];
 const RUNDEN = [10, 20, 30, 50];
+const ZIEL_SCHRITT = 5;
+const ZIEL_MIN = 5;
+const ZIEL_MAX = 200;
 
 export function EinstellungenSeite() {
   const { profil, aendereProfil } = useDaten();
@@ -19,7 +23,57 @@ export function EinstellungenSeite() {
         ‹ Mehr
       </Link>
 
-      <h2 className="mb-2 text-sm font-semibold tracking-wide text-slate-500 uppercase">Darstellung</h2>
+      <h2 className="mb-2 text-sm font-semibold tracking-wide text-slate-500 uppercase">Ziele</h2>
+      <div className="space-y-2">
+        <div className="flex min-h-16 items-center gap-3 rounded-2xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+          <span className="flex-1">
+            <span className="block font-medium">Tagesziel</span>
+            <span className="block text-sm text-slate-500 dark:text-slate-400">Fragen pro Tag (+50 XP beim Erreichen)</span>
+          </span>
+          <button
+            type="button"
+            className="flex size-11 items-center justify-center rounded-full bg-slate-100 text-2xl font-bold disabled:opacity-40 dark:bg-slate-800"
+            aria-label="Tagesziel verringern"
+            disabled={profil.tagesziel <= ZIEL_MIN}
+            onClick={() => aendereProfil({ tagesziel: Math.max(ZIEL_MIN, profil.tagesziel - ZIEL_SCHRITT) })}
+          >
+            −
+          </button>
+          <span className="w-10 text-center text-xl font-semibold tabular-nums" aria-live="polite">
+            {profil.tagesziel}
+          </span>
+          <button
+            type="button"
+            className="flex size-11 items-center justify-center rounded-full bg-slate-100 text-2xl font-bold disabled:opacity-40 dark:bg-slate-800"
+            aria-label="Tagesziel erhöhen"
+            disabled={profil.tagesziel >= ZIEL_MAX}
+            onClick={() => aendereProfil({ tagesziel: Math.min(ZIEL_MAX, profil.tagesziel + ZIEL_SCHRITT) })}
+          >
+            +
+          </button>
+        </div>
+        <label className="block rounded-2xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+          <span className="block font-medium">Schriftliche Prüfung am</span>
+          <span className="block text-sm text-slate-500 dark:text-slate-400">Für Countdown und empfohlenes Tagespensum</span>
+          <input
+            type="date"
+            value={profil.pruefungsDatum}
+            onChange={(e) => istGueltigesDatum(e.target.value) && aendereProfil({ pruefungsDatum: e.target.value })}
+            className="mt-2 min-h-12 w-full rounded-xl border border-slate-300 bg-white px-3 text-base dark:border-slate-700 dark:bg-slate-950 dark:[color-scheme:dark]"
+          />
+          {profil.pruefungsDatum !== STANDARD_PROFIL.pruefungsDatum && (
+            <button
+              type="button"
+              className="mt-2 text-sm text-slate-600 underline dark:text-slate-300"
+              onClick={() => aendereProfil({ pruefungsDatum: STANDARD_PROFIL.pruefungsDatum })}
+            >
+              Zurück auf 30.01.2027
+            </button>
+          )}
+        </label>
+      </div>
+
+      <h2 className="mt-6 mb-2 text-sm font-semibold tracking-wide text-slate-500 uppercase">Darstellung</h2>
       <div className="flex flex-wrap gap-2 rounded-2xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
         {THEMES.map((t) => (
           <Chip key={t.wert} aktiv={profil.theme === t.wert} onClick={() => aendereProfil({ theme: t.wert })}>

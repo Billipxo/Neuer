@@ -21,9 +21,9 @@ export function knopf(variante: KnopfVariante = 'primaer', extra = ''): string {
 
 export const STATUS_INFO: Record<LernStatus, { text: string; farbe: string }> = {
   neu: { text: 'neu', farbe: 'bg-slate-400' },
-  falsch: { text: 'falsch', farbe: 'bg-red-500' },
-  einmal: { text: '1× richtig', farbe: 'bg-amber-400' },
-  gelernt: { text: 'gelernt', farbe: 'bg-green-500' },
+  falsch: { text: 'falsch', farbe: 'bg-status-kritisch' },
+  einmal: { text: '1× richtig', farbe: 'bg-status-warnung' },
+  gelernt: { text: 'gelernt', farbe: 'bg-status-gut' },
 };
 
 /** Farbiger Statuspunkt; ohne Text nur Dekoration (der umgebende Text nennt den Status). */
@@ -37,18 +37,31 @@ export function StatusPunkt({ status, mitText = true }: { status: LernStatus; mi
   );
 }
 
-/** Ampelbalken: grün = gelernt, gelb = 1× richtig, rot = falsch, grau = neu */
+/**
+ * Ampelbalken (Anteil je Lernstatus): grün = gelernt, gelb = 1× richtig, rot = falsch, grau = neu.
+ * Segmente mit 2px Abstand; die Bedeutung steht immer zusätzlich als Text daneben (AmpelLegende / aria-label).
+ */
 export function Ampelbalken({ v, hoehe = 'h-2.5' }: { v: Verteilung; hoehe?: string }) {
-  const anteil = (n: number) => (v.gesamt ? `${(n / v.gesamt) * 100}%` : '0%');
+  const segmente = [
+    { n: v.gelernt, farbe: 'bg-status-gut' },
+    { n: v.einmal, farbe: 'bg-status-warnung' },
+    { n: v.falsch, farbe: 'bg-status-kritisch' },
+    { n: v.neu, farbe: 'bg-status-neu' },
+  ].filter((s) => s.n > 0);
   return (
     <div
-      className={`flex w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700 ${hoehe}`}
+      className={`flex w-full gap-[2px] ${hoehe}`}
       role="img"
       aria-label={`${v.gelernt} gelernt, ${v.einmal} einmal richtig, ${v.falsch} falsch, ${v.neu} neu`}
     >
-      <div className="bg-green-500" style={{ width: anteil(v.gelernt) }} />
-      <div className="bg-amber-400" style={{ width: anteil(v.einmal) }} />
-      <div className="bg-red-500" style={{ width: anteil(v.falsch) }} />
+      {segmente.length === 0 && <div className="flex-1 rounded-full bg-status-neu" />}
+      {segmente.map((s, i) => (
+        <div
+          key={i}
+          className={`${s.farbe} ${i === 0 ? 'rounded-l-full' : ''} ${i === segmente.length - 1 ? 'rounded-r-full' : ''}`}
+          style={{ flexGrow: s.n, flexBasis: 0 }}
+        />
+      ))}
     </div>
   );
 }
@@ -146,5 +159,49 @@ export function Chip({ aktiv, onClick, children }: { aktiv: boolean; onClick: ()
     >
       {children}
     </button>
+  );
+}
+
+/**
+ * Fortschrittsbalken für einen Anteil (0–1) mit Spur in hellerer Stufe derselben Farbe.
+ * Der Wert steht immer als Text daneben – der Balken ist Ergänzung, nicht einzige Quelle.
+ */
+export function Meter({ anteil, label, hoehe = 'h-2.5' }: { anteil: number; label: string; hoehe?: string }) {
+  const p = Math.max(0, Math.min(1, anteil));
+  return (
+    <div
+      className={`w-full overflow-hidden rounded-full bg-daten-spur ${hoehe}`}
+      role="progressbar"
+      aria-label={label}
+      aria-valuemin={0}
+      aria-valuemax={100}
+      aria-valuenow={Math.round(p * 100)}
+    >
+      <div className="h-full rounded-full bg-daten transition-[width] duration-500" style={{ width: `${p * 100}%` }} />
+    </div>
+  );
+}
+
+/** Kennzahl-Kachel: Bezeichnung, Wert, optional Zusatz und Inhalt (z. B. Meter) */
+export function Kachel({
+  label,
+  wert,
+  zusatz,
+  children,
+  className = '',
+}: {
+  label: string;
+  wert: ReactNode;
+  zusatz?: ReactNode;
+  children?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={`rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800 ${className}`}>
+      <p className="text-sm text-slate-600 dark:text-slate-400">{label}</p>
+      <p className="mt-1 text-3xl font-semibold">{wert}</p>
+      {zusatz && <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">{zusatz}</p>}
+      {children && <div className="mt-3">{children}</div>}
+    </div>
   );
 }

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { formatFaelligkeit, tageZwischen } from './format';
+import { tageZwischen } from './datum';
+import { formatFaelligkeit } from './format';
 import { naechsterFortschritt } from './leitner';
 import { neuerFortschritt } from '../types';
 

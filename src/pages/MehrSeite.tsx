@@ -39,7 +39,7 @@ export function MehrSeite() {
     <Seite titel="Mehr">
       <ul className="space-y-2">
         <Eintrag to="/mehr/katalog" icon="🔎" titel="Fragenkatalog" text="Alle Fragen suchen, filtern und ansehen" zahl={fragen.length} />
-        <Eintrag to="/mehr/einstellungen" icon="⚙️" titel="Einstellungen" text="Darstellung und Lernrunden" />
+        <Eintrag to="/mehr/einstellungen" icon="⚙️" titel="Einstellungen" text="Tagesziel, Prüfungsdatum, Darstellung, Lernrunden" />
       </ul>
 
       <h2 className="mt-6 mb-2 text-sm font-semibold tracking-wide text-slate-500 uppercase">Fragen prüfen</h2>

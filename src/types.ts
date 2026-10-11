@@ -86,11 +86,15 @@ export interface SimulationsEinstellungen {
 export interface Profil {
   id: 'profil';
   xp: number;
+  /** richtige Antworten in Folge (über Runden hinweg) */
   serieAktuell: number;
+  /** beste Serie richtiger Antworten */
   bestSerie: number;
   tagesziel: number;
   /** Datum (YYYY-MM-DD) → Anzahl beantworteter Fragen */
   lernTage: Record<string, number>;
+  /** Tage (YYYY-MM-DD), an denen das Tagesziel erreicht wurde */
+  zielErreichtTage: string[];
   abzeichen: string[];
   pruefungsDatum: string; // YYYY-MM-DD
   simulation: SimulationsEinstellungen;
@@ -123,6 +127,7 @@ export const STANDARD_PROFIL: Profil = {
   bestSerie: 0,
   tagesziel: 20,
   lernTage: {},
+  zielErreichtTage: [],
   abzeichen: [],
   pruefungsDatum: '2027-01-30',
   simulation: { anzahl: 30, minuten: 60, bestehensgrenze: 70 },

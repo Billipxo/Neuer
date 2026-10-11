@@ -11,6 +11,8 @@ import { SitzungSeite } from './pages/SitzungSeite';
 import { MehrSeite } from './pages/MehrSeite';
 import { FrageDetailSeite } from './pages/FrageDetailSeite';
 import { EinstellungenSeite } from './pages/EinstellungenSeite';
+import { StatistikSeite } from './pages/StatistikSeite';
+import { Hinweise, LevelAufstieg } from './components/Feier';
 
 function useTheme() {
   const { profil } = useDaten();
@@ -45,7 +47,7 @@ export function App() {
         <Route path="/lernen/:thema" element={<ThemaSeite />} />
         <Route path="/sitzung" element={<SitzungSeite />} />
         <Route path="/pruefung" element={<Folgt titel="Prüfungssimulation" />} />
-        <Route path="/statistik" element={<Folgt titel="Statistik" />} />
+        <Route path="/statistik" element={<StatistikSeite />} />
         <Route path="/mehr" element={<MehrSeite />} />
         <Route path="/mehr/katalog" element={<KatalogSeite />} />
         <Route path="/mehr/frage/:id" element={<FrageDetailSeite />} />
@@ -53,6 +55,8 @@ export function App() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       {mitNavigation && <Navigation />}
+      <Hinweise />
+      <LevelAufstieg />
     </>
   );
 }

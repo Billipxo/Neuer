@@ -5,6 +5,7 @@ import { Dialog, StatusPunkt, knopf } from '../components/ui';
 import { useDaten } from '../db/DatenContext';
 import { bewerteAuswahl, bewerteRechnung, formatToleranz, formatZahl, parseZahl } from '../logic/bewertung';
 import { KARTEN_ERGEBNIS, type Ergebnis } from '../logic/leitner';
+import type { AntwortEreignis } from '../logic/motivation';
 import { LERN_MODI, antwortReihenfolge, waehleFragen, wiederEinreihen, type LernModus } from '../logic/sitzung';
 import { THEMA_IDS, type Frage, type KartenBewertung, type RechenLoesung, type ThemaId } from '../types';
 
@@ -26,7 +27,7 @@ export function SitzungSeite() {
 }
 
 function Sitzung({ params }: { params: URLSearchParams }) {
-  const { fragen, fortschritte, profil, antwortSpeichern } = useDaten();
+  const { fragen, fortschritte, profil, antwortSpeichern, zeigeHinweis } = useDaten();
   const nachId = useMemo(() => new Map(fragen.map((f) => [f.id, f])), [fragen]);
 
   const themaParam = params.get('thema');
@@ -69,6 +70,9 @@ function Sitzung({ params }: { params: URLSearchParams }) {
   const [protokoll, setProtokoll] = useState<Map<string, Ergebnis>>(new Map());
   const [wiederholungen, setWiederholungen] = useState<Record<string, number>>({});
   const [speichert, setSpeichert] = useState(false);
+  /** Rückmeldung zur letzten Antwort (XP, Serie) */
+  const [ereignis, setEreignis] = useState<AntwortEreignis | null>(null);
+  const [xpRunde, setXpRunde] = useState(0);
 
   useEffect(() => window.scrollTo(0, 0), [pos]);
 
@@ -89,7 +93,7 @@ function Sitzung({ params }: { params: URLSearchParams }) {
   }
 
   if (pos >= warteschlange.length) {
-    return <Zusammenfassung protokoll={protokoll} nachId={nachId} zurueck={zurueck} params={params} />;
+    return <Zusammenfassung protokoll={protokoll} nachId={nachId} zurueck={zurueck} params={params} xp={xpRunde} />;
   }
 
   const eintrag = warteschlange[pos];
@@ -111,16 +115,19 @@ function Sitzung({ params }: { params: URLSearchParams }) {
     setAufgedeckt(false);
     setErgebnis(null);
     setWiederEingereiht(false);
+    setEreignis(null);
   }
 
   async function abschliessen(erg: Ergebnis, karte?: KartenBewertung) {
     if (speichert || !frage) return;
     setSpeichert(true);
+    let rueckmeldung;
     try {
-      await antwortSpeichern(frage.id, erg, karte);
+      rueckmeldung = await antwortSpeichern(frage.id, erg, karte);
     } finally {
       setSpeichert(false);
     }
+    setXpRunde((x) => x + rueckmeldung.ereignis.xpGesamt);
     setProtokoll((p) => (p.has(frage.id) ? p : new Map(p).set(frage.id, erg)));
     const schon = wiederholungen[frage.id] ?? 0;
     const nochmal = erg === 'falsch' && schon < MAX_WIEDERHOLUNGEN;
@@ -129,9 +136,12 @@ function Sitzung({ params }: { params: URLSearchParams }) {
       setWarteschlange((q) => wiederEinreihen(q, pos, neuerEintrag(frage, q.length)));
     }
     if (karte) {
+      // Karteikarten springen sofort weiter – XP deshalb als kurzer Hinweis
+      if (rueckmeldung.ereignis.xp.gesamt > 0) zeigeHinweis('⭐', `+${rueckmeldung.ereignis.xp.gesamt} XP`);
       weiter();
     } else {
       setErgebnis(erg);
+      setEreignis(rueckmeldung.ereignis);
       setWiederEingereiht(nochmal);
       setAufgeloest(true);
     }
@@ -231,7 +241,7 @@ function Sitzung({ params }: { params: URLSearchParams }) {
 
         {aufgeloest && ergebnis && (
           <div className="mt-5 space-y-4">
-            <ErgebnisBanner ergebnis={ergebnis} wiederEingereiht={wiederEingereiht} />
+            <ErgebnisBanner ergebnis={ergebnis} wiederEingereiht={wiederEingereiht} ereignis={ereignis} />
             <Erklaerung frage={frage} />
           </div>
         )}
@@ -422,20 +432,36 @@ function RechenEingabe({
   );
 }
 
-function ErgebnisBanner({ ergebnis, wiederEingereiht }: { ergebnis: Ergebnis; wiederEingereiht: boolean }) {
+function ErgebnisBanner({
+  ergebnis,
+  wiederEingereiht,
+  ereignis,
+}: {
+  ergebnis: Ergebnis;
+  wiederEingereiht: boolean;
+  ereignis: AntwortEreignis | null;
+}) {
   const ok = ergebnis === 'richtig';
+  const xp = ereignis?.xp;
   return (
     <div
       role="status"
-      className={`flex items-center gap-3 rounded-2xl p-4 ${ok ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`}
+      className={`flex items-center gap-3 rounded-2xl p-4 ${ok ? 'bg-green-700 text-white' : 'bg-red-600 text-white'}`}
     >
       <span className="text-3xl" aria-hidden>
         {ok ? '✓' : '✗'}
       </span>
-      <div>
+      <div className="flex-1">
         <p className="text-lg font-bold">{ok ? 'Richtig!' : 'Leider falsch'}</p>
-        {wiederEingereiht && <p className="text-sm opacity-90">Die Frage kommt in dieser Runde gleich noch einmal.</p>}
+        {wiederEingereiht && <p className="text-sm">Die Frage kommt in dieser Runde gleich noch einmal.</p>}
+        {ok && xp && xp.serienBonus > 0 && (
+          <p className="text-sm">
+            🔥 {ereignis.serie} richtige in Folge · +{xp.serienBonus} Bonus
+          </p>
+        )}
+        {ok && xp?.gedrosselt && <p className="text-sm">Heute schon richtig beantwortet</p>}
       </div>
+      {xp && xp.gesamt > 0 && <span className="shrink-0 rounded-full bg-white/20 px-3 py-1 font-bold">+{xp.gesamt} XP</span>}
     </div>
   );
 }
@@ -445,11 +471,13 @@ function Zusammenfassung({
   nachId,
   zurueck,
   params,
+  xp,
 }: {
   protokoll: Map<string, Ergebnis>;
   nachId: Map<string, Frage>;
   zurueck: string;
   params: URLSearchParams;
+  xp: number;
 }) {
   const navigate = useNavigate();
   const { fortschritte } = useDaten();
@@ -480,6 +508,11 @@ function Zusammenfassung({
         <p className="mt-1 text-lg">
           <strong>{richtig}</strong> von <strong>{gesamt}</strong> Fragen beim ersten Versuch richtig ({prozent} %)
         </p>
+        {xp > 0 && (
+          <p className="mt-3 inline-block rounded-full bg-marke-400 px-4 py-1.5 font-bold text-slate-900">
+            ⭐ +{xp.toLocaleString('de-DE')} XP in dieser Runde
+          </p>
+        )}
       </div>
 
       {nichtRichtig.length > 0 && (

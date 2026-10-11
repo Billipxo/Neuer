@@ -1,12 +1,5 @@
 import type { Fortschritt } from '../types';
-import { tagesbeginn } from './leitner';
-
-const TAG = 86_400_000;
-
-/** Ganze Kalendertage von `von` bis `bis` (lokale Zeit, robust gegen Sommerzeit). */
-export function tageZwischen(von: number, bis: number): number {
-  return Math.round((tagesbeginn(bis) - tagesbeginn(von)) / TAG);
-}
+import { tageZwischen } from './datum';
 
 /** z. B. „Mi., 16.01.2027, 14:30“ */
 export function formatDatumZeit(ts: number): string {
