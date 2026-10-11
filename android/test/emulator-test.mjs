@@ -186,3 +186,5 @@ if (fehler.length) {
   process.exit(1);
 }
 console.log('\nAlles in Ordnung ✔');
+// Die Verbindung zum Gerät hält Node sonst am Leben – ausdrücklich beenden.
+process.exit(0);
