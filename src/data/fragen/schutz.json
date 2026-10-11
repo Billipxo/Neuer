@@ -1,0 +1,57 @@
+[
+  {
+    "id": "schutz-001",
+    "thema": "schutz",
+    "unterthema": "Abschaltbedingungen",
+    "typ": "einfach",
+    "frage": "Welche maximale Abschaltzeit gilt im TN-System für Endstromkreise bis 32 A bei U₀ = 230 V AC?",
+    "antworten": ["0,2 s", "0,4 s", "1 s", "5 s"],
+    "richtig": [1],
+    "erklaerung": "Nach DIN VDE 0100-410 (Tabelle 41.1) gilt für 120 V < U₀ ≤ 230 V AC im TN-System 0,4 s, im TT-System 0,2 s. 5 s sind im TN-System für Verteilungsstromkreise und Endstromkreise über 32 A zulässig.",
+    "quelle": "DIN VDE 0100-410, Tabelle 41.1",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-002",
+    "thema": "schutz",
+    "unterthema": "RCD",
+    "typ": "mehrfach",
+    "frage": "Für welche Stromkreise ist ein zusätzlicher Schutz durch RCD mit IΔn ≤ 30 mA gefordert?",
+    "antworten": [
+      "Steckdosen bis 32 A, die für die Benutzung durch Laien vorgesehen sind",
+      "Endstromkreise für Leuchten in Wohnungen",
+      "Endstromkreise im Außenbereich für ortsveränderliche Betriebsmittel bis 32 A",
+      "Die Hauptstromversorgung zwischen HAK und Zählerplatz"
+    ],
+    "richtig": [0, 1, 2],
+    "erklaerung": "DIN VDE 0100-410 (Abschnitt 411.3.3) fordert zusätzlichen Schutz durch RCD ≤ 30 mA für Steckdosen bis 32 A für Laien, für Endstromkreise im Außenbereich mit ortsveränderlichen Betriebsmitteln bis 32 A und für Beleuchtungsstromkreise in Wohnungen. Die Hauptstromversorgung wird nicht mit einem 30-mA-RCD geschützt.",
+    "quelle": "DIN VDE 0100-410, 411.3.3",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "schutz-003",
+    "thema": "schutz",
+    "unterthema": "TT-System",
+    "typ": "einfach",
+    "frage": "Welche Bedingung muss im TT-System beim Fehlerschutz mit RCD erfüllt sein?",
+    "antworten": [
+      "R_A · IΔn ≤ 50 V",
+      "Z_S · I_a ≤ U₀",
+      "R_A ≤ 2 Ω",
+      "R_A · IΔn ≤ 230 V"
+    ],
+    "richtig": [0],
+    "erklaerung": "Im TT-System muss gelten: R_A · IΔn ≤ 50 V (R_A = Summe aus Erderwiderstand und Schutzleiterwiderstand zu den Körpern). Die Bedingung Z_S · I_a ≤ U₀ gilt für das TN-System. Beispiel: bei IΔn = 30 mA darf R_A bis 1666 Ω betragen.",
+    "quelle": "DIN VDE 0100-410, 411.5",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

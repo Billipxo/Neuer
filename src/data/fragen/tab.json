@@ -1,0 +1,57 @@
+[
+  {
+    "id": "tab-001",
+    "thema": "tab",
+    "unterthema": "Geltungsbereich",
+    "typ": "einfach",
+    "frage": "Was regelt die VDE-AR-N 4100?",
+    "antworten": [
+      "Den Anschluss von Erzeugungsanlagen an das Mittelspannungsnetz",
+      "Technische Regeln für den Anschluss von Kundenanlagen an das Niederspannungsnetz und deren Betrieb",
+      "Das Errichten von Niederspannungsanlagen allgemein, unabhängig vom Netzanschluss",
+      "Den Anschluss von Kundenanlagen an das Hochspannungsnetz"
+    ],
+    "richtig": [1],
+    "erklaerung": "Die VDE-AR-N 4100 ist die Technische Anschlussregel Niederspannung (TAR NS) für Kundenanlagen. Mittelspannung regelt die VDE-AR-N 4110, Hochspannung die VDE-AR-N 4120. Erzeugungsanlagen am Niederspannungsnetz behandelt die VDE-AR-N 4105. Das allgemeine Errichten regelt die Normenreihe DIN VDE 0100.",
+    "quelle": "VDE-AR-N 4100, VDE-AR-N 4105, 4110, 4120",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-002",
+    "thema": "tab",
+    "unterthema": "Hauptstromversorgung",
+    "typ": "einfach",
+    "frage": "Wie groß darf der Spannungsfall in der Hauptstromversorgung zwischen Hausanschlusskasten und Messeinrichtung bei einem Leistungsbedarf bis 100 kVA höchstens sein?",
+    "antworten": ["0,5 %", "1 %", "3 %", "4 %"],
+    "richtig": [0],
+    "erklaerung": "Für die Hauptstromversorgung gilt bei Leistungsbedarf bis 100 kVA ein maximaler Spannungsfall von 0,5 %. Für größere Leistungen sind gestaffelt höhere Werte zulässig (z. B. 1 % über 100 bis 250 kVA). Die 3 % bzw. 4 % kennt man vom Spannungsfall in Verbraucheranlagen nach dem Zähler. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100 (Hauptstromversorgung)",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-003",
+    "thema": "tab",
+    "unterthema": "Inbetriebsetzung",
+    "typ": "einfach",
+    "frage": "Wer darf nach NAV die Anlage hinter der Messeinrichtung in Betrieb setzen?",
+    "antworten": [
+      "Nur der Netzbetreiber",
+      "Der Messstellenbetreiber",
+      "Das Installationsunternehmen",
+      "Der Anschlussnehmer"
+    ],
+    "richtig": [2],
+    "erklaerung": "NAV § 14: Den Netzanschluss setzt der Netzbetreiber in Betrieb. Die Anlage hinter dem Netzanschluss bis zu den Messeinrichtungen setzt der Netzbetreiber oder mit seiner Zustimmung das Installationsunternehmen in Betrieb. Die Anlage hinter der Messeinrichtung darf nur durch das Installationsunternehmen in Betrieb gesetzt werden.",
+    "quelle": "NAV § 14",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

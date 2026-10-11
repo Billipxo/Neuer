@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+
+/* Dark Mode per Klasse .dark am <html> (gesetzt nach Einstellung bzw. System) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-marke-50: #fefce8;
+  --color-marke-400: #facc15;
+  --color-marke-500: #eab308;
+  --color-marke-600: #ca8a04;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+  overscroll-behavior-y: none;
+}

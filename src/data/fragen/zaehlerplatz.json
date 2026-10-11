@@ -1,0 +1,57 @@
+[
+  {
+    "id": "zaehlerplatz-001",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "einfach",
+    "frage": "In welchem Höhenbereich über der Standfläche muss sich die Mitte der Messeinrichtung (Zähler) befinden?",
+    "antworten": [
+      "zwischen 0,40 m und 1,40 m",
+      "zwischen 0,80 m und 1,80 m",
+      "zwischen 1,10 m und 2,00 m",
+      "beliebig, solange der Zähler ablesbar ist"
+    ],
+    "richtig": [1],
+    "erklaerung": "Die Zählerplätze sind so anzuordnen, dass die Mitte der Messeinrichtung zwischen 0,80 m und 1,80 m über dem Fußboden liegt – damit Ablesung, Wechsel und Bedienung möglich sind. Stand prüfen (TAB des Netzbetreibers und VDE-AR-N 4100).",
+    "quelle": "VDE-AR-N 4100 (Zählerplatz); TAB Niederspannung",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-002",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "mehrfach",
+    "frage": "Welche Aussagen zum selektiven Hauptleitungsschutzschalter (SH-Schalter) im netzseitigen Anschlussraum des Zählerplatzes treffen zu?",
+    "antworten": [
+      "Er löst selektiv zu nachgeschalteten Leitungsschutzschaltern aus.",
+      "Er ermöglicht das Freischalten der Kundenanlage, ohne die Hausanschlusssicherung ziehen zu müssen.",
+      "Er ersetzt den Fehlerstromschutzschalter (RCD) der Anlage.",
+      "Er ist vor der Messeinrichtung angeordnet."
+    ],
+    "richtig": [0, 1, 3],
+    "erklaerung": "Der SH-Schalter sitzt netzseitig vor dem Zähler. Er ist selektiv zu den nachgeschalteten LS-Schaltern (die LS lösen bei Fehlern zuerst aus) und dient als Trenn- und Schaltstelle für die Kundenanlage, z. B. beim Zählerwechsel. Einen RCD ersetzt er nicht – er schützt gegen Überstrom, nicht gegen Fehlerströme. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100 (Zählerplatz)",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-k01",
+    "thema": "zaehlerplatz",
+    "unterthema": "Moderne Messeinrichtung / iMSys",
+    "typ": "karte",
+    "frage": "Erklären Sie den Unterschied zwischen einer modernen Messeinrichtung (mME) und einem intelligenten Messsystem (iMSys).",
+    "antworten": [],
+    "richtig": "Moderne Messeinrichtung: digitaler Zähler, der den tatsächlichen Verbrauch und die Nutzungszeit anzeigt, aber selbst nicht kommuniziert. Er kann über ein Smart-Meter-Gateway in ein Kommunikationsnetz eingebunden werden.\nIntelligentes Messsystem: moderne Messeinrichtung + Smart-Meter-Gateway (SMGW). Das Gateway überträgt Messwerte sicher (BSI-zertifiziert) an berechtigte Marktteilnehmer und ermöglicht z. B. Steuern über eine Steuerbox (§ 14a EnWG, Erzeugungsanlagen).\nGrundlage ist das Messstellenbetriebsgesetz (MsbG).",
+    "erklaerung": "Merksatz: iMSys = mME + SMGW. Einbaufälle und Pflichten (Rollout) ergeben sich aus dem MsbG – Stand prüfen.",
+    "quelle": "MsbG § 2",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

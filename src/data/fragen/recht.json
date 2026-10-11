@@ -1,0 +1,77 @@
+[
+  {
+    "id": "recht-001",
+    "thema": "recht",
+    "unterthema": "Installateurverzeichnis",
+    "typ": "einfach",
+    "frage": "Wer darf – außer dem Netzbetreiber – eine elektrische Anlage hinter der Hausanschlusssicherung errichten, erweitern oder ändern?",
+    "antworten": [
+      "Jede Elektrofachkraft mit Gesellenbrief",
+      "Ein Installationsunternehmen, das in ein Installateurverzeichnis eines Netzbetreibers eingetragen ist",
+      "Der Anschlussnehmer selbst, wenn er die Anlage anschließend prüfen lässt",
+      "Jeder Betrieb mit Gewerbeanmeldung im Elektrohandwerk"
+    ],
+    "richtig": [1],
+    "erklaerung": "Nach NAV § 13 Abs. 2 dürfen Arbeiten an der Anlage hinter der Hausanschlusssicherung (außer durch den Netzbetreiber) nur von einem Installationsunternehmen ausgeführt werden, das in ein Installateurverzeichnis eines Netzbetreibers eingetragen ist. Ein Gesellenbrief oder eine Gewerbeanmeldung allein reicht nicht.",
+    "quelle": "NAV § 13 Abs. 2",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "recht-002",
+    "thema": "recht",
+    "unterthema": "Verantwortung",
+    "typ": "mehrfach",
+    "frage": "Welche Aussagen zur Verantwortung für die Kundenanlage nach NAV treffen zu?",
+    "antworten": [
+      "Für die ordnungsgemäße Errichtung, Erweiterung, Änderung und Instandhaltung der Anlage hinter der Hausanschlusssicherung ist der Anschlussnehmer gegenüber dem Netzbetreiber verantwortlich.",
+      "Die Messeinrichtungen sind von dieser Verantwortung des Anschlussnehmers ausgenommen.",
+      "Durch die Eintragung des Installateurs übernimmt der Netzbetreiber die Haftung für dessen Arbeiten.",
+      "Der Netzbetreiber ist berechtigt, die Ausführung der Arbeiten zu überwachen."
+    ],
+    "richtig": [0, 1, 3],
+    "erklaerung": "NAV § 13 Abs. 1: Der Anschlussnehmer ist gegenüber dem Netzbetreiber für die Anlage hinter der Hausanschlusssicherung verantwortlich – mit Ausnahme der Messeinrichtungen. NAV § 13 Abs. 2: Der Netzbetreiber darf die Ausführung überwachen. Eine Haftungsübernahme durch den Netzbetreiber gibt es nicht; die Verantwortung für die fachgerechte Ausführung liegt beim Installationsunternehmen.",
+    "quelle": "NAV § 13 Abs. 1 und 2",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "recht-003",
+    "thema": "recht",
+    "unterthema": "Installateurverzeichnis",
+    "typ": "einfach",
+    "frage": "Wer führt das Installateurverzeichnis, in das ein Elektroinstallationsunternehmen eingetragen sein muss?",
+    "antworten": [
+      "Die Handwerkskammer",
+      "Die Bundesnetzagentur",
+      "Der Netzbetreiber",
+      "Der VDE"
+    ],
+    "richtig": [2],
+    "erklaerung": "Das Installateurverzeichnis wird vom Netzbetreiber geführt (NAV § 13 Abs. 2 spricht vom „Installateurverzeichnis eines Netzbetreibers“). Die Handwerkskammer ist für die Handwerksrolle zuständig, die Eintragung dort bzw. die fachliche Qualifikation ist eine Voraussetzung, ersetzt das Verzeichnis aber nicht.",
+    "quelle": "NAV § 13 Abs. 2",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "recht-k01",
+    "thema": "recht",
+    "unterthema": "Installateurverzeichnis",
+    "typ": "karte",
+    "frage": "Warum gibt es das Installateurverzeichnis, und was muss ein Betrieb typischerweise nachweisen, um eingetragen zu werden?",
+    "antworten": [],
+    "richtig": "Zweck: Der Netzbetreiber muss sicherstellen, dass Kundenanlagen sicher errichtet werden und keine unzulässigen Rückwirkungen auf das Netz und andere Kunden haben (NAV § 13). Darum dürfen nur eingetragene Installationsunternehmen an der Anlage hinter der Hausanschlusssicherung arbeiten.\nTypische Nachweise: Eintragung in die Handwerksrolle bzw. Berechtigung zur Ausübung des Elektrotechniker-Handwerks, eine verantwortliche Elektrofachkraft mit entsprechender Qualifikation (z. B. Meister oder Sachkundenachweis wie TREI), die nötigen Mess- und Prüfgeräte, Kenntnis der TAB und VDE-AR-N 4100 sowie Gewerbeanmeldung. Die Eintragung ist an die verantwortliche Fachkraft gebunden.",
+    "erklaerung": "Fachgespräch: Zweck (Sicherheit, Netzrückwirkungen, NAV § 13) und Voraussetzungen nennen. Die genauen Nachweise legt der jeweilige Netzbetreiber fest – Stand prüfen und mit den Kursunterlagen abgleichen.",
+    "quelle": "NAV § 13; Richtlinie des Netzbetreibers zum Installateurverzeichnis",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "rechnen-001",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Eine Wallbox nimmt an 400 V Drehstrom eine Wirkleistung von 11 kW auf (cos φ = 1). Wie groß ist der Strom je Außenleiter?",
+    "antworten": [],
+    "richtig": { "wert": 15.88, "einheit": "A", "toleranz": 0.2, "toleranzArt": "abs" },
+    "erklaerung": "I = P / (√3 · U · cos φ) = 11 000 W / (1,732 · 400 V · 1) ≈ 15,9 A",
+    "quelle": "Grundlagen Drehstrom",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-002",
+    "thema": "rechnen",
+    "unterthema": "Spannungsfall",
+    "typ": "rechnen",
+    "frage": "Ein Wechselstromkreis (230 V, cos φ = 1) aus NYM-J 3×1,5 mm² ist 25 m lang und wird mit 16 A belastet. Wie groß ist der Spannungsfall in Volt? (κ_Cu = 56 m/(Ω·mm²))",
+    "antworten": [],
+    "richtig": { "wert": 9.52, "einheit": "V", "toleranz": 0.1, "toleranzArt": "abs" },
+    "erklaerung": "Wechselstrom: Hin- und Rückleiter → ΔU = 2 · l · I · cos φ / (κ · A) = 2 · 25 m · 16 A · 1 / (56 · 1,5 mm²) = 800 / 84 ≈ 9,52 V. Das sind 9,52 V / 230 V ≈ 4,1 %. Der empfohlene Höchstwert von 3 % nach dem Zähler wäre damit überschritten.",
+    "quelle": "DIN VDE 0100-520; DIN 18015-1",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-003",
+    "thema": "rechnen",
+    "unterthema": "Schleifenimpedanz",
+    "typ": "rechnen",
+    "frage": "Ein Stromkreis im TN-System (U₀ = 230 V) ist mit einem LS-Schalter B16 geschützt. Wie groß darf die Schleifenimpedanz Z_S rechnerisch höchstens sein? (Abschaltstrom I_a = 5 · I_n)",
+    "antworten": [],
+    "richtig": { "wert": 2.875, "einheit": "Ω", "toleranz": 0.02, "toleranzArt": "abs" },
+    "erklaerung": "I_a = 5 · 16 A = 80 A. Z_S ≤ U₀ / I_a = 230 V / 80 A = 2,875 Ω. In der Praxis wird bei Messung im kalten Zustand oft ein Korrekturfaktor (z. B. 2/3) berücksichtigt, um die Leitererwärmung im Fehlerfall abzubilden – dann ≈ 1,92 Ω.",
+    "quelle": "DIN VDE 0100-410, 411.4.4; DIN VDE 0100-600",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-004",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Ein Wechselstromverbraucher an 230 V nimmt 10 A bei cos φ = 0,8 auf. Wie groß ist die Wirkleistung in Watt?",
+    "antworten": [],
+    "richtig": { "wert": 1840, "einheit": "W", "toleranz": 5, "toleranzArt": "abs" },
+    "erklaerung": "P = U · I · cos φ = 230 V · 10 A · 0,8 = 1840 W. Die Scheinleistung beträgt S = U · I = 2300 VA.",
+    "quelle": "Grundlagen Wechselstrom",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

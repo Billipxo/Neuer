@@ -1,0 +1,42 @@
+[
+  {
+    "id": "pruefung-001",
+    "thema": "pruefung",
+    "unterthema": "Erstprüfung",
+    "typ": "mehrfach",
+    "frage": "Welche Bestandteile gehören zur Erstprüfung nach DIN VDE 0100-600?",
+    "antworten": [
+      "Besichtigen",
+      "Erproben und Messen",
+      "Dokumentation der Ergebnisse in einem Prüfbericht",
+      "Ein 24-stündiger Probebetrieb unter Volllast"
+    ],
+    "richtig": [0, 1, 2],
+    "erklaerung": "Die Erstprüfung besteht aus Besichtigen (bei abgeschalteter Anlage, vor dem Erproben und Messen), Erproben und Messen und endet mit dem Prüfbericht. Einen Dauerprobebetrieb fordert die Norm nicht.",
+    "quelle": "DIN VDE 0100-600",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-002",
+    "thema": "pruefung",
+    "unterthema": "Isolationswiderstand",
+    "typ": "einfach",
+    "frage": "Mit welcher Messspannung und welchem Mindestwert wird der Isolationswiderstand eines 230/400-V-Stromkreises geprüft?",
+    "antworten": [
+      "250 V DC, mindestens 0,5 MΩ",
+      "500 V DC, mindestens 1 MΩ",
+      "1000 V DC, mindestens 1 MΩ",
+      "500 V AC, mindestens 0,5 MΩ"
+    ],
+    "richtig": [1],
+    "erklaerung": "DIN VDE 0100-600 (Tabelle 6.1): Für Stromkreise bis 500 V Nennspannung (außer SELV/PELV) beträgt die Messgleichspannung 500 V, der Isolationswiderstand muss mindestens 1 MΩ betragen. SELV/PELV: 250 V DC, ≥ 0,5 MΩ.",
+    "quelle": "DIN VDE 0100-600, Tabelle 6.1",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

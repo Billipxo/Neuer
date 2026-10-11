@@ -1,0 +1,57 @@
+[
+  {
+    "id": "hausanschluss-001",
+    "thema": "hausanschluss",
+    "unterthema": "DIN 18012",
+    "typ": "einfach",
+    "frage": "Ab welcher Gebäudegröße ist nach DIN 18012 ein Hausanschlussraum vorzusehen?",
+    "antworten": [
+      "Ab zwei Wohneinheiten",
+      "In Gebäuden mit mehr als vier Wohneinheiten",
+      "In Gebäuden mit mehr als zehn Wohneinheiten",
+      "Nur bei Nichtwohngebäuden"
+    ],
+    "richtig": [1],
+    "erklaerung": "DIN 18012 fordert einen Hausanschlussraum in Gebäuden mit mehr als vier Wohneinheiten. Bei kleineren Gebäuden genügen eine Hausanschlusswand oder eine Hausanschlussnische. Stand prüfen.",
+    "quelle": "DIN 18012",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-002",
+    "thema": "hausanschluss",
+    "unterthema": "Fundamenterder DIN 18014",
+    "typ": "mehrfach",
+    "frage": "Ein Neubau erhält eine Perimeterdämmung unter der Bodenplatte. Welche Aussagen zur Erdungsanlage nach DIN 18014 treffen zu?",
+    "antworten": [
+      "Der Erder wird als Ringerder außerhalb der Dämmung im Erdreich verlegt.",
+      "Für den Ringerder im Erdreich wird nichtrostender Stahl (z. B. Werkstoff 1.4571) verwendet.",
+      "In der Bodenplatte wird zusätzlich ein Funktionspotentialausgleichsleiter verlegt und mit dem Ringerder verbunden.",
+      "Feuerverzinkter Bandstahl darf direkt im Erdreich als Ringerder verlegt werden."
+    ],
+    "richtig": [0, 1, 2],
+    "erklaerung": "Bei Perimeterdämmung (oder z. B. WU-Beton) hat der Erder in der Bodenplatte keinen ausreichenden Erdkontakt. Darum: Ringerder außerhalb im Erdreich aus korrosionsbeständigem nichtrostendem Stahl, zusätzlich ein Funktionspotentialausgleichsleiter in der Bodenplatte (Maschenweite max. 20 m × 20 m), mehrfach mit dem Ringerder verbunden. Verzinkter Stahl korrodiert im Erdreich und ist dort nicht zulässig. Stand prüfen.",
+    "quelle": "DIN 18014",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-003",
+    "thema": "hausanschluss",
+    "unterthema": "Schutzpotentialausgleich",
+    "typ": "einfach",
+    "frage": "Welchen Mindestquerschnitt muss ein Schutzpotentialausgleichsleiter aus Kupfer zur Haupterdungsschiene haben?",
+    "antworten": ["2,5 mm²", "4 mm²", "6 mm²", "16 mm²"],
+    "richtig": [2],
+    "erklaerung": "Nach DIN VDE 0100-540 mindestens 6 mm² Cu (16 mm² Al, 50 mm² Stahl). Zusätzlich gilt: mindestens halb so groß wie der größte Schutzleiter der Anlage, wobei 25 mm² Cu nicht überschritten werden müssen.",
+    "quelle": "DIN VDE 0100-540",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "id": "erzeugung-001",
+    "thema": "erzeugung",
+    "unterthema": "Marktstammdatenregister",
+    "typ": "einfach",
+    "frage": "Innerhalb welcher Frist muss der Betreiber eine neue PV-Anlage im Marktstammdatenregister registrieren?",
+    "antworten": [
+      "Vor der Anmeldung beim Netzbetreiber",
+      "Innerhalb eines Monats nach Inbetriebnahme",
+      "Innerhalb eines Jahres nach Inbetriebnahme",
+      "Nur bei Anlagen über 30 kWp"
+    ],
+    "richtig": [1],
+    "erklaerung": "Nach der Marktstammdatenregisterverordnung (MaStRV) ist die Registrierung innerhalb eines Monats nach Inbetriebnahme vorzunehmen – unabhängig von der Anlagengröße, auch Steckersolargeräte und Speicher sind registrierungspflichtig. Verantwortlich ist der Anlagenbetreiber, der Installateur sollte darauf hinweisen. Stand prüfen.",
+    "quelle": "MaStRV § 5",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-002",
+    "thema": "erzeugung",
+    "unterthema": "NA-Schutz",
+    "typ": "einfach",
+    "frage": "Ab welcher Summen-Scheinleistung der Erzeugungsanlagen fordert die VDE-AR-N 4105 einen zentralen NA-Schutz?",
+    "antworten": ["über 4,6 kVA", "über 13,8 kVA", "über 30 kVA", "über 100 kVA"],
+    "richtig": [2],
+    "erklaerung": "Bis 30 kVA genügt der im Wechselrichter integrierte NA-Schutz. Über 30 kVA ist ein zentraler NA-Schutz mit Kuppelschalter vorzusehen. Die 4,6 kVA kennt man als Grenze der Schieflast je Außenleiter. Stand prüfen.",
+    "quelle": "VDE-AR-N 4105",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

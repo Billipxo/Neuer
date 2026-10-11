@@ -1,0 +1,17 @@
+[
+  {
+    "id": "sicherheit-k01",
+    "thema": "sicherheit",
+    "unterthema": "5 Sicherheitsregeln",
+    "typ": "karte",
+    "frage": "Nennen Sie die fünf Sicherheitsregeln in der richtigen Reihenfolge und erläutern Sie kurz, was beim Arbeiten im Zählerschrank zu beachten ist.",
+    "antworten": [],
+    "richtig": "1. Freischalten\n2. Gegen Wiedereinschalten sichern\n3. Spannungsfreiheit feststellen (allpolig, mit geeignetem zweipoligem Spannungsprüfer, vorher und nachher auf Funktion prüfen)\n4. Erden und kurzschließen\n5. Benachbarte, unter Spannung stehende Teile abdecken oder abschranken\nIm Zählerschrank: Der netzseitige Anschlussraum bleibt bis zur Hausanschlusssicherung meist unter Spannung – abdecken. Freischalten z. B. über den SH-Schalter oder das Ziehen der NH-Sicherungen im HAK (nur mit PSA und NH-Aufsteckgriff mit Stulpe). Wiedereinschalten verhindern, z. B. mit Sperrelement und Hinweisschild. In Niederspannungsanlagen kann Erden und Kurzschließen entfallen, wenn keine Gefahr der Rückspeisung besteht – an PV-Anlagen und Speichern auf Rückspeisung achten!",
+    "erklaerung": "Die fünf Sicherheitsregeln stehen in DIN VDE 0105-100 und DGUV Vorschrift 3. Reihenfolge einhalten, Aufheben in umgekehrter Reihenfolge.",
+    "quelle": "DIN VDE 0105-100; DGUV Vorschrift 3",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

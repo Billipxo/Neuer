@@ -1,0 +1,32 @@
+[
+  {
+    "id": "verbraucher14a-001",
+    "thema": "verbraucher14a",
+    "unterthema": "Ladeeinrichtungen",
+    "typ": "einfach",
+    "frage": "Ab welcher Summen-Bemessungsleistung bedürfen Ladeeinrichtungen für Elektrofahrzeuge nach NAV der vorherigen Zustimmung des Netzbetreibers?",
+    "antworten": ["über 3,7 kVA", "über 11 kVA", "über 12 kVA", "über 22 kVA"],
+    "richtig": [2],
+    "erklaerung": "NAV § 19 Abs. 2: Ladeeinrichtungen für Elektrofahrzeuge sind dem Netzbetreiber vor Inbetriebnahme mitzuteilen. Übersteigt ihre Summen-Bemessungsleistung 12 kVA, ist die vorherige Zustimmung des Netzbetreibers nötig. Eine 11-kW-Wallbox ist also meldepflichtig, eine 22-kW-Wallbox zustimmungspflichtig. Stand prüfen.",
+    "quelle": "NAV § 19 Abs. 2",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-k01",
+    "thema": "verbraucher14a",
+    "unterthema": "§ 14a EnWG",
+    "typ": "karte",
+    "frage": "Was regelt § 14a EnWG, und was bedeutet das für die Installation einer Wärmepumpe oder Wallbox?",
+    "antworten": [],
+    "richtig": "§ 14a EnWG regelt die netzorientierte Steuerung steuerbarer Verbrauchseinrichtungen (z. B. nicht öffentliche Wallboxen, Wärmepumpen, Klimageräte, Batteriespeicher) mit einer Leistung über 4,2 kW, die seit 2024 neu angeschlossen werden.\n• Der Netzbetreiber darf den Anschluss nicht wegen Netzengpässen verweigern.\n• Im Gegenzug darf er bei drohender Überlastung den Bezug vorübergehend reduzieren – mindestens 4,2 kW müssen je Gerät verfügbar bleiben.\n• Der Kunde erhält ein reduziertes Netzentgelt (Module zur Auswahl).\n• Die Steuerung erfolgt über eine Steuereinrichtung, perspektivisch über das Smart-Meter-Gateway mit Steuerbox, oder über ein Energiemanagementsystem.\n• Für den Installateur: Anmeldung beim Netzbetreiber, Platz für Steuerung/Steuerbox im Zählerschrank vorsehen, steuerbare Schnittstelle am Gerät anschließen.",
+    "erklaerung": "Fachgespräch: Leistungsgrenze 4,2 kW, Pflicht zur Steuerbarkeit, Netzentgeltreduzierung und praktische Umsetzung nennen. Die Details stammen aus den Festlegungen der Bundesnetzagentur und ändern sich – Stand prüfen.",
+    "quelle": "EnWG § 14a; Festlegungen der BNetzA",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]
