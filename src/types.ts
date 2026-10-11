@@ -95,6 +95,12 @@ export interface Profil {
   pruefungsDatum: string; // YYYY-MM-DD
   simulation: SimulationsEinstellungen;
   theme: 'system' | 'hell' | 'dunkel';
+  /** Fragen pro Lernsitzung */
+  sitzungsLaenge: number;
+  /** Antwortreihenfolge bei jeder Anzeige mischen */
+  antwortenMischen: boolean;
+  /** Beim Lernen nur als geprüft markierte Fragen verwenden */
+  nurGeprueft: boolean;
 }
 
 export interface SimulationErgebnis {
@@ -121,6 +127,9 @@ export const STANDARD_PROFIL: Profil = {
   pruefungsDatum: '2027-01-30',
   simulation: { anzahl: 30, minuten: 60, bestehensgrenze: 70 },
   theme: 'system',
+  sitzungsLaenge: 20,
+  antwortenMischen: true,
+  nurGeprueft: false,
 };
 
 export function neuerFortschritt(id: string): Fortschritt {

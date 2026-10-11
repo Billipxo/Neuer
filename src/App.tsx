@@ -1,10 +1,13 @@
 import { useEffect } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, useLocation } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { Seite } from './components/Seite';
 import { useDaten } from './db/DatenContext';
 import { StartSeite } from './pages/StartSeite';
 import { KatalogSeite } from './pages/KatalogSeite';
+import { LernenSeite } from './pages/LernenSeite';
+import { ThemaSeite } from './pages/ThemaSeite';
+import { SitzungSeite } from './pages/SitzungSeite';
 
 function useTheme() {
   const { profil } = useDaten();
@@ -28,16 +31,21 @@ const Folgt = ({ titel }: { titel: string }) => (
 
 export function App() {
   useTheme();
+  const { pathname } = useLocation();
+  // Während einer Lernrunde braucht es die Navigation nicht – mehr Platz für die Frage.
+  const mitNavigation = !pathname.startsWith('/sitzung');
   return (
     <>
       <Routes>
         <Route path="/" element={<StartSeite />} />
-        <Route path="/lernen" element={<Folgt titel="Lernen" />} />
+        <Route path="/lernen" element={<LernenSeite />} />
+        <Route path="/lernen/:thema" element={<ThemaSeite />} />
+        <Route path="/sitzung" element={<SitzungSeite />} />
         <Route path="/pruefung" element={<Folgt titel="Prüfungssimulation" />} />
         <Route path="/statistik" element={<Folgt titel="Statistik" />} />
         <Route path="/mehr" element={<KatalogSeite />} />
       </Routes>
-      <Navigation />
+      {mitNavigation && <Navigation />}
     </>
   );
 }

@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import { Karte, Seite } from '../components/Seite';
+import { knopf } from '../components/ui';
 import { useDaten } from '../db/DatenContext';
 import { THEMEN } from '../types';
 
@@ -10,6 +12,9 @@ export function StartSeite() {
         <p className="text-lg font-semibold">{fragen.length} Fragen geladen</p>
         <p className="text-sm text-slate-500">davon {fragen.filter((f) => f.geprueft).length} geprüft</p>
       </Karte>
+      <Link to="/sitzung?thema=alle&modus=empfohlen&zurueck=/" className={knopf('primaer', 'mt-4 w-full')}>
+        ▶ Weiterlernen
+      </Link>
       <ul className="mt-4 space-y-2">
         {THEMEN.map((t) => (
           <li key={t.id}>

@@ -1,27 +1,46 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import { MITGELIEFERTE_FRAGEN } from '../data/fragen';
-import type { Fortschritt, GespeicherteFrage, Profil } from '../types';
-import { alleFortschritte, alleFragen, holeProfil, oeffneDb, synchronisiereFragen, type Db } from './db';
+import { naechsterFortschritt, type Ergebnis } from '../logic/leitner';
+import type { Fortschritt, GespeicherteFrage, KartenBewertung, Profil } from '../types';
+import {
+  alleFortschritte,
+  alleFragen,
+  holeFortschritt,
+  holeProfil,
+  oeffneDb,
+  speichereFortschritt,
+  speichereProfil,
+  synchronisiereFragen,
+  type Db,
+} from './db';
 
-interface Daten {
+interface Zustand {
   db: Db;
   fragen: GespeicherteFrage[];
   fortschritte: Map<string, Fortschritt>;
   profil: Profil;
+}
+
+interface Daten extends Zustand {
   /** Lädt Fragen, Fortschritt und Profil neu aus der Datenbank. */
   neuLaden: () => Promise<void>;
+  /** Speichert eine Antwort und aktualisiert den Lernstand der Frage. */
+  antwortSpeichern: (id: string, ergebnis: Ergebnis, karte?: KartenBewertung) => Promise<Fortschritt>;
+  /** Ändert Markierung, Notiz, Fehlermeldung o. Ä. einer Frage. */
+  aendereFortschritt: (id: string, aenderung: Partial<Omit<Fortschritt, 'id'>>) => Promise<void>;
+  aendereProfil: (aenderung: Partial<Omit<Profil, 'id'>>) => Promise<void>;
 }
 
 const DatenContext = createContext<Daten | null>(null);
 
 export function DatenProvider({ children }: { children: ReactNode }) {
-  const [daten, setDaten] = useState<Omit<Daten, 'neuLaden'> | null>(null);
+  const [zustand, setZustand] = useState<Zustand | null>(null);
   const [fehler, setFehler] = useState<string | null>(null);
 
   const laden = useCallback(async (db: Db) => {
     const [fragen, fortschritte, profil] = await Promise.all([alleFragen(db), alleFortschritte(db), holeProfil(db)]);
     fragen.sort((a, b) => a.id.localeCompare(b.id, 'de', { numeric: true }));
-    setDaten({ db, fragen, fortschritte, profil });
+    setZustand({ db, fragen, fortschritte, profil });
   }, []);
 
   useEffect(() => {
@@ -32,6 +51,10 @@ export function DatenProvider({ children }: { children: ReactNode }) {
     })().catch((e: unknown) => setFehler(String(e)));
   }, [laden]);
 
+  const fortschrittSetzen = useCallback((f: Fortschritt) => {
+    setZustand((z) => z && { ...z, fortschritte: new Map(z.fortschritte).set(f.id, f) });
+  }, []);
+
   if (fehler) {
     return (
       <div className="p-6">
@@ -41,11 +64,32 @@ export function DatenProvider({ children }: { children: ReactNode }) {
       </div>
     );
   }
-  if (!daten) return <div className="p-6 text-center text-slate-500">Lade …</div>;
+  if (!zustand) return <div className="p-6 text-center text-slate-500">Lade …</div>;
 
-  return (
-    <DatenContext.Provider value={{ ...daten, neuLaden: () => laden(daten.db) }}>{children}</DatenContext.Provider>
-  );
+  const { db } = zustand;
+  const daten: Daten = {
+    ...zustand,
+    neuLaden: () => laden(db),
+    antwortSpeichern: async (id, ergebnis, karte) => {
+      let f = naechsterFortschritt(await holeFortschritt(db, id), ergebnis);
+      if (karte) f = { ...f, kartenBewertung: karte };
+      await speichereFortschritt(db, f);
+      fortschrittSetzen(f);
+      return f;
+    },
+    aendereFortschritt: async (id, aenderung) => {
+      const f = { ...(await holeFortschritt(db, id)), ...aenderung };
+      await speichereFortschritt(db, f);
+      fortschrittSetzen(f);
+    },
+    aendereProfil: async (aenderung) => {
+      const p = { ...(await holeProfil(db)), ...aenderung };
+      await speichereProfil(db, p);
+      setZustand((z) => z && { ...z, profil: p });
+    },
+  };
+
+  return <DatenContext.Provider value={daten}>{children}</DatenContext.Provider>;
 }
 
 export function useDaten(): Daten {
