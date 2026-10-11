@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { nachUpdateSuchen, type UpdateErgebnis } from '../components/appUpdate';
 import { Seite } from '../components/Seite';
-import { Chip, Schalter, Stepper } from '../components/ui';
+import { Chip, Schalter, Stepper, knopf } from '../components/ui';
 import { useDaten } from '../db/DatenContext';
 import { istGueltigesDatum } from '../logic/datum';
 import { STANDARD_PROFIL, type Profil } from '../types';
@@ -15,8 +17,23 @@ const ZIEL_SCHRITT = 5;
 const ZIEL_MIN = 5;
 const ZIEL_MAX = 200;
 
+const UPDATE_TEXT: Record<UpdateErgebnis, string> = {
+  neu: 'Neue Version gefunden. Sobald sie geladen ist, erscheint oben „Aktualisieren“.',
+  aktuell: 'Du hast die neueste Version.',
+  anmeldung: 'Ohne Anmeldung ist keine Update-Prüfung möglich. Benutzername und Passwort sind die des geschützten Ordners.',
+  offline: 'Keine Internetverbindung – die App läuft offline weiter.',
+  fehler: 'Die Update-Prüfung hat nicht geklappt. Versuch es später noch einmal.',
+  'nicht-verfuegbar': 'Updates gibt es nur in der veröffentlichten App, nicht im Entwicklungsmodus.',
+};
+const APP_STAND = new Date(__APP_STAND__).toLocaleString('de-DE', { dateStyle: 'medium', timeStyle: 'short' });
+
 export function EinstellungenSeite() {
   const { profil, aendereProfil } = useDaten();
+  const [update, setUpdate] = useState<UpdateErgebnis | 'sucht' | null>(null);
+  const updateSuchen = async () => {
+    setUpdate('sucht');
+    setUpdate(await nachUpdateSuchen());
+  };
   return (
     <Seite titel="Einstellungen">
       <Link to="/mehr" className="-mt-2 mb-3 inline-block text-sm text-slate-500 dark:text-slate-400">
@@ -88,6 +105,26 @@ export function EinstellungenSeite() {
           an={profil.nurGeprueft}
           onChange={(an) => aendereProfil({ nurGeprueft: an })}
         />
+      </div>
+
+      <h2 className="mt-6 mb-2 text-sm font-semibold tracking-wide text-slate-500 uppercase">App</h2>
+      <div className="rounded-2xl bg-white p-4 ring-1 ring-slate-200 dark:bg-slate-900 dark:ring-slate-800">
+        <p className="font-medium">Version vom {APP_STAND}</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          Neue Versionen werden automatisch gesucht. Klappt das nicht (z. B. im passwortgeschützten Ordner), hier von Hand
+          suchen – der Browser fragt dann nach Benutzername und Passwort.
+        </p>
+        <button
+          type="button"
+          className={knopf('sekundaer', 'mt-3 w-full', 'mittel')}
+          disabled={update === 'sucht'}
+          onClick={updateSuchen}
+        >
+          {update === 'sucht' ? 'Suche …' : 'Nach Updates suchen'}
+        </button>
+        <p aria-live="polite" className="mt-2 text-sm text-slate-700 empty:hidden dark:text-slate-300">
+          {update && update !== 'sucht' ? UPDATE_TEXT[update] : ''}
+        </p>
       </div>
     </Seite>
   );

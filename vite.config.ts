@@ -9,6 +9,9 @@ process.env.TZ = 'Europe/Berlin';
 
 // base './' sorgt dafür, dass die App in jedem Unterordner läuft (z. B. /trei/ auf dem Webspace).
 export default defineConfig({
+  define: {
+    __APP_STAND__: JSON.stringify(new Date().toISOString()),
+  },
   base: './',
   plugins: [
     react(),

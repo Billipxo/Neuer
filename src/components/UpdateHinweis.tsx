@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { registerSW } from 'virtual:pwa-register';
 import { useDaten } from '../db/DatenContext';
+import { abonniereNeueVersion, meldeNeueVersion, merkeRegistrierung, stillNachUpdateSchauen } from './appUpdate';
 import { knopf } from './ui';
 
 /** Stündlich nach einer neuen Version schauen, solange die App offen ist */
@@ -15,14 +16,17 @@ export function UpdateHinweis() {
   const [neueVersion, setNeueVersion] = useState(false);
   const aktualisieren = useRef<((neuLaden?: boolean) => Promise<void>) | null>(null);
 
+  useEffect(() => abonniereNeueVersion(() => setNeueVersion(true)), []);
+
   useEffect(() => {
     if (!('serviceWorker' in navigator)) return;
     let intervall: ReturnType<typeof setInterval> | undefined;
     aktualisieren.current = registerSW({
-      onNeedRefresh: () => setNeueVersion(true),
+      onNeedRefresh: meldeNeueVersion,
       onOfflineReady: () => zeigeHinweis('📴', 'Die App funktioniert jetzt auch offline'),
       onRegisteredSW: (_url, registrierung) => {
-        if (registrierung) intervall = setInterval(() => registrierung.update().catch(() => {}), PRUEF_INTERVALL_MS);
+        merkeRegistrierung(registrierung);
+        if (registrierung) intervall = setInterval(stillNachUpdateSchauen, PRUEF_INTERVALL_MS);
       },
     });
     return () => clearInterval(intervall);
