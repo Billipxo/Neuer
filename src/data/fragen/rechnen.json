@@ -398,5 +398,325 @@
     "bild": null,
     "geprueft": false,
     "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-001",
+    "thema": "rechnen",
+    "unterthema": "Schleifenimpedanz",
+    "typ": "rechnen",
+    "frage": "Ein Stromkreis ist mit C16 geschützt (U₀ = 230 V, I_a = 10 · I_n). Welchen Wert darf die gemessene Schleifenimpedanz mit der 2/3-Reserve höchstens haben?",
+    "antworten": [],
+    "richtig": {
+      "wert": 0.96,
+      "einheit": "Ω",
+      "toleranz": 0.01,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "I_a = 10 · 16 A = 160 A; Z_s,max = 230 V / 160 A ≈ 1,44 Ω; Messwert höchstens 2/3 · 1,44 Ω ≈ 0,96 Ω.",
+    "quelle": "DIN VDE 0100-410; DIN VDE 0100-600",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-002",
+    "thema": "rechnen",
+    "unterthema": "Schutzmaßnahmen",
+    "typ": "rechnen",
+    "frage": "Im TT-System beträgt der Erdungswiderstand R_A = 100 Ω, der RCD hat IΔn = 30 mA. Wie groß ist die Berührungsspannung bei IΔn?",
+    "antworten": [],
+    "richtig": {
+      "wert": 3,
+      "einheit": "V",
+      "toleranz": 0.05,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "U_B = IΔn · R_A = 0,03 A · 100 Ω = 3 V – weit unter U_L = 50 V. Zulässig wäre R_A ≤ 50 V / 0,03 A ≈ 1.667 Ω.",
+    "quelle": "DIN VDE 0100-410; DIN VDE 0100-600",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-003",
+    "thema": "rechnen",
+    "unterthema": "Spannungsfall",
+    "typ": "rechnen",
+    "frage": "Ein Wechselstromkreis (230 V, cos φ = 1) aus Kupfer 1,5 mm² ist 30 m lang und führt 10 A. Wie groß ist der Spannungsfall in Prozent? (κ_Cu = 56 m/(Ω·mm²))",
+    "antworten": [],
+    "richtig": {
+      "wert": 3.11,
+      "einheit": "%",
+      "toleranz": 0.05,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "ΔU = 2 · 30 m · 10 A / (56 · 1,5 mm²) = 600 / 84 ≈ 7,14 V; Δu = 7,14 V / 230 V · 100 % ≈ 3,1 % – knapp über 3 % (DIN 18015-1). Mit 2,5 mm²: 4,29 V ≈ 1,9 %.",
+    "quelle": "DIN VDE 0100-520; DIN 18015-1",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-004",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Eine Wärmepumpe nimmt an 400 V Drehstrom 9 kW bei cos φ = 0,9 auf. Wie groß ist der Strom je Außenleiter?",
+    "antworten": [],
+    "richtig": {
+      "wert": 14.43,
+      "einheit": "A",
+      "toleranz": 0.1,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "I = P / (√3 · U · cos φ) = 9.000 W / (1,732 · 400 V · 0,9) ≈ 14,4 A. Mit mehr als 4,2 kW ist die Wärmepumpe zugleich steuerbar nach § 14a EnWG.",
+    "quelle": "Grundlagen Drehstrom; EnWG § 14a",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-005",
+    "thema": "rechnen",
+    "unterthema": "Leitungsschutz",
+    "typ": "rechnen",
+    "frage": "Wie lange darf ein Kurzschluss mit I_k = 500 A in einer Kupferleitung 2,5 mm² mit PVC-Isolierung (k = 115) höchstens dauern?",
+    "antworten": [],
+    "richtig": {
+      "wert": 0.33,
+      "einheit": "s",
+      "toleranz": 0.01,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "t ≤ (k · A / I_k)² = (115 · 2,5 / 500)² = 0,575² ≈ 0,33 s. Ein B16 löst bei 500 A magnetisch in wenigen Millisekunden aus – die Leitung ist geschützt.",
+    "quelle": "DIN VDE 0100-430",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-006",
+    "thema": "rechnen",
+    "unterthema": "Leitungsschutz",
+    "typ": "rechnen",
+    "frage": "Am Ende einer Kupferleitung 2,5 mm² (PVC, k = 115) beträgt der Kurzschlussstrom 250 A. Welche Abschaltzeit ist für die Leitung höchstens zulässig?",
+    "antworten": [],
+    "richtig": {
+      "wert": 1.32,
+      "einheit": "s",
+      "toleranz": 0.02,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "t ≤ (115 · 2,5 / 250)² = 1,15² ≈ 1,32 s. Ein B16 löst bei 250 A (mehr als 5 · 16 A = 80 A) magnetisch aus, also in Millisekunden.",
+    "quelle": "DIN VDE 0100-430",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-007",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Welchem Strom entspricht die Schieflastgrenze von 4,6 kVA bei einphasigem Anschluss an 230 V?",
+    "antworten": [],
+    "richtig": {
+      "wert": 20,
+      "einheit": "A",
+      "toleranz": 0.1,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "I = S / U₀ = 4.600 VA / 230 V = 20 A. Einphasige Geräte darüber werden in der Regel dreiphasig angeschlossen (VDE-AR-N 4100).",
+    "quelle": "VDE-AR-N 4100",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-008",
+    "thema": "rechnen",
+    "unterthema": "Verteiler",
+    "typ": "rechnen",
+    "frage": "Ein Gerät im Verteiler hat bei Nennstrom 25 A eine Verlustleistung von 4 W. Wie groß ist seine Verlustleistung, wenn es mit 15 A betrieben wird?",
+    "antworten": [],
+    "richtig": {
+      "wert": 1.44,
+      "einheit": "W",
+      "toleranz": 0.01,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "P_v = P_v,n · (I_b / I_n)² = 4 W · (15 / 25)² = 4 W · 0,36 = 1,44 W. Die Summe aller Verlustleistungen darf die zulässige Verlustleistung des Gehäuses nicht überschreiten (DIN EN 61439).",
+    "quelle": "DIN EN 61439-1; DIN EN 61439-3",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-009",
+    "thema": "rechnen",
+    "unterthema": "Leitungsschutz",
+    "typ": "rechnen",
+    "frage": "Für eine Leitung 2,5 mm² gibt die Tabelle bei der vorliegenden Verlegeart I_r = 24 A an. Drei Stromkreise liegen gebündelt (f₂ = 0,70), die Umgebungstemperatur entspricht der Tabelle (f₁ = 1,0). Wie groß ist die Strombelastbarkeit I_z?",
+    "antworten": [],
+    "richtig": {
+      "wert": 16.8,
+      "einheit": "A",
+      "toleranz": 0.1,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "I_z = I_r · f₁ · f₂ = 24 A · 1,0 · 0,70 = 16,8 A. Bei I_b = 14 A passt B16 (14 A ≤ 16 A ≤ 16,8 A), B20 nicht (20 A > 16,8 A). Tabellenwerte aus DIN VDE 0298-4 bzw. dem Tabellenbuch.",
+    "quelle": "DIN VDE 0298-4; DIN VDE 0100-430",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-010",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Eine Werkstatt hat 30 kW Anschlussleistung, Gleichzeitigkeitsfaktor g = 0,6, cos φ = 0,9, 400 V Drehstrom. Wie groß ist der Betriebsstrom?",
+    "antworten": [],
+    "richtig": {
+      "wert": 28.87,
+      "einheit": "A",
+      "toleranz": 0.15,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "P_max = g · ΣP = 0,6 · 30 kW = 18 kW; I_b = 18.000 W / (1,732 · 400 V · 0,9) ≈ 28,9 A → Absicherung z. B. 32 A, Querschnitt nach Strombelastbarkeit und Spannungsfall.",
+    "quelle": "Grundlagen Drehstrom",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-011",
+    "thema": "rechnen",
+    "unterthema": "Spannungsfall",
+    "typ": "rechnen",
+    "frage": "Eine Hauptleitung aus Kupfer 10 mm² ist 15 m lang, die vorgeschaltete Hausanschlusssicherung hat 63 A (Drehstrom 400 V, cos φ = 1). Wie groß ist der Spannungsfall in Prozent? (κ_Cu = 56 m/(Ω·mm²))",
+    "antworten": [],
+    "richtig": {
+      "wert": 0.73,
+      "einheit": "%",
+      "toleranz": 0.01,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "ΔU = √3 · l · I · cos φ / (κ · A) = 1,732 · 15 m · 63 A / (56 · 10 mm²) ≈ 2,92 V; Δu = 2,92 V / 400 V · 100 % ≈ 0,73 % – über 0,5 % (NAV § 13 Abs. 4), der Querschnitt ist zu klein. Mit 16 mm² sind es 0,46 %.",
+    "quelle": "NAV § 13 Abs. 4; VDE-AR-N 4100; DIN VDE 0100-520",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-012",
+    "thema": "rechnen",
+    "unterthema": "Querschnitt",
+    "typ": "rechnen",
+    "frage": "Ein Steckdosenkreis (230 V, cos φ = 1) ist 40 m lang und führt 16 A. Der Spannungsfall darf 3 % nicht überschreiten. Welcher Querschnitt ist rechnerisch mindestens nötig (in mm²)? (κ_Cu = 56 m/(Ω·mm²))",
+    "antworten": [],
+    "richtig": {
+      "wert": 3.31,
+      "einheit": "mm²",
+      "toleranz": 0.03,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "ΔU_zul = 0,03 · 230 V = 6,9 V; A = 2 · l · I · cos φ / (κ · ΔU_zul) = 2 · 40 m · 16 A / (56 · 6,9 V) ≈ 3,31 mm² → nächster Normquerschnitt 4 mm². Strombelastbarkeit und Abschaltbedingung zusätzlich prüfen.",
+    "quelle": "DIN VDE 0100-520; DIN 18015-1",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-013",
+    "thema": "rechnen",
+    "unterthema": "Selektivität",
+    "typ": "rechnen",
+    "frage": "Nachgeschaltet ist eine Schmelzsicherung gG 25 A. Welchen Bemessungsstrom muss die vorgeschaltete gG-Sicherung nach der Faustregel für Selektivität mindestens haben?",
+    "antworten": [],
+    "richtig": {
+      "wert": 40,
+      "einheit": "A",
+      "toleranz": 0,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "Faustregel für gG-Sicherungen: I_n,vor ≥ 1,6 · I_n,nach = 1,6 · 25 A = 40 A. Bei Kombinationen verschiedener Geräte (z. B. SH-Schalter und LS-Schalter) gelten die Selektivitätstabellen der Hersteller.",
+    "quelle": "DIN VDE 0100-530; Herstellerangaben",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-014",
+    "thema": "rechnen",
+    "unterthema": "Schleifenimpedanz",
+    "typ": "rechnen",
+    "frage": "Welche Schleifenimpedanz darf ein mit C32 geschützter Stromkreis (U₀ = 230 V, I_a = 10 · I_n) rechnerisch höchstens haben?",
+    "antworten": [],
+    "richtig": {
+      "wert": 0.72,
+      "einheit": "Ω",
+      "toleranz": 0.01,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "I_a = 10 · 32 A = 320 A; Z_s,max = 230 V / 320 A ≈ 0,72 Ω; als Messwert mit 2/3-Reserve höchstens ≈ 0,48 Ω.",
+    "quelle": "DIN VDE 0100-410; DIN VDE 0100-600",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-015",
+    "thema": "rechnen",
+    "unterthema": "Strom & Leistung",
+    "typ": "rechnen",
+    "frage": "Eine einphasige Wallbox lädt mit 7,4 kW an 230 V (cos φ = 1). Wie groß ist der Strom?",
+    "antworten": [],
+    "richtig": {
+      "wert": 32.17,
+      "einheit": "A",
+      "toleranz": 0.1,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "I = P / (U · cos φ) = 7.400 W / 230 V ≈ 32,2 A – weit über der Schieflastgrenze von 20 A (4,6 kVA). Deshalb wird in der Regel dreiphasig angeschlossen.",
+    "quelle": "Grundlagen Wechselstrom; VDE-AR-N 4100",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-rechnen-016",
+    "thema": "rechnen",
+    "unterthema": "Spannungsfall",
+    "typ": "rechnen",
+    "frage": "Ein Wechselstromkreis (230 V, cos φ = 1) aus Kupfer 2,5 mm² ist 22 m lang und führt 16 A. Wie groß ist der Spannungsfall in Volt? (κ_Cu = 56 m/(Ω·mm²))",
+    "antworten": [],
+    "richtig": {
+      "wert": 5.03,
+      "einheit": "V",
+      "toleranz": 0.05,
+      "toleranzArt": "abs"
+    },
+    "erklaerung": "ΔU = 2 · 22 m · 16 A / (56 · 2,5 mm²) = 704 / 140 ≈ 5,03 V; Δu = 5,03 V / 230 V · 100 % ≈ 2,2 % – unter 3 %, in Ordnung.",
+    "quelle": "DIN VDE 0100-520; DIN 18015-1",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
   }
 ]

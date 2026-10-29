@@ -334,5 +334,246 @@
     "bild": null,
     "geprueft": false,
     "stand": "2026-10"
+  },
+  {
+    "id": "lf-zaehlerplatz-001",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "mehrfach",
+    "frage": "Welche Aufgaben erfüllt der SH-Schalter im netzseitigen Anschlussraum nach VDE-AR-N 4100?",
+    "antworten": [
+      "Zentrale Überstrom-Schutzeinrichtung für Messeinrichtung und Kundenanlage",
+      "Trennvorrichtung für die Inbetriebsetzung der Kundenanlage",
+      "Freischalteinrichtung für Mess- und Steuereinrichtungen, z. B. beim Zählerwechsel",
+      "Abrechnungsrelevante Messung der bezogenen Energie"
+    ],
+    "richtig": [
+      0,
+      1,
+      2
+    ],
+    "erklaerung": "Der selektive Hauptleitungsschutzschalter (SH-Schalter, oft „SLS“ genannt) sitzt vor jedem Zähler. Er ist Trennvorrichtung im Sinne von NAV § 14, Freischalteinrichtung für Mess- und Steuereinrichtungen und zentrale Überstrom-Schutzeinrichtung. Er muss laienbedienbar sowie sperr- und plombierbar sein und ist selektiv zu den nachgeschalteten LS-Schaltern. Gemessen wird im Zähler, nicht im SH-Schalter.",
+    "quelle": "VDE-AR-N 4100; NAV § 14",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-zaehlerplatz-002",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "einfach",
+    "frage": "Wo sitzt der SH-Schalter in einem Zählerschrank nach VDE-AR-N 4100?",
+    "antworten": [
+      "Im netzseitigen (unteren) Anschlussraum vor dem Zähler",
+      "Im Stromkreisverteiler der Wohnung",
+      "Im Hausanschlusskasten des Netzbetreibers",
+      "Im anlagenseitigen (oberen) Anschlussraum hinter dem Zähler"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Der Strom fließt im Zählerplatz von unten nach oben: netzseitiger Anschlussraum (NAR, unten, ungezählt, plombiert) mit dem SH-Schalter vor jedem Zähler → Zählerfeld → anlagenseitiger Anschlussraum (AAR, oben, gezählt). Der SH-Schalter liegt also vor dem Zähler.",
+    "quelle": "VDE-AR-N 4100",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-zaehlerplatz-003",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "einfach",
+    "frage": "Was darf im anlagenseitigen Anschlussraum (AAR) eines Zählerplatzes nach VDE-AR-N 4100 nicht eingebaut werden?",
+    "antworten": [
+      "Abzweigklemmen für die Leitung zum Stromkreisverteiler",
+      "Ein Hauptschalter für die Kundenanlage",
+      "Ein Überspannungsschutzgerät Typ 1+2",
+      "Ein kompletter Stromkreisverteiler für die Wohnung"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Der AAR (oben, 300 mm hoch) nimmt z. B. Hauptschalter, Abzweigklemmen zum Stromkreisverteiler, eine RJ45-Schnittstelle für die Steuerung, bis zu drei einphasige Stromkreise bis 16 A und Überspannungsschutz Typ 1+2 auf. Ein Stromkreisverteiler gehört nicht hinein, sondern in ein eigenes Verteilerfeld bzw. einen eigenen Verteiler. Stand prüfen (TAB).",
+    "quelle": "VDE-AR-N 4100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-zaehlerplatz-004",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "mehrfach",
+    "frage": "Welche Maße eines Zählerplatzes nach VDE-AR-N 4100 sind richtig?",
+    "antworten": [
+      "Zählerfeld für einen Zähler: 450 mm hoch",
+      "Anlagenseitiger Anschlussraum: 150 mm hoch",
+      "Breite eines Zählerfelds: 250 mm",
+      "Netzseitiger Anschlussraum: 300 mm hoch"
+    ],
+    "richtig": [
+      0,
+      2,
+      3
+    ],
+    "erklaerung": "Ein Zählerplatz ist 250 mm breit. Von unten nach oben: netzseitiger Anschlussraum 300 mm, Zählerfeld mit Raum für Zusatzanwendungen 450 mm, anlagenseitiger Anschlussraum 300 mm. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100; DIN VDE 0603",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-zaehlerplatz-005",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "einfach",
+    "frage": "Welche freie Bedien- und Arbeitsfläche ist vor einem Zählerschrank nach VDE-AR-N 4100 mindestens vorzusehen?",
+    "antworten": [
+      "0,60 m tief",
+      "0,80 m tief",
+      "1,20 m tief bei 1,80 m freier Höhe",
+      "1,00 m tief bei 2,00 m freier Höhe"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Vor dem Zählerschrank ist eine Bedien- und Arbeitsfläche von mindestens 1,20 m Tiefe mit 1,80 m freier Höhe freizuhalten. Die Mitte von Zähler und Steuereinrichtung liegt zwischen 0,80 m und 1,80 m über dem Fußboden. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-zaehlerplatz-006",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "mehrfach",
+    "frage": "Wo dürfen Zählerplätze nach VDE-AR-N 4100 nicht angeordnet werden?",
+    "antworten": [
+      "Im Hausanschlussraum nach DIN 18012",
+      "In Garagen",
+      "In Wohnungen von Mehrfamilienhäusern",
+      "In Küchen"
+    ],
+    "richtig": [
+      1,
+      2,
+      3
+    ],
+    "erklaerung": "Unzulässig sind u. a. Wohnungen von Mehrfamilienhäusern, Wohnräume, Küchen, Bäder und Toiletten, Bereiche über Treppenstufen, feuchte Räume, Garagen, Spitzböden, Räume mit mehr als 30 °C sowie feuer- oder explosionsgefährdete Bereiche. Gut geeignet sind trockene, allgemein zugängliche Räume wie der Hausanschlussraum. Stand prüfen (TAB).",
+    "quelle": "VDE-AR-N 4100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-zaehlerplatz-007",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "einfach",
+    "frage": "Bis zu welchem Dauerstrom (z. B. Wallbox, Wärmepumpe, Speicher) ist ein Zählerplatz mit 10-mm²-Verdrahtung nach VDE-AR-N 4100 ausgelegt?",
+    "antworten": [
+      "16 A",
+      "32 A",
+      "44 A",
+      "63 A"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Zählerplätze sind für mindestens 63 A ausgelegt. Mit 10 mm² interner Verdrahtung gilt das für haushaltsübliche Last; bei Dauerstrom (Wallbox, Speicher, PV, Direktheizung) nur bis 32 A. Mit 16 mm² sind bis 44 A Dauerstrom möglich. Darüber ist meist eine Wandlermessung nötig – mit dem Netzbetreiber abstimmen. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-zaehlerplatz-008",
+    "thema": "zaehlerplatz",
+    "unterthema": "Moderne Messeinrichtung / iMSys",
+    "typ": "einfach",
+    "frage": "Wofür ist der APZ (Abschlusspunkt Zählerplatz) im Zählerschrank vorgesehen?",
+    "antworten": [
+      "Als Anschluss für die Hauptleitung im netzseitigen Anschlussraum",
+      "Als Messpunkt für die Schleifenimpedanzmessung",
+      "Als Anschlusspunkt für den Schutzpotentialausgleich",
+      "Für die Kommunikationsanbindung der Mess- und Steuertechnik des Messstellenbetreibers, z. B. des Smart-Meter-Gateways"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Über den APZ wird die Kommunikationsverbindung zur Mess- und Steuertechnik im Zählerschrank geführt, etwa zum Smart-Meter-Gateway im Raum für Zusatzanwendungen. Er wird plombierbar im Zählerschrank vorgesehen. Stand prüfen (TAB).",
+    "quelle": "VDE-AR-N 4100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-zaehlerplatz-009",
+    "thema": "zaehlerplatz",
+    "unterthema": "Moderne Messeinrichtung / iMSys",
+    "typ": "einfach",
+    "frage": "Ein Haushalt verbraucht 4.000 kWh im Jahr und hat weder eine steuerbare Verbrauchseinrichtung noch eine Erzeugungsanlage. Was gilt nach dem Messstellenbetriebsgesetz für ein intelligentes Messsystem?",
+    "antworten": [
+      "Optionaler Einbau: Der Messstellenbetreiber kann es einbauen, der Kunde muss das dulden",
+      "Der Einbau ist unter 6.000 kWh verboten",
+      "Der Installateur entscheidet über den Einbau",
+      "Pflichteinbau, weil jeder Haushalt eines bekommen muss"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Pflichtfälle: Jahresverbrauch über 6.000 kWh, steuerbare Verbrauchseinrichtung nach § 14a EnWG, Erzeugungsanlage über 7 kW installierter Leistung. Optional – nach Entscheidung des Messstellenbetreibers – sind Verbräuche bis 6.000 kWh und Erzeugungsanlagen über 1 bis 7 kW. Stand prüfen.",
+    "quelle": "MsbG § 29; Bundesnetzagentur (FAQ Rollout)",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-zaehlerplatz-010",
+    "thema": "zaehlerplatz",
+    "unterthema": "Moderne Messeinrichtung / iMSys",
+    "typ": "einfach",
+    "frage": "Was gilt seit 2025, wenn ein Kunde ohne Pflichtfall ein intelligentes Messsystem haben möchte?",
+    "antworten": [
+      "Der Netzbetreiber entscheidet nach der Auslastung seines Netzes.",
+      "Das ist nicht möglich – intelligente Messsysteme gibt es nur in Pflichtfällen.",
+      "Er kann den Einbau beim Messstellenbetreiber verlangen; dafür darf ein einmaliges Zusatzentgelt anfallen.",
+      "Er muss das Gateway selbst kaufen und vom Installateur einbauen lassen."
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Seit 2025 können Kunden die Ausstattung mit einem intelligenten Messsystem verlangen. Der Messstellenbetreiber darf dafür zusätzlich zur Preisobergrenze ein einmaliges Entgelt verlangen (laut Bundesnetzagentur bis 100 € als angemessen vermutet); in optionalen Fällen kann ein jährliches Zusatzentgelt hinzukommen. Zähler und Gateway gehören dem Messstellenbetreiber. Stand prüfen.",
+    "quelle": "MsbG; Bundesnetzagentur (FAQ Rollout)",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-zaehlerplatz-k01",
+    "thema": "zaehlerplatz",
+    "unterthema": "Aufbau Zählerschrank",
+    "typ": "karte",
+    "frage": "Skizzieren Sie den Aufbau eines Zählerplatzes nach VDE-AR-N 4100 und erklären Sie die Aufgaben des SH-Schalters.",
+    "antworten": [],
+    "richtig": "Von unten nach oben (Energiefluss), Breite je Feld 250 mm:\n• Netzseitiger Anschlussraum (NAR, 300 mm): Anschluss der Hauptleitung, SH-Schalter vor jedem Zähler – ungezählt, plombiert.\n• Zählerfeld (450 mm) mit Raum für Zusatzanwendungen (RfZ): Zähler (Dreipunktbefestigung oder eHZ auf BKE), Smart-Meter-Gateway, Steuergeräte – Bereich des Messstellenbetreibers.\n• Anlagenseitiger Anschlussraum (AAR, 300 mm): z. B. Hauptschalter, Abzweigklemmen, RJ45 für die Steuerung, bis zu drei einphasige Stromkreise bis 16 A, Überspannungsschutz – kein Stromkreisverteiler.\nSH-Schalter: Trennvorrichtung für die Inbetriebsetzung (NAV § 14), Freischalteinrichtung für Mess- und Steuereinrichtungen, zentrale Überstrom-Schutzeinrichtung; selektiv zu den LS-Schaltern, laienbedienbar, sperr- und plombierbar.\nAußerdem: mindestens 63 A; Zählermitte 0,80 m bis 1,80 m über dem Fußboden; davor 1,20 m Bedienfläche; APZ für die Kommunikation; Zählerfelder eindeutig der Kundenanlage zuordnen.",
+    "erklaerung": "Fachgespräch: den Zählerplatz frei skizzieren und ungezählte und gezählte Bereiche zuordnen. Maße mit den TAB und der aktuellen Ausgabe abgleichen – Stand prüfen.",
+    "quelle": "VDE-AR-N 4100; DIN VDE 0603; NAV § 14",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
   }
 ]

@@ -11,8 +11,9 @@ Es gibt drei Varianten mit denselben Fragen und Funktionen:
 - **Datei für den PC** (`TREI-Trainer.html`) – per Doppelklick im Browser öffnen, läuft offline.
 - **Optional als Web-App** auf eigenem Webspace (z. B. All-Inkl, passwortgeschützt).
 
-> **Wichtig zu den Fragen:** Die 161 Startfragen sind in eigenen Worten formuliert und
-> **alle als „ungeprüft“ markiert**. Gleiche sie mit den Kursunterlagen ab, bevor du dich
+> **Wichtig zu den Fragen:** Die App bringt 261 Startfragen mit – 161 Grundfragen in eigenen
+> Worten und 100 Fragen aus der Datei „TREI-Leitfaden-Fragen“ (IDs `lf-…`). Alle sind
+> **als „ungeprüft“ markiert**. Gleiche sie mit den Kursunterlagen ab, bevor du dich
 > auf sie verlässt. Werte, die sich mit neuen Ausgaben von TAB, VDE-Regeln oder Gesetzen
 > ändern können, tragen den Hinweis **„Stand prüfen“**. Maßgeblich sind immer die
 > Kursunterlagen und die aktuellen Normen, TAB und Gesetze.
@@ -207,7 +208,7 @@ Es gibt zwei Wege. Beide lassen sich kombinieren.
 
 | Feld | Inhalt |
 |---|---|
-| `id` | eindeutig über alle Dateien; nur `a–z`, `0–9`, `-` und `_`. Üblich: `<thema>-001` für Auswahl- und Rechenfragen, `<thema>-k01` für Karteikarten, `<thema>-e001` für in der App angelegte Fragen |
+| `id` | eindeutig über alle Dateien; nur `a–z`, `0–9`, `-` und `_`. Üblich: `<thema>-001` für Auswahl- und Rechenfragen, `<thema>-k01` für Karteikarten, `<thema>-e001` für in der App angelegte Fragen, `lf-<thema>-001` für Fragen aus dem TREI-Leitfaden |
 | `thema` | Themen-ID, muss zum Dateinamen passen (z. B. `schutz` in `schutz.json`) |
 | `typ` | `einfach`, `mehrfach`, `rechnen` oder `karte` |
 | `frage` | Fragetext |

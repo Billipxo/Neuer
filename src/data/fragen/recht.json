@@ -330,5 +330,325 @@
     "bild": null,
     "geprueft": false,
     "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-001",
+    "thema": "recht",
+    "unterthema": "Installateurverzeichnis",
+    "typ": "einfach",
+    "frage": "Für welche Arbeiten gilt die Pflicht zur Eintragung in ein Installateurverzeichnis nach NAV § 13 Abs. 2 nicht?",
+    "antworten": [
+      "Für Instandhaltungsarbeiten zwischen Hausanschlusssicherung und Zähler",
+      "Für alle Arbeiten an Stromkreisen bis 16 A",
+      "Für Erweiterungen der Anlage in Einfamilienhäusern",
+      "Für Instandhaltungsarbeiten hinter der Messeinrichtung (Zähler)"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "NAV § 13 Abs. 2: Errichten, Erweitern, Ändern und Instandhalten darf außer dem Netzbetreiber nur ein eingetragenes Installationsunternehmen. Ausgenommen sind Instandhaltungsarbeiten – aber nicht im Abschnitt zwischen Hausanschlusssicherung und Messeinrichtung einschließlich der Messeinrichtung. Dort gilt die Eintragungspflicht immer. Fachlich bleibt jede Arbeit Sache einer Elektrofachkraft (DGUV Vorschrift 3).",
+    "quelle": "NAV § 13 Abs. 2; DGUV Vorschrift 3",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-002",
+    "thema": "recht",
+    "unterthema": "NAV",
+    "typ": "einfach",
+    "frage": "Wann wird nach NAV vermutet, dass verwendete Materialien und Geräte den allgemein anerkannten Regeln der Technik entsprechen?",
+    "antworten": [
+      "Wenn sie die vorgeschriebene CE-Kennzeichnung tragen – wo keine vorgeschrieben ist, z. B. das VDE- oder GS-Zeichen",
+      "Wenn sie nicht älter als fünf Jahre sind",
+      "Wenn der Netzbetreiber sie vorher schriftlich freigegeben hat",
+      "Wenn sie im Elektrofachgroßhandel gekauft wurden"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "NAV § 13 Abs. 2: Es dürfen nur Materialien und Geräte verwendet werden, die nach den allgemein anerkannten Regeln der Technik hergestellt sind. Das wird bei der vorgeschriebenen CE-Kennzeichnung vermutet; wo keine CE-Kennzeichnung vorgeschrieben ist, bei dem Zeichen einer akkreditierten Stelle, z. B. VDE- oder GS-Zeichen. Ware ohne Kennzeichnung gehört nicht in die Anlage.",
+    "quelle": "NAV § 13 Abs. 2; EnWG § 49",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-003",
+    "thema": "recht",
+    "unterthema": "Netzanschluss",
+    "typ": "einfach",
+    "frage": "Sie stellen bei Arbeiten am Hausanschluss fest, dass eine Plombe fehlt und die Hausanschlusssicherung beschädigt ist. Was ist nach NAV zu tun?",
+    "antworten": [
+      "Den Stromlieferanten des Kunden informieren",
+      "Die Sicherung selbst tauschen und eine eigene Plombe setzen",
+      "Nichts – das fällt beim nächsten Zählerwechsel auf",
+      "Dem Netzbetreiber unverzüglich mitteilen und nichts eigenmächtig verändern"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "NAV § 8: Netzanschlüsse gehören zu den Betriebsanlagen des Netzbetreibers. Beschädigungen, etwa an der Hausanschlusssicherung, und fehlende Plomben sind ihm unverzüglich mitzuteilen. Wer Plomben öffnen oder setzen darf, regelt der Netzbetreiber in seinen TAB.",
+    "quelle": "NAV § 8; NAV § 13 Abs. 3; TAB",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-004",
+    "thema": "recht",
+    "unterthema": "NAV",
+    "typ": "einfach",
+    "frage": "In welchem Bereich muss der Verschiebungsfaktor cos φ einer Kundenanlage nach NAV liegen?",
+    "antworten": [
+      "Zwischen 0,9 kapazitiv und 0,9 induktiv",
+      "Genau bei 1,0",
+      "Zwischen 0,95 kapazitiv und 1,0",
+      "Zwischen 0,8 kapazitiv und 0,8 induktiv"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "NAV § 16 Abs. 2: Der Verschiebungsfaktor ist zwischen cos φ = 0,9 kapazitiv und 0,9 induktiv zu halten. Andernfalls kann der Netzbetreiber den Einbau ausreichender Kompensationseinrichtungen verlangen – wichtig z. B. bei großen Motoren oder vielen induktiven Lasten.",
+    "quelle": "NAV § 16 Abs. 2",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-005",
+    "thema": "recht",
+    "unterthema": "NAV",
+    "typ": "einfach",
+    "frage": "Was verlangt die NAV für Zählerplätze in Neubauten mit Blick auf intelligente Messsysteme?",
+    "antworten": [
+      "Der Zählerplatz muss so ausgeführt sein, dass ein Smart-Meter-Gateway später einfach eingebaut werden kann.",
+      "In Neubauten sind nur noch Ferraris-Zähler zulässig.",
+      "Der Installateur muss das Gateway selbst beschaffen und betreiben.",
+      "Ein Smart-Meter-Gateway muss schon bei Bauende eingebaut sein."
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "NAV § 22: Der Anschlussnehmer sieht die Zählerplätze vor. In Neubauten müssen sie so ausgestattet sein, dass ein Smart-Meter-Gateway einfach nachgerüstet werden kann – in der Praxis ein Zählerschrank nach VDE-AR-N 4100 mit Raum für Zusatzanwendungen (RfZ) und APZ. Einbau und Betrieb des Gateways sind Sache des Messstellenbetreibers.",
+    "quelle": "NAV § 22; MsbG; VDE-AR-N 4100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-006",
+    "thema": "recht",
+    "unterthema": "NAV",
+    "typ": "einfach",
+    "frage": "Ein Kunde möchte eine Eigenanlage errichten, z. B. ein Notstromaggregat oder eine PV-Anlage. Was gilt nach NAV § 19 Abs. 3?",
+    "antworten": [
+      "Die Anlage ist erst nach einem Jahr Betrieb zu melden.",
+      "Eigenanlagen müssen nur im Marktstammdatenregister eingetragen werden.",
+      "Eine Mitteilung ist nur nötig, wenn die Anlage ins Netz einspeist.",
+      "Der Netzbetreiber ist vor der Errichtung zu informieren; schädliche Rückwirkungen ins Netz sind auszuschließen."
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "NAV § 19 Abs. 3: Vor der Errichtung einer Eigenanlage ist dem Netzbetreiber Mitteilung zu machen. Durch geeignete Maßnahmen muss sichergestellt sein, dass keine schädlichen Rückwirkungen ins Netz möglich sind. Der Anschluss ist mit dem Netzbetreiber abzustimmen; er kann ihn von Schutzmaßnahmen gegen Rückspannungen abhängig machen. Bei PV-Anlagen kommen die Anmeldung nach TAB und VDE-AR-N 4105 und die Registrierung im Marktstammdatenregister hinzu.",
+    "quelle": "NAV § 19 Abs. 3",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-007",
+    "thema": "recht",
+    "unterthema": "TREI-Verfahren",
+    "typ": "einfach",
+    "frage": "Welche Bestehensregel gilt für den TREI-Sachkundenachweis?",
+    "antworten": [
+      "Nur der schriftliche Teil A wird bewertet, Teil B und C sind reine Teilnahme",
+      "Mindestens 50 % in Teil A; Schwächen in Teil B und C können ausgeglichen werden",
+      "Insgesamt mindestens 70 %, ein einzelner Teil darf darunter liegen",
+      "Insgesamt mindestens 50 % und in keinem der drei Teile weniger als 50 %"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Die drei Teile – A schriftlich, B praktisch, C Fachgespräch – sind gleich gewichtet. In jedem Teil sind mindestens 50 % der Punkte nötig. Liegt ein Teil darunter, endet der Durchgang; bei der Wiederholung werden alle drei Teile neu abgelegt. Maßgeblich ist die aktuelle Verfahrensordnung – Stand prüfen.",
+    "quelle": "Verfahrensordnung TREI (Bundes-Installateurausschuss, Ausgabe Januar 2025)",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-008",
+    "thema": "recht",
+    "unterthema": "TREI-Verfahren",
+    "typ": "einfach",
+    "frage": "Welche Hilfsmittel sind im Fachgespräch (Teil C) des TREI-Sachkundenachweises erlaubt?",
+    "antworten": [
+      "Keine",
+      "Eigene Notizen aus Teil B",
+      "Tabellenbuch und Formelsammlung",
+      "Nur die TAB des Netzbetreibers"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Das Fachgespräch dauert 30 Minuten und knüpft an Teil A und B an – Hilfsmittel sind nicht zugelassen. In Teil A (120 Minuten) sind u. a. eine Formelsammlung ohne Rechenbeispiele, Tabellenbücher, TAB und Taschenrechner erlaubt, in Teil B (45 Minuten) eigene Messgeräte. Was am Prüfungstag zugelassen ist, entscheidet das Prüfungsgremium.",
+    "quelle": "Verfahrensordnung TREI (Bundes-Installateurausschuss, Ausgabe Januar 2025)",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-009",
+    "thema": "recht",
+    "unterthema": "TREI-Verfahren",
+    "typ": "mehrfach",
+    "frage": "Welche Hilfsmittel sind im schriftlichen Teil A des TREI-Sachkundenachweises in der Regel zugelassen?",
+    "antworten": [
+      "Eine selbst erstellte Formelsammlung ohne Rechenbeispiele",
+      "Tabellenbücher und die TAB",
+      "Aufgabensammlungen mit Musterlösungen",
+      "Ein Taschenrechner",
+      "KI-Anwendungen und Berechnungsprogramme"
+    ],
+    "richtig": [
+      0,
+      1,
+      3
+    ],
+    "erklaerung": "Zugelassen sind u. a. Formelsammlungen (auch selbst erstellt, ohne Rechenbeispiele), Tabellenbücher, Fachliteratur ohne Aufgabensammlungen, TAB, die VDE-Auswahl für das Elektrotechniker-Handwerk, das DIN-Normen-Handbuch, Taschenrechner und Zeichengeräte. Nicht erlaubt sind Aufgabensammlungen, KI und Berechnungsprogramme. Was am Prüfungstag gilt, entscheidet das Prüfungsgremium.",
+    "quelle": "Verfahrensordnung TREI (Bundes-Installateurausschuss, Ausgabe Januar 2025)",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-010",
+    "thema": "recht",
+    "unterthema": "Bauordnung",
+    "typ": "einfach",
+    "frage": "Wie dürfen elektrische Leitungen in notwendigen Treppenräumen und notwendigen Fluren nach der Leitungsanlagen-Richtlinie (MLAR/LAR) verlegt werden?",
+    "antworten": [
+      "Nur in Kunststoff-Installationsrohren auf Putz",
+      "Gar nicht – dort sind elektrische Leitungen verboten",
+      "Beliebig offen auf Putz, wenn sie mit Schellen befestigt sind",
+      "Nur geschützt, z. B. in Schlitzen massiver Wände mit mindestens 15 mm mineralischem Putz oder in Kanälen und Unterdecken mit Feuerwiderstand"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Notwendige Treppenräume und Flure sind Rettungswege. Leitungen liegen dort z. B. einzeln eingeputzt oder in Schlitzen, die mit mindestens 15 mm dickem mineralischem Putz bzw. 15 mm dicken mineralischen Platten verschlossen sind, oder in Installationsschächten, -kanälen und Unterdecken mit Feuerwiderstand. Offen nur in Ausnahmen, z. B. nichtbrennbare Leitungen oder Leitungen, die nur den Raum selbst versorgen. Es gilt die im Land eingeführte Fassung – Stand prüfen.",
+    "quelle": "MLAR / LAR (als Technische Baubestimmung eingeführt)",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-011",
+    "thema": "recht",
+    "unterthema": "Bauordnung",
+    "typ": "einfach",
+    "frage": "Welche Dauer des Funktionserhalts fordert die Leitungsanlagen-Richtlinie (MLAR/LAR) in der Regel für die Leitungsanlage einer Sicherheitsbeleuchtung?",
+    "antworten": [
+      "15 Minuten (E 15)",
+      "30 Minuten (E 30)",
+      "60 Minuten (E 60)",
+      "120 Minuten (E 120)"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Leitungsanlagen für die Sicherheitsbeleuchtung brauchen in der Regel 30 Minuten Funktionserhalt (E 30), Feuerwehraufzüge 90 Minuten (E 90). Ausnahmen gibt es z. B. für Leitungen, die nur innerhalb eines Brandabschnitts in einem Geschoss oder nur innerhalb eines Treppenraums versorgen. Stand prüfen.",
+    "quelle": "MLAR / LAR, Abschnitt Funktionserhalt",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-k01",
+    "thema": "recht",
+    "unterthema": "TREI-Verfahren",
+    "typ": "karte",
+    "frage": "Beschreiben Sie Aufbau, Dauer und Bestehensregeln des TREI-Sachkundenachweises.",
+    "antworten": [],
+    "richtig": "Drei gleich gewichtete Teile:\n• Teil A – schriftlicher Kenntnisnachweis zu fünf Themenblöcken (Recht, Regeln der Technik und Arbeitssicherheit, Prüfen und Inbetriebnahme, Schaltanlagen und Verteiler, Projektierung und Anmeldung), 120 Minuten. Hilfsmittel u. a. Formelsammlung ohne Rechenbeispiele, Tabellenbücher, TAB, Taschenrechner.\n• Teil B – praktische Prüfung: Prüfen, Messen, Fehlersuche mit Prüf- und Inbetriebsetzungsprotokoll, 45 Minuten, mit eigenen Messgeräten.\n• Teil C – Fachgespräch zu Teil A und B, 30 Minuten, ohne Hilfsmittel.\nBestehen: insgesamt mindestens 50 % und kein Teil unter 50 %. Liegt ein Teil darunter, endet der Durchgang; bei der Wiederholung werden alle drei Teile neu abgelegt.\nZulassung: Die Voraussetzungen für die Eintragung in die Handwerksrolle im Elektrotechniker-Handwerk erfüllen und einen schriftlichen Antrag stellen. Mitbringen: amtlicher Ausweis und Anmeldebestätigung. Prüfungssprache Deutsch.",
+    "erklaerung": "Organisation: Ablauf und Regeln kennen. Maßgeblich ist die aktuelle Verfahrensordnung des Bundes-Installateurausschusses – Stand prüfen.",
+    "quelle": "Verfahrensordnung TREI (Bundes-Installateurausschuss, Ausgabe Januar 2025)",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-k02",
+    "thema": "recht",
+    "unterthema": "NAV",
+    "typ": "karte",
+    "frage": "Wer setzt was in Betrieb? Erläutern Sie § 14 NAV und die Rolle der Trennvorrichtung.",
+    "antworten": [],
+    "richtig": "• Den Netzanschluss schließt der Netzbetreiber an und setzt ihn in Betrieb.\n• Die Anlage hinter dem Netzanschluss bis zur Trennvorrichtung aus den TAB setzt der Netzbetreiber in Betrieb – oder mit seiner Zustimmung das Installationsunternehmen.\n• Die Anlage hinter der Trennvorrichtung setzt nur das Installationsunternehmen in Betrieb.\n• Trennvorrichtung nach VDE-AR-N 4100: der SH-Schalter im netzseitigen (unteren) Anschlussraum vor jedem Zähler.\n• Jede Inbetriebsetzung beantragt das Installationsunternehmen beim Netzbetreiber, auf Verlangen mit dessen Vordruck – vorher Erstprüfung nach DIN VDE 0100-600 mit Protokoll.\n• Den Zähler setzt der Messstellenbetreiber.",
+    "erklaerung": "Fachgespräch: Zuständigkeiten klar trennen und die Trennvorrichtung im Zählerplatz zeigen können.",
+    "quelle": "NAV § 14; VDE-AR-N 4100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-k03",
+    "thema": "recht",
+    "unterthema": "NAV",
+    "typ": "karte",
+    "frage": "Was regelt § 13 NAV? Nennen Sie die Kernaussagen der Absätze 1 bis 4.",
+    "antworten": [],
+    "richtig": "• Abs. 1: Für die Anlage hinter der Hausanschlusssicherung ist der Anschlussnehmer verantwortlich – ausgenommen Messeinrichtungen, die ihm nicht gehören.\n• Abs. 2: Unzulässige Rückwirkungen sind auszuschließen. Errichten, erweitern, ändern und instand halten darf außer dem Netzbetreiber nur ein Unternehmen aus einem Installateurverzeichnis; die Eintragung darf nur vom Nachweis ausreichender fachlicher Qualifikation abhängen. Instandhaltung ist ausgenommen – außer zwischen Hausanschlusssicherung und Messeinrichtung einschließlich der Messeinrichtung. Material: anerkannte Regeln der Technik, vermutet bei CE-Kennzeichnung bzw. VDE- oder GS-Zeichen. Der Netzbetreiber darf die Ausführung überwachen.\n• Abs. 3: Anlagenteile mit ungezählter Energie kann der Netzbetreiber plombieren.\n• Abs. 4: Spannungsfall zwischen Ende des Hausanschlusses und Zähler höchstens 0,5 %, gerechnet mit dem Nennstrom der vorgeschalteten Sicherung.",
+    "erklaerung": "Fachgespräch: § 13 ist die Rechtsgrundlage für Installateurverzeichnis, TREI-Nachweis, Plomben und die Bemessung der Hauptleitung.",
+    "quelle": "NAV § 13",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-k04",
+    "thema": "recht",
+    "unterthema": "NAV",
+    "typ": "karte",
+    "frage": "Welche Mitteilungs- und Zustimmungspflichten nach § 19 NAV müssen Sie kennen?",
+    "antworten": [],
+    "richtig": "• Erweiterungen, Änderungen und zusätzliche Verbrauchsgeräte mitteilen, soweit sich die vorzuhaltende Leistung erhöht oder Netzrückwirkungen zu erwarten sind.\n• Ladeeinrichtungen für Elektrofahrzeuge immer vor der Inbetriebnahme mitteilen.\n• Vorherige Zustimmung, wenn die Summen-Bemessungsleistung der Ladeeinrichtungen 12 kVA je elektrischer Anlage überschreitet. Der Netzbetreiber muss sich binnen zwei Monaten äußern und eine Ablehnung begründen (Gründe, Abhilfemaßnahmen, Zeitbedarf).\n• Eigenanlagen (z. B. PV, Notstrom) vor der Errichtung mitteilen; Rückwirkungen ausschließen, Anschluss abstimmen.\n• Seit 2024 sind die Mitteilungen auch über die Internetseite des Netzbetreibers möglich; Inhalt und Form legt er fest.\n• Beispiel: Eine 11-kW-Wallbox mitteilen; zwei 11-kW-Wallboxen (22 kVA) – Zustimmung abwarten. Zusätzlich gilt § 14a EnWG für Geräte über 4,2 kW.",
+    "erklaerung": "Fachgespräch: Mitteilung und Zustimmung sauber unterscheiden und mit Beispielen belegen.",
+    "quelle": "NAV § 19; EnWG § 14a",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-recht-k05",
+    "thema": "recht",
+    "unterthema": "Bauordnung",
+    "typ": "karte",
+    "frage": "Worauf achten Sie bei Leitungsanlagen in Rettungswegen und an Brandabschnitten nach Bauordnung und Leitungsanlagen-Richtlinie?",
+    "antworten": [],
+    "richtig": "• Notwendige Treppenräume und Flure sind Rettungswege: Leitungen nur geschützt verlegen – einzeln eingeputzt, in Schlitzen mit mindestens 15 mm mineralischem Putz oder in Schächten, Kanälen und Unterdecken mit Feuerwiderstand; offen nur in Ausnahmefällen.\n• Zählerschränke und Verteiler in Rettungswegen nur nach den Vorgaben der Leitungsanlagen-Richtlinie – und nie über Treppenstufen (VDE-AR-N 4100).\n• Durchführungen durch feuerwiderstandsfähige Wände und Decken mit zugelassenen Abschottungen verschließen.\n• Funktionserhalt für Sicherheitsanlagen, z. B. E 30 für die Sicherheitsbeleuchtung, E 90 für Feuerwehraufzüge.\n• Sonderbauten (z. B. Versammlungsstätten, Krankenhäuser, Hochhäuser) haben eigene Verordnungen – zuerst klären, welche Gebäudeart vorliegt.",
+    "erklaerung": "Fachgespräch: Rettungswege, Abschottung und Funktionserhalt erklären. Es gilt die im Land eingeführte Fassung (in NRW über die Technischen Baubestimmungen) – Stand prüfen.",
+    "quelle": "Landesbauordnung; MLAR / LAR; Sonderbauverordnungen",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
   }
 ]

@@ -14,8 +14,8 @@
     "richtig": [
       1
     ],
-    "erklaerung": "Nach DIN VDE 0100-410 (Tabelle 41.1) gilt für 120 V < U₀ ≤ 230 V AC im TN-System 0,4 s, im TT-System 0,2 s. 5 s sind im TN-System für Verteilungsstromkreise und Endstromkreise über 32 A zulässig.",
-    "quelle": "DIN VDE 0100-410, Tabelle 41.1",
+    "erklaerung": "Nach DIN VDE 0100-410 (Tabelle 41.1) gilt bei 120 V < U₀ ≤ 230 V AC im TN-System 0,4 s, im TT-System 0,2 s. Seit der Ausgabe 2018 gelten diese Zeiten für Endstromkreise mit Steckdosen bis 63 A und für Endstromkreise, die nur fest angeschlossene Verbrauchsmittel bis 32 A versorgen. Verteilerstromkreise und alle übrigen Stromkreise dürfen im TN-System bis 5 s brauchen (TT-System: 1 s).",
+    "quelle": "DIN VDE 0100-410:2018-10, 411.3.2, Tabelle 41.1",
     "schwierigkeit": 1,
     "bild": null,
     "geprueft": false,
@@ -94,7 +94,7 @@
     "thema": "schutz",
     "unterthema": "Abschaltbedingungen",
     "typ": "einfach",
-    "frage": "Welche Abschaltzeit gilt im TN-System für Verteilungsstromkreise und Endstromkreise über 32 A?",
+    "frage": "Welche Abschaltzeit ist im TN-System höchstens zulässig für Verteilerstromkreise und für Endstromkreise, die nur fest angeschlossene Verbrauchsmittel über 32 A versorgen?",
     "antworten": [
       "0,2 s",
       "0,4 s",
@@ -104,8 +104,8 @@
     "richtig": [
       3
     ],
-    "erklaerung": "Nach DIN VDE 0100-410 dürfen Verteilungsstromkreise und Endstromkreise über 32 A im TN-System höchstens 5 s bis zur Abschaltung brauchen. Für Endstromkreise bis 32 A gelten bei U₀ = 230 V 0,4 s.",
-    "quelle": "DIN VDE 0100-410",
+    "erklaerung": "DIN VDE 0100-410:2018: Im TN-System sind für Verteilerstromkreise und für Stromkreise, die nicht unter Tabelle 41.1 fallen, bis zu 5 s zulässig (TT-System: 1 s). Achtung, Änderung seit 2018: Endstromkreise mit Steckdosen bis 63 A – z. B. mit einer CEE-Steckdose 63 A – brauchen 0,4 s (TN) bzw. 0,2 s (TT), nicht 5 s. Die Grenze 32 A gilt nur noch für Endstromkreise mit ausschließlich fest angeschlossenen Verbrauchsmitteln.",
+    "quelle": "DIN VDE 0100-410:2018-10, 411.3.2",
     "schwierigkeit": 2,
     "bild": null,
     "geprueft": false,
@@ -397,6 +397,273 @@
     "richtig": "• Typ 1+2 (Kombiableiter) am Gebäudeeintritt bzw. im Hauptverteiler, wenn ein äußerer Blitzschutz oder ein Freileitungsanschluss vorhanden ist; sonst Typ 2 im Hauptverteiler.\n• Typ 2 zusätzlich in Unterverteilungen, die weiter als etwa 10 m vom vorgeschalteten Ableiter entfernt sind.\n• Typ 3 nahe empfindlicher Geräte.\n• PV-Anlage: Überspannungsschutz auf der AC-Seite und auf der DC-Seite am Wechselrichter, abhängig von Leitungslängen und Blitzschutz; Trennungsabstand zur Blitzschutzanlage beachten.\n• Anschlussleitungen der Ableiter möglichst kurz (Gesamtlänge möglichst höchstens 0,5 m) und gut an den Potentialausgleich angebunden.\n• Im Vorzählerbereich nur vom Netzbetreiber zugelassene Ableiter.",
     "erklaerung": "Fachgespräch: Stufenkonzept (Typ 1/2/3) und Besonderheiten bei PV erklären. Normen (DIN VDE 0100-443, -534, -712) und TAB beachten – Stand prüfen.",
     "quelle": "DIN VDE 0100-443; DIN VDE 0100-534; DIN VDE 0100-712",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-001",
+    "thema": "schutz",
+    "unterthema": "RCD",
+    "typ": "einfach",
+    "frage": "Bis zu welchem Bemessungsstrom müssen Steckdosen, die Laien benutzen und die zur allgemeinen Verwendung bestimmt sind, seit DIN VDE 0100-410:2018 zusätzlich durch einen RCD ≤ 30 mA geschützt sein?",
+    "antworten": [
+      "16 A",
+      "20 A",
+      "32 A",
+      "63 A"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Seit der Ausgabe 2018 gilt der zusätzliche Schutz durch RCD ≤ 30 mA für Steckdosen bis 32 A (vorher 20 A). Neu ist außerdem die RCD-Pflicht für Endstromkreise mit Leuchten in Wohnungen; Endstromkreise für ortsveränderliche Betriebsmittel im Außenbereich bis 32 A sind ebenfalls einzubeziehen.",
+    "quelle": "DIN VDE 0100-410:2018-10, 411.3.3",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-002",
+    "thema": "schutz",
+    "unterthema": "Abschaltbedingungen",
+    "typ": "einfach",
+    "frage": "Ein Endstromkreis versorgt eine CEE-Steckdose 63 A im TN-System (U₀ = 230 V). Welche Abschaltzeit ist nach DIN VDE 0100-410:2018 höchstens zulässig?",
+    "antworten": [
+      "0,2 s",
+      "0,4 s",
+      "1 s",
+      "5 s"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Seit 2018 gelten die kurzen Abschaltzeiten aus Tabelle 41.1 für Endstromkreise mit Steckdosen bis 63 A und für Endstromkreise mit nur fest angeschlossenen Verbrauchsmitteln bis 32 A. Ein 63-A-Steckdosenkreis braucht im TN-System also 0,4 s (TT-System: 0,2 s). 5 s gelten nur für Verteilerstromkreise und die übrigen Stromkreise.",
+    "quelle": "DIN VDE 0100-410:2018-10, 411.3.2",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-003",
+    "thema": "schutz",
+    "unterthema": "TT-System",
+    "typ": "einfach",
+    "frage": "Welche Abschaltzeit ist im TT-System für Verteilerstromkreise höchstens zulässig?",
+    "antworten": [
+      "0,2 s",
+      "0,4 s",
+      "1 s",
+      "5 s"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "DIN VDE 0100-410: Im TT-System gilt für Verteilerstromkreise und die nicht von Tabelle 41.1 erfassten Stromkreise 1 s, im TN-System 5 s. Für Endstromkreise mit Steckdosen bis 63 A bzw. fest angeschlossene Verbrauchsmittel bis 32 A gelten bei 230 V im TT-System 0,2 s, im TN-System 0,4 s.",
+    "quelle": "DIN VDE 0100-410:2018-10, 411.3.2",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-004",
+    "thema": "schutz",
+    "unterthema": "Schutzleiter",
+    "typ": "einfach",
+    "frage": "Welchen Mindestquerschnitt muss ein Schutzleiter aus Kupfer haben, wenn die Außenleiter 25 mm² Cu haben?",
+    "antworten": [
+      "10 mm²",
+      "16 mm²",
+      "25 mm²",
+      "35 mm²"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "DIN VDE 0100-540 (Schutzleiter aus demselben Material wie der Außenleiter): Außenleiter bis 16 mm² → Schutzleiter gleich groß; über 16 bis 35 mm² → 16 mm²; über 35 mm² → halber Außenleiterquerschnitt. Bei 25 mm² sind es also 16 mm².",
+    "quelle": "DIN VDE 0100-540",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-005",
+    "thema": "schutz",
+    "unterthema": "Baustellen",
+    "typ": "mehrfach",
+    "frage": "Welche Anforderungen stellt DIN VDE 0100-704 an die Stromversorgung auf Baustellen?",
+    "antworten": [
+      "Steckdosen über 32 A brauchen keinen RCD",
+      "Jeder Baustromverteiler braucht eine in Aus-Stellung abschließbare, laienbedienbare Trenneinrichtung",
+      "Steckdosen bis 32 A: RCD mit IΔn ≤ 30 mA",
+      "Drehstrom-Steckdosen bis 63 A: RCD Typ B"
+    ],
+    "richtig": [
+      1,
+      2,
+      3
+    ],
+    "erklaerung": "DIN VDE 0100-704:2018: Steckdosen bis 32 A mit LS-Schalter und RCD ≤ 30 mA, Steckdosen über 32 A mit RCD ≤ 500 mA; für Drehstrom-CEE-Steckdosen bis 63 A RCD Typ B. Jeder Baustromverteiler hat eine Einrichtung zum Trennen, die in der Aus-Stellung abschließbar und von Laien bedienbar ist. Stand prüfen.",
+    "quelle": "DIN VDE 0100-704:2018-10",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-006",
+    "thema": "schutz",
+    "unterthema": "Leitungsschutz",
+    "typ": "einfach",
+    "frage": "Welchen Materialbeiwert k setzt man beim Kurzschlussschutz für Kupferleiter mit PVC-Isolierung an?",
+    "antworten": [
+      "56",
+      "115",
+      "143",
+      "230"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Kurzschlussschutz: t ≤ (k · A / I_k)². Für Kupfer mit PVC-Isolierung ist k = 115, mit VPE-Isolierung 143. 56 ist die Leitfähigkeit κ von Kupfer in m/(Ω·mm²) – eine andere Größe. Die Formel gilt für Abschaltzeiten bis 5 s; unter 0,1 s vergleicht man k² · A² mit dem Durchlass-I²t des Schutzgeräts laut Hersteller.",
+    "quelle": "DIN VDE 0100-430; DIN VDE 0100-540",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-007",
+    "thema": "schutz",
+    "unterthema": "Leitungsschutz",
+    "typ": "einfach",
+    "frage": "Was muss für das Bemessungsschaltvermögen eines Leitungsschutzschalters gelten?",
+    "antworten": [
+      "Es entspricht dem Bemessungsstrom I_n des LS-Schalters.",
+      "Es spielt nur bei RCDs eine Rolle.",
+      "Es muss mindestens so groß sein wie der größte Kurzschlussstrom am Einbauort.",
+      "Es muss kleiner sein als der Kurzschlussstrom, damit der LS-Schalter sicher auslöst."
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Das Bemessungsschaltvermögen (z. B. 6 kA oder 10 kA) ist der höchste Kurzschlussstrom, den das Gerät sicher abschalten kann. Es muss mindestens so groß sein wie der größte mögliche Kurzschlussstrom am Einbauort; kleiner nur, wenn eine vorgeschaltete Schutzeinrichtung den Back-up-Schutz übernimmt (Herstellerangaben). Beispiel: Z_s = 0,10 Ω → I_k = 230 V / 0,10 Ω = 2.300 A einpolig; der dreipolige Kurzschlussstrom ist meist höher.",
+    "quelle": "DIN VDE 0100-430; DIN EN 60898-1",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-008",
+    "thema": "schutz",
+    "unterthema": "Verteiler",
+    "typ": "einfach",
+    "frage": "Sie bauen einen Stromkreisverteiler aus einem Leergehäuse und Einbaugeräten zusammen. Wer gilt danach nach DIN EN 61439 als Hersteller der Schaltgerätekombination?",
+    "antworten": [
+      "Sie – wer zusammenbaut und bestückt, ist Hersteller und trägt die Verantwortung",
+      "Der Netzbetreiber, der den Zählerschrank abnimmt",
+      "Der Hersteller des Leergehäuses",
+      "Der Hersteller der eingebauten LS-Schalter"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Nach DIN EN 61439 ist Hersteller, wer die Schaltgerätekombination zusammenbaut bzw. bestückt. Der ursprüngliche Hersteller des Systems liefert den Bauartnachweis; Sie führen die Stückprüfung durch, bringen die Aufschrift an (Hersteller, Typ- oder Kennnummer, Herstellungsdatum, Normbezug) und dokumentieren.",
+    "quelle": "DIN EN 61439-1; DIN EN 61439-3",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-009",
+    "thema": "schutz",
+    "unterthema": "Verteiler",
+    "typ": "einfach",
+    "frage": "Welcher Teil der DIN EN 61439 gilt für Installationsverteiler, die von Laien bedient werden (z. B. Wohnungsverteiler)?",
+    "antworten": [
+      "DIN EN 61439-2",
+      "DIN EN 61439-3",
+      "DIN EN 61439-4",
+      "DIN EN 61439-6"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "DIN EN 61439: Teil 1 allgemeine Festlegungen, Teil 2 Energie-Schaltgerätekombinationen, Teil 3 Installationsverteiler für die Bedienung durch Laien, Teil 4 Baustromverteiler, Teil 5 Kabelverteiler im öffentlichen Netz, Teil 6 Schienenverteilersysteme.",
+    "quelle": "DIN EN 61439",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-010",
+    "thema": "schutz",
+    "unterthema": "Verteiler",
+    "typ": "einfach",
+    "frage": "Wie wird bei einem Installationsverteiler nach DIN EN 61439 nachgewiesen, dass er im Betrieb nicht zu warm wird?",
+    "antworten": [
+      "Durch eine Sichtprüfung nach 24 Stunden Volllast",
+      "Durch eine Isolationsmessung mit 500 V DC",
+      "Durch den Erwärmungsnachweis: Summe der Verlustleistungen der Einbauten ≤ zulässige Verlustleistung des Gehäuses",
+      "Durch Messen der Schleifenimpedanz am Verteilereingang"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Für Installationsverteiler wird die Erwärmung meist rechnerisch nachgewiesen: P_v = P_v,n · (I_b / I_n)² je Gerät, Summe ≤ P_v,zul des Gehäuses (Herstellerangaben). Weil die Verlustleistung quadratisch mit dem Strom sinkt, entlastet Teillast deutlich.",
+    "quelle": "DIN EN 61439-1; DIN EN 61439-3; Herstellerangaben",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-k01",
+    "thema": "schutz",
+    "unterthema": "Leitungsschutz",
+    "typ": "karte",
+    "frage": "Wie bemessen Sie eine Leitung und ihre Schutzeinrichtung? Nennen Sie die Bedingungen für Überlast- und Kurzschlussschutz.",
+    "antworten": [],
+    "richtig": "1. Betriebsstrom I_b aus der Leistung bestimmen (Gleichzeitigkeit berücksichtigen).\n2. Strombelastbarkeit: I_z = I_r · f₁ · f₂ (Tabellenwert für die Verlegeart, Faktoren für Umgebungstemperatur und Häufung, DIN VDE 0298-4).\n3. Überlastschutz: I_b ≤ I_n ≤ I_z und I_2 ≤ 1,45 · I_z – bei LS-Schaltern mit I_2 = 1,45 · I_n automatisch erfüllt.\n4. Kurzschlussschutz: t ≤ (k · A / I_k)², k = 115 für Cu/PVC, 143 für Cu/VPE; unter 0,1 s k² · A² ≥ I²t laut Hersteller. Schaltvermögen ≥ größter Kurzschlussstrom.\n5. Spannungsfall: bis zum Zähler höchstens 0,5 % (NAV § 13), Zähler bis Verbraucher höchstens 3 % (DIN 18015-1).\n6. Abschaltbedingung: Z_s · I_a ≤ U₀, Messwert höchstens 2/3 von U₀ / I_a.\nBeispiel: 2,5 mm², angenommen I_r = 24 A, drei Stromkreise gebündelt (f₂ = 0,70) → I_z = 16,8 A; bei I_b = 14 A passt B16, B20 nicht.",
+    "erklaerung": "Fachgespräch: Reihenfolge und Formeln erklären. Tabellenwerte (I_r, Faktoren) aus dem eigenen Tabellenbuch – Stand prüfen.",
+    "quelle": "DIN VDE 0100-430; DIN VDE 0298-4; DIN VDE 0100-410; DIN VDE 0100-520",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-k02",
+    "thema": "schutz",
+    "unterthema": "Abschaltbedingungen",
+    "typ": "karte",
+    "frage": "Was hat sich mit DIN VDE 0100-410:2018 bei Abschaltzeiten und RCD-Schutz geändert?",
+    "antworten": [],
+    "richtig": "• Kurze Abschaltzeiten (Tabelle 41.1, bei 230 V: TN 0,4 s, TT 0,2 s) gelten für Endstromkreise mit Steckdosen bis 63 A und für Endstromkreise mit nur fest angeschlossenen Verbrauchsmitteln bis 32 A (vorher: Endstromkreise bis 32 A).\n• Verteilerstromkreise und übrige Stromkreise: TN 5 s, TT 1 s.\n• Zusätzlicher Schutz durch RCD ≤ 30 mA für Steckdosen bis 32 A für Laien und zur allgemeinen Verwendung (vorher 20 A).\n• Neu: RCD ≤ 30 mA für Endstromkreise mit Leuchten in Wohnungen.\n• Weiterhin: Endstromkreise für ortsveränderliche Betriebsmittel im Außenbereich bis 32 A.",
+    "erklaerung": "Fachgespräch: alte und neue Grenzen auseinanderhalten. Übergangsregeln und Ausnahmen in der Norm nachlesen – Stand prüfen.",
+    "quelle": "DIN VDE 0100-410:2018-10",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-schutz-k03",
+    "thema": "schutz",
+    "unterthema": "Verteiler",
+    "typ": "karte",
+    "frage": "Sie bauen einen Stromkreisverteiler nach DIN EN 61439. Welche Pflichten haben Sie?",
+    "antworten": [],
+    "richtig": "• Wer zusammenbaut oder bestückt, wird Hersteller der Schaltgerätekombination und trägt die Verantwortung.\n• Bauartnachweis: liefert der ursprüngliche Hersteller des Systems – innerhalb seiner Vorgaben bleiben (Gehäuse, Geräte, Anordnung).\n• Erwärmungsnachweis: Summe der Verlustleistungen P_v = P_v,n · (I_b / I_n)² ≤ zulässige Verlustleistung des Gehäuses.\n• Stückprüfung für jeden Verteiler: Schutzart, Luft- und Kriechstrecken, Schutzleiterverbindungen, Einbau der Betriebsmittel, Anzugsmomente, Verdrahtung, Isolationsprüfung, Funktionsprüfung – dokumentieren.\n• Aufschrift: Hersteller, Typ- oder Kennnummer, Herstellungsdatum, Normbezug (DIN EN 61439-x).\n• Normteile: -1 allgemein, -2 Energie-Schaltgerätekombinationen, -3 Installationsverteiler für Laien, -4 Baustromverteiler, -5 Kabelverteiler, -6 Schienenverteiler.",
+    "erklaerung": "Fachgespräch: Hersteller-Rolle, Bauart- und Stückprüfung sowie den Erwärmungsnachweis erklären.",
+    "quelle": "DIN EN 61439-1; DIN EN 61439-3",
     "schwierigkeit": 3,
     "bild": null,
     "geprueft": false,

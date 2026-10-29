@@ -48,7 +48,7 @@
     "thema": "tab",
     "unterthema": "Inbetriebsetzung",
     "typ": "einfach",
-    "frage": "Wer setzt nach NAV die Kundenanlage hinter dem in den TAB festgelegten Trennpunkt (in der Regel hinter dem Zähler) in Betrieb?",
+    "frage": "Wer darf nach NAV § 14 die Kundenanlage hinter der in den TAB festgelegten Trennvorrichtung für die Inbetriebsetzung in Betrieb setzen?",
     "antworten": [
       "Der Anschlussnehmer",
       "Nur der Netzbetreiber",
@@ -58,8 +58,8 @@
     "richtig": [
       2
     ],
-    "erklaerung": "NAV § 14: Den Netzanschluss nimmt der Netzbetreiber in Betrieb. Die Anlage bis zu dem in den TAB festgelegten Trennpunkt setzt der Netzbetreiber in Betrieb – oder mit seiner Zustimmung das Installationsunternehmen. Hinter diesem Trennpunkt setzt das Installationsunternehmen die Anlage in Betrieb. Wo der Trennpunkt liegt (z. B. Trennvorrichtung im Zählerplatz), steht in den TAB – Stand prüfen.",
-    "quelle": "NAV § 14",
+    "erklaerung": "NAV § 14: Den Netzanschluss setzt der Netzbetreiber in Betrieb. Die Anlage bis zu der in den TAB festgelegten Trennvorrichtung setzt der Netzbetreiber in Betrieb – oder mit seiner Zustimmung das Installationsunternehmen. Hinter dieser Trennvorrichtung darf nur das Installationsunternehmen die Anlage in Betrieb setzen. Nach VDE-AR-N 4100 ist die Trennvorrichtung der SH-Schalter im netzseitigen (unteren) Anschlussraum – sie liegt also vor dem Zähler, nicht dahinter. Einzelheiten stehen in den TAB – Stand prüfen.",
+    "quelle": "NAV § 14; VDE-AR-N 4100",
     "schwierigkeit": 2,
     "bild": null,
     "geprueft": false,
@@ -192,8 +192,8 @@
     "richtig": [
       3
     ],
-    "erklaerung": "NAV § 19: Erweiterungen und Änderungen der Anlage sowie zusätzliche Verbrauchsgeräte sind dem Netzbetreiber mitzuteilen, soweit sich dadurch preisliche Bemessungsgrößen ändern oder die vorzuhaltende Leistung steigt. Ob ein stärkerer Netzanschluss nötig ist, entscheidet der Netzbetreiber.",
-    "quelle": "NAV § 19",
+    "erklaerung": "NAV § 19 Abs. 2: Erweiterungen und Änderungen der Anlage sowie die Verwendung zusätzlicher Verbrauchsgeräte sind dem Netzbetreiber mitzuteilen, soweit sich dadurch die vorzuhaltende Leistung erhöht oder mit Netzrückwirkungen zu rechnen ist. Ob ein stärkerer Netzanschluss nötig ist, entscheidet der Netzbetreiber. Seit 2024 muss er die Mitteilung auch über seine Internetseite ermöglichen.",
+    "quelle": "NAV § 19 Abs. 2 und 4",
     "schwierigkeit": 2,
     "bild": null,
     "geprueft": false,
@@ -328,6 +328,116 @@
     "erklaerung": "Fachgespräch: Anforderungen nennen und begründen. Grenzwerte ändern sich mit neuen Ausgaben – Stand prüfen.",
     "quelle": "VDE-AR-N 4100; DIN 18015-1",
     "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-tab-001",
+    "thema": "tab",
+    "unterthema": "Hauptstromversorgung",
+    "typ": "einfach",
+    "frage": "Für welchen Strom ist eine Hauptleitung nach VDE-AR-N 4100 mindestens zu bemessen?",
+    "antworten": [
+      "35 A",
+      "50 A",
+      "63 A",
+      "100 A"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Hauptleitungen sind nach VDE-AR-N 4100 mindestens für 63 A auszulegen. Für den Querschnitt zählen außerdem der Leistungsbedarf (DIN 18015-1), die Strombelastbarkeit und der Spannungsfall von höchstens 0,5 % bis zum Zähler. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100; DIN 18015-1",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-tab-002",
+    "thema": "tab",
+    "unterthema": "Hauptstromversorgung",
+    "typ": "einfach",
+    "frage": "Mit welchem Strom wird der Spannungsfall zwischen dem Ende des Hausanschlusses und dem Zähler nach NAV § 13 Abs. 4 berechnet?",
+    "antworten": [
+      "Mit dem Nennstrom der vorgeschalteten Sicherung",
+      "Mit dem Bemessungsstrom des Zählers",
+      "Mit pauschal 16 A je Außenleiter",
+      "Mit dem gemessenen Betriebsstrom der Anlage"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "NAV § 13 Abs. 4: Der Spannungsfall in den Leitungen zwischen Ende des Hausanschlusses und Zähler darf höchstens 0,5 % betragen – gerechnet mit dem Nennstrom der vorgeschalteten Sicherung (meist der Hausanschlusssicherung). Beispiel: 63 A, 15 m, Drehstrom → mit 10 mm² 0,73 % (zu viel), mit 16 mm² 0,46 % (in Ordnung).",
+    "quelle": "NAV § 13 Abs. 4; VDE-AR-N 4100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-tab-003",
+    "thema": "tab",
+    "unterthema": "Hauptstromversorgung",
+    "typ": "einfach",
+    "frage": "Wie wird eine Hauptleitung im TT-System ausgeführt?",
+    "antworten": [
+      "Fünfadrig mit PEN-Leiter",
+      "Zweiadrig, weil im TT-System die Erde als Rückleiter dient",
+      "Dreiadrig ohne Neutralleiter",
+      "Vieradrig (L1, L2, L3, N) mit separat verlegtem Schutzleiter"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Hauptleitungen werden als Drehstromleitungen ausgeführt: im TN-System vier- oder fünfadrig (PEN bzw. PE und N getrennt), im TT-System vieradrig mit separat verlegtem Schutzleiter. Was im Einzelfall gilt, gibt der Netzbetreiber in den TAB vor – Stand prüfen.",
+    "quelle": "VDE-AR-N 4100; TAB",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-tab-004",
+    "thema": "tab",
+    "unterthema": "Hauptstromversorgung",
+    "typ": "einfach",
+    "frage": "Welche Kurzschlussfestigkeit fordert die VDE-AR-N 4100 für das Hauptstromversorgungssystem vom Hausanschlusskasten bis zur letzten Überstrom-Schutzeinrichtung vor dem Zähler?",
+    "antworten": [
+      "6 kA",
+      "10 kA",
+      "25 kA",
+      "50 kA"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Die Betriebsmittel vom Hausanschlusskasten bis zur letzten Überstrom-Schutzeinrichtung vor der Messeinrichtung müssen für 25 kA bemessen sein, weil nahe am Ortsnetztransformator sehr hohe Kurzschlussströme auftreten können. 6 kA und 10 kA kennt man als Schaltvermögen von LS-Schaltern in Stromkreisverteilern. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-tab-005",
+    "thema": "tab",
+    "unterthema": "Symmetrie",
+    "typ": "einfach",
+    "frage": "Ein Kunde möchte eine einphasige Wallbox mit 7,4 kW (32 A) anschließen. Was gilt nach VDE-AR-N 4100?",
+    "antworten": [
+      "In der Regel nicht zulässig: Einphasig sind höchstens 4,6 kVA (20 A) erlaubt, darüber wird dreiphasig angeschlossen",
+      "Zulässig nach Meldung beim Stromlieferanten",
+      "Zulässig, weil die Leistung unter 12 kVA liegt",
+      "Zulässig, wenn ein RCD Typ B vorgeschaltet ist"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Die Schieflastgrenze liegt bei 4,6 kVA je Außenleiter, also I = 4.600 VA / 230 V = 20 A. 7,4 kW einphasig (32 A) überschreiten das deutlich – die Wallbox wird dreiphasig angeschlossen (z. B. 11 kW mit 16 A je Außenleiter). Abweichungen nur nach Vorgabe des Netzbetreibers. Die 12-kVA-Grenze der NAV betrifft die Zustimmungspflicht, nicht die Symmetrie. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100; NAV § 19",
+    "schwierigkeit": 2,
     "bild": null,
     "geprueft": false,
     "stand": "2026-10"

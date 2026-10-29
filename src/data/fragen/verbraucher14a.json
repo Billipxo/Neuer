@@ -289,5 +289,95 @@
     "bild": null,
     "geprueft": false,
     "stand": "2026-10"
+  },
+  {
+    "id": "lf-verbraucher14a-001",
+    "thema": "verbraucher14a",
+    "unterthema": "§ 14a EnWG",
+    "typ": "mehrfach",
+    "frage": "Welche Aussagen zu steuerbaren Verbrauchseinrichtungen nach § 14a EnWG treffen zu?",
+    "antworten": [
+      "Die Regeln gelten für Geräte, die seit dem 1. Januar 2024 in Betrieb genommen werden.",
+      "Mehrere Wärmepumpen oder Klimageräte an einem Netzanschluss werden für die 4,2-kW-Grenze zusammengerechnet.",
+      "Öffentlich zugängliche Ladepunkte fallen ebenfalls darunter.",
+      "Stromspeicher zählen dazu, soweit sie Strom aus dem Netz beziehen."
+    ],
+    "richtig": [
+      0,
+      1,
+      3
+    ],
+    "erklaerung": "Steuerbare Verbrauchseinrichtungen sind nicht öffentlich zugängliche Ladepunkte, Wärmepumpen (einschließlich Zusatz- oder Notheizung wie Heizstab), Anlagen zur Raumkühlung und Stromspeicher (beim Einspeichern aus dem Netz) mit mehr als 4,2 kW Netzanschlussleistung, in Betrieb genommen ab dem 1. Januar 2024. Wärmepumpen bzw. Klimageräte an einem Anschluss werden addiert. Öffentliche Ladepunkte gehören nicht dazu. Stand prüfen.",
+    "quelle": "EnWG § 14a; BNetzA-Festlegung BK6-22-300",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-verbraucher14a-002",
+    "thema": "verbraucher14a",
+    "unterthema": "§ 14a EnWG",
+    "typ": "einfach",
+    "frage": "Ein Kunde lässt eine Wallbox mit 3,7 kW (einphasig, 16 A) installieren. Was gilt?",
+    "antworten": [
+      "Sie ist dem Netzbetreiber vor der Inbetriebnahme mitzuteilen, fällt aber nicht unter § 14a EnWG.",
+      "Sie braucht die vorherige Zustimmung des Netzbetreibers.",
+      "Sie muss weder mitgeteilt noch angemeldet werden.",
+      "Sie ist eine steuerbare Verbrauchseinrichtung nach § 14a EnWG."
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Ladeeinrichtungen sind nach NAV § 19 immer vor der Inbetriebnahme mitzuteilen; eine Zustimmung braucht es erst über 12 kVA. Unter § 14a EnWG fallen Ladepunkte erst mit mehr als 4,2 kW – eine 3,7-kW-Wallbox nicht. Stand prüfen.",
+    "quelle": "NAV § 19 Abs. 2; EnWG § 14a",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-verbraucher14a-003",
+    "thema": "verbraucher14a",
+    "unterthema": "Ladeeinrichtungen",
+    "typ": "einfach",
+    "frage": "In einem Einfamilienhaus sollen zwei Wallboxen mit je 11 kW installiert werden. Was gilt nach NAV?",
+    "antworten": [
+      "Es genügt die Registrierung im Marktstammdatenregister.",
+      "Jede Wallbox liegt unter 12 kVA, also genügt die Mitteilung.",
+      "Die Summen-Bemessungsleistung beträgt 22 kVA – die vorherige Zustimmung des Netzbetreibers ist nötig.",
+      "Wallboxen über 11 kW sind in Einfamilienhäusern verboten."
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "NAV § 19 Abs. 2 stellt auf die Summen-Bemessungsleistung je elektrischer Anlage ab: 2 × 11 kVA = 22 kVA > 12 kVA → Zustimmung vor der Inbetriebnahme. Der Netzbetreiber muss sich binnen zwei Monaten äußern. Zusätzlich ist jede Wallbox über 4,2 kW steuerbar nach § 14a EnWG.",
+    "quelle": "NAV § 19 Abs. 2; EnWG § 14a",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-verbraucher14a-004",
+    "thema": "verbraucher14a",
+    "unterthema": "Ladeeinrichtungen",
+    "typ": "einfach",
+    "frage": "Eine Ladeeinrichtung mit 22 kW ist zustimmungspflichtig. Innerhalb welcher Frist muss sich der Netzbetreiber nach Eingang der Mitteilung äußern?",
+    "antworten": [
+      "Innerhalb von zwei Wochen",
+      "Innerhalb von vier Wochen",
+      "Innerhalb von zwei Monaten",
+      "Innerhalb von sechs Monaten"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "NAV § 19 Abs. 2: Ladeeinrichtungen sind vor der Inbetriebnahme mitzuteilen; über 12 kVA Summen-Bemessungsleistung je elektrischer Anlage braucht es die vorherige Zustimmung. Der Netzbetreiber muss sich innerhalb von zwei Monaten nach Eingang der Mitteilung äußern. Verweigert er die Zustimmung, muss er die Gründe, mögliche Abhilfemaßnahmen und den dafür nötigen Zeitbedarf darlegen.",
+    "quelle": "NAV § 19 Abs. 2",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
   }
 ]
