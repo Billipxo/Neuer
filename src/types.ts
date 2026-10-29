@@ -149,6 +149,8 @@ export interface Profil {
   antwortenMischen: boolean;
   /** Beim Lernen nur als geprüft markierte Fragen verwenden */
   nurGeprueft: boolean;
+  /** Kurzer Ton bei richtigen und falschen Antworten in Lernrunden */
+  toene: boolean;
 }
 
 /** Antwort in einer Simulation: gewählte Original-Indizes bzw. eingegebener Text */
@@ -205,6 +207,7 @@ export const STANDARD_PROFIL: Profil = {
   sitzungsLaenge: 20,
   antwortenMischen: true,
   nurGeprueft: false,
+  toene: true,
 };
 
 export function neuerFortschritt(id: string): Fortschritt {

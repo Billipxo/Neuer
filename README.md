@@ -69,6 +69,12 @@ Es gibt drei Varianten mit denselben Fragen und Funktionen:
 - **Prüfungssimulation:** gemischte Fragen mit Zeitlimit, Auswertung je Thema und
   Verlauf aller Simulationen. Anzahl, Zeit und Bestehensgrenze sind einstellbar
   (Standard: 30 Fragen, 60 Minuten, 70 %).
+- **Rückmeldung mit Ton und kleinen Effekten:** Bei einer richtigen Antwort springt die
+  Meldung kurz auf, ein paar Funken fliegen, dazu ein heller Ton (jede fünfte richtige Antwort
+  in Folge etwas festlicher); bei einer falschen wackelt sie, dazu ein tiefer Ton. Die Töne
+  erzeugt die App selbst (keine Audiodateien, offline). Abschalten unter *Mehr → Einstellungen
+  → Töne bei Antworten*; die Bewegungen entfallen, wenn am Gerät „Bewegung reduzieren“ an ist.
+  In der Prüfungssimulation bleibt es still.
 - **Motivation:** XP (mehr für schwere Fragen und Serien), Level von „Azubi“ bis
   „Eingetragen ins Installateurverzeichnis“, Tagesziel, Lernserie, Abzeichen je Thema,
   Prüfungsreife, Statistik und ein Countdown bis zur Prüfung mit empfohlenem Tagespensum.

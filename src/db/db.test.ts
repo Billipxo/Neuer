@@ -53,6 +53,13 @@ describe('Datenbank', () => {
     expect((await holeFortschritt(db, 'x')).markiert).toBe(true);
   });
 
+  it('ergänzt neue Einstellungen in einem alten Profil mit dem Standard (Töne an)', async () => {
+    const db = await neueDb();
+    const { toene: _t, ...altesProfil } = await holeProfil(db);
+    await db.put('profil', { ...altesProfil, xp: 7 } as never);
+    expect(await holeProfil(db)).toMatchObject({ xp: 7, toene: true });
+  });
+
   it('löscht beim Entfernen einer Frage auch den Fortschritt', async () => {
     const db = await neueDb();
     await synchronisiereFragen(db, [f('a')]);

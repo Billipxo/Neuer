@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { nachUpdateSuchen, type UpdateErgebnis } from '../components/appUpdate';
 import { Seite } from '../components/Seite';
+import { spieleTon } from '../components/toene';
 import { Chip, Schalter, Stepper, knopf } from '../components/ui';
 import { useDaten } from '../db/DatenContext';
 import { istGueltigesDatum } from '../logic/datum';
@@ -104,6 +105,15 @@ export function EinstellungenSeite() {
           text="Gilt für Lernrunden; der Katalog zeigt weiterhin alle Fragen"
           an={profil.nurGeprueft}
           onChange={(an) => aendereProfil({ nurGeprueft: an })}
+        />
+        <Schalter
+          titel="Töne bei Antworten"
+          text="Kurzer Ton bei richtig und falsch. In der Prüfungssimulation bleibt es still."
+          an={profil.toene}
+          onChange={(an) => {
+            aendereProfil({ toene: an });
+            if (an) spieleTon('richtig');
+          }}
         />
       </div>
 

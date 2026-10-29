@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Erklaerung, FrageBild, FrageKopf, FrageMitLoesung, FrageWerkzeuge } from '../components/FrageTeile';
 import { FormelKnopf } from '../components/Formeln';
+import { spieleTon, tonVorbereiten } from '../components/toene';
 import { AntwortOption, BUCHSTABEN, RechenEingabe } from '../components/Antworten';
 import { Dialog, StatusPunkt, knopf } from '../components/ui';
 import { BEREICHE } from '../data/bereiche';
@@ -10,6 +11,7 @@ import { bewerteAuswahl, bewerteRechnung, parseZahl } from '../logic/bewertung';
 import { KARTEN_ERGEBNIS, type Ergebnis } from '../logic/leitner';
 import type { AntwortEreignis } from '../logic/motivation';
 import { LERN_MODI, antwortReihenfolge, waehleFragen, wiederEinreihen, type LernModus } from '../logic/sitzung';
+import { istSerienMeilenstein, tonFuer } from '../logic/toene';
 import { THEMA_IDS, type Frage, type KartenBewertung, type RechenLoesung, type ThemaId } from '../types';
 
 /** Wie oft eine falsch beantwortete Frage in derselben Runde höchstens erneut drankommt */
@@ -135,12 +137,15 @@ function Sitzung({ params }: { params: URLSearchParams }) {
   async function abschliessen(erg: Ergebnis, karte?: KartenBewertung) {
     if (speichert || !frage) return;
     setSpeichert(true);
+    // Noch im Klick vorbereiten – Android spielt Töne nur nach einer Berührung ab
+    if (profil.toene) tonVorbereiten();
     let rueckmeldung;
     try {
       rueckmeldung = await antwortSpeichern(frage.id, erg, karte);
     } finally {
       setSpeichert(false);
     }
+    if (profil.toene) spieleTon(tonFuer(erg, rueckmeldung.ereignis.serie, karte));
     setXpRunde((x) => x + rueckmeldung.ereignis.xpGesamt);
     setProtokoll((p) => (p.has(frage.id) ? p : new Map(p).set(frage.id, erg)));
     const schon = wiederholungen[frage.id] ?? 0;
@@ -318,13 +323,15 @@ function ErgebnisBanner({
 }) {
   const ok = ergebnis === 'richtig';
   const xp = ereignis?.xp;
+  const meilenstein = ok && !!ereignis && istSerienMeilenstein(ereignis.serie);
   return (
     <div
       role="status"
-      className={`flex items-center gap-3 rounded-2xl p-4 ${ok ? 'bg-green-700 text-white' : 'bg-red-600 text-white'}`}
+      className={`flex items-center gap-3 rounded-2xl p-4 ${ok ? 'anim-richtig bg-green-700 text-white' : 'anim-falsch bg-red-600 text-white'}`}
     >
-      <span className="text-3xl" aria-hidden>
-        {ok ? '✓' : '✗'}
+      <span className="relative text-3xl" aria-hidden>
+        <span className={`inline-block ${ok ? 'anim-haken' : ''}`}>{ok ? '✓' : '✗'}</span>
+        {ok && <Funken anzahl={meilenstein ? 14 : 8} />}
       </span>
       <div className="flex-1">
         <p className="text-lg font-bold">{ok ? 'Richtig!' : 'Leider falsch'}</p>
@@ -338,6 +345,25 @@ function ErgebnisBanner({
       </div>
       {xp && xp.gesamt > 0 && <span className="shrink-0 rounded-full bg-white/20 px-3 py-1 font-bold">+{xp.gesamt} XP</span>}
     </div>
+  );
+}
+
+const FUNKEN_FARBEN = ['bg-marke-400', 'bg-white', 'bg-green-200'];
+
+/** Kleine Punkte, die bei einer richtigen Antwort vom Häkchen wegfliegen (aus bei „Bewegung reduzieren“). */
+function Funken({ anzahl }: { anzahl: number }) {
+  return (
+    <>
+      {Array.from({ length: anzahl }, (_, i) => {
+        const winkel = (i / anzahl) * 2 * Math.PI;
+        const weite = i % 2 ? 26 : 40;
+        const richtung = {
+          '--dx': `${Math.round(Math.cos(winkel) * weite)}px`,
+          '--dy': `${Math.round(Math.sin(winkel) * weite)}px`,
+        } as CSSProperties;
+        return <span key={i} className={`anim-spritzer absolute top-1/2 left-1/2 size-1.5 rounded-full ${FUNKEN_FARBEN[i % 3]}`} style={richtung} />;
+      })}
+    </>
   );
 }
 
