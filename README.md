@@ -49,6 +49,11 @@ Es gibt drei Varianten mit denselben Fragen und Funktionen:
 | i | Arbeitssicherheit | `sicherheit.json` |
 | j | Rechenaufgaben | `rechnen.json` |
 
+- **Themenbereiche mit Erklärung:** Jedes Thema ist in Themenbereiche aufgeteilt
+  (zusammen 40), z. B. „NAV“, „Fundamenterder (DIN 18014)“ oder „RCD-Prüfung und
+  Schleifenimpedanz“. Jeder Bereich hat eine Erklärung zum Nachlesen (Worum geht es?,
+  Das Wichtigste, Merke) und ein eigenes Training. Alle Erklärungen auf einen Blick:
+  *Lernen → Erklärungen* oder *Mehr → Erklärungen*.
 - **Fragetypen:** Einfachauswahl, Mehrfachauswahl (zählt nur, wenn alles stimmt),
   Rechenaufgaben mit Toleranz und Rechenweg, Karteikarten für das Fachgespräch
   (aufdecken, selbst bewerten: gewusst / teilweise / nicht gewusst), optional mit Bild.
@@ -175,6 +180,7 @@ deploy/            Vorlage für den Passwortschutz auf dem Webspace (.htaccess)
 public/            Icons und Bilder (Bilder zu Fragen in public/bilder/)
 scripts/           Prüfskript für die Fragen-Dateien, Bilder einbetten (Offline-Datei)
 src/data/fragen/   die Fragen – eine JSON-Datei je Thema
+src/data/bereiche/ die Themenbereiche mit ihren Erklärungen – eine JSON-Datei je Thema
 src/logic/         Lernlogik (Bewertung, Leitner, XP/Level, Abzeichen, Simulation …) mit Tests
 src/db/            Speicherung im Browser (IndexedDB)
 src/pages/         Seiten der App
@@ -220,7 +226,7 @@ Es gibt zwei Wege. Beide lassen sich kombinieren.
 | `bild` | `null` oder ein Pfad wie `"bilder/netzsystem-a.svg"` (Datei liegt in `public/bilder/`) |
 | `geprueft` | `true` oder `false` – mit den Kursunterlagen abgeglichen? |
 | `stand` | Stand der Information, z. B. `"2026-10"` |
-| `unterthema` | optional, wird bei der Suche berücksichtigt |
+| `unterthema` | ordnet die Frage einem Themenbereich zu (siehe [Themenbereiche](#themenbereiche-und-erklärungen)); wird auch bei der Suche berücksichtigt |
 
 So sieht `richtig` je nach Typ aus:
 
@@ -261,6 +267,39 @@ Tipps:
   Einstellungen). Trotzdem die richtige Antwort nicht immer an dieselbe Stelle setzen
   und nicht immer zur längsten machen.
 - Keine Normtexte abschreiben – in eigenen Worten formulieren.
+
+### Themenbereiche und Erklärungen
+
+Die Themenbereiche stehen in `src/data/bereiche/<thema>.json` – je Thema eine Liste:
+
+```json
+{
+  "id": "recht-nav",
+  "thema": "recht",
+  "titel": "NAV: Kundenanlage, Material und Mitteilungen",
+  "kurz": "§§ 13, 14, 16, 19 und 22 NAV – Anlage, Inbetriebsetzung, Eigenanlagen, Zählerplatz",
+  "unterthemen": ["NAV"],
+  "erklaerung": [
+    { "titel": "Worum geht es?", "text": "Die NAV regelt …" },
+    { "titel": "Das Wichtigste", "punkte": ["§ 13 Abs. 1: …", "§ 14: …"] },
+    { "titel": "Merke", "text": "Mitteilen heißt: Bescheid geben. …" }
+  ],
+  "quelle": "NAV §§ 13, 14, 16, 19, 22",
+  "stand": "2026-10"
+}
+```
+
+- Zu einem Bereich gehören alle Fragen seines Themas, deren `unterthema` in `unterthemen`
+  steht. Die Reihenfolge in der Datei ist die Reihenfolge in der App.
+- `erklaerung` besteht aus Abschnitten mit `titel` und `text` und/oder `punkte`
+  (Stichpunkte). Ein Abschnitt, dessen Titel mit „Merke“ beginnt, wird gelb hervorgehoben.
+- `npm run pruefe` meldet Fragen ohne Themenbereich, Unterthemen ohne Fragen und
+  Unterthemen, die in zwei Bereichen stehen.
+- In der App angelegte Fragen: beim Anlegen ein vorhandenes Unterthema aus der
+  Vorschlagsliste wählen, dann erscheinen sie im passenden Bereich. Mit einem neuen
+  Unterthema stehen sie nur unter „Ganzes Thema üben“.
+- Die Erklärungen fassen die Fragen des Bereichs zusammen. Sie sind – wie die Fragen –
+  noch nicht mit den Kursunterlagen abgeglichen.
 
 ### Bilder
 

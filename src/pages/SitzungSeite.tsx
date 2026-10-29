@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Erklaerung, FrageBild, FrageKopf, FrageMitLoesung, FrageWerkzeuge } from '../components/FrageTeile';
 import { AntwortOption, BUCHSTABEN, RechenEingabe } from '../components/Antworten';
 import { Dialog, StatusPunkt, knopf } from '../components/ui';
+import { BEREICHE } from '../data/bereiche';
 import { useDaten } from '../db/DatenContext';
 import { bewerteAuswahl, bewerteRechnung, parseZahl } from '../logic/bewertung';
 import { KARTEN_ERGEBNIS, type Ergebnis } from '../logic/leitner';
@@ -30,12 +31,19 @@ function Sitzung({ params }: { params: URLSearchParams }) {
   const { fragen, fortschritte, profil, antwortSpeichern, zeigeHinweis } = useDaten();
   const nachId = useMemo(() => new Map(fragen.map((f) => [f.id, f])), [fragen]);
 
+  const bereich = BEREICHE.find((b) => b.id === params.get('bereich'));
   const themaParam = params.get('thema');
-  const thema: ThemaId | 'alle' = THEMA_IDS.includes(themaParam as ThemaId) ? (themaParam as ThemaId) : 'alle';
+  const thema: ThemaId | 'alle' = bereich?.thema ?? (THEMA_IDS.includes(themaParam as ThemaId) ? (themaParam as ThemaId) : 'alle');
   const modusParam = params.get('modus') as LernModus;
   const modus: LernModus = LERN_MODI.includes(modusParam) ? modusParam : 'empfohlen';
   const zurueckParam = params.get('zurueck');
-  const zurueck = zurueckParam?.startsWith('/') ? zurueckParam : themaParam ? `/lernen/${thema}` : '/lernen';
+  const zurueck = zurueckParam?.startsWith('/')
+    ? zurueckParam
+    : bereich
+      ? `/lernen/${bereich.thema}/${bereich.id}`
+      : themaParam
+        ? `/lernen/${thema}`
+        : '/lernen';
 
   const neuerEintrag = (f: Frage, nr: number): Eintrag => ({
     id: f.id,
@@ -52,6 +60,7 @@ function Sitzung({ params }: { params: URLSearchParams }) {
           .filter((f): f is NonNullable<typeof f> => !!f)
       : waehleFragen(fragen, fortschritte, {
           thema,
+          bereich,
           modus,
           nurGeprueft: profil.nurGeprueft,
           limit: profil.sitzungsLaenge,

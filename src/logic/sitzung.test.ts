@@ -51,6 +51,21 @@ describe('waehleFragen', () => {
   it('begrenzt die Anzahl', () => {
     expect(waehleFragen(fragen, fortschritte, { thema: 'alle', modus: 'empfohlen', limit: 3 })).toHaveLength(3);
   });
+
+  it('filtert nach Themenbereich (Thema und Unterthema)', () => {
+    const mitUnterthema = [
+      frage('nav1', 'recht', { unterthema: 'NAV' }),
+      frage('nav2', 'recht', { unterthema: 'NAV' }),
+      frage('enwg', 'recht', { unterthema: 'EnWG' }),
+      frage('fremd', 'tab', { unterthema: 'NAV' }),
+      ...fragen,
+    ];
+    const bereich = { thema: 'recht' as const, unterthemen: ['NAV'] };
+    const ids = waehleFragen(mitUnterthema, new Map(), { thema: 'recht', bereich, modus: 'empfohlen' }).map((f) => f.id);
+    expect(ids.sort()).toEqual(['nav1', 'nav2']);
+    const falsch = map(fp('nav2', ['falsch']));
+    expect(waehleFragen(mitUnterthema, falsch, { thema: 'recht', bereich, modus: 'falsch' }).map((f) => f.id)).toEqual(['nav2']);
+  });
 });
 
 describe('Hilfsfunktionen', () => {

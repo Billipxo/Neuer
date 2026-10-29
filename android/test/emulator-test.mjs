@@ -1,6 +1,6 @@
-// Testet die Android-App in einem Android-Emulator: Start, Lernen, Lernstand nach Neustart,
-// Zurück-Taste, dunkles Design, Sicherung speichern („Speichern unter“) und wiederherstellen
-// (Dateiauswahl). Läuft in GitHub Actions, siehe .github/workflows/android-test.yml.
+// Testet die Android-App in einem Android-Emulator: Start, Lernen, Themenbereich mit Erklärung,
+// Lernstand nach Neustart, Zurück-Taste, dunkles Design, Sicherung speichern („Speichern unter“)
+// und wiederherstellen (Dateiauswahl). Läuft in GitHub Actions, siehe .github/workflows/android-test.yml.
 //
 // Aufruf: node android/test/emulator-test.mjs [Pfad zur Test-APK]
 // Braucht: laufenden Emulator (adb), npm-Paket playwright, eine mit „--test“ gebaute APK.
@@ -118,6 +118,14 @@ try {
     .waitForFunction(() => !location.hash.includes('schutz-016'), null, { timeout: 10_000 })
     .then(() => true, () => false);
   pruefe(zurueck, `4. Zurück-Taste: jetzt bei ${await seite.evaluate(() => location.hash || '#/')}`);
+
+  // 4b. Themenbereich mit Erklärung und Training
+  await gehe(seite, '#/lernen/recht/recht-nav');
+  const bereichDa = await seite
+    .waitForSelector('text=📖 Erklärung', { timeout: 15_000 })
+    .then(() => true, () => false);
+  pruefe(bereichDa && (await text(seite)).includes('Training starten'), '4b. Themenbereich „NAV“ zeigt Erklärung und Training');
+  await bild('4b-themenbereich');
 
   // 5. App beenden und neu starten → Lernstand noch da?
   seite = await starteApp();

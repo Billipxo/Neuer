@@ -1,0 +1,124 @@
+[
+  {
+    "id": "sicherheit-regeln",
+    "thema": "sicherheit",
+    "titel": "Die 5 Sicherheitsregeln und Arbeiten unter Spannung",
+    "kurz": "Reihenfolge, Spannungsprüfer, Erden und Kurzschließen, Aufheben und die drei Arbeitsweisen",
+    "unterthemen": ["5 Sicherheitsregeln", "Arbeiten unter Spannung"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Bevor du an einer Anlage arbeitest, wird sie nach den fünf Sicherheitsregeln spannungsfrei gemacht. Das ist der Regelfall. Arbeiten unter Spannung sind die seltene Ausnahme."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "1. Freischalten – 2. gegen Wiedereinschalten sichern – 3. Spannungsfreiheit feststellen – 4. erden und kurzschließen – 5. benachbarte, unter Spannung stehende Teile abdecken oder abschranken.",
+          "Spannungsfreiheit allpolig mit einem zweipoligen Spannungsprüfer (DIN EN 61243-3) feststellen und den Prüfer unmittelbar vorher und nachher an einer bekannten Spannungsquelle testen. Einpolige Phasenprüfer sind dafür nicht zulässig.",
+          "Erdungs- und Kurzschließvorrichtung: zuerst mit der Erdungsanlage verbinden, dann mit den Leitern. Abnehmen in umgekehrter Reihenfolge.",
+          "In Niederspannungsanlagen darf Erden und Kurzschließen entfallen, wenn keine Gefahr durch Rückspeisung besteht – nicht bei Freileitungen oder Anlagen mit PV, Speicher oder Notstrom.",
+          "Im Zählerschrank: Der netzseitige Anschlussraum bleibt bis zur Hausanschlusssicherung meist unter Spannung – abdecken. Freischalten z. B. über den SH-Schalter, mit Sperrelement und Hinweisschild gegen Wiedereinschalten sichern.",
+          "Aufheben in umgekehrter Reihenfolge. Wieder eingeschaltet wird erst, wenn alle Personen gewarnt sind und Werkzeuge sowie Erdungen entfernt sind.",
+          "Arbeiten in der Nähe unter Spannung stehender Teile: Die Arbeitsstelle ist spannungsfrei, daneben steht etwas unter Spannung – Schutz durch Abdecken, Abschranken, Abstand und Aufsicht.",
+          "Arbeiten unter Spannung: nur aus zwingenden Gründen, mit besonderer Ausbildung, festgelegten Arbeitsverfahren, isoliertem Werkzeug (1000 V) und PSA."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Freischalten – sichern – prüfen – erden – abdecken."
+      }
+    ],
+    "quelle": "DIN VDE 0105-100; DGUV Vorschrift 3",
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-verantwortung",
+    "thema": "sicherheit",
+    "titel": "Verantwortung: Fachkräfte und befähigte Personen",
+    "kurz": "Elektrofachkraft, Anlagen- und Arbeitsverantwortlicher, befähigte Person, Festlegung der Prüfungen",
+    "unterthemen": ["Verantwortung"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Wer darf was? Das regeln die DGUV Vorschrift 3, die DIN VDE 0105-100, die Betriebssicherheitsverordnung (BetrSichV) und die TRBS 1203."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Elektrofachkraft: wer aufgrund Ausbildung, Kenntnissen und Erfahrung sowie Kenntnis der Bestimmungen die übertragenen Arbeiten beurteilen und mögliche Gefahren erkennen kann.",
+          "Elektrotechnisch unterwiesene Person (EuP): darf nur festgelegte Tätigkeiten nach Unterweisung ausführen.",
+          "Errichten, ändern und instand halten nur durch eine Elektrofachkraft oder unter ihrer Leitung und Aufsicht (DGUV Vorschrift 3 § 3).",
+          "Anlagenverantwortlicher: trägt die unmittelbare Verantwortung für den sicheren Betrieb der Anlage, z. B. die Freigabe zur Arbeit. Arbeitsverantwortlicher: verantwortlich für die Durchführung der Arbeit vor Ort. Bei kleinen Arbeiten kann beides dieselbe Person sein.",
+          "Zur Prüfung befähigte Person (TRBS 1203): abgeschlossene Berufsausbildung, Berufserfahrung und eine zeitnahe berufliche Tätigkeit im Prüfen. Einen Meisterbrief verlangt die TRBS 1203 nicht.",
+          "Art, Umfang und Fristen der Prüfungen legt der Arbeitgeber auf Grundlage der Gefährdungsbeurteilung fest (BetrSichV)."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Installateurverzeichnis (NAV) = das Unternehmen gegenüber dem Netzbetreiber. DGUV Vorschrift 3 = die Person, die die Arbeit macht."
+      }
+    ],
+    "quelle": "DGUV Vorschrift 3; DIN VDE 0105-100; BetrSichV; TRBS 1203",
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-fristen",
+    "thema": "sicherheit",
+    "titel": "Prüffristen nach DGUV Vorschrift 3",
+    "kurz": "Richtwerte für Anlagen, RCD und ortsveränderliche Betriebsmittel",
+    "unterthemen": ["Prüffristen"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Elektrische Anlagen und Geräte werden regelmäßig erneut geprüft. Die DGUV Vorschrift 3 nennt Richtwerte; die tatsächlichen Fristen legt der Arbeitgeber in der Gefährdungsbeurteilung fest."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Elektrische Anlagen und ortsfeste Betriebsmittel: 4 Jahre (Elektrofachkraft).",
+          "In Betriebsstätten, Räumen und Anlagen besonderer Art (DIN VDE 0100 Gruppe 700): 1 Jahr.",
+          "Schutzmaßnahmen mit RCD in nichtstationären Anlagen, z. B. auf der Baustelle: jeden Monat auf Wirksamkeit prüfen, mit Messgerät.",
+          "RCD-Prüftaste durch den Benutzer: in stationären Anlagen alle 6 Monate, in nichtstationären Anlagen arbeitstäglich.",
+          "Ortsveränderliche Betriebsmittel: 6 Monate, auf Baustellen 3 Monate.",
+          "Liegt die Fehlerquote unter 2 %, darf verlängert werden: höchstens auf 1 Jahr (Baustelle, Werkstatt, Fertigungsstätte) bzw. 2 Jahre (Büro).",
+          "Prüfen darf eine Elektrofachkraft, mit geeigneten Mess- und Prüfgeräten teils auch eine elektrotechnisch unterwiesene Person."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "4 Jahre Anlage – 1 Jahr besondere Art – 6 Monate ortsveränderlich – 3 Monate auf der Baustelle."
+      }
+    ],
+    "quelle": "DGUV Vorschrift 3, Durchführungsanweisungen (Tabellen 1A und 1B); BetrSichV",
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-unfall",
+    "thema": "sicherheit",
+    "titel": "PSA, Gefahren des Stroms und Erste Hilfe",
+    "kurz": "Schutzausrüstung am Hausanschlusskasten, Wirkung des Stroms und Verhalten nach einem Stromunfall",
+    "unterthemen": ["PSA", "Gefahren des Stroms", "Erste Hilfe"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Strom kann Muskeln verkrampfen, das Herz aus dem Takt bringen und Störlichtbögen erzeugen. Die richtige Schutzausrüstung und das richtige Verhalten nach einem Unfall retten Leben."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Wirkung des Stroms (50 Hz, Hand–Hand, grobe Richtwerte): ab etwa 0,5 mA spürbar, ab etwa 10 mA kann man nicht mehr loslassen, ab etwa 50 mA bei längerer Einwirkung Gefahr von Herzkammerflimmern. Darum schaltet der 30-mA-RCD schnell ab.",
+          "NH-Sicherungen ziehen oder setzen: NH-Aufsteckgriff mit Stulpe, Gesichtsschutz mit Störlichtbogenschutz, geeignete Handschuhe, störlichtbogengeprüfte Kleidung, isoliertes Werkzeug (1000 V) und zweipoliger Spannungsprüfer.",
+          "Möglichst lastfrei schalten: erst die Last bzw. den SH-Schalter ausschalten, dann die NH-Sicherungen ziehen. Der Hausanschlusskasten gehört zum Netzanschluss und ist plombiert – Arbeiten daran mit dem Netzbetreiber absprechen.",
+          "Stromunfall: 1. Eigenschutz – Strom abschalten, den Verunglückten nicht berühren, solange er unter Spannung steht. 2. Notruf 112, Unfallstelle sichern. 3. Erste Hilfe – Bewusstsein und Atmung prüfen, ggf. Herz-Lungen-Wiederbelebung, Defibrillator (AED). 4. Immer ärztlich untersuchen lassen (EKG). 5. Unfall dokumentieren und melden.",
+          "Herzrhythmusstörungen können noch Stunden nach dem Unfall auftreten – deshalb auch nach scheinbar leichten Unfällen zum Arzt."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Eigenschutz – Notruf – Erste Hilfe – Arzt – Meldung."
+      }
+    ],
+    "quelle": "DIN IEC/TS 60479-1; DGUV Vorschrift 3; DIN VDE 0105-100",
+    "stand": "2026-10"
+  }
+]

@@ -50,6 +50,28 @@ export interface Frage {
   unterthema?: string;
 }
 
+/** Ein Abschnitt der Erklärung zu einem Themenbereich: Überschrift mit Text und/oder Stichpunkten. */
+export interface ErklaerungsAbschnitt {
+  titel: string;
+  text?: string;
+  punkte?: string[];
+}
+
+/**
+ * Themenbereich innerhalb eines Themas, wie er in src/data/bereiche/<thema>.json steht.
+ * Dazu gehören alle Fragen des Themas, deren unterthema in `unterthemen` steht.
+ */
+export interface Bereich {
+  id: string;
+  thema: ThemaId;
+  titel: string;
+  kurz: string;
+  unterthemen: string[];
+  erklaerung: ErklaerungsAbschnitt[];
+  quelle: string;
+  stand: string;
+}
+
 /** Frage in der lokalen Datenbank, mit Herkunft. */
 export interface GespeicherteFrage extends Frage {
   herkunft: 'mitgeliefert' | 'eigen';

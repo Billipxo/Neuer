@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { pruefeFrage, pruefeSammlung } from './validierung';
+import { pruefeBereich, pruefeBereiche, pruefeFrage, pruefeSammlung } from './validierung';
 
 const basis = {
   id: 'test-001',
@@ -91,5 +91,85 @@ describe('pruefeSammlung', () => {
 
   it('meldet Dateien, die keine Liste sind', () => {
     expect(pruefeSammlung([{ ort: 'x.json', inhalt: {} }])[0].fehler).toMatch(/Liste/);
+  });
+});
+
+const bereich = {
+  id: 'recht-nav',
+  thema: 'recht',
+  titel: 'NAV',
+  kurz: 'Kundenanlage und Mitteilungen',
+  unterthemen: ['NAV'],
+  erklaerung: [
+    { titel: 'Worum geht es?', text: 'Die NAV regelt den Netzanschluss.' },
+    { titel: 'Das Wichtigste', punkte: ['§ 13', '§ 14'] },
+  ],
+  quelle: 'NAV',
+  stand: '2026-10',
+};
+const navFrage = { id: 'recht-001', thema: 'recht' as const, unterthema: 'NAV' };
+
+describe('pruefeBereich', () => {
+  it('akzeptiert einen gültigen Themenbereich', () => {
+    expect(pruefeBereich(bereich)).toEqual([]);
+  });
+
+  it('meldet fehlende, leere und unbekannte Felder', () => {
+    const { quelle: _q, ...ohneQuelle } = bereich;
+    expect(pruefeBereich({ ...ohneQuelle, titel: ' ', farbe: 'rot' })).toEqual([
+      'Feld „quelle“ fehlt',
+      'Unbekanntes Feld „farbe“',
+      'titel ist leer',
+    ]);
+    expect(pruefeBereich({ ...bereich, unterthemen: [] })).toContain('unterthemen muss eine Liste von Texten sein');
+    expect(pruefeBereich({ ...bereich, unterthemen: ['NAV', 'NAV'] })).toContain('unterthemen enthält doppelte Einträge');
+  });
+
+  it('prüft die Abschnitte der Erklärung', () => {
+    expect(pruefeBereich({ ...bereich, erklaerung: [] })).toContain('erklaerung muss eine Liste von Abschnitten sein');
+    expect(pruefeBereich({ ...bereich, erklaerung: [{ titel: 'Leer' }] })).toContain('Abschnitt 1: braucht text oder punkte');
+    expect(pruefeBereich({ ...bereich, erklaerung: [{ titel: '', punkte: ['a', ''] }, { titel: 'x', text: 'y', bild: 'z' }] })).toEqual([
+      'Abschnitt 1: titel ist leer',
+      'Abschnitt 1: punkte muss eine Liste von Texten sein',
+      'Abschnitt 2: unbekanntes Feld „bild“',
+    ]);
+  });
+});
+
+describe('pruefeBereiche', () => {
+  it('ist zufrieden, wenn jede Frage genau einen Bereich hat', () => {
+    expect(pruefeBereiche([{ ort: 'bereiche/recht.json', inhalt: [bereich], erwartetesThema: 'recht' }], [navFrage])).toEqual([]);
+  });
+
+  it('meldet doppelte IDs, falsches Thema und doppelt vergebene Unterthemen', () => {
+    const befunde = pruefeBereiche(
+      [
+        { ort: 'bereiche/recht.json', inhalt: [bereich, { ...bereich, id: 'recht-nav-2' }], erwartetesThema: 'recht' },
+        { ort: 'bereiche/tab.json', inhalt: [bereich], erwartetesThema: 'tab' },
+      ],
+      [navFrage],
+    );
+    expect(befunde.map((b) => `${b.ort} ${b.id}: ${b.fehler}`)).toEqual([
+      'bereiche/recht.json recht-nav-2: Unterthema „NAV“ steht schon im Bereich recht-nav',
+      'bereiche/tab.json recht-nav: Thema passt nicht zur Datei (erwartet „tab“)',
+      'bereiche/tab.json recht-nav: Doppelte ID (schon in bereiche/recht.json)',
+      'bereiche/tab.json recht-nav: Unterthema „NAV“ steht schon im Bereich recht-nav',
+    ]);
+  });
+
+  it('meldet Unterthemen ohne Fragen und Fragen ohne Bereich', () => {
+    const befunde = pruefeBereiche(
+      [{ ort: 'bereiche/recht.json', inhalt: [{ ...bereich, unterthemen: ['NAV', 'Tippfehler'] }] }],
+      [navFrage, { id: 'recht-002', thema: 'recht', unterthema: 'EnWG' }, { id: 'recht-003', thema: 'recht' }],
+    );
+    expect(befunde.map((b) => `${b.ort} ${b.id}: ${b.fehler}`)).toEqual([
+      'bereiche/recht.json recht-nav: Unterthema „Tippfehler“ kommt in keiner Frage vor',
+      'recht.json recht-002: gehört zu keinem Themenbereich – Unterthema „EnWG“ in bereiche/recht.json eintragen',
+      'recht.json recht-003: gehört zu keinem Themenbereich – unterthema fehlt',
+    ]);
+  });
+
+  it('meldet Dateien, die keine Liste sind', () => {
+    expect(pruefeBereiche([{ ort: 'bereiche/x.json', inhalt: {} }], [])[0].fehler).toMatch(/Liste/);
   });
 });

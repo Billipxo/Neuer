@@ -1,4 +1,4 @@
-import { FRAGE_TYPEN, THEMA_IDS, type Frage } from '../types';
+import { FRAGE_TYPEN, THEMA_IDS, type Bereich, type Frage } from '../types';
 
 const PFLICHTFELDER = [
   'id',
@@ -136,6 +136,124 @@ export function pruefeSammlung(
         else gesehen.set(id, ort);
       }
     });
+  }
+  return befunde;
+}
+
+const BEREICH_FELDER = ['id', 'thema', 'titel', 'kurz', 'unterthemen', 'erklaerung', 'quelle', 'stand'] as const;
+const ABSCHNITT_FELDER = ['titel', 'text', 'punkte'];
+
+function istTextListe(x: unknown): x is string[] {
+  return Array.isArray(x) && x.length > 0 && x.every(istText);
+}
+
+/** Prüft einen einzelnen Themenbereich (Aufbau und Inhalte) und liefert Fehlermeldungen (leer = in Ordnung). */
+export function pruefeBereich(roh: unknown): string[] {
+  const fehler: string[] = [];
+  if (typeof roh !== 'object' || roh === null || Array.isArray(roh)) {
+    return ['Eintrag ist kein Objekt'];
+  }
+  const b = roh as Record<string, unknown>;
+
+  for (const feld of BEREICH_FELDER) {
+    if (!(feld in b)) fehler.push(`Feld „${feld}“ fehlt`);
+  }
+  for (const feld of Object.keys(b)) {
+    if (!(BEREICH_FELDER as readonly string[]).includes(feld)) fehler.push(`Unbekanntes Feld „${feld}“`);
+  }
+
+  const hat = (feld: string) => feld in b;
+  if (hat('id')) {
+    if (!istText(b.id)) fehler.push('id ist leer');
+    else if (!/^[a-z0-9][a-z0-9_-]*$/.test(b.id)) fehler.push('id darf nur a-z, 0-9, - und _ enthalten');
+  }
+  if (hat('thema') && !THEMA_IDS.includes(b.thema as never)) fehler.push(`Unbekanntes Thema „${String(b.thema)}“`);
+  for (const feld of ['titel', 'kurz', 'quelle', 'stand'] as const) {
+    if (hat(feld) && !istText(b[feld])) fehler.push(`${feld} ist leer`);
+  }
+  if (hat('unterthemen')) {
+    if (!istTextListe(b.unterthemen)) fehler.push('unterthemen muss eine Liste von Texten sein');
+    else if (new Set(b.unterthemen).size !== b.unterthemen.length) fehler.push('unterthemen enthält doppelte Einträge');
+  }
+  if (hat('erklaerung')) {
+    if (!Array.isArray(b.erklaerung) || b.erklaerung.length === 0) {
+      fehler.push('erklaerung muss eine Liste von Abschnitten sein');
+    } else {
+      b.erklaerung.forEach((roheAbschnitt, i) => {
+        const nr = `Abschnitt ${i + 1}`;
+        if (typeof roheAbschnitt !== 'object' || roheAbschnitt === null || Array.isArray(roheAbschnitt)) {
+          fehler.push(`${nr} ist kein Objekt`);
+          return;
+        }
+        const a = roheAbschnitt as Record<string, unknown>;
+        for (const feld of Object.keys(a)) {
+          if (!ABSCHNITT_FELDER.includes(feld)) fehler.push(`${nr}: unbekanntes Feld „${feld}“`);
+        }
+        if (!istText(a.titel)) fehler.push(`${nr}: titel ist leer`);
+        if (!('text' in a) && !('punkte' in a)) fehler.push(`${nr}: braucht text oder punkte`);
+        if ('text' in a && !istText(a.text)) fehler.push(`${nr}: text ist leer`);
+        if ('punkte' in a && !istTextListe(a.punkte)) fehler.push(`${nr}: punkte muss eine Liste von Texten sein`);
+      });
+    }
+  }
+  return fehler;
+}
+
+/**
+ * Prüft die Themenbereich-Dateien zusammen mit den Fragen: Aufbau, doppelte IDs, Thema passend zur Datei,
+ * kein Unterthema in zwei Bereichen, kein Unterthema ohne Fragen – und jede Frage gehört zu einem Bereich.
+ */
+export function pruefeBereiche(
+  listen: { ort: string; inhalt: unknown; erwartetesThema?: string }[],
+  fragen: readonly Pick<Frage, 'id' | 'thema' | 'unterthema'>[],
+): Befund[] {
+  const befunde: Befund[] = [];
+  const gesehen = new Map<string, string>();
+  /** je Thema: Unterthema → ID des Bereichs */
+  const zuordnung = new Map<string, Map<string, string>>();
+
+  for (const { ort, inhalt, erwartetesThema } of listen) {
+    if (!Array.isArray(inhalt)) {
+      befunde.push({ ort, id: '-', fehler: 'Datei muss eine Liste (Array) von Themenbereichen enthalten' });
+      continue;
+    }
+    inhalt.forEach((roh, i) => {
+      const b = roh as Partial<Bereich> | null;
+      const id = typeof b?.id === 'string' ? b.id : `#${i + 1}`;
+      const fehler = pruefeBereich(roh);
+      for (const f of fehler) befunde.push({ ort, id, fehler: f });
+      if (erwartetesThema && b?.thema !== erwartetesThema) {
+        befunde.push({ ort, id, fehler: `Thema passt nicht zur Datei (erwartet „${erwartetesThema}“)` });
+      }
+      if (typeof b?.id === 'string') {
+        const vorher = gesehen.get(id);
+        if (vorher) befunde.push({ ort, id, fehler: `Doppelte ID (schon in ${vorher})` });
+        else gesehen.set(id, ort);
+      }
+      if (fehler.length || typeof b?.thema !== 'string' || !Array.isArray(b.unterthemen)) return;
+      const jeThema = zuordnung.get(b.thema) ?? new Map<string, string>();
+      zuordnung.set(b.thema, jeThema);
+      for (const u of b.unterthemen) {
+        const anderer = jeThema.get(u);
+        if (anderer) befunde.push({ ort, id, fehler: `Unterthema „${u}“ steht schon im Bereich ${anderer}` });
+        else jeThema.set(u, id);
+        if (!fragen.some((f) => f.thema === b.thema && f.unterthema === u)) {
+          befunde.push({ ort, id, fehler: `Unterthema „${u}“ kommt in keiner Frage vor` });
+        }
+      }
+    });
+  }
+
+  for (const f of fragen) {
+    if (!f.unterthema || !zuordnung.get(f.thema)?.has(f.unterthema)) {
+      befunde.push({
+        ort: `${f.thema}.json`,
+        id: f.id,
+        fehler: f.unterthema
+          ? `gehört zu keinem Themenbereich – Unterthema „${f.unterthema}“ in bereiche/${f.thema}.json eintragen`
+          : 'gehört zu keinem Themenbereich – unterthema fehlt',
+      });
+    }
   }
   return befunde;
 }

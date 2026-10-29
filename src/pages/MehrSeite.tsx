@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Seite } from '../components/Seite';
+import { BEREICHE } from '../data/bereiche';
 import { useDaten } from '../db/DatenContext';
 
 function Eintrag({ to, icon, titel, text, zahl }: { to: string; icon: string; titel: string; text: string; zahl?: number }) {
@@ -38,6 +39,7 @@ export function MehrSeite() {
   return (
     <Seite titel="Mehr">
       <ul className="space-y-2">
+        <Eintrag to="/lernen/erklaerungen" icon="📖" titel="Erklärungen" text="Das Wichtigste zu jedem Themenbereich" zahl={BEREICHE.length} />
         <Eintrag to="/mehr/katalog" icon="🔎" titel="Fragenkatalog" text="Alle Fragen suchen, filtern und ansehen" zahl={fragen.length} />
         <Eintrag to="/mehr/neue-frage" icon="✚" titel="Neue Frage" text="Eigene Frage aus dem Kurs anlegen" />
         <Eintrag to="/mehr/daten" icon="💾" titel="Daten & Sicherung" text="Lernstand sichern, Fragen importieren und exportieren" />

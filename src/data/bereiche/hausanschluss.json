@@ -1,0 +1,126 @@
+[
+  {
+    "id": "hausanschluss-anschlussraum",
+    "thema": "hausanschluss",
+    "titel": "Hausanschlussraum, -wand und -nische (DIN 18012)",
+    "kurz": "Wo die Anschlüsse ins Haus kommen und wie viel Platz davor frei bleiben muss",
+    "unterthemen": ["DIN 18012", "Hauseinführung"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Strom, Gas, Wasser und Telekommunikation kommen an einer Stelle ins Haus. DIN 18012 legt fest, wie diese Stelle aussieht und wo sie liegt."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Hausanschlussraum: eigener Raum – nötig in Gebäuden mit mehr als vier Wohneinheiten.",
+          "Hausanschlusswand: Wand in einem allgemein zugänglichen Raum – für Gebäude mit bis zu vier Wohneinheiten.",
+          "Hausanschlussnische: vor allem für nicht unterkellerte Einfamilienhäuser.",
+          "Lage: an der Außenwand, durch die die Anschlussleitungen ins Gebäude kommen, und über allgemein zugängliche Räume (z. B. Treppenraum, Kellerflur) oder direkt von außen erreichbar – für alle Versorger und ohne Weg durch eine Wohnung.",
+          "Vor den Hausanschlusseinrichtungen mindestens 1,20 m Bedien- und Arbeitsfläche freihalten.",
+          "Platz für die Anschlüsse aller Sparten, Haupterdungsschiene in der Nähe, Schutz vor Beschädigung.",
+          "Hauseinführungen müssen gas- und wasserdicht sein – üblich sind geprüfte Systeme, oft als Mehrsparten-Hauseinführung."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Mehr als vier Wohneinheiten → Hausanschlussraum. Davor 1,20 m frei."
+      }
+    ],
+    "quelle": "DIN 18012",
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-erder",
+    "thema": "hausanschluss",
+    "titel": "Fundamenterder (DIN 18014)",
+    "kurz": "Ringerder, Maße, Perimeterdämmung, Anschlussfahnen und Dokumentation",
+    "unterthemen": ["Fundamenterder DIN 18014"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Jeder Neubau bekommt eine Erdungsanlage nach DIN 18014 – egal, ob ein TN- oder TT-System vorliegt. Sie ist die Grundlage für den Schutzpotentialausgleich."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Der Fundamenterder ist ein geschlossener Ring im Fundament der Außenwände bzw. in der Bodenplatte. Bei großen Gebäuden Maschen von höchstens 20 m × 20 m.",
+          "Mindestmaße für Stahl im Beton: Rundstahl mit 10 mm Durchmesser oder Bandstahl 30 mm × 3,5 mm – blank oder verzinkt.",
+          "Allseitig mindestens 5 cm Beton als Schutz vor Korrosion.",
+          "Verbindungen dauerhaft leitfähig: geeignete Verbindungsteile (z. B. Klemmverbinder) oder Schweißen. Rödeldraht dient nur der Lagesicherung.",
+          "Perimeterdämmung oder WU-Beton: Der Erder in der Bodenplatte hat dann keinen guten Erdkontakt. Deshalb ein Ringerder außen im Erdreich aus nichtrostendem Stahl (z. B. Werkstoff 1.4571) und zusätzlich ein Funktionspotentialausgleichsleiter in der Bodenplatte, mehrfach mit dem Ringerder verbunden.",
+          "Verzinkter Stahl korrodiert im Erdreich – dort nicht zulässig.",
+          "Anschlussfahne zur Haupterdungsschiene im Raum mindestens 1,5 m lang, in der Bauphase vor Beschädigung schützen.",
+          "Planen, errichten oder beaufsichtigen muss eine Elektrofachkraft oder Blitzschutz-Fachkraft – auch wenn der Rohbauer den Stahl verlegt.",
+          "Dokumentation: Pläne, Fotos vor dem Betonieren, Durchgangsmessung zwischen den Anschlussteilen mit Protokoll, Übergabe an den Bauherrn."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Planung – Ausführung – Dokumentation: Diese drei Schritte gehören im Fachgespräch dazu."
+      }
+    ],
+    "quelle": "DIN 18014; DIN 18015-1",
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-potentialausgleich",
+    "thema": "hausanschluss",
+    "titel": "Schutzpotentialausgleich",
+    "kurz": "Haupterdungsschiene, was angeschlossen wird und welche Querschnitte gelten",
+    "unterthemen": ["Schutzpotentialausgleich"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Der Schutzpotentialausgleich verbindet alle leitfähigen Teile, die ins Gebäude führen, mit der Haupterdungsschiene. So entstehen bei einem Fehler keine gefährlichen Spannungen zwischen Teilen, die man gleichzeitig berühren kann."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "An die Haupterdungsschiene (meist im Hausanschlussraum) kommen: Erdungsleiter bzw. Anschlussfahne des Fundamenterders, Hauptschutzleiter (PE bzw. PEN der Hauptstromversorgung), metallene Wasser- und Heizungsrohre, die Gasinnenleitung und – soweit möglich – Metallteile der Gebäudekonstruktion.",
+          "Schirme von Telekommunikations- und Antennenanlagen werden nach deren eigenen Regeln angeschlossen.",
+          "Gasinnenleitung mit Isolierstück: hausseitig hinter dem Isolierstück anschließen, damit kein Strom über die Gasnetzleitung fließt.",
+          "Querschnitt der Schutzpotentialausgleichsleiter: mindestens 6 mm² Cu (16 mm² Al, 50 mm² Stahl) und mindestens halb so groß wie der größte Schutzleiter der Anlage – mehr als 25 mm² Cu sind nicht nötig.",
+          "Neutralleiter von Endstromkreisen gehören nicht an die Haupterdungsschiene – der Neutralleiter ist ein aktiver Leiter."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Gleiches Potential heißt: keine Spannung zwischen den Teilen – also keine Gefahr beim gleichzeitigen Berühren."
+      }
+    ],
+    "quelle": "DIN VDE 0100-410; DIN VDE 0100-540",
+    "stand": "2026-10"
+  },
+  {
+    "id": "hausanschluss-planung",
+    "thema": "hausanschluss",
+    "titel": "Planung nach DIN 18015 und Installationszonen",
+    "kurz": "DIN 18015 Teil 1 bis 3, DIN 18013, Spannungsfall nach dem Zähler und Installationszonen",
+    "unterthemen": ["Planung DIN 18015", "Installationszonen"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Die Normenreihe DIN 18015 beschreibt, wie elektrische Anlagen in Wohngebäuden geplant, ausgestattet und verlegt werden. Die Installationszonen sorgen dafür, dass man später weiß, wo Leitungen in der Wand liegen können."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "DIN 18015-1: Planungsgrundlagen. Spannungsfall vom Zähler bis zum Verbraucher höchstens 3 % (vor dem Zähler höchstens 0,5 % nach NAV § 13 Abs. 4).",
+          "DIN 18015-2: Mindestausstattung – Anzahl der Steckdosen, Auslässe und Stromkreise je Raum. Mehr Ausstattung beschreibt RAL-RG 678 (Ausstattungswerte 1 bis 3).",
+          "DIN 18015-3: Leitungsführung in Installationszonen.",
+          "Zur Abgrenzung: DIN 18012 Hausanschlusseinrichtungen, DIN 18013 Nischen für Zählerplätze, DIN 18014 Fundamenterder.",
+          "Waagerechte Zonen: oben (ZW-o) 15 bis 45 cm unter der Decke, unten (ZW-u) 15 bis 45 cm über dem fertigen Fußboden – Vorzugsmaß jeweils 30 cm.",
+          "Mittlere Zone (ZW-m): nur in Räumen mit Arbeitsflächen vor den Wänden, z. B. Küche – 90 bis 120 cm über dem fertigen Fußboden, Vorzugsmaß 100 cm.",
+          "Senkrechte Zonen an Türen, Fenstern und Ecken (ZS-t, ZS-f, ZS-e): 20 cm breit, 10 bis 30 cm neben der Rohbaukante bzw. Ecke, Vorzugsmaß 15 cm."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Unter Putz verlegte Leitungen gehören in die Zonen – wer später bohrt, dübelt oder nagelt, trifft sie dann nicht."
+      }
+    ],
+    "quelle": "DIN 18015-1, -2, -3; DIN 18013; RAL-RG 678",
+    "stand": "2026-10"
+  }
+]

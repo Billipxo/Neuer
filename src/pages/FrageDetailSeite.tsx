@@ -3,7 +3,9 @@ import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { FrageMitLoesung, FrageWerkzeuge } from '../components/FrageTeile';
 import { Karte, Seite } from '../components/Seite';
 import { Dialog, Schalter, StatusPunkt, knopf } from '../components/ui';
+import { BEREICHE } from '../data/bereiche';
 import { useDaten } from '../db/DatenContext';
+import { bereichVonFrage } from '../logic/bereiche';
 import { fuerExport } from '../logic/austausch';
 import { formatDatumZeit, formatFaelligkeit } from '../logic/format';
 import { MAX_BOX, ohneLernstand } from '../logic/leitner';
@@ -36,6 +38,7 @@ export function FrageDetailSeite() {
     );
   }
   const fp = fortschritte.get(frage.id);
+  const bereich = bereichVonFrage(BEREICHE, frage);
 
   const lernstandZuruecksetzen = () => {
     if (!window.confirm('Lernstand dieser Frage zurücksetzen? Markierung, Notiz und Meldung bleiben erhalten.')) return;
@@ -81,6 +84,16 @@ export function FrageDetailSeite() {
         <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-sm">
           <dt className="text-slate-500 dark:text-slate-400">ID</dt>
           <dd className="font-mono">{frage.id}</dd>
+          {bereich && (
+            <>
+              <dt className="text-slate-500 dark:text-slate-400">Themenbereich</dt>
+              <dd>
+                <Link to={`/lernen/${bereich.thema}/${bereich.id}`} className="font-medium underline">
+                  {bereich.titel}
+                </Link>
+              </dd>
+            </>
+          )}
           {frage.unterthema && (
             <>
               <dt className="text-slate-500 dark:text-slate-400">Unterthema</dt>

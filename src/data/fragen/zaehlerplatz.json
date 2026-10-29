@@ -2,7 +2,7 @@
   {
     "id": "zaehlerplatz-001",
     "thema": "zaehlerplatz",
-    "unterthema": "Aufbau Zählerschrank",
+    "unterthema": "Anordnung Zählerplatz",
     "typ": "einfach",
     "frage": "In welchem Höhenbereich über der Standfläche muss sich die Mitte der Messeinrichtung (Zähler) befinden?",
     "antworten": [
@@ -85,7 +85,7 @@
   {
     "id": "zaehlerplatz-004",
     "thema": "zaehlerplatz",
-    "unterthema": "Aufbau Zählerschrank",
+    "unterthema": "Anordnung Zählerplatz",
     "typ": "mehrfach",
     "frage": "An welchen Orten dürfen Zählerplätze nicht angeordnet werden?",
     "antworten": [
@@ -242,7 +242,7 @@
   {
     "id": "zaehlerplatz-011",
     "thema": "zaehlerplatz",
-    "unterthema": "Aufbau Zählerschrank",
+    "unterthema": "Anordnung Zählerplatz",
     "typ": "einfach",
     "frage": "Warum müssen Zählerplätze in Mehrfamilienhäusern dauerhaft gekennzeichnet werden?",
     "antworten": [
@@ -430,7 +430,7 @@
   {
     "id": "lf-zaehlerplatz-005",
     "thema": "zaehlerplatz",
-    "unterthema": "Aufbau Zählerschrank",
+    "unterthema": "Anordnung Zählerplatz",
     "typ": "einfach",
     "frage": "Welche freie Bedien- und Arbeitsfläche ist vor einem Zählerschrank nach VDE-AR-N 4100 mindestens vorzusehen?",
     "antworten": [
@@ -452,7 +452,7 @@
   {
     "id": "lf-zaehlerplatz-006",
     "thema": "zaehlerplatz",
-    "unterthema": "Aufbau Zählerschrank",
+    "unterthema": "Anordnung Zählerplatz",
     "typ": "mehrfach",
     "frage": "Wo dürfen Zählerplätze nach VDE-AR-N 4100 nicht angeordnet werden?",
     "antworten": [

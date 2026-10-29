@@ -1,0 +1,197 @@
+[
+  {
+    "id": "recht-grundlagen",
+    "thema": "recht",
+    "titel": "EnWG, Begriffe und Netzanschluss",
+    "kurz": "Ziele des EnWG, § 49 EnWG, Anschlussnehmer und Anschlussnutzer, Netzanschluss",
+    "unterthemen": ["EnWG", "Begriffe", "Netzanschluss"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Das Energiewirtschaftsgesetz (EnWG) ist das Grundgesetz der Energieversorgung. Auf ihm baut die Niederspannungsanschlussverordnung (NAV) auf. Hier lernst du die Ziele des EnWG, die Vermutungswirkung nach § 49 und die wichtigsten Begriffe rund um den Netzanschluss."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "§ 1 EnWG: Die Versorgung mit Elektrizität, Gas und Wasserstoff soll möglichst sicher, preisgünstig, verbraucherfreundlich, effizient, umweltverträglich und treibhausgasneutral sein.",
+          "§ 49 EnWG: Energieanlagen – auch die Kundenanlage – müssen technisch sicher sein. Maßstab sind die allgemein anerkannten Regeln der Technik.",
+          "Vermutungswirkung: Wer die technischen Regeln des VDE einhält (DIN-VDE-Normen, VDE-Anwendungsregeln), für den wird vermutet, dass er die anerkannten Regeln der Technik eingehalten hat. Wer davon abweicht, muss im Zweifel nachweisen, dass die Anlage genauso sicher ist.",
+          "Anschlussnehmer: wer den Anschluss in Auftrag gibt, sonst der Eigentümer des Grundstücks oder Gebäudes – z. B. Hauseigentümer oder Bauherr. Mit ihm besteht das Netzanschlussverhältnis.",
+          "Anschlussnutzer: wer den Anschluss zur Entnahme von Strom nutzt – z. B. der Mieter einer Wohnung. Im selbst genutzten Einfamilienhaus ist der Eigentümer beides.",
+          "Netzanschluss: beginnt an der Abzweigstelle des Niederspannungsnetzes und endet in der Regel mit der Hausanschlusssicherung. Er gehört zu den Betriebsanlagen des Netzbetreibers – nur dieser stellt ihn her, ändert oder unterhält ihn.",
+          "Fehlt eine Plombe oder ist die Hausanschlusssicherung beschädigt: dem Netzbetreiber unverzüglich mitteilen und nichts eigenmächtig verändern."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "punkte": [
+          "Gesetz (EnWG) → Verordnung (NAV) → technische Regeln (VDE-AR-N 4100 und TAB des Netzbetreibers).",
+          "Am Netzanschluss arbeitet nur der Netzbetreiber. Deine Arbeit beginnt hinter der Hausanschlusssicherung."
+        ]
+      }
+    ],
+    "quelle": "EnWG §§ 1, 49; NAV §§ 1, 5, 8",
+    "stand": "2026-10"
+  },
+  {
+    "id": "recht-nav",
+    "thema": "recht",
+    "titel": "NAV: Kundenanlage, Material und Mitteilungen",
+    "kurz": "§§ 13, 14, 16, 19 und 22 NAV – Anlage, Inbetriebsetzung, Eigenanlagen, Zählerplatz",
+    "unterthemen": ["NAV"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Die NAV regelt, wie Netzbetreiber, Anschlussnehmer und Anschlussnutzer am Niederspannungsnetz zusammenarbeiten. Für dich als Installateur sind vor allem § 13 (Kundenanlage), § 14 (Inbetriebsetzung) und § 19 (Mitteilungen) wichtig."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "§ 13 Abs. 1: Für die Anlage hinter der Hausanschlusssicherung ist der Anschlussnehmer verantwortlich – ausgenommen die Messeinrichtungen, die ihm nicht gehören.",
+          "§ 13 Abs. 2: Errichten, erweitern, ändern und instand halten darf außer dem Netzbetreiber nur ein Unternehmen aus einem Installateurverzeichnis. Unzulässige Rückwirkungen auf das Netz sind auszuschließen.",
+          "Material (§ 13 Abs. 2): nur nach den anerkannten Regeln der Technik. Das wird bei der vorgeschriebenen CE-Kennzeichnung vermutet; wo keine vorgeschrieben ist, z. B. beim VDE- oder GS-Zeichen. Ware ohne Kennzeichnung gehört nicht in die Anlage.",
+          "§ 13 Abs. 4: Spannungsfall zwischen Ende des Hausanschlusses und Zähler höchstens 0,5 % – gerechnet mit dem Nennstrom der vorgeschalteten Sicherung.",
+          "§ 14: Den Netzanschluss setzt der Netzbetreiber in Betrieb. Die Anlage bis zur Trennvorrichtung aus den TAB setzt er in Betrieb – oder mit seiner Zustimmung das Installationsunternehmen. Hinter der Trennvorrichtung setzt nur das Installationsunternehmen in Betrieb. Jede Inbetriebsetzung beantragt das Installationsunternehmen.",
+          "§ 16 Abs. 2: Der Verschiebungsfaktor cos φ muss zwischen 0,9 kapazitiv und 0,9 induktiv liegen – sonst kann der Netzbetreiber eine Kompensation verlangen.",
+          "§ 19: Erweiterungen und zusätzliche Geräte mitteilen, wenn die vorzuhaltende Leistung steigt oder Netzrückwirkungen zu erwarten sind. Ladeeinrichtungen immer vorher mitteilen, über 12 kVA Summe vorher die Zustimmung einholen. Eigenanlagen (z. B. PV, Notstrom) vor der Errichtung mitteilen.",
+          "§ 22: In Neubauten müssen Zählerplätze so ausgeführt sein, dass ein Smart-Meter-Gateway einfach nachgerüstet werden kann."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "punkte": [
+          "Mitteilen heißt: Bescheid geben. Zustimmen heißt: erst nach dem Okay des Netzbetreibers in Betrieb nehmen (Ladeeinrichtungen über 12 kVA).",
+          "Die Trennvorrichtung ist der SH-Schalter im unteren Anschlussraum des Zählerplatzes – sie liegt vor dem Zähler."
+        ]
+      }
+    ],
+    "quelle": "NAV §§ 13, 14, 16, 19, 22",
+    "stand": "2026-10"
+  },
+  {
+    "id": "recht-netzbetreiber",
+    "thema": "recht",
+    "titel": "Verantwortung und Rechte des Netzbetreibers",
+    "kurz": "Wer verantwortlich ist und was der Netzbetreiber prüfen, plombieren und verweigern darf",
+    "unterthemen": ["Verantwortung"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Der Netzbetreiber muss alle Kunden sicher und störungsfrei versorgen. Deshalb gibt ihm die NAV Rechte gegenüber der Kundenanlage. Die Verantwortung für die Anlage bleibt aber beim Anschlussnehmer und beim Installationsunternehmen."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Verantwortlich für die Anlage hinter der Hausanschlusssicherung ist der Anschlussnehmer – ausgenommen die Messeinrichtungen (§ 13 Abs. 1).",
+          "Der Netzbetreiber darf die Ausführung der Arbeiten überwachen (§ 13).",
+          "Plomben: Anlagenteile, in denen nicht gemessene Energie fließt, darf er plombieren – z. B. Hausanschlusskasten, netzseitiger Anschlussraum und Zählerfeld. Die plombierbaren Abdeckungen sieht der Anschlussnehmer vor.",
+          "Überprüfung: Er darf die Anlage vor und nach der Inbetriebsetzung überprüfen (§ 15).",
+          "Gefährden Mängel die Sicherheit, darf er den Anschluss oder die Anschlussnutzung verweigern – bei Gefahr für Leib oder Leben muss er es.",
+          "Zutritt zu Grundstück und Räumen nach vorheriger Benachrichtigung, z. B. zum Prüfen technischer Einrichtungen oder zum Ablesen (§ 21).",
+          "In den Technischen Anschlussbedingungen (TAB) darf er weitere technische Anforderungen festlegen (§ 20)."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Prüft der Netzbetreiber die Anlage, übernimmt er damit keine Haftung für Mängel. Verantwortlich bleiben Anschlussnehmer und Installationsunternehmen."
+      }
+    ],
+    "quelle": "NAV §§ 13, 15, 20, 21",
+    "stand": "2026-10"
+  },
+  {
+    "id": "recht-installateur",
+    "thema": "recht",
+    "titel": "Installateurverzeichnis und Handwerksrolle",
+    "kurz": "Wer an der Kundenanlage arbeiten darf und was der Betrieb nachweisen muss",
+    "unterthemen": ["Installateurverzeichnis", "Handwerksrecht"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Nicht jeder darf an einer Anlage arbeiten, die am öffentlichen Netz hängt. Der Betrieb braucht zwei Eintragungen: in die Handwerksrolle bei der Handwerkskammer und in das Installateurverzeichnis eines Netzbetreibers."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Hinter der Hausanschlusssicherung darf außer dem Netzbetreiber nur ein Installationsunternehmen arbeiten, das in ein Installateurverzeichnis eines Netzbetreibers eingetragen ist (NAV § 13 Abs. 2).",
+          "Das Installateurverzeichnis führt der Netzbetreiber, nicht die Handwerkskammer.",
+          "Die Eintragung darf der Netzbetreiber nur vom Nachweis einer ausreichenden fachlichen Qualifikation abhängig machen.",
+          "Typische Nachweise: Eintragung in die Handwerksrolle, eine verantwortliche Elektrofachkraft (z. B. Meister oder TREI-Sachkundenachweis), geeignete Mess- und Prüfgeräte, Kenntnis von TAB und VDE-AR-N 4100. Die Eintragung hängt an der verantwortlichen Fachkraft.",
+          "Zweck: Kundenanlagen sollen sicher errichtet werden und keine unzulässigen Rückwirkungen auf das Netz und andere Kunden haben.",
+          "Ausnahme: Instandhaltungsarbeiten brauchen keine Eintragung – aber nicht zwischen Hausanschlusssicherung und Messeinrichtung einschließlich der Messeinrichtung. Dort gilt die Eintragungspflicht immer.",
+          "Handwerksordnung: Das Elektrotechniker-Handwerk ist zulassungspflichtig (Anlage A). Für einen selbstständigen Betrieb braucht es die Eintragung in die Handwerksrolle, z. B. mit Meisterprüfung oder einer Ausübungsberechtigung."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "punkte": [
+          "Handwerksrolle (Handwerkskammer) und Installateurverzeichnis (Netzbetreiber) sind zwei verschiedene Dinge – der Betrieb braucht beide.",
+          "Gesellenbrief oder Gewerbeanmeldung allein reichen nicht."
+        ]
+      }
+    ],
+    "quelle": "NAV § 13 Abs. 2; Handwerksordnung",
+    "stand": "2026-10"
+  },
+  {
+    "id": "recht-trei",
+    "thema": "recht",
+    "titel": "Der TREI-Sachkundenachweis",
+    "kurz": "Aufbau, Dauer, Hilfsmittel und Bestehensregeln der Prüfung",
+    "unterthemen": ["TREI-Verfahren"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Mit dem TREI-Sachkundenachweis zeigst du die Sachkunde, die für die Eintragung ins Installateurverzeichnis verlangt wird. Hier steht, wie die Prüfung abläuft und wann du bestanden hast."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Drei gleich gewichtete Teile: Teil A schriftlich (120 Minuten), Teil B praktisch (45 Minuten), Teil C Fachgespräch (30 Minuten).",
+          "Teil A fragt fünf Themenblöcke ab: Recht, Regeln der Technik und Arbeitssicherheit, Prüfen und Inbetriebnahme, Schaltanlagen und Verteiler, Projektierung und Anmeldung.",
+          "Teil B: Prüfen, Messen und Fehlersuche mit Prüf- und Inbetriebsetzungsprotokoll – mit deinen eigenen Messgeräten.",
+          "Teil C: Fachgespräch zu Teil A und B – ohne Hilfsmittel.",
+          "Hilfsmittel in Teil A u. a.: Formelsammlung ohne Rechenbeispiele (auch selbst erstellt), Tabellenbücher, TAB, Taschenrechner. Nicht erlaubt: Aufgabensammlungen, KI und Berechnungsprogramme.",
+          "Bestanden: insgesamt mindestens 50 % und in keinem Teil unter 50 %. Liegt ein Teil darunter, endet der Durchgang – bei der Wiederholung werden alle drei Teile neu abgelegt.",
+          "Zulassung: die Voraussetzungen für die Eintragung in die Handwerksrolle im Elektrotechniker-Handwerk erfüllen und einen schriftlichen Antrag stellen. Mitbringen: amtlicher Ausweis und Anmeldebestätigung."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Was am Prüfungstag erlaubt ist, entscheidet das Prüfungsgremium – im Zweifel vorher nachfragen."
+      }
+    ],
+    "quelle": "Verfahrensordnung TREI (Bundes-Installateurausschuss, Ausgabe Januar 2025)",
+    "stand": "2026-10"
+  },
+  {
+    "id": "recht-bauordnung",
+    "thema": "recht",
+    "titel": "Bauordnung und Leitungsanlagen-Richtlinie",
+    "kurz": "Leitungen in Rettungswegen, Abschottungen und Funktionserhalt (MLAR/LAR)",
+    "unterthemen": ["Bauordnung"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Bei einem Brand müssen Menschen das Gebäude sicher verlassen können. Darum regeln die Bauordnung und die Leitungsanlagen-Richtlinie (MLAR bzw. LAR des Landes), wie Leitungen in Rettungswegen liegen und wie lange Sicherheitsanlagen bei Feuer weiterlaufen müssen."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Notwendige Treppenräume und notwendige Flure sind Rettungswege. Leitungen dort nur geschützt verlegen: einzeln eingeputzt, in Schlitzen mit mindestens 15 mm mineralischem Putz oder 15 mm mineralischen Platten, oder in Schächten, Kanälen und Unterdecken mit Feuerwiderstand.",
+          "Offen verlegen nur in Ausnahmen, z. B. nichtbrennbare Leitungen oder Leitungen, die nur den Raum selbst versorgen.",
+          "Zählerschränke und Verteiler in Rettungswegen nur nach den Vorgaben der Richtlinie – und nie über Treppenstufen (VDE-AR-N 4100).",
+          "Durchführungen durch feuerwiderstandsfähige Wände und Decken mit zugelassenen Abschottungen verschließen.",
+          "Funktionserhalt: Sicherheitsbeleuchtung in der Regel 30 Minuten (E 30), Feuerwehraufzüge 90 Minuten (E 90).",
+          "Sonderbauten (z. B. Versammlungsstätten, Krankenhäuser, Hochhäuser) haben eigene Verordnungen – zuerst klären, welche Gebäudeart vorliegt."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Es gilt die im jeweiligen Bundesland eingeführte Fassung – in NRW über die Technischen Baubestimmungen."
+      }
+    ],
+    "quelle": "Landesbauordnung; MLAR / LAR; Sonderbauverordnungen",
+    "stand": "2026-10"
+  }
+]

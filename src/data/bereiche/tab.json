@@ -1,0 +1,96 @@
+[
+  {
+    "id": "tab-grundlagen",
+    "thema": "tab",
+    "titel": "TAB, VDE-AR-N 4100 und Netzspannung",
+    "kurz": "Rechtsgrundlage der TAB, Nennspannung, Spannungsqualität und Schieflast",
+    "unterthemen": ["Grundlagen", "Geltungsbereich", "Symmetrie"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Die VDE-AR-N 4100 beschreibt bundesweit einheitlich, wie Kundenanlagen an das Niederspannungsnetz angeschlossen werden. Der Netzbetreiber setzt sie über seine Technischen Anschlussbedingungen (TAB) um und darf dort Ergänzungen festlegen."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "VDE-AR-N 4100 = Technische Anschlussregel Niederspannung (TAR NS) für Kundenanlagen. Mittelspannung: VDE-AR-N 4110, Hochspannung: VDE-AR-N 4120, Erzeugungsanlagen und Speicher am Niederspannungsnetz: VDE-AR-N 4105. Das allgemeine Errichten regelt DIN VDE 0100.",
+          "Rechtsgrundlage der TAB ist NAV § 20: Der Netzbetreiber darf weitere technische Anforderungen festlegen, soweit sie für eine sichere und störungsfreie Versorgung nötig sind.",
+          "Nennspannung des Niederspannungsnetzes: 230/400 V, 50 Hz (DIN EN 60038). 220/380 V war der frühere Wert.",
+          "Spannungsqualität nach DIN EN 50160: 95 % der 10-Minuten-Mittelwerte einer Woche liegen innerhalb ± 10 % der Nennspannung – bei 230 V also 207 V bis 253 V.",
+          "Symmetrie: Einphasig angeschlossene Geräte höchstens 4,6 kVA – das sind 20 A bei 230 V. Größere Geräte werden dreiphasig angeschlossen, damit keine Schieflast entsteht.",
+          "Beispiel: Eine einphasige Wallbox mit 7,4 kW (32 A) ist in der Regel nicht zulässig – dreiphasig anschließen, z. B. 11 kW mit 16 A je Außenleiter."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "punkte": [
+          "Die 4,6-kVA-Grenze gilt auch für einphasige Erzeugungsanlagen (VDE-AR-N 4105).",
+          "Die 12-kVA-Grenze der NAV betrifft die Zustimmung für Ladeeinrichtungen, nicht die Symmetrie."
+        ]
+      }
+    ],
+    "quelle": "VDE-AR-N 4100; NAV § 20; DIN EN 60038; DIN EN 50160",
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-hauptstrom",
+    "thema": "tab",
+    "titel": "Hauptstromversorgung",
+    "kurz": "Hauptleitung, Spannungsfall bis zum Zähler, Selektivität und Kurzschlussfestigkeit",
+    "unterthemen": ["Hauptstromversorgung"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Das Hauptstromversorgungssystem reicht vom Hausanschlusskasten bis zu den Zählern. Dort fließt noch nicht gemessene Energie. Deshalb gelten für diesen Teil besondere Anforderungen der VDE-AR-N 4100."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Dazu gehören alle Hauptleitungen und Betriebsmittel hinter der Übergabestelle (Hausanschlusskasten), die nicht gemessene Energie führen. Leitungen hinter dem Zähler gehören zur Verbraucheranlage, das Hausanschlusskabel zum Netzanschluss.",
+          "Hauptleitungen mindestens für 63 A bemessen. Für den Querschnitt zählen außerdem Leistungsbedarf (DIN 18015-1), Strombelastbarkeit und Spannungsfall.",
+          "Spannungsfall Hausanschlusskasten bis Zähler: bis 100 kVA höchstens 0,5 %, über 100 bis 250 kVA 1 %, über 250 bis 400 kVA 1,25 %, über 400 kVA 1,5 %.",
+          "Gerechnet wird mit dem Nennstrom der vorgeschalteten Sicherung (NAV § 13 Abs. 4). Beispiel: 63 A, 15 m, Drehstrom – mit 10 mm² 0,73 % (zu viel), mit 16 mm² 0,46 % (in Ordnung).",
+          "Selektivität: Bei einem Fehler soll nur die Schutzeinrichtung direkt vor der Fehlerstelle auslösen – sonst ist das ganze Haus ohne Strom. Hausanschlusssicherung, selektiver Hauptleitungsschutzschalter (SH) und LS-Schalter werden aufeinander abgestimmt.",
+          "Kurzschlussfestigkeit: Betriebsmittel vom Hausanschlusskasten bis zur letzten Überstrom-Schutzeinrichtung vor dem Zähler für 25 kA – nahe am Ortsnetztransformator können sehr hohe Kurzschlussströme auftreten.",
+          "Ausführung: im TN-System vier- oder fünfadrig, im TT-System vieradrig mit separat verlegtem Schutzleiter – Vorgaben der TAB beachten.",
+          "Teile mit nicht gemessener Energie plombierbar und berührungssicher ausführen, Reserve für Wärmepumpe, Wallbox oder PV einplanen."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "0,5 % bis zum Zähler, 3 % vom Zähler bis zum Verbraucher (DIN 18015-1)."
+      }
+    ],
+    "quelle": "VDE-AR-N 4100; NAV § 13 Abs. 4; DIN 18015-1",
+    "stand": "2026-10"
+  },
+  {
+    "id": "tab-anmeldung",
+    "thema": "tab",
+    "titel": "Anmeldung und Inbetriebsetzung",
+    "kurz": "Was angemeldet wird und wie der Weg vom Antrag bis zur fertigen Anlage aussieht",
+    "unterthemen": ["Anmeldung", "Inbetriebsetzung"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Bevor eine neue oder geänderte Anlage ans Netz geht, muss der Netzbetreiber Bescheid wissen. Das läuft über das eingetragene Installationsunternehmen – mit den Vordrucken oder dem Portal des Netzbetreibers."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Anmelden: Neuanschlüsse, Erhöhung der Anschlussleistung (z. B. für eine Wärmepumpe), Erzeugungsanlagen wie PV und bestimmte Verbrauchsgeräte wie Wärmepumpen und Ladeeinrichtungen. Reine Instandsetzungen ohne Leistungsänderung nicht.",
+          "NAV § 19 Abs. 2: Erweiterungen und zusätzliche Verbrauchsgeräte mitteilen, wenn die vorzuhaltende Leistung steigt oder Netzrückwirkungen zu erwarten sind. Ob ein stärkerer Netzanschluss nötig ist, entscheidet der Netzbetreiber. Seit 2024 muss er die Mitteilung auch über seine Internetseite ermöglichen.",
+          "Ablauf: 1. Anmeldung bzw. Netzanschlussantrag mit Leistungsbedarf und Lageplan – 2. der Netzbetreiber prüft und legt den Netzanschluss fest – 3. er stellt den Netzanschluss bis zur Hausanschlusssicherung her – 4. das Installationsunternehmen errichtet Hauptstromversorgung, Zählerplatz und Verbraucheranlage – 5. Erstprüfung nach DIN VDE 0100-600 mit Prüfbericht – 6. Inbetriebsetzungsauftrag an den Netzbetreiber, der Messstellenbetreiber setzt den Zähler – 7. Inbetriebsetzung und Übergabe an den Kunden mit Dokumentation.",
+          "Die Inbetriebsetzung beantragt das Installationsunternehmen, das die Arbeiten ausgeführt hat (NAV § 14).",
+          "Hinter der Trennvorrichtung – dem SH-Schalter im unteren Anschlussraum, vor dem Zähler – setzt nur das Installationsunternehmen die Anlage in Betrieb."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Netzbetreiber = Netzanschluss. Messstellenbetreiber = Zähler. Installationsunternehmen = Anlage hinter der Trennvorrichtung."
+      }
+    ],
+    "quelle": "NAV §§ 14, 19; VDE-AR-N 4100; TAB",
+    "stand": "2026-10"
+  }
+]

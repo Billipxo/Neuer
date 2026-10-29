@@ -6,6 +6,8 @@ import { StartSeite } from './pages/StartSeite';
 import { KatalogSeite } from './pages/KatalogSeite';
 import { LernenSeite } from './pages/LernenSeite';
 import { ThemaSeite } from './pages/ThemaSeite';
+import { BereichSeite } from './pages/BereichSeite';
+import { ErklaerungenSeite } from './pages/ErklaerungenSeite';
 import { SitzungSeite } from './pages/SitzungSeite';
 import { MehrSeite } from './pages/MehrSeite';
 import { FrageDetailSeite } from './pages/FrageDetailSeite';
@@ -53,7 +55,9 @@ export function App() {
       <Routes>
         <Route path="/" element={<StartSeite />} />
         <Route path="/lernen" element={<LernenSeite />} />
+        <Route path="/lernen/erklaerungen" element={<ErklaerungenSeite />} />
         <Route path="/lernen/:thema" element={<ThemaSeite />} />
+        <Route path="/lernen/:thema/:bereich" element={<BereichSeite />} />
         <Route path="/sitzung" element={<SitzungSeite />} />
         <Route path="/pruefung" element={<PruefungSeite />} />
         <Route path="/pruefung/laeuft" element={<SimulationSeite />} />

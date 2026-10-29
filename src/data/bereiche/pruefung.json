@@ -1,0 +1,129 @@
+[
+  {
+    "id": "pruefung-erstpruefung",
+    "thema": "pruefung",
+    "titel": "Erstprüfung: Ablauf, Prüfbericht und Übergabe",
+    "kurz": "Besichtigen, Erproben, Messen – Reihenfolge, Prüfbericht, Grenzwerte und Übergabe an den Kunden",
+    "unterthemen": ["Erstprüfung", "Protokoll", "Übergabe", "Wiederholungsprüfung"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Jede neue oder geänderte Anlage wird vor der Übergabe nach DIN VDE 0100-600 geprüft. Die Prüfung besteht aus Besichtigen, Erproben und Messen und endet mit dem Prüfbericht."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Besichtigen: bei abgeschalteter Anlage, vor dem Erproben und Messen – Auswahl und Errichtung der Betriebsmittel, Schutzmaßnahmen, Leiterkennzeichnung, Querschnitte, Schutzeinrichtungen, Brandabschottungen, Zugänglichkeit, Dokumentation.",
+          "Spannungsfrei messen: 1. Durchgängigkeit der Schutz- und Schutzpotentialausgleichsleiter, 2. Isolationswiderstand, 3. Polarität.",
+          "Unter Spannung: 4. Schleifenimpedanz bzw. Kurzschlussstrom (im TT-System Erdungswiderstand), 5. RCD, 6. Drehfeld, 7. Spannungsfall bei Bedarf und Funktionsprüfungen.",
+          "Erst wenn der Schutzleiter nachweislich durchgängig ist, sind Messungen unter Spannung sicher.",
+          "Prüfbericht: geprüfte Anlage und Umfang der Prüfung, Ergebnisse von Besichtigen, Erproben und Messen mit Messwerten, Prüfer und verwendete Messgeräte, Datum und Unterschrift.",
+          "Grenzwerte selbst herleiten, z. B. für B16 mit NYM-J 3 × 2,5 mm², 25 m und RCD 30 mA: R_PE rund 0,18 Ω, R_iso ≥ 1 MΩ, Z_s ≤ 1,92 Ω (Messwert), I_k ≥ 80 A, RCD-Auslösestrom 15 bis 30 mA, Auslösezeit ≤ 300 ms, U_B ≤ 50 V.",
+          "Übergabe: Prüfbericht, Stromkreisliste bzw. Beschriftung, Schaltpläne, Anleitungen der Geräte, Einweisung (z. B. RCD-Prüftaste regelmäßig drücken), Hinweise auf Wiederholungsprüfungen und Registrierungspflichten, Meldung an den Netzbetreiber.",
+          "Wiederholungsprüfung (DGUV Vorschrift 3, Richtwert): Anlagen und ortsfeste Betriebsmittel alle 4 Jahre, in Betriebsstätten, Räumen und Anlagen besonderer Art jedes Jahr."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Erst spannungsfrei, dann unter Spannung – und jedes Ergebnis ins Protokoll."
+      }
+    ],
+    "quelle": "DIN VDE 0100-600; DGUV Vorschrift 3",
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-messen",
+    "thema": "pruefung",
+    "titel": "Schutzleiter- und Isolationsmessung",
+    "kurz": "Niederohmmessung, Isolationswiderstand, Messspannungen, Grenzwerte und Messgeräte",
+    "unterthemen": ["Messungen", "Isolationswiderstand"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Die ersten Messungen der Erstprüfung laufen ohne Netzspannung: Ist der Schutzleiter durchgängig, und ist die Isolierung in Ordnung?"
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Durchgängigkeit (Niederohmmessung): Messgerät nach DIN EN 61557-4, Leerlaufspannung 4 bis 24 V, Messstrom mindestens 0,2 A.",
+          "Erwartungswert berechnen: R = l / (κ · A). Beispiel 25 m Kupfer mit 2,5 mm²: 25 / (56 · 2,5) ≈ 0,18 Ω. 2 Ω wären viel zu viel – lose Klemme oder Unterbrechung suchen.",
+          "Isolationswiderstand: zwischen den aktiven Leitern (L und N dürfen dafür verbunden sein) und dem Schutzleiter messen.",
+          "Messspannung und Grenzwert: SELV/PELV 250 V DC, mindestens 0,5 MΩ – bis 500 V Nennspannung 500 V DC, mindestens 1 MΩ – über 500 V 1000 V DC, mindestens 1 MΩ.",
+          "Verbraucher und Überspannungsschutzgeräte vorher abklemmen. Lässt sich ein Überspannungsschutz nicht trennen: Messspannung für diesen Stromkreis auf 250 V DC senken – der Grenzwert 1 MΩ bleibt.",
+          "Messgeräte nach DIN EN 61557 (VDE 0413), regelmäßig kalibrieren lassen.",
+          "Vor dem Messen: Funktion und Batterie prüfen, Messleitungen kontrollieren, Nullabgleich der Messleitungen. Messgerät mit Seriennummer und Kalibrierdatum ins Protokoll."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "230/400-V-Stromkreis: 500 V DC und mindestens 1 MΩ."
+      }
+    ],
+    "quelle": "DIN VDE 0100-600; DIN EN 61557",
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-abschaltung",
+    "thema": "pruefung",
+    "titel": "RCD-Prüfung und Schleifenimpedanz",
+    "kurz": "Auslösestrom, Auslösezeit, Berührungsspannung, Schleifenimpedanz messen und bewerten",
+    "unterthemen": ["RCD-Prüfung", "Schleifenimpedanz"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Unter Spannung wird geprüft, ob die automatische Abschaltung funktioniert: Löst der RCD richtig aus? Und ist die Schleifenimpedanz klein genug, damit der LS-Schalter schnell genug abschaltet?"
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Die Prüftaste prüft nur die Mechanik – sie sagt nichts über Auslösestrom, Auslösezeit oder Schutzleiter. Dafür braucht es ein Messgerät nach DIN EN 61557-6.",
+          "Auslösestrom: zwischen 0,5 · IΔn und IΔn – bei 30 mA also 15 bis 30 mA.",
+          "Auslösezeit eines unverzögerten RCD: bei IΔn höchstens 300 ms, bei 5 · IΔn höchstens 40 ms. Selektive RCDs (Typ S) lösen absichtlich verzögert aus.",
+          "Berührungsspannung: höchstens 50 V (vereinbarte Grenze U_L), in besonderen Bereichen wie landwirtschaftlichen Betriebsstätten 25 V.",
+          "RCD Typ B oder F: mit der passenden Prüfstromform prüfen.",
+          "Schleifenimpedanz: Impedanz der Fehlerschleife am ungünstigsten Punkt jedes Stromkreises (meist an der entferntesten Steckdose), gemessen mit einem Gerät nach DIN EN 61557-3.",
+          "Bewertung: Z_s · I_a ≤ U₀. B16: I_a = 80 A → Z_s ≤ 2,875 Ω. Weil die Leiter im Fehlerfall warm und hochohmiger werden, darf der kalt gemessene Wert höchstens 2/3 davon betragen: 1,92 Ω.",
+          "Zeigt das Gerät den Kurzschlussstrom I_k an: I_k muss größer als I_a sein."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "RCD 30 mA: Auslösung bei 15 bis 30 mA, in höchstens 300 ms, U_B höchstens 50 V. B16: gemessen Z_s höchstens 1,92 Ω."
+      }
+    ],
+    "quelle": "DIN VDE 0100-600; DIN EN 61557-3; DIN EN 61557-6",
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-fehlersuche",
+    "thema": "pruefung",
+    "titel": "Erproben und Fehlersuche",
+    "kurz": "Drehfeld, Polarität und typische eingebaute Fehler in der praktischen Prüfung",
+    "unterthemen": ["Erproben", "Fehlersuche"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "In der praktischen Prüfung (Teil B) sind Fehler eingebaut. Wer die typischen Anzeichen kennt, findet sie schnell und kann jeden Befund mit Messwert und Grenzwert begründen."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Drehstrom-Steckdosen brauchen ein Rechtsdrehfeld. Bei Linksdrehfeld: freischalten (fünf Sicherheitsregeln), zwei Außenleiter tauschen, erneut messen.",
+          "Polarität: Einpolige Schalter und Schutzeinrichtungen müssen im Außenleiter liegen, nicht im Neutralleiter – sonst bleibt das Gerät nach dem Ausschalten unter Spannung. Spannungsfrei mit einer Durchgangsprüfung kontrollieren.",
+          "Isolationswiderstand zu niedrig → Feuchte, beschädigte Leitung, angeschlossener Verbraucher oder nicht abgeklemmter Überspannungsschutz → abklemmen, abschnittsweise messen.",
+          "RCD löst bei der Prüfung nicht aus → Verbindung zwischen N und PE hinter dem RCD.",
+          "RCD löst unter Last aus → N und PE vertauscht oder der N eines anderen RCD-Kreises benutzt → N-Zuordnung je Stromkreis prüfen.",
+          "Schleifenimpedanz zu hoch → lose Klemme, Stromkreis zu lang, Querschnitt zu klein.",
+          "Schutzleiterwiderstand zu hoch → lose oder unterbrochene PE-Verbindung → abschnittsweise messen.",
+          "Zeit in Teil B (45 Minuten) einteilen, z. B. 5 Minuten Überblick, 25 Minuten Messen, 10 Minuten Protokoll, 5 Minuten Kontrolle."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Jeder Befund braucht Messwert, Grenzwert und Bewertung."
+      }
+    ],
+    "quelle": "DIN VDE 0100-600; DIN VDE 0105-100",
+    "stand": "2026-10"
+  }
+]

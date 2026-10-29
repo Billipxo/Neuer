@@ -1,0 +1,95 @@
+[
+  {
+    "id": "erzeugung-pv",
+    "thema": "erzeugung",
+    "titel": "PV-Anlage: Ablauf und Sicherheit",
+    "kurz": "Von der Planung bis zur Inbetriebnahme, Gleichstromseite und Arbeiten an PV und Speicher",
+    "unterthemen": ["PV-Anlage"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Eine PV-Anlage auf dem Dach ist eine Erzeugungsanlage. Sie wird beim Netzbetreiber angemeldet, fachgerecht errichtet und geprüft. Die Gleichstromseite hat eigene Gefahren."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Vor der Inbetriebnahme: Anmeldung beim Netzbetreiber über das eingetragene Installationsunternehmen (z. B. Datenblatt, Einheitenzertifikat, Lageplan, Schaltbild, Messkonzept) und die Zusage abwarten.",
+          "Ablauf: planen – anmelden – montieren (Gleichstromseite nach DIN VDE 0100-712) – Zählerplatz anpassen – prüfen (Wechselstromseite nach DIN VDE 0100-600, Gleichstromseite z. B. nach DIN EN 62446-1) – mit Protokoll in Betrieb setzen – Zählersetzung durch den Messstellenbetreiber – Registrierung im Marktstammdatenregister – Übergabe.",
+          "Auch die Gleichstromseite errichtet nur ein Elektrofachbetrieb (VDE-AR-N 4105).",
+          "Solange Licht auf die Module fällt, erzeugen sie Spannung – je nach Reihenschaltung mehrere hundert Volt. Der DC-Lasttrennschalter trennt nur den Wechselrichter, die Leitungen zum Generator bleiben unter Spannung.",
+          "Gleichstrom-Lichtbögen erlöschen schlecht: Steckverbinder nie unter Last trennen.",
+          "Arbeiten an den Modulen: abdecken oder bei geringer Einstrahlung arbeiten, isoliertes Werkzeug, PSA, Absturzsicherung auf dem Dach.",
+          "Speicher: Energie ist auch ohne PV und Netz vorhanden – Herstellervorgaben zum sicheren Abschalten beachten. Beim Feststellen der Spannungsfreiheit an Rückspeisung aus Wechselrichter oder Speicher denken.",
+          "Die Anlage für Feuerwehr und Rettungskräfte nach den örtlichen Vorgaben kennzeichnen."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "PV-Module kann man nicht ausschalten – nur abdecken."
+      }
+    ],
+    "quelle": "VDE-AR-N 4105; DIN VDE 0100-712; DIN VDE 0100-600; DIN EN 62446-1",
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-4105",
+    "thema": "erzeugung",
+    "titel": "VDE-AR-N 4105 und NA-Schutz",
+    "kurz": "Geltungsbereich, einphasige Einspeisung, NA-Schutz, Überfrequenz, Nachweise und Kleinsterzeugung",
+    "unterthemen": ["VDE-AR-N 4105", "NA-Schutz"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Die VDE-AR-N 4105 regelt, wie Erzeugungsanlagen und Speicher an das Niederspannungsnetz angeschlossen und parallel zum Netz betrieben werden."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Gilt für Erzeugungsanlagen und Speicher am Niederspannungsnetz: u. a. NA-Schutz, Blindleistung, Wirkleistungsreduktion bei Überfrequenz und Nachweise. Die Gleichstromseite regelt DIN VDE 0100-712.",
+          "Einphasig höchstens 4,6 kVA. Darüber wird auf mehrere Außenleiter verteilt – die Unsymmetrie zwischen den Außenleitern darf 4,6 kVA nicht überschreiten.",
+          "NA-Schutz (Netz- und Anlagenschutz): Bis 30 kVA genügt der im Wechselrichter integrierte. Über 30 kVA – gezählt wird die Summe aller Erzeugungseinheiten – braucht es einen zentralen NA-Schutz mit Kuppelschalter.",
+          "Beispiel: 15 + 15 + 5 kVA = 35 kVA → zentraler NA-Schutz.",
+          "Ab 50,2 Hz müssen Erzeugungsanlagen ihre Wirkleistung verringern; bei 51,5 Hz trennt der NA-Schutz die Anlage vom Netz.",
+          "Nachweis gegenüber dem Netzbetreiber: Einheitenzertifikat für den Wechselrichtertyp. Bei größeren Anlagen kann zusätzlich ein Anlagenzertifikat nötig sein.",
+          "Kleinsterzeugungsanlagen bis 800 VA, z. B. Steckersolargeräte: vereinfachtes Verfahren – die Registrierung im Marktstammdatenregister genügt."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "4,6 kVA einphasig – über 30 kVA zentraler NA-Schutz – ab 50,2 Hz Leistung runter."
+      }
+    ],
+    "quelle": "VDE-AR-N 4105:2026-03; DIN VDE 0100-712; DIN VDE V 0126-95",
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-speicher",
+    "thema": "erzeugung",
+    "titel": "Speicher, Steckersolargeräte und Marktstammdatenregister",
+    "kurz": "AC- und DC-Kopplung, Ersatzstrom, Balkonkraftwerke und Registrierungspflicht",
+    "unterthemen": ["Speicher", "Steckersolargeräte", "Marktstammdatenregister"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Batteriespeicher und Steckersolargeräte werden immer häufiger. Hier geht es um ihre Bauarten, das sichere Trennen vom Netz im Ersatzstrombetrieb und die Pflicht zur Registrierung."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "DC-gekoppelt: Speicher und PV-Generator hängen am Gleichstromkreis desselben Hybridwechselrichters – wenig Umwandlungsverluste beim Laden aus PV.",
+          "AC-gekoppelt: eigener Batteriewechselrichter am Wechselstromnetz des Hauses – gut nachrüstbar.",
+          "Ersatzstrom- bzw. Inselbetrieb: Die Hausanlage wird vorher allpolig vom öffentlichen Netz getrennt, damit nichts ins Netz zurückgespeist wird – zum Schutz der Monteure des Netzbetreibers. Eigenanlagen mit dem Netzbetreiber abstimmen (NAV § 19).",
+          "Steckersolargeräte (seit dem Solarpaket I, 2024): bis 800 VA Wechselrichterleistung und 2.000 Wp Modulleistung. Nur Registrierung im Marktstammdatenregister, keine Anmeldung beim Netzbetreiber.",
+          "Marktstammdatenregister: Alle Erzeugungsanlagen und Speicher eintragen – auch kleine Anlagen und Steckersolargeräte – innerhalb eines Monats nach Inbetriebnahme.",
+          "Verantwortlich für die Registrierung ist der Anlagenbetreiber. Der Installateur weist ihn darauf hin."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Registrieren muss der Betreiber – innerhalb eines Monats nach Inbetriebnahme."
+      }
+    ],
+    "quelle": "Marktstammdatenregisterverordnung (MaStRV); NAV § 19; VDE-AR-N 4105",
+    "stand": "2026-10"
+  }
+]

@@ -1,4 +1,5 @@
-import type { Fortschritt, Frage, LernStatus, ThemaId } from '../types';
+import type { Bereich, Fortschritt, Frage, LernStatus, ThemaId } from '../types';
+import { gehoertZu } from './bereiche';
 import { istFaellig } from './leitner';
 
 export type LernModus = 'empfohlen' | 'neu' | 'falsch' | 'markiert' | 'karten' | 'faellig';
@@ -7,6 +8,8 @@ export const LERN_MODI: readonly LernModus[] = ['empfohlen', 'neu', 'falsch', 'm
 
 export interface Auswahl {
   thema: ThemaId | 'alle';
+  /** nur Fragen dieses Themenbereichs */
+  bereich?: Pick<Bereich, 'thema' | 'unterthemen'>;
   modus: LernModus;
   nurGeprueft?: boolean;
   limit?: number;
@@ -46,7 +49,9 @@ export function waehleFragen(
   zufall: () => number = Math.random,
 ): Frage[] {
   const fp = (f: Frage) => fortschritte.get(f.id);
+  const { bereich } = auswahl;
   let pool = fragen.filter((f) => auswahl.thema === 'alle' || f.thema === auswahl.thema);
+  if (bereich) pool = pool.filter((f) => gehoertZu(f, bereich));
   if (auswahl.nurGeprueft) pool = pool.filter((f) => f.geprueft);
 
   switch (auswahl.modus) {

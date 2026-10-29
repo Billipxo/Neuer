@@ -1,0 +1,128 @@
+[
+  {
+    "id": "zaehlerplatz-aufbau",
+    "thema": "zaehlerplatz",
+    "titel": "Aufbau des Zählerplatzes und SH-Schalter",
+    "kurz": "Anschlussräume, Maße, Raum für Zusatzanwendungen, Plomben und Dauerstrom",
+    "unterthemen": ["Aufbau Zählerschrank"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Der Zählerplatz ist genau aufgeteilt: Unten kommt der Strom an, in der Mitte wird gezählt, oben geht es zur Wohnung weiter. Wer den Aufbau kennt, weiß sofort, was ungezählt und plombiert ist und was nicht."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Von unten nach oben (in Richtung des Energieflusses), je Feld 250 mm breit: netzseitiger Anschlussraum (NAR) 300 mm – Zählerfeld mit Raum für Zusatzanwendungen 450 mm – anlagenseitiger Anschlussraum (AAR) 300 mm.",
+          "Im NAR sitzt vor jedem Zähler der selektive Hauptleitungsschutzschalter (SH-Schalter). Dieser Bereich ist ungezählt und plombiert.",
+          "Der SH-Schalter ist Trennvorrichtung für die Inbetriebsetzung (NAV § 14), Freischalteinrichtung für Mess- und Steuereinrichtungen (z. B. beim Zählerwechsel) und zentrale Überstrom-Schutzeinrichtung. Er ist selektiv zu den LS-Schaltern, laienbedienbar sowie sperr- und plombierbar. Einen RCD ersetzt er nicht.",
+          "Raum für Zusatzanwendungen (RfZ): Platz für Smart-Meter-Gateway und Steuerbox. Die Kommunikation läuft über den APZ (Abschlusspunkt Zählerplatz).",
+          "Im AAR z. B. Hauptschalter, Abzweigklemmen zum Stromkreisverteiler, RJ45-Schnittstelle für die Steuerung, bis zu drei einphasige Stromkreise bis 16 A und Überspannungsschutz – aber kein kompletter Stromkreisverteiler.",
+          "Plombiert werden die Bereiche mit nicht gemessener Energie: NAR mit SH-Schalter und Zählerfeld. Der Bereich hinter dem Zähler bleibt zugänglich.",
+          "Zählerplätze sind für mindestens 63 A ausgelegt. Bei Dauerstrom (Wallbox, Wärmepumpe, Speicher): mit 10-mm²-Verdrahtung bis 32 A, mit 16 mm² bis 44 A – darüber meist Wandlermessung.",
+          "Gebaut werden Zählerplätze nach DIN VDE 0603. Welche Ausführung verlangt wird, sagen VDE-AR-N 4100 und TAB."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Unten ungezählt, oben gezählt – der SH-Schalter liegt vor dem Zähler."
+      }
+    ],
+    "quelle": "VDE-AR-N 4100; DIN VDE 0603; NAV §§ 13, 14",
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-anordnung",
+    "thema": "zaehlerplatz",
+    "titel": "Wo der Zählerschrank hin darf",
+    "kurz": "Geeignete und verbotene Orte, Montagehöhe, Bedienfläche und Kennzeichnung",
+    "unterthemen": ["Anordnung Zählerplatz"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Zählerplätze müssen leicht erreichbar, trocken und sicher sein. Die VDE-AR-N 4100 legt fest, wo sie hin dürfen und wie viel Platz davor frei bleibt."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Gut geeignet: trockene, allgemein zugängliche Räume wie Hausanschlussraum, Kellerflur oder Treppenhaus.",
+          "Nicht erlaubt u. a.: in Wohnungen von Mehrfamilienhäusern, in Wohnräumen, Küchen, Bädern und Toiletten (Räume mit Badewanne oder Dusche), über Treppenstufen, in feuchten Räumen, Garagen und Spitzböden, in Räumen über 30 °C sowie in feuer- oder explosionsgefährdeten Bereichen.",
+          "Mitte von Zähler und Steuereinrichtung: zwischen 0,80 m und 1,80 m über dem Fußboden.",
+          "Davor eine Bedien- und Arbeitsfläche von mindestens 1,20 m Tiefe bei 1,80 m freier Höhe.",
+          "In Mehrfamilienhäusern jeden Zählerplatz dauerhaft kennzeichnen (z. B. Wohnungsbezeichnung), damit es bei Abrechnung, Zählerwechsel und Freischalten keine Verwechslung gibt. Auch die Stromkreisverteiler eindeutig zuordnen."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "punkte": [
+          "0,80 bis 1,80 m Höhe – 1,20 m Platz davor.",
+          "Die vollständige Liste der verbotenen Orte steht in der VDE-AR-N 4100 und in den TAB."
+        ]
+      }
+    ],
+    "quelle": "VDE-AR-N 4100; TAB",
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-messsystem",
+    "thema": "zaehlerplatz",
+    "titel": "Moderne Messeinrichtung und Smart-Meter-Gateway",
+    "kurz": "mME, iMSys, Smart-Meter-Gateway, Pflichtfälle nach MsbG und Messstellenbetreiber",
+    "unterthemen": ["Moderne Messeinrichtung / iMSys", "Messstellenbetrieb"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Analoge Zähler werden durch digitale ersetzt. Zusammen mit einem Smart-Meter-Gateway werden sie zu einem intelligenten Messsystem, das Daten sicher überträgt und Geräte steuern kann. Grundlage ist das Messstellenbetriebsgesetz (MsbG)."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Moderne Messeinrichtung (mME): digitaler Zähler, zeigt Verbrauch und Nutzungszeit an, kommuniziert aber selbst nicht nach außen.",
+          "Intelligentes Messsystem (iMSys) = mME + Smart-Meter-Gateway (SMGW).",
+          "Das SMGW sammelt die Messwerte, überträgt sie verschlüsselt an berechtigte Marktteilnehmer (jeweils nur die nötigen Daten), stellt dem Kunden seine eigenen Daten bereit und leitet Steuerbefehle an eine Steuerbox weiter – z. B. für § 14a EnWG oder Erzeugungsanlagen.",
+          "Sicherheitsanforderungen und Zertifizierung der Gateways: Bundesamt für Sicherheit in der Informationstechnik (BSI).",
+          "Pflichteinbau u. a. bei mehr als 6.000 kWh Jahresverbrauch, bei steuerbaren Verbrauchseinrichtungen nach § 14a EnWG und bei Erzeugungsanlagen über 7 kW. In kleineren Fällen ist der Einbau optional – der Kunde muss ihn dann dulden.",
+          "Seit 2025 kann jeder Kunde ein iMSys verlangen; dafür darf ein einmaliges Zusatzentgelt anfallen.",
+          "Zuständig für Einbau, Betrieb und Wartung des Zählers ist der Messstellenbetreiber – meist der grundzuständige beim Netzbetreiber, der Kunde kann aber einen anderen beauftragen. Zähler und Gateway gehören dem Messstellenbetreiber.",
+          "Der Installateur stellt den normgerechten Zählerplatz mit Raum für Zusatzanwendungen und APZ bereit."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "iMSys = mME + SMGW."
+      }
+    ],
+    "quelle": "Messstellenbetriebsgesetz (MsbG); BSI; NAV § 22",
+    "stand": "2026-10"
+  },
+  {
+    "id": "zaehlerplatz-messkonzepte",
+    "thema": "zaehlerplatz",
+    "titel": "Messkonzepte",
+    "kurz": "Überschuss- und Volleinspeisung, Zweirichtungszähler, Konzept mit PV, Speicher und Wärmepumpe",
+    "unterthemen": ["Messkonzepte"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Das Messkonzept legt fest, welche Zähler wo sitzen – zum Beispiel bei PV-Anlage, Speicher oder Wärmepumpe. Es wird vor der Installation mit Netz- und Messstellenbetreiber abgestimmt."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Überschusseinspeisung: Der PV-Strom wird zuerst im Haus verbraucht, nur der Rest geht ins Netz.",
+          "Volleinspeisung: Der gesamte erzeugte Strom geht ins Netz und wird separat gemessen.",
+          "Bei Überschusseinspeisung sitzt am Netzanschlusspunkt ein Zweirichtungszähler. Er zählt Bezug und Einspeisung in getrennten Registern.",
+          "Ein Speicher liegt meist hinter diesem Zähler und speichert Eigenstrom – oder wird nach Vorgabe des Netzbetreibers zusätzlich gemessen.",
+          "Wärmepumpe: über denselben Zähler (z. B. Netzentgelt-Modul 1) oder über einen eigenen Zähler, z. B. für Modul 2 nach § 14a EnWG.",
+          "Gesteuert wird über ein Smart-Meter-Gateway mit Steuerbox oder über ein Energiemanagementsystem."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Das Messkonzept bei der Anmeldung angeben. Welche Konzepte zulässig sind, veröffentlicht der Netzbetreiber."
+      }
+    ],
+    "quelle": "VDE-AR-N 4100; TAB; § 14a EnWG",
+    "stand": "2026-10"
+  }
+]

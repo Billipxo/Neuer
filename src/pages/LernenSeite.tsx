@@ -1,36 +1,10 @@
 import { Link } from 'react-router-dom';
 import { Seite } from '../components/Seite';
-import { AmpelLegende, Ampelbalken } from '../components/ui';
+import { ThemaKachel } from '../components/ThemaKachel';
+import { BEREICHE } from '../data/bereiche';
 import { useDaten } from '../db/DatenContext';
-import { statusVerteilung, type Verteilung } from '../logic/sitzung';
+import { statusVerteilung } from '../logic/sitzung';
 import { THEMEN } from '../types';
-
-function ThemaKachel({ to, titel, kurz, v, gross }: { to: string; titel: string; kurz: string; v: Verteilung; gross?: boolean }) {
-  return (
-    <Link
-      to={to}
-      className="block rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 transition active:scale-[0.99] dark:bg-slate-900 dark:ring-slate-800"
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className={`font-semibold ${gross ? 'text-lg' : ''}`}>{titel}</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400">{kurz}</p>
-        </div>
-        <span className="shrink-0 text-sm text-slate-500 dark:text-slate-400">
-          {v.gelernt}/{v.gesamt}
-        </span>
-      </div>
-      <div className="mt-3">
-        <Ampelbalken v={v} />
-      </div>
-      {gross && (
-        <div className="mt-2">
-          <AmpelLegende v={v} />
-        </div>
-      )}
-    </Link>
-  );
-}
 
 export function LernenSeite() {
   const { fragen, fortschritte } = useDaten();
@@ -43,6 +17,23 @@ export function LernenSeite() {
         v={statusVerteilung(fragen, fortschritte)}
         gross
       />
+      <Link
+        to="/lernen/erklaerungen"
+        className="mt-2 flex min-h-16 items-center gap-3 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200 active:scale-[0.99] dark:bg-slate-900 dark:ring-slate-800"
+      >
+        <span className="w-8 shrink-0 text-center text-2xl" aria-hidden>
+          📖
+        </span>
+        <span className="flex-1">
+          <span className="block font-semibold">Erklärungen</span>
+          <span className="block text-sm text-slate-500 dark:text-slate-400">
+            Das Wichtigste zu allen {BEREICHE.length} Themenbereichen zum Nachlesen
+          </span>
+        </span>
+        <span className="text-slate-400" aria-hidden>
+          ›
+        </span>
+      </Link>
       <h2 className="mt-6 mb-2 text-sm font-semibold tracking-wide text-slate-500 uppercase">Themen</h2>
       <ul className="space-y-2">
         {THEMEN.map((t) => (
