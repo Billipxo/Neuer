@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { FrageMitLoesung, FrageWerkzeuge } from '../components/FrageTeile';
+import { FormelKnopf } from '../components/Formeln';
 import { Karte, Seite } from '../components/Seite';
 import { Dialog, Schalter, StatusPunkt, knopf } from '../components/ui';
 import { BEREICHE } from '../data/bereiche';
@@ -51,6 +52,7 @@ export function FrageDetailSeite() {
       <Karte>
         <FrageMitLoesung frage={frage} />
         <div className="mt-4">
+          <FormelKnopf frage={frage} />
           <FrageWerkzeuge frageId={frage.id} />
         </div>
       </Karte>

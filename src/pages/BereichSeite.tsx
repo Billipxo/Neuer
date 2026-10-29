@@ -1,5 +1,7 @@
 import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { BereichErklaerung } from '../components/BereichErklaerung';
+import { FORMELN } from '../data/formeln';
+import { formelnZumBereich } from '../logic/formeln';
 import { LernModusListe } from '../components/LernModusListe';
 import { Karte, Seite } from '../components/Seite';
 import { AmpelLegende, Ampelbalken, Schalter, StatusPunkt, knopf } from '../components/ui';
@@ -61,6 +63,11 @@ export function BereichSeite() {
 
       <h2 className="mt-6 mb-2 text-sm font-semibold tracking-wide text-slate-500 uppercase">📖 Erklärung</h2>
       <BereichErklaerung bereich={bereich} />
+      {formelnZumBereich(bereich.id, FORMELN).map((g) => (
+        <Link key={g.id} to={`/lernen/formeln?gruppe=${g.id}`} className={knopf('sekundaer', 'mt-3 w-full', 'mittel')}>
+          📐 Formelsammlung: {g.titel}
+        </Link>
+      ))}
 
       <div className="mt-4">{startKnopf('Jetzt üben', 'sekundaer')}</div>
 

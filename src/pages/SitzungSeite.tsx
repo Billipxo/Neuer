@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Erklaerung, FrageBild, FrageKopf, FrageMitLoesung, FrageWerkzeuge } from '../components/FrageTeile';
+import { FormelKnopf } from '../components/Formeln';
 import { AntwortOption, BUCHSTABEN, RechenEingabe } from '../components/Antworten';
 import { Dialog, StatusPunkt, knopf } from '../components/ui';
 import { BEREICHE } from '../data/bereiche';
@@ -203,6 +204,7 @@ function Sitzung({ params }: { params: URLSearchParams }) {
         <FrageKopf frage={frage} />
         <FrageBild bild={frage.bild} />
         <h1 className="mb-4 text-xl leading-snug font-semibold">{frage.frage}</h1>
+        <FormelKnopf frage={frage} />
 
         {istAuswahl && (
           <>

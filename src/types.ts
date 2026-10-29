@@ -72,6 +72,28 @@ export interface Bereich {
   stand: string;
 }
 
+/** Eine Zeile der Formelsammlung: Bezeichnung, eine oder mehrere Formeln, optional ein Hinweis. */
+export interface FormelEintrag {
+  name: string;
+  formeln: string[];
+  hinweis?: string;
+}
+
+/**
+ * Gruppe der Formelsammlung (src/data/formeln.json). Bei Aufgaben erscheint sie, wenn die Frage zu
+ * einem der `bereiche` gehört oder ihre ID in `fragen` steht. Tiefgestelltes wird als „I_a“ geschrieben.
+ */
+export interface FormelGruppe {
+  id: string;
+  titel: string;
+  kurz: string;
+  eintraege: FormelEintrag[];
+  /** Erklärung der Formelzeichen, z. B. { zeichen: "l", bedeutung: "einfache Leitungslänge in m" } */
+  groessen?: { zeichen: string; bedeutung: string }[];
+  bereiche: string[];
+  fragen: string[];
+}
+
 /** Frage in der lokalen Datenbank, mit Herkunft. */
 export interface GespeicherteFrage extends Frage {
   herkunft: 'mitgeliefert' | 'eigen';

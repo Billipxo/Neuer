@@ -257,3 +257,81 @@ export function pruefeBereiche(
   }
   return befunde;
 }
+
+const FORMEL_GRUPPE_FELDER = ['id', 'titel', 'kurz', 'eintraege', 'groessen', 'bereiche', 'fragen'];
+const FORMEL_PFLICHT = ['id', 'titel', 'kurz', 'eintraege', 'bereiche', 'fragen'];
+const FORMEL_EINTRAG_FELDER = ['name', 'formeln', 'hinweis'];
+
+/**
+ * Prüft die Formelsammlung: Aufbau der Gruppen und Einträge, doppelte IDs und ob die genannten
+ * Themenbereiche und Fragen existieren.
+ */
+export function pruefeFormeln(inhalt: unknown, bereichIds: ReadonlySet<string>, frageIds: ReadonlySet<string>): Befund[] {
+  const ort = 'formeln.json';
+  if (!Array.isArray(inhalt)) return [{ ort, id: '-', fehler: 'Datei muss eine Liste (Array) von Formelgruppen enthalten' }];
+  const befunde: Befund[] = [];
+  const gesehen = new Set<string>();
+  inhalt.forEach((roh, i) => {
+    const g = (typeof roh === 'object' && roh !== null && !Array.isArray(roh) ? roh : {}) as Record<string, unknown>;
+    const id = istText(g.id) ? g.id : `#${i + 1}`;
+    const melde = (fehler: string) => {
+      befunde.push({ ort, id, fehler });
+    };
+    if (typeof roh !== 'object' || roh === null || Array.isArray(roh)) {
+      melde('Eintrag ist kein Objekt');
+      return;
+    }
+
+    for (const feld of FORMEL_PFLICHT) if (!(feld in g)) melde(`Feld „${feld}“ fehlt`);
+    for (const feld of Object.keys(g)) if (!FORMEL_GRUPPE_FELDER.includes(feld)) melde(`Unbekanntes Feld „${feld}“`);
+    if ('id' in g) {
+      if (!istText(g.id)) melde('id ist leer');
+      else if (!/^[a-z0-9][a-z0-9_-]*$/.test(g.id)) melde('id darf nur a-z, 0-9, - und _ enthalten');
+      else if (gesehen.has(g.id)) melde('Doppelte ID');
+      else gesehen.add(g.id);
+    }
+    for (const feld of ['titel', 'kurz'] as const) if (feld in g && !istText(g[feld])) melde(`${feld} ist leer`);
+    if ('groessen' in g) {
+      const groessen = g.groessen;
+      const ok =
+        Array.isArray(groessen) &&
+        groessen.length > 0 &&
+        groessen.every((x) => {
+          const e = (typeof x === 'object' && x !== null && !Array.isArray(x) ? x : {}) as Record<string, unknown>;
+          return Object.keys(e).length === 2 && istText(e.zeichen) && istText(e.bedeutung);
+        });
+      if (!ok) melde('groessen muss eine Liste aus { zeichen, bedeutung } sein');
+    }
+
+    if ('eintraege' in g) {
+      if (!Array.isArray(g.eintraege) || g.eintraege.length === 0) melde('eintraege muss eine Liste von Formeln sein');
+      else
+        g.eintraege.forEach((e, j) => {
+          const nr = `Eintrag ${j + 1}`;
+          if (typeof e !== 'object' || e === null || Array.isArray(e)) {
+            melde(`${nr} ist kein Objekt`);
+            return;
+          }
+          const eintrag = e as Record<string, unknown>;
+          for (const feld of Object.keys(eintrag)) if (!FORMEL_EINTRAG_FELDER.includes(feld)) melde(`${nr}: unbekanntes Feld „${feld}“`);
+          if (!istText(eintrag.name)) melde(`${nr}: name ist leer`);
+          if (!istTextListe(eintrag.formeln)) melde(`${nr}: formeln muss eine Liste von Texten sein`);
+          if ('hinweis' in eintrag && !istText(eintrag.hinweis)) melde(`${nr}: hinweis ist leer`);
+        });
+    }
+
+    for (const [feld, bekannt, art] of [
+      ['bereiche', bereichIds, 'Themenbereich'],
+      ['fragen', frageIds, 'Frage'],
+    ] as const) {
+      if (!(feld in g)) continue;
+      const liste = g[feld];
+      if (!Array.isArray(liste) || liste.some((x) => !istText(x))) {
+        melde(`${feld} muss eine Liste von IDs sein`);
+        continue;
+      }
+      for (const x of liste) if (!bekannt.has(x)) melde(`${art} „${x}“ gibt es nicht`);
+    }
+  });
+  return befunde;
+}

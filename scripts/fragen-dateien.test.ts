@@ -1,8 +1,8 @@
-// Stellt sicher, dass `npm test` auch an kaputten Fragen- oder Themenbereich-Dateien scheitert.
+// Stellt sicher, dass `npm test` auch an kaputten Fragen-, Themenbereich- oder Formel-Dateien scheitert.
 import { readdirSync, readFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { expect, it } from 'vitest';
-import { pruefeBereiche, pruefeSammlung } from '../src/logic/validierung';
+import { pruefeBereiche, pruefeFormeln, pruefeSammlung } from '../src/logic/validierung';
 import type { Frage } from '../src/types';
 
 const lies = (ordner: string, praefix = '') => {
@@ -19,4 +19,11 @@ it('alle Fragen-Dateien sind gültig', () => {
 it('alle Themenbereich-Dateien sind gültig, jede Frage gehört zu genau einem Bereich', () => {
   const fragen = lies('fragen').flatMap((l) => l.inhalt as Frage[]);
   expect(pruefeBereiche(lies('bereiche', 'bereiche/'), fragen)).toEqual([]);
+});
+
+it('die Formelsammlung ist gültig und verweist nur auf vorhandene Bereiche und Fragen', () => {
+  const fragen = lies('fragen').flatMap((l) => l.inhalt as Frage[]);
+  const bereiche = lies('bereiche').flatMap((l) => l.inhalt as { id: string }[]);
+  const formeln = JSON.parse(readFileSync(join(__dirname, '..', 'src', 'data', 'formeln.json'), 'utf8'));
+  expect(pruefeFormeln(formeln, new Set(bereiche.map((b) => b.id)), new Set(fragen.map((f) => f.id)))).toEqual([]);
 });

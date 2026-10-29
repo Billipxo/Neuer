@@ -40,6 +40,7 @@ export function MehrSeite() {
     <Seite titel="Mehr">
       <ul className="space-y-2">
         <Eintrag to="/lernen/erklaerungen" icon="📖" titel="Erklärungen" text="Das Wichtigste zu jedem Themenbereich" zahl={BEREICHE.length} />
+        <Eintrag to="/lernen/formeln" icon="📐" titel="Formelsammlung" text="Alle Formeln für die Rechenaufgaben" />
         <Eintrag to="/mehr/katalog" icon="🔎" titel="Fragenkatalog" text="Alle Fragen suchen, filtern und ansehen" zahl={fragen.length} />
         <Eintrag to="/mehr/neue-frage" icon="✚" titel="Neue Frage" text="Eigene Frage aus dem Kurs anlegen" />
         <Eintrag to="/mehr/daten" icon="💾" titel="Daten & Sicherung" text="Lernstand sichern, Fragen importieren und exportieren" />

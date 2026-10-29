@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { AntwortOption, BUCHSTABEN, RechenEingabe } from '../components/Antworten';
 import { FrageBild, FrageKopf, FrageWerkzeuge } from '../components/FrageTeile';
+import { FormelKnopf } from '../components/Formeln';
 import { Dialog, knopf } from '../components/ui';
 import { useDaten } from '../db/DatenContext';
 import { holeLaufendeSimulation, loescheLaufendeSimulation, speichereLaufendeSimulation } from '../db/db';
@@ -149,6 +150,7 @@ function Pruefungslauf({ anfang }: { anfang: LaufendeSimulation }) {
             <FrageKopf frage={frage} ohneStatus />
             <FrageBild bild={frage.bild} />
             <h1 className="mb-4 text-xl leading-snug font-semibold">{frage.frage}</h1>
+            <FormelKnopf frage={frage} />
             {(frage.typ === 'einfach' || frage.typ === 'mehrfach') && (
               <>
                 <p className="mb-2 text-sm text-slate-500 dark:text-slate-400">

@@ -1,5 +1,5 @@
 // Testet die Android-App in einem Android-Emulator: Start, Lernen, Themenbereich mit Erklärung,
-// Lernstand nach Neustart, Zurück-Taste, dunkles Design, Sicherung speichern („Speichern unter“)
+// Formeln bei einer Rechenaufgabe, Lernstand nach Neustart, Zurück-Taste, dunkles Design, Sicherung speichern („Speichern unter“)
 // und wiederherstellen (Dateiauswahl). Läuft in GitHub Actions, siehe .github/workflows/android-test.yml.
 //
 // Aufruf: node android/test/emulator-test.mjs [Pfad zur Test-APK]
@@ -126,6 +126,17 @@ try {
     .then(() => true, () => false);
   pruefe(bereichDa && (await text(seite)).includes('Training starten'), '4b. Themenbereich „NAV“ zeigt Erklärung und Training');
   await bild('4b-themenbereich');
+
+  // 4c. Rechenaufgabe: Knopf „Formeln“ öffnet die passenden Formeln
+  await gehe(seite, '#/sitzung?ids=rechnen-001');
+  await seite.getByRole('button', { name: '📐 Formeln' }).click();
+  const formelnDa = await seite
+    .locator('[role=dialog]', { hasText: 'Drehstrom' })
+    .waitFor({ timeout: 15_000 })
+    .then(() => true, () => false);
+  await bild('4c-formeln');
+  pruefe(formelnDa, '4c. Rechenaufgabe: Knopf „Formeln“ zeigt die passenden Formeln');
+  await seite.locator('[role=dialog]').getByRole('button', { name: 'Zurück zur Aufgabe' }).click();
 
   // 5. App beenden und neu starten → Lernstand noch da?
   seite = await starteApp();

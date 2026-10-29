@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { pruefeBereich, pruefeBereiche, pruefeFrage, pruefeSammlung } from './validierung';
+import { pruefeBereich, pruefeBereiche, pruefeFormeln, pruefeFrage, pruefeSammlung } from './validierung';
 
 const basis = {
   id: 'test-001',
@@ -171,5 +171,58 @@ describe('pruefeBereiche', () => {
 
   it('meldet Dateien, die keine Liste sind', () => {
     expect(pruefeBereiche([{ ort: 'bereiche/x.json', inhalt: {} }], [])[0].fehler).toMatch(/Liste/);
+  });
+});
+
+describe('pruefeFormeln', () => {
+  const gruppe = {
+    id: 'leistung',
+    titel: 'Leistung',
+    kurz: 'P, S, Q',
+    eintraege: [{ name: 'Wechselstrom', formeln: ['P = U · I · cos φ'], hinweis: 'U = 230 V' }],
+    groessen: [{ zeichen: 'P', bedeutung: 'Wirkleistung in W' }],
+    bereiche: ['rechnen-leistung'],
+    fragen: ['tab-005'],
+  };
+  const bereiche = new Set(['rechnen-leistung']);
+  const fragen = new Set(['tab-005']);
+  const fehler = (inhalt: unknown) => pruefeFormeln(inhalt, bereiche, fragen).map((b) => `${b.id}: ${b.fehler}`);
+
+  it('akzeptiert eine gültige Formelgruppe', () => {
+    expect(fehler([gruppe])).toEqual([]);
+  });
+
+  it('meldet fehlende und unbekannte Felder sowie doppelte IDs', () => {
+    const { kurz: _k, ...ohneKurz } = gruppe;
+    expect(fehler([gruppe, { ...ohneKurz, farbe: 'blau' }])).toEqual([
+      'leistung: Feld „kurz“ fehlt',
+      'leistung: Unbekanntes Feld „farbe“',
+      'leistung: Doppelte ID',
+    ]);
+  });
+
+  it('prüft die Einträge', () => {
+    expect(fehler([{ ...gruppe, eintraege: [] }])).toEqual(['leistung: eintraege muss eine Liste von Formeln sein']);
+    expect(fehler([{ ...gruppe, eintraege: [{ name: '', formeln: [] , bild: 'x' }] }])).toEqual([
+      'leistung: Eintrag 1: unbekanntes Feld „bild“',
+      'leistung: Eintrag 1: name ist leer',
+      'leistung: Eintrag 1: formeln muss eine Liste von Texten sein',
+    ]);
+  });
+
+  it('prüft die Erklärung der Formelzeichen', () => {
+    expect(fehler([{ ...gruppe, groessen: ['P Wirkleistung'] }])).toEqual(['leistung: groessen muss eine Liste aus { zeichen, bedeutung } sein']);
+    expect(fehler([{ ...gruppe, groessen: [{ zeichen: 'P', bedeutung: '' }] }])).toEqual(['leistung: groessen muss eine Liste aus { zeichen, bedeutung } sein']);
+  });
+
+  it('meldet unbekannte Themenbereiche und Fragen', () => {
+    expect(fehler([{ ...gruppe, bereiche: ['gibt-es-nicht'], fragen: ['auch-nicht'] }])).toEqual([
+      'leistung: Themenbereich „gibt-es-nicht“ gibt es nicht',
+      'leistung: Frage „auch-nicht“ gibt es nicht',
+    ]);
+  });
+
+  it('meldet eine Datei, die keine Liste ist', () => {
+    expect(fehler({})).toEqual(['-: Datei muss eine Liste (Array) von Formelgruppen enthalten']);
   });
 });

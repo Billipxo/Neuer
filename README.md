@@ -54,6 +54,10 @@ Es gibt drei Varianten mit denselben Fragen und Funktionen:
   Schleifenimpedanz“. Jeder Bereich hat eine Erklärung zum Nachlesen (Worum geht es?,
   Das Wichtigste, Merke) und ein eigenes Training. Alle Erklärungen auf einen Blick:
   *Lernen → Erklärungen* oder *Mehr → Erklärungen*.
+- **Formelsammlung:** alle Formeln für die Rechenaufgaben, ohne Rechenbeispiele – unter
+  *Lernen → Formelsammlung* bzw. *Mehr → Formelsammlung*. Bei Aufgaben, die eine Formel
+  brauchen (Lernrunde, Prüfungssimulation, Frage-Details), öffnet der Knopf „📐 Formeln“
+  die passenden Formeln, ohne die Runde zu verlassen.
 - **Fragetypen:** Einfachauswahl, Mehrfachauswahl (zählt nur, wenn alles stimmt),
   Rechenaufgaben mit Toleranz und Rechenweg, Karteikarten für das Fachgespräch
   (aufdecken, selbst bewerten: gewusst / teilweise / nicht gewusst), optional mit Bild.
@@ -181,6 +185,7 @@ public/            Icons und Bilder (Bilder zu Fragen in public/bilder/)
 scripts/           Prüfskript für die Fragen-Dateien, Bilder einbetten (Offline-Datei)
 src/data/fragen/   die Fragen – eine JSON-Datei je Thema
 src/data/bereiche/ die Themenbereiche mit ihren Erklärungen – eine JSON-Datei je Thema
+src/data/formeln.json die Formelsammlung
 src/logic/         Lernlogik (Bewertung, Leitner, XP/Level, Abzeichen, Simulation …) mit Tests
 src/db/            Speicherung im Browser (IndexedDB)
 src/pages/         Seiten der App
@@ -300,6 +305,36 @@ Die Themenbereiche stehen in `src/data/bereiche/<thema>.json` – je Thema eine 
   Unterthema stehen sie nur unter „Ganzes Thema üben“.
 - Die Erklärungen fassen die Fragen des Bereichs zusammen. Sie sind – wie die Fragen –
   noch nicht mit den Kursunterlagen abgeglichen.
+
+### Formelsammlung
+
+Die Formelsammlung steht in `src/data/formeln.json` – eine Liste von Gruppen:
+
+```json
+{
+  "id": "spannungsfall",
+  "titel": "Leitungswiderstand, Spannungsfall und Querschnitt",
+  "kurz": "Widerstand einer Leitung, Spannungsfall, Mindestquerschnitt, Grenzwerte",
+  "eintraege": [
+    { "name": "Spannungsfall Drehstrom", "formeln": ["ΔU = √3 · l · I · cos φ / (κ · A)"] },
+    { "name": "Spannungsfall in Prozent", "formeln": ["Δu = ΔU / U · 100 %"], "hinweis": "Drehstrom auf 400 V beziehen" }
+  ],
+  "groessen": [{ "zeichen": "l", "bedeutung": "einfache Leitungslänge in m" }],
+  "bereiche": ["rechnen-spannungsfall"],
+  "fragen": []
+}
+```
+
+- Tiefgestellte Zeichen schreibt man mit Unterstrich: `I_a`, `Z_s,max`, `κ_Cu`. Formeln und ein
+  einzeln stehendes `l` (Länge) erscheinen in Schrift mit Serifen, damit `l` und `I` (Strom)
+  nicht verwechselt werden.
+- Den Knopf „📐 Formeln“ bekommen alle Fragen der Themenbereiche in `bereiche` und
+  zusätzlich die Fragen, deren ID in `fragen` steht. Reine Wissensfragen (z. B. „Welche
+  Abschaltzeit gilt …?“) bekommen bewusst keinen Knopf, damit die Formel nicht die
+  Antwort verrät.
+- Keine Rechenbeispiele aufnehmen – so bleibt die Sammlung wie die, die in Teil A der
+  Prüfung erlaubt ist. `npm run pruefe` prüft den Aufbau und ob es die genannten Bereiche
+  und Fragen gibt.
 
 ### Bilder
 

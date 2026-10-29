@@ -1,4 +1,5 @@
 import type { Bereich } from '../types';
+import { FormelText } from './Formeln';
 import { Karte } from './Seite';
 
 /** Die Erklärung zu einem Themenbereich: Abschnitte mit Text und Stichpunkten, „Merke“ hervorgehoben. */
@@ -9,13 +10,19 @@ export function BereichErklaerung({ bereich }: { bereich: Bereich }) {
         const inhalt = (
           <>
             <h3 className="font-semibold">{a.titel}</h3>
-            {a.text && <p className="mt-1 leading-relaxed">{a.text}</p>}
+            {a.text && (
+              <p className="mt-1 leading-relaxed">
+                <FormelText text={a.text} />
+              </p>
+            )}
             {a.punkte && (
               <ul className="mt-2 space-y-2">
                 {a.punkte.map((p, j) => (
                   <li key={j} className="flex gap-2 leading-relaxed">
                     <span className="mt-2.5 size-1.5 shrink-0 rounded-full bg-marke-500" aria-hidden />
-                    <span>{p}</span>
+                    <span>
+                      <FormelText text={p} />
+                    </span>
                   </li>
                 ))}
               </ul>

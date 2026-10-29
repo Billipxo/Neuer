@@ -1,10 +1,11 @@
-// Prüft alle Fragen-Dateien unter src/data/fragen/*.json und die Themenbereiche unter
-// src/data/bereiche/*.json (jede Frage muss zu genau einem Themenbereich gehören).
+// Prüft alle Fragen-Dateien unter src/data/fragen/*.json, die Themenbereiche unter
+// src/data/bereiche/*.json (jede Frage muss zu genau einem Themenbereich gehören) und die
+// Formelsammlung src/data/formeln.json.
 // Aufruf: npm run pruefe   (läuft auch automatisch vor npm run build)
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, basename, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { pruefeBereiche, pruefeSammlung, type Befund } from '../src/logic/validierung';
+import { pruefeBereiche, pruefeFormeln, pruefeSammlung, type Befund } from '../src/logic/validierung';
 import type { Frage } from '../src/types';
 
 const daten = join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'data');
@@ -30,6 +31,15 @@ const alle = listen.flatMap((l) => (Array.isArray(l.inhalt) ? (l.inhalt as Frage
 
 const bereichListen = lies('bereiche', 'bereiche/');
 befunde.push(...pruefeBereiche(bereichListen, alle));
+const bereiche = bereichListen.flatMap((l) => (Array.isArray(l.inhalt) ? (l.inhalt as { id?: string }[]) : []));
+
+let formeln: unknown = [];
+try {
+  formeln = JSON.parse(readFileSync(join(daten, 'formeln.json'), 'utf8'));
+} catch (e) {
+  befunde.push({ ort: 'formeln.json', id: '-', fehler: `Kein gültiges JSON: ${(e as Error).message}` });
+}
+befunde.push(...pruefeFormeln(formeln, new Set(bereiche.map((b) => String(b.id))), new Set(alle.map((f) => f.id))));
 
 // Kleine Statistik
 const dateien = listen.map((l) => l.ort);
@@ -40,8 +50,12 @@ const jeTyp = alle.reduce<Record<string, number>>((acc, f) => {
 console.log(`${dateien.length} Dateien, ${alle.length} Fragen`);
 for (const l of listen) console.log(`  ${l.ort.padEnd(24)} ${Array.isArray(l.inhalt) ? l.inhalt.length : '-'}`);
 console.log('  je Typ:', Object.entries(jeTyp).map(([t, n]) => `${t} ${n}`).join(', '));
-const bereiche = bereichListen.flatMap((l) => (Array.isArray(l.inhalt) ? l.inhalt : []));
 console.log(`${bereiche.length} Themenbereiche mit Erklärung in ${bereichListen.length} Dateien`);
+if (Array.isArray(formeln)) {
+  const gruppen = formeln as { eintraege?: unknown[] }[];
+  const anzahl = gruppen.reduce((n, g) => n + (Array.isArray(g.eintraege) ? g.eintraege.length : 0), 0);
+  console.log(`Formelsammlung: ${gruppen.length} Gruppen mit ${anzahl} Einträgen`);
+}
 
 if (befunde.length) {
   console.error(`\n${befunde.length} Fehler gefunden:`);

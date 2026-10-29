@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { Navigate, Route, Routes, useLocation, useNavigationType } from 'react-router-dom';
 import { Navigation } from './components/Navigation';
 import { useDaten } from './db/DatenContext';
 import { StartSeite } from './pages/StartSeite';
@@ -8,6 +8,7 @@ import { LernenSeite } from './pages/LernenSeite';
 import { ThemaSeite } from './pages/ThemaSeite';
 import { BereichSeite } from './pages/BereichSeite';
 import { ErklaerungenSeite } from './pages/ErklaerungenSeite';
+import { FormelnSeite } from './pages/FormelnSeite';
 import { SitzungSeite } from './pages/SitzungSeite';
 import { MehrSeite } from './pages/MehrSeite';
 import { FrageDetailSeite } from './pages/FrageDetailSeite';
@@ -41,9 +42,20 @@ function useTheme() {
   }, [profil.theme]);
 }
 
+/** Eine neu geöffnete Seite beginnt oben; bei „Zurück“ stellt der Browser die alte Position wieder her. */
+function useNachObenBeiSeitenwechsel(pathname: string) {
+  const art = useNavigationType();
+  const vorher = useRef(pathname);
+  useEffect(() => {
+    if (vorher.current !== pathname && art !== 'POP') window.scrollTo(0, 0);
+    vorher.current = pathname;
+  }, [pathname, art]);
+}
+
 export function App() {
   useTheme();
   const { pathname } = useLocation();
+  useNachObenBeiSeitenwechsel(pathname);
   // Während einer Lernrunde oder Prüfung braucht es die Navigation nicht – mehr Platz für die Frage.
   const mitNavigation =
     !pathname.startsWith('/sitzung') &&
@@ -56,6 +68,7 @@ export function App() {
         <Route path="/" element={<StartSeite />} />
         <Route path="/lernen" element={<LernenSeite />} />
         <Route path="/lernen/erklaerungen" element={<ErklaerungenSeite />} />
+        <Route path="/lernen/formeln" element={<FormelnSeite />} />
         <Route path="/lernen/:thema" element={<ThemaSeite />} />
         <Route path="/lernen/:thema/:bereich" element={<BereichSeite />} />
         <Route path="/sitzung" element={<SitzungSeite />} />
