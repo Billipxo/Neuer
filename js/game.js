@@ -1130,24 +1130,24 @@
 
   // -------------------------------------------------------------------------
   // Wegfindung: Raster (eine Kachel = 40 px) mit zwischengespeicherten Strömungsfeldern.
-  // Gebäude blockieren alle, Mauern nur gegnerische Teams. Ist das Ziel unerreichbar
-  // (geschlossene Mauer), laufen Einheiten direkt darauf zu und reißen die Mauer ein.
+  // Gebäude und Mauern blockieren nur gegnerische Teams – eigene und verbündete Truppen gehen hindurch.
+  // Ist das Ziel unerreichbar (geschlossene Mauer), laufen Einheiten direkt darauf zu und reißen sie ein.
   const NAV = { W: 0, H: 0, bld: null, wall: null, cache: new Map() };
   const DX = [1, -1, 0, 0, 1, 1, -1, -1], DY = [0, 0, 1, -1, 1, -1, 1, -1];
   function cellAt(x, y) {
     const cx = Math.floor(x / T), cy = Math.floor(y / T);
     return cx < 0 || cy < 0 || cx >= NAV.W || cy >= NAV.H ? -1 : cy * NAV.W + cx;
   }
-  const blockedFor = (c, team) => NAV.bld[c] === 1 || (NAV.wall[c] !== -1 && NAV.wall[c] !== team);
+  const blockedFor = (c, team) => (NAV.bld[c] !== -1 && NAV.bld[c] !== team) || (NAV.wall[c] !== -1 && NAV.wall[c] !== team);
   function navRebuild() {
     NAV.W = Math.ceil(S.w / T); NAV.H = Math.ceil(S.h / T);
     const n = NAV.W * NAV.H;
-    if (!NAV.bld || NAV.bld.length !== n) { NAV.bld = new Uint8Array(n); NAV.wall = new Int8Array(n); }
-    NAV.bld.fill(0); NAV.wall.fill(-1);
+    if (!NAV.bld || NAV.bld.length !== n) { NAV.bld = new Int8Array(n); NAV.wall = new Int8Array(n); }
+    NAV.bld.fill(-1); NAV.wall.fill(-1);
     for (const b of S.ents) {
       if (b.dead || b.kind !== 'building') continue;
       if (b.type === 'mauer') { const c = cellAt(b.x, b.y); if (c >= 0) NAV.wall[c] = b.team; continue; }
-      for (const c of footprint(b)) NAV.bld[c] = 1;
+      for (const c of footprint(b)) NAV.bld[c] = b.team;
     }
     NAV.cache.clear();
     S.navDirty = false;
@@ -1395,7 +1395,7 @@
       G.query(e.x, e.y, e.r + 70, (o) => {
         if (o === e) return;
         if (o.kind === 'building') {
-          if (o.type === 'mauer' && o.team === e.team) return; // eigene Truppen passieren die Mauer
+          if (o.team === e.team) return; // eigene und verbündete Truppen gehen durch Gebäude und Mauer
           const hs = o.size * T / 2;
           const dx = e.x - o.x, dy = e.y - o.y;
           const ox = hs + e.r - Math.abs(dx), oy = hs + e.r - Math.abs(dy);

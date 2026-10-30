@@ -40,8 +40,9 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 **Kampf**
 - **Armee-Stile:** „Sammeln & Angreifen“, „Wellen losschicken“ (regelmäßige Angriffswellen), „Nur verteidigen“ +
   „Jetzt angreifen!“. Losgeschickte Einheiten kämpfen, bis sie fallen.
-- **Wegfindung:** Einheiten laufen um Gebäude herum (Strömungsfelder auf einem 40-px-Raster). Eigene Mauern sind
-  durchlässig; gegnerische Mauern werden umgangen, wenn es eine Lücke gibt, sonst eingerissen.
+- **Wegfindung:** Eigene und verbündete Truppen gehen durch eigene Gebäude und Mauern hindurch (niemand bleibt in der
+  Basis stecken). Gegner müssen um fremde Gebäude herumlaufen (Strömungsfelder auf einem 40-px-Raster); gegnerische
+  Mauern werden umgangen, wenn es eine Lücke gibt, sonst eingerissen.
 - **Heldenfenster** (immer sichtbar): Lebenspunkte, Erfahrung, Fähigkeiten mit Abklingzeit, Heiltrank, Rückzug,
   Kamera folgt dem Helden, Verhalten „Folgt Armee“ / „Verteidigt Basis“ / „Jagt Monster“ / „Manuell“.
   Steuern: Held auswählen, dann Ziel anklicken bzw. antippen. Beim Zielen zeigen Kreise Reichweite und Wirkungsbereich.
