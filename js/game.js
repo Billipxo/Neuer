@@ -455,7 +455,7 @@
       b.atkT -= dt;
       if (b.atkT <= 0) {
         let best = null, bd = Infinity;
-        G.query(b.x, b.y, atk.range, (o) => {
+        G.queryFoes(b.x, b.y, atk.range, b.team, (o) => {
           if (o.team === b.team || o.kind === 'building' || o.dead) return;
           if (o.kind === 'creep' && !o.camp.active) return;
           const dd = d2(o.x, o.y, b.x, b.y);
@@ -685,7 +685,7 @@
 
   function enemiesNear(e, x, y, r, includeBuildings) {
     const out = [];
-    G.query(x, y, r, (o) => {
+    G.queryFoes(x, y, r, e.team, (o) => {
       if (o.dead || o.team === e.team) return;
       if (o.kind === 'building' && !includeBuildings) return;
       if (o.kind === 'creep' && e.team !== -1 && !o.camp.active && dist(o, { x, y }) > 120) return;
@@ -695,7 +695,7 @@
   }
   function alliesNear(team, x, y, r) {
     const out = [];
-    G.query(x, y, r, (o) => { if (!o.dead && o.team === team && o.kind !== 'building') out.push(o); });
+    G.queryTeam(x, y, r, team, (o) => { if (!o.dead && o.kind !== 'building') out.push(o); });
     return out;
   }
   function bestCluster(list, radius) {
@@ -895,22 +895,47 @@
   // -------------------------------------------------------------------------
   // Raum-Raster für schnelle Nachbarschaftssuche
   const CELL = 120;
+  // Ein Raster für alles und zusätzlich eines je Team: Die Zielsuche durchsucht nur gegnerische Teams.
+  // Raster sind flache Arrays (Zelle = cx + cy * GW), deren Zellen-Arrays wiederverwendet werden.
+  let GW = 0, GH = 0;
+  function newGrid() { const g = new Array(GW * GH); for (let i = 0; i < g.length; i++) g[i] = []; return g; }
   function buildGrid() {
-    const g = S.grid; g.clear();
+    if (!S.gridArr) {
+      GW = Math.ceil(S.w / CELL) + 1; GH = Math.ceil(S.h / CELL) + 1;
+      S.gridArr = newGrid(); S.teamGrids = new Map();
+    }
+    for (const a of S.gridArr) a.length = 0;
+    for (const g of S.teamGrids.values()) for (const a of g) a.length = 0;
     for (const e of S.ents) {
       if (e.dead) continue;
-      const k = ((e.x / CELL) | 0) + ((e.y / CELL) | 0) * 1000;
-      let a = g.get(k); if (!a) { a = []; g.set(k, a); } a.push(e);
+      const cx = clamp((e.x / CELL) | 0, 0, GW - 1), cy = clamp((e.y / CELL) | 0, 0, GH - 1), k = cx + cy * GW;
+      S.gridArr[k].push(e);
+      let tg = S.teamGrids.get(e.team); if (!tg) { tg = newGrid(); S.teamGrids.set(e.team, tg); }
+      tg[k].push(e);
     }
   }
-  G.query = function (x, y, r, fn) {
+  function scanGrid(grid, x, y, r, fn) {
     const R = r + 60;
-    const x0 = Math.max(0, ((x - R) / CELL) | 0), x1 = ((x + R) / CELL) | 0;
-    const y0 = Math.max(0, ((y - R) / CELL) | 0), y1 = ((y + R) / CELL) | 0;
+    const x0 = Math.max(0, ((x - R) / CELL) | 0), x1 = Math.min(GW - 1, ((x + R) / CELL) | 0);
+    const y0 = Math.max(0, ((y - R) / CELL) | 0), y1 = Math.min(GH - 1, ((y + R) / CELL) | 0);
     for (let cy = y0; cy <= y1; cy++) for (let cx = x0; cx <= x1; cx++) {
-      const a = S.grid.get(cx + cy * 1000); if (!a) continue;
-      for (const e of a) { if (e.dead) continue; const rr = r + e.r; if (d2(e.x, e.y, x, y) <= rr * rr) fn(e); }
+      const a = grid[cx + cy * GW]; if (!a.length) continue;
+      for (const e of a) {
+        if (e.dead) continue;
+        const rr = r + e.r, dx = e.x - x, dy = e.y - y;
+        if (dx * dx + dy * dy <= rr * rr) fn(e);
+      }
     }
+  }
+  G.query = (x, y, r, fn) => scanGrid(S.gridArr, x, y, r, fn);
+  // nur Einheiten/Gebäude anderer Teams (inkl. neutraler Monster)
+  G.queryFoes = function (x, y, r, team, fn) {
+    for (const [t, g] of S.teamGrids) if (t !== team) scanGrid(g, x, y, r, fn);
+  };
+  // nur das eigene Team
+  G.queryTeam = function (x, y, r, team, fn) {
+    const g = S.teamGrids.get(team);
+    if (g) scanGrid(g, x, y, r, fn);
   };
 
   // -------------------------------------------------------------------------
@@ -1080,7 +1105,7 @@
     else aggro = Math.max(er + 70, 250);
     const focus = p && !p.human && p.diff.focus;
     let best = null, bs = Infinity;
-    G.query(e.x, e.y, aggro, (o) => {
+    G.queryFoes(e.x, e.y, aggro, e.team, (o) => {
       if (o.team === e.team || o.dead) return;
       if (e.kind === 'creep') {
         if (o.kind === 'building') return;
@@ -1105,8 +1130,8 @@
   }
   function findHealTarget(e) {
     let best = null, br = 0.92;
-    G.query(e.x, e.y, e.range + 120, (o) => {
-      if (o.team !== e.team || o.dead || o.kind === 'building' || o === e) return;
+    G.queryTeam(e.x, e.y, e.range + 120, e.team, (o) => {
+      if (o.dead || o.kind === 'building' || o === e) return;
       const r = o.hp / o.maxHp;
       if (r < br) { br = r; best = o; }
     });
@@ -1262,8 +1287,9 @@
     const p = S.players[e.owner];
     if (e.kind === 'hero') return e.goal || p.armyPoint;
     const ap = (e.committed ? p.attackPoint : p.armyPoint) || p.rally;
-    const a = e.id * 2.399;
-    const rr = 22 + (e.id % 6) * 16;
+    const slot = e.id % (e.committed ? p.attackSlots || 12 : p.poolSlots || 12);
+    const a = slot * 2.399;
+    const rr = 14 + 15 * Math.sqrt(slot);
     let x = ap.x + Math.cos(a) * rr, y = ap.y + Math.sin(a) * rr;
     if (!e.committed) {
       if (e.range > 100) { x -= p.dir.x * 55; y -= p.dir.y * 55; }
@@ -1321,12 +1347,14 @@
     }
     e.retargetT -= dt;
     if (!e.order && (e.retargetT <= 0 || !validTarget(e, e.target))) {
-      e.retargetT = 0.3 + Math.random() * 0.15;
       e.target = findTarget(e);
+      e.retargetT = e.target ? 0.3 + Math.random() * 0.15 : 0.55 + Math.random() * 0.3;
     }
 
     if (e.heal > 0) {
-      const ht = findHealTarget(e);
+      e.healT = (e.healT || 0) - dt;
+      if (e.healT <= 0 || !e.healTgt || e.healTgt.dead || e.healTgt.hp >= e.healTgt.maxHp) { e.healT = 0.35 + Math.random() * 0.15; e.healTgt = findHealTarget(e); }
+      const ht = e.healTgt;
       if (ht) {
         const dd = dist(e, ht) - ht.r - e.r;
         if (dd <= e.range) {
@@ -1389,33 +1417,51 @@
     S.proj = S.proj.filter((p) => !p.done);
   }
 
+  // Kollision: Einheiten untereinander über ein feines Raster (48 px), gegnerische Gebäude über das Team-Raster
+  const SEP = 48, MAX_R = 34;
   function separate() {
+    const SW = Math.ceil(S.w / SEP) + 1, SH = Math.ceil(S.h / SEP) + 1;
+    if (!S.sepGrid) { S.sepGrid = new Array(SW * SH); for (let i = 0; i < S.sepGrid.length; i++) S.sepGrid[i] = []; }
+    const sg = S.sepGrid;
+    for (const a of sg) a.length = 0;
+    const mobs = [];
     for (const e of S.ents) {
       if (e.dead || e.kind === 'building') continue;
-      G.query(e.x, e.y, e.r + 70, (o) => {
-        if (o === e) return;
-        if (o.kind === 'building') {
-          if (o.team === e.team) return; // eigene und verbündete Truppen gehen durch Gebäude und Mauer
-          const hs = o.size * T / 2;
-          const dx = e.x - o.x, dy = e.y - o.y;
-          const ox = hs + e.r - Math.abs(dx), oy = hs + e.r - Math.abs(dy);
-          if (ox > 0 && oy > 0) {
-            if (ox < oy) e.x += (dx >= 0 ? 1 : -1) * ox; else e.y += (dy >= 0 ? 1 : -1) * oy;
-          }
-          return;
+      mobs.push(e);
+      sg[clamp((e.x / SEP) | 0, 0, SW - 1) + clamp((e.y / SEP) | 0, 0, SH - 1) * SW].push(e);
+    }
+    for (const e of mobs) {
+      if (e.dead) continue;
+      // gegnerische Gebäude und Mauern: aus dem Grundriss schieben (eigene sind durchlässig)
+      G.queryFoes(e.x, e.y, e.r + 26, e.team, (o) => {
+        if (o.kind !== 'building') return;
+        const hs = o.size * T / 2;
+        const dx = e.x - o.x, dy = e.y - o.y;
+        const ox = hs + e.r - Math.abs(dx), oy = hs + e.r - Math.abs(dy);
+        if (ox > 0 && oy > 0) {
+          if (ox < oy) e.x += (dx >= 0 ? 1 : -1) * ox; else e.y += (dy >= 0 ? 1 : -1) * oy;
         }
-        if (o.id < e.id) return;
-        const dx = o.x - e.x, dy = o.y - e.y;
-        const rr = e.r + o.r;
-        const dd = dx * dx + dy * dy;
-        if (dd < rr * rr && dd > 0.0001) {
-          const d = Math.sqrt(dd), push = (rr - d) * 0.5;
-          const nx = dx / d, ny = dy / d;
-          const es = e.speed === 0 ? 0 : 1, os = o.speed === 0 ? 0 : 1;
-          e.x -= nx * push * es; e.y -= ny * push * es;
-          o.x += nx * push * os; o.y += ny * push * os;
-        } else if (dd <= 0.0001) { e.x += rand(-1, 1); }
       });
+      // andere Einheiten: jedes Paar einmal (vom Partner mit der kleineren ID aus)
+      const span = Math.ceil((e.r + MAX_R) / SEP);
+      const cx0 = (e.x / SEP) | 0, cy0 = (e.y / SEP) | 0;
+      for (let cy = Math.max(0, cy0 - span); cy <= Math.min(SH - 1, cy0 + span); cy++) for (let cx = Math.max(0, cx0 - span); cx <= Math.min(SW - 1, cx0 + span); cx++) {
+        const a = sg[cx + cy * SW]; if (!a.length) continue;
+        for (const o of a) {
+          if (o.id <= e.id || o.dead) continue;
+          const dx = o.x - e.x, dy = o.y - e.y;
+          const rr = e.r + o.r;
+          const dd = dx * dx + dy * dy;
+          if (dd >= rr * rr) continue;
+          if (dd > 0.0001) {
+            const d = Math.sqrt(dd), push = (rr - d) * 0.5;
+            const nx = dx / d, ny = dy / d;
+            const es = e.speed === 0 ? 0 : 1, os = o.speed === 0 ? 0 : 1;
+            e.x -= nx * push * es; e.y -= ny * push * es;
+            o.x += nx * push * os; o.y += ny * push * os;
+          } else e.x += rand(-1, 1);
+        }
+      }
       e.x = clamp(e.x, e.r, S.w - e.r); e.y = clamp(e.y, e.r, S.h - e.r);
     }
   }
@@ -1441,9 +1487,8 @@
     }
     for (const s of auraSrc) {
       const a = s.aura;
-      G.query(s.x, s.y, 180, (o) => {
+      (a.side === 'ally' ? G.queryTeam : G.queryFoes)(s.x, s.y, 180, s.team, (o) => {
         if (o.dead || o.kind === 'building') return;
-        if (a.side === 'ally' ? o.team !== s.team : (o.team === s.team)) return;
         if (o._auraT !== S.tick) { o._auraT = S.tick; o._aura = {}; }
         const key = a.side + a.stat;
         if (o._aura[key] === undefined || Math.abs(a.value) > Math.abs(o._aura[key])) {
@@ -1584,9 +1629,9 @@
   };
 
   function updateSupply(p) {
-    let cap = p.th.level * 10;
-    for (const b of p.blds) if (b.type === 'unterkunft' && b.level >= 1) cap += b.level * 8;
-    p.supplyCap = Math.min(200, cap);
+    let cap = p.th.level * G.SUPPLY.perTH;
+    for (const b of p.blds) if (b.type === 'unterkunft' && b.level >= 1) cap += b.level * G.SUPPLY.perHouseLevel;
+    p.supplyCap = Math.min(G.SUPPLY.max, cap);
     let used = 0, army = 0;
     for (const e of S.ents) if (!e.dead && e.owner === p.id && e.kind === 'unit') { used += e.supply || 0; army += e.supply || (e.merc ? 2 : 0); }
     for (const b of p.blds) if (b.prod) used += G.UNIT_BASE[b.prod.role].supply;
@@ -1695,8 +1740,8 @@
   // Losgeschickte Einheiten ("committed") kämpfen, bis sie fallen oder das Spiel endet.
   function findThreat(p) {
     let sx = 0, sy = 0, n = 0;
-    G.query(p.base.x, p.base.y, G.BASE_RADIUS + 220, (o) => {
-      if (o.dead || o.team === p.team || o.kind === 'building' || o.kind === 'creep') return;
+    G.queryFoes(p.base.x, p.base.y, G.BASE_RADIUS + 220, p.team, (o) => {
+      if (o.dead || o.kind === 'building' || o.kind === 'creep') return;
       sx += o.x; sy += o.y; n++;
     });
     return n ? { x: sx / n, y: sy / n, n } : null;
@@ -1769,6 +1814,8 @@
     let poolSup = 0;
     for (const u of pool) poolSup += u.supply || (u.merc ? 2 : 0);
     p.poolSupply = poolSup;
+    p.poolSlots = Math.max(12, Math.round(pool.length * 1.3));
+    p.attackSlots = Math.max(12, Math.round(com.length * 1.3));
     if (com.length || p.manualPoint) p.attackPoint = attackPoint(p, p.attackCentroid || p.rally);
 
     const threat = findThreat(p);

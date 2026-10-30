@@ -847,6 +847,29 @@
     return y - r * 1.0;
   }
 
+  // Vereinfachte Figur für große Schlachten oder weites Herauszoomen (spart Rechenzeit, v. a. am Handy)
+  function drawSimple(e, look, x, y, k, face, flash, p) {
+    const RL = RACE_LOOK[look.race] || {};
+    const fx = Math.cos(face), fy = Math.sin(face);
+    if (look.shape === 'beast') {
+      ctx.beginPath(); ctx.ellipse(x, y, k * 0.95, k * 0.55, Math.atan2(fy * 0.75, fx), 0, 7); ctx.fillStyle = flash ? '#fff' : look.col; ctx.fill(); outline(1.8);
+      circ(x + fx * k * 0.95, y + fy * k * 0.7 - k * 0.25, k * 0.38, flash ? '#fff' : look.col, 1.6);
+      if (look.rider) circ(x, y - k * 0.7, k * 0.35, '#6f9a3c', 1.4);
+      return y - k * 0.8;
+    }
+    const body = flash ? '#fff' : look.heavy ? (RL.metal || '#999') : look.cloth;
+    ctx.beginPath(); ctx.ellipse(x, y - k * 0.05, k * 0.6, k * 0.55, 0, 0, 7); ctx.fillStyle = body; ctx.fill(); outline(1.8);
+    if (p) { ctx.fillStyle = p.color; ctx.fillRect(x - k * 0.15, y - k * 0.4, k * 0.3, k * 0.75); }
+    const hx = x + fx * k * 0.06, hy = y - k * 0.68;
+    circ(hx, hy, k * 0.4, flash ? '#fff' : (look.skull !== undefined ? look.skull : RL.skull) ? '#e4dfcc' : (look.skin || RL.skin || '#c8a080'), 1.6);
+    if (look.weapon && look.weapon !== 'none') { // Waffe als einfacher Strich
+      ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath();
+      ctx.moveTo(x + Math.cos(face + 1.2) * k * 0.6, y - k * 0.1); ctx.lineTo(x + Math.cos(face + 0.5) * k * 1.3, y - k * 0.1 + fy * k * 0.5 - k * 0.3); ctx.stroke();
+    }
+    if (look.shield && p) circ(x + Math.cos(face - 1.2) * k * 0.6, y - k * 0.05, k * 0.3, p.color, 1.4);
+    return hy - k * 0.4;
+  }
+
   R._drawMobile = (e) => drawMobile(e); // für Figuren-Vorschau und Tests
   function drawMobile(e) {
     const S = G.S;
@@ -861,10 +884,11 @@
     const swing = e.swing > 0 ? Math.sin((e.swing / 0.22) * Math.PI) * 1.4 : 0;
     const k = r * 1.15;
     shadow(e.x, e.y + r * 0.75, r * (look.shape === 'dragon' ? 1.6 : 1.05), r * 0.45);
-    if (pal && pal.glow) { ctx.save(); ctx.globalAlpha = 0.22 + 0.1 * Math.sin(S.time * 3 + e.id); ctx.shadowColor = pal.glow; ctx.shadowBlur = 16; circ(x, y - r * 0.3, r * 1.15, pal.glow, 0); ctx.restore(); }
+    if (pal && pal.glow && !R.lodSimple) { ctx.save(); ctx.globalAlpha = 0.22 + 0.1 * Math.sin(S.time * 3 + e.id); ctx.shadowColor = pal.glow; ctx.shadowBlur = 16; circ(x, y - r * 0.3, r * 1.15, pal.glow, 0); ctx.restore(); }
     if (e.summoned && look.shape === 'human' && !look.ghost) { ctx.save(); ctx.globalAlpha = 0.3; circ(e.x, e.y + r * 0.6, r * 0.9, p.rd.palette.trim, 0); ctx.restore(); }
     let top;
-    if (look.shape === 'human') {
+    if (R.lodSimple && (look.shape === 'human' || look.shape === 'beast') && e.kind !== 'hero') top = drawSimple(e, look, x, y, k, face, flash, p);
+    else if (look.shape === 'human') {
       if (e.speed > 0 && !look.ghost) { // Füße
         const step = e.moving ? Math.sin((e.walkT || 0) * 1.0) * k * 0.3 : 0;
         for (const sgn of [-1, 1]) {
@@ -1093,6 +1117,9 @@
     for (const c of S.critters) if (!c.fly && inView(c.hx || c.x, c.hy || c.y, 120)) list.push({ y: c.y, c });
     for (const e of S.ents) if (!e.dead && inView(e.x, e.y, 80)) list.push({ y: e.y + (e.kind === 'building' ? e.size * T / 2 - 10 : 0), e });
     for (const s of S.shops) if (inView(s.x, s.y, 80)) list.push({ y: s.y + 10, s });
+    let nMob = 0;
+    for (const it of list) if (it.e && it.e.kind !== 'building') nMob++;
+    R.lodSimple = z < 0.6 || nMob > 90;
     list.sort((a, b) => a.y - b.y);
     for (const it of list) {
       if (it.d) drawDecor(it.d, th);

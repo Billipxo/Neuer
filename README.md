@@ -11,7 +11,7 @@ Auch am **Handy und Tablet** spielbar (Touch-Steuerung: Wischen = Karte bewegen,
 Tippen = auswählen/bauen, Held antippen und dann Ziel antippen = Held steuern, ☰ = Menü).
 Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http://localhost:8000` öffnen.
 
-## Was schon drin ist (Prototyp v0.7)
+## Was schon drin ist (Prototyp v0.8)
 
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
@@ -36,6 +36,9 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - **Mauer-Upgrade** (Holzpalisade → Steinmauer → Festungsmauer): Ring um die ganze Basis, eigene Truppen gehen hindurch.
 - **Goldadern** auf der Karte: Außenposten dort bringen Bonus-Einkommen und sind umkämpft.
 - Sichtbare **Arbeiter**, die Gold schürfen und Holz schlagen.
+- **Großes Einheitenlimit:** 15 Versorgung je Haupthaus-Stufe, 12 je Unterkunft-Stufe, bis zu 300 pro Spieler
+  (Werte in `G.SUPPLY`, `js/data.js`). Bei großen Schlachten oder weitem Herauszoomen werden Figuren automatisch
+  vereinfacht gezeichnet, damit das Spiel auch am Handy flüssig bleibt.
 
 **Kampf**
 - **Armee-Stile:** „Sammeln & Angreifen“, „Wellen losschicken“ (regelmäßige Angriffswellen), „Nur verteidigen“ +

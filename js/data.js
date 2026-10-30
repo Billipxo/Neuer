@@ -3,6 +3,8 @@
 window.G = window.G || {};
 
 G.TILE = 40;
+// Versorgung (Einheitenlimit): je Haupthaus-Stufe, je Unterkunft-Stufe und Obergrenze pro Spieler
+G.SUPPLY = { perTH: 15, perHouseLevel: 12, max: 300 };
 // Spieltempo: Faktor für Einkommen und Bau-/Forschungszeiten. 2.6 ≈ Basis in knapp 30 min auf Maximalstufe.
 G.PACE = 2.6;
 // Spieldauer (Minuten). In den letzten 5 Minuten läuft die Endphase, danach entscheidet die Punktzahl.
@@ -41,7 +43,7 @@ G.BUILDINGS = {
                   desc: 'Herz der Basis. Bestimmt die maximale Stufe aller Gebäude, liefert Gold, Arbeiter und Versorgung. Fällt es, ist das Volk besiegt.' },
   goldmine:     { name: 'Goldmine', size: 2, hp: 800, cost: { g: 120, w: 40 }, time: 15, desc: '+1,8 Gold/s pro Stufe.' },
   saegewerk:    { name: 'Sägewerk', size: 2, hp: 800, cost: { g: 100, w: 20 }, time: 15, desc: '+1,5 Holz/s pro Stufe.' },
-  unterkunft:   { name: 'Unterkunft', size: 2, hp: 700, cost: { g: 80, w: 60 }, time: 12, desc: '+8 Versorgung pro Stufe.' },
+  unterkunft:   { name: 'Unterkunft', size: 2, hp: 700, cost: { g: 80, w: 60 }, time: 12, desc: '+12 Versorgung pro Stufe.' },
   kaserne:      { name: 'Kaserne', size: 2, hp: 1200, cost: { g: 160, w: 80 }, time: 20, desc: 'Bildet Nahkämpfer (St. 1) und Tanks (St. 2) aus.' },
   schiessstand: { name: 'Schießstand', size: 2, hp: 1000, cost: { g: 150, w: 110 }, time: 20, desc: 'Bildet Fernkämpfer aus.' },
   sanktum:      { name: 'Sanktum', size: 2, hp: 1000, cost: { g: 180, w: 130 }, time: 24, desc: 'Heiler (St. 1), Magier (St. 2), Support (St. 3).' },
