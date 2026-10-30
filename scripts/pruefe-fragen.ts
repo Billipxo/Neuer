@@ -31,7 +31,7 @@ const alle = listen.flatMap((l) => (Array.isArray(l.inhalt) ? (l.inhalt as Frage
 
 const bereichListen = lies('bereiche', 'bereiche/');
 befunde.push(...pruefeBereiche(bereichListen, alle));
-const bereiche = bereichListen.flatMap((l) => (Array.isArray(l.inhalt) ? (l.inhalt as { id?: string }[]) : []));
+const bereiche = bereichListen.flatMap((l) => (Array.isArray(l.inhalt) ? (l.inhalt as { id?: string; verstaendnis?: unknown }[]) : []));
 
 let formeln: unknown = [];
 try {
@@ -50,7 +50,8 @@ const jeTyp = alle.reduce<Record<string, number>>((acc, f) => {
 console.log(`${dateien.length} Dateien, ${alle.length} Fragen`);
 for (const l of listen) console.log(`  ${l.ort.padEnd(24)} ${Array.isArray(l.inhalt) ? l.inhalt.length : '-'}`);
 console.log('  je Typ:', Object.entries(jeTyp).map(([t, n]) => `${t} ${n}`).join(', '));
-console.log(`${bereiche.length} Themenbereiche mit Erklärung in ${bereichListen.length} Dateien`);
+const verstaendnis = bereiche.reduce((n, b) => n + (Array.isArray(b.verstaendnis) ? b.verstaendnis.length : 0), 0);
+console.log(`${bereiche.length} Themenbereiche mit Erklärung und ${verstaendnis} Verständnisfragen in ${bereichListen.length} Dateien`);
 if (Array.isArray(formeln)) {
   const gruppen = formeln as { eintraege?: unknown[] }[];
   const anzahl = gruppen.reduce((n, g) => n + (Array.isArray(g.eintraege) ? g.eintraege.length : 0), 0);

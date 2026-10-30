@@ -1,17 +1,26 @@
-import { useEffect, useMemo, useState, type CSSProperties, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Erklaerung, FrageBild, FrageKopf, FrageMitLoesung, FrageWerkzeuge } from '../components/FrageTeile';
 import { FormelKnopf } from '../components/Formeln';
 import { spieleTon, tonVorbereiten } from '../components/toene';
 import { AntwortOption, BUCHSTABEN, RechenEingabe } from '../components/Antworten';
+import { ErgebnisBanner } from '../components/ErgebnisBanner';
 import { Dialog, StatusPunkt, knopf } from '../components/ui';
 import { BEREICHE } from '../data/bereiche';
 import { useDaten } from '../db/DatenContext';
 import { bewerteAuswahl, bewerteRechnung, parseZahl } from '../logic/bewertung';
 import { KARTEN_ERGEBNIS, type Ergebnis } from '../logic/leitner';
 import type { AntwortEreignis } from '../logic/motivation';
-import { LERN_MODI, antwortReihenfolge, waehleFragen, wiederEinreihen, type LernModus } from '../logic/sitzung';
-import { istSerienMeilenstein, tonFuer } from '../logic/toene';
+import {
+  LERN_MODI,
+  antwortReihenfolge,
+  lesezeichenSchluessel,
+  startNachLesezeichen,
+  waehleFragen,
+  wiederEinreihen,
+  type LernModus,
+} from '../logic/sitzung';
+import { tonFuer } from '../logic/toene';
 import { THEMA_IDS, type Frage, type KartenBewertung, type RechenLoesung, type ThemaId } from '../types';
 
 /** Wie oft eine falsch beantwortete Frage in derselben Runde höchstens erneut drankommt */
@@ -31,7 +40,7 @@ export function SitzungSeite() {
 }
 
 function Sitzung({ params }: { params: URLSearchParams }) {
-  const { fragen, fortschritte, profil, antwortSpeichern, zeigeHinweis } = useDaten();
+  const { fragen, fortschritte, profil, antwortSpeichern, aendereProfil, zeigeHinweis } = useDaten();
   const nachId = useMemo(() => new Map(fragen.map((f) => [f.id, f])), [fragen]);
 
   const bereich = BEREICHE.find((b) => b.id === params.get('bereich'));
@@ -39,6 +48,9 @@ function Sitzung({ params }: { params: URLSearchParams }) {
   const thema: ThemaId | 'alle' = bereich?.thema ?? (THEMA_IDS.includes(themaParam as ThemaId) ? (themaParam as ThemaId) : 'alle');
   const modusParam = params.get('modus') as LernModus;
   const modus: LernModus = LERN_MODI.includes(modusParam) ? modusParam : 'empfohlen';
+  // „Alle der Reihe nach“: ohne Längenbegrenzung, ohne Wiederholen in der Runde, mit Lesezeichen
+  const reihe = !params.get('ids') && modus === 'reihe';
+  const lesezeichen = lesezeichenSchluessel(thema, bereich?.id);
   const zurueckParam = params.get('zurueck');
   const zurueck = zurueckParam?.startsWith('/')
     ? zurueckParam
@@ -54,22 +66,32 @@ function Sitzung({ params }: { params: URLSearchParams }) {
     schluessel: `${f.id}-${nr}`,
   });
 
-  const [warteschlange, setWarteschlange] = useState<Eintrag[]>(() => {
+  const [start] = useState(() => {
     const ids = params.get('ids');
-    const auswahl = ids
-      ? ids
-          .split(',')
-          .map((id) => nachId.get(id))
-          .filter((f): f is NonNullable<typeof f> => !!f)
-      : waehleFragen(fragen, fortschritte, {
-          thema,
-          bereich,
-          modus,
-          nurGeprueft: profil.nurGeprueft,
-          limit: profil.sitzungsLaenge,
-        });
-    return auswahl.map((f, i) => neuerEintrag(f, i));
+    if (ids) {
+      const liste = ids
+        .split(',')
+        .map((id) => nachId.get(id))
+        .filter((f): f is NonNullable<typeof f> => !!f);
+      return { fragen: liste, versatz: 0 };
+    }
+    const auswahl = waehleFragen(fragen, fortschritte, {
+      thema,
+      bereich,
+      modus,
+      nurGeprueft: profil.nurGeprueft,
+      limit: reihe ? undefined : profil.sitzungsLaenge,
+    });
+    if (!reihe || params.has('vorn')) return { fragen: auswahl, versatz: 0 };
+    const versatz = startNachLesezeichen(
+      auswahl.map((f) => f.id),
+      profil.lesezeichen[lesezeichen],
+    );
+    return { fragen: auswahl.slice(versatz), versatz };
   });
+  /** „Alle der Reihe nach“: so viele Fragen der Reihe liegen vor dieser Runde (es geht am Lesezeichen weiter) */
+  const versatz = start.versatz;
+  const [warteschlange, setWarteschlange] = useState<Eintrag[]>(() => start.fragen.map((f, i) => neuerEintrag(f, i)));
   const [pos, setPos] = useState(0);
   const [aufgeloest, setAufgeloest] = useState(false);
   const [gewaehlt, setGewaehlt] = useState<number[]>([]);
@@ -142,6 +164,8 @@ function Sitzung({ params }: { params: URLSearchParams }) {
     let rueckmeldung;
     try {
       rueckmeldung = await antwortSpeichern(frage.id, erg, karte);
+      // erst nach dem Speichern der Antwort – beide schreiben ins Profil
+      if (reihe) await aendereProfil({ lesezeichen: { ...profil.lesezeichen, [lesezeichen]: frage.id } });
     } finally {
       setSpeichert(false);
     }
@@ -149,7 +173,7 @@ function Sitzung({ params }: { params: URLSearchParams }) {
     setXpRunde((x) => x + rueckmeldung.ereignis.xpGesamt);
     setProtokoll((p) => (p.has(frage.id) ? p : new Map(p).set(frage.id, erg)));
     const schon = wiederholungen[frage.id] ?? 0;
-    const nochmal = erg === 'falsch' && schon < MAX_WIEDERHOLUNGEN;
+    const nochmal = !reihe && erg === 'falsch' && schon < MAX_WIEDERHOLUNGEN;
     if (nochmal) {
       setWiederholungen((w) => ({ ...w, [frage.id]: schon + 1 }));
       setWarteschlange((q) => wiederEinreihen(q, pos, neuerEintrag(frage, q.length)));
@@ -197,15 +221,26 @@ function Sitzung({ params }: { params: URLSearchParams }) {
             ✕
           </Link>
           <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
-            <div className="h-full rounded-full bg-marke-400 transition-all" style={{ width: `${(pos / warteschlange.length) * 100}%` }} />
+            <div
+              className="h-full rounded-full bg-marke-400 transition-all"
+              style={{ width: `${((versatz + pos) / (versatz + warteschlange.length)) * 100}%` }}
+            />
           </div>
-          <span className="w-14 text-right text-sm text-slate-500 tabular-nums dark:text-slate-400">
-            {pos + 1}/{warteschlange.length}
+          <span className="min-w-14 text-right text-sm text-slate-500 tabular-nums dark:text-slate-400">
+            {versatz + pos + 1}/{versatz + warteschlange.length}
           </span>
         </div>
       </header>
 
       <main className="flex-1 px-4 pt-2 pb-36" key={eintrag.schluessel}>
+        {versatz > 0 && pos === 0 && (
+          <p className="mb-3 rounded-xl bg-marke-50 p-3 text-sm text-slate-700 dark:bg-marke-500/10 dark:text-slate-200">
+            📋 Du machst bei Frage {versatz + 1} von {versatz + warteschlange.length} weiter.{' '}
+            <Link to={`/sitzung?${vonVorn(params)}`} replace className="font-medium underline">
+              Von vorn beginnen
+            </Link>
+          </p>
+        )}
         <FrageKopf frage={frage} />
         <FrageBild bild={frage.bild} />
         <h1 className="mb-4 text-xl leading-snug font-semibold">{frage.frage}</h1>
@@ -312,59 +347,11 @@ function Sitzung({ params }: { params: URLSearchParams }) {
   );
 }
 
-function ErgebnisBanner({
-  ergebnis,
-  wiederEingereiht,
-  ereignis,
-}: {
-  ergebnis: Ergebnis;
-  wiederEingereiht: boolean;
-  ereignis: AntwortEreignis | null;
-}) {
-  const ok = ergebnis === 'richtig';
-  const xp = ereignis?.xp;
-  const meilenstein = ok && !!ereignis && istSerienMeilenstein(ereignis.serie);
-  return (
-    <div
-      role="status"
-      className={`flex items-center gap-3 rounded-2xl p-4 ${ok ? 'anim-richtig bg-green-700 text-white' : 'anim-falsch bg-red-600 text-white'}`}
-    >
-      <span className="relative text-3xl" aria-hidden>
-        <span className={`inline-block ${ok ? 'anim-haken' : ''}`}>{ok ? '✓' : '✗'}</span>
-        {ok && <Funken anzahl={meilenstein ? 14 : 8} />}
-      </span>
-      <div className="flex-1">
-        <p className="text-lg font-bold">{ok ? 'Richtig!' : 'Leider falsch'}</p>
-        {wiederEingereiht && <p className="text-sm">Die Frage kommt in dieser Runde gleich noch einmal.</p>}
-        {ok && xp && xp.serienBonus > 0 && (
-          <p className="text-sm">
-            🔥 {ereignis.serie} richtige in Folge · +{xp.serienBonus} Bonus
-          </p>
-        )}
-        {ok && xp?.gedrosselt && <p className="text-sm">Heute schon richtig beantwortet</p>}
-      </div>
-      {xp && xp.gesamt > 0 && <span className="shrink-0 rounded-full bg-white/20 px-3 py-1 font-bold">+{xp.gesamt} XP</span>}
-    </div>
-  );
-}
-
-const FUNKEN_FARBEN = ['bg-marke-400', 'bg-white', 'bg-green-200'];
-
-/** Kleine Punkte, die bei einer richtigen Antwort vom Häkchen wegfliegen (aus bei „Bewegung reduzieren“). */
-function Funken({ anzahl }: { anzahl: number }) {
-  return (
-    <>
-      {Array.from({ length: anzahl }, (_, i) => {
-        const winkel = (i / anzahl) * 2 * Math.PI;
-        const weite = i % 2 ? 26 : 40;
-        const richtung = {
-          '--dx': `${Math.round(Math.cos(winkel) * weite)}px`,
-          '--dy': `${Math.round(Math.sin(winkel) * weite)}px`,
-        } as CSSProperties;
-        return <span key={i} className={`anim-spritzer absolute top-1/2 left-1/2 size-1.5 rounded-full ${FUNKEN_FARBEN[i % 3]}`} style={richtung} />;
-      })}
-    </>
-  );
+/** Adresse derselben Runde, aber ohne Lesezeichen von der ersten Frage an */
+function vonVorn(params: URLSearchParams): string {
+  const p = new URLSearchParams(params);
+  p.set('vorn', '1');
+  return p.toString();
 }
 
 function Zusammenfassung({

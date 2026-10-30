@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   LEVELS,
+  XP_LEKTION_NEU,
+  XP_LEKTION_WIEDERHOLT,
   XP_TAGESZIEL,
   kalenderStufe,
   kalenderWochen,
@@ -8,8 +10,10 @@ import {
   lernserie,
   levelFuerXp,
   levelStand,
+  profilOhneLernstand,
   serienBonus,
   verarbeiteAntwort,
+  verbucheLektion,
   xpFuerAntwort,
 } from './motivation';
 import { naechsterFortschritt } from './leitner';
@@ -172,5 +176,32 @@ describe('Lernkalender', () => {
     expect(kalenderWochen(sonntag, 1)[0].map((t) => t.schluessel)).toEqual([
       '2027-01-11', '2027-01-12', '2027-01-13', '2027-01-14', '2027-01-15', '2027-01-16', '2027-01-17',
     ]);
+  });
+});
+
+describe('Lektion', () => {
+  it('merkt das Ergebnis, gibt beim ersten Mal mehr XP und zählt die Fragen zum Tag', () => {
+    const erst = verbucheLektion({ profil: { ...STANDARD_PROFIL, xp: 100 }, bereichId: 'recht-nav', richtig: 2, gesamt: 3, jetzt: JETZT });
+    expect(erst.ereignis).toMatchObject({ erstesMal: true, xpLektion: XP_LEKTION_NEU, xpGesamt: XP_LEKTION_NEU, tageszielErreicht: false });
+    expect(erst.profil).toMatchObject({ xp: 100 + XP_LEKTION_NEU, lernTage: { '2027-01-15': 3 }, lektionen: { 'recht-nav': { datum: JETZT, richtig: 2, gesamt: 3 } } });
+    expect(erst.profil.serieAktuell).toBe(0);
+
+    const nochmal = verbucheLektion({ profil: erst.profil, bereichId: 'recht-nav', richtig: 3, gesamt: 3, jetzt: JETZT });
+    expect(nochmal.ereignis).toMatchObject({ erstesMal: false, xpGesamt: XP_LEKTION_WIEDERHOLT });
+    expect(nochmal.profil.lektionen['recht-nav'].richtig).toBe(3);
+    expect(nochmal.profil.lernTage['2027-01-15']).toBe(6);
+    expect(STANDARD_PROFIL.lektionen).toEqual({});
+  });
+
+  it('kann das Tagesziel und einen Levelaufstieg auslösen', () => {
+    const r = verbucheLektion({ profil: { ...STANDARD_PROFIL, tagesziel: 3, xp: 230 }, bereichId: 'a', richtig: 3, gesamt: 3, jetzt: JETZT });
+    expect(r.ereignis).toMatchObject({ tageszielErreicht: true, xpTagesziel: XP_TAGESZIEL, xpGesamt: XP_LEKTION_NEU + XP_TAGESZIEL });
+    // 230 + 20 + 50 = 300 XP: genau die Grenze zum Gesellen
+    expect(r.ereignis).toMatchObject({ aufstieg: true, levelNachher: { titel: 'Geselle' } });
+  });
+
+  it('Lernstand zurücksetzen löscht auch Lektionen und Lesezeichen', () => {
+    const p = { ...STANDARD_PROFIL, lektionen: { a: { datum: 1, richtig: 1, gesamt: 1 } }, lesezeichen: { 'alle|': 'x' }, tagesziel: 30 };
+    expect(profilOhneLernstand(p)).toMatchObject({ lektionen: {}, lesezeichen: {}, tagesziel: 30 });
   });
 });

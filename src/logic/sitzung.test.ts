@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { antwortReihenfolge, mischen, statusVerteilung, waehleFragen, wiederEinreihen } from './sitzung';
+import { antwortReihenfolge, lesezeichenSchluessel, mischen, startNachLesezeichen, statusVerteilung, waehleFragen, wiederEinreihen } from './sitzung';
 import { naechsterFortschritt } from './leitner';
 import { neuerFortschritt, type Fortschritt, type Frage, type ThemaId } from '../types';
 
@@ -48,6 +48,15 @@ describe('waehleFragen', () => {
     expect(waehleFragen(mitGeprueft, new Map(), { thema: 'alle', modus: 'empfohlen', nurGeprueft: true }).map((f) => f.id)).toEqual(['ok']);
   });
 
+  it('reihe: alle Fragen wie im Katalog – Themen der Reihe nach, sonst Reihenfolge der Liste, nicht gemischt', () => {
+    const liste = [frage('tab1', 'tab'), frage('r2'), frage('sicher', 'sicherheit'), frage('r1'), frage('r3', 'recht', { geprueft: true })];
+    const ids = (extra = {}) => waehleFragen(liste, fortschritte, { thema: 'alle', modus: 'reihe', ...extra }, JETZT, () => 0.99).map((f) => f.id);
+    expect(ids()).toEqual(['r2', 'r1', 'r3', 'tab1', 'sicher']);
+    expect(ids({ limit: 2 })).toEqual(['r2', 'r1']);
+    expect(ids({ nurGeprueft: true })).toEqual(['r3']);
+    expect(waehleFragen(liste, fortschritte, { thema: 'tab', modus: 'reihe' }, JETZT).map((f) => f.id)).toEqual(['tab1']);
+  });
+
   it('begrenzt die Anzahl', () => {
     expect(waehleFragen(fragen, fortschritte, { thema: 'alle', modus: 'empfohlen', limit: 3 })).toHaveLength(3);
   });
@@ -65,6 +74,26 @@ describe('waehleFragen', () => {
     expect(ids.sort()).toEqual(['nav1', 'nav2']);
     const falsch = map(fp('nav2', ['falsch']));
     expect(waehleFragen(mitUnterthema, falsch, { thema: 'recht', bereich, modus: 'falsch' }).map((f) => f.id)).toEqual(['nav2']);
+  });
+});
+
+describe('Lesezeichen für „Alle der Reihe nach“', () => {
+  const ids = ['a', 'b', 'c', 'd'];
+  it('geht hinter der zuletzt beantworteten Frage weiter', () => {
+    expect(startNachLesezeichen(ids, 'b')).toBe(2);
+    expect(startNachLesezeichen(ids, 'a')).toBe(1);
+  });
+
+  it('beginnt von vorn: ohne Lesezeichen, nach der letzten Frage oder wenn die Frage fehlt', () => {
+    expect(startNachLesezeichen(ids, undefined)).toBe(0);
+    expect(startNachLesezeichen(ids, 'd')).toBe(0);
+    expect(startNachLesezeichen(ids, 'x')).toBe(0);
+    expect(startNachLesezeichen([], 'a')).toBe(0);
+  });
+
+  it('hat je Auswahl einen eigenen Schlüssel', () => {
+    expect(lesezeichenSchluessel('alle')).toBe('alle|');
+    expect(lesezeichenSchluessel('recht', 'recht-nav')).toBe('recht|recht-nav');
   });
 });
 

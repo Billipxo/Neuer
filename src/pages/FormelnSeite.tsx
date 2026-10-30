@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { FormelGruppeAnzeige } from '../components/Formeln';
 import { Seite } from '../components/Seite';
 import { FORMELN } from '../data/formeln';
@@ -10,6 +10,9 @@ const anker = (id: string) => `formeln-${id}`;
 export function FormelnSeite() {
   const [params] = useSearchParams();
   const gruppe = params.get('gruppe');
+  const navigate = useNavigate();
+  // „default“: die Seite wurde direkt geöffnet – dann gibt es kein „Zurück“ innerhalb der App
+  const direktGeoeffnet = useLocation().key === 'default';
 
   // Erst nach dem „nach oben“ beim Seitenwechsel (App) zur gewünschten Gruppe springen.
   useEffect(() => {
@@ -20,9 +23,15 @@ export function FormelnSeite() {
 
   return (
     <Seite titel="Formelsammlung">
-      <Link to="/lernen" className="-mt-2 mb-3 inline-block text-sm text-slate-500 dark:text-slate-400">
-        ‹ Lernen
-      </Link>
+      {direktGeoeffnet ? (
+        <Link to="/lernen" className="-mt-2 mb-3 inline-block text-sm text-slate-500 dark:text-slate-400">
+          ‹ Üben
+        </Link>
+      ) : (
+        <button type="button" onClick={() => navigate(-1)} className="-mt-2 mb-3 inline-block text-sm text-slate-500 dark:text-slate-400">
+          ‹ Zurück
+        </button>
+      )}
       <p className="mb-4 text-slate-600 dark:text-slate-300">
         Alle Formeln für die Rechenaufgaben – ohne Rechenbeispiele, so wie die Formelsammlung, die du im
         schriftlichen Teil der Prüfung benutzen darfst. Bei Aufgaben, für die du eine Formel brauchst, gibt es den Knopf

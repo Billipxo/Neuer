@@ -16,6 +16,13 @@ import {
 } from '../logic/simulation';
 import type { Frage, LaufendeSimulation, SimulationErgebnis, SimulationsEinstellungen } from '../types';
 
+/** Vorlagen für die Länge einer Simulation: 2 Minuten je Frage, „Lang“ dauert so lange wie Teil A */
+const VORLAGEN = [
+  { titel: 'Kurz', anzahl: 15, minuten: 30 },
+  { titel: 'Standard', anzahl: 30, minuten: 60 },
+  { titel: 'Lang', anzahl: 60, minuten: 120 },
+] as const;
+
 export function PruefungSeite() {
   const { db, fragen, profil, simulationen, aendereProfil, simulationSpeichern } = useDaten();
   const navigate = useNavigate();
@@ -52,7 +59,7 @@ export function PruefungSeite() {
   const bestanden = simulationen.filter((s) => s.bestanden).length;
 
   return (
-    <Seite titel="Prüfungssimulation">
+    <Seite titel="Prüfungsmodus">
       {laufend && (
         <LaufendeKarte
           laufend={laufend}
@@ -65,12 +72,42 @@ export function PruefungSeite() {
       )}
 
       <Karte>
-        <h2 className="font-semibold">Neue Simulation</h2>
+        <h2 className="font-semibold">Neue Prüfungssimulation</h2>
         <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
-          Gemischte Fragen aus allen Themen, gleichmäßig verteilt. Keine Rückmeldung während der Prüfung, unbeantwortete
-          Fragen zählen als falsch. Die Zeit läuft weiter, auch wenn du die App schließt.
+          Wie in der echten Prüfung: gemischte Fragen aus allen Themen, mit Zeitlimit und ohne Rückmeldung. Erst am Ende
+          siehst du, was richtig war. Unbeantwortete Fragen zählen als falsch. Die Zeit läuft weiter, auch wenn du die App
+          schließt.
+        </p>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+          In der echten Prüfung dauert Teil A 120 Minuten, und du brauchst in jedem Teil mindestens 50 %. Mit einer
+          höheren Bestehensgrenze übst du mit Sicherheitsabstand.
         </p>
       </Karte>
+      <div className="mt-3 grid grid-cols-3 gap-2" role="group" aria-label="Vorlagen">
+        {VORLAGEN.map((v) => {
+          const aktiv = e.anzahl === v.anzahl && e.minuten === v.minuten;
+          return (
+            <button
+              key={v.titel}
+              type="button"
+              aria-pressed={aktiv}
+              onClick={() => setze({ anzahl: v.anzahl, minuten: v.minuten })}
+              className={`flex min-h-16 flex-col items-center justify-center rounded-2xl p-2 text-center ring-1 transition active:scale-[0.98] ${
+                aktiv
+                  ? 'bg-marke-400 text-slate-900 ring-marke-500'
+                  : 'bg-white ring-slate-200 dark:bg-slate-900 dark:ring-slate-800'
+              }`}
+            >
+              <span className="text-sm leading-tight font-semibold">{v.titel}</span>
+              <span className={`text-xs leading-snug ${aktiv ? 'text-slate-800' : 'text-slate-500 dark:text-slate-400'}`}>
+                {v.anzahl} Fragen
+                <br />
+                {v.minuten} Min.
+              </span>
+            </button>
+          );
+        })}
+      </div>
       <div className="mt-2 space-y-2">
         <Stepper
           titel="Anzahl Fragen"

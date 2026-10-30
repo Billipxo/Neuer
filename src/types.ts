@@ -58,6 +58,20 @@ export interface ErklaerungsAbschnitt {
 }
 
 /**
+ * Verständnisfrage (Einfachauswahl) für die Lektion eines Themenbereichs. Sie erscheint direkt nach der Seite,
+ * auf der Stichpunkt `punkt` von Abschnitt `abschnitt` steht – ohne `punkt` nach dem ganzen Abschnitt.
+ */
+export interface Verstaendnisfrage {
+  abschnitt: number;
+  punkt?: number;
+  frage: string;
+  antworten: string[];
+  /** Index der richtigen Antwort (0-basiert) */
+  richtig: number;
+  erklaerung: string;
+}
+
+/**
  * Themenbereich innerhalb eines Themas, wie er in src/data/bereiche/<thema>.json steht.
  * Dazu gehören alle Fragen des Themas, deren unterthema in `unterthemen` steht.
  */
@@ -68,6 +82,7 @@ export interface Bereich {
   kurz: string;
   unterthemen: string[];
   erklaerung: ErklaerungsAbschnitt[];
+  verstaendnis?: Verstaendnisfrage[];
   quelle: string;
   stand: string;
 }
@@ -127,6 +142,15 @@ export interface SimulationsEinstellungen {
   bestehensgrenze: number; // Prozent
 }
 
+/** Ergebnis der zuletzt abgeschlossenen Lektion eines Themenbereichs (Erklärmodus) */
+export interface LektionStand {
+  /** Zeitpunkt (ms) */
+  datum: number;
+  /** Verständnisfragen richtig beantwortet, von gesamt */
+  richtig: number;
+  gesamt: number;
+}
+
 export interface Profil {
   id: 'profil';
   xp: number;
@@ -151,6 +175,10 @@ export interface Profil {
   nurGeprueft: boolean;
   /** Kurzer Ton bei richtigen und falschen Antworten in Lernrunden */
   toene: boolean;
+  /** Abgeschlossene Lektionen im Erklärmodus: Bereich-ID → letztes Ergebnis */
+  lektionen: Record<string, LektionStand>;
+  /** „Alle der Reihe nach“: zuletzt beantwortete Frage je Auswahl (z. B. „recht|recht-nav“ → Frage-ID) */
+  lesezeichen: Record<string, string>;
 }
 
 /** Antwort in einer Simulation: gewählte Original-Indizes bzw. eingegebener Text */
@@ -208,6 +236,8 @@ export const STANDARD_PROFIL: Profil = {
   antwortenMischen: true,
   nurGeprueft: false,
   toene: true,
+  lektionen: {},
+  lesezeichen: {},
 };
 
 export function neuerFortschritt(id: string): Fortschritt {

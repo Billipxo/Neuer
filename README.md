@@ -1,9 +1,10 @@
 # TREI-Trainer
 
 Lern-App für den **TREI-Sachkundenachweis** (Lehrgang der HWK zu Köln, 11.01.–03.02.2027;
-schriftliche Prüfung am 30.01.2027). Sie funktioniert wie eine Führerschein-Lern-App:
-Fragen nach Themen üben, Fehler wiederholen, Prüfung simulieren – ohne Internet, ohne
-Konto, ohne Server-Backend und ohne Tracking.
+schriftliche Prüfung am 30.01.2027). Sie funktioniert wie eine Führerschein-Lern-App mit drei
+Modi: **Erklären** (Lektionen mit Verständnisfragen), **Üben** (Fragen mit sofortiger Lösung,
+Fehler wiederholen) und **Prüfung** (Simulation mit Zeitlimit) – ohne Internet, ohne Konto,
+ohne Server-Backend und ohne Tracking.
 
 Es gibt drei Varianten mit denselben Fragen und Funktionen:
 
@@ -34,6 +35,21 @@ Es gibt drei Varianten mit denselben Fragen und Funktionen:
 
 ## Was die App kann
 
+**Drei Modi** – unten in der Leiste: *Start · Erklären · Üben · Prüfung · Mehr*.
+
+- **📖 Erklären:** Jeder der 40 Themenbereiche als kurze Lektion – ein paar Seiten zum Lesen,
+  dazwischen insgesamt 132 Verständnisfragen mit Erklärung. Am Ende „x von y richtig“, XP
+  (+20 beim ersten Mal, +5 bei jeder Wiederholung) und ein Knopf, um den Bereich gleich zu
+  üben. Die Übersicht zeigt, welche Lektionen geschafft sind, und „Weiter mit …“.
+- **✏️ Üben:** Prüfungsfragen wie in der Fahrschul-App – nach jeder Antwort die Lösung mit
+  Erklärung. „Weiterlernen“ nimmt falsche und fällige Fragen zuerst; „Alle der Reihe nach“
+  geht jede Frage einmal durch wie im Fragenkatalog und merkt sich die Stelle (Lesezeichen).
+- **⏱️ Prüfung:** Simulation mit Zeitlimit und ohne Rückmeldung bis zum Ende. Vorlagen
+  *Kurz* (15 Fragen, 30 Min.), *Standard* (30, 60) und *Lang* (60, 120 – so lange wie Teil A).
+
+Die Statistik (Lernstand, Kalender, Level, Abzeichen) steht unter *Mehr → Statistik* und ist
+von der Startseite aus verlinkt.
+
 **Lernen nach Themen** – jedes Thema hat eine eigene Fragen-Datei:
 
 | | Thema | Datei |
@@ -51,11 +67,10 @@ Es gibt drei Varianten mit denselben Fragen und Funktionen:
 
 - **Themenbereiche mit Erklärung:** Jedes Thema ist in Themenbereiche aufgeteilt
   (zusammen 40), z. B. „NAV“, „Fundamenterder (DIN 18014)“ oder „RCD-Prüfung und
-  Schleifenimpedanz“. Jeder Bereich hat eine Erklärung zum Nachlesen (Worum geht es?,
-  Das Wichtigste, Merke) und ein eigenes Training. Alle Erklärungen auf einen Blick:
-  *Lernen → Erklärungen* oder *Mehr → Erklärungen*.
+  Schleifenimpedanz“. Jeder Bereich hat eine Erklärung (Worum geht es?, Das Wichtigste,
+  Merke), eine Lektion im Modus *Erklären* und ein eigenes Training unter *Üben → Thema*.
 - **Formelsammlung:** alle Formeln für die Rechenaufgaben, ohne Rechenbeispiele – unter
-  *Lernen → Formelsammlung* bzw. *Mehr → Formelsammlung*. Bei Aufgaben, die eine Formel
+  *Erklären*, *Üben* und *Mehr → Formelsammlung*. Bei Aufgaben, die eine Formel
   brauchen (Lernrunde, Prüfungssimulation, Frage-Details), öffnet der Knopf „📐 Formeln“
   die passenden Formeln, ohne die Runde zu verlassen.
 - **Fragetypen:** Einfachauswahl, Mehrfachauswahl (zählt nur, wenn alles stimmt),
@@ -68,13 +83,14 @@ Es gibt drei Varianten mit denselben Fragen und Funktionen:
   4 und 7 Tagen wieder hervor. Dazu „Fehler wiederholen“, Markieren und Volltextsuche.
 - **Prüfungssimulation:** gemischte Fragen mit Zeitlimit, Auswertung je Thema und
   Verlauf aller Simulationen. Anzahl, Zeit und Bestehensgrenze sind einstellbar
-  (Standard: 30 Fragen, 60 Minuten, 70 %).
+  (Standard: 30 Fragen, 60 Minuten, 70 %), dazu die Vorlagen Kurz, Standard und Lang.
 - **Rückmeldung mit Ton und kleinen Effekten:** Bei einer richtigen Antwort springt die
   Meldung kurz auf, ein paar Funken fliegen, dazu ein heller Ton (jede fünfte richtige Antwort
-  in Folge etwas festlicher); bei einer falschen wackelt sie, dazu ein tiefer Ton. Die Töne
-  erzeugt die App selbst (keine Audiodateien, offline). Abschalten unter *Mehr → Einstellungen
-  → Töne bei Antworten*; die Bewegungen entfallen, wenn am Gerät „Bewegung reduzieren“ an ist.
-  In der Prüfungssimulation bleibt es still.
+  in Folge etwas festlicher); bei einer falschen wackelt sie, dazu ein tiefer Ton – auch bei den
+  Verständnisfragen der Lektionen. Die Töne erzeugt die App selbst (keine Audiodateien,
+  offline). Abschalten unter *Mehr → Einstellungen → Töne bei Antworten*; die Bewegungen
+  entfallen, wenn am Gerät „Bewegung reduzieren“ an ist. In der Prüfungssimulation bleibt es
+  still.
 - **Motivation:** XP (mehr für schwere Fragen und Serien), Level von „Azubi“ bis
   „Eingetragen ins Installateurverzeichnis“, Tagesziel, Lernserie, Abzeichen je Thema,
   Prüfungsreife, Statistik und ein Countdown bis zur Prüfung mit empfohlenem Tagespensum.
@@ -295,6 +311,16 @@ Die Themenbereiche stehen in `src/data/bereiche/<thema>.json` – je Thema eine 
     { "titel": "Das Wichtigste", "punkte": ["§ 13 Abs. 1: …", "§ 14: …"] },
     { "titel": "Merke", "text": "Mitteilen heißt: Bescheid geben. …" }
   ],
+  "verstaendnis": [
+    {
+      "abschnitt": 1,
+      "punkt": 1,
+      "frage": "Wer setzt die Anlage hinter der Trennvorrichtung (dem SH-Schalter) in Betrieb?",
+      "antworten": ["Der Netzbetreiber", "Nur das Installationsunternehmen", "Der Anschlussnehmer"],
+      "richtig": 1,
+      "erklaerung": "NAV § 14: Hinter der Trennvorrichtung setzt nur das Installationsunternehmen in Betrieb. …"
+    }
+  ],
   "quelle": "NAV §§ 13, 14, 16, 19, 22",
   "stand": "2026-10"
 }
@@ -304,8 +330,15 @@ Die Themenbereiche stehen in `src/data/bereiche/<thema>.json` – je Thema eine 
   steht. Die Reihenfolge in der Datei ist die Reihenfolge in der App.
 - `erklaerung` besteht aus Abschnitten mit `titel` und `text` und/oder `punkte`
   (Stichpunkte). Ein Abschnitt, dessen Titel mit „Merke“ beginnt, wird gelb hervorgehoben.
-- `npm run pruefe` meldet Fragen ohne Themenbereich, Unterthemen ohne Fragen und
-  Unterthemen, die in zwei Bereichen stehen.
+- `verstaendnis` (optional) sind die Verständnisfragen der Lektion: Einfachauswahl mit 2–4
+  `antworten`, `richtig` ist der Index der richtigen Antwort (ab 0). In der Lektion werden
+  die Stichpunkte auf Seiten mit höchstens drei verteilt; eine Frage kommt direkt nach der
+  Seite mit Stichpunkt `punkt` von Abschnitt `abschnitt` (beide ab 0 gezählt) – ohne `punkt`
+  nach dem ganzen Abschnitt. Die Reihenfolge der Antworten mischt die App beim Anzeigen,
+  wenn „Antworten mischen“ eingeschaltet ist.
+- `npm run pruefe` meldet Fragen ohne Themenbereich, Unterthemen ohne Fragen,
+  Unterthemen, die in zwei Bereichen stehen, und Verständnisfragen mit falschem Abschnitt,
+  Stichpunkt oder Index.
 - In der App angelegte Fragen: beim Anlegen ein vorhandenes Unterthema aus der
   Vorschlagsliste wählen, dann erscheinen sie im passenden Bereich. Mit einem neuen
   Unterthema stehen sie nur unter „Ganzes Thema üben“.

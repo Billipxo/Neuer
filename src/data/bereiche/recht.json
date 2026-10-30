@@ -30,6 +30,42 @@
         ]
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 2,
+        "frage": "Ein Betrieb hält bei einer Installation die DIN-VDE-Normen ein. Was folgt daraus nach § 49 EnWG?",
+        "antworten": [
+          "Für alle späteren Mängel an der Anlage haftet dann der Netzbetreiber.",
+          "Die Anlage muss danach von niemandem mehr geprüft werden.",
+          "Der Betrieb braucht dafür keinen Eintrag ins Installateurverzeichnis.",
+          "Es wird vermutet, dass die anerkannten Regeln der Technik eingehalten sind."
+        ],
+        "richtig": 3,
+        "erklaerung": "Das ist die Vermutungswirkung nach § 49 EnWG. Wer von den VDE-Regeln abweicht, muss im Zweifel nachweisen, dass die Anlage genauso sicher ist."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Eine Mieterin bezieht in ihrer Wohnung Strom. Was ist sie im Sinne der NAV?",
+        "antworten": ["Netzbetreiberin", "Anschlussnehmerin", "Messstellenbetreiberin", "Anschlussnutzerin"],
+        "richtig": 3,
+        "erklaerung": "Anschlussnutzer ist, wer den Anschluss zur Entnahme von Strom nutzt – z. B. ein Mieter. Anschlussnehmer ist, wer den Anschluss in Auftrag gibt, sonst der Eigentümer des Gebäudes."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 6,
+        "frage": "Bei einer Arbeit im Keller siehst du, dass an der Hausanschlusssicherung die Plombe fehlt. Was tust du?",
+        "antworten": [
+          "Eine eigene Plombe anbringen, damit wieder alles verschlossen ist.",
+          "Nichts tun – solange der Strom fließt, ist alles in Ordnung.",
+          "Sofort den Netzbetreiber informieren und nichts selbst verändern.",
+          "Die Sicherung zur Kontrolle herausnehmen und danach wieder einsetzen."
+        ],
+        "richtig": 2,
+        "erklaerung": "Der Netzanschluss gehört dem Netzbetreiber, nur er arbeitet daran. Eine fehlende Plombe oder eine beschädigte Hausanschlusssicherung teilst du ihm unverzüglich mit."
+      }
+    ],
     "quelle": "EnWG §§ 1, 49; NAV §§ 1, 5, 8",
     "stand": "2026-10"
   },
@@ -65,6 +101,47 @@
         ]
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Wer darf eine Kundenanlage hinter der Hausanschlusssicherung erweitern – außer dem Netzbetreiber?",
+        "antworten": [
+          "Jeder Betrieb mit Gewerbeanmeldung.",
+          "Nur ein Unternehmen, das in ein Installateurverzeichnis eingetragen ist.",
+          "Jede Elektrofachkraft mit Gesellenbrief.",
+          "Der Anschlussnehmer selbst, wenn er die Anlage danach prüfen lässt."
+        ],
+        "richtig": 1,
+        "erklaerung": "NAV § 13 Abs. 2: Errichten, erweitern, ändern und instand halten darf außer dem Netzbetreiber nur ein Unternehmen aus einem Installateurverzeichnis."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Wer setzt die Anlage hinter der Trennvorrichtung (dem SH-Schalter) in Betrieb?",
+        "antworten": [
+          "Der Messstellenbetreiber",
+          "Nur das Installationsunternehmen",
+          "Nur der Netzbetreiber",
+          "Der Anschlussnehmer"
+        ],
+        "richtig": 1,
+        "erklaerung": "NAV § 14: Hinter der Trennvorrichtung setzt nur das Installationsunternehmen in Betrieb. Bis zur Trennvorrichtung macht das der Netzbetreiber – oder mit seiner Zustimmung das Installationsunternehmen."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 6,
+        "frage": "Ein Kunde möchte zwei Wallboxen mit je 11 kW. Was gilt nach NAV § 19?",
+        "antworten": [
+          "Vorher die Zustimmung einholen – zusammen sind es 22 kVA.",
+          "Mitteilen genügt – jede einzelne Wallbox liegt unter 12 kVA.",
+          "Es reicht, die Wallboxen nach der Inbetriebnahme zu melden.",
+          "Ladeeinrichtungen müssen dem Netzbetreiber nicht gemeldet werden."
+        ],
+        "richtig": 0,
+        "erklaerung": "Ladeeinrichtungen werden immer vorher mitgeteilt. Liegt die Summe über 12 kVA, braucht es vorher die Zustimmung des Netzbetreibers – es zählt die Summe, nicht das einzelne Gerät."
+      }
+    ],
     "quelle": "NAV §§ 13, 14, 16, 19, 22",
     "stand": "2026-10"
   },
@@ -94,6 +171,46 @@
       {
         "titel": "Merke",
         "text": "Prüft der Netzbetreiber die Anlage, übernimmt er damit keine Haftung für Mängel. Verantwortlich bleiben Anschlussnehmer und Installationsunternehmen."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 2,
+        "frage": "Welche Teile der Anlage darf der Netzbetreiber plombieren?",
+        "antworten": [
+          "Alle Teile mit nicht gemessener Energie, z. B. das Zählerfeld",
+          "Nur die Anlagenteile hinter dem Zähler, z. B. den Verteiler",
+          "Nur die Hausanschlusssicherung im Hausanschlusskasten",
+          "Alle Verteiler im Gebäude, auch die Wohnungsverteiler"
+        ],
+        "richtig": 0,
+        "erklaerung": "Plombiert wird alles, wo noch ungezählte Energie fließt: Hausanschlusskasten, netzseitiger Anschlussraum und Zählerfeld. Die plombierbaren Abdeckungen sieht der Anschlussnehmer vor."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Der Netzbetreiber findet einen Mangel, der Leib und Leben gefährdet. Was gilt?",
+        "antworten": [
+          "Er muss den Anschluss verweigern.",
+          "Er muss zuerst die Handwerkskammer informieren.",
+          "Er muss den Mangel selbst beseitigen.",
+          "Er darf nur einen schriftlichen Hinweis geben."
+        ],
+        "richtig": 0,
+        "erklaerung": "Gefährden Mängel die Sicherheit, darf der Netzbetreiber den Anschluss verweigern. Bei Gefahr für Leib oder Leben muss er es."
+      },
+      {
+        "abschnitt": 2,
+        "frage": "Der Netzbetreiber hat eine Anlage geprüft und nichts beanstandet. Später zeigt sich ein Mangel. Wer ist verantwortlich?",
+        "antworten": [
+          "Anschlussnehmer und Installationsunternehmen",
+          "Der Netzbetreiber, weil er geprüft hat",
+          "Niemand, weil die Anlage abgenommen wurde",
+          "Der Messstellenbetreiber"
+        ],
+        "richtig": 0,
+        "erklaerung": "Mit seiner Prüfung übernimmt der Netzbetreiber keine Haftung für Mängel. Verantwortlich bleiben Anschlussnehmer und Installationsunternehmen."
       }
     ],
     "quelle": "NAV §§ 13, 15, 20, 21",
@@ -130,6 +247,42 @@
         ]
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Wer führt das Installateurverzeichnis?",
+        "antworten": ["Der Netzbetreiber", "Die Handwerkskammer", "Der VDE", "Die Bundesnetzagentur"],
+        "richtig": 0,
+        "erklaerung": "Das Installateurverzeichnis führt der Netzbetreiber. Die Handwerkskammer führt die Handwerksrolle – das ist etwas anderes."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 5,
+        "frage": "Ein nicht eingetragener Betrieb soll die Leitung zwischen Hausanschlusssicherung und Zählerplatz instand setzen. Darf er das?",
+        "antworten": [
+          "Ja, wenn der Kunde den Auftrag schriftlich bestätigt.",
+          "Nein – in diesem Bereich gilt die Eintragungspflicht immer.",
+          "Ja, wenn danach ein eingetragener Betrieb die Anlage prüft.",
+          "Ja – Instandhaltungsarbeiten brauchen nie eine Eintragung."
+        ],
+        "richtig": 1,
+        "erklaerung": "Instandhaltung braucht sonst keine Eintragung – aber nicht zwischen Hausanschlusssicherung und Messeinrichtung, die Messeinrichtung eingeschlossen. Dort gilt die Eintragungspflicht immer."
+      },
+      {
+        "abschnitt": 2,
+        "punkt": 0,
+        "frage": "Ein Elektrobetrieb ist in die Handwerksrolle eingetragen. Darf er damit schon Anlagen am öffentlichen Netz errichten?",
+        "antworten": [
+          "Ja, wenn ein Meister im Betrieb die Verantwortung trägt.",
+          "Nein – er braucht auch einen Eintrag ins Installateurverzeichnis.",
+          "Ja, aber nur für Anlagen bis 12 kVA Anschlussleistung.",
+          "Ja – die Eintragung in die Handwerksrolle reicht aus."
+        ],
+        "richtig": 1,
+        "erklaerung": "Handwerksrolle (Handwerkskammer) und Installateurverzeichnis (Netzbetreiber) sind zwei verschiedene Eintragungen – der Betrieb braucht beide."
+      }
+    ],
     "quelle": "NAV § 13 Abs. 2; Handwerksordnung",
     "stand": "2026-10"
   },
@@ -161,6 +314,42 @@
         "text": "Was am Prüfungstag erlaubt ist, entscheidet das Prüfungsgremium – im Zweifel vorher nachfragen."
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Wie lange dauert Teil A, die schriftliche Prüfung des TREI-Sachkundenachweises?",
+        "antworten": ["120 Minuten", "90 Minuten", "45 Minuten", "30 Minuten"],
+        "richtig": 0,
+        "erklaerung": "Teil A schriftlich: 120 Minuten. Teil B praktisch: 45 Minuten. Teil C Fachgespräch: 30 Minuten. Alle drei Teile zählen gleich viel."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Was darfst du in Teil A NICHT als Hilfsmittel benutzen?",
+        "antworten": [
+          "Einen Taschenrechner",
+          "Eine Aufgabensammlung mit Lösungen",
+          "Ein Tabellenbuch",
+          "Eine selbst erstellte Formelsammlung ohne Rechenbeispiele"
+        ],
+        "richtig": 1,
+        "erklaerung": "Erlaubt sind u. a. eine Formelsammlung ohne Rechenbeispiele (auch selbst erstellt), Tabellenbücher, die TAB und ein Taschenrechner. Aufgabensammlungen, KI und Berechnungsprogramme sind nicht erlaubt."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 5,
+        "frage": "In Teil A hast du 80 %, in Teil B nur 45 %. Hast du bestanden?",
+        "antworten": [
+          "Nein – kein Teil darf unter 50 % liegen.",
+          "Nein, aber du musst nur Teil B wiederholen.",
+          "Ja, wenn Teil C mindestens 50 % ergibt.",
+          "Ja – im Durchschnitt liegst du über 50 %."
+        ],
+        "richtig": 0,
+        "erklaerung": "Bestanden hat nur, wer insgesamt mindestens 50 % erreicht und in keinem Teil unter 50 % liegt. Liegt ein Teil darunter, endet der Durchgang – bei der Wiederholung legst du alle drei Teile neu ab."
+      }
+    ],
     "quelle": "Verfahrensordnung TREI (Bundes-Installateurausschuss, Ausgabe Januar 2025)",
     "stand": "2026-10"
   },
@@ -189,6 +378,37 @@
       {
         "titel": "Merke",
         "text": "Es gilt die im jeweiligen Bundesland eingeführte Fassung – in NRW über die Technischen Baubestimmungen."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Wie darfst du eine Leitung in einem notwendigen Treppenraum verlegen?",
+        "antworten": [
+          "In einem Kunststoff-Kabelkanal auf Putz, wie im Rest des Hauses",
+          "Offen auf der Wand, wenn sie mit Schellen gut befestigt ist",
+          "Hinter einer Verkleidung aus Holz oder Kunststoffplatten",
+          "Geschützt, z. B. unter mindestens 15 mm mineralischem Putz"
+        ],
+        "richtig": 3,
+        "erklaerung": "Notwendige Treppenräume und Flure sind Rettungswege. Leitungen liegen dort geschützt: einzeln eingeputzt, in Schlitzen mit mindestens 15 mm mineralischem Putz oder Platten, oder in Schächten, Kanälen und Unterdecken mit Feuerwiderstand."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 2,
+        "frage": "Wo darf ein Zählerschrank im Treppenhaus auf keinen Fall hängen?",
+        "antworten": ["Im Erdgeschoss", "Im Kellergeschoss", "Über Treppenstufen", "Neben einer Wohnungstür"],
+        "richtig": 2,
+        "erklaerung": "Zählerschränke und Verteiler in Rettungswegen nur nach den Vorgaben der Leitungsanlagen-Richtlinie – und nie über Treppenstufen (VDE-AR-N 4100)."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Wie lange müssen die Leitungen der Sicherheitsbeleuchtung bei einem Brand in der Regel funktionieren?",
+        "antworten": ["60 Minuten (E 60)", "30 Minuten (E 30)", "90 Minuten (E 90)", "10 Minuten"],
+        "richtig": 1,
+        "erklaerung": "Funktionserhalt: Sicherheitsbeleuchtung in der Regel 30 Minuten (E 30), Feuerwehraufzüge 90 Minuten (E 90)."
       }
     ],
     "quelle": "Landesbauordnung; MLAR / LAR; Sonderbauverordnungen",

@@ -38,6 +38,40 @@
         ]
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Wallbox 11 kW an 400 V Drehstrom, cos φ = 1: Wie groß ist der Strom je Außenleiter?",
+        "antworten": ["Rund 15,9 A", "Rund 27,5 A", "Rund 47,8 A", "Rund 9,2 A"],
+        "richtig": 0,
+        "erklaerung": "I = P / (√3 · U · cos φ) = 11.000 W / (1,732 · 400 V) ≈ 15,9 A. Wer durch 230 V teilt (47,8 A) oder √3 vergisst (27,5 A), liegt falsch."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Welchen Widerstand hat ein Heizstab mit 2 kW an 230 V?",
+        "antworten": ["Rund 0,04 Ω", "Rund 115 Ω", "Rund 26,5 Ω", "Rund 8,7 Ω"],
+        "richtig": 2,
+        "erklaerung": "R = U² / P = 230² / 2.000 = 52.900 / 2.000 ≈ 26,5 Ω. Die 8,7 wären der Strom in Ampere (2.000 W / 230 V)."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Eine Wärmepumpe mit 2 kW läuft 5 Stunden täglich, 30 Tage lang. Wie viel Energie braucht sie?",
+        "antworten": ["300 kWh", "60 kWh", "10 kWh", "3.000 kWh"],
+        "richtig": 0,
+        "erklaerung": "W = P · t = 2 kW · 5 h · 30 = 300 kWh."
+      },
+      {
+        "abschnitt": 3,
+        "punkt": 0,
+        "frage": "Welcher Strom gehört ungefähr zu 22 kW Drehstrom?",
+        "antworten": ["16 A", "96 A", "20 A", "32 A"],
+        "richtig": 3,
+        "erklaerung": "Merkwerte: 11 kW Drehstrom ≈ 16 A, 22 kW ≈ 32 A, 4,6 kVA einphasig = 20 A."
+      }
+    ],
     "quelle": "Grundlagen Wechselstrom und Drehstrom",
     "stand": "2026-10"
   },
@@ -74,6 +108,42 @@
       {
         "titel": "Merke",
         "text": "Wechselstrom mal 2, Drehstrom mal √3. Strombelastbarkeit und Abschaltbedingung zusätzlich prüfen."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Warum steht in der Spannungsfall-Formel für Wechselstrom der Faktor 2?",
+        "antworten": [
+          "Als Sicherheitszuschlag für warme Leitungen",
+          "Hin- und Rückleiter haben beide einen Widerstand.",
+          "Weil die Steckdose zwei Pole hat",
+          "Weil im Stromkreis zwei Außenleiter liegen."
+        ],
+        "richtig": 1,
+        "erklaerung": "Der Strom fließt über den Außenleiter hin und über den Neutralleiter zurück – beide Leiter haben Widerstand. Bei Drehstrom steht statt der 2 der Faktor √3."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Auf welche Spannung beziehst du bei Drehstrom den prozentualen Spannungsfall?",
+        "antworten": ["693 V", "230 V", "325 V", "400 V"],
+        "richtig": 3,
+        "erklaerung": "Δu = ΔU / U · 100 % – bei Wechselstrom auf 230 V, bei Drehstrom auf 400 V beziehen."
+      },
+      {
+        "abschnitt": 2,
+        "punkt": 2,
+        "frage": "Wechselstromkreis 16 A, 20 m, 2,5 mm² Kupfer, cos φ = 1: Wie groß ist der Spannungsfall?",
+        "antworten": [
+          "Rund 4,0 V – etwa 1,7 %",
+          "Rund 7,6 V – etwa 3,3 %",
+          "Rund 2,3 V – etwa 1 %",
+          "Rund 4,6 V – etwa 2 %"
+        ],
+        "richtig": 3,
+        "erklaerung": "ΔU = 2 · l · I / (κ · A) = 2 · 20 · 16 / (56 · 2,5) = 640 / 140 ≈ 4,6 V. Bezogen auf 230 V sind das etwa 2 % – unter 3 %, also in Ordnung."
       }
     ],
     "quelle": "DIN 18015-1; NAV § 13 Abs. 4; VDE-AR-N 4100",
@@ -114,6 +184,45 @@
         "text": "Z_s,max = U₀ / I_a – und der Messwert höchstens 2/3 davon."
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Welcher Abschaltstrom I_a gilt für einen LS-Schalter C16?",
+        "antworten": ["16 A", "320 A", "160 A", "80 A"],
+        "richtig": 2,
+        "erklaerung": "Charakteristik C: I_a = 10 · I_n = 10 · 16 A = 160 A. Bei B wären es 5 · I_n = 80 A."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Gemessen wird Z_s = 1,15 Ω. Wie groß ist der Kurzschlussstrom bei U₀ = 230 V?",
+        "antworten": ["200 A", "348 A", "264,5 A", "20 A"],
+        "richtig": 0,
+        "erklaerung": "I_k = U₀ / Z_s = 230 V / 1,15 Ω = 200 A."
+      },
+      {
+        "abschnitt": 2,
+        "punkt": 1,
+        "frage": "Stromkreis mit C16, gemessen Z_s = 1,2 Ω. Ist das in Ordnung?",
+        "antworten": [
+          "Nein – erlaubt sind höchstens 0,72 Ω.",
+          "Ja – erlaubt sind bis 2,875 Ω.",
+          "Ja – erlaubt sind bis 1,44 Ω.",
+          "Nein – gemessen höchstens 0,96 Ω."
+        ],
+        "richtig": 3,
+        "erklaerung": "C16: Z_s ≤ 230 V / 160 A = 1,44 Ω. Der kalt gemessene Wert darf höchstens 2/3 davon betragen: 0,96 Ω. 1,2 Ω ist zu viel."
+      },
+      {
+        "abschnitt": 2,
+        "punkt": 3,
+        "frage": "TT-System mit RCD 100 mA: Wie groß darf R_A höchstens sein?",
+        "antworten": ["50 Ω", "500 Ω", "5.000 Ω", "1.667 Ω"],
+        "richtig": 1,
+        "erklaerung": "R_A ≤ 50 V / IΔn = 50 V / 0,1 A = 500 Ω."
+      }
+    ],
     "quelle": "DIN VDE 0100-410; DIN VDE 0100-600",
     "stand": "2026-10"
   },
@@ -150,6 +259,39 @@
       {
         "titel": "Merke",
         "text": "Die Verlustleistung geht quadratisch mit dem Strom: halber Strom, ein Viertel der Wärme."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Tabellenwert I_r = 26 A, normale Umgebungstemperatur (f₁ = 1,0), zwei Stromkreise gebündelt (f₂ = 0,80): Wie groß ist I_z?",
+        "antworten": ["32,5 A", "20,8 A", "26 A", "5,2 A"],
+        "richtig": 1,
+        "erklaerung": "I_z = I_r · f₁ · f₂ = 26 A · 1,0 · 0,80 = 20,8 A."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Betriebsstrom I_b = 18 A, Strombelastbarkeit I_z = 20,8 A. Welcher LS-Schalter passt?",
+        "antworten": ["20 A", "32 A", "25 A", "16 A"],
+        "richtig": 0,
+        "erklaerung": "I_b ≤ I_n ≤ I_z: 18 A ≤ 20 A ≤ 20,8 A. 16 A wäre kleiner als der Betriebsstrom, 25 A größer als die Strombelastbarkeit."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Nachgeschaltet ist eine gG-Sicherung mit 20 A. Wie groß muss die vorgeschaltete gG-Sicherung nach der Faustregel mindestens sein?",
+        "antworten": ["20 A", "16 A", "25 A", "32 A"],
+        "richtig": 3,
+        "erklaerung": "I_n,vor ≥ 1,6 · I_n,nach = 1,6 · 20 A = 32 A."
+      },
+      {
+        "abschnitt": 3,
+        "frage": "Ein Gerät im Verteiler wird statt mit Nennstrom mit halbem Strom betrieben. Wie ändert sich seine Verlustleistung?",
+        "antworten": ["Sie halbiert sich.", "Sie sinkt auf ein Viertel.", "Sie verdoppelt sich.", "Sie bleibt gleich."],
+        "richtig": 1,
+        "erklaerung": "P_v = P_v,n · (I_b / I_n)² – bei halbem Strom: (1/2)² = 1/4."
       }
     ],
     "quelle": "DIN VDE 0100-430; DIN VDE 0298-4; DIN EN 61439",

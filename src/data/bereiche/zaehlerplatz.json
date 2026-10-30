@@ -28,6 +28,55 @@
         "text": "Unten ungezählt, oben gezählt – der SH-Schalter liegt vor dem Zähler."
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Wo sitzt der selektive Hauptleitungsschutzschalter (SH-Schalter)?",
+        "antworten": [
+          "Im netzseitigen Anschlussraum, vor dem Zähler",
+          "Im Hausanschlusskasten",
+          "Im Stromkreisverteiler der Wohnung",
+          "Im anlagenseitigen Anschlussraum, hinter dem Zähler"
+        ],
+        "richtig": 0,
+        "erklaerung": "Im netzseitigen Anschlussraum (NAR) sitzt vor jedem Zähler der SH-Schalter. Dieser Bereich ist ungezählt und plombiert."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 2,
+        "frage": "Was kann der SH-Schalter NICHT?",
+        "antworten": [
+          "Selektiv zu den LS-Schaltern abschalten",
+          "Als Trennvorrichtung für die Inbetriebsetzung dienen",
+          "Einen RCD ersetzen",
+          "Mess- und Steuereinrichtungen freischalten, z. B. beim Zählerwechsel"
+        ],
+        "richtig": 2,
+        "erklaerung": "Der SH-Schalter ist Trennvorrichtung, Freischalteinrichtung und zentrale Überstrom-Schutzeinrichtung, selektiv zu den LS-Schaltern. Einen RCD ersetzt er nicht."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Was darf im anlagenseitigen Anschlussraum (AAR) NICHT eingebaut werden?",
+        "antworten": [
+          "Bis zu drei einphasige Stromkreise bis 16 A",
+          "Ein Überspannungsschutz",
+          "Ein Hauptschalter",
+          "Ein kompletter Stromkreisverteiler"
+        ],
+        "richtig": 3,
+        "erklaerung": "Im AAR sind z. B. Hauptschalter, Abzweigklemmen, RJ45-Schnittstelle, bis zu drei einphasige Stromkreise bis 16 A und Überspannungsschutz erlaubt – aber kein kompletter Stromkreisverteiler."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 6,
+        "frage": "Eine Wallbox zieht dauerhaft 40 A über den Zählerplatz. Welche Verdrahtung braucht er?",
+        "antworten": ["4 mm²", "16 mm²", "10 mm²", "6 mm²"],
+        "richtig": 1,
+        "erklaerung": "Bei Dauerstrom: mit 10-mm²-Verdrahtung bis 32 A, mit 16 mm² bis 44 A – darüber meist Wandlermessung. 40 A liegen über 32 A, also 16 mm²."
+      }
+    ],
     "quelle": "VDE-AR-N 4100; DIN VDE 0603; NAV §§ 13, 14",
     "stand": "2026-10"
   },
@@ -58,6 +107,47 @@
           "0,80 bis 1,80 m Höhe – 1,20 m Platz davor.",
           "Die vollständige Liste der verbotenen Orte steht in der VDE-AR-N 4100 und in den TAB."
         ]
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Wo darf ein Zählerschrank NICHT hin?",
+        "antworten": [
+          "In den Hausanschlussraum",
+          "In ein Bad mit Dusche",
+          "In einen trockenen Kellerflur",
+          "In ein allgemein zugängliches Treppenhaus"
+        ],
+        "richtig": 1,
+        "erklaerung": "Nicht erlaubt sind u. a. Wohnräume, Küchen, Bäder und Toiletten, feuchte Räume, Garagen, Spitzböden, Räume über 30 °C und Orte über Treppenstufen. Gut geeignet sind trockene, allgemein zugängliche Räume."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 2,
+        "frage": "In welcher Höhe muss die Mitte von Zähler und Steuereinrichtung liegen?",
+        "antworten": [
+          "Mindestens 1,50 m über dem Fußboden",
+          "Zwischen 1,00 m und 2,00 m über dem Fußboden",
+          "Zwischen 0,80 m und 1,80 m über dem Fußboden",
+          "Zwischen 0,40 m und 1,40 m über dem Fußboden"
+        ],
+        "richtig": 2,
+        "erklaerung": "Die Mitte von Zähler und Steuereinrichtung liegt zwischen 0,80 m und 1,80 m über dem Fußboden – gut ablesbar und erreichbar."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Wie viel Platz muss vor dem Zählerplatz frei bleiben?",
+        "antworten": [
+          "0,80 m Tiefe bei 2,00 m freier Höhe",
+          "0,60 m Tiefe bei 1,80 m freier Höhe",
+          "1,20 m Tiefe bei 1,80 m freier Höhe",
+          "1,00 m Tiefe bei 1,50 m freier Höhe"
+        ],
+        "richtig": 2,
+        "erklaerung": "Vor dem Zählerplatz liegt eine Bedien- und Arbeitsfläche von mindestens 1,20 m Tiefe bei 1,80 m freier Höhe."
       }
     ],
     "quelle": "VDE-AR-N 4100; TAB",
@@ -92,6 +182,42 @@
         "text": "iMSys = mME + SMGW."
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Was ist ein intelligentes Messsystem (iMSys)?",
+        "antworten": [
+          "Ein digitaler Zähler ohne Kommunikation",
+          "Eine Steuerbox für Wärmepumpen",
+          "Moderne Messeinrichtung plus Smart-Meter-Gateway",
+          "Ein Zweirichtungszähler für PV-Anlagen"
+        ],
+        "richtig": 2,
+        "erklaerung": "iMSys = mME + SMGW. Die moderne Messeinrichtung allein ist zwar digital, kommuniziert aber nicht nach außen."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "In welchem Fall ist ein intelligentes Messsystem Pflicht?",
+        "antworten": [
+          "Bei einer steuerbaren Wärmepumpe nach § 14a EnWG",
+          "Bei jeder Mietwohnung im Mehrfamilienhaus",
+          "Bei einem Haushalt mit 3.000 kWh Jahresverbrauch",
+          "Bei einer PV-Anlage mit 5 kW auf dem Dach"
+        ],
+        "richtig": 0,
+        "erklaerung": "Pflicht ist das iMSys u. a. bei mehr als 6.000 kWh Jahresverbrauch, bei steuerbaren Verbrauchseinrichtungen nach § 14a EnWG und bei Erzeugungsanlagen über 7 kW."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 6,
+        "frage": "Wem gehören Zähler und Smart-Meter-Gateway?",
+        "antworten": ["Dem Mieter", "Dem Installationsunternehmen", "Dem Anschlussnehmer", "Dem Messstellenbetreiber"],
+        "richtig": 3,
+        "erklaerung": "Zähler und Gateway gehören dem Messstellenbetreiber. Er ist für Einbau, Betrieb und Wartung zuständig – der Installateur stellt den normgerechten Zählerplatz bereit."
+      }
+    ],
     "quelle": "Messstellenbetriebsgesetz (MsbG); BSI; NAV § 22",
     "stand": "2026-10"
   },
@@ -120,6 +246,47 @@
       {
         "titel": "Merke",
         "text": "Das Messkonzept bei der Anmeldung angeben. Welche Konzepte zulässig sind, veröffentlicht der Netzbetreiber."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Was bedeutet Überschusseinspeisung?",
+        "antworten": [
+          "Der gesamte PV-Strom geht ins Netz und wird extra gemessen.",
+          "Überschüssiger Strom aus dem Netz wird im Speicher abgelegt.",
+          "Erst wird im Haus verbraucht, nur der Rest geht ins Netz.",
+          "Die Anlage speist nur mittags ein, wenn das Netz Strom braucht."
+        ],
+        "richtig": 2,
+        "erklaerung": "Bei Überschusseinspeisung wird der PV-Strom zuerst im Haus verbraucht. Bei Volleinspeisung geht dagegen der gesamte Strom ins Netz."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 2,
+        "frage": "Welcher Zähler sitzt bei Überschusseinspeisung am Netzanschlusspunkt?",
+        "antworten": [
+          "Ein Zähler, der Bezug und Einspeisung miteinander verrechnet",
+          "Ein Zweirichtungszähler, der Bezug und Einspeisung getrennt zählt",
+          "Kein Zähler – die Einspeisung wird geschätzt",
+          "Ein Bezugszähler mit Rücklaufsperre"
+        ],
+        "richtig": 1,
+        "erklaerung": "Am Netzanschlusspunkt sitzt ein Zweirichtungszähler. Er zählt Bezug und Einspeisung in getrennten Registern."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Für eine Wärmepumpe soll Netzentgelt-Modul 2 nach § 14a genutzt werden. Was braucht es?",
+        "antworten": [
+          "Einen eigenen Zähler für die Wärmepumpe",
+          "Nichts – das läuft über den Hauszähler",
+          "Einen zweiten Netzanschluss",
+          "Eine Volleinspeisung"
+        ],
+        "richtig": 0,
+        "erklaerung": "Modul 2 (reduzierter Arbeitspreis) braucht einen eigenen Zählpunkt für das Gerät. Modul 1 läuft dagegen über denselben Zähler."
       }
     ],
     "quelle": "VDE-AR-N 4100; TAB; § 14a EnWG",

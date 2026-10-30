@@ -7,7 +7,8 @@ import { KatalogSeite } from './pages/KatalogSeite';
 import { LernenSeite } from './pages/LernenSeite';
 import { ThemaSeite } from './pages/ThemaSeite';
 import { BereichSeite } from './pages/BereichSeite';
-import { ErklaerungenSeite } from './pages/ErklaerungenSeite';
+import { ErklaerenSeite } from './pages/ErklaerenSeite';
+import { LektionSeite } from './pages/LektionSeite';
 import { FormelnSeite } from './pages/FormelnSeite';
 import { SitzungSeite } from './pages/SitzungSeite';
 import { MehrSeite } from './pages/MehrSeite';
@@ -56,9 +57,10 @@ export function App() {
   useTheme();
   const { pathname } = useLocation();
   useNachObenBeiSeitenwechsel(pathname);
-  // Während einer Lernrunde oder Prüfung braucht es die Navigation nicht – mehr Platz für die Frage.
+  // Während einer Lernrunde, Lektion oder Prüfung braucht es die Navigation nicht – mehr Platz für die Frage.
   const mitNavigation =
     !pathname.startsWith('/sitzung') &&
+    !pathname.startsWith('/erklaeren/') &&
     pathname !== '/pruefung/laeuft' &&
     pathname !== '/mehr/neue-frage' &&
     !pathname.endsWith('/bearbeiten');
@@ -66,8 +68,10 @@ export function App() {
     <>
       <Routes>
         <Route path="/" element={<StartSeite />} />
+        <Route path="/erklaeren" element={<ErklaerenSeite />} />
+        <Route path="/erklaeren/:bereich" element={<LektionSeite />} />
         <Route path="/lernen" element={<LernenSeite />} />
-        <Route path="/lernen/erklaerungen" element={<ErklaerungenSeite />} />
+        <Route path="/lernen/erklaerungen" element={<Navigate to="/erklaeren" replace />} />
         <Route path="/lernen/formeln" element={<FormelnSeite />} />
         <Route path="/lernen/:thema" element={<ThemaSeite />} />
         <Route path="/lernen/:thema/:bereich" element={<BereichSeite />} />

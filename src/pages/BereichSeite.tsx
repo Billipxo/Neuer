@@ -1,4 +1,4 @@
-import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { BereichErklaerung } from '../components/BereichErklaerung';
 import { FORMELN } from '../data/formeln';
 import { formelnZumBereich } from '../logic/formeln';
@@ -11,10 +11,9 @@ import { fragenIm } from '../logic/bereiche';
 import { statusVerteilung, waehleFragen, type LernModus } from '../logic/sitzung';
 import { THEMEN, THEMA_IDS, type ThemaId } from '../types';
 
-/** Ein Themenbereich: Lernstand, Training starten, Erklärung zum Nachlesen, weitere Trainings und Fragenliste. */
+/** Ein Themenbereich: Lernstand, Training starten, Lektion, Erklärung zum Nachlesen, weitere Trainings und Fragenliste. */
 export function BereichSeite() {
   const { thema = '', bereich: bereichId = '' } = useParams();
-  const [params] = useSearchParams();
   const { fragen, fortschritte, profil, aendereProfil } = useDaten();
   const bereich = BEREICHE.find((b) => b.id === bereichId && b.thema === thema);
   if (!bereich) return <Navigate to={THEMA_IDS.includes(thema as ThemaId) ? `/lernen/${thema}` : '/lernen'} replace />;
@@ -26,7 +25,6 @@ export function BereichSeite() {
     waehleFragen(fragen, fortschritte, { thema: bereich.thema, bereich, modus, nurGeprueft: profil.nurGeprueft }).length;
   const auswahl = `thema=${bereich.thema}&bereich=${bereich.id}`;
   const start = Math.min(anzahl('empfohlen'), profil.sitzungsLaenge);
-  const vonErklaerungen = params.get('von') === 'erklaerungen';
 
   const startKnopf = (beschriftung: string, variante: 'primaer' | 'sekundaer') =>
     start > 0 ? (
@@ -43,11 +41,8 @@ export function BereichSeite() {
 
   return (
     <Seite titel={bereich.titel}>
-      <Link
-        to={vonErklaerungen ? '/lernen/erklaerungen' : `/lernen/${bereich.thema}`}
-        className="-mt-2 mb-3 inline-block text-sm text-slate-500 dark:text-slate-400"
-      >
-        ‹ {vonErklaerungen ? 'Alle Erklärungen' : t?.titel}
+      <Link to={`/lernen/${bereich.thema}`} className="-mt-2 mb-3 inline-block text-sm text-slate-500 dark:text-slate-400">
+        ‹ {t?.titel}
       </Link>
       <Karte>
         <p className="mb-3 text-sm text-slate-600 dark:text-slate-400">
@@ -60,6 +55,12 @@ export function BereichSeite() {
       </Karte>
 
       <div className="mt-4">{startKnopf('Training starten', 'primaer')}</div>
+      <Link
+        to={`/erklaeren/${bereich.id}?zurueck=${encodeURIComponent(`/lernen/${bereich.thema}/${bereich.id}`)}`}
+        className={knopf('sekundaer', 'mt-2 w-full', 'mittel')}
+      >
+        📖 Als Lektion lernen – mit Verständnisfragen
+      </Link>
 
       <h2 className="mt-6 mb-2 text-sm font-semibold tracking-wide text-slate-500 uppercase">📖 Erklärung</h2>
       <BereichErklaerung bereich={bereich} />

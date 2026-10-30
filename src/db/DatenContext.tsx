@@ -2,7 +2,15 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { MITGELIEFERTE_FRAGEN } from '../data/fragen';
 import { baueAbzeichenKontext, neueAbzeichen, type Abzeichen } from '../logic/abzeichen';
 import { naechsterFortschritt, type Ergebnis } from '../logic/leitner';
-import { verarbeiteAntwort, verbucheSimulation, type AntwortEreignis, type Level, type SimulationsEreignis } from '../logic/motivation';
+import {
+  verarbeiteAntwort,
+  verbucheLektion,
+  verbucheSimulation,
+  type AntwortEreignis,
+  type LektionsEreignis,
+  type Level,
+  type SimulationsEreignis,
+} from '../logic/motivation';
 import { endeZeitpunkt, werteSimulationAus } from '../logic/simulation';
 import type { Sicherung } from '../logic/austausch';
 import type {
@@ -67,6 +75,8 @@ interface Daten extends Zustand {
   antwortSpeichern: (id: string, ergebnis: Ergebnis, karte?: KartenBewertung) => Promise<AntwortRueckmeldung>;
   /** Wertet eine Simulation aus und speichert Ergebnis, Lernstand, XP und Abzeichen. */
   simulationSpeichern: (laufend: LaufendeSimulation) => Promise<SimulationsRueckmeldung>;
+  /** Bucht eine abgeschlossene Lektion des Erklärmodus: Ergebnis, XP, Lerntag und Abzeichen. */
+  lektionAbschliessen: (bereichId: string, richtig: number, gesamt: number) => Promise<LektionsEreignis>;
   /** Legt eine Frage an oder speichert Änderungen (gilt danach als „in der App bearbeitet“). */
   frageSpeichern: (frage: Frage) => Promise<void>;
   frageLoeschen: (id: string) => Promise<void>;
@@ -212,6 +222,23 @@ export function DatenProvider({ children }: { children: ReactNode }) {
     return { ergebnis, ereignis, abzeichen };
   };
 
+  const lektionAbschliessen: Daten['lektionAbschliessen'] = async (bereichId, richtig, gesamt) => {
+    const stand = aktuell.current!;
+    const { profil: nachLektion, ereignis } = verbucheLektion({ profil: await holeProfil(db), bereichId, richtig, gesamt, jetzt: Date.now() });
+    const abzeichen = neueAbzeichen(
+      baueAbzeichenKontext(stand.fragen, stand.fortschritte, nachLektion, stand.simulationen),
+      nachLektion.abzeichen,
+    );
+    const profil = { ...nachLektion, abzeichen: [...nachLektion.abzeichen, ...abzeichen.map((a) => a.id)] };
+    await speichereProfil(db, profil);
+    setZustand((z) => z && { ...z, profil });
+
+    if (ereignis.tageszielErreicht) zeigeHinweis('🎯', 'Tagesziel erreicht! +50 XP');
+    for (const a of abzeichen) zeigeHinweis(a.icon, `Neues Abzeichen: ${a.titel}`);
+    if (ereignis.aufstieg) setAufstieg(ereignis.levelNachher);
+    return ereignis;
+  };
+
   const sortiert = (fragen: GespeicherteFrage[]) =>
     [...fragen].sort((a, b) => a.id.localeCompare(b.id, 'de', { numeric: true }));
   const frageErsetzen = (f: GespeicherteFrage) =>
@@ -222,6 +249,7 @@ export function DatenProvider({ children }: { children: ReactNode }) {
     neuLaden: () => laden(db),
     antwortSpeichern,
     simulationSpeichern,
+    lektionAbschliessen,
     frageSpeichern: async (frage) => frageErsetzen(await speichereFrage(db, frage)),
     frageLoeschen: async (id) => {
       await loescheFrage(db, id);

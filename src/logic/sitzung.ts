@@ -1,10 +1,10 @@
-import type { Bereich, Fortschritt, Frage, LernStatus, ThemaId } from '../types';
+import { THEMA_IDS, type Bereich, type Fortschritt, type Frage, type LernStatus, type ThemaId } from '../types';
 import { gehoertZu } from './bereiche';
 import { istFaellig } from './leitner';
 
-export type LernModus = 'empfohlen' | 'neu' | 'falsch' | 'markiert' | 'karten' | 'faellig';
+export type LernModus = 'empfohlen' | 'reihe' | 'neu' | 'falsch' | 'markiert' | 'karten' | 'faellig';
 
-export const LERN_MODI: readonly LernModus[] = ['empfohlen', 'neu', 'falsch', 'markiert', 'karten', 'faellig'];
+export const LERN_MODI: readonly LernModus[] = ['empfohlen', 'reihe', 'neu', 'falsch', 'markiert', 'karten', 'faellig'];
 
 export interface Auswahl {
   thema: ThemaId | 'alle';
@@ -40,7 +40,10 @@ function gruppe(f: Fortschritt | undefined, jetzt: number): number {
   return status === 'falsch' ? 0 : status === 'einmal' ? 1 : 2;
 }
 
-/** Wählt die Fragen für eine Lernsitzung aus und sortiert sie. */
+/**
+ * Wählt die Fragen für eine Lernsitzung aus und sortiert sie.
+ * „reihe“ (Alle der Reihe nach): alle Fragen wie im Fragenkatalog – Themen in fester Reihenfolge, nicht gemischt.
+ */
 export function waehleFragen(
   fragen: readonly Frage[],
   fortschritte: ReadonlyMap<string, Fortschritt>,
@@ -53,6 +56,11 @@ export function waehleFragen(
   let pool = fragen.filter((f) => auswahl.thema === 'alle' || f.thema === auswahl.thema);
   if (bereich) pool = pool.filter((f) => gehoertZu(f, bereich));
   if (auswahl.nurGeprueft) pool = pool.filter((f) => f.geprueft);
+
+  if (auswahl.modus === 'reihe') {
+    const reihe = [...pool].sort((a, b) => THEMA_IDS.indexOf(a.thema) - THEMA_IDS.indexOf(b.thema));
+    return auswahl.limit ? reihe.slice(0, auswahl.limit) : reihe;
+  }
 
   switch (auswahl.modus) {
     case 'neu':
@@ -78,6 +86,20 @@ export function waehleFragen(
   gemischt.sort((a, b) => a.g - b.g || (a.g === 4 ? a.faellig - b.faellig : 0));
   const sortiert = gemischt.map((x) => x.f);
   return auswahl.limit ? sortiert.slice(0, auswahl.limit) : sortiert;
+}
+
+/** Schlüssel für das Lesezeichen von „Alle der Reihe nach“, z. B. „recht|recht-nav“ oder „alle|“. */
+export function lesezeichenSchluessel(thema: ThemaId | 'alle', bereichId?: string): string {
+  return `${thema}|${bereichId ?? ''}`;
+}
+
+/**
+ * Wo „Alle der Reihe nach“ weitergeht: hinter der zuletzt beantworteten Frage.
+ * Nach der letzten Frage oder ohne passendes Lesezeichen geht es von vorn los.
+ */
+export function startNachLesezeichen(ids: readonly string[], lesezeichen: string | undefined): number {
+  const i = lesezeichen === undefined ? -1 : ids.indexOf(lesezeichen);
+  return i >= 0 && i < ids.length - 1 ? i + 1 : 0;
 }
 
 /** Fügt eine falsch beantwortete Frage ein paar Plätze weiter hinten erneut ein. */

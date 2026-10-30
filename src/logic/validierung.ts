@@ -141,7 +141,11 @@ export function pruefeSammlung(
 }
 
 const BEREICH_FELDER = ['id', 'thema', 'titel', 'kurz', 'unterthemen', 'erklaerung', 'quelle', 'stand'] as const;
+const BEREICH_ERLAUBT = new Set<string>([...BEREICH_FELDER, 'verstaendnis']);
 const ABSCHNITT_FELDER = ['titel', 'text', 'punkte'];
+const VERSTAENDNIS_FELDER = ['abschnitt', 'punkt', 'frage', 'antworten', 'richtig', 'erklaerung'];
+
+const istIndex = (x: unknown, laenge: number): x is number => Number.isInteger(x) && (x as number) >= 0 && (x as number) < laenge;
 
 function istTextListe(x: unknown): x is string[] {
   return Array.isArray(x) && x.length > 0 && x.every(istText);
@@ -159,7 +163,7 @@ export function pruefeBereich(roh: unknown): string[] {
     if (!(feld in b)) fehler.push(`Feld „${feld}“ fehlt`);
   }
   for (const feld of Object.keys(b)) {
-    if (!(BEREICH_FELDER as readonly string[]).includes(feld)) fehler.push(`Unbekanntes Feld „${feld}“`);
+    if (!BEREICH_ERLAUBT.has(feld)) fehler.push(`Unbekanntes Feld „${feld}“`);
   }
 
   const hat = (feld: string) => feld in b;
@@ -195,6 +199,40 @@ export function pruefeBereich(roh: unknown): string[] {
         if ('punkte' in a && !istTextListe(a.punkte)) fehler.push(`${nr}: punkte muss eine Liste von Texten sein`);
       });
     }
+  }
+  if (hat('verstaendnis')) {
+    if (!Array.isArray(b.verstaendnis)) fehler.push('verstaendnis muss eine Liste von Fragen sein');
+    else {
+      const abschnitte = Array.isArray(b.erklaerung) ? (b.erklaerung as Record<string, unknown>[]) : [];
+      b.verstaendnis.forEach((roheFrage, i) => fehler.push(...pruefeVerstaendnisfrage(roheFrage, abschnitte, `Verständnisfrage ${i + 1}`)));
+    }
+  }
+  return fehler;
+}
+
+/** Prüft eine Verständnisfrage, auch ob Abschnitt und Stichpunkt in der Erklärung vorkommen. */
+function pruefeVerstaendnisfrage(roh: unknown, abschnitte: Record<string, unknown>[], nr: string): string[] {
+  if (typeof roh !== 'object' || roh === null || Array.isArray(roh)) return [`${nr} ist kein Objekt`];
+  const f = roh as Record<string, unknown>;
+  const fehler: string[] = [];
+  for (const feld of Object.keys(f)) {
+    if (!VERSTAENDNIS_FELDER.includes(feld)) fehler.push(`${nr}: unbekanntes Feld „${feld}“`);
+  }
+  if (!istText(f.frage)) fehler.push(`${nr}: frage ist leer`);
+  if (!istText(f.erklaerung)) fehler.push(`${nr}: erklaerung ist leer`);
+  if (!istIndex(f.abschnitt, abschnitte.length)) fehler.push(`${nr}: abschnitt ${String(f.abschnitt)} gibt es nicht`);
+  else if ('punkt' in f) {
+    const abschnitt: unknown = abschnitte[f.abschnitt];
+    const punkte = typeof abschnitt === 'object' && abschnitt !== null ? (abschnitt as Record<string, unknown>).punkte : undefined;
+    if (!istIndex(f.punkt, Array.isArray(punkte) ? punkte.length : 0)) {
+      fehler.push(`${nr}: punkt ${String(f.punkt)} gibt es in Abschnitt ${f.abschnitt + 1} nicht`);
+    }
+  }
+  if (!Array.isArray(f.antworten) || f.antworten.length < 2 || f.antworten.length > 4 || !f.antworten.every(istText)) {
+    fehler.push(`${nr}: antworten muss 2 bis 4 Texte enthalten`);
+  } else {
+    if (new Set(f.antworten).size !== f.antworten.length) fehler.push(`${nr}: antworten enthält doppelte Einträge`);
+    if (!istIndex(f.richtig, f.antworten.length)) fehler.push(`${nr}: richtig muss der Index einer Antwort sein`);
   }
   return fehler;
 }

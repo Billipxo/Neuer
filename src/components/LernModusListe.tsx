@@ -3,6 +3,7 @@ import type { LernModus } from '../logic/sitzung';
 
 const MODI: { modus: LernModus; titel: string; text: string; icon: string }[] = [
   { modus: 'empfohlen', titel: 'Weiterlernen', text: 'Falsche und fällige Fragen zuerst, dann neue', icon: '▶' },
+  { modus: 'reihe', titel: 'Alle der Reihe nach', text: 'Jede Frage einmal, wie im Fragenkatalog – mit Lesezeichen', icon: '📋' },
   { modus: 'neu', titel: 'Nur neue Fragen', text: 'Noch nie beantwortet', icon: '✨' },
   { modus: 'falsch', titel: 'Fehler wiederholen', text: 'Alle zuletzt falsch beantworteten Fragen', icon: '🔁' },
   { modus: 'faellig', titel: 'Fällige Wiederholungen', text: 'Laut Leitner-System heute wieder dran', icon: '⏰' },

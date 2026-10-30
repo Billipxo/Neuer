@@ -1,5 +1,5 @@
 // Testet die Android-App in einem Android-Emulator: Start, Lernen, Themenbereich mit Erklärung,
-// Formeln bei einer Rechenaufgabe, Lernstand nach Neustart, Zurück-Taste, dunkles Design, Sicherung speichern („Speichern unter“)
+// Formeln bei einer Rechenaufgabe, Lektion im Erklärmodus, Lernstand nach Neustart, Zurück-Taste, dunkles Design, Sicherung speichern („Speichern unter“)
 // und wiederherstellen (Dateiauswahl). Läuft in GitHub Actions, siehe .github/workflows/android-test.yml.
 //
 // Aufruf: node android/test/emulator-test.mjs [Pfad zur Test-APK]
@@ -137,6 +137,22 @@ try {
   await bild('4c-formeln');
   pruefe(formelnDa, '4c. Rechenaufgabe: Knopf „Formeln“ zeigt die passenden Formeln');
   await seite.locator('[role=dialog]').getByRole('button', { name: 'Zurück zur Aufgabe' }).click();
+
+  // 4d. Erklärmodus: Lektion blättern und eine Verständnisfrage beantworten (ohne Navigationsleiste)
+  await gehe(seite, '#/erklaeren/recht-trei');
+  const zaehlerIst = (soll) =>
+    seite.waitForFunction((t) => document.querySelector('header .tabular-nums')?.textContent?.trim().startsWith(t), soll, { timeout: 15_000 });
+  await zaehlerIst('1/');
+  await seite.click('footer button:has-text("Weiter")');
+  await zaehlerIst('2/');
+  await seite.click('footer button:has-text("Weiter")');
+  await zaehlerIst('3/');
+  await seite.locator('button[role=radio]', { hasText: '120 Minuten' }).click();
+  await seite.click('footer button:has-text("Antwort prüfen")');
+  const lektion = (await seite.locator('[role=status]').textContent()).replace(/\s+/g, ' ');
+  const ohneNavigation = (await seite.locator('nav').count()) === 0;
+  await bild('4d-lektion');
+  pruefe(lektion.includes('Richtig') && ohneNavigation, `4d. Lektion: Verständnisfrage beantwortet (${lektion.slice(0, 20)}), Navigation ausgeblendet: ${ohneNavigation}`);
 
   // 5. App beenden und neu starten → Lernstand noch da?
   seite = await starteApp();

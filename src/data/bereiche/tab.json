@@ -29,6 +29,37 @@
         ]
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Welche Anwendungsregel gilt für den Anschluss von Kundenanlagen an das Niederspannungsnetz?",
+        "antworten": ["VDE-AR-N 4110", "VDE-AR-N 4105", "VDE-AR-N 4100", "VDE-AR-N 4120"],
+        "richtig": 2,
+        "erklaerung": "4100 = Kundenanlagen am Niederspannungsnetz. 4110 = Mittelspannung, 4120 = Hochspannung, 4105 = Erzeugungsanlagen und Speicher am Niederspannungsnetz."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "In welchem Bereich muss die Netzspannung bei 230 V nach DIN EN 50160 liegen (95 % der 10-Minuten-Mittelwerte einer Woche)?",
+        "antworten": ["220 V bis 240 V", "210 V bis 250 V", "207 V bis 253 V", "195 V bis 265 V"],
+        "richtig": 2,
+        "erklaerung": "± 10 % von 230 V sind ± 23 V: 230 V − 23 V = 207 V und 230 V + 23 V = 253 V."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 5,
+        "frage": "Ein Kunde möchte eine einphasige Wallbox mit 7,4 kW (32 A). Was sagst du ihm?",
+        "antworten": [
+          "Einphasig meist nicht zulässig – besser dreiphasig mit 11 kW.",
+          "Kein Problem, wenn ein RCD Typ B vor der Wallbox sitzt.",
+          "Kein Problem – einphasig sind Geräte bis 12 kVA erlaubt.",
+          "Einphasig geht das nur mit Zustimmung der Handwerkskammer."
+        ],
+        "richtig": 0,
+        "erklaerung": "Einphasig sind höchstens 4,6 kVA zulässig (20 A bei 230 V), damit keine Schieflast entsteht. Dreiphasig mit 11 kW fließen nur 16 A je Außenleiter."
+      }
+    ],
     "quelle": "VDE-AR-N 4100; NAV § 20; DIN EN 60038; DIN EN 50160",
     "stand": "2026-10"
   },
@@ -61,6 +92,37 @@
         "text": "0,5 % bis zum Zähler, 3 % vom Zähler bis zum Verbraucher (DIN 18015-1)."
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Für welchen Strom muss eine Hauptleitung mindestens bemessen sein?",
+        "antworten": ["100 A", "63 A", "35 A", "50 A"],
+        "richtig": 1,
+        "erklaerung": "Hauptleitungen werden mindestens für 63 A bemessen. Für den Querschnitt zählen außerdem Leistungsbedarf (DIN 18015-1), Strombelastbarkeit und Spannungsfall."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Hauptleitung, 63 A, 15 m, Drehstrom, Leistung unter 100 kVA: Mit 10 mm² ergibt sich ein Spannungsfall von 0,73 %. Was folgt daraus?",
+        "antworten": [
+          "Zu viel – erlaubt sind 0,5 %, also größerer Querschnitt.",
+          "Falsch gerechnet – man nimmt den Betriebsstrom, nicht 63 A.",
+          "In Ordnung – bei Drehstrom sind bis zu 1 % erlaubt.",
+          "In Ordnung – bis zum Zähler sind bis zu 3 % erlaubt."
+        ],
+        "richtig": 0,
+        "erklaerung": "Vom Hausanschlusskasten bis zum Zähler sind bis 100 kVA höchstens 0,5 % erlaubt, gerechnet mit dem Nennstrom der vorgeschalteten Sicherung. Mit 16 mm² sind es 0,46 % – in Ordnung."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 5,
+        "frage": "Für welchen Kurzschlussstrom müssen die Betriebsmittel vom Hausanschlusskasten bis zur letzten Überstrom-Schutzeinrichtung vor dem Zähler ausgelegt sein?",
+        "antworten": ["50 kA", "10 kA", "6 kA", "25 kA"],
+        "richtig": 3,
+        "erklaerung": "25 kA – nahe am Ortsnetztransformator können sehr hohe Kurzschlussströme auftreten."
+      }
+    ],
     "quelle": "VDE-AR-N 4100; NAV § 13 Abs. 4; DIN 18015-1",
     "stand": "2026-10"
   },
@@ -88,6 +150,47 @@
       {
         "titel": "Merke",
         "text": "Netzbetreiber = Netzanschluss. Messstellenbetreiber = Zähler. Installationsunternehmen = Anlage hinter der Trennvorrichtung."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Was musst du beim Netzbetreiber NICHT anmelden?",
+        "antworten": [
+          "Eine neue Wärmepumpe als Ersatz für die Gasheizung",
+          "Eine neue PV-Anlage mit Einspeisung ins Netz",
+          "Eine Erhöhung der Anschlussleistung für das Haus",
+          "Eine Instandsetzung ohne Leistungsänderung"
+        ],
+        "richtig": 3,
+        "erklaerung": "Anzumelden sind Neuanschlüsse, Leistungserhöhungen, Erzeugungsanlagen und Verbrauchsgeräte wie Wärmepumpen und Ladeeinrichtungen. Reine Instandsetzungen ohne Leistungsänderung nicht."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 2,
+        "frage": "Was kommt im Ablauf direkt vor dem Inbetriebsetzungsauftrag an den Netzbetreiber?",
+        "antworten": [
+          "Die Übergabe an den Kunden",
+          "Das Setzen des Zählers durch den Messstellenbetreiber",
+          "Die Erstprüfung nach DIN VDE 0100-600 mit Prüfbericht",
+          "Der Netzanschlussantrag"
+        ],
+        "richtig": 2,
+        "erklaerung": "Erst errichten, dann nach DIN VDE 0100-600 prüfen und den Prüfbericht erstellen. Danach geht der Inbetriebsetzungsauftrag an den Netzbetreiber, und der Messstellenbetreiber setzt den Zähler."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Wer beantragt die Inbetriebsetzung einer neuen Anlage?",
+        "antworten": [
+          "Der Netzbetreiber selbst nach der Prüfung",
+          "Der Messstellenbetreiber beim Zählersetzen",
+          "Der Anschlussnehmer als Eigentümer",
+          "Das ausführende Installationsunternehmen"
+        ],
+        "richtig": 3,
+        "erklaerung": "Nach NAV § 14 beantragt das Installationsunternehmen, das die Arbeiten ausgeführt hat, die Inbetriebsetzung."
       }
     ],
     "quelle": "NAV §§ 14, 19; VDE-AR-N 4100; TAB",

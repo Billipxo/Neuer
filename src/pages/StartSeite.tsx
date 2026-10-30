@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Seite } from '../components/Seite';
 import { Kachel, Meter, knopf } from '../components/ui';
+import { BEREICHE } from '../data/bereiche';
 import { useDaten } from '../db/DatenContext';
 import { tagAusSchluessel, tageZwischen } from '../logic/datum';
 import { LEVELS, heuteBeantwortet, lernserie, levelStand } from '../logic/motivation';
@@ -21,6 +22,7 @@ export function StartSeite() {
     waehleFragen(fragen, fortschritte, { thema: 'alle', modus, nurGeprueft: profil.nurGeprueft }).length;
   const datumText = new Date(pruefungTs).toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' });
   const zielErreicht = heute >= profil.tagesziel;
+  const lektionen = BEREICHE.filter((b) => profil.lektionen[b.id]).length;
 
   return (
     <Seite titel="TREI-Trainer">
@@ -54,6 +56,13 @@ export function StartSeite() {
           </p>
         )}
       </section>
+
+      {/* Die drei Modi */}
+      <div className="mt-3 grid grid-cols-3 gap-2">
+        <ModusKachel to="/erklaeren" icon="📖" titel="Erklären" text={`${lektionen}/${BEREICHE.length} Lektionen`} />
+        <ModusKachel to="/lernen" icon="✏️" titel="Üben" text="Fragen mit Lösung" />
+        <ModusKachel to="/pruefung" icon="⏱️" titel="Prüfung" text="Mit Zeitlimit" />
+      </div>
 
       <div className="mt-3 grid grid-cols-2 gap-3">
         <Kachel
@@ -124,6 +133,23 @@ export function StartSeite() {
         <SchnellStart to="/sitzung?thema=alle&modus=karten&zurueck=/" icon="🗂️" titel="Karteikarten" zahl={anzahl('karten')} />
       </div>
     </Seite>
+  );
+}
+
+function ModusKachel({ to, icon, titel, text }: { to: string; icon: string; titel: string; text: string }) {
+  return (
+    <Link
+      to={to}
+      className="flex min-h-24 flex-col items-start justify-between rounded-2xl bg-white p-3 shadow-sm ring-1 ring-slate-200 active:scale-[0.98] dark:bg-slate-900 dark:ring-slate-800"
+    >
+      <span className="text-2xl" aria-hidden>
+        {icon}
+      </span>
+      <span>
+        <span className="block font-semibold">{titel}</span>
+        <span className="block text-xs leading-tight text-slate-500 dark:text-slate-400">{text}</span>
+      </span>
+    </Link>
   );
 }
 

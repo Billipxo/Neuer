@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom';
 
+/** Die drei Modi (Erklären, Üben, Prüfung) plus Start und Mehr; die Statistik steckt unter „Mehr“. */
 const EINTRAEGE = [
   { pfad: '/', text: 'Start', icon: '🏠' },
-  { pfad: '/lernen', text: 'Lernen', icon: '📚' },
+  { pfad: '/erklaeren', text: 'Erklären', icon: '📖' },
+  { pfad: '/lernen', text: 'Üben', icon: '✏️' },
   { pfad: '/pruefung', text: 'Prüfung', icon: '⏱️' },
-  { pfad: '/statistik', text: 'Statistik', icon: '📊' },
   { pfad: '/mehr', text: 'Mehr', icon: '☰' },
 ];
 

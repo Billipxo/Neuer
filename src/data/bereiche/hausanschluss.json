@@ -27,6 +27,42 @@
         "text": "Mehr als vier Wohneinheiten → Hausanschlussraum. Davor 1,20 m frei."
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Ab wann ist nach DIN 18012 ein eigener Hausanschlussraum nötig?",
+        "antworten": [
+          "In Gebäuden mit mehr als vier Wohneinheiten",
+          "Nur in nicht unterkellerten Gebäuden",
+          "Ab zwei Wohneinheiten",
+          "In jedem Neubau"
+        ],
+        "richtig": 0,
+        "erklaerung": "Mehr als vier Wohneinheiten → Hausanschlussraum. Bis zu vier Wohneinheiten genügt eine Hausanschlusswand, für nicht unterkellerte Einfamilienhäuser gibt es die Hausanschlussnische."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Wie viel Bedien- und Arbeitsfläche muss vor den Hausanschlusseinrichtungen mindestens frei bleiben?",
+        "antworten": ["1,00 m", "1,20 m", "0,80 m", "0,60 m"],
+        "richtig": 1,
+        "erklaerung": "Vor den Hausanschlusseinrichtungen bleiben mindestens 1,20 m frei – genauso viel wie vor einem Zählerplatz."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 6,
+        "frage": "Was gilt für Hauseinführungen?",
+        "antworten": [
+          "Sie müssen nur wasserdicht sein.",
+          "Sie werden mit Bauschaum abgedichtet.",
+          "Jede Sparte braucht eine eigene Einführung.",
+          "Sie müssen gas- und wasserdicht sein."
+        ],
+        "richtig": 3,
+        "erklaerung": "Hauseinführungen müssen gas- und wasserdicht sein. Üblich sind geprüfte Systeme, oft als Mehrsparten-Hauseinführung für Strom, Gas, Wasser und Telekommunikation."
+      }
+    ],
     "quelle": "DIN 18012",
     "stand": "2026-10"
   },
@@ -60,6 +96,42 @@
         "text": "Planung – Ausführung – Dokumentation: Diese drei Schritte gehören im Fachgespräch dazu."
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 2,
+        "frage": "Wie viel Beton muss den Fundamenterder allseitig mindestens umgeben?",
+        "antworten": ["1 cm", "10 cm", "2 cm", "5 cm"],
+        "richtig": 3,
+        "erklaerung": "Allseitig mindestens 5 cm Beton schützen den Stahl vor Korrosion."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Unter der Bodenplatte liegt eine Perimeterdämmung. Was ist richtig?",
+        "antworten": [
+          "Zusätzlich ein Ringerder aus verzinktem Stahl im Erdreich",
+          "Der Fundamenterder in der Bodenplatte genügt wie immer.",
+          "Zusätzlich ein Ringerder aus nichtrostendem Stahl im Erdreich",
+          "Auf den Erder kann dann ganz verzichtet werden."
+        ],
+        "richtig": 2,
+        "erklaerung": "Durch die Dämmung hat der Erder in der Bodenplatte keinen guten Erdkontakt. Deshalb kommt ein Ringerder aus nichtrostendem Stahl (z. B. 1.4571) ins Erdreich, und in der Bodenplatte liegt ein Funktionspotentialausgleichsleiter. Verzinkter Stahl korrodiert im Erdreich."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 7,
+        "frage": "Wer muss den Fundamenterder planen, errichten oder die Errichtung beaufsichtigen?",
+        "antworten": [
+          "Der Netzbetreiber vor dem Hausanschluss",
+          "Der Rohbauer, der auch den Bewehrungsstahl verlegt",
+          "Eine Elektrofachkraft oder Blitzschutz-Fachkraft",
+          "Der Statiker des Gebäudes"
+        ],
+        "richtig": 2,
+        "erklaerung": "Auch wenn der Rohbauer den Stahl verlegt: Planen, errichten oder beaufsichtigen muss eine Elektrofachkraft oder Blitzschutz-Fachkraft. Dazu gehört die Dokumentation mit Fotos und Durchgangsmessung."
+      }
+    ],
     "quelle": "DIN 18014; DIN 18015-1",
     "stand": "2026-10"
   },
@@ -87,6 +159,54 @@
       {
         "titel": "Merke",
         "text": "Gleiches Potential heißt: keine Spannung zwischen den Teilen – also keine Gefahr beim gleichzeitigen Berühren."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 2,
+        "frage": "Wo schließt du eine Gasinnenleitung mit Isolierstück an den Schutzpotentialausgleich an?",
+        "antworten": [
+          "Gar nicht – Gasleitungen werden nie angeschlossen.",
+          "Netzseitig vor dem Isolierstück",
+          "Auf beiden Seiten des Isolierstücks",
+          "Hausseitig hinter dem Isolierstück"
+        ],
+        "richtig": 3,
+        "erklaerung": "Hausseitig hinter dem Isolierstück – so fließt kein Strom über die Gasnetzleitung. Das Isolierstück trennt die Hausleitung elektrisch vom Gasnetz."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Der größte Schutzleiter der Anlage hat 10 mm² Cu. Welchen Querschnitt braucht der Schutzpotentialausgleichsleiter mindestens?",
+        "antworten": ["6 mm² Cu", "10 mm² Cu", "4 mm² Cu", "5 mm² Cu"],
+        "richtig": 0,
+        "erklaerung": "Halb so groß wie der größte Schutzleiter wären 5 mm² – vorgeschrieben sind aber mindestens 6 mm² Cu. Mehr als 25 mm² Cu sind nie nötig."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Was gehört NICHT an die Haupterdungsschiene?",
+        "antworten": [
+          "Der Hauptschutzleiter",
+          "Die metallene Wasserleitung",
+          "Die Anschlussfahne des Fundamenterders",
+          "Der Neutralleiter eines Endstromkreises"
+        ],
+        "richtig": 3,
+        "erklaerung": "Der Neutralleiter ist ein aktiver Leiter und gehört nicht an die Haupterdungsschiene. Wasser- und Heizungsrohre, Gasinnenleitung, Erdungsleiter und Hauptschutzleiter dagegen schon."
+      },
+      {
+        "abschnitt": 2,
+        "frage": "Wozu verbindet man alle leitfähigen Teile, die ins Gebäude führen, mit der Haupterdungsschiene?",
+        "antworten": [
+          "Damit der Zähler den Verbrauch genauer messen kann",
+          "Damit in der Anlage kein RCD mehr eingebaut werden muss",
+          "Damit Rohre und Metallteile im Gebäude nicht rosten",
+          "Damit zwischen berührbaren Teilen keine Spannung entsteht"
+        ],
+        "richtig": 3,
+        "erklaerung": "Gleiches Potential heißt: keine Spannung zwischen den Teilen – also keine Gefahr, wenn man zwei Teile gleichzeitig berührt."
       }
     ],
     "quelle": "DIN VDE 0100-410; DIN VDE 0100-540",
@@ -118,6 +238,41 @@
       {
         "titel": "Merke",
         "text": "Unter Putz verlegte Leitungen gehören in die Zonen – wer später bohrt, dübelt oder nagelt, trifft sie dann nicht."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Wie groß darf der Spannungsfall vom Zähler bis zum Verbraucher nach DIN 18015-1 höchstens sein?",
+        "antworten": ["5 %", "0,5 %", "3 %", "1 %"],
+        "richtig": 2,
+        "erklaerung": "Vom Zähler bis zum Verbraucher höchstens 3 % (DIN 18015-1). Vor dem Zähler sind es höchstens 0,5 % (NAV § 13 Abs. 4)."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "In welcher Höhe liegt die untere waagerechte Installationszone (ZW-u)?",
+        "antworten": [
+          "30 bis 60 cm über dem Rohfußboden",
+          "15 bis 45 cm über dem fertigen Fußboden",
+          "90 bis 120 cm über dem fertigen Fußboden",
+          "0 bis 15 cm über dem fertigen Fußboden"
+        ],
+        "richtig": 1,
+        "erklaerung": "ZW-u: 15 bis 45 cm über dem fertigen Fußboden, Vorzugsmaß 30 cm. Die obere Zone ZW-o liegt 15 bis 45 cm unter der Decke, die mittlere ZW-m (z. B. Küche) bei 90 bis 120 cm."
+      },
+      {
+        "abschnitt": 2,
+        "frage": "Warum gehören unter Putz verlegte Leitungen in die Installationszonen?",
+        "antworten": [
+          "Damit man sie beim Bohren oder Dübeln nicht trifft",
+          "Damit in jedem Raum weniger Steckdosen nötig sind",
+          "Damit der Spannungsfall im Stromkreis kleiner wird",
+          "Damit die Leitungswege möglichst kurz bleiben"
+        ],
+        "richtig": 0,
+        "erklaerung": "Wer später bohrt, dübelt oder nagelt, weiß dank der Zonen, wo Leitungen liegen können – und trifft sie nicht."
       }
     ],
     "quelle": "DIN 18015-1, -2, -3; DIN 18013; RAL-RG 678",

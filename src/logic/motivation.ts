@@ -216,6 +216,62 @@ export function verbucheSimulation(e: {
   };
 }
 
+// ---------- Lektion (Erklärmodus) ----------
+
+/** XP für eine Lektion, die zum ersten Mal abgeschlossen wird */
+export const XP_LEKTION_NEU = 20;
+/** XP für jede weitere Wiederholung derselben Lektion */
+export const XP_LEKTION_WIEDERHOLT = 5;
+
+export interface LektionsEreignis {
+  erstesMal: boolean;
+  xpLektion: number;
+  xpTagesziel: number;
+  xpGesamt: number;
+  tageszielErreicht: boolean;
+  levelVorher: Level;
+  levelNachher: Level;
+  aufstieg: boolean;
+}
+
+/**
+ * Bucht eine abgeschlossene Lektion: Ergebnis merken, XP für die Lektion (beim ersten Mal mehr).
+ * Die beantworteten Verständnisfragen zählen zum Tagesziel und zur Lernserie, nicht zum Lernstand der Fragen.
+ */
+export function verbucheLektion(e: {
+  profil: Profil;
+  bereichId: string;
+  richtig: number;
+  gesamt: number;
+  jetzt: number;
+}): { profil: Profil; ereignis: LektionsEreignis } {
+  const erstesMal = !e.profil.lektionen[e.bereichId];
+  const tag = bucheLerntag(e.profil, e.gesamt, e.jetzt);
+  const xpLektion = erstesMal ? XP_LEKTION_NEU : XP_LEKTION_WIEDERHOLT;
+  const xpTagesziel = tag.tageszielErreicht ? XP_TAGESZIEL : 0;
+  const xpGesamt = xpLektion + xpTagesziel;
+  const profil: Profil = {
+    ...tag.profil,
+    xp: e.profil.xp + xpGesamt,
+    lektionen: { ...e.profil.lektionen, [e.bereichId]: { datum: e.jetzt, richtig: e.richtig, gesamt: e.gesamt } },
+  };
+  const levelVorher = levelFuerXp(e.profil.xp);
+  const levelNachher = levelFuerXp(profil.xp);
+  return {
+    profil,
+    ereignis: {
+      erstesMal,
+      xpLektion,
+      xpTagesziel,
+      xpGesamt,
+      tageszielErreicht: tag.tageszielErreicht,
+      levelVorher,
+      levelNachher,
+      aufstieg: levelNachher.nr > levelVorher.nr,
+    },
+  };
+}
+
 // ---------- Lernserie (Tage) ----------
 
 /**
@@ -281,7 +337,7 @@ export function kalenderWochen(jetzt: number, wochen = 5): KalenderTag[][] {
   );
 }
 
-/** Profil ohne Lernfortschritt (XP, Serien, Lerntage, Abzeichen) – Einstellungen bleiben. */
+/** Profil ohne Lernfortschritt (XP, Serien, Lerntage, Abzeichen, Lektionen, Lesezeichen) – Einstellungen bleiben. */
 export function profilOhneLernstand(p: Profil): Profil {
-  return { ...p, xp: 0, serieAktuell: 0, bestSerie: 0, lernTage: {}, zielErreichtTage: [], abzeichen: [] };
+  return { ...p, xp: 0, serieAktuell: 0, bestSerie: 0, lernTage: {}, zielErreichtTage: [], abzeichen: [], lektionen: {}, lesezeichen: {} };
 }

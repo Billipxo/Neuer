@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react';
+import type { FormEvent, ReactNode } from 'react';
 import { formatToleranz, formatZahl, parseZahl } from '../logic/bewertung';
 import type { Ergebnis } from '../logic/leitner';
 import type { RechenLoesung } from '../types';
@@ -19,7 +19,7 @@ export function AntwortOption({
   onClick,
 }: {
   buchstabe: string;
-  text: string;
+  text: ReactNode;
   mehrfach: boolean;
   ausgewaehlt: boolean;
   richtig: boolean;

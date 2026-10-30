@@ -134,6 +134,41 @@ describe('pruefeBereich', () => {
       'Abschnitt 2: unbekanntes Feld „bild“',
     ]);
   });
+
+  const verstaendnis = { abschnitt: 1, punkt: 1, frage: 'Wer setzt in Betrieb?', antworten: ['A', 'B', 'C'], richtig: 2, erklaerung: 'Weil …' };
+
+  it('akzeptiert Verständnisfragen, auch ohne Stichpunkt', () => {
+    const { punkt: _p, ...ohnePunkt } = verstaendnis;
+    expect(pruefeBereich({ ...bereich, verstaendnis: [verstaendnis, { ...ohnePunkt, abschnitt: 0 }] })).toEqual([]);
+  });
+
+  it('prüft Verständnisfragen: Abschnitt, Stichpunkt, Antworten und Index', () => {
+    expect(pruefeBereich({ ...bereich, verstaendnis: {} })).toEqual(['verstaendnis muss eine Liste von Fragen sein']);
+    expect(
+      pruefeBereich({
+        ...bereich,
+        verstaendnis: [
+          { ...verstaendnis, abschnitt: 2 },
+          { ...verstaendnis, punkt: 2 },
+          { ...verstaendnis, abschnitt: 0, punkt: 0 },
+          { ...verstaendnis, antworten: ['A'], richtig: 0 },
+          { ...verstaendnis, antworten: ['A', 'A'], richtig: 1 },
+          { ...verstaendnis, richtig: 3, frage: ' ', tipp: 'x' },
+          'Frage',
+        ],
+      }),
+    ).toEqual([
+      'Verständnisfrage 1: abschnitt 2 gibt es nicht',
+      'Verständnisfrage 2: punkt 2 gibt es in Abschnitt 2 nicht',
+      'Verständnisfrage 3: punkt 0 gibt es in Abschnitt 1 nicht',
+      'Verständnisfrage 4: antworten muss 2 bis 4 Texte enthalten',
+      'Verständnisfrage 5: antworten enthält doppelte Einträge',
+      'Verständnisfrage 6: unbekanntes Feld „tipp“',
+      'Verständnisfrage 6: frage ist leer',
+      'Verständnisfrage 6: richtig muss der Index einer Antwort sein',
+      'Verständnisfrage 7 ist kein Objekt',
+    ]);
+  });
 });
 
 describe('pruefeBereiche', () => {

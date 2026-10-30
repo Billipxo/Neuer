@@ -28,6 +28,60 @@
         "text": "PV-Module kann man nicht ausschalten – nur abdecken."
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Wann darf eine neue PV-Anlage in Betrieb gehen?",
+        "antworten": [
+          "Erst nach der Anmeldung beim Netzbetreiber und seiner Zusage",
+          "Sofort nach der Montage",
+          "Sobald der Kunde zustimmt",
+          "Sobald sie im Marktstammdatenregister eingetragen ist"
+        ],
+        "richtig": 0,
+        "erklaerung": "Vor der Inbetriebnahme meldet das eingetragene Installationsunternehmen die Anlage beim Netzbetreiber an und wartet die Zusage ab. Ins Marktstammdatenregister kommt sie erst nach der Inbetriebnahme."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Du schaltest den DC-Lasttrennschalter am Wechselrichter aus. Sind die Leitungen zum PV-Generator jetzt spannungsfrei?",
+        "antworten": [
+          "Ja, wenn auch der AC-Schalter am Zähler aus ist.",
+          "Nein – bei Licht liefern die Module weiter Spannung.",
+          "Ja, der Trennschalter trennt die ganze DC-Seite ab.",
+          "Ja, nach einer Minute Wartezeit zum Entladen."
+        ],
+        "richtig": 1,
+        "erklaerung": "Der DC-Lasttrennschalter trennt nur den Wechselrichter. Die Module erzeugen bei Licht weiter Spannung – je nach Reihenschaltung mehrere hundert Volt."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Warum darfst du PV-Steckverbinder nie unter Last trennen?",
+        "antworten": [
+          "Die Module verlieren dauerhaft Leistung.",
+          "Der Wechselrichter verliert seine Einstellungen.",
+          "Gleichstrom-Lichtbögen erlöschen schlecht.",
+          "Der Zähler zählt dann falsch."
+        ],
+        "richtig": 2,
+        "erklaerung": "Ein Gleichstrom-Lichtbogen hat keinen Nulldurchgang und erlischt deshalb schlecht. Darum Steckverbinder nur ohne Last trennen."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 6,
+        "frage": "Haus mit PV und Speicher: Woran denkst du beim Feststellen der Spannungsfreiheit zusätzlich?",
+        "antworten": [
+          "An Rückspeisung aus Wechselrichter oder Speicher",
+          "An die nächste Prüffrist des Speichers",
+          "An die Ablesezeit des Zweirichtungszählers",
+          "An das Drehfeld der Steckdosen im Haus"
+        ],
+        "richtig": 0,
+        "erklaerung": "Ein Speicher hat auch ohne PV und Netz Energie. Beim Feststellen der Spannungsfreiheit an Rückspeisung denken und die Herstellervorgaben zum Abschalten beachten."
+      }
+    ],
     "quelle": "VDE-AR-N 4105; DIN VDE 0100-712; DIN VDE 0100-600; DIN EN 62446-1",
     "stand": "2026-10"
   },
@@ -59,6 +113,42 @@
         "text": "4,6 kVA einphasig – über 30 kVA zentraler NA-Schutz – ab 50,2 Hz Leistung runter."
       }
     ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Wie viel Leistung darf eine Erzeugungsanlage höchstens einphasig einspeisen?",
+        "antworten": ["4,6 kVA", "800 VA", "3,68 kVA", "12 kVA"],
+        "richtig": 0,
+        "erklaerung": "Einphasig höchstens 4,6 kVA. Darüber wird auf mehrere Außenleiter verteilt – die Unsymmetrie darf 4,6 kVA nicht überschreiten."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Eine Anlage hat drei Wechselrichter mit 15, 15 und 5 kVA. Was gilt für den NA-Schutz?",
+        "antworten": [
+          "Der integrierte NA-Schutz genügt – jedes Gerät liegt unter 30 kVA",
+          "Es ist gar kein NA-Schutz nötig",
+          "Nur der 5-kVA-Wechselrichter braucht einen eigenen",
+          "Zentraler NA-Schutz mit Kuppelschalter – die Summe liegt über 30 kVA"
+        ],
+        "richtig": 3,
+        "erklaerung": "Gezählt wird die Summe aller Erzeugungseinheiten: 15 + 15 + 5 = 35 kVA. Über 30 kVA braucht es einen zentralen NA-Schutz mit Kuppelschalter."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Die Netzfrequenz steigt auf 51,5 Hz. Was passiert mit der Erzeugungsanlage?",
+        "antworten": [
+          "Der NA-Schutz trennt sie vom Netz.",
+          "Nichts – getrennt wird erst ab 52 Hz.",
+          "Sie beginnt erst jetzt, ihre Leistung zu verringern.",
+          "Sie erhöht ihre Leistung."
+        ],
+        "richtig": 0,
+        "erklaerung": "Ab 50,2 Hz verringern Erzeugungsanlagen ihre Wirkleistung. Bei 51,5 Hz trennt der NA-Schutz die Anlage vom Netz."
+      }
+    ],
     "quelle": "VDE-AR-N 4105:2026-03; DIN VDE 0100-712; DIN VDE V 0126-95",
     "stand": "2026-10"
   },
@@ -87,6 +177,47 @@
       {
         "titel": "Merke",
         "text": "Registrieren muss der Betreiber – innerhalb eines Monats nach Inbetriebnahme."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Was kennzeichnet einen AC-gekoppelten Speicher?",
+        "antworten": [
+          "Er arbeitet nur bei Netzausfall als Notstromquelle.",
+          "Er hat einen eigenen Batteriewechselrichter auf der AC-Seite.",
+          "Er hängt mit am Gleichstromkreis des PV-Wechselrichters.",
+          "Er braucht keinen Wechselrichter, weil er AC speichert."
+        ],
+        "richtig": 1,
+        "erklaerung": "AC-gekoppelt: eigener Batteriewechselrichter am Wechselstromnetz – gut nachrüstbar. DC-gekoppelt: Speicher und PV am selben Hybridwechselrichter."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 2,
+        "frage": "Warum wird die Hausanlage im Ersatzstrombetrieb allpolig vom öffentlichen Netz getrennt?",
+        "antworten": [
+          "Damit der Speicher schneller und verlustärmer lädt",
+          "Damit der RCD beim Umschalten nicht auslöst",
+          "Damit nichts ins abgeschaltete Netz zurückfließt",
+          "Damit der Zähler im Inselbetrieb nicht weiterzählt"
+        ],
+        "richtig": 2,
+        "erklaerung": "Ohne Trennung könnte die Hausanlage ins abgeschaltete Netz zurückspeisen – lebensgefährlich für die Monteure des Netzbetreibers."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Ein Kunde betreibt seit drei Wochen ein neues Steckersolargerät. Was muss er noch tun?",
+        "antworten": [
+          "Es im Marktstammdatenregister registrieren",
+          "Nichts – Steckersolargeräte sind von allem befreit",
+          "Es beim Netzbetreiber anmelden und die Zusage abwarten",
+          "Es von einem eingetragenen Installateur abnehmen lassen"
+        ],
+        "richtig": 0,
+        "erklaerung": "Steckersolargeräte brauchen keine Anmeldung beim Netzbetreiber, aber die Registrierung im Marktstammdatenregister innerhalb eines Monats nach Inbetriebnahme. Verantwortlich ist der Betreiber."
       }
     ],
     "quelle": "Marktstammdatenregisterverordnung (MaStRV); NAV § 19; VDE-AR-N 4105",
