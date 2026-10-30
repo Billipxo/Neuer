@@ -239,3 +239,18 @@ button.armed { background: linear-gradient(#a02a1a, #6a140c) !important; border-
 :root { color-scheme: dark; }
 #game { inset: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
 #menu { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+#tutorial { position: absolute; left: 50%; transform: translateX(-50%); top: 10px; width: min(460px, calc(100% - 140px)); z-index: 5;
+  background: rgba(30,22,14,.96); border: 2px solid var(--gold); border-radius: 10px; padding: 10px 12px; box-shadow: 0 6px 20px rgba(0,0,0,.55); font-size: 14px; }
+.tut-head { font-family: 'Cinzel', serif; color: var(--gold); font-size: 13px; margin-bottom: 4px; }
+.tut-text { line-height: 1.4; }
+.tut-btns { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; gap: 8px; }
+.tut-wait { color: var(--muted); }
+.help .hgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.help .hgrid > div { background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; }
+.help h3 { color: var(--gold); font-size: 15px; margin-bottom: 4px; }
+.help p { margin: 0; line-height: 1.45; font-size: 14px; }
+@media (max-width: 900px), (max-height: 560px) {
+  #tutorial { top: 6px; left: 6px; right: 62px; transform: none; width: auto; font-size: 12.5px; padding: 7px 9px; }
+  body.tut-on #msgs { display: none; }
+}

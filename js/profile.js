@@ -8,7 +8,7 @@
     const xp = {}, skin = {};
     const banner = {};
     for (const r of G.RACE_KEYS) { xp[r] = 0; skin[r] = 'standard'; banner[r] = 'standard'; }
-    return { xp, skin, banner, campaign: { done: {} }, settings: { music: 0.5, sfx: 0.7, blood: true, muted: false }, games: 0, wins: 0 };
+    return { xp, skin, banner, campaign: { done: {} }, settings: { music: 0.5, sfx: 0.7, blood: true, muted: false }, tutorialDone: false, games: 0, wins: 0 };
   }
   P.data = fresh();
   P.load = function () {

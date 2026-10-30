@@ -63,7 +63,7 @@
 
   function renderMenu() {
     const c = UI.cfg;
-    const tabs = [['frei', 'Freies Spiel'], ['kampagne', 'Kampagne'], ['voelker', 'Völker & Skins'], ['optionen', 'Einstellungen']];
+    const tabs = [['frei', 'Freies Spiel'], ['kampagne', 'Kampagne'], ['voelker', 'Völker & Skins'], ['hilfe', 'Anleitung'], ['optionen', 'Einstellungen']];
     let body = `<nav class="menutabs">${tabs.map(([k, n]) => `<button class="${UI.menuTab === k ? 'sel' : ''}" data-act="m-tab" data-v="${k}">${n}</button>`).join('')}</nav>`;
     if (UI.menuTab === 'frei') {
       const maps = [['heimat', 'Heimatkarte', 'Karte deines Volkes'], ['zufall', 'Zufall', '']].concat(Object.keys(G.THEMES).map((k) => [k, G.THEMES[k].name, '']));
@@ -106,6 +106,18 @@
             <div class="skinlist">${G.SKINS.map((s) => `<div class="skin ${l >= s.lvl ? 'ok' : ''}"><span class="sw" style="${swatch(k, s.id)}"></span>${s.name}<small>${l >= s.lvl ? (s.desc || 'Standardaussehen') : 'ab Stufe ' + s.lvl}</small></div>`).join('')}</div>
             <div class="rewards">${G.REWARDS.map((rw) => `<div class="rw ${l >= rw.lvl ? 'ok' : ''}"><span>${l >= rw.lvl ? '✔' : rw.lvl}</span>${rw.kind === 'hero' ? 'Held: ' + r.heroes.find((h) => h.unlock).name : rw.text}</div>`).join('')}</div></div>`;
         }).join('')}</div><p class="note">Partien gesamt: ${Prof().data.games} · Siege: ${Prof().data.wins}</p></section>`;
+    } else if (UI.menuTab === 'hilfe') {
+      body += `<section class="help"><h2>Anleitung</h2>
+        <div class="hgrid">
+        <div><h3>Ziel</h3><p>Zerstöre das Haupthaus aller gegnerischen Völker. Fällt dein eigenes, ist die Partie verloren. In der Endphase (letzte 5 Minuten) greifen alle an, danach entscheidet die Punktzahl.</p></div>
+        <div><h3>Basisbau</h3><p>Baue innerhalb des gestrichelten Rings. Das Haupthaus bestimmt, wie viele Gebäude du bauen und wie hoch du sie ausbauen kannst. Baumeister begrenzen, wie viel gleichzeitig entsteht. Die Mauer kaufst du im Bauen-Tab; sie umschließt die ganze Basis.</p></div>
+        <div><h3>Wirtschaft</h3><p>Arbeiter entstehen automatisch und sammeln Gold und Holz. Minen und Sägewerke erhöhen das Einkommen. Außenposten auf Goldadern bringen viel Gold, stehen aber ungeschützt auf der Karte.</p></div>
+        <div><h3>Armee</h3><p>Truppengebäude bilden Einheiten nach deiner Zusammensetzung aus. Höhere Gebäudestufen schalten Rollen frei (Tank, Magier, Support …). Im Armee-Tab wählst du: Sammeln &amp; Angreifen, Wellen oder Nur verteidigen. Losgeschickte Einheiten kämpfen bis zum Tod.</p></div>
+        <div><h3>Held</h3><p>Dein Held gibt der ganzen Armee einen Commander-Bonus, steigt bis Stufe 10 auf und bringt pro Stufe einen Talentpunkt. Er kann automatisch kämpfen oder manuell gesteuert werden und kauft beim Händler Ausrüstung.</p></div>
+        <div><h3>Volk</h3><p>Jedes Volk hat ein Passiv und drei Volksfähigkeiten (ab Haupthaus-Stufe 1, 3 und 5). Im Tab „Volk“ verteilst du Talente in Krieg, Bollwerk und Wohlstand.</p></div>
+        <div><h3>Neutrale Monster</h3><p>Lager auf der Karte geben Gold, Holz, Erfahrung und Beute. Trolle schließen sich dir als Söldner an, Golems und Drachen stärken die ganze Armee.</p></div>
+        <div><h3>Steuerung</h3><p><b>PC:</b> WASD/Ziehen = Kamera, Mausrad = Zoom, Linksklick = auswählen/bauen, Rechtsklick = Held (manuell), Q/E = Heldenfähigkeit, 1–3 = Volksfähigkeit, H = Held manuell.<br><b>Handy:</b> Wischen = Kamera, zwei Finger = Zoom, Tippen = auswählen/bauen, lange drücken = Held bewegen (manuell), ☰ = Menü, rote Knöpfe = Fähigkeiten.</p></div>
+        </div></section>`;
     } else {
       const s = Prof().data.settings;
       body += `<section class="settings"><h2>Einstellungen</h2>
@@ -114,6 +126,7 @@
         <label class="tgl"><input type="checkbox" data-act="m-set" data-key="muted" ${s.muted ? 'checked' : ''}><span></span>Ton aus</label>
         <label class="tgl"><input type="checkbox" data-act="m-set" data-key="blood" ${s.blood ? 'checked' : ''}><span></span>Blut und Gefallene anzeigen</label>
         <button data-act="m-testsound">Klangprobe</button>
+        <button data-act="m-tutorial" ${Prof().data.tutorialDone ? '' : 'disabled'}>${Prof().data.tutorialDone ? 'Einführung im nächsten Spiel erneut zeigen' : 'Einführung wird im nächsten Spiel gezeigt'}</button>
         <p class="note">Profil und Fortschritt werden in diesem Browser gespeichert.</p>
         <button data-act="m-reset">Fortschritt zurücksetzen</button></section>`;
     }
@@ -123,6 +136,41 @@
     const fake = { race, rd: G.RACES[race], skin };
     const p = G.R.palOf(fake);
     return `background:linear-gradient(135deg, ${p.body} 0 33%, ${p.roof} 33% 66%, ${p.trim} 66%);${p.glow ? 'box-shadow:0 0 8px ' + p.glow : ''}`;
+  }
+
+  // -------------------------------------------------------------------------
+  // Einführung (geführte Tipps im ersten Spiel)
+  const TUT = [
+    { text: (p) => `Willkommen, Herrscher der ${p.rd.name}! Dein Ziel: Zerstöre das gegnerische Haupthaus, bevor es dein ${G.bname(p.race, 'haupthaus')} trifft. Zuerst bauen wir deine Wirtschaft auf.`, manual: 'Los geht\'s' },
+    { text: (p) => `Baue eine <b>${G.bname(p.race, 'goldmine')}</b>: Tab „Bauen“${G.R.touch ? ' (☰ oben rechts)' : ''} → ${G.bname(p.race, 'goldmine')} → freien Platz in deiner Basis ${G.R.touch ? 'antippen' : 'anklicken'}.`, check: (p) => G.countOf(p, 'goldmine') >= 1 },
+    { text: (p) => `Baue ein Truppengebäude: <b>${G.bname(p.race, 'kaserne')}</b>. Es bildet automatisch Nahkämpfer aus.`, check: (p) => G.countOf(p, 'kaserne') >= 1 },
+    { text: (p) => `Baue eine <b>${G.bname(p.race, 'unterkunft')}</b>. Mehr Versorgung (⚑ oben) bedeutet eine größere Armee.`, check: (p) => G.countOf(p, 'unterkunft') >= 1 },
+    { text: (p) => `Baue einen <b>${G.bname(p.race, 'turm')}</b> zur Verteidigung deiner Basis.`, check: (p) => G.countOf(p, 'turm') >= 1 },
+    { text: (p) => `Werte dein <b>${G.bname(p.race, 'haupthaus')}</b> auf Stufe 2 auf: ${G.R.touch ? 'antippen' : 'anklicken'} → „Ausbau“. Das schaltet neue Gebäude, Stufen und die Mauer frei.`, check: (p) => p.th.level >= 2 || !!p.th.upgrading },
+    { text: () => 'Deine Truppen kämpfen von selbst. Öffne den Tab <b>„Armee“</b>: „Sammeln“ greift geschlossen an, „Wellen“ schickt regelmäßig Truppen los.', check: () => UI.tab === 'armee' },
+    { text: (p) => `Volksfähigkeiten sind deine Trumpfkarten (${G.R.touch ? 'rote Knöpfe unten rechts' : 'Tasten 1–3'}). Setze <b>${p.rd.abilities[0].name}</b> ein, sobald gekämpft wird.`, check: (p) => (p.raceCasts || 0) > 0 },
+    { text: () => 'Sehr gut! Dein Held steigt durch Kämpfe auf und bringt Talentpunkte (Tab „Volk“). Beim Händler kauft er Ausrüstung. Tipp: Der Bau-Autopilot kann dir den Basisbau abnehmen. Viel Erfolg!', manual: 'Fertig' },
+  ];
+  function tutorialTick() {
+    const t = UI.tut; if (!t || !G.S) return;
+    const p = me(), st = TUT[t.step];
+    if (!st) return endTutorial(true);
+    if (st.check && st.check(p)) { t.step++; G.sfx('fertig', 0, 0, 0.6, true); renderTutorial(); }
+  }
+  function renderTutorial() {
+    const box = $('#tutorial'), t = UI.tut;
+    const on = !!(t && TUT[t.step]);
+    document.body.classList.toggle('tut-on', on);
+    if (!on) { box.classList.add('hidden'); return; }
+    const st = TUT[t.step];
+    box.classList.remove('hidden');
+    box.innerHTML = `<div class="tut-head">Einführung ${t.step + 1}/${TUT.length}</div><div class="tut-text">${st.text(me())}</div>
+      <div class="tut-btns">${st.manual ? `<button data-act="tut-next">${st.manual}</button>` : '<span class="tut-wait">…</span>'}<button class="mini" data-act="tut-skip">Überspringen</button></div>`;
+  }
+  function endTutorial(done) {
+    UI.tut = null; $('#tutorial').classList.add('hidden'); document.body.classList.remove('tut-on');
+    Prof().data.tutorialDone = true; Prof().save();
+    if (done) G.msg('Einführung abgeschlossen.', 'good');
   }
 
   // -------------------------------------------------------------------------
@@ -149,6 +197,8 @@
     });
     UI.selected = null; UI.placing = null; UI.casting = null; UI.pickTarget = false;
     UI.tab = 'bauen'; UI.awarded = null;
+    UI.tut = Prof().data.tutorialDone ? null : { step: 0 };
+    renderTutorial();
     document.body.classList.remove('panel-open');
     if (G.R.touch) { G.R.cam.z = 0.8; G.msg('Wischen: Karte bewegen · Zwei Finger: Zoom · Tippen: Auswählen · ☰: Menü · Lange drücken: Held bewegen (manuell)', ''); }
     if (cfg.mission) G.msg(`Mission: ${Prof().findMission(cfg.mission).m.goal}`, 'gold');
@@ -478,6 +528,9 @@
       case 'menu': G.S = null; UI.showMenu(); return;
       case 'tab': UI.tab = v; break;
       case 'panel': document.body.classList.toggle('panel-open'); return;
+      case 'tut-next': UI.tut.step++; if (!TUT[UI.tut.step]) endTutorial(true); else renderTutorial(); return;
+      case 'tut-skip': endTutorial(false); return;
+      case 'm-tutorial': Prof().data.tutorialDone = false; Prof().save(); renderMenu(); return;
       case 'build': UI.placing = UI.placing === el.dataset.type ? null : el.dataset.type; UI.casting = null;
         if (UI.placing && isMobile()) { document.body.classList.remove('panel-open'); G.msg('Tippe auf einen freien Platz in deiner Basis.', ''); G.R.centerOn(p.base.x, p.base.y); }
         if (UI.placing && G.BUILDINGS[UI.placing].outpost) G.msg('Klicke auf eine freie Goldader (gelb markiert) außerhalb deiner Basis.', '');
@@ -750,7 +803,7 @@
     const S = G.S; if (!S) return;
     tTop -= dt; tPanel -= dt; tMini -= dt;
     if (tTop <= 0) { tTop = 0.2; renderTop(); renderMsgs(); if (G.Audio) updateIntensity(); }
-    if (tPanel <= 0) { tPanel = 0.5; renderPanel(false); }
+    if (tPanel <= 0) { tPanel = 0.5; renderPanel(false); tutorialTick(); }
     if (tMini <= 0) { tMini = 0.15; G.R.drawMinimap($('#minimap')); }
     if (S.over && !endShown) { endShown = true; showEnd(); }
     if (!S.over) endShown = false;

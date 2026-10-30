@@ -11,13 +11,14 @@ Auch am **Handy und Tablet** spielbar (Touch-Steuerung: Wischen = Karte bewegen,
 Tippen = auswählen/bauen, lange drücken = Held bewegen im manuellen Modus, ☰ = Menü).
 Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http://localhost:8000` öffnen.
 
-## Was schon drin ist (Prototyp v0.4)
+## Was schon drin ist (Prototyp v0.5)
 
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
   Gegner-Völker werden jede Runde ausgelost. Spieldauer 20/30/45 Minuten oder unbegrenzt.
 - **6 Volkskampagnen** mit eigener Geschichte (je 5 Missionen: vernichten, überleben, Drachen erschlagen,
   Bündnis-Schlacht, Finale auf „Schwer“), z. B. „Die Krone von Valenmark“ (Menschen) oder „Blut und Steppe“ (Orks).
+- **Einführung** im ersten Spiel (abschaltbar) und **Anleitung** im Hauptmenü.
 - **Volks-XP & Belohnungen:** Jede Partie gibt deinem Volk Erfahrung. Pro Volksstufe gibt es Skins (Veteran, Elite,
   Legendär), Banner (Schwalbenwimpel, Kriegsstandarte), Titel (Rekrut bis Legende) und ab Stufe 3 einen vierten Helden.
   Fortschritt wird im Browser gespeichert.
@@ -43,6 +44,7 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 **Atmosphäre**
 - **Musik** je Heimatkarte (live erzeugt, wird bei Kämpfen intensiver) und **Kampfgeräusche** (Klingen, Bögen, Magie,
   Explosionen, Todesschreie) – ohne Audiodateien, mit der Web-Audio-API synthetisiert.
+- **Gezeichnete Figuren** je Volk und Rolle (Rüstung, Helme, Kapuzen, Bärte, Hauer, Hörner, Totenschädel, Waffen, Schilde in Spielerfarbe), Tiere und Monster mit eigener Gestalt.
 - **Animationen:** Laufen, Ausfallschritte, Waffenschwünge, umfallende Gefallene, hämmernde Baumeister.
 - **Blut** (abschaltbar): Spritzer, Lachen, Leichen; Trümmer zerstörter Gebäude.
 - **Tiere passend zur Karte** (Hasen, Rehe, Krähen, Kröten, Geier, Füchse, Glühwürmchen, Fledermäuse …), die vor Truppen fliehen.

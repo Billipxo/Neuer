@@ -1702,6 +1702,7 @@
         break;
     }
     p.abCd[i] = ab.cd * (1 - (p.teco.abilityCdr || 0));
+    p.raceCasts = (p.raceCasts || 0) + 1;
     G.sfx('faehigkeit', at.x, at.y, 1, p.human);
     if (p.human) G.msg(`${ab.name}!`, 'gold');
     else S.fx.push({ type: 'text', x: at.x, y: at.y - 40, text: ab.name, color: '#ff8080', t: 0, dur: 1.6, big: true });
