@@ -11,7 +11,7 @@ Auch am **Handy und Tablet** spielbar (Touch-Steuerung: Wischen = Karte bewegen,
 Tippen = auswählen/bauen, Held antippen und dann Ziel antippen = Held steuern, ☰ = Menü).
 Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http://localhost:8000` öffnen.
 
-## Was schon drin ist (Prototyp v0.8)
+## Was schon drin ist (Prototyp v0.9)
 
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
@@ -52,6 +52,13 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - **Einfache Produktion:** Armee-Vorlagen (Ausgewogen, Schildwall, Sturmangriff, Fernkampf, Arkane Macht),
   Rekrutieren per Einheitenkarte ohne Gebäudeauswahl, Übersicht der laufenden Ausbildung; Regler unter „Feineinstellung“.
 - Neutrale Monster mit Beute und Extra-Belohnungen, Händler, Endphase mit Punktewertung.
+
+**Oberfläche**
+- **Volks-Designs:** Die Oberfläche passt sich dem gespielten Volk an – Farben, Überschrift-Schrift und Wappen
+  (Menschen: Königsblau & Gold, Elfen: Waldgrün & Silber, Untote: Violett & Grabesgrün mit Frakturschrift,
+  Orks: Leder & Blutrot, Zwerge: Eisen & Bronze, Dämonen: Obsidian & Lava).
+- **Hauptmenü** mit gezeichneten Figuren-Szenen für jedes Volk und jeden Helden; Farben wechseln mit dem gewählten Volk.
+- Rohstoffleiste mit Symbolen, Fähigkeiten mit sichtbarer Abklingzeit, Seitenleiste mit Wappen und Titel.
 
 **Atmosphäre**
 - **Musik** je Heimatkarte (live erzeugt, wird bei Kämpfen intensiver) und **Kampfgeräusche** (Klingen, Bögen, Magie,

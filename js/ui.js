@@ -10,6 +10,32 @@
   const esc = (s) => String(s).replace(/"/g, '&quot;');
   const Prof = () => G.Profile;
 
+  // Wappen je Volk (einfarbig, übernimmt die Textfarbe)
+  const EMBLEM = {
+    menschen: '<path d="M3 17h18l-1.6-9.5-4.6 4.2L12 4.5 9.2 11.7 4.6 7.5z"/><rect x="3" y="18.5" width="18" height="2.5" rx=".6"/>',
+    elfen: '<path d="M12 2C5.5 7.5 5 15 12 22c7-7 6.5-14.5 0-20z"/><path d="M12 6v15M12 11l-3-2.5M12 15l3.2-2.8" stroke="rgba(0,0,0,.45)" stroke-width="1.3" fill="none"/>',
+    untote: '<path d="M12 2.5a8 8 0 0 0-8 8c0 2.9 1.4 5 3.2 6.1V20h2v-2h1.8v2h2v-2h1.8v2h2v-3.4c1.8-1.1 3.2-3.2 3.2-6.1a8 8 0 0 0-8-8z"/><circle cx="8.8" cy="11" r="2" fill="rgba(0,0,0,.7)"/><circle cx="15.2" cy="11" r="2" fill="rgba(0,0,0,.7)"/><path d="M12 13.5l-1.1 2h2.2z" fill="rgba(0,0,0,.7)"/>',
+    orks: '<path d="M3.5 8.5c.4 7.4 3.8 12.5 8.5 12.5s8.1-5.1 8.5-12.5C18.4 11 16 12 12 12S5.6 11 3.5 8.5z"/><path d="M7.2 12.3 5.6 3.2l3.9 8.6zM16.8 12.3l1.6-9.1-3.9 8.6z"/>',
+    zwerge: '<rect x="3" y="3" width="13" height="7" rx="1.2"/><rect x="8.2" y="9.5" width="2.8" height="12" rx="1"/><path d="M16 4.5h3.5v4H16z"/>',
+    daemonen: '<path d="M12 7.5c-3.3 3.8-3.5 8.2 0 14 3.5-5.8 3.3-10.2 0-14z"/><path d="M4.5 2.5c-1.5 5.5.2 9.2 4.6 10.4M19.5 2.5c1.5 5.5-.2 9.2-4.6 10.4" stroke="currentColor" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+    zufall: '<path d="M12 2l2.6 6.6 7 .5-5.4 4.5 1.7 6.9L12 16.8l-5.9 3.7 1.7-6.9L2.4 9.1l7-.5z"/>',
+  };
+  const emblem = (race) => `<span class="emblem"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${EMBLEM[race] || EMBLEM.zufall}</svg></span>`;
+  UI.emblem = emblem;
+  const RACE_FONT = { menschen: "'Cinzel', Georgia, serif", elfen: "'Uncial Antiqua', Georgia, serif", untote: "'UnifrakturCook', Georgia, serif", orks: "'Pirata One', Georgia, serif", zwerge: "'Germania One', Georgia, serif", daemonen: "'Metamorphous', Georgia, serif" };
+  // Symbole für die Rohstoffleiste
+  const ICON = {
+    gold: '<circle cx="12" cy="12" r="9" fill="#f0c24a" stroke="#6a4a10" stroke-width="2"/><circle cx="12" cy="12" r="5" fill="none" stroke="#a8781a" stroke-width="1.6"/>',
+    wood: '<rect x="2.5" y="7" width="19" height="10" rx="5" fill="#a8703a" stroke="#4a2a10" stroke-width="1.8"/><ellipse cx="17" cy="12" rx="3.2" ry="4.2" fill="#e0b070" stroke="#4a2a10" stroke-width="1.4"/><ellipse cx="17" cy="12" rx="1.3" ry="1.8" fill="none" stroke="#8a5a2a"/>',
+    supply: '<path d="M6 3v18" stroke="#d8c8a0" stroke-width="2.2"/><path d="M7 4h11l-3 4 3 4H7z" fill="var(--accent2)" stroke="#120d09" stroke-width="1.4"/>',
+    worker: '<path d="M4 20 14 10" stroke="#a87a4a" stroke-width="2.6" stroke-linecap="round"/><path d="M9 5c4-2 9 0 11 4-3-1.6-6-1.8-9-.6z" fill="#b8bcc4" stroke="#120d09" stroke-width="1.3"/>',
+    builder: '<path d="M5 20 13 12" stroke="#a87a4a" stroke-width="2.6" stroke-linecap="round"/><rect x="11" y="4" width="9" height="6" rx="1" transform="rotate(45 15.5 7)" fill="#9a9ea8" stroke="#120d09" stroke-width="1.3"/>',
+    castle: '<path d="M3 21V9h3v2h2V9h3v2h2V9h3v2h2V9h3v12z" fill="#9a968e" stroke="#120d09" stroke-width="1.4"/><path d="M10 21v-5a2 2 0 0 1 4 0v5z" fill="#120d09"/>',
+    time: '<path d="M6 3h12M6 21h12M7 3c0 5 10 5 10 9s-10 4-10 9M17 3c0 5-10 5-10 9s10 4 10 9" stroke="#d8c8a0" stroke-width="1.8" fill="none"/><path d="M9 19c1-2 5-2 6 0z" fill="#f0c24a"/>',
+    star: '<path d="M12 2.5l2.6 6.4 6.9.5-5.3 4.4 1.7 6.7L12 16.8l-5.9 3.7 1.7-6.7-5.3-4.4 6.9-.5z" fill="#ffd23a" stroke="#6a4a10" stroke-width="1.2"/>',
+  };
+  const ico = (k) => `<span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true">${ICON[k]}</svg></span>`;
+
   // -------------------------------------------------------------------------
   // Hauptmenü
   UI.cfg = { race: 'menschen', hero: null, mode: '1v1', difficulty: 'mittel', map: 'heimat', duration: 30 };
@@ -28,14 +54,14 @@
     return G.RACE_KEYS.map((k) => {
       const r = G.RACES[k], lvl = Prof().raceLevel(k);
       return `<button class="card race ${c.race === k ? 'sel' : ''}" data-act="m-race" data-v="${k}" style="--rc:${r.color};--rd:${r.dark}">
-        <div class="crest" style="background:${r.color}"><span>${r.name[0]}</span></div><span class="lvlbadge">Stufe ${lvl} · ${G.titleFor(lvl)}</span>
-        <h3>${r.name}</h3><p>${r.desc}</p>
+        <canvas class="preview" data-race="${k}" data-mode="race" data-skin="${Prof().data.skin[k] || 'standard'}" aria-label="${r.name}"></canvas><span class="lvlbadge">Stufe ${lvl} · ${G.titleFor(lvl)}</span>
+        <h3 style="color:${r.color};font-family:${RACE_FONT[k]}">${emblem(k)} ${r.name}</h3><p>${r.desc}</p>
         <div class="kv"><b>Passiv:</b> ${r.passive.name} – ${r.passive.desc}</div>
         <div class="kv"><b>Volksfähigkeiten:</b> ${r.abilities.map((a) => a.name).join(' · ')}</div>
         <div class="kv"><b>Heimat:</b> ${r.map.name}</div></button>`;
     }).join('') + `<button class="card race ${c.race === 'zufall' ? 'sel' : ''}" data-act="m-race" data-v="zufall" style="--rc:#888;--rd:#333">
-        <div class="crest" style="background:linear-gradient(135deg,#d6c39a,#9fd18c,#a9b5ac,#7aa04a,#c99a6a,#c0484a)"><span>?</span></div>
-        <h3>Zufall</h3><p>Das Schicksal entscheidet über dein Volk und deinen Helden.</p></button>`;
+        <div class="crest" style="background:linear-gradient(135deg,#d6c39a,#9fd18c,#a9b5ac,#7aa04a,#c99a6a,#c0484a);margin-top:12px"><span>?</span></div>
+        <h3>${emblem('zufall')} Zufall</h3><p>Das Schicksal entscheidet über dein Volk und deinen Helden.</p></button>`;
   }
   function heroCards(c) {
     if (c.race === 'zufall') return '<p class="note">Bei zufälligem Volk wird auch der Held zufällig bestimmt.</p>';
@@ -43,11 +69,11 @@
     if (c.hero !== 'zufall' && !rd.heroes.find((h) => h.id === c.hero)) c.hero = rd.heroes[0].id;
     if (c.hero !== 'zufall' && !Prof().heroUnlocked(c.race, rd.heroes.find((h) => h.id === c.hero))) c.hero = rd.heroes[0].id;
     return rd.heroes.map((h) => { const ok = Prof().heroUnlocked(c.race, h); return `<button class="card hero ${c.hero === h.id ? 'sel' : ''} ${ok ? '' : 'locked'}" data-act="m-hero" data-v="${h.id}" ${ok ? '' : `disabled title="Freischaltung ab Volksstufe ${G.UNLOCK_HERO_LVL}"`} style="--rc:${rd.color};--rd:${rd.dark}">${ok ? '' : `<span class="lvlbadge">🔒 ab Volksstufe ${G.UNLOCK_HERO_LVL}</span>`}
-        <div class="crest small" style="background:${rd.color}"><span>${h.name.split(' ').pop()[0]}</span></div>
+        <canvas class="preview" data-race="${c.race}" data-mode="hero" data-hero="${h.id}" data-skin="${Prof().data.skin[c.race] || 'standard'}" aria-label="${h.name}"></canvas>
         <h3>${h.name}</h3><div class="sub">${h.title} · ${h.ranged ? 'Fernkampf' : 'Nahkampf'}</div>
         <div class="kv"><b>Commander-Bonus:</b> ${h.bonusDesc}</div>
         <div class="kv"><b>Fähigkeiten:</b> ${h.abilities.map((a) => a.name).join(', ')}</div></button>`; }).join('')
-      + `<button class="card hero ${c.hero === 'zufall' ? 'sel' : ''}" data-act="m-hero" data-v="zufall" style="--rc:#888;--rd:#333"><div class="crest small" style="background:#777"><span>?</span></div><h3>Zufälliger Held</h3></button>`;
+      + `<button class="card hero ${c.hero === 'zufall' ? 'sel' : ''}" data-act="m-hero" data-v="zufall" style="--rc:#888;--rd:#333"><div class="crest small" style="background:#777;margin-top:12px"><span>?</span></div><h3>Zufälliger Held</h3></button>`;
   }
   function skinRow(c) {
     if (c.race === 'zufall') return '';
@@ -92,7 +118,7 @@
           const ok = Prof().missionUnlocked(c.race, i), dn = Prof().missionDone(c.race, i);
           return `<button class="mission ${UI.mission === i ? 'sel' : ''}" data-act="m-mission" data-v="${i}" ${ok ? '' : 'disabled'}><span>${dn ? '✔' : ok ? '⚔' : '🔒'}</span> ${i + 1}. ${m.title}</button>`;
         }).join('')}</div>
-        <div class="brief"><h3>${UI.mission + 1}. ${sel.title}</h3><p class="story">${sel.story}</p><p><b>Ziel:</b> ${sel.goal}</p>
+        <div class="brief"><canvas class="preview" data-race="${c.race}" data-mode="race" data-hero="${c.hero || ''}" data-skin="${Prof().data.skin[c.race] || 'standard'}"></canvas><h3>${UI.mission + 1}. ${sel.title}</h3><p class="story">${sel.story}</p><p><b>Ziel:</b> ${sel.goal}</p>
           <p class="note">Modus: ${G.LAYOUTS[sel.cfg.mode].name} · Schwierigkeit: ${G.DIFFICULTY[sel.cfg.difficulty].name} · ${sel.cfg.duration} Minuten · Karte: ${G.THEMES[sel.cfg.map].name}</p>
           <button class="big" data-act="m-campaign" ${Prof().missionUnlocked(c.race, UI.mission) ? '' : 'disabled'}>⚔ Mission starten</button></div></div>${skinRow(c)}</section>
         <section><h2>Dein Held</h2><div class="grid heroes">${heroCards(c)}</div></section>`;
@@ -100,8 +126,8 @@
       body += `<section><h2>Volks-Erfahrung</h2><p class="note">Jede Partie bringt deinem gespielten Volk Erfahrung (mehr bei Siegen, höherer Schwierigkeit und in der Kampagne). Mit steigender Volksstufe schaltest du Skins, Banner, Titel und einen vierten Helden frei.</p>
         <div class="grid races">${G.RACE_KEYS.map((k) => {
           const r = G.RACES[k], xp = Prof().data.xp[k] || 0, l = Prof().raceLevel(k), a = Prof().xpFor(l), b = Prof().xpFor(l + 1);
-          return `<div class="card race" style="--rc:${r.color}"><div class="crest" style="background:${r.color}"><span>${r.name[0]}</span></div>
-            <h3>${r.name} – Stufe ${l}</h3><div class="xpbar"><div style="width:${Math.floor(100 * (xp - a) / (b - a))}%"></div></div><small>${fmt(xp)} / ${fmt(b)} XP</small>
+          return `<div class="card race" style="--rc:${r.color}"><canvas class="preview" data-race="${k}" data-mode="race" data-skin="${Prof().data.skin[k] || 'standard'}"></canvas>
+            <h3 style="color:${r.color};font-family:${RACE_FONT[k]}">${emblem(k)} ${r.name} – Stufe ${l}</h3><div class="xpbar"><div style="width:${Math.floor(100 * (xp - a) / (b - a))}%"></div></div><small>${fmt(xp)} / ${fmt(b)} XP</small>
             <div class="kv">Titel: <b>${G.titleFor(l)}</b></div>
             <div class="skinlist">${G.SKINS.map((s) => `<div class="skin ${l >= s.lvl ? 'ok' : ''}"><span class="sw" style="${swatch(k, s.id)}"></span>${s.name}<small>${l >= s.lvl ? (s.desc || 'Standardaussehen') : 'ab Stufe ' + s.lvl}</small></div>`).join('')}</div>
             <div class="rewards">${G.REWARDS.map((rw) => `<div class="rw ${l >= rw.lvl ? 'ok' : ''}"><span>${l >= rw.lvl ? '✔' : rw.lvl}</span>${rw.kind === 'hero' ? 'Held: ' + r.heroes.find((h) => h.unlock).name : rw.text}</div>`).join('')}</div></div>`;
@@ -131,7 +157,20 @@
         <button data-act="m-reset">Fortschritt zurücksetzen</button></section>`;
     }
     $('#menu-body').innerHTML = body;
+    document.body.dataset.race = c.race === 'zufall' ? '' : c.race;
+    $('#title-orn').innerHTML = emblem(c.race);
+    drawPreviews();
   }
+  // Gezeichnete Figuren in den Menükarten (leicht animiert: Waffenschwünge, Banner, Leuchten)
+  function drawPreviews() {
+    document.querySelectorAll('#menu canvas.preview').forEach((cv) => G.R.drawPreview(cv, cv.dataset.race, cv.dataset.mode, cv.dataset.hero, cv.dataset.skin));
+  }
+  let menuT = 0;
+  UI.menuTick = function (dt) {
+    if ($('#menu').classList.contains('hidden')) return;
+    menuT -= dt;
+    if (menuT <= 0) { menuT = 0.1; drawPreviews(); }
+  };
   function swatch(race, skin) {
     const fake = { race, rd: G.RACES[race], skin };
     const p = G.R.palOf(fake);
@@ -189,6 +228,7 @@
     $('#game').classList.remove('hidden');
     G.R.cam.z = 1;
     if (G.Audio) { G.Audio.init(); G.Audio.setTheme(S.theme); }
+    document.body.dataset.race = S.players[0].race;
     requestAnimationFrame(() => {
       G.R.init($('#view'));
       const mm = $('#minimap');
@@ -211,14 +251,15 @@
     const S = G.S, p = me();
     const busy = G.buildersBusy(p), bmax = G.builders(p);
     $('#top-res').innerHTML = `
-      <span class="res gold" title="Gold">● ${fmt(p.gold)} <small>+${p.incomeG.toFixed(1)}/s</small></span>
-      <span class="res wood" title="Holz">▮ ${fmt(p.wood)} <small>+${p.incomeW.toFixed(1)}/s</small></span>
-      <span class="res sup" title="Versorgung">⚑ ${p.supplyUsed}/${p.supplyCap}</span>
-      <span class="res" title="Arbeiter">⚒ ${p.workers}/${p.workerCap || 0}</span>
-      <span class="res" title="Baumeister">🔨 ${busy}/${bmax}</span>
-      <span class="res" title="Haupthaus-Stufe">♜ Stufe ${p.th.level}</span>
-      ${p.talentPoints ? `<span class="res tp" title="Talentpunkte im Tab „Volk“ verteilen">★ ${p.talentPoints} Talent${p.talentPoints > 1 ? 'e' : ''}</span>` : ''}
-      <span class="res time ${S.endphase ? 'endphase' : ''}" title="${S.limit ? 'Verbleibende Spielzeit' : 'Spielzeit'}">⏱ ${S.limit ? 'noch ' + fmtTime(G.timeLeft()) + (S.endphase ? ' · ENDPHASE' : '') : fmtTime(S.time)}</span>`;
+      <span class="realm" title="${esc(p.rd.name + ' – ' + Prof().title(p.race))}">${emblem(p.race)}${p.rd.name}<small>${Prof().title(p.race)}</small></span>
+      <span class="res gold" title="Gold">${ico('gold')}${fmt(p.gold)} <small>+${p.incomeG.toFixed(1)}/s</small></span>
+      <span class="res wood" title="Holz">${ico('wood')}${fmt(p.wood)} <small>+${p.incomeW.toFixed(1)}/s</small></span>
+      <span class="res sup" title="Versorgung (Einheitenlimit)">${ico('supply')}${p.supplyUsed}/${p.supplyCap}</span>
+      <span class="res" title="Arbeiter">${ico('worker')}${p.workers}/${p.workerCap || 0}</span>
+      <span class="res" title="Baumeister">${ico('builder')}${busy}/${bmax}</span>
+      <span class="res" title="${esc(G.bname(p.race, 'haupthaus'))}-Stufe">${ico('castle')}${p.th.level}</span>
+      ${p.talentPoints ? `<span class="res tp" title="Talentpunkte im Tab „Volk“ verteilen">${ico('star')}${p.talentPoints}</span>` : ''}
+      <span class="res time ${S.endphase ? 'endphase' : ''}" title="${S.limit ? 'Verbleibende Spielzeit' : 'Spielzeit'}">${ico('time')}${S.limit ? fmtTime(G.timeLeft()) + (S.endphase ? ' · ENDPHASE' : '') : fmtTime(S.time)}</span>`;
     document.querySelectorAll('[data-act="speed"]').forEach((b) => b.classList.toggle('sel', !S.paused && +b.dataset.v === S.speed));
     $('[data-act="pause"]').classList.toggle('sel', S.paused);
     $('[data-act="mute"]').textContent = G.Audio && G.Audio.muted ? '🔇' : '🔊';
@@ -397,9 +438,11 @@
     const S = G.S; if (!S) return;
     if (!force && UI.pointerDownPanel) return;
     const p = me();
+    $('#panelhead').innerHTML = `${emblem(p.race)}<div><div class="ph-name">${p.rd.name}</div><small>${Prof().title(p.race)} · ${p.heroDef.name}</small></div>`;
     $('#race-ab').innerHTML = p.rd.abilities.map((ab, i) => {
       const why = G.raceAbilityCheck(p, i);
-      return `<button class="race-btn" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.desc)}"><b>${i + 1}${i === 0 ? '/R' : ''}: ${ab.name}</b><small>${why || 'Bereit!'}</small></button>`;
+      const cdf = p.th.level >= ab.th && p.abCd[i] > 0 ? Math.min(1, p.abCd[i] / (ab.cd * (1 - (p.teco.abilityCdr || 0)))) : 0;
+      return `<button class="race-btn" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.desc)}"><span class="cdfill" style="width:${Math.round(cdf * 100)}%"></span><b>${i + 1}${i === 0 ? '/R' : ''}: ${ab.name}</b><small>${why || 'Bereit!'}</small></button>`;
     }).join('');
     renderQuick(p);
     const tabs = [['bauen', 'Bauen'], ['armee', 'Armee'], ['held', 'Held'], ['volk', 'Volk' + (p.talentPoints ? ' ★' : '')], ['haendler', 'Händler'], ['wirtschaft', 'Wirtsch.']];
@@ -429,7 +472,7 @@
       <div class="hc-info"><div class="hc-name"><b>${d.name.split(' ').pop()}</b> St. ${h.level}${p.talentPoints ? ' <span class="tp">★</span>' : ''}</div>
       ${h.dead ? `<div class="hc-dead">Wiederbelebung in ${Math.ceil(p.heroRespawn)} s</div>` : `<div class="hc-bar hp"><div style="width:${Math.max(0, 100 * h.hp / h.maxHp)}%"></div></div>`}
       <div class="hc-bar xp"><div style="width:${xpPct}%"></div></div></div></div>
-      <div class="hc-btns">${h.abilities.map((a, i) => `<button data-act="cast" data-idx="${i}" ${a.t > 0 || h.dead ? 'disabled' : ''} title="${esc(a.name + ' – ' + abilityDesc(a))}">${G.R.touch ? '' : (i ? 'E ' : 'Q ')}${a.name.split(/[ -]/)[0].slice(0, 8)}<small>${a.t > 0 ? Math.ceil(a.t) + ' s' : 'bereit'}</small></button>`).join('')}
+      <div class="hc-btns">${h.abilities.map((a, i) => `<button class="cd" style="--cd:${a.t > 0 ? Math.min(1, a.t / (a.cd * (1 - h.cdr))).toFixed(3) : 0}" data-act="cast" data-idx="${i}" ${a.t > 0 || h.dead ? 'disabled' : ''} title="${esc(a.name + ' – ' + abilityDesc(a))}">${G.R.touch ? '' : (i ? 'E ' : 'Q ')}${a.name.split(/[ -]/)[0].slice(0, 8)}<small>${a.t > 0 ? Math.ceil(a.t) + ' s' : 'bereit'}</small></button>`).join('')}
         <button data-act="potion" ${potions && !h.dead ? '' : 'disabled'} title="Heiltrank trinken">🧪<small>${potions}×</small></button>
         <button data-act="retreat" ${h.dead ? 'disabled' : ''} title="Rückzug zur Basis">↩<small>Rückzug</small></button>
         <button data-act="follow" class="${UI.follow ? 'sel' : ''}" title="Kamera folgt dem Helden">🎥<small>${UI.follow ? 'folgt' : 'Kamera'}</small></button></div>
@@ -442,7 +485,8 @@
     let q = p.rd.abilities.map((ab, i) => {
       const why = G.raceAbilityCheck(p, i);
       const short = ab.name.split(/[ -]/)[0].slice(0, 9);
-      return `<button class="qr" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.name + ': ' + ab.desc)}">${short}<small>${why ? (p.th.level < ab.th ? '🔒' : Math.ceil(p.abCd[i]) + ' s') : 'bereit'}</small></button>`;
+      const cdf = p.th.level >= ab.th && p.abCd[i] > 0 ? Math.min(1, p.abCd[i] / (ab.cd * (1 - (p.teco.abilityCdr || 0)))) : 0;
+      return `<button class="qr cd" style="--cd:${cdf.toFixed(3)}" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.name + ': ' + ab.desc)}">${short}<small>${why ? (p.th.level < ab.th ? '🔒' : Math.ceil(p.abCd[i]) + ' s') : 'bereit'}</small></button>`;
     }).join('');
     q += `<button class="qa" data-act="launch" ${p.poolSupply ? '' : 'disabled'}>⚔ Angriff<small>${p.poolSupply} Vers.</small></button>`;
     $('#quick').innerHTML = q;
@@ -519,7 +563,7 @@
     const fm = S.cfg.mission ? Prof().findMission(S.cfg.mission) : null;
     const hasNext = fm && fm.index + 1 < 5;
     $('#end').classList.remove('hidden');
-    $('#end-body').innerHTML = `<h1 class="${o.win ? 'win' : 'lose'}">${o.win ? 'Sieg!' : 'Niederlage'}</h1>
+    $('#end-body').innerHTML = `${emblem(p.race)}<h1 class="${o.win ? 'win' : 'lose'}">${o.win ? 'Sieg!' : 'Niederlage'}</h1>
       <p>${o.reason || (o.byTime ? (o.win ? 'Die Zeit ist abgelaufen – dein Team liegt nach Punkten vorn.' : 'Die Zeit ist abgelaufen – der Gegner liegt nach Punkten vorn.') : o.win ? 'Alle gegnerischen Völker wurden bezwungen.' : 'Dein Haupthaus ist gefallen.')}</p>
       ${o.scores ? `<div class="stats">${o.scores.map((x) => `<span style="color:${x.color}">${x.name} <b>${x.score}</b></span>`).join('')}</div>` : ''}
       <div class="stats"><span>Spielzeit <b>${fmtTime(o.time)}</b></span><span>Besiegte Gegner <b>${p.stats.kills}</b></span><span>Verlorene Einheiten <b>${p.stats.lost}</b></span><span>Heldenstufe <b>${p.hero.level}</b></span></div>

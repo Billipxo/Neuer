@@ -871,6 +871,56 @@
   }
 
   R._drawMobile = (e) => drawMobile(e); // für Figuren-Vorschau und Tests
+
+  // Kleine Szene fürs Menü: Volk (Held mit Gefolge) oder einzelner Held vor der Heimatkarte
+  R.drawPreview = function (cv, race, mode, heroId, skin) {
+    const w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    const d2r = Math.min(2, window.devicePixelRatio || 1);
+    if (cv.width !== Math.round(w * d2r)) { cv.width = Math.round(w * d2r); cv.height = Math.round(h * d2r); }
+    const c2 = cv.getContext('2d');
+    const prevCtx = ctx, prevS = G.S;
+    const rd = G.RACES[race], th = G.THEMES[rd.map.theme];
+    const t = performance.now() / 1000;
+    const player = { race, rd, skin: skin || 'standard', color: G.PLAYER_COLORS[0], banner: 'standard' };
+    ctx = c2;
+    G.S = { time: t, players: [player] };
+    try {
+      c2.setTransform(d2r, 0, 0, d2r, 0, 0);
+      const g = c2.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, shade(th.ground[3], -0.05)); g.addColorStop(1, shade(th.ground[0], -0.45));
+      c2.fillStyle = g; c2.fillRect(0, 0, w, h);
+      const rnd = rng(race.length * 131 + (heroId ? heroId.length * 17 : 3));
+      for (let i = 0; i < 18; i++) {
+        c2.globalAlpha = 0.35; c2.fillStyle = th.ground[1 + Math.floor(rnd() * 3)];
+        c2.beginPath(); c2.ellipse(rnd() * w, h * 0.35 + rnd() * h * 0.7, 10 + rnd() * 30, 4 + rnd() * 10, 0, 0, 7); c2.fill();
+      }
+      c2.globalAlpha = 1;
+      // Hintergrund-Deko an den Rändern
+      for (const [dx, dy, sc] of [[0.08, 0.52, 0.9], [0.93, 0.48, 1.0]]) drawDecor({ x: w * dx, y: h * dy, s: sc * h / 120, v: 1, seed: dx }, th);
+      const fig = (e, x, y, sc, off) => {
+        const ph = (t + off) % 2.4;
+        e.swing = ph < 0.22 ? 0.22 - ph : 0;
+        Object.assign(e, { x: 0, y: 0, owner: 0, hp: 1, maxHp: 1, level: 1, m: {}, moving: false, preview: true, id: Math.round(off * 100) });
+        c2.save(); c2.translate(x, y); c2.scale(sc, sc); drawMobile(e); c2.restore();
+      };
+      const hd = rd.heroes.find((x) => x.id === heroId) || rd.heroes[0];
+      const hero = { kind: 'hero', def: hd, name: hd.name, r: 16, face: 1.35, range: hd.ranged ? 165 : 28, speed: 80 };
+      const unit = (role) => ({ kind: 'unit', role, name: rd.units[role].name, r: G.UNIT_BASE[role].r, face: 1.35, range: G.UNIT_BASE[role].range, speed: 60 });
+      const s0 = h / 120;
+      if (mode === 'hero') fig(hero, w / 2, h * 0.66, s0 * 1.9, 0.3);
+      else {
+        fig(unit('tank'), w * 0.26, h * 0.52, s0 * 1.3, 0.9);
+        fig(unit('fernkampf'), w * 0.74, h * 0.52, s0 * 1.3, 1.7);
+        fig(unit('nahkampf'), w * 0.36, h * 0.78, s0 * 1.35, 1.2);
+        fig(unit('magier'), w * 0.64, h * 0.78, s0 * 1.35, 2.0);
+        fig(hero, w / 2, h * 0.62, s0 * 1.6, 0.3);
+      }
+      const v = c2.createRadialGradient(w / 2, h * 0.55, h * 0.3, w / 2, h * 0.55, w * 0.75);
+      v.addColorStop(0, 'rgba(0,0,0,0)'); v.addColorStop(1, 'rgba(0,0,0,0.55)');
+      c2.fillStyle = v; c2.fillRect(0, 0, w, h);
+    } finally { ctx = prevCtx; G.S = prevS; }
+  };
   function drawMobile(e) {
     const S = G.S;
     const p = e.owner >= 0 ? S.players[e.owner] : null;
@@ -918,6 +968,7 @@
     if (e.kind === 'unit' && e.level > 1) {
       for (let i = 0; i < e.level - 1; i++) { ctx.fillStyle = '#ffd23a'; ctx.beginPath(); ctx.arc(x - (e.level - 2) * 3 + i * 6, top - 5, 2.2, 0, 7); ctx.fill(); outline(1); }
     }
+    if (e.preview) return;
     const sel = G.UI && G.UI.selected === e;
     if (e.hp < e.maxHp || e.kind === 'hero' || sel) bar(x - r - 2, top - (e.kind === 'hero' ? 18 : 11), r * 2 + 4, e.kind === 'hero' ? 5 : 3.5, e.hp / e.maxHp, hpCol(e));
     if (e.kind === 'hero') {

@@ -5,6 +5,7 @@
   function frame(now) {
     const dt = Math.min(0.1, (now - last) / 1000);
     last = now;
+    if (!G.S) G.UI.menuTick(dt);
     if (G.S && G.R.ready()) {
       G.update(dt);
       G.UI.updateCamera(dt);
