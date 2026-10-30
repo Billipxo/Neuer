@@ -248,72 +248,188 @@
   }
   R.buildingIcon = buildingIcon;
 
+  // Farbpalette eines Spielers inkl. Skin
+  R.palOf = function (p) {
+    if (p._pal && p._palSkin === p.skin) return p._pal;
+    const b = p.rd.palette;
+    let pal = { ...b }, body = p.rd.color, glow = null;
+    if (p.skin === 'veteran') { pal = { wall: shade(b.wall, -0.25), roof: shade(b.roof, -0.2), trim: '#c8d0d8' }; body = shade(body, -0.15); }
+    else if (p.skin === 'elite') { pal = { wall: '#e6dfd0', roof: shade(b.roof, 0.12), trim: '#ffd23a' }; body = shade(body, 0.08); }
+    else if (p.skin === 'legende') { glow = G.LEGEND_COLORS[p.race]; pal = { wall: shade(b.wall, -0.15), roof: shade(glow, -0.4), trim: glow }; }
+    p._pal = { ...pal, body, glow }; p._palSkin = p.skin;
+    return p._pal;
+  };
+
+  // Volksspezifisches Dach / Oberteil eines Gebäudes
+  function drawRoof(race, type, x, y, hs, pal, flash, S) {
+    const roof = flash ? '#fff' : pal.roof;
+    const top = y - hs * 1.05, eave = y - hs * 0.3;
+    ctx.beginPath();
+    switch (race) {
+      case 'elfen': { // Blätterkrone
+        ctx.moveTo(x - hs + 2, eave); ctx.quadraticCurveTo(x, top - hs * 0.5, x + hs - 2, eave); ctx.closePath();
+        ctx.fillStyle = roof; ctx.fill(); outline();
+        for (const [dx, dy, r] of [[-0.45, -0.75, 0.32], [0.4, -0.8, 0.3], [0, -1.05, 0.34]]) circ(x + dx * hs, y + dy * hs, r * hs, shade(roof, dx * 0.2), 2);
+        ctx.fillStyle = pal.trim; ctx.globalAlpha *= 0.8;
+        for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.arc(x + Math.sin(S.time + i * 2) * hs * 0.6, y - hs * (0.7 + 0.2 * Math.cos(S.time * 1.3 + i)), 1.6, 0, 7); ctx.fill(); }
+        ctx.globalAlpha /= 0.8;
+        return;
+      }
+      case 'untote': { // Gotische Spitztürme
+        ctx.moveTo(x - hs + 4, eave); ctx.lineTo(x - hs * 0.45, top - hs * 0.45); ctx.lineTo(x - hs * 0.1, eave - hs * 0.2);
+        ctx.lineTo(x + hs * 0.1, eave - hs * 0.2); ctx.lineTo(x + hs * 0.45, top - hs * 0.45); ctx.lineTo(x + hs - 4, eave); ctx.closePath();
+        ctx.fillStyle = roof; ctx.fill(); outline();
+        ctx.save(); ctx.shadowColor = pal.trim; ctx.shadowBlur = 8; ctx.fillStyle = pal.trim;
+        for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(x + s * hs * 0.45, y - hs * 0.75, 2.5, 4.5, 0, 0, 7); ctx.fill(); }
+        ctx.restore();
+        return;
+      }
+      case 'orks': { // Fellzelt mit Hörnern
+        ctx.moveTo(x - hs, eave + 2); ctx.lineTo(x, top - hs * 0.15); ctx.lineTo(x + hs, eave + 2); ctx.closePath();
+        ctx.fillStyle = roof; ctx.fill(); outline();
+        ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1.5;
+        for (let i = -2; i <= 2; i++) { ctx.beginPath(); ctx.moveTo(x, top - hs * 0.1); ctx.lineTo(x + i * hs * 0.35, eave); ctx.stroke(); }
+        for (const s of [-1, 1]) {
+          ctx.beginPath(); ctx.moveTo(x + s * 3, top - hs * 0.05); ctx.quadraticCurveTo(x + s * hs * 0.5, top - hs * 0.5, x + s * hs * 0.3, top - hs * 0.75);
+          ctx.lineTo(x + s * hs * 0.22, top - hs * 0.35); ctx.closePath(); ctx.fillStyle = '#e8dcc0'; ctx.fill(); outline(1.8);
+        }
+        return;
+      }
+      case 'zwerge': { // Flaches Steindach mit Zinnen und Esse
+        ctx.rect(x - hs + 3, y - hs * 0.75, hs * 2 - 6, hs * 0.45); ctx.fillStyle = roof; ctx.fill(); outline();
+        for (let i = 0; i < 4; i++) { ctx.beginPath(); ctx.rect(x - hs + 5 + i * (hs * 2 - 14) / 3, y - hs * 0.95, 8, hs * 0.22); ctx.fillStyle = shade(pal.wall, 0.1); ctx.fill(); outline(1.8); }
+        ctx.beginPath(); ctx.rect(x + hs * 0.35, y - hs * 1.25, 9, hs * 0.55); ctx.fillStyle = shade(pal.wall, -0.2); ctx.fill(); outline(1.8);
+        ctx.save(); ctx.fillStyle = '#9a9a9a';
+        for (let i = 0; i < 3; i++) { const k = (S.time * 0.6 + i / 3) % 1; ctx.globalAlpha = 0.45 * (1 - k); ctx.beginPath(); ctx.arc(x + hs * 0.35 + 4 + k * 8, y - hs * 1.3 - k * 26, 3 + k * 6, 0, 7); ctx.fill(); }
+        ctx.restore();
+        return;
+      }
+      case 'daemonen': { // Gezackte Obsidianspitzen mit Glut
+        ctx.moveTo(x - hs + 2, eave);
+        const n = 5;
+        for (let i = 0; i <= n; i++) { const px = x - hs + 2 + (i / n) * (hs * 2 - 4); ctx.lineTo(px - hs * 0.15, eave - hs * 0.3); ctx.lineTo(px, top - hs * (i % 2 ? 0.1 : 0.45)); }
+        ctx.lineTo(x + hs - 2, eave); ctx.closePath();
+        ctx.fillStyle = roof; ctx.fill(); outline();
+        ctx.save(); ctx.shadowColor = pal.trim; ctx.shadowBlur = 10; ctx.strokeStyle = pal.trim; ctx.lineWidth = 1.5; ctx.globalAlpha *= 0.6 + 0.3 * Math.sin(S.time * 3);
+        ctx.beginPath(); ctx.moveTo(x - hs * 0.4, eave); ctx.lineTo(x - hs * 0.2, y - hs * 0.7); ctx.lineTo(x + hs * 0.1, eave - 4); ctx.stroke(); ctx.restore();
+        return;
+      }
+      default: { // Menschen: Satteldach bzw. Kuppel
+        if (type === 'sanktum' || type === 'beschwoerung') { ctx.ellipse(x, eave - 1, hs * 0.85, hs * 0.75, 0, Math.PI, 0); ctx.closePath(); }
+        else { ctx.moveTo(x - hs + 2, eave); ctx.lineTo(x - hs * 0.55, top); ctx.lineTo(x + hs * 0.55, top); ctx.lineTo(x + hs - 2, eave); ctx.closePath(); }
+        ctx.fillStyle = roof; ctx.fill(); outline();
+        ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.beginPath(); ctx.moveTo(x - hs * 0.55, top + 2); ctx.lineTo(x - hs * 0.1, top + 2); ctx.lineTo(x - hs * 0.4, eave - 1); ctx.lineTo(x - hs + 8, eave - 1); ctx.closePath(); ctx.fill();
+      }
+    }
+  }
+
+  function drawWall(s) {
+    const S = G.S, p = S.players[s.owner], pal = R.palOf(p);
+    const flash = s.hitT > 0;
+    ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(s.ang + Math.PI / 2);
+    const col = flash ? '#fff' : s.level === 1 ? '#8a5a32' : s.level === 2 ? pal.wall : shade(pal.wall, -0.15);
+    shadow(4, 8, 20, 7);
+    if (s.level === 1) { // Holzpalisade: angespitzte Pfähle
+      for (let i = -2; i <= 2; i++) {
+        ctx.beginPath(); ctx.moveTo(i * 7 - 3.5, 6); ctx.lineTo(i * 7 - 3.5, -10); ctx.lineTo(i * 7, -16); ctx.lineTo(i * 7 + 3.5, -10); ctx.lineTo(i * 7 + 3.5, 6); ctx.closePath();
+        ctx.fillStyle = i % 2 ? col : shade(col, 0.1); ctx.fill(); outline(1.6);
+      }
+    } else {
+      roundRect(-18, -12, 36, 20, 2); ctx.fillStyle = col; ctx.fill(); outline(2);
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(-18, -2); ctx.lineTo(18, -2); ctx.moveTo(-6, -12); ctx.lineTo(-6, -2); ctx.moveTo(8, -2); ctx.lineTo(8, 8); ctx.stroke();
+      const z = s.level === 3 ? 3 : 2;
+      for (let i = 0; i < z; i++) { const w = 36 / (z * 2 - 1); roundRect(-18 + i * w * 2, -18, w, 7, 1); ctx.fillStyle = shade(col, 0.1); ctx.fill(); outline(1.5); }
+      if (s.level === 3) { ctx.fillStyle = pal.trim; ctx.fillRect(-2, -10, 4, 4); }
+    }
+    ctx.restore();
+    if (s.hp < s.maxHp) bar(s.x - 16, s.y - 26, 32, 3, s.hp / s.maxHp, hpCol(s));
+  }
+
+  function drawSite(s) {
+    const x = s.x, y = s.y, S = G.S;
+    shadow(x + 4, y + 10, 42, 14);
+    for (const [dx, dy, r, c] of [[-22, 4, 14, '#6a6058'], [16, 8, 12, '#7a7068'], [0, -8, 16, '#5a524a'], [24, -6, 9, '#6a6058']]) {
+      ctx.beginPath(); ctx.moveTo(x + dx - r, y + dy + r * 0.4); ctx.lineTo(x + dx - r * 0.6, y + dy - r * 0.7); ctx.lineTo(x + dx + r * 0.3, y + dy - r); ctx.lineTo(x + dx + r, y + dy + r * 0.4); ctx.closePath();
+      ctx.fillStyle = c; ctx.fill(); outline(2);
+    }
+    ctx.save(); ctx.shadowColor = '#ffd23a'; ctx.shadowBlur = 8; ctx.fillStyle = '#ffd23a';
+    for (const [dx, dy] of [[-18, 0], [-2, -12], [14, 4], [22, -8], [4, 2]]) { ctx.beginPath(); ctx.arc(x + dx, y + dy, 2.4, 0, 7); ctx.fill(); }
+    const k = (S.time * 0.8) % 1;
+    ctx.globalAlpha = 1 - k; ctx.beginPath(); ctx.arc(x - 6 + k * 4, y - 14 - k * 10, 1.6, 0, 7); ctx.fill();
+    ctx.restore();
+    label('Goldader', x, y + 34, '#ffe066', 10);
+  }
+
   // -------------------------------------------------------------------------
   // Gebäude
   function drawBuilding(b) {
-    const S = G.S, p = S.players[b.owner], pal = p.rd.palette;
+    if (b.type === 'mauer') return drawWall(b);
+    const S = G.S, p = S.players[b.owner], pal = R.palOf(p);
     const hs = b.size * T / 2, x = b.x, y = b.y;
     const constructing = b.level === 0;
+    if (b.site) drawSite(b.site);
     ctx.save();
     if (constructing) ctx.globalAlpha = 0.55 + 0.4 * (b.upgrading ? b.upgrading.t / b.upgrading.total : 0);
     shadow(x + 6, y + hs * 0.55, hs * 1.05, hs * 0.5);
     const flash = b.hitT > 0;
     if (b.type === 'turm' || b.type === 'kanone') {
-      // Rundturm
       const r = hs * 0.95;
       ctx.fillStyle = shade(pal.wall, -0.25); ctx.beginPath(); ctx.ellipse(x, y + 4, r, r * 0.8, 0, 0, 7); ctx.fill(); outline();
       ctx.fillStyle = flash ? '#fff' : pal.wall; ctx.beginPath(); ctx.ellipse(x, y - 8, r * 0.9, r * 0.72, 0, 0, 7); ctx.fill(); outline();
       for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2; ctx.fillStyle = shade(pal.wall, 0.15); ctx.fillRect(x + Math.cos(a) * r * 0.7 - 2.5, y - 8 + Math.sin(a) * r * 0.55 - 2.5, 5, 5); }
       if (b.type === 'kanone') {
-        const S2 = G.S; const tgt = S2 && b.lastAng !== undefined ? b.lastAng : -Math.PI / 4;
-        ctx.save(); ctx.translate(x, y - 10); ctx.rotate(tgt); ctx.fillStyle = '#2a2a2e'; ctx.fillRect(0, -3.5, 14, 7); ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.strokeRect(0, -3.5, 14, 7); ctx.restore();
+        const ang = b.lastAng !== undefined ? b.lastAng : -Math.PI / 4;
+        ctx.save(); ctx.translate(x, y - 10); ctx.rotate(ang); ctx.fillStyle = '#2a2a2e'; ctx.fillRect(0, -3.5, 14, 7); ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.strokeRect(0, -3.5, 14, 7); ctx.restore();
         circ(x, y - 10, 6, '#3a3a40', 2);
       } else {
-        ctx.beginPath(); ctx.moveTo(x - r * 0.6, y - 14); ctx.lineTo(x, y - 30); ctx.lineTo(x + r * 0.6, y - 14); ctx.closePath(); ctx.fillStyle = pal.roof; ctx.fill(); outline();
+        ctx.beginPath();
+        if (p.race === 'elfen') { ctx.ellipse(x, y - 22, r * 0.7, r * 0.55, 0, 0, 7); }
+        else if (p.race === 'zwerge') { ctx.rect(x - r * 0.6, y - 24, r * 1.2, 10); }
+        else { ctx.moveTo(x - r * 0.6, y - 14); ctx.lineTo(x, y - (p.race === 'untote' || p.race === 'daemonen' ? 38 : 30)); ctx.lineTo(x + r * 0.6, y - 14); ctx.closePath(); }
+        ctx.fillStyle = pal.roof; ctx.fill(); outline();
+        if (p.race === 'daemonen' || p.race === 'untote') { ctx.save(); ctx.shadowColor = pal.trim; ctx.shadowBlur = 10; circ(x, y - 22, 3, pal.trim, 0); ctx.restore(); }
       }
     } else {
-      // Fundament
       ctx.fillStyle = shade(pal.wall, -0.35);
       roundRect(x - hs + 2, y - hs + 6, hs * 2 - 4, hs * 2 - 6, 6); ctx.fill(); outline();
-      // Mauern
       ctx.fillStyle = flash ? '#fff' : pal.wall;
       roundRect(x - hs + 6, y - hs * 0.35, hs * 2 - 12, hs * 1.15, 4); ctx.fill(); outline();
-      // Dach
-      ctx.beginPath();
-      if (b.type === 'sanktum' || b.type === 'beschwoerung') {
-        ctx.ellipse(x, y - hs * 0.35, hs * 0.85, hs * 0.75, 0, Math.PI, 0); ctx.closePath();
-      } else {
-        ctx.moveTo(x - hs + 2, y - hs * 0.3); ctx.lineTo(x - hs * 0.55, y - hs * 1.05); ctx.lineTo(x + hs * 0.55, y - hs * 1.05); ctx.lineTo(x + hs - 2, y - hs * 0.3); ctx.closePath();
+      if (p.race === 'zwerge' || p.race === 'menschen') { // Mauerwerk
+        ctx.strokeStyle = 'rgba(0,0,0,0.18)'; ctx.lineWidth = 1;
+        for (let r = 0; r < 3; r++) { const yy = y - hs * 0.35 + (r + 1) * hs * 0.3; ctx.beginPath(); ctx.moveTo(x - hs + 7, yy); ctx.lineTo(x + hs - 7, yy); ctx.stroke(); }
       }
-      ctx.fillStyle = flash ? '#fff' : pal.roof; ctx.fill(); outline();
-      ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.beginPath(); ctx.moveTo(x - hs * 0.55, y - hs * 1.0); ctx.lineTo(x - hs * 0.1, y - hs * 1.0); ctx.lineTo(x - hs * 0.4, y - hs * 0.35); ctx.lineTo(x - hs + 8, y - hs * 0.35); ctx.closePath(); ctx.fill();
-      // Tür
+      drawRoof(p.race, b.type, x, y, hs, pal, flash, S);
       ctx.fillStyle = INK; roundRect(x - 6, y + hs * 0.35, 12, hs * 0.45, 5); ctx.fill();
-      // Symbol
+      if (p.race === 'untote' || p.race === 'daemonen') { ctx.save(); ctx.globalAlpha *= 0.5 + 0.3 * Math.sin(S.time * 2 + b.id); ctx.fillStyle = pal.trim; roundRect(x - 4, y + hs * 0.42, 8, hs * 0.35, 4); ctx.fill(); ctx.restore(); }
       buildingIcon(b.type, x, y + hs * 0.05, b.size === 3 ? 1.5 : 1.05, pal.trim);
       if (b.type === 'beschwoerung' && !constructing) {
         ctx.save(); ctx.globalAlpha = 0.35 + 0.25 * Math.sin(S.time * 3); ctx.strokeStyle = '#c070ff'; ctx.lineWidth = 3;
         ctx.beginPath(); ctx.ellipse(x, y + hs * 0.6, hs * 0.9, hs * 0.35, 0, 0, 7); ctx.stroke(); ctx.restore();
       }
       if (b.type === 'schmiede' && !constructing) {
-        ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = '#888';
+        ctx.save(); ctx.fillStyle = '#888';
         const t = S.time * 0.8;
         for (let i = 0; i < 3; i++) { const k = (t + i / 3) % 1; ctx.beginPath(); ctx.arc(x + hs * 0.5 + k * 10, y - hs * 1.1 - k * 30, 4 + k * 6, 0, 7); ctx.globalAlpha = 0.5 * (1 - k); ctx.fill(); }
         ctx.restore();
       }
     }
-    // Banner in Spielerfarbe
     const fx = x + hs - 8, fy = y - hs * (b.size === 1 ? 1.4 : 1.0);
     ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(fx, fy + 16); ctx.lineTo(fx, fy - 6); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(fx, fy - 6); ctx.lineTo(fx + 12, fy - 2 + Math.sin(S.time * 4 + b.id) * 1.5); ctx.lineTo(fx, fy + 3); ctx.closePath();
     ctx.fillStyle = p.color; ctx.fill(); outline(1.5);
     ctx.restore();
 
-    // Gerüst
     if (constructing) {
       ctx.strokeStyle = '#8a6a3a'; ctx.lineWidth = 2;
       for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.moveTo(x + i * hs * 0.7, y + hs * 0.8); ctx.lineTo(x + i * hs * 0.7, y - hs); ctx.stroke(); }
       ctx.beginPath(); ctx.moveTo(x - hs * 0.8, y); ctx.lineTo(x + hs * 0.8, y); ctx.moveTo(x - hs * 0.8, y - hs * 0.6); ctx.lineTo(x + hs * 0.8, y - hs * 0.6); ctx.stroke();
+    }
+    if (b.upgrading) { // Hämmernde Baumeister
+      const k = Math.abs(Math.sin(S.time * 8 + b.id));
+      ctx.save(); ctx.translate(x - hs + 6, y + hs * 0.2); ctx.rotate(-0.8 + k * 0.9);
+      ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -12); ctx.stroke();
+      ctx.fillStyle = '#9a9aa0'; ctx.fillRect(-4, -15, 8, 5); ctx.restore();
     }
     // Stufen-Abzeichen
     if (b.level > 0) {
@@ -348,11 +464,24 @@
   function drawMobile(e) {
     const S = G.S;
     const p = e.owner >= 0 ? S.players[e.owner] : null;
-    const r = e.r, x = e.x, y = e.y;
-    const bob = e.moving ? Math.sin(S.time * 12 + e.id) * 1.2 : 0;
-    const bodyCol = e.kind === 'creep' ? e.def.color : p.rd.color;
-    const face = e.face || 0;
+    const r = e.r, face = e.face || 0;
+    const pal = p ? R.palOf(p) : null;
+    // Ausfallschritt beim Nahkampfangriff
+    const lunge = e.swing > 0 && e.range < 60 ? Math.sin((e.swing / 0.22) * Math.PI) * 5 : 0;
+    const x = e.x + Math.cos(face) * lunge, y = e.y + Math.sin(face) * lunge;
+    const bob = e.moving ? Math.abs(Math.sin((e.walkT || 0) * 1.0)) * -2 : 0;
+    const bodyCol = e.kind === 'creep' ? e.def.color : pal.body;
     shadow(x, y + r * 0.7, r * 1.0, r * 0.45);
+    if (pal && pal.glow) { ctx.save(); ctx.globalAlpha = 0.25 + 0.1 * Math.sin(S.time * 3 + e.id); ctx.shadowColor = pal.glow; ctx.shadowBlur = 14; circ(x, y, r + 3, pal.glow, 0); ctx.restore(); }
+    // Füße (Laufanimation)
+    if (e.speed > 0) {
+      const step = e.moving ? Math.sin((e.walkT || 0) * 1.0) * r * 0.45 : 0;
+      for (const sgn of [-1, 1]) {
+        const fx = x + Math.cos(face + sgn * 1.2) * r * 0.55 + Math.cos(face) * step * sgn;
+        const fy = y + Math.sin(face + sgn * 1.2) * r * 0.55 + Math.sin(face) * step * sgn + r * 0.35;
+        ctx.fillStyle = shade(bodyCol, -0.45); ctx.beginPath(); ctx.ellipse(fx, fy, r * 0.28, r * 0.2, face, 0, 7); ctx.fill(); outline(1.5);
+      }
+    }
     if (e.summoned) { ctx.save(); ctx.globalAlpha = 0.35; circ(x, y, r + 4, p.rd.palette.trim, 0); ctx.restore(); }
     if (e.stun > 0) { ctx.save(); ctx.strokeStyle = '#9ad8ff'; ctx.lineWidth = 2; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.arc(x, y - r - 6, 7, S.time * 5, S.time * 5 + 5); ctx.stroke(); ctx.restore(); }
 
@@ -373,7 +502,7 @@
     }
     // Waffe hinten (Schild/Stab)
     const role = e.kind === 'hero' ? (e.def.ranged ? 'magier' : 'nahkampf') : e.role;
-    const swing = e.swing > 0 ? Math.sin((e.swing / 0.18) * Math.PI) * 0.9 : 0;
+    const swing = e.swing > 0 ? Math.sin((e.swing / 0.22) * Math.PI) * 1.4 : 0;
     ctx.save(); ctx.translate(x, y + bob); ctx.rotate(face);
     ctx.lineCap = 'round';
     if (e.kind !== 'creep') {
@@ -497,6 +626,92 @@
   }
 
   // -------------------------------------------------------------------------
+  // Leben auf der Karte: Arbeiter, Tiere, Blut, Leichen
+  function drawWorker(w, p) {
+    const pal = R.palOf(p), x = w.x, y = w.y, f = w.face || 0;
+    const bob = w.moving ? Math.abs(Math.sin(w.walkT)) * -1.5 : 0;
+    shadow(x, y + 4, 6, 3);
+    if (w.state === 'work') { // Spitzhacke / Axt schwingen
+      const k = Math.sin(G.S.time * 9 + w.idx) * 0.9;
+      ctx.save(); ctx.translate(x, y - 2); ctx.rotate(f + k - 0.5);
+      ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(10, 0); ctx.stroke();
+      ctx.strokeStyle = '#9a9aa0'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(10, -3); ctx.lineTo(10, 3); ctx.stroke();
+      ctx.restore();
+    }
+    circ(x, y + bob, 5.5, shade(pal.body, -0.1), 1.8);
+    circ(x + Math.cos(f) * 1.5, y + bob - 4, 3.2, '#e8c8a0', 1.5);
+    if (w.carry === 'gold') circ(x - Math.cos(f) * 5, y + bob - 3, 3, '#ffd23a', 1.4);
+    else if (w.carry === 'holz') { ctx.save(); ctx.translate(x - Math.cos(f) * 5, y + bob - 3); ctx.rotate(f + 1.2); ctx.fillStyle = '#8a5a32'; ctx.fillRect(-6, -2, 12, 4); ctx.strokeStyle = INK; ctx.lineWidth = 1.2; ctx.strokeRect(-6, -2, 12, 4); ctx.restore(); }
+  }
+
+  const CRIT = {
+    hase: { col: '#b8a890', r: 4 }, schneehase: { col: '#f4f6f8', r: 4 }, reh: { col: '#a8784a', r: 6 }, kroete: { col: '#5a7a3a', r: 3.5 },
+    ratte: { col: '#5a5450', r: 3 }, echse: { col: '#8a9a4a', r: 3.5 }, fuchs: { col: '#d87a3a', r: 5 }, salamander: { col: '#ff6a2a', r: 3.5 },
+  };
+  function drawCritter(c) {
+    const S = G.S;
+    if (c.glow) {
+      ctx.save(); ctx.shadowBlur = 10;
+      const col = c.type === 'gluehwurm' ? '#d8ff8a' : '#ff9a3a'; ctx.shadowColor = col; ctx.fillStyle = col;
+      for (let i = 0; i < c.n; i++) {
+        const a = c.t * (0.4 + i * 0.07) + i * 1.7;
+        ctx.globalAlpha = 0.4 + 0.5 * Math.abs(Math.sin(c.t * 1.5 + i));
+        ctx.beginPath(); ctx.arc(c.hx + Math.cos(a) * (20 + i * 6), c.hy + Math.sin(a * 1.3) * (14 + i * 4), 1.6, 0, 7); ctx.fill();
+      }
+      ctx.restore(); return;
+    }
+    if (c.fly) {
+      const flap = Math.sin(c.t * (c.type === 'geier' ? 3 : 10)) * 0.8;
+      const col = { vogel: '#3a3a3a', eule: '#8a6a4a', kraehe: '#1a1a1e', geier: '#4a3a30', fledermaus: '#2a1a1e' }[c.type];
+      const sz = c.type === 'geier' ? 12 : c.type === 'eule' ? 9 : 7;
+      ctx.fillStyle = 'rgba(0,0,0,0.18)'; ctx.beginPath(); ctx.ellipse(c.x + 30, c.y + 60, sz, sz * 0.4, 0, 0, 7); ctx.fill();
+      ctx.save(); ctx.translate(c.x, c.y); ctx.rotate(c.ang);
+      ctx.fillStyle = col; ctx.strokeStyle = INK; ctx.lineWidth = 1.2;
+      for (const s of [-1, 1]) { ctx.beginPath(); ctx.moveTo(2, 0); ctx.quadraticCurveTo(-2, s * sz * (0.6 + flap * 0.4), -sz * 0.6, s * sz * (0.9 + flap * 0.3)); ctx.lineTo(-3, 0); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+      ctx.beginPath(); ctx.ellipse(0, 0, sz * 0.45, sz * 0.22, 0, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.restore(); return;
+    }
+    const d = CRIT[c.type] || CRIT.hase;
+    const hop = c.moving && (c.type === 'hase' || c.type === 'schneehase' || c.type === 'kroete') ? Math.abs(Math.sin(c.t * 14)) * -4 : 0;
+    shadow(c.x, c.y + d.r * 0.6, d.r, d.r * 0.4);
+    ctx.save(); ctx.translate(c.x, c.y + hop); ctx.rotate(c.face);
+    ctx.fillStyle = d.col; ctx.beginPath(); ctx.ellipse(0, 0, d.r * 1.3, d.r * 0.8, 0, 0, 7); ctx.fill(); outline(1.3);
+    ctx.beginPath(); ctx.arc(d.r * 1.2, 0, d.r * 0.6, 0, 7); ctx.fill(); outline(1.3);
+    if (c.type === 'hase' || c.type === 'schneehase') { ctx.beginPath(); ctx.ellipse(d.r * 0.9, -d.r * 0.5, d.r * 0.7, d.r * 0.22, -0.4, 0, 7); ctx.fill(); outline(1); }
+    if (c.type === 'reh') { ctx.strokeStyle = '#5a3a20'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(d.r * 1.3, -2); ctx.lineTo(d.r * 1.1, -d.r); ctx.moveTo(d.r * 1.3, 2); ctx.lineTo(d.r * 1.1, d.r); ctx.stroke(); }
+    if (c.type === 'salamander') { ctx.shadowColor = '#ff6a1a'; ctx.shadowBlur = 8; ctx.fill(); }
+    if (c.type === 'fuchs' || c.type === 'ratte' || c.type === 'echse' || c.type === 'salamander') { ctx.strokeStyle = d.col; ctx.lineWidth = c.type === 'fuchs' ? 4 : 1.5; ctx.beginPath(); ctx.moveTo(-d.r * 1.2, 0); ctx.lineTo(-d.r * 2.4, Math.sin(c.t * 6) * 2); ctx.stroke(); }
+    ctx.restore();
+  }
+
+  function drawDecal(d) {
+    const fade = d.kind === 'truemmer' ? Math.min(1, (120 - d.t) / 20) : Math.min(1, (60 - d.t) / 15);
+    ctx.save(); ctx.globalAlpha = 0.75 * fade; ctx.fillStyle = d.col;
+    if (d.kind === 'truemmer') {
+      for (let i = 0; i < 7; i++) { const a = d.seed + i * 0.9, rr = d.r * (0.3 + ((d.seed * (i + 3)) % 1) * 0.6); ctx.beginPath(); ctx.ellipse(d.x + Math.cos(a) * rr, d.y + Math.sin(a) * rr * 0.6, 6 + (i % 3) * 3, 4 + (i % 2) * 2, a, 0, 7); ctx.fill(); }
+    } else if (d.kind === 'lache') {
+      ctx.beginPath(); ctx.ellipse(d.x, d.y + 3, d.r * Math.min(1, d.t * 2 + 0.3), d.r * 0.55 * Math.min(1, d.t * 2 + 0.3), d.seed, 0, 7); ctx.fill();
+      for (let i = 0; i < 3; i++) { const a = d.seed + i * 2.1; ctx.beginPath(); ctx.arc(d.x + Math.cos(a) * d.r * 1.1, d.y + Math.sin(a) * d.r * 0.6, d.r * 0.2, 0, 7); ctx.fill(); }
+    } else { ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 7); ctx.fill(); }
+    ctx.restore();
+  }
+  function drawCorpse(c) {
+    const k = Math.min(1, c.t / 0.35); // Umkippen
+    const fade = c.t > 10 ? 1 - (c.t - 10) / 4 : 1;
+    ctx.save(); ctx.globalAlpha = Math.max(0, fade);
+    ctx.translate(c.x, c.y); ctx.rotate(c.face + Math.PI / 2 * k);
+    const r = c.r;
+    ctx.fillStyle = shade(c.col, -0.35);
+    ctx.beginPath(); ctx.ellipse(0, 0, r * (1 + 0.25 * k), r * (1 - 0.4 * k), 0, 0, 7); ctx.fill(); outline(2);
+    ctx.fillStyle = shade(c.col, -0.15); ctx.beginPath(); ctx.arc(r * 0.9 * k, 0, r * 0.45, 0, 7); ctx.fill(); outline(1.5);
+    if (c.owner >= 0) { ctx.strokeStyle = G.S.players[c.owner].color; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, r * 0.6, 0.5, 2.6); ctx.stroke(); }
+    ctx.restore();
+  }
+  function drawParticle(q) {
+    ctx.fillStyle = q.col; ctx.beginPath(); ctx.arc(q.x, q.y - q.z, q.s, 0, 7); ctx.fill();
+  }
+
+  // -------------------------------------------------------------------------
   // Hauptzeichnung
   R.draw = function () {
     const S = G.S; if (!S) return;
@@ -524,27 +739,40 @@
       ctx.globalAlpha = 1;
     }
 
-    // Tiefensortierung: Deko, Gebäude, Einheiten
+    // Blut, Trümmer und Gefallene liegen auf dem Boden
+    for (const d of S.decals) if (inView(d.x, d.y, 60)) drawDecal(d);
+    for (const c of S.corpses) if (inView(c.x, c.y, 40)) drawCorpse(c);
+
+    // Tiefensortierung: Deko, Gebäude, Einheiten, Arbeiter, Tiere
     const th = G.THEMES[S.theme];
     const list = [];
     for (const d of S.decor) if (inView(d.x, d.y, 60)) list.push({ y: d.y, d });
+    for (const s of S.sites) if ((!s.b || s.b.dead) && inView(s.x, s.y, 80)) list.push({ y: s.y, site: s });
+    for (const p of S.players) if (p.alive) for (const w of p.wv) if (inView(w.x, w.y, 20)) list.push({ y: w.y, w, p });
+    for (const c of S.critters) if (!c.fly && inView(c.hx || c.x, c.hy || c.y, 120)) list.push({ y: c.y, c });
     for (const e of S.ents) if (!e.dead && inView(e.x, e.y, 80)) list.push({ y: e.y + (e.kind === 'building' ? e.size * T / 2 - 10 : 0), e });
     for (const s of S.shops) if (inView(s.x, s.y, 80)) list.push({ y: s.y + 10, s });
     list.sort((a, b) => a.y - b.y);
     for (const it of list) {
       if (it.d) drawDecor(it.d, th);
       else if (it.s) drawShop(it.s);
+      else if (it.site) drawSite(it.site);
+      else if (it.w) drawWorker(it.w, it.p);
+      else if (it.c) drawCritter(it.c);
       else if (it.e.kind === 'building') drawBuilding(it.e);
       else drawMobile(it.e);
     }
+    for (const q of S.parts) if (inView(q.x, q.y, 20)) drawParticle(q);
     for (const pr of S.proj) if (inView(pr.x, pr.y, 40)) drawProjectile(pr);
+    for (const c of S.critters) if (c.fly && inView(c.x, c.y, 80)) drawCritter(c);
     for (const f of S.fx) if (inView(f.x, f.y, 200)) drawFx(f);
 
     // Bauvorschau
     const UI = G.UI;
     if (UI && UI.placing) {
       const type = UI.placing;
-      const pos = G.snap(type, R.mouse.wx, R.mouse.wy);
+      let pos = G.snap(type, R.mouse.wx, R.mouse.wy);
+      if (G.BUILDINGS[type].outpost) { const st = G.freeSiteNear(R.mouse.wx, R.mouse.wy, 140); if (st) pos = { x: st.x, y: st.y }; for (const s2 of S.sites) if (!s2.b || s2.b.dead) { ctx.strokeStyle = '#ffe066'; ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.arc(s2.x, s2.y, 60, 0, 7); ctx.stroke(); ctx.setLineDash([]); } }
       const ok = G.canPlace(me, type, pos.x, pos.y) && !G.buildingCheck(me, type);
       const hs = G.BUILDINGS[type].size * T / 2;
       ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.setLineDash([8, 6]); ctx.lineWidth = 2;
@@ -576,11 +804,12 @@
     m.fillStyle = 'rgba(0,0,0,0.25)'; m.fillRect(0, 0, W, H);
     for (const c of S.camps) { m.fillStyle = c.left > 0 ? '#e0a030' : '#555'; m.beginPath(); m.arc(c.x * sx, c.y * sy, 3, 0, 7); m.fill(); }
     for (const s of S.shops) { m.fillStyle = '#ffe066'; m.fillRect(s.x * sx - 3, s.y * sy - 3, 6, 6); }
+    for (const s of S.sites) { m.strokeStyle = '#ffd23a'; m.lineWidth = 1.5; m.beginPath(); m.arc(s.x * sx, s.y * sy, 4, 0, 7); m.stroke(); }
     for (const e of S.ents) {
       if (e.dead || e.kind === 'creep') continue;
       const p = S.players[e.owner];
       m.fillStyle = p.color;
-      if (e.kind === 'building') m.fillRect(e.x * sx - 2.5, e.y * sy - 2.5, 5, 5);
+      if (e.kind === 'building') { const q = e.type === 'mauer' ? 1 : 2.5; m.fillRect(e.x * sx - q, e.y * sy - q, q * 2, q * 2); }
       else if (e.kind === 'hero') { m.beginPath(); m.arc(e.x * sx, e.y * sy, 3.5, 0, 7); m.fill(); m.strokeStyle = '#fff'; m.lineWidth = 1; m.stroke(); }
       else m.fillRect(e.x * sx - 1, e.y * sy - 1, 2, 2);
     }

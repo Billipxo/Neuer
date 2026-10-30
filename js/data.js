@@ -48,15 +48,17 @@ G.BUILDINGS = {
   beschwoerung: { name: 'Beschwörungskreis', size: 2, hp: 1000, cost: { g: 220, w: 160 }, time: 28, desc: 'Bildet Beschwörer aus.' },
   schmiede:     { name: 'Schmiede', size: 2, hp: 1000, cost: { g: 180, w: 120 }, time: 25, desc: 'Erforscht Waffen, Rüstung und Ausbildung für alle Einheiten.' },
   turm:         { name: 'Wachturm', size: 1, hp: 950, cost: { g: 110, w: 60 }, time: 15, attack: { dmg: 28, range: 240, cd: 1.0 }, desc: 'Schneller Einzelziel-Verteidigungsturm.' },
+  aussenposten: { name: 'Außenposten', size: 2, hp: 1400, cost: { g: 300, w: 200 }, time: 30, attack: { dmg: 20, range: 220, cd: 1.2 }, outpost: true,
+                  desc: 'Nur auf Goldadern außerhalb der Basis. +3 Gold/s und +1 Holz/s pro Stufe, verteidigt sich selbst.' },
   kanone:       { name: 'Kanonenturm', size: 1, hp: 1200, cost: { g: 200, w: 120 }, time: 22, attack: { dmg: 50, range: 220, cd: 2.2, splash: 65 }, desc: 'Langsamer Flächenschaden.' },
 };
 // Maximale Anzahl je Haupthaus-Stufe 1..5
 G.LIMITS = {
   haupthaus: [1, 1, 1, 1, 1], goldmine: [1, 2, 2, 3, 3], saegewerk: [1, 1, 2, 2, 3], unterkunft: [1, 2, 3, 4, 5],
   kaserne: [1, 1, 2, 2, 3], schiessstand: [0, 1, 1, 2, 2], sanktum: [0, 1, 1, 1, 2], beschwoerung: [0, 0, 1, 1, 1],
-  schmiede: [0, 1, 1, 1, 1], turm: [1, 2, 3, 4, 5], kanone: [0, 0, 1, 2, 3],
+  schmiede: [0, 1, 1, 1, 1], turm: [1, 2, 3, 4, 5], kanone: [0, 0, 1, 2, 3], aussenposten: [0, 1, 2, 2, 3],
 };
-G.BUILD_ORDER = ['goldmine', 'kaserne', 'saegewerk', 'unterkunft', 'turm', 'schiessstand', 'sanktum', 'schmiede', 'beschwoerung', 'kanone'];
+G.BUILD_ORDER = ['goldmine', 'kaserne', 'saegewerk', 'unterkunft', 'turm', 'schiessstand', 'sanktum', 'schmiede', 'beschwoerung', 'kanone', 'aussenposten'];
 
 G.RESEARCH = {
   waffen:     { name: 'Geschärfte Waffen', desc: '+8% Schaden je Stufe' },
@@ -73,7 +75,6 @@ G.RACES = {
     palette: { wall: '#9a9286', roof: '#3f63a8', trim: '#d9c27a' },
     desc: 'Disziplinierte Königreiche mit starker Wirtschaft und vielseitigen Truppen.',
     passive: { name: 'Handelsgilden', desc: '+10% Goldeinkommen', eco: { goldPct: 0.10 } },
-    ability: { id: 'banner', name: 'Heiliges Banner', cd: 90, desc: 'Alle Einheiten erhalten 15 s lang +25% Schaden und +3 Rüstung.' },
     map: { name: 'Grüne Auen', theme: 'auen' },
     units: {
       tank: { name: 'Schildwache' },
@@ -107,7 +108,6 @@ G.RACES = {
     palette: { wall: '#d8d0b8', roof: '#3f8a4a', trim: '#e8e2c0' },
     desc: 'Uralte Waldvölker – flink, präzise und eng mit der Natur verbunden.',
     passive: { name: 'Lebenshauch', desc: 'Alle Einheiten regenerieren +2 LP/s', bonus: [{ roles: ['all', 'summon'], regen: 2 }] },
-    ability: { id: 'mondsegen', name: 'Mondsegen', cd: 80, desc: 'Heilt alle eigenen Einheiten sofort um 50% ihrer maximalen LP.' },
     map: { name: 'Silberwald', theme: 'silberwald' },
     units: {
       tank: { name: 'Baumhüter', mods: { hp: 1.1, speed: 0.9 } },
@@ -142,7 +142,6 @@ G.RACES = {
     palette: { wall: '#4a4650', roof: '#5d3a78', trim: '#9ad0a0' },
     desc: 'Eine endlose Flut aus Knochen und dunkler Magie, angeführt von Nekromanten.',
     passive: { name: 'Seelenlos', desc: 'Einheiten kosten 12% weniger Gold', eco: { unitDiscount: 0.12 } },
-    ability: { id: 'erweckung', name: 'Totenerweckung', cd: 90, desc: 'Erweckt 6 Skelettkrieger an der Spitze deiner Armee (45 s).' },
     map: { name: 'Verfluchte Sümpfe', theme: 'suempfe' },
     units: {
       tank: { name: 'Knochenkoloss', mods: { hp: 1.15, speed: 0.85 } },
@@ -177,7 +176,6 @@ G.RACES = {
     palette: { wall: '#7a5838', roof: '#9a3a2a', trim: '#c8b080' },
     desc: 'Wilde Kriegerclans der Steppe – rohe Kraft und unbändiger Kampfgeist.',
     passive: { name: 'Kriegerblut', desc: 'Nahkampf & Tanks +15% LP', bonus: [{ roles: ['nahkampf', 'tank'], hp: 0.15 }] },
-    ability: { id: 'blutrausch', name: 'Blutrausch', cd: 90, desc: 'Alle Einheiten erhalten 12 s lang +40% Angriffstempo und +20% Tempo.' },
     map: { name: 'Rote Steppe', theme: 'steppe' },
     units: {
       tank: { name: 'Orkbrecher' },
@@ -213,7 +211,6 @@ G.RACES = {
     palette: { wall: '#8a8a8e', roof: '#a8742a', trim: '#e0c070' },
     desc: 'Sture Bergvölker – Meister der Schmiedekunst, Runen und Schießpulver.',
     passive: { name: 'Steinerne Hallen', desc: 'Gebäude +25% LP, Türme +15% Schaden', bonus: [{ roles: ['buildings'], hp: 0.25 }, { roles: ['defense'], dmg: 0.15 }] },
-    ability: { id: 'moerser', name: 'Mörsersalve', cd: 80, desc: '8 Mörsergranaten schlagen in der größten Gegnergruppe nahe deiner Armee ein.' },
     map: { name: 'Frostgipfel', theme: 'frost' },
     units: {
       tank: { name: 'Eisenbrecher', mods: { armor: 2 } },
@@ -248,7 +245,6 @@ G.RACES = {
     palette: { wall: '#2e2426', roof: '#8a1e1e', trim: '#ff8a3a' },
     desc: 'Brut aus den Höllenschlünden – sie nähren sich vom Leben ihrer Feinde.',
     passive: { name: 'Seelenhunger', desc: 'Alle Einheiten 10% Lebensraub', bonus: [{ roles: ['all', 'summon'], lifesteal: 0.10 }] },
-    ability: { id: 'hoellenfeuer', name: 'Höllenfeuer', cd: 100, desc: 'Ein Meteor schlägt in der größten Gegnergruppe ein und ruft ein Infernal herbei.' },
     map: { name: 'Aschenlande', theme: 'asche' },
     units: {
       tank: { name: 'Höllenwächter' },
@@ -280,6 +276,101 @@ G.RACES = {
   },
 };
 G.RACE_KEYS = Object.keys(G.RACES);
+
+// ---------------------------------------------------------------------------
+// Volksspezifische Gebäudenamen
+// Reihenfolge: haupthaus, goldmine, saegewerk, unterkunft, kaserne, schiessstand, sanktum, beschwoerung, schmiede, turm, kanone, aussenposten
+(function () {
+  const keys = ['haupthaus', 'goldmine', 'saegewerk', 'unterkunft', 'kaserne', 'schiessstand', 'sanktum', 'beschwoerung', 'schmiede', 'turm', 'kanone', 'aussenposten'];
+  const names = {
+    menschen: ['Burgfried', 'Goldmine', 'Sägewerk', 'Bauernhaus', 'Kaserne', 'Schießplatz', 'Kathedrale', 'Elementarzirkel', 'Schmiede', 'Wachturm', 'Kanonenturm', 'Grenzfeste'],
+    elfen: ['Mondbaum', 'Kristallader', 'Holzhain', 'Mondlaube', 'Klingenhain', 'Bogenlichtung', 'Mondtempel', 'Hain der Rufer', 'Mondschmiede', 'Wächterbaum', 'Arkanspitze', 'Waldposten'],
+    untote: ['Nekropole', 'Verfluchte Mine', 'Knochensäge', 'Gruft', 'Ghulgrube', 'Knochenwerkstatt', 'Tempel der Verdammten', 'Opferaltar', 'Seelenschmiede', 'Geisterturm', 'Seuchenkatapult', 'Totenposten'],
+    orks: ['Großhalle', 'Goldgrube', 'Holzfällerlager', 'Orkhöhle', 'Kriegslager', 'Speerhütte', 'Geisterhütte', 'Bestiarium', 'Kriegsschmiede', 'Wachposten', 'Katapultstand', 'Raubposten'],
+    zwerge: ['Bergfeste', 'Tiefe Mine', 'Holzwerk', 'Steinhalle', 'Waffenhalle', 'Schützenhalle', 'Runentempel', 'Golemwerkstatt', 'Große Esse', 'Schützenturm', 'Kanonenbastion', 'Grubenposten'],
+    daemonen: ['Höllenschlund', 'Seelenmine', 'Ascheforst', 'Brutstätte', 'Höllenkaserne', 'Teufelsbastion', 'Blutaltar', 'Höllenportal', 'Höllenschmiede', 'Teufelsspitze', 'Feuerturm', 'Schwefelposten'],
+  };
+  for (const r in names) { G.RACES[r].bnames = {}; keys.forEach((k, i) => (G.RACES[r].bnames[k] = names[r][i])); }
+})();
+G.bname = (race, type) => (G.RACES[race].bnames && G.RACES[race].bnames[type]) || G.BUILDINGS[type].name;
+
+// ---------------------------------------------------------------------------
+// Volksfähigkeiten: 3 je Volk, freigeschaltet über die Haupthaus-Stufe (Tasten 1/R, 2, 3)
+// Typen: buff, heal, summon, strike, curse, fortify
+G.RACES.menschen.abilities = [
+  { id: 'banner', name: 'Heiliges Banner', th: 1, cd: 90, type: 'buff', mods: { dmg: 0.25, armor: 3 }, dur: 15, desc: 'Alle Einheiten erhalten 15 s lang +25% Schaden und +3 Rüstung.' },
+  { id: 'miliz', name: 'Ruf zu den Waffen', th: 3, cd: 100, type: 'summon', at: 'army', count: 5, life: 45, unit: { name: 'Milizsoldat', hp: 320, dmg: 20, range: 24, cd: 1.0, speed: 65, armor: 3, r: 11 }, desc: '5 Milizsoldaten eilen deiner Armee zu Hilfe (45 s).' },
+  { id: 'zorn', name: 'Himmlischer Zorn', th: 5, cd: 120, type: 'strike', shells: 6, dmg: 200, radius: 85, stun: 0.6, color: '#fff2a0', desc: '6 Lichtstrahlen schlagen in die größte Gegnergruppe ein.' },
+];
+G.RACES.elfen.abilities = [
+  { id: 'mondsegen', name: 'Mondsegen', th: 1, cd: 80, type: 'heal', pct: 0.5, desc: 'Heilt alle eigenen Einheiten sofort um 50% ihrer maximalen LP.' },
+  { id: 'wurzeln', name: 'Zorn der Natur', th: 3, cd: 90, type: 'strike', shells: 1, dmg: 140, radius: 170, stun: 3, color: '#7aff7a', desc: 'Wurzeln brechen hervor: Schaden und 3 s Betäubung in großem Radius.' },
+  { id: 'sternenregen', name: 'Sternenregen', th: 5, cd: 120, type: 'strike', shells: 12, dmg: 120, radius: 70, color: '#c8f0ff', desc: '12 Sterne regnen auf die Gegner nieder.' },
+];
+G.RACES.untote.abilities = [
+  { id: 'erweckung', name: 'Totenerweckung', th: 1, cd: 90, type: 'summon', at: 'cluster', count: 6, life: 45, unit: { name: 'Skelettkrieger', hp: 230, dmg: 17, range: 24, cd: 1.0, speed: 65, armor: 1, r: 10 }, desc: 'Erweckt 6 Skelettkrieger an der Front (45 s).' },
+  { id: 'seuche', name: 'Seuchenhauch', th: 3, cd: 90, type: 'curse', radius: 200, dmg: 80, mods: { armor: -4, speed: -0.3, dmg: -0.15 }, dur: 12, color: '#9aff7a', desc: 'Verseucht Gegner: −4 Rüstung, −30% Tempo, −15% Schaden für 12 s.' },
+  { id: 'knochendrache', name: 'Knochendrache', th: 5, cd: 140, type: 'summon', at: 'cluster', count: 1, life: 45, unit: { name: 'Knochendrache', hp: 2600, dmg: 70, range: 140, cd: 1.6, speed: 60, armor: 5, r: 24, proj: 'feuer', splash: 70 }, desc: 'Erhebt einen Knochendrachen (45 s).' },
+];
+G.RACES.orks.abilities = [
+  { id: 'blutrausch', name: 'Blutrausch', th: 1, cd: 90, type: 'buff', mods: { atkspd: 0.4, speed: 0.2 }, dur: 12, desc: 'Alle Einheiten erhalten 12 s lang +40% Angriffstempo und +20% Tempo.' },
+  { id: 'wolfsreiter', name: 'Wolfsreiter-Ansturm', th: 3, cd: 100, type: 'summon', at: 'army', count: 4, life: 45, unit: { name: 'Wolfsreiter', hp: 480, dmg: 28, range: 24, cd: 1.0, speed: 95, armor: 3, r: 13 }, desc: '4 Wolfsreiter stürmen herbei (45 s).' },
+  { id: 'erdspalter', name: 'Erdspalter', th: 5, cd: 120, type: 'strike', shells: 1, dmg: 300, radius: 190, stun: 2.5, color: '#c87a3a', desc: 'Die Erde bricht auf: hoher Schaden und 2,5 s Betäubung.' },
+];
+G.RACES.zwerge.abilities = [
+  { id: 'moerser', name: 'Mörsersalve', th: 1, cd: 80, type: 'strike', shells: 8, dmg: 110, radius: 70, color: '#ffb040', desc: '8 Mörsergranaten schlagen in der größten Gegnergruppe ein.' },
+  { id: 'festung', name: 'Festungsbefehl', th: 3, cd: 100, type: 'fortify', heal: 0.35, mods: { armor: 6 }, dur: 20, desc: 'Alle Gebäude werden um 35% repariert, Einheiten erhalten 20 s lang +6 Rüstung.' },
+  { id: 'luftschiff', name: 'Luftschiff-Bombardement', th: 5, cd: 130, type: 'strike', shells: 14, dmg: 140, radius: 75, color: '#ff8a3a', desc: 'Ein Luftschiff wirft 14 Bomben ab.' },
+];
+G.RACES.daemonen.abilities = [
+  { id: 'hoellenfeuer', name: 'Höllenfeuer', th: 1, cd: 100, type: 'strike', shells: 1, meteor: true, dmg: 260, radius: 130, stun: 1.2, color: '#ff5020',
+    summon: { name: 'Infernal', hp: 1600, dmg: 50, range: 30, cd: 1.3, speed: 55, armor: 6, r: 18 }, life: 35, desc: 'Ein Meteor schlägt ein und ruft ein Infernal herbei.' },
+  { id: 'blutopfer', name: 'Blutopfer', th: 3, cd: 90, type: 'buff', mods: { dmg: 0.25, lifesteal: 0.25 }, dur: 15, hpCost: 0.1, desc: 'Opfert 10% LP aller Einheiten: 15 s lang +25% Schaden und +25% Lebensraub.' },
+  { id: 'hoellentor', name: 'Höllentor', th: 5, cd: 140, type: 'summon', at: 'cluster', count: 4, life: 45, unit: { name: 'Teufelswache', hp: 700, dmg: 38, range: 26, cd: 1.1, speed: 70, armor: 5, r: 14 }, desc: 'Ein Höllentor entlässt 4 Teufelswachen (45 s).' },
+];
+
+// ---------------------------------------------------------------------------
+// Talentbaum: 3 Zweige × 4 Stufen. 1 Punkt pro Heldenstufe. Stufe n benötigt n−1 Punkte im Zweig.
+G.TALENTS = [
+  { id: 'krieg', name: 'Krieg', color: '#e0503a', talents: [
+    { id: 'klingen', name: 'Scharfe Klingen', desc: 'Alle Einheiten +8% Schaden', bonus: { roles: ['all', 'summon'], dmg: 0.08 } },
+    { id: 'rausch', name: 'Kampfrausch', desc: 'Alle Einheiten +10% Angriffstempo', bonus: { roles: ['all', 'summon'], atkspd: 0.10 } },
+    { id: 'veteranen', name: 'Veteranen', desc: 'Neue Einheiten starten eine Stufe höher', special: 'veteranen' },
+    { id: 'vernichter', name: 'Vernichter', desc: '+30% Schaden gegen Gebäude', special: 'siege' },
+  ] },
+  { id: 'bollwerk', name: 'Bollwerk', color: '#4a8ae0', talents: [
+    { id: 'haut', name: 'Dicke Haut', desc: 'Alle Einheiten +10% LP', bonus: { roles: ['all', 'summon'], hp: 0.10 } },
+    { id: 'sanitaeter', name: 'Feldsanitäter', desc: '+2 LP/s Regeneration, Heiler +15%', bonus: { roles: ['all', 'summon'], regen: 2, heal: 0.15 } },
+    { id: 'festung', name: 'Befestigte Basis', desc: 'Gebäude +25% LP, Türme +20% Schaden', bonus: [{ roles: ['buildings'], hp: 0.25 }, { roles: ['defense'], dmg: 0.2 }] },
+    { id: 'unbeugsam', name: 'Unbeugsam', desc: 'Alle Einheiten +2 Rüstung, Held +15% LP', bonus: [{ roles: ['all', 'summon'], armor: 2 }, { roles: ['hero'], hp: 0.15 }] },
+  ] },
+  { id: 'wohlstand', name: 'Wohlstand', color: '#e0b030', talents: [
+    { id: 'arbeiter', name: 'Fleißige Arbeiter', desc: '+10% Goldeinkommen', eco: { goldPct: 0.10 } },
+    { id: 'holzrecht', name: 'Holzrecht', desc: '+15% Holzeinkommen', eco: { woodPct: 0.15 } },
+    { id: 'gilde', name: 'Baumeistergilde', desc: '+1 Baumeister, Bauen 20% schneller', eco: { builder: 1, buildSpeed: 0.2 } },
+    { id: 'kasse', name: 'Kriegskasse', desc: 'Einheiten 10% billiger, Volksfähigkeiten laden 20% schneller', eco: { unitDiscount: 0.10, abilityCdr: 0.2 } },
+  ] },
+];
+
+// ---------------------------------------------------------------------------
+// Mauer-Upgrades (nicht frei platzierbar: Ring um die Basis, über das Haupthaus erwerbbar)
+G.WALLS = [
+  { name: 'Holzpalisade', th: 2, hp: 450, armor: 2, cost: { g: 200, w: 250 }, time: 30 },
+  { name: 'Steinmauer', th: 3, hp: 1000, armor: 5, cost: { g: 500, w: 400 }, time: 45 },
+  { name: 'Festungsmauer', th: 4, hp: 1800, armor: 8, cost: { g: 900, w: 700 }, time: 60 },
+];
+G.WALL_RADIUS = G.BASE_RADIUS + 36;
+
+// ---------------------------------------------------------------------------
+// Skins (über Volks-XP freischaltbar)
+G.SKINS = [
+  { id: 'standard', name: 'Standard', lvl: 1 },
+  { id: 'veteran', name: 'Veteran', lvl: 2, desc: 'Dunkler Stahl und silberne Beschläge' },
+  { id: 'elite', name: 'Elite', lvl: 4, desc: 'Marmor, Gold und edle Banner' },
+  { id: 'legende', name: 'Legendär', lvl: 7, desc: 'Leuchtende Aura um alle Einheiten' },
+];
+G.LEGEND_COLORS = { menschen: '#fff4c0', elfen: '#7af0ff', untote: '#5aff8a', orks: '#ff5a1a', zwerge: '#ffd23a', daemonen: '#c060ff' };
+
 
 G.HERO_BASE = { hp: 800, dmg: 36, range: 28, rangedRange: 165, cd: 1.2, speed: 80, armor: 4, r: 16 };
 G.HERO_XP = (lvl) => 110 * lvl * (lvl + 1) / 2; // XP benötigt, um von lvl auf lvl+1 zu steigen (kumulativ)
@@ -330,12 +421,18 @@ G.CAMP_RESPAWN = 150;
 
 // Kartenthemen (Heimatkarten der Völker)
 G.THEMES = {
-  auen:       { name: 'Grüne Auen',        ground: ['#6f8f45', '#7d9b4e', '#627f3c', '#86a35a'], road: '#a8946a', decor: 'eiche', decorCols: ['#3f6a2a', '#4f7d33', '#2f5520'], accent: '#e8d36a' },
-  silberwald: { name: 'Silberwald',        ground: ['#3f6b48', '#46784f', '#365e40', '#517f58'], road: '#8a9a7a', decor: 'hochbaum', decorCols: ['#2a5a3a', '#3a7048', '#a8d8c0'], accent: '#c8f0ff' },
-  suempfe:    { name: 'Verfluchte Sümpfe', ground: ['#4a5044', '#40463c', '#525a48', '#3a4038'], road: '#5a5448', decor: 'totbaum', decorCols: ['#2a2a26', '#3a3430', '#7a5a9a'], accent: '#9ad0a0' },
-  steppe:     { name: 'Rote Steppe',       ground: ['#a8784a', '#b08250', '#9a6c42', '#b88c5a'], road: '#c8a070', decor: 'fels', decorCols: ['#6a4a32', '#7a5a3a', '#e8e0d0'], accent: '#d84a2a' },
-  frost:      { name: 'Frostgipfel',       ground: ['#c4ced6', '#b8c4cc', '#d0d8de', '#aebcc6'], road: '#9aa4aa', decor: 'tanne', decorCols: ['#2a4a3a', '#36584a', '#ffffff'], accent: '#7ac0f0' },
-  asche:      { name: 'Aschenlande',       ground: ['#3a2c28', '#42322c', '#332622', '#4a3830'], road: '#5a4238', decor: 'lava', decorCols: ['#1a1210', '#2a1a16', '#ff6a1a'], accent: '#ff8a3a' },
+  auen:       { name: 'Grüne Auen',        ground: ['#6f8f45', '#7d9b4e', '#627f3c', '#86a35a'], road: '#a8946a', decor: 'eiche', decorCols: ['#3f6a2a', '#4f7d33', '#2f5520'], accent: '#e8d36a', critters: ['hase', 'reh', 'vogel'],
+                music: { scale: [0, 2, 4, 7, 9], root: 57, tempo: 92, lead: 'laute', pad: 'warm', drums: 'leicht' } },
+  silberwald: { name: 'Silberwald',        ground: ['#3f6b48', '#46784f', '#365e40', '#517f58'], road: '#8a9a7a', decor: 'hochbaum', decorCols: ['#2a5a3a', '#3a7048', '#a8d8c0'], accent: '#c8f0ff', critters: ['reh', 'gluehwurm', 'eule'],
+                music: { scale: [0, 2, 4, 6, 7, 9, 11], root: 62, tempo: 76, lead: 'harfe', pad: 'glas', drums: 'keine' } },
+  suempfe:    { name: 'Verfluchte Sümpfe', ground: ['#4a5044', '#40463c', '#525a48', '#3a4038'], road: '#5a5448', decor: 'totbaum', decorCols: ['#2a2a26', '#3a3430', '#7a5a9a'], accent: '#9ad0a0', critters: ['kraehe', 'kroete', 'ratte'],
+                music: { scale: [0, 1, 3, 5, 6, 8, 10], root: 50, tempo: 64, lead: 'glocke', pad: 'dunkel', drums: 'leicht' } },
+  steppe:     { name: 'Rote Steppe',       ground: ['#a8784a', '#b08250', '#9a6c42', '#b88c5a'], road: '#c8a070', decor: 'fels', decorCols: ['#6a4a32', '#7a5a3a', '#e8e0d0'], accent: '#d84a2a', critters: ['geier', 'echse', 'hase'],
+                music: { scale: [0, 2, 3, 5, 7, 9, 10], root: 45, tempo: 104, lead: 'horn', pad: 'dunkel', drums: 'kriegstrommel' } },
+  frost:      { name: 'Frostgipfel',       ground: ['#c4ced6', '#b8c4cc', '#d0d8de', '#aebcc6'], road: '#9aa4aa', decor: 'tanne', decorCols: ['#2a4a3a', '#36584a', '#ffffff'], accent: '#7ac0f0', critters: ['schneehase', 'fuchs', 'vogel'],
+                music: { scale: [0, 2, 3, 5, 7, 8, 10], root: 64, tempo: 70, lead: 'glocke', pad: 'glas', drums: 'keine' } },
+  asche:      { name: 'Aschenlande',       ground: ['#3a2c28', '#42322c', '#332622', '#4a3830'], road: '#5a4238', decor: 'lava', decorCols: ['#1a1210', '#2a1a16', '#ff6a1a'], accent: '#ff8a3a', critters: ['salamander', 'fledermaus', 'glutkaefer'],
+                music: { scale: [0, 1, 4, 5, 7, 8, 10], root: 43, tempo: 96, lead: 'horn', pad: 'dunkel', drums: 'schwer' } },
 };
 
 G.PLAYER_COLORS = ['#3d7bff', '#e0453a', '#3fbf5a', '#e8b030'];
@@ -344,3 +441,7 @@ G.DIFFICULTY = {
   mittel:  { name: 'Mittel',  eco: 1.0,  think: 1.2, attackFrac: 0.75, minAttack: 360, focus: false, abilityChance: 0.8 },
   schwer:  { name: 'Schwer',  eco: 1.25, think: 0.5, attackFrac: 0.65, minAttack: 270, focus: true,  abilityChance: 1.0 },
 };
+
+// Blutfarben (Treffer, Leichen, Flecken)
+G.BLOOD = { menschen: '#8a0a0a', elfen: '#7a0a1a', untote: '#3e5a2a', orks: '#6a0a06', zwerge: '#8a0a0a', daemonen: '#4a0404' };
+G.CREEP_BLOOD = { wolf: '#7a0a0a', bandit: '#8a0a0a', schuetze: '#8a0a0a', troll: '#3a6a5a', hexer: '#3a6a5a', golem: '#8a8478', drache: '#6a0a0a' };

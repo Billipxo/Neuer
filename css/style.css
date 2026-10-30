@@ -160,3 +160,36 @@ input[type=range] { width: 100%; accent-color: var(--accent); }
   #keys { display: none; }
   #selection { width: calc(100% - 170px); left: auto; right: 8px; transform: none; }
 }
+
+/* ---------------- Erweiterungen v0.3 ---------------- */
+.menutabs { display: flex; gap: 6px; justify-content: center; margin-bottom: 10px; flex-wrap: wrap; }
+.menutabs button { font-family: 'Cinzel', serif; font-size: 16px; padding: 8px 18px; }
+.lvlbadge { position: absolute; right: 10px; top: 10px; font-size: 12px; background: #1e1812; border: 1px solid var(--line); border-radius: 10px; padding: 1px 8px; color: var(--gold); }
+.skins { margin-top: 10px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.campaign { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: 14px; }
+.mlist { display: flex; flex-direction: column; gap: 4px; }
+.mission { text-align: left; }
+.mission span { display: inline-block; width: 20px; }
+.brief { background: var(--panel2); border: 2px solid var(--ink); border-radius: 10px; padding: 14px 18px; }
+.brief h3 { color: var(--gold); margin-bottom: 6px; }
+.story { font-style: italic; color: #e8d8b8; line-height: 1.45; }
+.skinlist { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin-top: 8px; }
+.skin { font-size: 13px; opacity: .45; display: flex; flex-direction: column; }
+.skin.ok { opacity: 1; }
+.skin small { font-size: 11px; }
+.sw { display: inline-block; width: 100%; height: 14px; border-radius: 4px; border: 2px solid var(--ink); margin-bottom: 2px; }
+.settings { max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.settings label { display: flex; gap: 10px; align-items: center; }
+#race-ab { display: flex; flex-direction: column; gap: 4px; }
+.race-btn { padding: 4px 8px; flex-direction: row; justify-content: space-between; gap: 6px; }
+.race-btn small { white-space: nowrap; }
+.res.tp { color: #ffd23a; animation: pulse 1s infinite alternate; }
+.tree { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 6px; }
+.branch { display: flex; flex-direction: column; gap: 4px; }
+.bh { text-align: center; font-family: 'Cinzel', serif; color: var(--bc); font-size: 13px; border-bottom: 2px solid var(--bc); }
+.talent { text-align: left; padding: 4px; font-size: 12px; min-height: 64px; display: flex; flex-direction: column; }
+.talent small { font-size: 10.5px; }
+.talent.has { opacity: 1 !important; border-color: var(--bc); background: linear-gradient(#5a4a28, #3a2e18); box-shadow: 0 0 6px var(--bc); }
+.xpgain { margin: 0 0 16px; font-size: 15px; }
+.bad { color: var(--bad); }
+@media (max-width: 700px) { .campaign { grid-template-columns: 1fr; } }

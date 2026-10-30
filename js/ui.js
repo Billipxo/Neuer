@@ -1,13 +1,14 @@
 'use strict';
 // Oberfläche: Hauptmenü, HUD, Seitenleiste, Auswahl und Eingabe.
 (function () {
-  const UI = (G.UI = { tab: 'bauen', selected: null, placing: null, casting: null, pickTarget: false, pointerDownPanel: false });
+  const UI = (G.UI = { tab: 'bauen', selected: null, placing: null, casting: null, pickTarget: false, pointerDownPanel: false, menuTab: 'frei', mission: 0 });
   const $ = (s) => document.querySelector(s);
   const fmt = (n) => Math.floor(n).toLocaleString('de-DE');
   const fmtTime = (s) => { s = Math.max(0, Math.ceil(s)); const m = Math.floor(s / 60); return m ? `${m}:${String(s % 60).padStart(2, '0')} min` : `${s} s`; };
   const costHtml = (c) => `<span class="c-g">${fmt(c.g)}</span> <span class="c-w">${fmt(c.w)}</span>`;
   const me = () => G.S.players[0];
   const esc = (s) => String(s).replace(/"/g, '&quot;');
+  const Prof = () => G.Profile;
 
   // -------------------------------------------------------------------------
   // Hauptmenü
@@ -17,39 +18,54 @@
     $('#menu').classList.remove('hidden');
     $('#game').classList.add('hidden');
     $('#end').classList.add('hidden');
+    if (G.Audio) G.Audio.setTheme(null);
     renderMenu();
   };
 
-  function renderMenu() {
-    const c = UI.cfg;
-    const races = G.RACE_KEYS.map((k) => {
-      const r = G.RACES[k];
+  const opt = (act, cur, list) => list.map(([v, n, d, dis]) => `<button class="opt ${cur === v ? 'sel' : ''}" data-act="${act}" data-v="${v}" ${dis ? 'disabled' : ''}>${n}${d ? `<small>${d}</small>` : ''}</button>`).join('');
+
+  function raceCards(c) {
+    return G.RACE_KEYS.map((k) => {
+      const r = G.RACES[k], lvl = Prof().raceLevel(k);
       return `<button class="card race ${c.race === k ? 'sel' : ''}" data-act="m-race" data-v="${k}" style="--rc:${r.color};--rd:${r.dark}">
-        <div class="crest" style="background:${r.color}"><span>${r.name[0]}</span></div>
+        <div class="crest" style="background:${r.color}"><span>${r.name[0]}</span></div><span class="lvlbadge">Stufe ${lvl}</span>
         <h3>${r.name}</h3><p>${r.desc}</p>
         <div class="kv"><b>Passiv:</b> ${r.passive.name} – ${r.passive.desc}</div>
-        <div class="kv"><b>Volksfähigkeit:</b> ${r.ability.name} – ${r.ability.desc}</div>
+        <div class="kv"><b>Volksfähigkeiten:</b> ${r.abilities.map((a) => a.name).join(' · ')}</div>
         <div class="kv"><b>Heimat:</b> ${r.map.name}</div></button>`;
     }).join('') + `<button class="card race ${c.race === 'zufall' ? 'sel' : ''}" data-act="m-race" data-v="zufall" style="--rc:#888;--rd:#333">
         <div class="crest" style="background:linear-gradient(135deg,#d6c39a,#9fd18c,#a9b5ac,#7aa04a,#c99a6a,#c0484a)"><span>?</span></div>
         <h3>Zufall</h3><p>Das Schicksal entscheidet über dein Volk und deinen Helden.</p></button>`;
-    let heroes;
-    if (c.race === 'zufall') heroes = '<p class="note">Bei zufälligem Volk wird auch der Held zufällig bestimmt.</p>';
-    else {
-      const rd = G.RACES[c.race];
-      if (!rd.heroes.find((h) => h.id === c.hero)) c.hero = rd.heroes[0].id;
-      heroes = rd.heroes.map((h) => `<button class="card hero ${c.hero === h.id ? 'sel' : ''}" data-act="m-hero" data-v="${h.id}" style="--rc:${rd.color};--rd:${rd.dark}">
+  }
+  function heroCards(c) {
+    if (c.race === 'zufall') return '<p class="note">Bei zufälligem Volk wird auch der Held zufällig bestimmt.</p>';
+    const rd = G.RACES[c.race];
+    if (c.hero !== 'zufall' && !rd.heroes.find((h) => h.id === c.hero)) c.hero = rd.heroes[0].id;
+    return rd.heroes.map((h) => `<button class="card hero ${c.hero === h.id ? 'sel' : ''}" data-act="m-hero" data-v="${h.id}" style="--rc:${rd.color};--rd:${rd.dark}">
         <div class="crest small" style="background:${rd.color}"><span>${h.name.split(' ').pop()[0]}</span></div>
         <h3>${h.name}</h3><div class="sub">${h.title} · ${h.ranged ? 'Fernkampf' : 'Nahkampf'}</div>
         <div class="kv"><b>Commander-Bonus:</b> ${h.bonusDesc}</div>
         <div class="kv"><b>Fähigkeiten:</b> ${h.abilities.map((a) => a.name).join(', ')}</div></button>`).join('')
-        + `<button class="card hero ${c.hero === 'zufall' ? 'sel' : ''}" data-act="m-hero" data-v="zufall" style="--rc:#888;--rd:#333"><div class="crest small" style="background:#777"><span>?</span></div><h3>Zufälliger Held</h3></button>`;
-    }
-    const opt = (act, cur, list) => list.map(([v, n, d]) => `<button class="opt ${cur === v ? 'sel' : ''}" data-act="${act}" data-v="${v}">${n}${d ? `<small>${d}</small>` : ''}</button>`).join('');
-    const maps = [['heimat', 'Heimatkarte', 'Karte deines Volkes'], ['zufall', 'Zufall', '']].concat(Object.keys(G.THEMES).map((k) => [k, G.THEMES[k].name, '']));
-    $('#menu-body').innerHTML = `
-      <section><h2>1. Wähle dein Volk</h2><div class="grid races">${races}</div></section>
-      <section><h2>2. Wähle deinen Helden</h2><div class="grid heroes">${heroes}</div></section>
+      + `<button class="card hero ${c.hero === 'zufall' ? 'sel' : ''}" data-act="m-hero" data-v="zufall" style="--rc:#888;--rd:#333"><div class="crest small" style="background:#777"><span>?</span></div><h3>Zufälliger Held</h3></button>`;
+  }
+  function skinRow(c) {
+    if (c.race === 'zufall') return '';
+    const cur = Prof().data.skin[c.race] || 'standard';
+    return `<div class="skins"><b>Skin:</b> ${G.SKINS.map((s) => {
+      const ok = Prof().skinUnlocked(c.race, s.id);
+      return `<button class="chip ${cur === s.id ? 'sel' : ''}" data-act="m-skin" data-v="${s.id}" ${ok ? '' : `disabled title="Freischaltung ab Volksstufe ${s.lvl}"`}>${ok ? '' : '🔒 '}${s.name}</button>`;
+    }).join('')}</div>`;
+  }
+
+  function renderMenu() {
+    const c = UI.cfg;
+    const tabs = [['frei', 'Freies Spiel'], ['kampagne', 'Kampagne'], ['voelker', 'Völker & Skins'], ['optionen', 'Einstellungen']];
+    let body = `<nav class="menutabs">${tabs.map(([k, n]) => `<button class="${UI.menuTab === k ? 'sel' : ''}" data-act="m-tab" data-v="${k}">${n}</button>`).join('')}</nav>`;
+    if (UI.menuTab === 'frei') {
+      const maps = [['heimat', 'Heimatkarte', 'Karte deines Volkes'], ['zufall', 'Zufall', '']].concat(Object.keys(G.THEMES).map((k) => [k, G.THEMES[k].name, '']));
+      body += `
+      <section><h2>1. Wähle dein Volk</h2><div class="grid races">${raceCards(c)}</div>${skinRow(c)}</section>
+      <section><h2>2. Wähle deinen Helden</h2><div class="grid heroes">${heroCards(c)}</div></section>
       <section class="row3">
         <div><h2>3. Spielmodus</h2>${opt('m-mode', c.mode, [['1v1', '1 gegen 1', 'Du gegen einen Computer'], ['2v2', '2 gegen 2', 'Du + KI-Verbündeter gegen 2 KI'], ['ffa', '1 vs 1 vs 1 vs 1', 'Jeder gegen jeden']])}</div>
         <div><h2>4. Schwierigkeit</h2>${opt('m-diff', c.difficulty, [['einfach', 'Einfach', 'Langsame KI, weniger Einkommen'], ['mittel', 'Mittel', 'Ausgeglichen'], ['schwer', 'Schwer', 'Schnelle KI, Bonus-Einkommen, fokussiert Heiler']])}</div>
@@ -57,19 +73,60 @@
         <div><h2>6. Spieldauer</h2>${opt('m-dur', String(c.duration), G.DURATIONS.map(([v, n]) => [String(v), n, v ? 'Danach entscheidet die Punktzahl' : 'Bis ein Team besiegt ist']))}</div>
       </section>
       <div class="start-row"><button class="big" data-act="m-start">⚔ Schlacht beginnen</button></div>`;
+    } else if (UI.menuTab === 'kampagne') {
+      const ms = G.CAMPAIGN, sel = ms[UI.mission];
+      body += `<section><h2>Die Funkenkriege</h2><div class="campaign">
+        <div class="mlist">${ms.map((m, i) => {
+          const ok = Prof().missionUnlocked(i), done = Prof().data.campaign.done[m.id];
+          return `<button class="mission ${UI.mission === i ? 'sel' : ''}" data-act="m-mission" data-v="${i}" ${ok ? '' : 'disabled'}><span>${done ? '✔' : ok ? '⚔' : '🔒'}</span> ${i + 1}. ${m.title}</button>`;
+        }).join('')}</div>
+        <div class="brief"><h3>${UI.mission + 1}. ${sel.title}</h3><p class="story">${sel.story}</p><p><b>Ziel:</b> ${sel.goal}</p>
+          <p class="note">Modus: ${G.LAYOUTS[sel.cfg.mode].name} · Schwierigkeit: ${G.DIFFICULTY[sel.cfg.difficulty].name} · ${sel.cfg.duration} Minuten</p></div></div></section>
+        <section><h2>Dein Volk für diese Mission</h2><div class="grid races">${raceCards(c)}</div>${skinRow(c)}</section>
+        <section><h2>Dein Held</h2><div class="grid heroes">${heroCards(c)}</div></section>
+        <div class="start-row"><button class="big" data-act="m-campaign" ${Prof().missionUnlocked(UI.mission) ? '' : 'disabled'}>⚔ Mission starten</button></div>`;
+    } else if (UI.menuTab === 'voelker') {
+      body += `<section><h2>Volks-Erfahrung</h2><p class="note">Jede Partie bringt deinem gespielten Volk Erfahrung (mehr bei Siegen, höherer Schwierigkeit und in der Kampagne). Mit steigender Volksstufe schaltest du Skins frei.</p>
+        <div class="grid races">${G.RACE_KEYS.map((k) => {
+          const r = G.RACES[k], xp = Prof().data.xp[k] || 0, l = Prof().raceLevel(k), a = Prof().xpFor(l), b = Prof().xpFor(l + 1);
+          return `<div class="card race" style="--rc:${r.color}"><div class="crest" style="background:${r.color}"><span>${r.name[0]}</span></div>
+            <h3>${r.name} – Stufe ${l}</h3><div class="xpbar"><div style="width:${Math.floor(100 * (xp - a) / (b - a))}%"></div></div><small>${fmt(xp)} / ${fmt(b)} XP</small>
+            <div class="skinlist">${G.SKINS.map((s) => `<div class="skin ${l >= s.lvl ? 'ok' : ''}"><span class="sw" style="${swatch(k, s.id)}"></span>${s.name}<small>${l >= s.lvl ? (s.desc || 'Standardaussehen') : 'ab Stufe ' + s.lvl}</small></div>`).join('')}</div></div>`;
+        }).join('')}</div><p class="note">Partien gesamt: ${Prof().data.games} · Siege: ${Prof().data.wins}</p></section>`;
+    } else {
+      const s = Prof().data.settings;
+      body += `<section class="settings"><h2>Einstellungen</h2>
+        <label>Musik <input type="range" min="0" max="100" value="${Math.round(s.music * 100)}" data-slider="music"></label>
+        <label>Geräusche <input type="range" min="0" max="100" value="${Math.round(s.sfx * 100)}" data-slider="sfxvol"></label>
+        <label class="tgl"><input type="checkbox" data-act="m-set" data-key="muted" ${s.muted ? 'checked' : ''}><span></span>Ton aus</label>
+        <label class="tgl"><input type="checkbox" data-act="m-set" data-key="blood" ${s.blood ? 'checked' : ''}><span></span>Blut und Gefallene anzeigen</label>
+        <button data-act="m-testsound">Klangprobe</button>
+        <p class="note">Profil und Fortschritt werden in diesem Browser gespeichert.</p>
+        <button data-act="m-reset">Fortschritt zurücksetzen</button></section>`;
+    }
+    $('#menu-body').innerHTML = body;
+  }
+  function swatch(race, skin) {
+    const fake = { race, rd: G.RACES[race], skin };
+    const p = G.R.palOf(fake);
+    return `background:linear-gradient(135deg, ${p.body} 0 33%, ${p.roof} 33% 66%, ${p.trim} 66%);${p.glow ? 'box-shadow:0 0 8px ' + p.glow : ''}`;
   }
 
   // -------------------------------------------------------------------------
   // Spielstart
-  UI.startGame = function () {
-    const cfg = { ...UI.cfg };
+  UI.startGame = function (extra) {
+    const cfg = { ...UI.cfg, ...(extra || {}) };
     if (cfg.race === 'zufall') cfg.hero = 'zufall';
+    cfg.skin = cfg.race === 'zufall' ? 'standard' : (Prof().data.skin[cfg.race] || 'standard');
+    UI.lastCfg = cfg;
     const S = G.newGame(cfg);
+    if (cfg.race === 'zufall') { const r = S.players[0].race; S.players[0].skin = Prof().data.skin[r] || 'standard'; }
     G.R.buildGround(S);
     $('#menu').classList.add('hidden');
     $('#end').classList.add('hidden');
     $('#game').classList.remove('hidden');
     G.R.cam.z = 1;
+    if (G.Audio) { G.Audio.init(); G.Audio.setTheme(S.theme); }
     requestAnimationFrame(() => {
       G.R.init($('#view'));
       const mm = $('#minimap');
@@ -77,7 +134,8 @@
       G.R.centerOn(me().base.x + me().dir.x * 200, me().base.y);
     });
     UI.selected = null; UI.placing = null; UI.casting = null; UI.pickTarget = false;
-    UI.tab = 'bauen';
+    UI.tab = 'bauen'; UI.awarded = null;
+    if (cfg.mission) G.msg(`Mission: ${G.CAMPAIGN.find((m) => m.id === cfg.mission).goal}`, 'gold');
     renderPanel(true);
   };
 
@@ -93,9 +151,11 @@
       <span class="res" title="Arbeiter">⚒ ${p.workers}/${p.workerCap || 0}</span>
       <span class="res" title="Baumeister">🔨 ${busy}/${bmax}</span>
       <span class="res" title="Haupthaus-Stufe">♜ Stufe ${p.th.level}</span>
+      ${p.talentPoints ? `<span class="res tp" title="Talentpunkte im Tab „Volk“ verteilen">★ ${p.talentPoints} Talent${p.talentPoints > 1 ? 'e' : ''}</span>` : ''}
       <span class="res time ${S.endphase ? 'endphase' : ''}" title="${S.limit ? 'Verbleibende Spielzeit' : 'Spielzeit'}">⏱ ${S.limit ? 'noch ' + fmtTime(G.timeLeft()) + (S.endphase ? ' · ENDPHASE' : '') : fmtTime(S.time)}</span>`;
     document.querySelectorAll('[data-act="speed"]').forEach((b) => b.classList.toggle('sel', !S.paused && +b.dataset.v === S.speed));
     $('[data-act="pause"]').classList.toggle('sel', S.paused);
+    $('[data-act="mute"]').textContent = G.Audio && G.Audio.muted ? '🔇' : '🔊';
   }
 
   // -------------------------------------------------------------------------
@@ -106,17 +166,27 @@
   function btn(act, label, why, extra) {
     return `<button data-act="${act}" ${extra || ''} ${why ? `disabled title="${esc(why)}"` : ''}>${label}</button>`;
   }
+  function wallBox(p) {
+    const next = G.WALLS[p.wallLevel], why = G.wallCheck(p);
+    const cur = p.wallLevel ? G.WALLS[p.wallLevel - 1].name : 'keine';
+    let h = `<div class="box"><div class="lbl">Befestigung: <b>${cur}</b>${p.wallLevel ? ` (${p.wallAlive} Segmente)` : ''}</div>`;
+    if (p.wallUp) h += `<div class="hint">Baut ${G.WALLS[p.wallUp.to - 1].name}: ${Math.floor(100 * p.wallUp.t / p.wallUp.total)}%</div>`;
+    else if (next) h += `<div class="brow">${next.name} (${next.hp} LP je Segment) – ${costHtml(next.cost)} · ${fmtTime(next.time / G.PACE)} ${btn('wall', 'Errichten', why)}</div>${why ? `<div class="why">${why}</div>` : ''}`;
+    else h += '<div class="good">Höchste Befestigung errichtet</div>';
+    return h + '<div class="hint">Die Mauer umschließt automatisch die ganze Basis. Eigene Truppen gehen hindurch, Gegner müssen sie einreißen. Ein Ausbau repariert alle Segmente.</div></div>';
+  }
 
   function tabBauen(p) {
     const types = Object.keys(G.BUILDINGS).filter((t) => t !== 'haupthaus');
-    let h = `<div class="box">${toggle('auto.build', 'Bau-Autopilot', p.auto.build, 'Der Computer baut und erforscht für dich nach einer optimierten Reihenfolge.')}
-      <div class="hint">Baumeister: ${G.buildersBusy(p)}/${G.builders(p)} · Haupthaus Stufe ${p.th.level} bestimmt Limits und Höchststufen.</div></div>`;
+    let h = `<div class="box">${toggle('auto.build', 'Bau-Autopilot', p.auto.build, 'Der Computer baut, erforscht und befestigt für dich nach einer optimierten Reihenfolge.')}
+      <div class="hint">Baumeister: ${G.buildersBusy(p)}/${G.builders(p)} · ${G.bname(p.race, 'haupthaus')} Stufe ${p.th.level} bestimmt Limits und Höchststufen.</div></div>`;
+    h += wallBox(p);
     h += '<div class="blist">';
     for (const t of types) {
       const d = G.BUILDINGS[t], n = G.countOf(p, t), max = G.maxCount(p, t);
       const why = G.buildingCheck(p, t);
       h += `<div class="bitem ${UI.placing === t ? 'sel' : ''}">
-        <div class="bname"><b>${d.name}</b> <span class="cnt">${n}/${max}</span></div>
+        <div class="bname"><b>${G.bname(p.race, t)}</b> <span class="cnt">${n}/${max}</span></div>
         <div class="bdesc">${d.desc}</div>
         <div class="brow">${costHtml(G.costOf(t, 1))} · ${fmtTime(G.timeOf(t, 1))}
         ${btn('build', UI.placing === t ? 'Abbrechen' : 'Bauen', UI.placing === t ? null : why, `data-type="${t}"`)}</div></div>`;
@@ -126,37 +196,42 @@
     for (const b of p.blds.slice().sort((a, b) => order.indexOf(a.type) - order.indexOf(b.type))) {
       const why = G.upgradeCheck(p, b);
       const st = b.upgrading ? `${Math.floor(100 * b.upgrading.t / b.upgrading.total)}%` : '';
+      const c = G.costOf(b.type, Math.min(5, b.level + 1));
       h += `<div class="mrow"><a data-act="selbld" data-id="${b.id}">${b.name}</a> <span>St. ${b.level}${st ? ' ⚒ ' + st : ''}</span>
-        ${b.level < 5 && !b.upgrading ? btn('upgradeid', '▲', why, `data-id="${b.id}" title="${esc(why || 'Ausbau: ' + G.costOf(b.type, b.level + 1).g + ' Gold, ' + G.costOf(b.type, b.level + 1).w + ' Holz')}"`) : ''}</div>`;
+        ${b.level < 5 && !b.upgrading ? btn('upgradeid', '▲', why, `data-id="${b.id}" title="${esc(why || `Ausbau: ${c.g} Gold, ${c.w} Holz`)}"`) : ''}</div>`;
     }
     return h + '</div>';
   }
 
   function tabArmee(p) {
     const S = G.S;
-    const modes = [['auto', 'Auto'], ['sammeln', 'Sammeln'], ['verteidigen', 'Verteidigen'], ['angriff', 'Angreifen'], ['camps', 'Monster jagen']];
-    const stateName = { sammeln: 'sammelt sich', verteidigen: 'verteidigt die Basis', angriff: 'greift an', camps: 'jagt neutrale Monster' };
-    let h = `<div class="box"><div class="lbl">Armee-Befehl</div><div class="chips">${modes.map(([m, n]) => `<button class="chip ${p.armyMode === m ? 'sel' : ''}" data-act="armymode" data-v="${m}">${n}</button>`).join('')}</div>
-      <div class="hint">Status: <b>${stateName[p.armyState] || p.armyState}</b>${p.armyState === 'angriff' && p.targetPlayer && !p.manualPoint ? ' → ' + p.targetPlayer.name : ''}${p.campTarget ? ' → ' + p.campTarget.name : ''} · Armee: ${p.armySupply} Versorgung</div>`;
-    if (p.armyMode === 'angriff') {
-      const foes = S.players.filter((o) => o.alive && o.team !== p.team);
-      h += `<div class="lbl">Angriffsziel</div><div class="chips">${foes.map((o) => `<button class="chip ${p.targetPlayer === o && !p.manualPoint ? 'sel' : ''}" data-act="target" data-v="${o.id}">${o.name}</button>`).join('')}
-        <button class="chip ${UI.pickTarget || p.manualPoint ? 'sel' : ''}" data-act="pickpoint">Punkt auf Karte…</button></div>`;
-    }
-    h += `</div><div class="box"><div class="lbl">Auto-Angriff ab <b>${Math.round(p.attackFrac * 100)}%</b> der Versorgung</div>
-      <input type="range" min="20" max="100" step="5" value="${Math.round(p.attackFrac * 100)}" data-slider="attackFrac">
-      ${toggle('campsAllowed', 'Im Auto-Modus neutrale Monster jagen', p.campsAllowed)}</div>`;
+    const styles = [['sammeln', 'Sammeln & Angreifen', 'Die Armee sammelt sich und greift geschlossen an, sobald sie groß genug ist.'],
+      ['wellen', 'Wellen losschicken', 'In festen Abständen zieht alles los, was gerade bereitsteht.'],
+      ['verteidigen', 'Nur verteidigen', 'Niemand verlässt die Basis – außer du drückst „Jetzt angreifen!“.']];
+    const stateName = { sammeln: 'sammelt sich', verteidigen: 'verteidigt die Basis', camps: 'jagt neutrale Monster' };
+    let h = `<div class="box"><div class="lbl">Armee-Stil</div><div class="chips">${styles.map(([m, n, d]) => `<button class="chip ${p.armyStyle === m ? 'sel' : ''}" data-act="armystyle" data-v="${m}" title="${esc(d)}">${n}</button>`).join('')}</div>
+      <div class="hint">${styles.find((s) => s[0] === p.armyStyle)[2]} Losgeschickte Einheiten kämpfen, bis sie fallen.</div>
+      <div class="stats"><span>Im Kampf: <b>${p.committedCount}</b> Einheiten</span><span>Bereit: <b>${p.poolSupply}</b> Versorgung (${stateName[p.armyState] || p.armyState}${p.campTarget ? ': ' + p.campTarget.name : ''})</span></div>
+      ${btn('launch', '⚔ Jetzt angreifen!', p.poolSupply ? null : 'Keine bereiten Truppen')}`;
+    if (p.armyStyle === 'sammeln') h += `<div class="lbl">Angriff ab <b>${Math.round(p.attackFrac * 100)}%</b> der Versorgung (${Math.round(Math.max(8, p.supplyCap * p.attackFrac))})</div>
+      <input type="range" min="15" max="100" step="5" value="${Math.round(p.attackFrac * 100)}" data-slider="attackFrac">
+      ${toggle('campsAllowed', 'Zwischendurch neutrale Monster jagen', p.campsAllowed)}`;
+    if (p.armyStyle === 'wellen') h += `<div class="lbl">Welle alle <b>${p.waveInterval}</b> s – nächste in ${Math.max(0, Math.ceil(p.waveT))} s</div>
+      <input type="range" min="15" max="120" step="5" value="${p.waveInterval}" data-slider="waveInterval">`;
+    const foes = S.players.filter((o) => o.alive && o.team !== p.team);
+    h += `<div class="lbl">Angriffsziel</div><div class="chips"><button class="chip ${p.targetMode === 'auto' && !p.manualPoint ? 'sel' : ''}" data-act="target" data-v="auto">Automatisch</button>
+      ${foes.map((o) => `<button class="chip ${p.targetMode === o.id && !p.manualPoint ? 'sel' : ''}" data-act="target" data-v="${o.id}" style="border-color:${o.color}">${o.name}</button>`).join('')}
+      <button class="chip ${UI.pickTarget || p.manualPoint ? 'sel' : ''}" data-act="pickpoint">Punkt auf Karte…</button></div></div>`;
     const counts = {}; G.ROLES.forEach((r) => (counts[r] = 0));
     let summons = 0;
     for (const e of S.ents) if (!e.dead && e.owner === p.id && e.kind === 'unit') { if (counts[e.role] !== undefined) counts[e.role]++; else summons++; }
     h += `<div class="box">${toggle('auto.produce', 'Automatische Produktion', p.auto.produce, 'Gebäude im Fokus „Auto" bilden Einheiten gemäß Zusammensetzung aus.')}
       <div class="lbl">Armee-Zusammensetzung (Gewichtung)</div>`;
     for (const r of G.ROLES) {
-      h += `<div class="comp"><span class="rn" title="${p.rd.units[r].name}">${G.ROLE_NAMES[r]} <small>${p.rd.units[r].name}</small></span>
+      h += `<div class="comp"><span class="rn">${G.ROLE_NAMES[r]} <small>${p.rd.units[r].name}</small></span>
         <input type="range" min="0" max="6" step="1" value="${p.comp[r]}" data-slider="comp" data-role="${r}"><span class="cv">${p.comp[r]}</span><span class="cc">${counts[r]}×</span></div>`;
     }
-    h += `<div class="hint">Beschwörungen/Söldner: ${summons} · Rolle wird je Gebäude freigeschaltet (Kaserne St.2 = Tank, Sanktum St.2 = Magier, St.3 = Support).</div></div>`;
-    return h;
+    return h + `<div class="hint">Beschwörungen/Söldner: ${summons}. Rollen werden je Gebäudestufe freigeschaltet (Kaserne St. 2 = Tank, Sanktum St. 2 = Magier, St. 3 = Support).</div></div>`;
   }
 
   function abilityDesc(a) {
@@ -194,6 +269,24 @@
     return s + '</div></div>';
   }
 
+  function tabVolk(p) {
+    const rd = p.rd;
+    let s = `<div class="box"><div class="lbl">Talentbaum – <b>${p.talentPoints}</b> Punkt(e) frei <small>(1 pro Heldenstufe)</small></div>
+      ${toggle('auto.talents', 'Talente automatisch verteilen', p.auto.talents)}<div class="tree">`;
+    G.TALENTS.forEach((br, bi) => {
+      s += `<div class="branch" style="--bc:${br.color}"><div class="bh">${br.name}</div>`;
+      br.talents.forEach((t, ti) => {
+        const has = p.talents[t.id], why = G.talentCheck(p, bi, ti);
+        s += `<button class="talent ${has ? 'has' : ''}" data-act="talent" data-b="${bi}" data-t="${ti}" ${has || why ? 'disabled' : ''} title="${esc(why && !has ? why : t.desc)}"><b>${t.name}</b><small>${t.desc}</small></button>`;
+      });
+      s += '</div>';
+    });
+    s += `</div></div><div class="box"><div class="lbl">Volk: ${rd.name}</div><div class="kv"><b>Passiv:</b> ${rd.passive.name} – ${rd.passive.desc}</div>
+      ${rd.abilities.map((a, i) => `<div class="kv"><b>${i + 1}${i === 0 ? '/R' : ''}: ${a.name}</b> (ab ${G.bname(p.race, 'haupthaus')} St. ${a.th}, ${a.cd} s) – ${a.desc}</div>`).join('')}
+      ${toggle('auto.ability', 'Volksfähigkeiten automatisch einsetzen', p.auto.ability)}</div>`;
+    return s;
+  }
+
   function tabHaendler(p) {
     const h = p.hero;
     const near = h && !h.dead && G.S.shops.some((s) => G.dist(s, h) < 230);
@@ -211,7 +304,8 @@
       ${toggle('autoRatio', 'Arbeiter automatisch verteilen', p.autoRatio, 'Verteilt die Arbeiter je nach Bedarf auf Gold und Holz.')}
       <div class="lbl">Gold <b>${Math.round(p.goldRatio * 100)}%</b> · Holz <b>${Math.round((1 - p.goldRatio) * 100)}%</b></div>
       <input type="range" min="0" max="100" step="5" value="${Math.round(p.goldRatio * 100)}" data-slider="goldRatio" ${p.autoRatio ? 'disabled' : ''}>
-      <div class="hint">Einkommen: <span class="c-g">${p.incomeG.toFixed(1)}</span>/s Gold, <span class="c-w">${p.incomeW.toFixed(1)}</span>/s Holz${p.reserve.g || p.reserve.w ? ` · Autopilot spart auf ${costHtml(p.reserve)}` : ''}</div></div>`;
+      <div class="hint">Einkommen: <span class="c-g">${p.incomeG.toFixed(1)}</span>/s Gold, <span class="c-w">${p.incomeW.toFixed(1)}</span>/s Holz${p.reserve.g || p.reserve.w ? ` · Autopilot spart auf ${costHtml(p.reserve)}` : ''}
+      · Außenposten auf Goldadern: ${p.blds.filter((b) => b.type === 'aussenposten').length}</div></div>`;
     s += '<div class="box"><div class="lbl">Schmiede-Forschung</div>';
     for (const l of Object.keys(G.RESEARCH)) {
       const r = G.RESEARCH[l], lvl = p.research[l], why = G.researchCheck(p, l);
@@ -219,23 +313,20 @@
       s += `<div class="sitem"><div><b>${r.name} ${lvl}/5</b><small>${r.desc}</small>${run ? `<small>Läuft: ${Math.floor(100 * p.researching.t / p.researching.total)}%</small>` : ''}</div>
         ${lvl < 5 ? btn('research', costHtml(G.researchCost(lvl + 1)), why, `data-line="${l}"`) : '<span class="good">max</span>'}</div>`;
     }
-    s += '</div>';
-    const rd = p.rd;
-    s += `<div class="box"><div class="lbl">Volk: ${rd.name}</div><div class="kv"><b>Passiv:</b> ${rd.passive.name} – ${rd.passive.desc}</div>
-      <div class="kv"><b>Volksfähigkeit:</b> ${rd.ability.name} – ${rd.ability.desc}</div>
-      ${toggle('auto.ability', 'Volksfähigkeit automatisch einsetzen', p.auto.ability)}</div>`;
-    return s;
+    return s + '</div>';
   }
 
   function renderPanel(force) {
     const S = G.S; if (!S) return;
     if (!force && UI.pointerDownPanel) return;
     const p = me();
-    const ab = p.rd.ability, why = G.raceAbilityCheck(p);
-    $('#race-ab').innerHTML = `<button class="race-btn" data-act="race" ${why ? 'disabled' : ''} title="${esc(ab.desc)}"><b>R: ${ab.name}</b><small>${why || 'Bereit!'}</small></button>`;
-    const tabs = [['bauen', 'Bauen'], ['armee', 'Armee'], ['held', 'Held'], ['haendler', 'Händler'], ['wirtschaft', 'Wirtschaft']];
+    $('#race-ab').innerHTML = p.rd.abilities.map((ab, i) => {
+      const why = G.raceAbilityCheck(p, i);
+      return `<button class="race-btn" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.desc)}"><b>${i + 1}${i === 0 ? '/R' : ''}: ${ab.name}</b><small>${why || 'Bereit!'}</small></button>`;
+    }).join('');
+    const tabs = [['bauen', 'Bauen'], ['armee', 'Armee'], ['held', 'Held'], ['volk', 'Volk' + (p.talentPoints ? ' ★' : '')], ['haendler', 'Händler'], ['wirtschaft', 'Wirtsch.']];
     $('#tabs').innerHTML = tabs.map(([k, n]) => `<button class="${UI.tab === k ? 'sel' : ''}" data-act="tab" data-v="${k}">${n}</button>`).join('');
-    const fn = { bauen: tabBauen, armee: tabArmee, held: tabHeld, haendler: tabHaendler, wirtschaft: tabWirtschaft }[UI.tab];
+    const fn = { bauen: tabBauen, armee: tabArmee, held: tabHeld, volk: tabVolk, haendler: tabHaendler, wirtschaft: tabWirtschaft }[UI.tab];
     const body = $('#tab-body');
     const st = body.scrollTop;
     body.innerHTML = fn(p);
@@ -258,13 +349,14 @@
     const ownerTxt = owner ? `<span style="color:${owner.color}">${owner.name}</span>` : '<span class="neutral">Neutral</span>';
     if (e.kind === 'building') {
       h += `<div class="sel-head"><b>${e.name}</b> · Stufe ${e.level}${e.level === 0 ? ' (im Bau)' : ''} · ${ownerTxt}</div>
-        <div class="hp">LP ${fmt(e.hp)}/${fmt(e.maxHp)}</div><div class="desc">${e.def.desc}</div>`;
-      if (mine) {
-        if (e.upgrading) h += `<div class="prog">${e.level === 0 ? 'Bau' : 'Ausbau auf Stufe ' + e.upgrading.to}: ${Math.floor(100 * e.upgrading.t / e.upgrading.total)}% – noch ${fmtTime(e.upgrading.total - e.upgrading.t)}</div>`;
+        <div class="hp">LP ${fmt(e.hp)}/${fmt(e.maxHp)} · Rüstung ${e.armor}</div><div class="desc">${e.def.desc}</div>`;
+      if (mine && e.type !== 'mauer') {
+        if (e.upgrading) h += `<div class="prog">${e.level === 0 ? 'Bau' : 'Ausbau auf Stufe ' + e.upgrading.to}: ${Math.floor(100 * e.upgrading.t / e.upgrading.total)}%</div>`;
         else if (e.level < 5) {
           const why = G.upgradeCheck(p, e);
           h += `<div class="row">${btn('upgrade', `Ausbau auf Stufe ${e.level + 1}: ${costHtml(G.costOf(e.type, e.level + 1))} · ${fmtTime(G.timeOf(e.type, e.level + 1))}`, why)}${why ? `<span class="why">${why}</span>` : ''}</div>`;
         } else h += '<div class="good">Maximale Stufe erreicht</div>';
+        if (e.type === 'haupthaus') h += wallBox(p);
         const prod = G.PRODUCTION[e.type];
         if (prod) {
           const unl = G.unlockedRoles(e);
@@ -283,7 +375,7 @@
       }
     } else {
       const role = e.kind === 'hero' ? 'Held' : e.kind === 'creep' ? 'Neutrales Monster' : e.role === 'summon' ? (e.merc ? 'Söldner' : 'Beschwörung') : G.ROLE_NAMES[e.role];
-      h += `<div class="sel-head"><b>${e.name}</b> · ${role} · Stufe ${e.level} · ${ownerTxt}</div>
+      h += `<div class="sel-head"><b>${e.name}</b> · ${role} · Stufe ${e.level} · ${ownerTxt}${e.committed ? ' · <span class="bad">im Angriff</span>' : ''}</div>
         <div class="hp">LP ${fmt(e.hp)}/${fmt(e.maxHp)} · Schaden ${Math.round(e.dmg * (1 + e.m.dmg))} · Rüstung ${Math.round((e.armor || 0) + e.m.armor)} · Reichweite ${Math.round(e.range)}</div>`;
       if (e.aura) h += `<div class="desc">Aura: ${e.aura.desc}</div>`;
       if (e.summon) h += `<div class="desc">Beschwört im Kampf: ${e.summon.name}</div>`;
@@ -296,45 +388,67 @@
   }
 
   // -------------------------------------------------------------------------
-  // Nachrichten
-  let lastMsgCount = -1;
+  // Nachrichten & Spielende
+  let lastMsgKey = '';
   function renderMsgs() {
     const S = G.S;
-    const list = S.msgs.slice(-7);
     const key = S.msgs.length + ':' + Math.floor(S.time / 2);
-    if (key === lastMsgCount) return;
-    lastMsgCount = key;
-    $('#msgs').innerHTML = list.filter((m) => S.time - m.t < 25).map((m) => `<div class="msg ${m.cls}">${m.text}</div>`).join('');
+    if (key === lastMsgKey) return;
+    lastMsgKey = key;
+    $('#msgs').innerHTML = S.msgs.slice(-7).filter((m) => S.time - m.t < 25).map((m) => `<div class="msg ${m.cls}">${m.text}</div>`).join('');
   }
 
   function showEnd() {
-    const S = G.S, p = me();
-    const o = S.over;
+    const S = G.S, p = me(), o = S.over;
+    if (!UI.awarded) UI.awarded = Prof().award(S);
+    const a = UI.awarded;
+    const mission = S.cfg.mission ? G.CAMPAIGN.findIndex((m) => m.id === S.cfg.mission) : -1;
     $('#end').classList.remove('hidden');
     $('#end-body').innerHTML = `<h1 class="${o.win ? 'win' : 'lose'}">${o.win ? 'Sieg!' : 'Niederlage'}</h1>
-      <p>${o.byTime ? (o.win ? 'Die Zeit ist abgelaufen – dein Team liegt nach Punkten vorn.' : 'Die Zeit ist abgelaufen – der Gegner liegt nach Punkten vorn.') : o.win ? 'Alle gegnerischen Völker wurden bezwungen.' : 'Dein Haupthaus ist gefallen.'}</p>
+      <p>${o.reason || (o.byTime ? (o.win ? 'Die Zeit ist abgelaufen – dein Team liegt nach Punkten vorn.' : 'Die Zeit ist abgelaufen – der Gegner liegt nach Punkten vorn.') : o.win ? 'Alle gegnerischen Völker wurden bezwungen.' : 'Dein Haupthaus ist gefallen.')}</p>
       ${o.scores ? `<div class="stats">${o.scores.map((x) => `<span style="color:${x.color}">${x.name} <b>${x.score}</b></span>`).join('')}</div>` : ''}
-      <div class="stats"><span>Spielzeit <b>${fmtTime(o.time)}</b></span><span>Besiegte Gegner <b>${p.stats.kills}</b></span><span>Verlorene Einheiten <b>${p.stats.lost}</b></span><span>Heldenstufe <b>${p.hero.level}</b></span><span>Haupthaus <b>Stufe ${p.th.level}</b></span></div>
-      <button class="big" data-act="menu">Zum Hauptmenü</button> <button class="big" data-act="again">Revanche (neue Gegner)</button>`;
+      <div class="stats"><span>Spielzeit <b>${fmtTime(o.time)}</b></span><span>Besiegte Gegner <b>${p.stats.kills}</b></span><span>Verlorene Einheiten <b>${p.stats.lost}</b></span><span>Heldenstufe <b>${p.hero.level}</b></span></div>
+      <div class="xpgain">+${a.xp} Volks-XP für ${G.RACES[a.race].name}${a.after > a.before ? ` – <b>Stufe ${a.after} erreicht!</b>` : ` (Stufe ${a.after})`}
+      ${a.unlocked.map((s) => `<div class="good">Neuer Skin freigeschaltet: ${s.name}</div>`).join('')}
+      ${a.missionNew ? `<div class="good">Mission abgeschlossen!${mission + 1 < G.CAMPAIGN.length ? ' Nächste Mission freigeschaltet.' : ' Kampagne gemeistert!'}</div>` : ''}</div>
+      <button class="big" data-act="menu">Zum Hauptmenü</button> <button class="big" data-act="again">${S.cfg.mission ? 'Mission wiederholen' : 'Revanche (neue Gegner)'}</button>
+      ${a.missionNew && mission + 1 < G.CAMPAIGN.length ? '<button class="big" data-act="nextmission">Nächste Mission</button>' : ''}`;
   }
 
   // -------------------------------------------------------------------------
   // Aktionen
   function findEnt(id) { return G.S.ents.find((e) => e.id === +id); }
-  function act(el, ev) {
+  function startMission(i) {
+    const m = G.CAMPAIGN[i];
+    UI.mission = i;
+    UI.startGame({ ...m.cfg, map: m.cfg.map || 'heimat', mission: m.id });
+  }
+  function act(el) {
     const a = el.dataset.act, v = el.dataset.v;
     const S = G.S, p = S && S.players[0];
     switch (a) {
+      case 'm-tab': UI.menuTab = v; renderMenu(); return;
       case 'm-race': UI.cfg.race = v; UI.cfg.hero = null; renderMenu(); return;
       case 'm-hero': UI.cfg.hero = v; renderMenu(); return;
+      case 'm-skin': Prof().data.skin[UI.cfg.race] = v; Prof().save(); renderMenu(); return;
       case 'm-mode': UI.cfg.mode = v; renderMenu(); return;
       case 'm-diff': UI.cfg.difficulty = v; renderMenu(); return;
       case 'm-map': UI.cfg.map = v; renderMenu(); return;
       case 'm-dur': UI.cfg.duration = +v; renderMenu(); return;
-      case 'm-start': case 'again': UI.startGame(); return;
+      case 'm-mission': UI.mission = +v; renderMenu(); return;
+      case 'm-start': UI.startGame(); return;
+      case 'm-campaign': startMission(UI.mission); return;
+      case 'm-set': Prof().data.settings[el.dataset.key] = el.checked; Prof().save(); Prof().applySettings(); return;
+      case 'm-testsound': G.Audio.init(); G.Audio.apply(); setTimeout(() => { G.sfx('schwert', 0, 0, 1, true); setTimeout(() => G.sfx('tod', 0, 0, 1, true), 250); setTimeout(() => G.sfx('horn', 0, 0, 1, true), 700); }, 100); return;
+      case 'm-reset': if (confirm('Gesamten Fortschritt (Volks-XP, Skins, Kampagne) löschen?')) { Prof().reset(); renderMenu(); } return;
+      case 'again': if (UI.lastCfg.mission) startMission(G.CAMPAIGN.findIndex((m) => m.id === UI.lastCfg.mission)); else UI.startGame(); return;
+      case 'nextmission': startMission(G.CAMPAIGN.findIndex((m) => m.id === UI.lastCfg.mission) + 1); return;
       case 'menu': G.S = null; UI.showMenu(); return;
       case 'tab': UI.tab = v; break;
-      case 'build': UI.placing = UI.placing === el.dataset.type ? null : el.dataset.type; UI.casting = null; break;
+      case 'build': UI.placing = UI.placing === el.dataset.type ? null : el.dataset.type; UI.casting = null;
+        if (UI.placing && G.BUILDINGS[UI.placing].outpost) G.msg('Klicke auf eine freie Goldader (gelb markiert) außerhalb deiner Basis.', '');
+        break;
+      case 'wall': G.upgradeWall(p); break;
       case 'toggle': {
         const k = el.dataset.key, on = el.checked;
         if (k === 'heroManual') { p.hero.manual = on; p.hero.order = null; p.hero.hold = null; if (on) UI.selected = p.hero; }
@@ -343,8 +457,9 @@
         else p[k] = on;
         break;
       }
-      case 'armymode': p.armyMode = v; p.manualPoint = null; UI.pickTarget = false; p.armyT = 0; break;
-      case 'target': p.targetPlayer = S.players[+v]; p.manualPoint = null; p.armyT = 0; break;
+      case 'armystyle': p.armyStyle = v; p.waveT = Math.min(p.waveT, p.waveInterval); p.armyT = 0; break;
+      case 'launch': G.launchNow(p); break;
+      case 'target': p.targetMode = v === 'auto' ? 'auto' : +v; p.manualPoint = null; p.armyT = 0; break;
       case 'pickpoint': UI.pickTarget = true; G.msg('Linksklick auf die Karte: Angriffsziel festlegen.', ''); break;
       case 'upgrade': if (UI.selected) G.upgradeBuilding(p, UI.selected); break;
       case 'upgradeid': { const b = findEnt(el.dataset.id); if (b) G.upgradeBuilding(p, b); break; }
@@ -352,25 +467,29 @@
       case 'focus': if (UI.selected) UI.selected.focus = v; break;
       case 'queue': if (UI.selected) G.queueUnit(p, UI.selected, v); break;
       case 'research': G.startResearch(p, el.dataset.line); break;
+      case 'talent': G.learnTalent(p, +el.dataset.b, +el.dataset.t); break;
       case 'buy': G.buyItem(p, el.dataset.item); break;
       case 'sell': G.sellItem(p, +el.dataset.idx); break;
       case 'gotoshop': {
         const h = p.hero; if (h.dead) break;
-        const s = S.shops.reduce((a, b) => (G.dist(b, h) < G.dist(a, h) ? b : a));
+        const s = S.shops.reduce((a2, b) => (G.dist(b, h) < G.dist(a2, h) ? b : a2));
         if (h.manual) h.order = { type: 'move', x: s.x, y: s.y + 60 };
         else h.shopping = s;
         break;
       }
       case 'cast': castBtn(+el.dataset.idx); break;
-      case 'race': G.castRaceAbility(p); break;
+      case 'race': G.castRaceAbility(p, +el.dataset.idx || 0); break;
       case 'speed': S.speed = +v; S.paused = false; break;
       case 'pause': S.paused = !S.paused; break;
+      case 'mute': Prof().data.settings.muted = !Prof().data.settings.muted; Prof().save(); Prof().applySettings(); break;
       case 'deselect': UI.selected = null; break;
       case 'centerhero': if (!p.hero.dead) G.R.centerOn(p.hero.x, p.hero.y); break;
       case 'centerbase': G.R.centerOn(p.base.x, p.base.y); break;
+      case 'zoom': G.R.cam.z = G.clamp(G.R.cam.z * (+v), 0.35, 2.2); G.R.clampCam(); break;
       case 'quit': if (confirm('Spiel wirklich beenden?')) { G.S = null; UI.showMenu(); } return;
     }
     renderPanel(true);
+    if (S) renderTop();
   }
   function castBtn(i) {
     const p = me(), h = p.hero, ab = h.abilities[i];
@@ -380,26 +499,32 @@
   }
 
   document.addEventListener('click', (ev) => {
+    if (G.Audio) G.Audio.init();
     const el = ev.target.closest('[data-act]');
     if (!el || el.disabled) return;
     if (el.tagName === 'INPUT') return; // Checkboxen über "change"
-    act(el, ev);
+    act(el);
   });
   document.addEventListener('change', (ev) => {
     const el = ev.target;
-    if (el.matches('input[type=checkbox][data-act]')) act(el, ev);
+    if (el.matches('input[type=checkbox][data-act]')) act(el);
   });
   document.addEventListener('input', (ev) => {
-    const el = ev.target; if (!el.dataset.slider || !G.S) return;
-    const p = me(), v = +el.value;
-    if (el.dataset.slider === 'attackFrac') p.attackFrac = v / 100;
-    if (el.dataset.slider === 'goldRatio') p.goldRatio = v / 100;
-    if (el.dataset.slider === 'comp') p.comp[el.dataset.role] = v;
+    const el = ev.target; if (!el.dataset.slider) return;
+    const v = +el.value, k = el.dataset.slider;
+    if (k === 'music' || k === 'sfxvol') {
+      Prof().data.settings[k === 'music' ? 'music' : 'sfx'] = v / 100; Prof().save(); Prof().applySettings(); return;
+    }
+    if (!G.S) return;
+    const p = me();
+    if (k === 'attackFrac') p.attackFrac = v / 100;
+    if (k === 'waveInterval') { p.waveInterval = v; p.waveT = Math.min(p.waveT, v); }
+    if (k === 'goldRatio') p.goldRatio = v / 100;
+    if (k === 'comp') p.comp[el.dataset.role] = v;
     const lab = el.previousElementSibling && el.previousElementSibling.querySelector('b');
-    if (lab && el.dataset.slider === 'attackFrac') lab.textContent = v + '%';
+    if (lab && (k === 'attackFrac' || k === 'waveInterval')) lab.textContent = k === 'attackFrac' ? v + '%' : v;
     if (el.nextElementSibling && el.nextElementSibling.classList.contains('cv')) el.nextElementSibling.textContent = v;
   });
-  const panel = () => $('#panel');
   document.addEventListener('pointerdown', (ev) => { if (ev.target.closest('#panel, #selection')) UI.pointerDownPanel = true; });
   document.addEventListener('pointerup', () => { UI.pointerDownPanel = false; });
 
@@ -413,7 +538,7 @@
       if (e.dead) continue;
       if (e.kind === 'building') {
         const hs = e.size * G.TILE / 2;
-        if (Math.abs(e.x - wx) < hs && Math.abs(e.y - wy) < hs + 10) { const d = 30; if (d < bd) { bd = d; best = e; } }
+        if (Math.abs(e.x - wx) < hs && Math.abs(e.y - wy) < hs + 10) { const d = e.type === 'mauer' ? 40 : 30; if (d < bd) { bd = d; best = e; } }
       } else {
         const d = Math.hypot(e.x - wx, e.y - wy);
         if (d < e.r + 6 && d < bd) { bd = d; best = e; }
@@ -437,19 +562,19 @@
     cv.addEventListener('pointerleave', () => { G.R.mouse.inside = false; });
     cv.addEventListener('pointerdown', (ev) => {
       if (!G.S) return;
-      if (ev.button === 0 || ev.button === 1) { drag = { sx: ev.clientX, sy: ev.clientY, cx: G.R.cam.x, cy: G.R.cam.y, moved: false, button: ev.button }; cv.setPointerCapture(ev.pointerId); }
+      if (ev.button === 0 || ev.button === 1) { drag = { sx: ev.clientX, sy: ev.clientY, cx: G.R.cam.x, cy: G.R.cam.y, moved: false, button: ev.button, shift: ev.shiftKey }; cv.setPointerCapture(ev.pointerId); }
       if (ev.button === 2) rightClick();
     });
-    cv.addEventListener('pointerup', (ev) => {
+    cv.addEventListener('pointerup', () => {
       if (!drag) return;
       const d = drag; drag = null;
       if (d.moved || d.button !== 0) return;
-      leftClick();
+      leftClick(d.shift);
     });
     cv.addEventListener('wheel', (ev) => {
       ev.preventDefault();
       const R = G.R, z0 = R.cam.z;
-      const z1 = G.clamp(z0 * (ev.deltaY < 0 ? 1.12 : 1 / 1.12), 0.45, 1.8);
+      const z1 = G.clamp(z0 * (ev.deltaY < 0 ? 1.12 : 1 / 1.12), 0.35, 2.2);
       const w = R.toWorld(R.mouse.x, R.mouse.y);
       R.cam.z = z1;
       R.cam.x = w.x - R.mouse.x / z1; R.cam.y = w.y - R.mouse.y / z1; R.clampCam();
@@ -475,27 +600,30 @@
       const p = me();
       if (k === 'escape') { UI.placing = null; UI.casting = null; UI.pickTarget = false; UI.selected = null; renderPanel(true); }
       if (k === 'q' || k === 'e') { const i = k === 'q' ? 0 : 1; const ab = p.hero.abilities[i]; if (ab && (ab.type === 'heal' || ab.type === 'buff' || ab.type === 'summon' || ab.self)) G.heroCastManual(p, i, p.hero.x, p.hero.y); else G.heroCastManual(p, i, G.R.mouse.wx, G.R.mouse.wy); }
-      if (k === 'r') G.castRaceAbility(p);
+      if (k === 'r' || k === '1') G.castRaceAbility(p, 0);
+      if (k === '2') G.castRaceAbility(p, 1);
+      if (k === '3') G.castRaceAbility(p, 2);
       if (k === 'h') { p.hero.manual = !p.hero.manual; p.hero.order = null; p.hero.hold = null; G.msg(`Held: ${p.hero.manual ? 'manuelle Steuerung' : 'automatisch'}`, ''); renderPanel(true); }
       if (k === ' ') { ev.preventDefault(); if (!p.hero.dead) G.R.centerOn(p.hero.x, p.hero.y); }
-      if (k === 'p') { G.S.paused = !G.S.paused; }
+      if (k === 'p') G.S.paused = !G.S.paused;
       if (k === 'b') { UI.tab = 'bauen'; renderPanel(true); }
+      if (k === '+' || k === '-') { G.R.cam.z = G.clamp(G.R.cam.z * (k === '+' ? 1.15 : 1 / 1.15), 0.35, 2.2); G.R.clampCam(); }
     });
     window.addEventListener('keyup', (ev) => { keys[ev.key.toLowerCase()] = false; });
   };
   function setManualPoint(x, y) {
     const p = me();
-    p.manualPoint = { x, y }; p.armyMode = 'angriff'; UI.pickTarget = false; p.armyT = 0;
+    p.manualPoint = { x, y }; UI.pickTarget = false; p.armyT = 0;
     G.S.fx.push({ type: 'ring', x, y, r: 30, color: '#ff4040', t: 0, dur: 0.8 });
-    G.msg('Armee greift den markierten Punkt an.', 'gold');
+    G.msg('Angreifende Truppen ziehen zum markierten Punkt.', 'gold');
     renderPanel(true);
   }
-  function leftClick() {
+  function leftClick(shift) {
     const p = me(), wx = G.R.mouse.wx, wy = G.R.mouse.wy;
     if (UI.placing) {
       const b = G.placeBuilding(p, UI.placing, wx, wy);
-      if (b) { if (!window.event || !window.event.shiftKey) UI.placing = null; UI.selected = b; }
-      else G.msg(G.buildingCheck(p, UI.placing) || 'Hier kann nicht gebaut werden (nur innerhalb deines Basisrings, nicht überlappend).', 'bad');
+      if (b) { if (!shift) UI.placing = null; UI.selected = b; }
+      else G.msg(G.buildingCheck(p, UI.placing) || (G.BUILDINGS[UI.placing].outpost ? 'Außenposten nur auf freien Goldadern (ohne Gegner in der Nähe).' : 'Hier kann nicht gebaut werden (nur innerhalb deines Basisrings, nicht überlappend).'), 'bad');
       renderPanel(true); return;
     }
     if (UI.casting !== null) { G.heroCastManual(p, UI.casting, wx, wy); UI.casting = null; renderPanel(true); return; }
@@ -525,11 +653,21 @@
     R.clampCam();
   };
 
+  // Kampfintensität im Bild steuert die Musik
+  function updateIntensity() {
+    const S = G.S, R = G.R;
+    const vw = R.viewW(), vh = R.viewH();
+    let n = 0;
+    for (const e of S.ents) if (e.kind !== 'building' && e.target && !e.target.dead && e.x > R.cam.x && e.x < R.cam.x + vw && e.y > R.cam.y && e.y < R.cam.y + vh) n++;
+    const target = Math.min(1, n / 25 + (S.endphase ? 0.35 : 0));
+    G.Audio.intensity += (target - G.Audio.intensity) * 0.1;
+  }
+
   let tTop = 0, tPanel = 0, tMini = 0, endShown = false;
   UI.tick = function (dt) {
     const S = G.S; if (!S) return;
     tTop -= dt; tPanel -= dt; tMini -= dt;
-    if (tTop <= 0) { tTop = 0.2; renderTop(); renderMsgs(); }
+    if (tTop <= 0) { tTop = 0.2; renderTop(); renderMsgs(); if (G.Audio) updateIntensity(); }
     if (tPanel <= 0) { tPanel = 0.5; renderPanel(false); }
     if (tMini <= 0) { tMini = 0.15; G.R.drawMinimap($('#minimap')); }
     if (S.over && !endShown) { endShown = true; showEnd(); }

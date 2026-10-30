@@ -14,6 +14,7 @@
     requestAnimationFrame(frame);
   }
   window.addEventListener('DOMContentLoaded', () => {
+    G.Profile.load();
     G.UI.bindInput();
     G.UI.showMenu();
     requestAnimationFrame(frame);

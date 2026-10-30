@@ -25,6 +25,9 @@
       <div class="top-ctrl">
         <button data-act="centerbase" title="Kamera auf Basis">⌂ Basis</button>
         <button data-act="centerhero" title="Kamera auf Held (Leertaste)">♛ Held</button>
+        <button data-act="zoom" data-v="1.2" title="Hineinzoomen (+)">＋</button>
+        <button data-act="zoom" data-v="0.8333" title="Herauszoomen (−)">－</button>
+        <button data-act="mute" title="Ton an/aus">🔊</button>
         <button data-act="pause" title="Pause (P)">❚❚</button>
         <button data-act="speed" data-v="1">1×</button>
         <button data-act="speed" data-v="2">2×</button>
@@ -38,7 +41,7 @@
         <div id="msgs"></div>
         <div id="selection" class="hidden"></div>
         <div id="mmwrap"><canvas id="minimap"></canvas></div>
-        <div id="keys">WASD/Pfeile: Kamera · Ziehen: Karte verschieben · Mausrad: Zoom · H: Held manuell · Q/E: Heldenfähigkeit · R: Volksfähigkeit · Esc: Abbrechen</div>
+        <div id="keys">WASD/Pfeile: Kamera · Ziehen: Karte verschieben · Mausrad: Zoom · +/−: Zoom · H: Held manuell · Q/E: Heldenfähigkeit · 1/2/3 (R): Volksfähigkeiten · Esc: Abbrechen</div>
       </div>
       <aside id="panel">
         <div id="race-ab"></div>
@@ -53,6 +56,8 @@
 
   <script src="js/data.js"></script>
   <script src="js/game.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/profile.js"></script>
   <script src="js/render.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/main.js"></script>
