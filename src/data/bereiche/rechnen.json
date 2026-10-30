@@ -1,0 +1,300 @@
+[
+  {
+    "id": "rechnen-leistung",
+    "thema": "rechnen",
+    "titel": "Strom, Leistung und Energie",
+    "kurz": "Formeln für Wechsel- und Drehstrom, Schein-, Wirk- und Blindleistung, Gleichzeitigkeit, Energie",
+    "unterthemen": ["Strom & Leistung", "Energie"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Die meisten Rechenaufgaben beginnen mit der Leistung: Wie groß ist der Strom einer Wallbox, einer Wärmepumpe oder in der Hauptleitung? Mit wenigen Formeln kommst du weit."
+      },
+      {
+        "titel": "Formeln",
+        "punkte": [
+          "Wechselstrom (230 V): P = U · I · cos φ → I = P / (U · cos φ).",
+          "Drehstrom (400 V): P = √3 · U · I · cos φ → I = P / (√3 · U · cos φ), mit √3 ≈ 1,732.",
+          "Scheinleistung S = U · I (Drehstrom: √3 · U · I). Blindleistung Q = √(S² − P²). Leistungsfaktor cos φ = P / S.",
+          "Widerstand aus Leistung und Spannung: P = U² / R → R = U² / P.",
+          "Energie: W = P · t.",
+          "Gleichzeitigkeit: P_max = g · ΣP – damit dann den Betriebsstrom berechnen."
+        ]
+      },
+      {
+        "titel": "Beispiele",
+        "punkte": [
+          "Wallbox 11 kW, 400 V, cos φ = 1: I = 11.000 / (1,732 · 400) ≈ 15,9 A.",
+          "Werkstatt 30 kW, g = 0,6, cos φ = 0,9: 18.000 / (1,732 · 400 · 0,9) ≈ 28,9 A.",
+          "Heizstab 3 kW an 230 V: R = 230² / 3.000 ≈ 17,6 Ω.",
+          "Wärmepumpe 2,5 kW, 6 Stunden täglich, 30 Tage: W = 2,5 kW · 6 h · 30 = 450 kWh."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "punkte": [
+          "Merkwerte: 11 kW Drehstrom ≈ 16 A, 22 kW ≈ 32 A, 4,6 kVA einphasig = 20 A, 7,4 kW einphasig ≈ 32 A.",
+          "Einphasig durch 230 V teilen, dreiphasig durch 1,732 · 400 V – und cos φ nicht vergessen."
+        ]
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Wallbox 11 kW an 400 V Drehstrom, cos φ = 1: Wie groß ist der Strom je Außenleiter?",
+        "antworten": ["Rund 15,9 A", "Rund 27,5 A", "Rund 47,8 A", "Rund 9,2 A"],
+        "richtig": 0,
+        "erklaerung": "I = P / (√3 · U · cos φ) = 11.000 W / (1,732 · 400 V) ≈ 15,9 A. Wer durch 230 V teilt (47,8 A) oder √3 vergisst (27,5 A), liegt falsch."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Welchen Widerstand hat ein Heizstab mit 2 kW an 230 V?",
+        "antworten": ["Rund 0,04 Ω", "Rund 115 Ω", "Rund 26,5 Ω", "Rund 8,7 Ω"],
+        "richtig": 2,
+        "erklaerung": "R = U² / P = 230² / 2.000 = 52.900 / 2.000 ≈ 26,5 Ω. Die 8,7 wären der Strom in Ampere (2.000 W / 230 V)."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Eine Wärmepumpe mit 2 kW läuft 5 Stunden täglich, 30 Tage lang. Wie viel Energie braucht sie?",
+        "antworten": ["300 kWh", "60 kWh", "10 kWh", "3.000 kWh"],
+        "richtig": 0,
+        "erklaerung": "W = P · t = 2 kW · 5 h · 30 = 300 kWh."
+      },
+      {
+        "abschnitt": 3,
+        "punkt": 0,
+        "frage": "Welcher Strom gehört ungefähr zu 22 kW Drehstrom?",
+        "antworten": ["16 A", "96 A", "20 A", "32 A"],
+        "richtig": 3,
+        "erklaerung": "Merkwerte: 11 kW Drehstrom ≈ 16 A, 22 kW ≈ 32 A, 4,6 kVA einphasig = 20 A."
+      }
+    ],
+    "quelle": "Grundlagen Wechselstrom und Drehstrom",
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-spannungsfall",
+    "thema": "rechnen",
+    "titel": "Spannungsfall, Querschnitt und Leitungswiderstand",
+    "kurz": "Formeln für Wechsel- und Drehstrom, Grenzwerte 0,5 % und 3 %, Mindestquerschnitt",
+    "unterthemen": ["Spannungsfall", "Querschnitt", "Leitungswiderstand"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Je länger und dünner eine Leitung ist, desto mehr Spannung geht auf dem Weg verloren. Du musst den Spannungsfall berechnen und den passenden Querschnitt wählen können."
+      },
+      {
+        "titel": "Formeln",
+        "punkte": [
+          "Leitungswiderstand (ein Leiter): R = l / (κ · A), κ_Cu = 56 m/(Ω·mm²). Hin- und Rückleiter zusammen: doppelt so viel.",
+          "Wechselstrom: ΔU = 2 · l · I · cos φ / (κ · A) – der Faktor 2 steht für Hin- und Rückleiter.",
+          "Drehstrom: ΔU = √3 · l · I · cos φ / (κ · A).",
+          "In Prozent: Δu = ΔU / U · 100 % – bei Wechselstrom auf 230 V, bei Drehstrom auf 400 V beziehen.",
+          "Querschnitt: A = 2 · l · I · cos φ / (κ · ΔU_zul), danach den nächsten Normquerschnitt wählen."
+        ]
+      },
+      {
+        "titel": "Grenzwerte und Beispiele",
+        "punkte": [
+          "Hausanschluss bis Zähler höchstens 0,5 % – gerechnet mit dem Nennstrom der vorgeschalteten Sicherung (NAV § 13 Abs. 4). Zähler bis Verbraucher höchstens 3 % (DIN 18015-1).",
+          "Hauptleitung 63 A, 15 m, Drehstrom: mit 10 mm² 0,73 % (zu viel), mit 16 mm² 0,46 % (in Ordnung).",
+          "Wechselstromkreis 16 A, 25 m, 1,5 mm²: ΔU = 2 · 25 · 16 / (56 · 1,5) ≈ 9,5 V ≈ 4,1 % – zu viel.",
+          "Querschnitt für 16 A, 25 m, höchstens 3 % (6,9 V): A = 800 / (56 · 6,9) ≈ 2,07 mm² → 2,5 mm². Bei 40 m: ≈ 3,31 mm² → 4 mm²."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Wechselstrom mal 2, Drehstrom mal √3. Strombelastbarkeit und Abschaltbedingung zusätzlich prüfen."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Warum steht in der Spannungsfall-Formel für Wechselstrom der Faktor 2?",
+        "antworten": [
+          "Als Sicherheitszuschlag für warme Leitungen",
+          "Hin- und Rückleiter haben beide einen Widerstand.",
+          "Weil die Steckdose zwei Pole hat",
+          "Weil im Stromkreis zwei Außenleiter liegen."
+        ],
+        "richtig": 1,
+        "erklaerung": "Der Strom fließt über den Außenleiter hin und über den Neutralleiter zurück – beide Leiter haben Widerstand. Bei Drehstrom steht statt der 2 der Faktor √3."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Auf welche Spannung beziehst du bei Drehstrom den prozentualen Spannungsfall?",
+        "antworten": ["693 V", "230 V", "325 V", "400 V"],
+        "richtig": 3,
+        "erklaerung": "Δu = ΔU / U · 100 % – bei Wechselstrom auf 230 V, bei Drehstrom auf 400 V beziehen."
+      },
+      {
+        "abschnitt": 2,
+        "punkt": 2,
+        "frage": "Wechselstromkreis 16 A, 20 m, 2,5 mm² Kupfer, cos φ = 1: Wie groß ist der Spannungsfall?",
+        "antworten": [
+          "Rund 4,0 V – etwa 1,7 %",
+          "Rund 7,6 V – etwa 3,3 %",
+          "Rund 2,3 V – etwa 1 %",
+          "Rund 4,6 V – etwa 2 %"
+        ],
+        "richtig": 3,
+        "erklaerung": "ΔU = 2 · l · I / (κ · A) = 2 · 20 · 16 / (56 · 2,5) = 640 / 140 ≈ 4,6 V. Bezogen auf 230 V sind das etwa 2 % – unter 3 %, also in Ordnung."
+      }
+    ],
+    "quelle": "DIN 18015-1; NAV § 13 Abs. 4; VDE-AR-N 4100",
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-schleife",
+    "thema": "rechnen",
+    "titel": "Schleifenimpedanz und Abschaltbedingung",
+    "kurz": "Z_s · I_a ≤ U₀, 2/3-Reserve, Kurzschlussstrom und Bedingung im TT-System",
+    "unterthemen": ["Schleifenimpedanz", "Schutzmaßnahmen"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Damit der Leitungsschutzschalter bei einem Körperschluss schnell genug abschaltet, darf die Schleifenimpedanz nicht zu groß sein. Im TT-System übernimmt das meist der RCD."
+      },
+      {
+        "titel": "Formeln",
+        "punkte": [
+          "Abschaltbedingung im TN-System: Z_s · I_a ≤ U₀ → Z_s ≤ U₀ / I_a.",
+          "I_a für LS-Schalter (unverzögerte Auslösung): B = 5 · I_n, C = 10 · I_n.",
+          "Messwert mit Reserve: höchstens 2/3 von U₀ / I_a – die Leiter sind beim Messen kalt, im Fehlerfall aber warm und hochohmiger.",
+          "Kurzschlussstrom: I_k = U₀ / Z_s. I_k muss größer als I_a sein.",
+          "TT-System: R_A · IΔn ≤ 50 V → R_A ≤ 50 V / IΔn. Berührungsspannung U_B = IΔn · R_A."
+        ]
+      },
+      {
+        "titel": "Beispiele",
+        "punkte": [
+          "B16: I_a = 80 A → Z_s ≤ 230 / 80 = 2,875 Ω, gemessen höchstens 1,92 Ω.",
+          "C16: I_a = 160 A → Z_s ≤ 1,44 Ω, gemessen höchstens 0,96 Ω. C32: I_a = 320 A → Z_s ≤ 0,72 Ω.",
+          "Z_s = 0,8 Ω → I_k = 230 / 0,8 = 287,5 A – mehr als 80 A, ein B16 schaltet sicher ab.",
+          "TT mit 300 mA: R_A ≤ 50 / 0,3 ≈ 166,7 Ω. Mit 30 mA: ≈ 1.667 Ω. R_A = 100 Ω bei 30 mA: U_B = 3 V."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Z_s,max = U₀ / I_a – und der Messwert höchstens 2/3 davon."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Welcher Abschaltstrom I_a gilt für einen LS-Schalter C16?",
+        "antworten": ["16 A", "320 A", "160 A", "80 A"],
+        "richtig": 2,
+        "erklaerung": "Charakteristik C: I_a = 10 · I_n = 10 · 16 A = 160 A. Bei B wären es 5 · I_n = 80 A."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Gemessen wird Z_s = 1,15 Ω. Wie groß ist der Kurzschlussstrom bei U₀ = 230 V?",
+        "antworten": ["200 A", "348 A", "264,5 A", "20 A"],
+        "richtig": 0,
+        "erklaerung": "I_k = U₀ / Z_s = 230 V / 1,15 Ω = 200 A."
+      },
+      {
+        "abschnitt": 2,
+        "punkt": 1,
+        "frage": "Stromkreis mit C16, gemessen Z_s = 1,2 Ω. Ist das in Ordnung?",
+        "antworten": [
+          "Nein – erlaubt sind höchstens 0,72 Ω.",
+          "Ja – erlaubt sind bis 2,875 Ω.",
+          "Ja – erlaubt sind bis 1,44 Ω.",
+          "Nein – gemessen höchstens 0,96 Ω."
+        ],
+        "richtig": 3,
+        "erklaerung": "C16: Z_s ≤ 230 V / 160 A = 1,44 Ω. Der kalt gemessene Wert darf höchstens 2/3 davon betragen: 0,96 Ω. 1,2 Ω ist zu viel."
+      },
+      {
+        "abschnitt": 2,
+        "punkt": 3,
+        "frage": "TT-System mit RCD 100 mA: Wie groß darf R_A höchstens sein?",
+        "antworten": ["50 Ω", "500 Ω", "5.000 Ω", "1.667 Ω"],
+        "richtig": 1,
+        "erklaerung": "R_A ≤ 50 V / IΔn = 50 V / 0,1 A = 500 Ω."
+      }
+    ],
+    "quelle": "DIN VDE 0100-410; DIN VDE 0100-600",
+    "stand": "2026-10"
+  },
+  {
+    "id": "rechnen-leitungsschutz",
+    "thema": "rechnen",
+    "titel": "Leitungsschutz, Selektivität und Verteiler",
+    "kurz": "Strombelastbarkeit, Kurzschlussdauer, Selektivität von Sicherungen, Verlustleistung im Verteiler",
+    "unterthemen": ["Leitungsschutz", "Selektivität", "Verteiler"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Hier rechnest du, ob eine Leitung richtig geschützt ist, welche Sicherung vorgeschaltet werden muss und wie warm ein Verteiler wird."
+      },
+      {
+        "titel": "Formeln",
+        "punkte": [
+          "Strombelastbarkeit: I_z = I_r · f₁ · f₂ (Tabellenwert für die Verlegeart, f₁ für die Umgebungstemperatur, f₂ für die Häufung).",
+          "Überlastschutz: I_b ≤ I_n ≤ I_z.",
+          "Kurzschlussdauer: t ≤ (k · A / I_k)², k = 115 für Kupfer mit PVC.",
+          "Selektivität von gG-Sicherungen (Faustregel): I_n,vor ≥ 1,6 · I_n,nach. Für andere Gerätekombinationen gelten die Tabellen der Hersteller.",
+          "Verlustleistung im Verteiler: P_v = P_v,n · (I_b / I_n)²."
+        ]
+      },
+      {
+        "titel": "Beispiele",
+        "punkte": [
+          "I_r = 24 A, drei Stromkreise gebündelt (f₂ = 0,70): I_z = 24 · 1,0 · 0,70 = 16,8 A. Bei I_b = 14 A passt B16, B20 nicht.",
+          "2,5 mm², I_k = 500 A: t ≤ (115 · 2,5 / 500)² ≈ 0,33 s. Ein B16 löst bei 500 A magnetisch in Millisekunden aus – die Leitung ist geschützt.",
+          "Nachgeschaltet gG 25 A → vorgeschaltet mindestens 1,6 · 25 = 40 A.",
+          "Gerät mit 4 W bei 25 A, betrieben mit 15 A: P_v = 4 · (15 / 25)² = 1,44 W."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Die Verlustleistung geht quadratisch mit dem Strom: halber Strom, ein Viertel der Wärme."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Tabellenwert I_r = 26 A, normale Umgebungstemperatur (f₁ = 1,0), zwei Stromkreise gebündelt (f₂ = 0,80): Wie groß ist I_z?",
+        "antworten": ["32,5 A", "20,8 A", "26 A", "5,2 A"],
+        "richtig": 1,
+        "erklaerung": "I_z = I_r · f₁ · f₂ = 26 A · 1,0 · 0,80 = 20,8 A."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Betriebsstrom I_b = 18 A, Strombelastbarkeit I_z = 20,8 A. Welcher LS-Schalter passt?",
+        "antworten": ["20 A", "32 A", "25 A", "16 A"],
+        "richtig": 0,
+        "erklaerung": "I_b ≤ I_n ≤ I_z: 18 A ≤ 20 A ≤ 20,8 A. 16 A wäre kleiner als der Betriebsstrom, 25 A größer als die Strombelastbarkeit."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Nachgeschaltet ist eine gG-Sicherung mit 20 A. Wie groß muss die vorgeschaltete gG-Sicherung nach der Faustregel mindestens sein?",
+        "antworten": ["20 A", "16 A", "25 A", "32 A"],
+        "richtig": 3,
+        "erklaerung": "I_n,vor ≥ 1,6 · I_n,nach = 1,6 · 20 A = 32 A."
+      },
+      {
+        "abschnitt": 3,
+        "frage": "Ein Gerät im Verteiler wird statt mit Nennstrom mit halbem Strom betrieben. Wie ändert sich seine Verlustleistung?",
+        "antworten": ["Sie halbiert sich.", "Sie sinkt auf ein Viertel.", "Sie verdoppelt sich.", "Sie bleibt gleich."],
+        "richtig": 1,
+        "erklaerung": "P_v = P_v,n · (I_b / I_n)² – bei halbem Strom: (1/2)² = 1/4."
+      }
+    ],
+    "quelle": "DIN VDE 0100-430; DIN VDE 0298-4; DIN EN 61439",
+    "stand": "2026-10"
+  }
+]

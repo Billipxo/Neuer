@@ -1,0 +1,503 @@
+[
+  {
+    "id": "sicherheit-k01",
+    "thema": "sicherheit",
+    "unterthema": "5 Sicherheitsregeln",
+    "typ": "karte",
+    "frage": "Nennen Sie die fünf Sicherheitsregeln in der richtigen Reihenfolge und erläutern Sie kurz, was beim Arbeiten im Zählerschrank zu beachten ist.",
+    "antworten": [],
+    "richtig": "1. Freischalten\n2. Gegen Wiedereinschalten sichern\n3. Spannungsfreiheit feststellen (allpolig, mit geeignetem zweipoligem Spannungsprüfer, vorher und nachher auf Funktion prüfen)\n4. Erden und kurzschließen\n5. Benachbarte, unter Spannung stehende Teile abdecken oder abschranken\nIm Zählerschrank: Der netzseitige Anschlussraum bleibt bis zur Hausanschlusssicherung meist unter Spannung – abdecken. Freischalten z. B. über den SH-Schalter oder das Ziehen der NH-Sicherungen im HAK (nur mit PSA und NH-Aufsteckgriff mit Stulpe). Wiedereinschalten verhindern, z. B. mit Sperrelement und Hinweisschild. In Niederspannungsanlagen kann Erden und Kurzschließen entfallen, wenn keine Gefahr der Rückspeisung besteht – an PV-Anlagen und Speichern auf Rückspeisung achten!",
+    "erklaerung": "Die fünf Sicherheitsregeln stehen in DIN VDE 0105-100 und DGUV Vorschrift 3. Reihenfolge einhalten, Aufheben in umgekehrter Reihenfolge.",
+    "quelle": "DIN VDE 0105-100; DGUV Vorschrift 3",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-001",
+    "thema": "sicherheit",
+    "unterthema": "5 Sicherheitsregeln",
+    "typ": "einfach",
+    "frage": "Welche ist die dritte der fünf Sicherheitsregeln?",
+    "antworten": [
+      "Erden und kurzschließen",
+      "Gegen Wiedereinschalten sichern",
+      "Spannungsfreiheit feststellen",
+      "Freischalten"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Reihenfolge: 1. Freischalten, 2. gegen Wiedereinschalten sichern, 3. Spannungsfreiheit feststellen, 4. erden und kurzschließen, 5. benachbarte, unter Spannung stehende Teile abdecken oder abschranken.",
+    "quelle": "DIN VDE 0105-100",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-002",
+    "thema": "sicherheit",
+    "unterthema": "5 Sicherheitsregeln",
+    "typ": "einfach",
+    "frage": "Womit wird die Spannungsfreiheit festgestellt?",
+    "antworten": [
+      "Durch kurzes Antippen mit dem Handrücken, weil dann keine Greifbewegung entsteht",
+      "Mit einem einpoligen Phasenprüfer (Schraubendreher mit Glimmlampe)",
+      "Mit einem zweipoligen Spannungsprüfer, der unmittelbar vorher und nachher auf Funktion geprüft wird",
+      "Durch Ablesen des Zählers, der bei abgeschalteter Anlage stillsteht"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Zulässig sind zweipolige Spannungsprüfer nach DIN EN 61243-3. Sie werden unmittelbar vor und nach der Prüfung an einer bekannten Spannungsquelle getestet. Einpolige Phasenprüfer sind dafür nicht zulässig, weil ihre Anzeige vom Standort und der Isolation abhängt.",
+    "quelle": "DIN VDE 0105-100; DIN EN 61243-3",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-003",
+    "thema": "sicherheit",
+    "unterthema": "5 Sicherheitsregeln",
+    "typ": "einfach",
+    "frage": "In welcher Reihenfolge wird eine Erdungs- und Kurzschließvorrichtung angebracht?",
+    "antworten": [
+      "Die Reihenfolge ist egal, wenn vorher die Spannungsfreiheit festgestellt wurde",
+      "Zuerst an die Außenleiter, dann an die Erde",
+      "Nur kurzschließen, weil Erden innerhalb von Gebäuden nicht zulässig ist",
+      "Zuerst mit der Erdungsanlage verbinden, dann mit den zu erdenden Leitern"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Zuerst wird die Vorrichtung mit der Erde verbunden, dann mit den Leitern – so wird eine doch noch vorhandene Spannung sofort zur Erde abgeleitet. Entfernt wird in umgekehrter Reihenfolge.",
+    "quelle": "DIN VDE 0105-100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-004",
+    "thema": "sicherheit",
+    "unterthema": "5 Sicherheitsregeln",
+    "typ": "einfach",
+    "frage": "Welche der fünf Sicherheitsregeln darf in Niederspannungsanlagen unter bestimmten Bedingungen entfallen?",
+    "antworten": [
+      "Freischalten – wenn nur an Stromkreisen bis 16 A gearbeitet wird",
+      "Erden und kurzschließen – wenn keine Gefahr einer Rückspeisung oder Spannungsübertragung besteht",
+      "Spannungsfreiheit feststellen – wenn die Anlage kurz vorher selbst freigeschaltet wurde",
+      "Gegen Wiedereinschalten sichern – wenn der Arbeitsplatz in Sichtweite des Schalters liegt"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "In Niederspannungsanlagen darf auf Erden und Kurzschließen verzichtet werden, wenn keine Gefahr durch Rückspeisung oder Spannungsübertragung besteht – Ausnahmen sind z. B. Freileitungen oder Anlagen mit Einspeisung (PV, Speicher, Notstrom). Die übrigen Regeln gelten immer.",
+    "quelle": "DIN VDE 0105-100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-005",
+    "thema": "sicherheit",
+    "unterthema": "Arbeiten unter Spannung",
+    "typ": "mehrfach",
+    "frage": "Welche Voraussetzungen gelten für Arbeiten unter Spannung (AuS)?",
+    "antworten": [
+      "Erlaubt für jede Person, die Gummistiefel trägt",
+      "Besondere Ausbildung der ausführenden Personen für AuS",
+      "Geeignete isolierte Werkzeuge und persönliche Schutzausrüstung",
+      "Festgelegte Arbeitsverfahren bzw. eine Arbeitsanweisung des Unternehmers"
+    ],
+    "richtig": [
+      1,
+      2,
+      3
+    ],
+    "erklaerung": "Arbeiten unter Spannung sind die Ausnahme und nur aus zwingenden Gründen zulässig. Sie erfordern eine spezielle AuS-Ausbildung, technische und organisatorische Festlegungen, geeignete isolierte Werkzeuge (1000 V) und PSA. Grundsätzlich gilt: im spannungsfreien Zustand arbeiten.",
+    "quelle": "DGUV Vorschrift 3 § 8; DIN VDE 0105-100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-006",
+    "thema": "sicherheit",
+    "unterthema": "PSA",
+    "typ": "mehrfach",
+    "frage": "Welche Schutzausrüstung gehört zum Ziehen und Setzen von NH-Sicherungen unter Spannung?",
+    "antworten": [
+      "NH-Sicherungsaufsteckgriff mit Stulpe",
+      "Geeignete Handschuhe und störlichtbogengeprüfte Kleidung",
+      "Gesichtsschutz mit Störlichtbogenschutz",
+      "Ein gewöhnlicher Schraubendreher genügt"
+    ],
+    "richtig": [
+      0,
+      1,
+      2
+    ],
+    "erklaerung": "Beim Ziehen und Setzen von NH-Sicherungen kann ein Störlichtbogen entstehen. Deshalb: NH-Aufsteckgriff mit Stulpe, Gesichtsschutzschirm, geeignete Handschuhe und störlichtbogengeprüfte Kleidung – und möglichst nicht unter Last schalten.",
+    "quelle": "DIN VDE 0105-100; DGUV-Informationen zu PSA gegen Störlichtbögen",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-007",
+    "thema": "sicherheit",
+    "unterthema": "Verantwortung",
+    "typ": "einfach",
+    "frage": "Wer ist eine Elektrofachkraft?",
+    "antworten": [
+      "Jeder, der einen geeigneten zweipoligen Spannungsprüfer besitzt und bedienen kann",
+      "Nur Personen mit Meisterbrief im Elektrotechniker-Handwerk und eigener Betriebsstätte",
+      "Wer aufgrund Ausbildung, Kenntnissen und Erfahrung übertragene Arbeiten beurteilen und mögliche Gefahren erkennen kann",
+      "Jede Person, die vom Unternehmer einmal jährlich über elektrische Gefahren unterwiesen wurde"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Die Definition stammt aus DGUV Vorschrift 3 bzw. DIN VDE 1000-10: Entscheidend sind Ausbildung, Kenntnisse, Erfahrung und Kenntnis der Bestimmungen. Eine elektrotechnisch unterwiesene Person (EuP) darf nur festgelegte Tätigkeiten nach Unterweisung ausführen.",
+    "quelle": "DGUV Vorschrift 3 § 2; DIN VDE 1000-10",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-008",
+    "thema": "sicherheit",
+    "unterthema": "Verantwortung",
+    "typ": "einfach",
+    "frage": "Wer trägt nach DIN VDE 0105-100 die unmittelbare Verantwortung für den Betrieb einer elektrischen Anlage, an der gearbeitet wird?",
+    "antworten": [
+      "Der Bauherr",
+      "Der Arbeitsverantwortliche",
+      "Der Netzbetreiber",
+      "Der Anlagenverantwortliche"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Der Anlagenverantwortliche ist für den sicheren Betrieb der Anlage verantwortlich (z. B. Freigabe zur Arbeit). Der Arbeitsverantwortliche trägt die Verantwortung für die Durchführung der Arbeit vor Ort. Bei kleinen Arbeiten können beide Rollen bei derselben Person liegen.",
+    "quelle": "DIN VDE 0105-100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-009",
+    "thema": "sicherheit",
+    "unterthema": "Gefahren des Stroms",
+    "typ": "einfach",
+    "frage": "Ab welcher Stromstärke (50 Hz, Durchströmung Hand–Hand) kann ein Erwachsener einen umfassten Leiter in der Regel nicht mehr loslassen?",
+    "antworten": [
+      "etwa 0,5 mA",
+      "etwa 10 mA",
+      "etwa 200 mA",
+      "etwa 1 A"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Grobe Richtwerte nach DIN IEC/TS 60479-1: ab etwa 0,5 mA spürbar, ab etwa 10 mA Muskelverkrampfung (Loslassen nicht mehr möglich), ab etwa 50 mA bei längerer Einwirkung Gefahr von Herzkammerflimmern. Deshalb schaltet der zusätzliche Schutz mit 30 mA schnell ab.",
+    "quelle": "DIN IEC/TS 60479-1",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-010",
+    "thema": "sicherheit",
+    "unterthema": "Erste Hilfe",
+    "typ": "mehrfach",
+    "frage": "Was ist bei einem Stromunfall richtig?",
+    "antworten": [
+      "Ist der Verletzte wieder ansprechbar, kann er ohne Untersuchung weiterarbeiten",
+      "Notruf 112 absetzen und bei Bedarf Herz-Lungen-Wiederbelebung durchführen",
+      "Zuerst Eigenschutz: Stromkreis unterbrechen und den Verunglückten nicht berühren, solange er unter Spannung steht",
+      "Auch nach scheinbar leichten Stromunfällen ärztlich untersuchen lassen"
+    ],
+    "richtig": [
+      1,
+      2,
+      3
+    ],
+    "erklaerung": "Nach einem Stromunfall können Herzrhythmusstörungen noch Stunden später auftreten. Darum immer ärztlich abklären lassen (EKG). Vorgehen: Eigenschutz – Strom abschalten – Notruf – Erste Hilfe – Unfall melden.",
+    "quelle": "DGUV-Informationen zur Ersten Hilfe",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-k02",
+    "thema": "sicherheit",
+    "unterthema": "Arbeiten unter Spannung",
+    "typ": "karte",
+    "frage": "Was unterscheidet Arbeiten im spannungsfreien Zustand, Arbeiten in der Nähe unter Spannung stehender Teile und Arbeiten unter Spannung?",
+    "antworten": [],
+    "richtig": "• Arbeiten im spannungsfreien Zustand: der Regelfall. Die fünf Sicherheitsregeln herstellen, erst dann arbeiten.\n• Arbeiten in der Nähe unter Spannung stehender Teile: Die Arbeitsstelle ist spannungsfrei, benachbarte Teile stehen aber unter Spannung. Schutz durch Abdecken, Abschranken, Abstand und Aufsicht.\n• Arbeiten unter Spannung: Berühren aktiver Teile oder Eindringen in die Gefahrenzone gehört zur Arbeit. Nur mit besonderer Ausbildung, festgelegten Verfahren, isoliertem Werkzeug und PSA – und nur, wenn zwingende Gründe vorliegen.",
+    "erklaerung": "Fachgespräch: die drei Arbeitsweisen abgrenzen und Schutzmaßnahmen nennen.",
+    "quelle": "DIN VDE 0105-100; DGUV Vorschrift 3 §§ 6–8",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-k03",
+    "thema": "sicherheit",
+    "unterthema": "PSA",
+    "typ": "karte",
+    "frage": "Welche PSA und welches Werkzeug benötigen Sie für Arbeiten am Hausanschlusskasten, z. B. zum Ziehen der NH-Sicherungen?",
+    "antworten": [],
+    "richtig": "• Isolierte Werkzeuge (VDE, 1000 V) und NH-Sicherungsaufsteckgriff mit Stulpe\n• Gesichtsschutz mit Störlichtbogenschutz, Schutzhelm nach Bedarf\n• geeignete Handschuhe und schwer entflammbare, störlichtbogengeprüfte Kleidung\n• zweipoliger Spannungsprüfer, ggf. isolierende Abdecktücher und Matten\n• Absprache mit dem Netzbetreiber: Der Hausanschlusskasten gehört zum Netzanschluss und ist plombiert\n• möglichst lastfrei schalten: erst Last bzw. SH-Schalter abschalten, dann NH-Sicherungen ziehen",
+    "erklaerung": "Fachgespräch: Gefährdung durch Störlichtbögen erklären und die PSA begründen.",
+    "quelle": "DIN VDE 0105-100; DGUV-Informationen zu PSA gegen Störlichtbögen",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-k04",
+    "thema": "sicherheit",
+    "unterthema": "Erste Hilfe",
+    "typ": "karte",
+    "frage": "Was tun Sie bei einem Stromunfall auf der Baustelle?",
+    "antworten": [],
+    "richtig": "1. Eigenschutz: Stromkreis abschalten (Not-Aus, Sicherung, Stecker ziehen) – den Verunglückten nicht berühren, solange er unter Spannung steht.\n2. Notruf 112, Unfallstelle sichern.\n3. Erste Hilfe: Bewusstsein und Atmung prüfen, ggf. Herz-Lungen-Wiederbelebung, Defibrillator (AED) nutzen; Brandwunden keimfrei abdecken.\n4. Auch bei leichten Unfällen ärztlich untersuchen lassen (EKG), weil Herzrhythmusstörungen später auftreten können.\n5. Unfall dokumentieren (Verbandbuch), dem Vorgesetzten bzw. der Berufsgenossenschaft melden und die Ursache klären.",
+    "erklaerung": "Fachgespräch: Reihenfolge Eigenschutz – Notruf – Erste Hilfe – ärztliche Abklärung – Meldung nennen.",
+    "quelle": "DGUV Vorschrift 1; DGUV-Informationen zur Ersten Hilfe",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-sicherheit-001",
+    "thema": "sicherheit",
+    "unterthema": "Prüffristen",
+    "typ": "einfach",
+    "frage": "Wie oft soll der Benutzer nach DGUV Vorschrift 3 die Prüftaste eines RCD in einer stationären Anlage betätigen (Richtwert)?",
+    "antworten": [
+      "Arbeitstäglich",
+      "Monatlich",
+      "Alle 6 Monate",
+      "Alle 4 Jahre"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "RCDs in stationären Anlagen: alle 6 Monate, in nichtstationären Anlagen (z. B. Baustelle) arbeitstäglich – jeweils durch den Benutzer über die Prüftaste. Die Prüftaste prüft nur die Mechanik der Auslösung, nicht Auslösestrom oder Auslösezeit.",
+    "quelle": "DGUV Vorschrift 3, Durchführungsanweisungen (Tabelle 1A)",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-sicherheit-002",
+    "thema": "sicherheit",
+    "unterthema": "Prüffristen",
+    "typ": "einfach",
+    "frage": "Wie oft ist die Prüftaste eines RCD in einer nichtstationären Anlage, z. B. am Baustromverteiler, nach DGUV Vorschrift 3 zu betätigen?",
+    "antworten": [
+      "Arbeitstäglich",
+      "Wöchentlich",
+      "Alle 3 Monate",
+      "Jährlich"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Nichtstationäre Anlagen sind rauen Bedingungen ausgesetzt. Deshalb betätigt der Benutzer die Prüftaste arbeitstäglich. Zusätzlich wird dort die Wirksamkeit der Schutzmaßnahmen mit RCD monatlich durch eine Elektrofachkraft oder eine elektrotechnisch unterwiesene Person mit Messgerät geprüft.",
+    "quelle": "DGUV Vorschrift 3, Durchführungsanweisungen (Tabelle 1A)",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-sicherheit-003",
+    "thema": "sicherheit",
+    "unterthema": "Prüffristen",
+    "typ": "einfach",
+    "frage": "In welchem Abstand ist nach DGUV Vorschrift 3 die Wirksamkeit von Schutzmaßnahmen mit RCD in nichtstationären Anlagen (z. B. Baustelle) zu prüfen?",
+    "antworten": [
+      "Jeden Monat",
+      "Alle 6 Monate",
+      "Jährlich",
+      "Alle 4 Jahre"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Richtwert 1 Monat: Prüfung auf Wirksamkeit durch eine Elektrofachkraft oder eine elektrotechnisch unterwiesene Person mit geeigneten Mess- und Prüfgeräten. Unabhängig davon drückt der Benutzer arbeitstäglich die Prüftaste.",
+    "quelle": "DGUV Vorschrift 3, Durchführungsanweisungen (Tabelle 1A)",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-sicherheit-004",
+    "thema": "sicherheit",
+    "unterthema": "Prüffristen",
+    "typ": "einfach",
+    "frage": "Welcher Richtwert gilt nach DGUV Vorschrift 3 für die Wiederholungsprüfung ortsveränderlicher elektrischer Betriebsmittel auf Baustellen?",
+    "antworten": [
+      "1 Monat",
+      "3 Monate",
+      "6 Monate",
+      "1 Jahr"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Ortsveränderliche Betriebsmittel: Richtwert 6 Monate, auf Baustellen 3 Monate. Liegt die Fehlerquote unter 2 %, kann die Frist verlängert werden – höchstens auf 1 Jahr (Baustellen, Werkstätten, Fertigungsstätten) bzw. 2 Jahre (Büros). Prüfer: Elektrofachkraft, bei geeigneten Mess- und Prüfgeräten auch eine elektrotechnisch unterwiesene Person.",
+    "quelle": "DGUV Vorschrift 3, Durchführungsanweisungen (Tabelle 1B)",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-sicherheit-005",
+    "thema": "sicherheit",
+    "unterthema": "Prüffristen",
+    "typ": "einfach",
+    "frage": "Bei den Prüfungen ortsveränderlicher Betriebsmittel in Büros liegt die Fehlerquote dauerhaft unter 2 %. Auf welche Frist darf höchstens verlängert werden?",
+    "antworten": [
+      "1 Jahr",
+      "2 Jahre",
+      "4 Jahre",
+      "Die Prüfung darf ganz entfallen"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Richtwert für ortsveränderliche Betriebsmittel sind 6 Monate (Baustelle 3 Monate). Bei einer Fehlerquote unter 2 % darf verlängert werden – höchstens auf 2 Jahre in Büros bzw. 1 Jahr auf Baustellen, in Werkstätten und Fertigungsstätten. Die Frist legt der Unternehmer in der Gefährdungsbeurteilung fest.",
+    "quelle": "DGUV Vorschrift 3, Durchführungsanweisungen (Tabelle 1B)",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-sicherheit-006",
+    "thema": "sicherheit",
+    "unterthema": "Verantwortung",
+    "typ": "mehrfach",
+    "frage": "Was zeichnet nach Betriebssicherheitsverordnung und TRBS 1203 eine „zur Prüfung befähigte Person“ aus?",
+    "antworten": [
+      "Zwingend ein Meisterbrief",
+      "Eine abgeschlossene Berufsausbildung",
+      "Berufserfahrung",
+      "Eine zeitnahe berufliche Tätigkeit im Prüfen"
+    ],
+    "richtig": [
+      1,
+      2,
+      3
+    ],
+    "erklaerung": "Zur Prüfung befähigt ist, wer durch Berufsausbildung, Berufserfahrung und zeitnahe berufliche Tätigkeit die nötigen Kenntnisse hat. Wer lange nicht geprüft hat, muss sich erst wieder einarbeiten. Einen Meisterbrief verlangt die TRBS 1203 nicht.",
+    "quelle": "BetrSichV § 2; TRBS 1203",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-sicherheit-007",
+    "thema": "sicherheit",
+    "unterthema": "Verantwortung",
+    "typ": "einfach",
+    "frage": "Wer legt nach der Betriebssicherheitsverordnung Art, Umfang und Fristen der Prüfungen von Arbeitsmitteln fest?",
+    "antworten": [
+      "Der Arbeitgeber auf Grundlage der Gefährdungsbeurteilung",
+      "Der Hersteller des Arbeitsmittels",
+      "Der Netzbetreiber",
+      "Die Berufsgenossenschaft, verbindlich für jeden Betrieb"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Nach der BetrSichV beurteilt der Arbeitgeber vor der Verwendung die Gefährdungen und legt Art, Umfang und Fristen der Prüfungen fest; prüfen darf nur eine zur Prüfung befähigte Person. Die Fristen der DGUV Vorschrift 3 sind Richtwerte.",
+    "quelle": "BetrSichV §§ 3, 14; DGUV Vorschrift 3",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-sicherheit-008",
+    "thema": "sicherheit",
+    "unterthema": "Verantwortung",
+    "typ": "einfach",
+    "frage": "Wer darf nach DGUV Vorschrift 3 elektrische Anlagen und Betriebsmittel errichten, ändern und instand halten?",
+    "antworten": [
+      "Nur Personen mit Eintrag im Installateurverzeichnis",
+      "Jede elektrotechnisch unterwiesene Person ohne Aufsicht",
+      "Jeder handwerklich geschickte Mitarbeiter",
+      "Nur eine Elektrofachkraft oder eine Person unter Leitung und Aufsicht einer Elektrofachkraft"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "DGUV Vorschrift 3 § 3: Errichten, Ändern und Instandhalten nur durch eine Elektrofachkraft oder unter ihrer Leitung und Aufsicht, entsprechend den elektrotechnischen Regeln. Der Eintrag ins Installateurverzeichnis (NAV § 13) betrifft dagegen das Unternehmen gegenüber dem Netzbetreiber.",
+    "quelle": "DGUV Vorschrift 3 § 3; NAV § 13",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-sicherheit-009",
+    "thema": "sicherheit",
+    "unterthema": "5 Sicherheitsregeln",
+    "typ": "einfach",
+    "frage": "Wie werden die Sicherheitsmaßnahmen nach Abschluss der Arbeiten aufgehoben?",
+    "antworten": [
+      "In umgekehrter Reihenfolge – wieder eingeschaltet wird erst, wenn alle Personen gewarnt und Werkzeuge sowie Erdungen entfernt sind",
+      "Zuerst wird wieder eingeschaltet, dann werden Erdung und Abdeckungen entfernt",
+      "Der Netzbetreiber hebt die Maßnahmen auf",
+      "In beliebiger Reihenfolge, sobald die Arbeit fertig ist"
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Nach Abschluss der Arbeiten werden Abdeckungen, Erdung und Kurzschließung in umgekehrter Reihenfolge entfernt. Wieder eingeschaltet wird erst, wenn alle Personen die Arbeitsstelle verlassen haben bzw. gewarnt sind und Werkzeuge und Hilfsmittel entfernt wurden.",
+    "quelle": "DIN VDE 0105-100",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-sicherheit-k01",
+    "thema": "sicherheit",
+    "unterthema": "Prüffristen",
+    "typ": "karte",
+    "frage": "Welche Prüffristen nach DGUV Vorschrift 3 kennen Sie, und wer legt die tatsächlichen Fristen fest?",
+    "antworten": [],
+    "richtig": "Richtwerte (Durchführungsanweisungen):\n• Elektrische Anlagen und ortsfeste Betriebsmittel: 4 Jahre (Elektrofachkraft)\n• dasselbe in Räumen und Anlagen besonderer Art (DIN VDE 0100 Gruppe 700): 1 Jahr\n• Schutzmaßnahmen mit RCD in nichtstationären Anlagen: 1 Monat (auf Wirksamkeit, mit Messgerät)\n• RCD-Prüftaste: stationär alle 6 Monate, nichtstationär arbeitstäglich (Benutzer)\n• Ortsveränderliche Betriebsmittel: 6 Monate, Baustelle 3 Monate; bei Fehlerquote unter 2 % verlängerbar auf höchstens 1 Jahr (Baustelle, Werkstatt) bzw. 2 Jahre (Büro)\nFestlegung: Der Arbeitgeber legt Art, Umfang und Fristen auf Grundlage der Gefährdungsbeurteilung fest (BetrSichV). Prüfen darf nur eine zur Prüfung befähigte Person (TRBS 1203: Berufsausbildung, Berufserfahrung, zeitnahe berufliche Tätigkeit).",
+    "erklaerung": "Fachgespräch: Richtwerte nennen und erklären, dass die Gefährdungsbeurteilung entscheidet.",
+    "quelle": "DGUV Vorschrift 3; BetrSichV; TRBS 1203",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

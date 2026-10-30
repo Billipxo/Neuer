@@ -1,0 +1,278 @@
+[
+  {
+    "id": "pruefung-erstpruefung",
+    "thema": "pruefung",
+    "titel": "Erstprüfung: Ablauf, Prüfbericht und Übergabe",
+    "kurz": "Besichtigen, Erproben, Messen – Reihenfolge, Prüfbericht, Grenzwerte und Übergabe an den Kunden",
+    "unterthemen": ["Erstprüfung", "Protokoll", "Übergabe", "Wiederholungsprüfung"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Jede neue oder geänderte Anlage wird vor der Übergabe nach DIN VDE 0100-600 geprüft. Die Prüfung besteht aus Besichtigen, Erproben und Messen und endet mit dem Prüfbericht."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Besichtigen: bei abgeschalteter Anlage, vor dem Erproben und Messen – Auswahl und Errichtung der Betriebsmittel, Schutzmaßnahmen, Leiterkennzeichnung, Querschnitte, Schutzeinrichtungen, Brandabschottungen, Zugänglichkeit, Dokumentation.",
+          "Spannungsfrei messen: 1. Durchgängigkeit der Schutz- und Schutzpotentialausgleichsleiter, 2. Isolationswiderstand, 3. Polarität.",
+          "Unter Spannung: 4. Schleifenimpedanz bzw. Kurzschlussstrom (im TT-System Erdungswiderstand), 5. RCD, 6. Drehfeld, 7. Spannungsfall bei Bedarf und Funktionsprüfungen.",
+          "Erst wenn der Schutzleiter nachweislich durchgängig ist, sind Messungen unter Spannung sicher.",
+          "Prüfbericht: geprüfte Anlage und Umfang der Prüfung, Ergebnisse von Besichtigen, Erproben und Messen mit Messwerten, Prüfer und verwendete Messgeräte, Datum und Unterschrift.",
+          "Grenzwerte selbst herleiten, z. B. für B16 mit NYM-J 3 × 2,5 mm², 25 m und RCD 30 mA: R_PE rund 0,18 Ω, R_iso ≥ 1 MΩ, Z_s ≤ 1,92 Ω (Messwert), I_k ≥ 80 A, RCD-Auslösestrom 15 bis 30 mA, Auslösezeit ≤ 300 ms, U_B ≤ 50 V.",
+          "Übergabe: Prüfbericht, Stromkreisliste bzw. Beschriftung, Schaltpläne, Anleitungen der Geräte, Einweisung (z. B. RCD-Prüftaste regelmäßig drücken), Hinweise auf Wiederholungsprüfungen und Registrierungspflichten, Meldung an den Netzbetreiber.",
+          "Wiederholungsprüfung (DGUV Vorschrift 3, Richtwert): Anlagen und ortsfeste Betriebsmittel alle 4 Jahre, in Betriebsstätten, Räumen und Anlagen besonderer Art jedes Jahr."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Erst spannungsfrei, dann unter Spannung – und jedes Ergebnis ins Protokoll."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Welche Messung kommt bei der Erstprüfung zuerst?",
+        "antworten": [
+          "Schleifenimpedanz am Stromkreisende",
+          "Auslösezeit des RCD",
+          "Durchgängigkeit der Schutzleiter",
+          "Drehfeld an den CEE-Steckdosen"
+        ],
+        "richtig": 2,
+        "erklaerung": "Spannungsfrei: 1. Durchgängigkeit der Schutzleiter, 2. Isolationswiderstand, 3. Polarität. Erst danach folgen die Messungen unter Spannung."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Warum misst du den Schutzleiter vor den Messungen unter Spannung?",
+        "antworten": [
+          "Weil der Netzbetreiber diese Reihenfolge in den TAB vorgibt.",
+          "Weil die Isolationsmessung sonst den RCD im Stromkreis auslöst.",
+          "Weil das Messgerät sonst bei den anderen Messungen falsch anzeigt.",
+          "Ohne intakten Schutzleiter wären Messungen unter Spannung gefährlich."
+        ],
+        "richtig": 3,
+        "erklaerung": "Bei den Messungen unter Spannung kann am Schutzleiter Spannung anliegen. Nur wenn er durchgängig ist, fließt der Fehlerstrom sicher ab."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 6,
+        "frage": "Was gehört zur Übergabe an den Kunden?",
+        "antworten": [
+          "Eine Einweisung, z. B. in die RCD-Prüftaste",
+          "Der Hinweis, dass nie wieder geprüft werden muss",
+          "Ersatzschlüssel für den Hausanschlusskasten",
+          "Eine Anleitung, wie man Plomben öffnet"
+        ],
+        "richtig": 0,
+        "erklaerung": "Zur Übergabe gehören Prüfbericht, Stromkreisliste, Schaltpläne, Anleitungen, eine Einweisung (z. B. RCD-Prüftaste) und Hinweise auf Wiederholungsprüfungen und Registrierungspflichten."
+      }
+    ],
+    "quelle": "DIN VDE 0100-600; DGUV Vorschrift 3",
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-messen",
+    "thema": "pruefung",
+    "titel": "Schutzleiter- und Isolationsmessung",
+    "kurz": "Niederohmmessung, Isolationswiderstand, Messspannungen, Grenzwerte und Messgeräte",
+    "unterthemen": ["Messungen", "Isolationswiderstand"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Die ersten Messungen der Erstprüfung laufen ohne Netzspannung: Ist der Schutzleiter durchgängig, und ist die Isolierung in Ordnung?"
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Durchgängigkeit (Niederohmmessung): Messgerät nach DIN EN 61557-4, Leerlaufspannung 4 bis 24 V, Messstrom mindestens 0,2 A.",
+          "Erwartungswert berechnen: R = l / (κ · A). Beispiel 25 m Kupfer mit 2,5 mm²: 25 / (56 · 2,5) ≈ 0,18 Ω. 2 Ω wären viel zu viel – lose Klemme oder Unterbrechung suchen.",
+          "Isolationswiderstand: zwischen den aktiven Leitern (L und N dürfen dafür verbunden sein) und dem Schutzleiter messen.",
+          "Messspannung und Grenzwert: SELV/PELV 250 V DC, mindestens 0,5 MΩ – bis 500 V Nennspannung 500 V DC, mindestens 1 MΩ – über 500 V 1000 V DC, mindestens 1 MΩ.",
+          "Verbraucher und Überspannungsschutzgeräte vorher abklemmen. Lässt sich ein Überspannungsschutz nicht trennen: Messspannung für diesen Stromkreis auf 250 V DC senken – der Grenzwert 1 MΩ bleibt.",
+          "Messgeräte nach DIN EN 61557 (VDE 0413), regelmäßig kalibrieren lassen.",
+          "Vor dem Messen: Funktion und Batterie prüfen, Messleitungen kontrollieren, Nullabgleich der Messleitungen. Messgerät mit Seriennummer und Kalibrierdatum ins Protokoll."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "230/400-V-Stromkreis: 500 V DC und mindestens 1 MΩ."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Welchen Schutzleiterwiderstand erwartest du bei 25 m Kupferleitung mit 2,5 mm²?",
+        "antworten": ["Rund 2 Ω", "Rund 0,018 Ω", "Rund 0,18 Ω", "Rund 1,8 Ω"],
+        "richtig": 2,
+        "erklaerung": "R = l / (κ · A) = 25 / (56 · 2,5) ≈ 0,18 Ω. 2 Ω wären viel zu viel – dann lose Klemme oder Unterbrechung suchen."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Messspannung und Grenzwert für die Isolationsmessung in einem 230/400-V-Stromkreis?",
+        "antworten": [
+          "500 V DC, mindestens 1 MΩ",
+          "230 V AC, mindestens 1 kΩ",
+          "1000 V DC, mindestens 1 MΩ",
+          "250 V DC, mindestens 0,5 MΩ"
+        ],
+        "richtig": 0,
+        "erklaerung": "Bis 500 V Nennspannung: 500 V DC, mindestens 1 MΩ. SELV/PELV: 250 V DC, mindestens 0,5 MΩ. Über 500 V: 1000 V DC, mindestens 1 MΩ."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Ein Überspannungsschutz lässt sich nicht abklemmen. Wie misst du den Isolationswiderstand dieses Stromkreises?",
+        "antworten": [
+          "Gar nicht – der Stromkreis wird ausgelassen",
+          "Mit 250 V DC und Grenzwert 0,5 MΩ",
+          "Mit 250 V DC – der Grenzwert bleibt 1 MΩ",
+          "Mit 500 V DC wie immer"
+        ],
+        "richtig": 2,
+        "erklaerung": "Lässt sich ein Überspannungsschutz nicht trennen, senkst du die Messspannung für diesen Stromkreis auf 250 V DC. Der Grenzwert von 1 MΩ bleibt."
+      }
+    ],
+    "quelle": "DIN VDE 0100-600; DIN EN 61557",
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-abschaltung",
+    "thema": "pruefung",
+    "titel": "RCD-Prüfung und Schleifenimpedanz",
+    "kurz": "Auslösestrom, Auslösezeit, Berührungsspannung, Schleifenimpedanz messen und bewerten",
+    "unterthemen": ["RCD-Prüfung", "Schleifenimpedanz"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Unter Spannung wird geprüft, ob die automatische Abschaltung funktioniert: Löst der RCD richtig aus? Und ist die Schleifenimpedanz klein genug, damit der LS-Schalter schnell genug abschaltet?"
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Die Prüftaste prüft nur die Mechanik – sie sagt nichts über Auslösestrom, Auslösezeit oder Schutzleiter. Dafür braucht es ein Messgerät nach DIN EN 61557-6.",
+          "Auslösestrom: zwischen 0,5 · IΔn und IΔn – bei 30 mA also 15 bis 30 mA.",
+          "Auslösezeit eines unverzögerten RCD: bei IΔn höchstens 300 ms, bei 5 · IΔn höchstens 40 ms. Selektive RCDs (Typ S) lösen absichtlich verzögert aus.",
+          "Berührungsspannung: höchstens 50 V (vereinbarte Grenze U_L), in besonderen Bereichen wie landwirtschaftlichen Betriebsstätten 25 V.",
+          "RCD Typ B oder F: mit der passenden Prüfstromform prüfen.",
+          "Schleifenimpedanz: Impedanz der Fehlerschleife am ungünstigsten Punkt jedes Stromkreises (meist an der entferntesten Steckdose), gemessen mit einem Gerät nach DIN EN 61557-3.",
+          "Bewertung: Z_s · I_a ≤ U₀. B16: I_a = 80 A → Z_s ≤ 2,875 Ω. Weil die Leiter im Fehlerfall warm und hochohmiger werden, darf der kalt gemessene Wert höchstens 2/3 davon betragen: 1,92 Ω.",
+          "Zeigt das Gerät den Kurzschlussstrom I_k an: I_k muss größer als I_a sein."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "RCD 30 mA: Auslösung bei 15 bis 30 mA, in höchstens 300 ms, U_B höchstens 50 V. B16: gemessen Z_s höchstens 1,92 Ω."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Was prüft die Prüftaste eines RCD?",
+        "antworten": ["Auslösestrom und Auslösezeit", "Den Schutzleiter", "Die Schleifenimpedanz", "Nur die Mechanik"],
+        "richtig": 3,
+        "erklaerung": "Die Prüftaste prüft nur die Mechanik. Auslösestrom, Auslösezeit und Schutzleiter misst du mit einem Gerät nach DIN EN 61557-6."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Ein RCD 30 mA löst bei der Messung schon bei 12 mA aus. Wie bewertest du das?",
+        "antworten": [
+          "Auffällig – der Auslösestrom muss zwischen 15 und 30 mA liegen.",
+          "Auffällig – ein RCD 30 mA muss genau bei 30 mA auslösen.",
+          "In Ordnung – je früher er auslöst, desto sicherer ist es.",
+          "In Ordnung – entscheidend ist nur, dass er unter 30 mA auslöst."
+        ],
+        "richtig": 0,
+        "erklaerung": "Der Auslösestrom muss zwischen 0,5 · IΔn und IΔn liegen, bei 30 mA also 15 bis 30 mA. Liegt er darunter, Ursache suchen – z. B. Ableitströme angeschlossener Geräte oder ein defekter RCD."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 6,
+        "frage": "B16: Wie groß darf die gemessene Schleifenimpedanz Z_s höchstens sein?",
+        "antworten": ["1,92 Ω", "2,875 Ω", "0,96 Ω", "1,44 Ω"],
+        "richtig": 0,
+        "erklaerung": "Z_s ≤ U₀ / I_a = 230 V / 80 A = 2,875 Ω. Weil die Leiter im Fehlerfall warm werden, darf der kalt gemessene Wert höchstens 2/3 davon betragen: 1,92 Ω."
+      }
+    ],
+    "quelle": "DIN VDE 0100-600; DIN EN 61557-3; DIN EN 61557-6",
+    "stand": "2026-10"
+  },
+  {
+    "id": "pruefung-fehlersuche",
+    "thema": "pruefung",
+    "titel": "Erproben und Fehlersuche",
+    "kurz": "Drehfeld, Polarität und typische eingebaute Fehler in der praktischen Prüfung",
+    "unterthemen": ["Erproben", "Fehlersuche"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "In der praktischen Prüfung (Teil B) sind Fehler eingebaut. Wer die typischen Anzeichen kennt, findet sie schnell und kann jeden Befund mit Messwert und Grenzwert begründen."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Drehstrom-Steckdosen brauchen ein Rechtsdrehfeld. Bei Linksdrehfeld: freischalten (fünf Sicherheitsregeln), zwei Außenleiter tauschen, erneut messen.",
+          "Polarität: Einpolige Schalter und Schutzeinrichtungen müssen im Außenleiter liegen, nicht im Neutralleiter – sonst bleibt das Gerät nach dem Ausschalten unter Spannung. Spannungsfrei mit einer Durchgangsprüfung kontrollieren.",
+          "Isolationswiderstand zu niedrig → Feuchte, beschädigte Leitung, angeschlossener Verbraucher oder nicht abgeklemmter Überspannungsschutz → abklemmen, abschnittsweise messen.",
+          "RCD löst bei der Prüfung nicht aus → Verbindung zwischen N und PE hinter dem RCD.",
+          "RCD löst unter Last aus → N und PE vertauscht oder der N eines anderen RCD-Kreises benutzt → N-Zuordnung je Stromkreis prüfen.",
+          "Schleifenimpedanz zu hoch → lose Klemme, Stromkreis zu lang, Querschnitt zu klein.",
+          "Schutzleiterwiderstand zu hoch → lose oder unterbrochene PE-Verbindung → abschnittsweise messen.",
+          "Zeit in Teil B (45 Minuten) einteilen, z. B. 5 Minuten Überblick, 25 Minuten Messen, 10 Minuten Protokoll, 5 Minuten Kontrolle."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Jeder Befund braucht Messwert, Grenzwert und Bewertung."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "An einer Drehstrom-Steckdose misst du ein Linksdrehfeld. Was tust du?",
+        "antworten": [
+          "Freischalten, zwei Außenleiter tauschen, erneut messen",
+          "Nichts – die Drehrichtung ist egal",
+          "Neutralleiter und einen Außenleiter tauschen",
+          "Alle drei Außenleiter reihum gegeneinander tauschen"
+        ],
+        "richtig": 0,
+        "erklaerung": "Drehstrom-Steckdosen brauchen ein Rechtsdrehfeld. Tauscht man zwei Außenleiter, dreht sich das Feld um. Reihum alle drei zu tauschen ändert die Drehrichtung nicht."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Der RCD löst bei der Prüfung nicht aus. Was ist eine typische Ursache?",
+        "antworten": [
+          "Eine Verbindung zwischen N und PE hinter dem RCD",
+          "Eine zu kurze Leitung hinter dem RCD",
+          "Ein Rechtsdrehfeld an der CEE-Steckdose",
+          "Ein zu großer Querschnitt der Außenleiter"
+        ],
+        "richtig": 0,
+        "erklaerung": "Ist N hinter dem RCD mit PE verbunden, fließt der Prüfstrom teilweise über den N zurück – der RCD sieht keinen ausreichenden Fehlerstrom."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Der RCD löst unter Last aus, bei der Prüfung aber korrekt. Woran liegt das oft?",
+        "antworten": [
+          "Der LS-Schalter ist für die Last zu klein bemessen",
+          "Bei der Isolationsmessung wurde der RCD nicht überbrückt",
+          "Der Schutzleiter hat einen zu großen Querschnitt",
+          "N und PE vertauscht oder N eines anderen RCD-Kreises benutzt"
+        ],
+        "richtig": 3,
+        "erklaerung": "Fließt der Laststrom über den PE oder über den N eines anderen RCD zurück, sieht der RCD eine Differenz und löst aus. Deshalb die N-Zuordnung je Stromkreis prüfen."
+      }
+    ],
+    "quelle": "DIN VDE 0100-600; DIN VDE 0105-100",
+    "stand": "2026-10"
+  }
+]

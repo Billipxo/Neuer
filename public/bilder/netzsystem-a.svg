@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="300" viewBox="0 0 640 300" font-family="Arial, Helvetica, sans-serif" font-size="15" fill="#111">
+  <title>Netzsystem mit Transformator, Außenleitern, Aufteilung eines Leiters an der Stelle A und einem Verbraucher</title>
+  <rect width="640" height="300" fill="#ffffff"/>
+  <!-- Transformator (Niederspannungsseite) -->
+  <circle cx="52" cy="100" r="28" fill="none" stroke="#111" stroke-width="2.5"/>
+  <circle cx="78" cy="100" r="28" fill="none" stroke="#111" stroke-width="2.5"/>
+  <text x="65" y="58" text-anchor="middle">Trafo</text>
+  <!-- Außenleiter -->
+  <line x1="106" y1="78" x2="612" y2="78" stroke="#8b5a2b" stroke-width="3"/>
+  <line x1="106" y1="100" x2="612" y2="100" stroke="#111" stroke-width="3"/>
+  <line x1="106" y1="122" x2="612" y2="122" stroke="#8a8a8a" stroke-width="3"/>
+  <text x="114" y="73">L1</text>
+  <text x="114" y="95">L2</text>
+  <text x="114" y="117">L3</text>
+  <!-- Sternpunkt, Betriebserder und PEN bis zur Stelle A -->
+  <polyline points="78,128 78,155 340,155" fill="none" stroke="#16a34a" stroke-width="5"/>
+  <polyline points="78,128 78,155 340,155" fill="none" stroke="#facc15" stroke-width="5" stroke-dasharray="9 9"/>
+  <line x1="78" y1="155" x2="78" y2="232" stroke="#111" stroke-width="2.5"/>
+  <line x1="60" y1="232" x2="96" y2="232" stroke="#111" stroke-width="3"/>
+  <line x1="66" y1="240" x2="90" y2="240" stroke="#111" stroke-width="3"/>
+  <line x1="72" y1="248" x2="84" y2="248" stroke="#111" stroke-width="3"/>
+  <text x="104" y="246">Betriebserder</text>
+  <text x="114" y="149">PEN</text>
+  <!-- N und PE nach der Stelle A -->
+  <line x1="340" y1="155" x2="612" y2="155" stroke="#2563eb" stroke-width="3"/>
+  <polyline points="340,155 340,188 612,188" fill="none" stroke="#16a34a" stroke-width="4"/>
+  <polyline points="340,155 340,188 612,188" fill="none" stroke="#facc15" stroke-width="4" stroke-dasharray="9 9"/>
+  <circle cx="340" cy="155" r="5.5" fill="#111"/>
+  <circle cx="340" cy="155" r="17" fill="none" stroke="#dc2626" stroke-width="2.5"/>
+  <text x="326" y="134" font-weight="bold" fill="#dc2626" font-size="18">A</text>
+  <text x="590" y="149">N</text>
+  <text x="586" y="182">PE</text>
+  <!-- Verbraucher mit leitfähigem Gehäuse (Körper) -->
+  <line x1="470" y1="78" x2="470" y2="226" stroke="#8b5a2b" stroke-width="3"/>
+  <circle cx="470" cy="78" r="4.5" fill="#111"/>
+  <line x1="510" y1="155" x2="510" y2="226" stroke="#2563eb" stroke-width="3"/>
+  <circle cx="510" cy="155" r="4.5" fill="#111"/>
+  <line x1="550" y1="188" x2="550" y2="226" stroke="#16a34a" stroke-width="4"/>
+  <line x1="550" y1="188" x2="550" y2="226" stroke="#facc15" stroke-width="4" stroke-dasharray="9 9"/>
+  <circle cx="550" cy="188" r="4.5" fill="#111"/>
+  <rect x="448" y="226" width="124" height="52" rx="6" fill="#f1f5f9" stroke="#111" stroke-width="2.5"/>
+  <text x="510" y="250" text-anchor="middle">Verbraucher</text>
+  <text x="510" y="269" text-anchor="middle" font-size="13">(Körper an PE)</text>
+</svg>

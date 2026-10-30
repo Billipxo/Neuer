@@ -1,0 +1,301 @@
+[
+  {
+    "id": "sicherheit-regeln",
+    "thema": "sicherheit",
+    "titel": "Die 5 Sicherheitsregeln und Arbeiten unter Spannung",
+    "kurz": "Reihenfolge, Spannungsprüfer, Erden und Kurzschließen, Aufheben und die drei Arbeitsweisen",
+    "unterthemen": ["5 Sicherheitsregeln", "Arbeiten unter Spannung"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Bevor du an einer Anlage arbeitest, wird sie nach den fünf Sicherheitsregeln spannungsfrei gemacht. Das ist der Regelfall. Arbeiten unter Spannung sind die seltene Ausnahme."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "1. Freischalten – 2. gegen Wiedereinschalten sichern – 3. Spannungsfreiheit feststellen – 4. erden und kurzschließen – 5. benachbarte, unter Spannung stehende Teile abdecken oder abschranken.",
+          "Spannungsfreiheit allpolig mit einem zweipoligen Spannungsprüfer (DIN EN 61243-3) feststellen und den Prüfer unmittelbar vorher und nachher an einer bekannten Spannungsquelle testen. Einpolige Phasenprüfer sind dafür nicht zulässig.",
+          "Erdungs- und Kurzschließvorrichtung: zuerst mit der Erdungsanlage verbinden, dann mit den Leitern. Abnehmen in umgekehrter Reihenfolge.",
+          "In Niederspannungsanlagen darf Erden und Kurzschließen entfallen, wenn keine Gefahr durch Rückspeisung besteht – nicht bei Freileitungen oder Anlagen mit PV, Speicher oder Notstrom.",
+          "Im Zählerschrank: Der netzseitige Anschlussraum bleibt bis zur Hausanschlusssicherung meist unter Spannung – abdecken. Freischalten z. B. über den SH-Schalter, mit Sperrelement und Hinweisschild gegen Wiedereinschalten sichern.",
+          "Aufheben in umgekehrter Reihenfolge. Wieder eingeschaltet wird erst, wenn alle Personen gewarnt sind und Werkzeuge sowie Erdungen entfernt sind.",
+          "Arbeiten in der Nähe unter Spannung stehender Teile: Die Arbeitsstelle ist spannungsfrei, daneben steht etwas unter Spannung – Schutz durch Abdecken, Abschranken, Abstand und Aufsicht.",
+          "Arbeiten unter Spannung: nur aus zwingenden Gründen, mit besonderer Ausbildung, festgelegten Arbeitsverfahren, isoliertem Werkzeug (1000 V) und PSA."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Freischalten – sichern – prüfen – erden – abdecken."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Was ist die 3. der fünf Sicherheitsregeln?",
+        "antworten": [
+          "Gegen Wiedereinschalten sichern",
+          "Erden und kurzschließen",
+          "Freischalten",
+          "Spannungsfreiheit feststellen"
+        ],
+        "richtig": 3,
+        "erklaerung": "1. Freischalten – 2. gegen Wiedereinschalten sichern – 3. Spannungsfreiheit feststellen – 4. erden und kurzschließen – 5. benachbarte, unter Spannung stehende Teile abdecken oder abschranken."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Womit stellst du die Spannungsfreiheit fest?",
+        "antworten": [
+          "Mit einem einpoligen Phasenprüfer",
+          "Mit einem zweipoligen Spannungsprüfer",
+          "Durch Ausschalten des LS-Schalters",
+          "Mit dem Isolationsmessgerät bei 500 V"
+        ],
+        "richtig": 1,
+        "erklaerung": "Allpolig mit einem zweipoligen Spannungsprüfer nach DIN EN 61243-3, unmittelbar vorher und nachher an einer bekannten Spannungsquelle getestet. Einpolige Phasenprüfer sind dafür nicht zulässig."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Wann darf das Erden und Kurzschließen in einer Niederspannungsanlage NICHT entfallen?",
+        "antworten": [
+          "Wenn Rückspeisung droht, z. B. durch PV oder Speicher",
+          "Wenn nur der LS-Schalter ausgeschaltet ist",
+          "In jeder Wohnung eines Mehrfamilienhauses",
+          "Bei Arbeiten, die länger als eine Stunde dauern"
+        ],
+        "richtig": 0,
+        "erklaerung": "Erden und Kurzschließen darf in Niederspannungsanlagen entfallen, wenn keine Rückspeisung droht – nicht bei Freileitungen oder Anlagen mit PV, Speicher oder Notstrom."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 7,
+        "frage": "Unter welchen Bedingungen sind Arbeiten unter Spannung erlaubt?",
+        "antworten": [
+          "Bei Spannungen bis 400 V mit isoliertem Werkzeug immer",
+          "Immer, wenn der Kunde keinen Stromausfall möchte",
+          "Nur aus zwingenden Gründen und mit besonderer Ausbildung",
+          "Wenn ein zweiter Elektriker daneben steht und aufpasst"
+        ],
+        "richtig": 2,
+        "erklaerung": "Arbeiten unter Spannung sind die seltene Ausnahme: nur aus zwingenden Gründen, mit besonderer Ausbildung, festgelegten Arbeitsverfahren, isoliertem Werkzeug (1000 V) und PSA."
+      }
+    ],
+    "quelle": "DIN VDE 0105-100; DGUV Vorschrift 3",
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-verantwortung",
+    "thema": "sicherheit",
+    "titel": "Verantwortung: Fachkräfte und befähigte Personen",
+    "kurz": "Elektrofachkraft, Anlagen- und Arbeitsverantwortlicher, befähigte Person, Festlegung der Prüfungen",
+    "unterthemen": ["Verantwortung"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Wer darf was? Das regeln die DGUV Vorschrift 3, die DIN VDE 0105-100, die Betriebssicherheitsverordnung (BetrSichV) und die TRBS 1203."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Elektrofachkraft: wer aufgrund Ausbildung, Kenntnissen und Erfahrung sowie Kenntnis der Bestimmungen die übertragenen Arbeiten beurteilen und mögliche Gefahren erkennen kann.",
+          "Elektrotechnisch unterwiesene Person (EuP): darf nur festgelegte Tätigkeiten nach Unterweisung ausführen.",
+          "Errichten, ändern und instand halten nur durch eine Elektrofachkraft oder unter ihrer Leitung und Aufsicht (DGUV Vorschrift 3 § 3).",
+          "Anlagenverantwortlicher: trägt die unmittelbare Verantwortung für den sicheren Betrieb der Anlage, z. B. die Freigabe zur Arbeit. Arbeitsverantwortlicher: verantwortlich für die Durchführung der Arbeit vor Ort. Bei kleinen Arbeiten kann beides dieselbe Person sein.",
+          "Zur Prüfung befähigte Person (TRBS 1203): abgeschlossene Berufsausbildung, Berufserfahrung und eine zeitnahe berufliche Tätigkeit im Prüfen. Einen Meisterbrief verlangt die TRBS 1203 nicht.",
+          "Art, Umfang und Fristen der Prüfungen legt der Arbeitgeber auf Grundlage der Gefährdungsbeurteilung fest (BetrSichV)."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Installateurverzeichnis (NAV) = das Unternehmen gegenüber dem Netzbetreiber. DGUV Vorschrift 3 = die Person, die die Arbeit macht."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Was darf eine elektrotechnisch unterwiesene Person (EuP)?",
+        "antworten": [
+          "Anlagen selbstständig errichten",
+          "Prüfberichte für Neuanlagen unterschreiben",
+          "Alle Arbeiten einer Elektrofachkraft",
+          "Nur festgelegte Tätigkeiten nach Unterweisung"
+        ],
+        "richtig": 3,
+        "erklaerung": "Die EuP darf nur die Tätigkeiten ausführen, für die sie unterwiesen wurde. Errichten, ändern und instand halten nur durch eine Elektrofachkraft oder unter ihrer Leitung und Aufsicht."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Braucht eine zur Prüfung befähigte Person nach TRBS 1203 einen Meisterbrief?",
+        "antworten": [
+          "Nein – Ausbildung, Erfahrung und Praxis im Prüfen genügen.",
+          "Nein – eine kurze Unterweisung durch den Chef genügt.",
+          "Ja, aber nur für Anlagen über 63 A.",
+          "Ja, ohne Meisterbrief darf niemand prüfen."
+        ],
+        "richtig": 0,
+        "erklaerung": "TRBS 1203: abgeschlossene Berufsausbildung, Berufserfahrung und eine zeitnahe berufliche Tätigkeit im Prüfen. Einen Meisterbrief verlangt sie nicht."
+      },
+      {
+        "abschnitt": 2,
+        "frage": "Was regelt das Installateurverzeichnis – im Unterschied zur DGUV Vorschrift 3?",
+        "antworten": [
+          "Die Pflichten des Netzbetreibers",
+          "Die Prüffristen für Anlagen und Geräte",
+          "Die Person, die vor Ort die Arbeit macht",
+          "Das Unternehmen gegenüber dem Netzbetreiber"
+        ],
+        "richtig": 3,
+        "erklaerung": "Installateurverzeichnis (NAV) = das Unternehmen gegenüber dem Netzbetreiber. DGUV Vorschrift 3 = die Person, die die Arbeit macht."
+      }
+    ],
+    "quelle": "DGUV Vorschrift 3; DIN VDE 0105-100; BetrSichV; TRBS 1203",
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-fristen",
+    "thema": "sicherheit",
+    "titel": "Prüffristen nach DGUV Vorschrift 3",
+    "kurz": "Richtwerte für Anlagen, RCD und ortsveränderliche Betriebsmittel",
+    "unterthemen": ["Prüffristen"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Elektrische Anlagen und Geräte werden regelmäßig erneut geprüft. Die DGUV Vorschrift 3 nennt Richtwerte; die tatsächlichen Fristen legt der Arbeitgeber in der Gefährdungsbeurteilung fest."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Elektrische Anlagen und ortsfeste Betriebsmittel: 4 Jahre (Elektrofachkraft).",
+          "In Betriebsstätten, Räumen und Anlagen besonderer Art (DIN VDE 0100 Gruppe 700): 1 Jahr.",
+          "Schutzmaßnahmen mit RCD in nichtstationären Anlagen, z. B. auf der Baustelle: jeden Monat auf Wirksamkeit prüfen, mit Messgerät.",
+          "RCD-Prüftaste durch den Benutzer: in stationären Anlagen alle 6 Monate, in nichtstationären Anlagen arbeitstäglich.",
+          "Ortsveränderliche Betriebsmittel: 6 Monate, auf Baustellen 3 Monate.",
+          "Liegt die Fehlerquote unter 2 %, darf verlängert werden: höchstens auf 1 Jahr (Baustelle, Werkstatt, Fertigungsstätte) bzw. 2 Jahre (Büro).",
+          "Prüfen darf eine Elektrofachkraft, mit geeigneten Mess- und Prüfgeräten teils auch eine elektrotechnisch unterwiesene Person."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "4 Jahre Anlage – 1 Jahr besondere Art – 6 Monate ortsveränderlich – 3 Monate auf der Baustelle."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Welcher Richtwert gilt für die Prüfung von Anlagen in Räumen und Anlagen besonderer Art (DIN VDE 0100 Gruppe 700)?",
+        "antworten": ["4 Jahre", "1 Jahr", "6 Monate", "2 Jahre"],
+        "richtig": 1,
+        "erklaerung": "Anlagen und ortsfeste Betriebsmittel: 4 Jahre. In Betriebsstätten, Räumen und Anlagen besonderer Art: 1 Jahr."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Wie oft soll auf einer Baustelle (nichtstationäre Anlage) die RCD-Prüftaste gedrückt werden?",
+        "antworten": ["Jeden Monat", "Alle 6 Monate", "Arbeitstäglich", "Einmal im Jahr"],
+        "richtig": 2,
+        "erklaerung": "In nichtstationären Anlagen arbeitstäglich, in stationären Anlagen alle 6 Monate. Zusätzlich prüft eine Elektrofachkraft den RCD auf der Baustelle jeden Monat mit Messgerät."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Welcher Richtwert gilt für ortsveränderliche Betriebsmittel auf Baustellen?",
+        "antworten": ["6 Monate", "1 Jahr", "3 Monate", "4 Jahre"],
+        "richtig": 2,
+        "erklaerung": "Ortsveränderliche Betriebsmittel: 6 Monate, auf Baustellen 3 Monate. Bei einer Fehlerquote unter 2 % darf verlängert werden."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 5,
+        "frage": "Bürogeräte haben eine Fehlerquote unter 2 %. Auf wie lange darf die Prüffrist höchstens verlängert werden?",
+        "antworten": ["1 Jahr", "Gar nicht", "2 Jahre", "4 Jahre"],
+        "richtig": 2,
+        "erklaerung": "Liegt die Fehlerquote unter 2 %, darf verlängert werden: höchstens auf 1 Jahr (Baustelle, Werkstatt, Fertigungsstätte) bzw. 2 Jahre (Büro)."
+      }
+    ],
+    "quelle": "DGUV Vorschrift 3, Durchführungsanweisungen (Tabellen 1A und 1B); BetrSichV",
+    "stand": "2026-10"
+  },
+  {
+    "id": "sicherheit-unfall",
+    "thema": "sicherheit",
+    "titel": "PSA, Gefahren des Stroms und Erste Hilfe",
+    "kurz": "Schutzausrüstung am Hausanschlusskasten, Wirkung des Stroms und Verhalten nach einem Stromunfall",
+    "unterthemen": ["PSA", "Gefahren des Stroms", "Erste Hilfe"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Strom kann Muskeln verkrampfen, das Herz aus dem Takt bringen und Störlichtbögen erzeugen. Die richtige Schutzausrüstung und das richtige Verhalten nach einem Unfall retten Leben."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Wirkung des Stroms (50 Hz, Hand–Hand, grobe Richtwerte): ab etwa 0,5 mA spürbar, ab etwa 10 mA kann man nicht mehr loslassen, ab etwa 50 mA bei längerer Einwirkung Gefahr von Herzkammerflimmern. Darum schaltet der 30-mA-RCD schnell ab.",
+          "NH-Sicherungen ziehen oder setzen: NH-Aufsteckgriff mit Stulpe, Gesichtsschutz mit Störlichtbogenschutz, geeignete Handschuhe, störlichtbogengeprüfte Kleidung, isoliertes Werkzeug (1000 V) und zweipoliger Spannungsprüfer.",
+          "Möglichst lastfrei schalten: erst die Last bzw. den SH-Schalter ausschalten, dann die NH-Sicherungen ziehen. Der Hausanschlusskasten gehört zum Netzanschluss und ist plombiert – Arbeiten daran mit dem Netzbetreiber absprechen.",
+          "Stromunfall: 1. Eigenschutz – Strom abschalten, den Verunglückten nicht berühren, solange er unter Spannung steht. 2. Notruf 112, Unfallstelle sichern. 3. Erste Hilfe – Bewusstsein und Atmung prüfen, ggf. Herz-Lungen-Wiederbelebung, Defibrillator (AED). 4. Immer ärztlich untersuchen lassen (EKG). 5. Unfall dokumentieren und melden.",
+          "Herzrhythmusstörungen können noch Stunden nach dem Unfall auftreten – deshalb auch nach scheinbar leichten Unfällen zum Arzt."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Eigenschutz – Notruf – Erste Hilfe – Arzt – Meldung."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Ab welchem Strom (50 Hz, Hand–Hand) kann man etwa nicht mehr loslassen?",
+        "antworten": ["Ab etwa 50 mA", "Ab etwa 10 mA", "Ab etwa 1 A", "Ab etwa 0,5 mA"],
+        "richtig": 1,
+        "erklaerung": "Grobe Richtwerte: ab etwa 0,5 mA spürbar, ab etwa 10 mA kein Loslassen mehr, ab etwa 50 mA bei längerer Einwirkung Gefahr von Herzkammerflimmern."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 2,
+        "frage": "Du sollst NH-Sicherungen ziehen. Was machst du zuerst?",
+        "antworten": [
+          "Die Last bzw. den SH-Schalter ausschalten",
+          "Den RCD mit der Prüftaste auslösen",
+          "Den Zähler abklemmen",
+          "Die NH-Sicherungen direkt ziehen, das geht schneller"
+        ],
+        "richtig": 0,
+        "erklaerung": "Möglichst lastfrei schalten: erst die Last bzw. den SH-Schalter aus, dann mit NH-Aufsteckgriff, Gesichtsschutz und Schutzausrüstung die Sicherungen ziehen."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Ein Kollege hängt an einer unter Spannung stehenden Leitung. Was tust du zuerst?",
+        "antworten": [
+          "Zuerst den Notruf 112 wählen und warten",
+          "Sofort mit der Herzdruckmassage beginnen",
+          "Ihn sofort mit den Händen wegziehen",
+          "Den Strom abschalten, ohne ihn zu berühren"
+        ],
+        "richtig": 3,
+        "erklaerung": "Zuerst Eigenschutz: Strom abschalten. Dann Notruf 112, Erste Hilfe, ärztliche Untersuchung und Meldung des Unfalls."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Nach einem leichten Stromschlag fühlt sich der Kollege gut. Muss er trotzdem zum Arzt?",
+        "antworten": [
+          "Nur wenn die Spannung höher als 400 V war.",
+          "Nein, wenn er sich gut fühlt, ist alles in Ordnung.",
+          "Nur wenn sichtbare Verbrennungen an der Haut sind.",
+          "Ja – Herzrhythmusstörungen können später auftreten."
+        ],
+        "richtig": 3,
+        "erklaerung": "Herzrhythmusstörungen können noch Stunden nach dem Unfall auftreten. Deshalb nach jedem Stromunfall ärztlich untersuchen lassen (EKG)."
+      }
+    ],
+    "quelle": "DIN IEC/TS 60479-1; DGUV Vorschrift 3; DIN VDE 0105-100",
+    "stand": "2026-10"
+  }
+]

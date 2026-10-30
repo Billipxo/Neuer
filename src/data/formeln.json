@@ -1,0 +1,123 @@
+[
+  {
+    "id": "leistung",
+    "titel": "Strom, Leistung und Energie",
+    "kurz": "Ohmsches Gesetz, Leistung bei Wechsel- und Drehstrom, Leistungsdreieck, Energie, Gleichzeitigkeit",
+    "eintraege": [
+      {"name": "Ohmsches Gesetz", "formeln": ["U = R · I", "I = U / R", "R = U / I"]},
+      {"name": "Leistung am Widerstand", "formeln": ["P = U · I", "P = I² · R", "P = U² / R  →  R = U² / P"]},
+      {"name": "Wechselstrom (einphasig)", "formeln": ["P = U · I · cos φ", "S = U · I", "Q = U · I · sin φ", "I = P / (U · cos φ)"], "hinweis": "U = 230 V (Außenleiter gegen Neutralleiter)"},
+      {"name": "Drehstrom (dreiphasig, symmetrisch)", "formeln": ["P = √3 · U · I · cos φ", "S = √3 · U · I", "Q = √3 · U · I · sin φ", "I = P / (√3 · U · cos φ)"], "hinweis": "U = 400 V (zwischen zwei Außenleitern), √3 ≈ 1,732"},
+      {"name": "Leistungsdreieck", "formeln": ["S² = P² + Q²", "Q = √(S² − P²)", "cos φ = P / S"]},
+      {"name": "Energie", "formeln": ["W = P · t"], "hinweis": "kW · h = kWh"},
+      {"name": "Gleichzeitigkeit", "formeln": ["P_max = g · ΣP_n"], "hinweis": "g = Gleichzeitigkeitsfaktor (0 bis 1); mit P_max dann den Betriebsstrom I_b berechnen"},
+      {"name": "Wirkungsgrad", "formeln": ["η = P_ab / P_zu"]},
+      {"name": "Schieflast (Symmetrie)", "formeln": ["einphasig angeschlossen: S ≤ 4,6 kVA"], "hinweis": "entspricht 20 A bei 230 V; größere Geräte dreiphasig anschließen (VDE-AR-N 4100)"}
+    ],
+    "groessen": [
+      {"zeichen": "U", "bedeutung": "Spannung in V"},
+      {"zeichen": "I", "bedeutung": "Strom in A"},
+      {"zeichen": "R", "bedeutung": "Widerstand in Ω"},
+      {"zeichen": "P", "bedeutung": "Wirkleistung in W"},
+      {"zeichen": "S", "bedeutung": "Scheinleistung in VA"},
+      {"zeichen": "Q", "bedeutung": "Blindleistung in var"},
+      {"zeichen": "cos φ", "bedeutung": "Leistungsfaktor"},
+      {"zeichen": "W", "bedeutung": "elektrische Energie in Wh bzw. kWh"},
+      {"zeichen": "t", "bedeutung": "Zeit in h"}
+    ],
+    "bereiche": ["rechnen-leistung"],
+    "fragen": ["lf-tab-005"]
+  },
+  {
+    "id": "spannungsfall",
+    "titel": "Leitungswiderstand, Spannungsfall und Querschnitt",
+    "kurz": "Widerstand einer Leitung, Spannungsfall bei Wechsel- und Drehstrom, Mindestquerschnitt, Grenzwerte",
+    "eintraege": [
+      {"name": "Leiterwiderstand (ein Leiter)", "formeln": ["R = l / (κ · A)"], "hinweis": "für Hin- und Rückleiter zusammen mit der doppelten Länge 2 · l rechnen"},
+      {"name": "Spannungsfall Wechselstrom", "formeln": ["ΔU = 2 · l · I · cos φ / (κ · A)"]},
+      {"name": "Spannungsfall Drehstrom", "formeln": ["ΔU = √3 · l · I · cos φ / (κ · A)"]},
+      {"name": "Spannungsfall in Prozent", "formeln": ["Δu = ΔU / U · 100 %"], "hinweis": "Wechselstrom auf 230 V, Drehstrom auf 400 V beziehen"},
+      {"name": "Mindestquerschnitt", "formeln": ["Wechselstrom: A = 2 · l · I · cos φ / (κ · ΔU_zul)", "Drehstrom: A = √3 · l · I · cos φ / (κ · ΔU_zul)", "ΔU_zul = Δu_zul · U / 100 %"], "hinweis": "danach den nächstgrößeren Normquerschnitt wählen und Strombelastbarkeit sowie Abschaltbedingung prüfen"},
+      {"name": "Grenzwerte", "formeln": ["Hausanschluss bis Zähler: Δu ≤ 0,5 %", "Zähler bis Verbraucher: Δu ≤ 3 %"], "hinweis": "0,5 % bei Leistungsbedarf bis 100 kVA, gerechnet mit dem Nennstrom der vorgeschalteten Sicherung (NAV § 13 Abs. 4); über 100 kVA gestaffelt 1 % bis 1,5 % (VDE-AR-N 4100). 3 % nach DIN 18015-1."}
+    ],
+    "groessen": [
+      {"zeichen": "l", "bedeutung": "einfache Leitungslänge in m"},
+      {"zeichen": "A", "bedeutung": "Leiterquerschnitt in mm²"},
+      {"zeichen": "κ", "bedeutung": "Leitfähigkeit, Kupfer: κ_Cu = 56 m/(Ω·mm²)"},
+      {"zeichen": "ΔU", "bedeutung": "Spannungsfall in V"},
+      {"zeichen": "Δu", "bedeutung": "Spannungsfall in %"}
+    ],
+    "bereiche": ["rechnen-spannungsfall"],
+    "fragen": []
+  },
+  {
+    "id": "abschaltung",
+    "titel": "Schleifenimpedanz und Abschaltbedingung",
+    "kurz": "Abschaltbedingung im TN-System, Abschaltstrom der LS-Schalter, Messwert-Reserve, TT-System mit RCD, Abschaltzeiten",
+    "eintraege": [
+      {"name": "Abschaltbedingung TN-System", "formeln": ["Z_s · I_a ≤ U₀", "Z_s,max = U₀ / I_a"], "hinweis": "U₀ = 230 V"},
+      {"name": "Abschaltstrom I_a von LS-Schaltern (unverzögerte Auslösung)", "formeln": ["B: I_a = 5 · I_n", "C: I_a = 10 · I_n", "D: I_a = 20 · I_n"], "hinweis": "jeweils der obere Wert des Auslösebereichs"},
+      {"name": "Messwert mit Reserve", "formeln": ["Z_s,Messung ≤ 2/3 · U₀ / I_a"], "hinweis": "Die Leiter sind beim Messen kalt, im Fehlerfall aber warm und hochohmiger."},
+      {"name": "Kurzschlussstrom", "formeln": ["I_k = U₀ / Z_s", "Bedingung: I_k ≥ I_a"]},
+      {"name": "TT-System mit RCD", "formeln": ["R_A · I_Δn ≤ U_L", "R_A,max = U_L / I_Δn", "U_B = I_Δn · R_A"], "hinweis": "U_L = 50 V (in besonderen Bereichen 25 V); R_A = Erderwiderstand plus Widerstand des Schutzleiters zu den Körpern"},
+      {"name": "Höchste Abschaltzeiten bei U₀ = 230 V", "formeln": ["Endstromkreise: TN 0,4 s · TT 0,2 s", "Verteilerstromkreise und übrige: TN 5 s · TT 1 s"], "hinweis": "Endstromkreise mit Steckdosen bis 63 A oder mit nur fest angeschlossenen Verbrauchsmitteln bis 32 A (DIN VDE 0100-410:2018)"}
+    ],
+    "groessen": [
+      {"zeichen": "Z_s", "bedeutung": "Schleifenimpedanz in Ω"},
+      {"zeichen": "I_a", "bedeutung": "Strom, der die Abschaltung in der geforderten Zeit bewirkt, in A"},
+      {"zeichen": "I_n", "bedeutung": "Bemessungsstrom der Schutzeinrichtung in A"},
+      {"zeichen": "U₀", "bedeutung": "Spannung Außenleiter gegen Erde: 230 V"},
+      {"zeichen": "I_k", "bedeutung": "Kurzschlussstrom in A"},
+      {"zeichen": "R_A", "bedeutung": "Widerstand von Anlagenerder und Schutzleiter in Ω"},
+      {"zeichen": "I_Δn", "bedeutung": "Bemessungsfehlerstrom des RCD in A"},
+      {"zeichen": "U_B", "bedeutung": "Berührungsspannung in V; U_L = vereinbarte Grenze der Berührungsspannung"}
+    ],
+    "bereiche": ["rechnen-schleife"],
+    "fragen": ["lf-pruefung-007", "lf-pruefung-k03"]
+  },
+  {
+    "id": "leitungsschutz",
+    "titel": "Leitungsschutz, Selektivität und Verteiler",
+    "kurz": "Überlast- und Kurzschlussschutz, Strombelastbarkeit, Selektivität von Sicherungen, Verlustleistung, Schutzleiterquerschnitt",
+    "eintraege": [
+      {"name": "Überlastschutz", "formeln": ["I_b ≤ I_n ≤ I_z", "I_2 ≤ 1,45 · I_z"], "hinweis": "bei LS-Schaltern nach DIN EN 60898 ist I_2 ≤ 1,45 · I_z mit I_n ≤ I_z erfüllt"},
+      {"name": "Strombelastbarkeit", "formeln": ["I_z = I_r · f₁ · f₂"], "hinweis": "I_r Tabellenwert für die Verlegeart, f₁ Faktor für die Umgebungstemperatur, f₂ Faktor für die Häufung (DIN VDE 0298-4)"},
+      {"name": "Kurzschlussschutz", "formeln": ["t ≤ (k · A / I_k)²", "unter 0,1 s: k² · A² ≥ I²t"], "hinweis": "Materialbeiwert k: Kupfer mit PVC 115, Kupfer mit VPE 143; I²t = Durchlasswert der Schutzeinrichtung laut Hersteller"},
+      {"name": "Schaltvermögen", "formeln": ["Bemessungsschaltvermögen ≥ I_k,max am Einbauort"]},
+      {"name": "Selektivität von gG-Sicherungen", "formeln": ["I_n,vor ≥ 1,6 · I_n,nach"], "hinweis": "Faustregel; für andere Kombinationen gelten die Selektivitätstabellen der Hersteller"},
+      {"name": "Verlustleistung im Verteiler", "formeln": ["P_v = P_v,n · (I_b / I_n)²", "ΣP_v ≤ P_v,zul"], "hinweis": "P_v,n Verlustleistung des Geräts bei Nennstrom, P_v,zul zulässige Verlustleistung des Gehäuses (DIN EN 61439)"},
+      {"name": "Mindestquerschnitt Schutzleiter (gleiches Material wie der Außenleiter)", "formeln": ["S ≤ 16 mm²  →  S_PE = S", "16 mm² < S ≤ 35 mm²  →  S_PE = 16 mm²", "S > 35 mm²  →  S_PE = S / 2"], "hinweis": "S = Querschnitt des Außenleiters (DIN VDE 0100-540)"}
+    ],
+    "groessen": [
+      {"zeichen": "I_b", "bedeutung": "Betriebsstrom in A"},
+      {"zeichen": "I_n", "bedeutung": "Bemessungsstrom der Schutzeinrichtung in A"},
+      {"zeichen": "I_z", "bedeutung": "Strombelastbarkeit der Leitung in A"},
+      {"zeichen": "I_2", "bedeutung": "großer Prüfstrom der Schutzeinrichtung in A"},
+      {"zeichen": "I_k", "bedeutung": "Kurzschlussstrom in A"},
+      {"zeichen": "A", "bedeutung": "Leiterquerschnitt in mm²"},
+      {"zeichen": "t", "bedeutung": "zulässige Dauer des Kurzschlusses in s"},
+      {"zeichen": "P_v", "bedeutung": "Verlustleistung in W"}
+    ],
+    "bereiche": ["rechnen-leitungsschutz"],
+    "fragen": []
+  },
+  {
+    "id": "pruefwerte",
+    "titel": "Prüfen: Messwerte und Grenzwerte",
+    "kurz": "Schutzleiter, Isolationswiderstand, RCD und Schleifenimpedanz bei der Erstprüfung",
+    "eintraege": [
+      {"name": "Durchgängigkeit der Schutzleiter", "formeln": ["Erwartungswert: R = l / (κ · A)", "Messstrom ≥ 0,2 A"], "hinweis": "Leerlaufspannung 4 bis 24 V (DIN EN 61557-4); Messleitungen vorher kompensieren"},
+      {"name": "Isolationswiderstand", "formeln": ["SELV/PELV: 250 V DC  →  R_iso ≥ 0,5 MΩ", "bis 500 V: 500 V DC  →  R_iso ≥ 1 MΩ", "über 500 V: 1000 V DC  →  R_iso ≥ 1 MΩ"]},
+      {"name": "RCD", "formeln": ["Auslösestrom: 0,5 · I_Δn bis I_Δn", "Auslösezeit bei I_Δn: ≤ 300 ms", "Auslösezeit bei 5 · I_Δn: ≤ 40 ms", "Berührungsspannung: U_B ≤ 50 V"], "hinweis": "Werte für unverzögerte RCDs; Typ S löst absichtlich verzögert aus"},
+      {"name": "Schleifenimpedanz", "formeln": ["Z_s,Messung ≤ 2/3 · U₀ / I_a", "I_k ≥ I_a"], "hinweis": "mehr dazu unter „Schleifenimpedanz und Abschaltbedingung“"}
+    ],
+    "groessen": [
+      {"zeichen": "l", "bedeutung": "Leitungslänge in m"},
+      {"zeichen": "A", "bedeutung": "Leiterquerschnitt in mm²"},
+      {"zeichen": "κ_Cu", "bedeutung": "Leitfähigkeit von Kupfer: 56 m/(Ω·mm²)"},
+      {"zeichen": "R_iso", "bedeutung": "Isolationswiderstand in MΩ"}
+    ],
+    "bereiche": [],
+    "fragen": ["lf-pruefung-008", "lf-pruefung-k03"]
+  }
+]

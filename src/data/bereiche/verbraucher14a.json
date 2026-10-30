@@ -1,0 +1,151 @@
+[
+  {
+    "id": "verbraucher14a-steuerung",
+    "thema": "verbraucher14a",
+    "titel": "§ 14a EnWG: steuerbare Verbrauchseinrichtungen",
+    "kurz": "Welche Geräte steuerbar sind, 4,2 kW Mindestleistung, Netzentgelt-Module und Anmeldung",
+    "unterthemen": ["§ 14a EnWG", "Wärmepumpe"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Seit 2024 dürfen Netzbetreiber Wallboxen, Wärmepumpen und ähnliche große Verbraucher bei drohender Überlastung des Netzes vorübergehend drosseln. Im Gegenzug dürfen sie den Anschluss nicht mehr verweigern, und der Kunde zahlt weniger Netzentgelt."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "Steuerbar sind Geräte mit mehr als 4,2 kW, in Betrieb genommen ab dem 1. Januar 2024: nicht öffentlich zugängliche Ladepunkte, Wärmepumpen (mit Zusatz- oder Notheizung wie Heizstab), Anlagen zur Raumkühlung und Stromspeicher, soweit sie Strom aus dem Netz beziehen.",
+          "Mehrere Wärmepumpen oder Klimageräte an einem Netzanschluss werden für die 4,2-kW-Grenze zusammengerechnet. Öffentliche Ladepunkte und Haushaltsgeräte wie Herde zählen nicht dazu.",
+          "Der Netzbetreiber darf den Anschluss nicht wegen fehlender Netzkapazität verweigern oder verzögern.",
+          "Bei drohender Überlastung darf er den Bezug vorübergehend begrenzen – mindestens 4,2 kW je Gerät bleiben verfügbar (bei Wärmepumpen und Klimageräten über 11 kW mehr).",
+          "Netzentgelt-Module: Modul 1 – pauschale Reduzierung, ohne eigenen Zähler. Modul 2 – reduzierter Arbeitspreis (60 %), mit eigenem Zählpunkt für das Gerät. Modul 3 – zeitvariables Netzentgelt, zusätzlich zu Modul 1 wählbar (seit 2025).",
+          "Gesteuert wird über eine Steuerbox am Smart-Meter-Gateway oder über ein Energiemanagementsystem.",
+          "Wärmepumpen sind beim Netzbetreiber anzumelden; mit mehr als 4,2 kW sind sie zugleich steuerbar nach § 14a.",
+          "Für den Installateur: anmelden, Platz für die Steuerung im Zählerschrank vorsehen, die steuerbare Schnittstelle am Gerät anschließen und das Messkonzept passend zum gewählten Modul planen."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Über 4,2 kW = steuerbar. Gedrosselt wird nie unter 4,2 kW."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 0,
+        "frage": "Welches Gerät ist eine steuerbare Verbrauchseinrichtung nach § 14a EnWG (Inbetriebnahme 2025)?",
+        "antworten": [
+          "Eine öffentlich zugängliche Ladesäule",
+          "Ein Elektroherd mit 10 kW",
+          "Eine Wallbox mit 3,7 kW",
+          "Eine private Wallbox mit 11 kW"
+        ],
+        "richtig": 3,
+        "erklaerung": "Steuerbar sind Geräte über 4,2 kW ab 2024: nicht öffentliche Ladepunkte, Wärmepumpen, Klimageräte und Speicher. Haushaltsgeräte wie Herde und öffentliche Ladepunkte zählen nicht dazu."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 2,
+        "frage": "Darf der Netzbetreiber den Anschluss einer neuen Wärmepumpe wegen fehlender Netzkapazität verweigern?",
+        "antworten": [
+          "Nein – er darf ihn weder verweigern noch verzögern.",
+          "Ja, wenn die Wärmepumpe mehr als 11 kW hat",
+          "Ja, wenn der Kunde kein Smart-Meter-Gateway hat",
+          "Ja, jederzeit"
+        ],
+        "richtig": 0,
+        "erklaerung": "Im Gegenzug für die Steuerbarkeit darf der Netzbetreiber den Anschluss nicht wegen fehlender Netzkapazität verweigern oder verzögern. Bei drohender Überlastung darf er stattdessen drosseln."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 3,
+        "frage": "Der Netzbetreiber drosselt eine Wallbox bei drohender Überlastung. Wie viel Leistung bleibt mindestens verfügbar?",
+        "antworten": ["11 kW", "4,2 kW", "1,5 kW", "0 kW – sie wird abgeschaltet"],
+        "richtig": 1,
+        "erklaerung": "Gedrosselt wird nie unter 4,2 kW je Gerät – bei Wärmepumpen und Klimageräten über 11 kW bleibt sogar mehr."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Welches Netzentgelt-Modul braucht einen eigenen Zählpunkt für das Gerät?",
+        "antworten": ["Alle drei Module", "Modul 3", "Modul 2", "Modul 1"],
+        "richtig": 2,
+        "erklaerung": "Modul 1: pauschale Reduzierung ohne eigenen Zähler. Modul 2: reduzierter Arbeitspreis mit eigenem Zählpunkt. Modul 3: zeitvariables Netzentgelt zusätzlich zu Modul 1."
+      }
+    ],
+    "quelle": "§ 14a EnWG; BNetzA-Festlegung BK6-22-300; VDE-AR-N 4100",
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-laden",
+    "thema": "verbraucher14a",
+    "titel": "Ladeeinrichtungen (Wallbox)",
+    "kurz": "Mitteilung und Zustimmung nach NAV, DIN VDE 0100-722, Ladebetriebsarten und Planung",
+    "unterthemen": ["Ladeeinrichtungen"],
+    "erklaerung": [
+      {
+        "titel": "Worum geht es?",
+        "text": "Eine Wallbox zieht stundenlang ihren vollen Strom. Deshalb gibt es klare Regeln für die Meldung beim Netzbetreiber und für den Stromkreis."
+      },
+      {
+        "titel": "Das Wichtigste",
+        "punkte": [
+          "NAV § 19 Abs. 2: Ladeeinrichtungen immer vor der Inbetriebnahme mitteilen. Über 12 kVA Summen-Bemessungsleistung je elektrischer Anlage vorher die Zustimmung einholen.",
+          "Beispiele: 3,7 kW oder 11 kW → mitteilen. 22 kW oder zwei Wallboxen mit je 11 kW (zusammen 22 kVA) → Zustimmung abwarten.",
+          "Der Netzbetreiber muss sich innerhalb von zwei Monaten äußern. Lehnt er ab, muss er Gründe, mögliche Abhilfemaßnahmen und den Zeitbedarf nennen.",
+          "Mit mehr als 4,2 kW ist die Wallbox zusätzlich steuerbar nach § 14a EnWG – eine 3,7-kW-Wallbox nicht.",
+          "DIN VDE 0100-722: jeder Ladepunkt mit eigenem Endstromkreis und eigenem RCD ≤ 30 mA. Gegen Gleichfehlerströme: RCD Typ B oder RCD Typ A plus Gleichfehlerstrom-Erkennung (6 mA DC), die viele Wallboxen schon eingebaut haben.",
+          "Mode 3 = AC-Laden an einer fest installierten Wallbox mit Kommunikation zum Fahrzeug. Mode 2 = Ladekabel mit Steuer- und Schutzeinrichtung an der Steckdose. Mode 4 = DC-Schnellladen.",
+          "Standard-Steckvorrichtung in Europa: Typ 2 für AC-Laden, CCS (Combo 2) für DC-Schnellladen.",
+          "Vorher prüfen: Netzanschluss, Hauptleitung, Absicherung, Selektivität, Zählerplatz und Platz für die Steuerung – bei Bedarf Lastmanagement einsetzen oder eine höhere Anschlussleistung beantragen."
+        ]
+      },
+      {
+        "titel": "Merke",
+        "text": "Bis 12 kVA mitteilen – darüber Zustimmung. Über 4,2 kW zusätzlich § 14a."
+      }
+    ],
+    "verstaendnis": [
+      {
+        "abschnitt": 1,
+        "punkt": 1,
+        "frage": "Ein Kunde lässt eine Wallbox mit 11 kW installieren. Was gilt gegenüber dem Netzbetreiber?",
+        "antworten": [
+          "Vorher mitteilen – eine Zustimmung ist nicht nötig.",
+          "Nichts – melden muss man erst ab 22 kW.",
+          "Nur im Marktstammdatenregister eintragen.",
+          "Vorher die Zustimmung des Netzbetreibers einholen."
+        ],
+        "richtig": 0,
+        "erklaerung": "Ladeeinrichtungen werden immer vor der Inbetriebnahme mitgeteilt. Die Zustimmung braucht es erst über 12 kVA – z. B. bei 22 kW oder zwei Wallboxen mit je 11 kW."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 4,
+        "frage": "Welcher Schutz gehört nach DIN VDE 0100-722 zu jedem Ladepunkt?",
+        "antworten": [
+          "Ein gemeinsamer RCD ≤ 30 mA für alle Ladepunkte im Haus",
+          "Ein eigener RCD ≤ 30 mA mit Schutz gegen Gleichfehlerströme",
+          "Ein RCD Typ AC mit 30 mA für den Stromkreis",
+          "Kein RCD, weil die Wallbox fest angeschlossen ist"
+        ],
+        "richtig": 1,
+        "erklaerung": "Jeder Ladepunkt bekommt einen eigenen Endstromkreis und einen eigenen RCD ≤ 30 mA. Gegen Gleichfehlerströme: Typ B oder Typ A plus 6-mA-DC-Erkennung, die viele Wallboxen schon eingebaut haben."
+      },
+      {
+        "abschnitt": 1,
+        "punkt": 5,
+        "frage": "Was bedeutet „Mode 3“ beim Laden?",
+        "antworten": [
+          "Laden an der Haushaltssteckdose mit Ladekabel",
+          "DC-Schnellladen an einer Ladesäule",
+          "Induktives Laden über eine Platte im Boden",
+          "AC-Laden an der Wallbox mit Kommunikation zum Auto"
+        ],
+        "richtig": 3,
+        "erklaerung": "Mode 3 = AC-Laden an der Wallbox mit Kommunikation zum Fahrzeug. Mode 2 = Ladekabel mit Steuer- und Schutzeinrichtung an der Steckdose. Mode 4 = DC-Schnellladen."
+      }
+    ],
+    "quelle": "NAV § 19 Abs. 2; DIN VDE 0100-722; § 14a EnWG",
+    "stand": "2026-10"
+  }
+]

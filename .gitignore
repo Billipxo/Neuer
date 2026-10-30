@@ -1,0 +1,17 @@
+node_modules
+dist
+dev-dist
+*.local
+.DS_Store
+coverage
+*.tsbuildinfo
+
+# Zugangsdaten für den Webspace nie einchecken
+.htpasswd
+
+dist-offline
+
+# Android: Bauordner und Signaturschlüssel nie einchecken
+android/build
+*.jks
+*.keystore

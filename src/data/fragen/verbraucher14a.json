@@ -1,0 +1,383 @@
+[
+  {
+    "id": "verbraucher14a-001",
+    "thema": "verbraucher14a",
+    "unterthema": "Ladeeinrichtungen",
+    "typ": "einfach",
+    "frage": "Ab welcher Summen-Bemessungsleistung bedürfen Ladeeinrichtungen für Elektrofahrzeuge nach NAV der vorherigen Zustimmung des Netzbetreibers?",
+    "antworten": [
+      "über 3,7 kVA",
+      "über 11 kVA",
+      "über 12 kVA",
+      "über 22 kVA"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "NAV § 19 Abs. 2: Ladeeinrichtungen für Elektrofahrzeuge sind dem Netzbetreiber vor Inbetriebnahme mitzuteilen. Übersteigt ihre Summen-Bemessungsleistung 12 kVA, ist die vorherige Zustimmung des Netzbetreibers nötig. Eine 11-kW-Wallbox ist also meldepflichtig, eine 22-kW-Wallbox zustimmungspflichtig. Stand prüfen.",
+    "quelle": "NAV § 19 Abs. 2",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-k01",
+    "thema": "verbraucher14a",
+    "unterthema": "§ 14a EnWG",
+    "typ": "karte",
+    "frage": "Was regelt § 14a EnWG, und was bedeutet das für die Installation einer Wärmepumpe oder Wallbox?",
+    "antworten": [],
+    "richtig": "§ 14a EnWG regelt die netzorientierte Steuerung steuerbarer Verbrauchseinrichtungen (z. B. nicht öffentliche Wallboxen, Wärmepumpen, Klimageräte, Batteriespeicher) mit einer Leistung über 4,2 kW, die seit 2024 neu angeschlossen werden.\n• Der Netzbetreiber darf den Anschluss nicht wegen Netzengpässen verweigern.\n• Im Gegenzug darf er bei drohender Überlastung den Bezug vorübergehend reduzieren – mindestens 4,2 kW müssen je Gerät verfügbar bleiben.\n• Der Kunde erhält ein reduziertes Netzentgelt (Module zur Auswahl).\n• Die Steuerung erfolgt über eine Steuereinrichtung, perspektivisch über das Smart-Meter-Gateway mit Steuerbox, oder über ein Energiemanagementsystem.\n• Für den Installateur: Anmeldung beim Netzbetreiber, Platz für Steuerung/Steuerbox im Zählerschrank vorsehen, steuerbare Schnittstelle am Gerät anschließen.",
+    "erklaerung": "Fachgespräch: Leistungsgrenze 4,2 kW, Pflicht zur Steuerbarkeit, Netzentgeltreduzierung und praktische Umsetzung nennen. Die Details stammen aus den Festlegungen der Bundesnetzagentur und ändern sich – Stand prüfen.",
+    "quelle": "EnWG § 14a; Festlegungen der BNetzA",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-002",
+    "thema": "verbraucher14a",
+    "unterthema": "Ladeeinrichtungen",
+    "typ": "einfach",
+    "frage": "Ein Kunde lässt eine 11-kW-Wallbox installieren (keine weiteren Ladepunkte). Was gilt nach NAV?",
+    "antworten": [
+      "Es ist nichts zu tun, weil sie unter 22 kW liegt.",
+      "Sie muss nur dem Stromlieferanten gemeldet werden.",
+      "Sie ist dem Netzbetreiber vor der Inbetriebnahme mitzuteilen.",
+      "Sie braucht die vorherige Zustimmung des Netzbetreibers."
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "NAV § 19: Ladeeinrichtungen sind vor der Inbetriebnahme mitzuteilen; eine vorherige Zustimmung ist erst nötig, wenn die Summen-Bemessungsleistung 12 kVA übersteigt. Eine 11-kW-Wallbox liegt darunter. Weil sie mehr als 4,2 kW hat, ist sie zugleich eine steuerbare Verbrauchseinrichtung nach § 14a EnWG. Stand prüfen.",
+    "quelle": "NAV § 19; EnWG § 14a",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-003",
+    "thema": "verbraucher14a",
+    "unterthema": "Ladeeinrichtungen",
+    "typ": "mehrfach",
+    "frage": "Welche Anforderungen stellt DIN VDE 0100-722 an den Stromkreis eines Ladepunkts?",
+    "antworten": [
+      "Jeder Ladepunkt erhält einen eigenen RCD mit IΔn ≤ 30 mA.",
+      "Jeder Ladepunkt wird über einen eigenen Endstromkreis versorgt.",
+      "Ein gemeinsamer RCD Typ AC für mehrere Ladepunkte genügt.",
+      "Gegen Gleichfehlerströme schützt ein RCD Typ B oder ein RCD Typ A mit Gleichfehlerstrom-Erkennung (6 mA DC)."
+    ],
+    "richtig": [
+      0,
+      1,
+      3
+    ],
+    "erklaerung": "Ladepunkte sind eigene Endstromkreise mit eigenem RCD (≤ 30 mA). Weil Fahrzeuge glatte Gleichfehlerströme verursachen können, die einen Typ-A-RCD unwirksam machen, braucht es entweder einen RCD Typ B oder einen Typ A plus Gleichfehlerstrom-Erkennung (6 mA DC), die viele Wallboxen bereits eingebaut haben. Stand prüfen.",
+    "quelle": "DIN VDE 0100-722",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-004",
+    "thema": "verbraucher14a",
+    "unterthema": "Ladeeinrichtungen",
+    "typ": "einfach",
+    "frage": "Welche Ladebetriebsart nutzt eine fest installierte AC-Wallbox mit Typ-2-Steckvorrichtung?",
+    "antworten": [
+      "Mode 1",
+      "Mode 2",
+      "Mode 3",
+      "Mode 4"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Mode 3: AC-Laden an einer fest angeschlossenen Ladeeinrichtung mit Kommunikation zum Fahrzeug (Control Pilot) – die Wallbox. Mode 2: Ladekabel mit integrierter Steuer- und Schutzeinrichtung an der Steckdose. Mode 4: DC-Schnellladen. Mode 1: ohne Kommunikation, für Elektroautos praktisch bedeutungslos.",
+    "quelle": "DIN EN IEC 61851-1",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-005",
+    "thema": "verbraucher14a",
+    "unterthema": "Ladeeinrichtungen",
+    "typ": "einfach",
+    "frage": "Welche Steckvorrichtung ist in Europa der Standard für das AC-Laden von Elektrofahrzeugen?",
+    "antworten": [
+      "Schutzkontakt-Steckdose",
+      "Typ 1",
+      "CHAdeMO",
+      "Typ 2"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Typ 2 (IEC 62196-2) ist in der EU der Standard für AC-Ladepunkte; für DC-Schnellladen wird in Europa CCS (Combo 2) genutzt. Typ 1 stammt aus Nordamerika und Asien, CHAdeMO ist ein japanischer DC-Standard.",
+    "quelle": "DIN EN 62196-2; Ladesäulenverordnung",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-006",
+    "thema": "verbraucher14a",
+    "unterthema": "§ 14a EnWG",
+    "typ": "mehrfach",
+    "frage": "Welche Geräte mit mehr als 4,2 kW gelten als steuerbare Verbrauchseinrichtungen nach § 14a EnWG?",
+    "antworten": [
+      "Nicht öffentlich zugängliche Ladepunkte für Elektrofahrzeuge",
+      "Anlagen zur Raumkühlung",
+      "Wärmepumpen (einschließlich Zusatz- oder Notheizung)",
+      "Elektroherde und Backöfen"
+    ],
+    "richtig": [
+      0,
+      1,
+      2
+    ],
+    "erklaerung": "Nach der Festlegung der Bundesnetzagentur fallen darunter nicht öffentliche Ladepunkte, Wärmepumpen, Anlagen zur Raumkühlung und Stromspeicher (beim Laden aus dem Netz) – jeweils mit mehr als 4,2 kW. Haushaltsgeräte wie Herde gehören nicht dazu. Stand prüfen.",
+    "quelle": "EnWG § 14a; BNetzA-Festlegung BK6-22-300",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-007",
+    "thema": "verbraucher14a",
+    "unterthema": "§ 14a EnWG",
+    "typ": "einfach",
+    "frage": "Was erhält der Kunde im Gegenzug dafür, dass der Netzbetreiber seine steuerbare Verbrauchseinrichtung bei Bedarf drosseln darf?",
+    "antworten": [
+      "Einen festen Strompreis für zehn Jahre",
+      "Ein reduziertes Netzentgelt",
+      "Nichts – die Steuerung ist ohne Ausgleich zulässig",
+      "Eine kostenlose Wallbox"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Für steuerbare Verbrauchseinrichtungen gibt es eine Netzentgeltreduzierung; der Kunde wählt je nach Messkonzept zwischen verschiedenen Modulen (z. B. pauschale Reduzierung oder reduzierter Arbeitspreis bei separatem Zähler). Stand prüfen.",
+    "quelle": "EnWG § 14a; BNetzA-Festlegungen",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-008",
+    "thema": "verbraucher14a",
+    "unterthema": "§ 14a EnWG",
+    "typ": "einfach",
+    "frage": "Darf der Netzbetreiber den Anschluss einer neuen Wärmepumpe mit Verweis auf einen möglichen Netzengpass ablehnen?",
+    "antworten": [
+      "Ja, aber nur bei Wärmepumpen mit mehr als 4,2 kW elektrischer Leistung.",
+      "Ja, wenn er nachweist, dass sein Ortsnetz zu bestimmten Zeiten ausgelastet ist.",
+      "Nur in den Wintermonaten, wenn das Netz durch Heizlasten stark belastet ist.",
+      "Nein – er darf sie stattdessen bei Bedarf netzorientiert steuern, mit garantierter Mindestleistung."
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Seit 2024 darf der Netzbetreiber den Anschluss steuerbarer Verbrauchseinrichtungen nicht mehr wegen fehlender Netzkapazität verweigern oder verzögern. Im Gegenzug darf er bei drohender Überlastung die Leistung vorübergehend begrenzen – auf mindestens 4,2 kW je Gerät. Stand prüfen.",
+    "quelle": "EnWG § 14a; BNetzA-Festlegung BK6-22-300",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-009",
+    "thema": "verbraucher14a",
+    "unterthema": "§ 14a EnWG",
+    "typ": "einfach",
+    "frage": "Welche Leistung muss einer steuerbaren Verbrauchseinrichtung bei netzorientierter Steuerung mindestens zur Verfügung bleiben?",
+    "antworten": [
+      "1,5 kW",
+      "3,7 kW",
+      "4,2 kW",
+      "11 kW"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Der Netzbetreiber darf den Bezug bei Netzengpässen auf bis zu 4,2 kW je steuerbarer Verbrauchseinrichtung reduzieren – so kann eine Wallbox weiter laden und eine Wärmepumpe weiter heizen. Für Wärmepumpen und Klimageräte über 11 kW liegt die Mindestleistung höher (Anteil der Nennleistung), für mehrere Geräte hinter einem Energiemanagementsystem gelten eigene Regeln. Stand prüfen.",
+    "quelle": "EnWG § 14a; BNetzA-Festlegung BK6-22-300",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-010",
+    "thema": "verbraucher14a",
+    "unterthema": "Wärmepumpe",
+    "typ": "einfach",
+    "frage": "Muss eine neue Wärmepumpe beim Netzbetreiber angemeldet werden?",
+    "antworten": [
+      "Nein, das erledigt der Heizungsbauer über den Schornsteinfeger.",
+      "Nur, wenn sie zusätzlich einen elektrischen Heizstab für die Spitzenlast hat.",
+      "Ja, Wärmepumpen sind anmeldepflichtig; je nach Leistung kann eine Zustimmung nötig sein.",
+      "Nein, Wärmepumpen gelten wie Kühlschränke als normale Haushaltsgeräte."
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Heiz- und Klimageräte wie Wärmepumpen sind nach VDE-AR-N 4100 bzw. TAB beim Netzbetreiber anzumelden; mit mehr als 4,2 kW sind sie zugleich steuerbare Verbrauchseinrichtungen nach § 14a EnWG. Die Anmeldung erfolgt über das eingetragene Installationsunternehmen. Stand prüfen.",
+    "quelle": "VDE-AR-N 4100; TAB; EnWG § 14a",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-011",
+    "thema": "verbraucher14a",
+    "unterthema": "Ladeeinrichtungen",
+    "typ": "einfach",
+    "frage": "Warum sollte man vor der Installation einer Wallbox den Netzanschluss und die Hauptstromversorgung prüfen?",
+    "antworten": [
+      "Weil die Wallbox sonst keine Kommunikationsverbindung zum Fahrzeug aufbauen kann",
+      "Das ist nicht nötig, weil jede Wallbox ihren Ladestrom immer selbst passend begrenzt",
+      "Weil die zusätzliche Dauerlast Anschlussleistung, Hauptleitung und Absicherung überlasten kann",
+      "Weil der Netzbetreiber sonst automatisch den Stromtarif des Kunden ändert"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Eine Wallbox zieht über Stunden ihren vollen Strom. Deshalb vorab prüfen: Leistungsbedarf des Gebäudes, Absicherung und Querschnitt der Hauptleitung, Selektivität, Zählerplatz und Platz für die Steuerung. Gegebenenfalls ein Lastmanagement einsetzen oder beim Netzbetreiber eine höhere Anschlussleistung beantragen.",
+    "quelle": "DIN VDE 0100-722; VDE-AR-N 4100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-k02",
+    "thema": "verbraucher14a",
+    "unterthema": "Ladeeinrichtungen",
+    "typ": "karte",
+    "frage": "Ein Kunde möchte eine 11-kW-Wallbox. Wie gehen Sie vor – von der Planung bis zur Übergabe?",
+    "antworten": [],
+    "richtig": "1. Bestand prüfen: Netzanschluss, Hauptleitung, Zählerplatz, freie Leistung, Netzsystem, Leitungsweg.\n2. Ladeleistung festlegen (z. B. 11 kW dreiphasig, 16 A), ggf. Lastmanagement vorsehen.\n3. Anmeldung beim Netzbetreiber (bis 12 kVA Mitteilung, darüber Zustimmung); als steuerbare Verbrauchseinrichtung nach § 14a die Steuerbarkeit vorsehen (Steuerbox oder Energiemanagement, Platz im Zählerschrank).\n4. Installation nach DIN VDE 0100-722: eigener Endstromkreis, eigener RCD ≤ 30 mA, Schutz gegen Gleichfehlerströme (RCD Typ B oder Typ A plus 6-mA-DC-Erkennung), Leitung nach Strombelastbarkeit und Spannungsfall, Überspannungsschutz.\n5. Erstprüfung nach DIN VDE 0100-600 einschließlich RCD-Prüfung, Prüfprotokoll.\n6. Inbetriebnahme, Einweisung, Unterlagen z. B. für das Netzentgelt-Modul.",
+    "erklaerung": "Fachgespräch: Vorgehen strukturiert nennen. Grenzwerte und Formulare – Stand prüfen.",
+    "quelle": "NAV § 19; DIN VDE 0100-722; EnWG § 14a",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "verbraucher14a-k03",
+    "thema": "verbraucher14a",
+    "unterthema": "§ 14a EnWG",
+    "typ": "karte",
+    "frage": "Erklären Sie die Module zur Netzentgeltreduzierung nach § 14a EnWG.",
+    "antworten": [],
+    "richtig": "Für steuerbare Verbrauchseinrichtungen gibt es eine Netzentgeltreduzierung in Modulen (Festlegungen der Bundesnetzagentur):\n• Modul 1: pauschale jährliche Reduzierung des Netzentgelts, ohne separaten Zähler.\n• Modul 2: prozentual reduzierter Arbeitspreis des Netzentgelts (60 %) – Voraussetzung ist ein eigener Zählpunkt für die steuerbare Verbrauchseinrichtung.\n• Modul 3: zeitvariables Netzentgelt mit günstigeren Zeitfenstern, zusätzlich zu Modul 1 wählbar (seit 2025).\nDer Kunde wählt das Modul; der Installateur sorgt für das passende Messkonzept und die Steuerbarkeit.",
+    "erklaerung": "Fachgespräch: Module unterscheiden und die Folgen für den Zählerplatz nennen. Höhe und Ausgestaltung ändern sich – Stand prüfen.",
+    "quelle": "EnWG § 14a; BNetzA-Festlegungen",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-verbraucher14a-001",
+    "thema": "verbraucher14a",
+    "unterthema": "§ 14a EnWG",
+    "typ": "mehrfach",
+    "frage": "Welche Aussagen zu steuerbaren Verbrauchseinrichtungen nach § 14a EnWG treffen zu?",
+    "antworten": [
+      "Die Regeln gelten für Geräte, die seit dem 1. Januar 2024 in Betrieb genommen werden.",
+      "Mehrere Wärmepumpen oder Klimageräte an einem Netzanschluss werden für die 4,2-kW-Grenze zusammengerechnet.",
+      "Öffentlich zugängliche Ladepunkte fallen ebenfalls darunter.",
+      "Stromspeicher zählen dazu, soweit sie Strom aus dem Netz beziehen."
+    ],
+    "richtig": [
+      0,
+      1,
+      3
+    ],
+    "erklaerung": "Steuerbare Verbrauchseinrichtungen sind nicht öffentlich zugängliche Ladepunkte, Wärmepumpen (einschließlich Zusatz- oder Notheizung wie Heizstab), Anlagen zur Raumkühlung und Stromspeicher (beim Einspeichern aus dem Netz) mit mehr als 4,2 kW Netzanschlussleistung, in Betrieb genommen ab dem 1. Januar 2024. Wärmepumpen bzw. Klimageräte an einem Anschluss werden addiert. Öffentliche Ladepunkte gehören nicht dazu. Stand prüfen.",
+    "quelle": "EnWG § 14a; BNetzA-Festlegung BK6-22-300",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-verbraucher14a-002",
+    "thema": "verbraucher14a",
+    "unterthema": "§ 14a EnWG",
+    "typ": "einfach",
+    "frage": "Ein Kunde lässt eine Wallbox mit 3,7 kW (einphasig, 16 A) installieren. Was gilt?",
+    "antworten": [
+      "Sie ist dem Netzbetreiber vor der Inbetriebnahme mitzuteilen, fällt aber nicht unter § 14a EnWG.",
+      "Sie braucht die vorherige Zustimmung des Netzbetreibers.",
+      "Sie muss weder mitgeteilt noch angemeldet werden.",
+      "Sie ist eine steuerbare Verbrauchseinrichtung nach § 14a EnWG."
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Ladeeinrichtungen sind nach NAV § 19 immer vor der Inbetriebnahme mitzuteilen; eine Zustimmung braucht es erst über 12 kVA. Unter § 14a EnWG fallen Ladepunkte erst mit mehr als 4,2 kW – eine 3,7-kW-Wallbox nicht. Stand prüfen.",
+    "quelle": "NAV § 19 Abs. 2; EnWG § 14a",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-verbraucher14a-003",
+    "thema": "verbraucher14a",
+    "unterthema": "Ladeeinrichtungen",
+    "typ": "einfach",
+    "frage": "In einem Einfamilienhaus sollen zwei Wallboxen mit je 11 kW installiert werden. Was gilt nach NAV?",
+    "antworten": [
+      "Es genügt die Registrierung im Marktstammdatenregister.",
+      "Jede Wallbox liegt unter 12 kVA, also genügt die Mitteilung.",
+      "Die Summen-Bemessungsleistung beträgt 22 kVA – die vorherige Zustimmung des Netzbetreibers ist nötig.",
+      "Wallboxen über 11 kW sind in Einfamilienhäusern verboten."
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "NAV § 19 Abs. 2 stellt auf die Summen-Bemessungsleistung je elektrischer Anlage ab: 2 × 11 kVA = 22 kVA > 12 kVA → Zustimmung vor der Inbetriebnahme. Der Netzbetreiber muss sich binnen zwei Monaten äußern. Zusätzlich ist jede Wallbox über 4,2 kW steuerbar nach § 14a EnWG.",
+    "quelle": "NAV § 19 Abs. 2; EnWG § 14a",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-verbraucher14a-004",
+    "thema": "verbraucher14a",
+    "unterthema": "Ladeeinrichtungen",
+    "typ": "einfach",
+    "frage": "Eine Ladeeinrichtung mit 22 kW ist zustimmungspflichtig. Innerhalb welcher Frist muss sich der Netzbetreiber nach Eingang der Mitteilung äußern?",
+    "antworten": [
+      "Innerhalb von zwei Wochen",
+      "Innerhalb von vier Wochen",
+      "Innerhalb von zwei Monaten",
+      "Innerhalb von sechs Monaten"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "NAV § 19 Abs. 2: Ladeeinrichtungen sind vor der Inbetriebnahme mitzuteilen; über 12 kVA Summen-Bemessungsleistung je elektrischer Anlage braucht es die vorherige Zustimmung. Der Netzbetreiber muss sich innerhalb von zwei Monaten nach Eingang der Mitteilung äußern. Verweigert er die Zustimmung, muss er die Gründe, mögliche Abhilfemaßnahmen und den dafür nötigen Zeitbedarf darlegen.",
+    "quelle": "NAV § 19 Abs. 2",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]

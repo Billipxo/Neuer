@@ -1,0 +1,379 @@
+[
+  {
+    "id": "erzeugung-001",
+    "thema": "erzeugung",
+    "unterthema": "Marktstammdatenregister",
+    "typ": "einfach",
+    "frage": "Innerhalb welcher Frist muss der Betreiber eine neue PV-Anlage im Marktstammdatenregister registrieren?",
+    "antworten": [
+      "Vor der Anmeldung beim Netzbetreiber",
+      "Innerhalb eines Monats nach Inbetriebnahme",
+      "Innerhalb eines Jahres nach Inbetriebnahme",
+      "Nur bei Anlagen über 30 kWp"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Nach der Marktstammdatenregisterverordnung (MaStRV) ist die Registrierung innerhalb eines Monats nach Inbetriebnahme vorzunehmen – unabhängig von der Anlagengröße, auch Steckersolargeräte und Speicher sind registrierungspflichtig. Verantwortlich ist der Anlagenbetreiber, der Installateur sollte darauf hinweisen. Stand prüfen.",
+    "quelle": "MaStRV § 5",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-002",
+    "thema": "erzeugung",
+    "unterthema": "NA-Schutz",
+    "typ": "einfach",
+    "frage": "Ab welcher Summen-Scheinleistung der Erzeugungsanlagen fordert die VDE-AR-N 4105 einen zentralen NA-Schutz?",
+    "antworten": [
+      "über 4,6 kVA",
+      "über 13,8 kVA",
+      "über 30 kVA",
+      "über 100 kVA"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Bis 30 kVA genügt der im Wechselrichter integrierte NA-Schutz. Über 30 kVA ist ein zentraler NA-Schutz mit Kuppelschalter vorzusehen. Die 4,6 kVA kennt man als Grenze der Schieflast je Außenleiter. Stand prüfen.",
+    "quelle": "VDE-AR-N 4105",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-003",
+    "thema": "erzeugung",
+    "unterthema": "VDE-AR-N 4105",
+    "typ": "einfach",
+    "frage": "Wofür gilt die VDE-AR-N 4105?",
+    "antworten": [
+      "Für Ladeeinrichtungen von Elektrofahrzeugen",
+      "Für die Dachmontage von PV-Modulen",
+      "Für Erzeugungsanlagen und Speicher am Niederspannungsnetz",
+      "Für Kundenanlagen am Mittelspannungsnetz"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Die VDE-AR-N 4105 enthält die technischen Mindestanforderungen für Anschluss und Parallelbetrieb von Erzeugungsanlagen und Speichern am Niederspannungsnetz, z. B. NA-Schutz, Blindleistung, Wirkleistungsreduktion bei Überfrequenz und Nachweise. Die Installation auf der Gleichstromseite regelt DIN VDE 0100-712.",
+    "quelle": "VDE-AR-N 4105; DIN VDE 0100-712",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-004",
+    "thema": "erzeugung",
+    "unterthema": "VDE-AR-N 4105",
+    "typ": "einfach",
+    "frage": "Bis zu welcher Scheinleistung darf eine Erzeugungsanlage einphasig angeschlossen werden?",
+    "antworten": [
+      "3,68 kVA",
+      "4,6 kVA",
+      "10 kVA",
+      "30 kVA"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Erzeugungsanlagen bis 4,6 kVA dürfen einphasig angeschlossen werden; darüber wird symmetrisch auf mehrere Außenleiter verteilt, die Unsymmetrie zwischen den Außenleitern darf 4,6 kVA nicht überschreiten. Stand prüfen.",
+    "quelle": "VDE-AR-N 4105",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-005",
+    "thema": "erzeugung",
+    "unterthema": "Marktstammdatenregister",
+    "typ": "einfach",
+    "frage": "Muss ein Batteriespeicher im Einfamilienhaus im Marktstammdatenregister eingetragen werden?",
+    "antworten": [
+      "Nein, nur PV-Module werden registriert.",
+      "Nein, das erledigt der Netzbetreiber automatisch.",
+      "Nur, wenn der Speicher größer als 30 kWh ist.",
+      "Ja, Stromspeicher sind wie Erzeugungsanlagen registrierungspflichtig."
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Im Marktstammdatenregister sind alle Stromerzeugungsanlagen und Stromspeicher einzutragen, auch kleine Anlagen. Verantwortlich ist der Betreiber; der Installateur sollte ihn darauf hinweisen. Stand prüfen.",
+    "quelle": "MaStRV",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-006",
+    "thema": "erzeugung",
+    "unterthema": "Steckersolargeräte",
+    "typ": "mehrfach",
+    "frage": "Welche Aussagen zu Steckersolargeräten („Balkonkraftwerken“) treffen seit dem Solarpaket I zu?",
+    "antworten": [
+      "Die installierte Modulleistung ist auf 2.000 Wp begrenzt.",
+      "Die Module dürfen ohne Wechselrichter direkt an eine Steckdose angeschlossen werden.",
+      "Eine Anmeldung beim Netzbetreiber entfällt, die Registrierung im Marktstammdatenregister genügt.",
+      "Die Wechselrichterleistung darf bis zu 800 VA betragen."
+    ],
+    "richtig": [
+      0,
+      2,
+      3
+    ],
+    "erklaerung": "Seit dem Solarpaket I (2024) gilt für Steckersolargeräte eine vereinfachte Regelung: bis 800 VA Wechselrichterleistung und 2.000 Wp Modulleistung, Registrierung nur im Marktstammdatenregister. PV-Module liefern Gleichspannung und brauchen immer einen Wechselrichter mit integriertem NA-Schutz. Die Regeln (auch zur Steckvorrichtung) entwickeln sich weiter – Stand prüfen.",
+    "quelle": "EEG; Solarpaket I; VDE-AR-N 4105",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-007",
+    "thema": "erzeugung",
+    "unterthema": "Speicher",
+    "typ": "einfach",
+    "frage": "Was kennzeichnet einen DC-gekoppelten Batteriespeicher?",
+    "antworten": [
+      "Er wird ausschließlich aus dem öffentlichen Netz geladen, nicht aus der PV-Anlage.",
+      "Er ist die Fahrbatterie eines Elektroautos, das über die Wallbox angeschlossen ist.",
+      "Er hat einen eigenen Wechselrichter und speist auf der Wechselstromseite ein.",
+      "Er ist auf der Gleichstromseite eines (Hybrid-)Wechselrichters zusammen mit dem PV-Generator angeschlossen."
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "DC-gekoppelt: Speicher und PV-Generator hängen am Gleichstromkreis desselben Hybridwechselrichters – wenige Umwandlungsverluste beim Laden aus PV. AC-gekoppelt: eigener Batteriewechselrichter am Wechselstromnetz des Hauses – gut nachrüstbar.",
+    "quelle": "VDE-AR-N 4105",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-008",
+    "thema": "erzeugung",
+    "unterthema": "Speicher",
+    "typ": "einfach",
+    "frage": "Was muss beim Ersatzstrom- bzw. Inselbetrieb eines Speichersystems zwingend sichergestellt sein?",
+    "antworten": [
+      "Die Hausanlage wird vor dem Inselbetrieb allpolig vom öffentlichen Netz getrennt, damit nicht ins Netz zurückgespeist wird.",
+      "Der Wechselrichter speist weiter ins öffentliche Netz ein, damit die Spannung dort während der Störung stabil bleibt.",
+      "Der Speicher schaltet erst ab, wenn die Netzspannung zurückkehrt; eine Trennvorrichtung ist in Hausanlagen nicht vorgesehen.",
+      "Es genügt, den Fehlerstromschutzschalter der Hausanlage auszuschalten, bevor der Speicher die Versorgung übernimmt."
+    ],
+    "richtig": [
+      0
+    ],
+    "erklaerung": "Arbeiten Monteure des Netzbetreibers an einem abgeschalteten Netz, darf aus Kundenanlagen keine Spannung zurückkommen. Ersatzstromsysteme brauchen deshalb eine Umschalteinrichtung, die allpolig vom Netz trennt, bevor das Inselnetz aufgebaut wird. Eigenanlagen sind mit dem Netzbetreiber abzustimmen (NAV § 19).",
+    "quelle": "NAV § 19; VDE-AR-N 4100; VDE-AR-N 4105",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-009",
+    "thema": "erzeugung",
+    "unterthema": "PV-Anlage",
+    "typ": "einfach",
+    "frage": "Warum steht die Gleichstromseite einer PV-Anlage auch nach dem Abschalten des Wechselrichters unter Spannung?",
+    "antworten": [
+      "Weil der Netzbetreiber die Gleichstromseite versorgt",
+      "Weil der Wechselrichter einen Kondensator ins Netz entlädt",
+      "Das stimmt nicht – nach dem Abschalten ist alles spannungsfrei",
+      "Weil die Module bei Lichteinfall weiter Spannung erzeugen"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Solange Licht auf die Module fällt, erzeugen sie Gleichspannung – je nach Reihenschaltung mehrere hundert Volt. Der DC-Lasttrennschalter trennt nur den Wechselrichter, die Leitungen zum Generator bleiben unter Spannung. Gleichstrom-Lichtbögen erlöschen schlecht: Steckverbinder nie unter Last trennen.",
+    "quelle": "DIN VDE 0100-712",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-010",
+    "thema": "erzeugung",
+    "unterthema": "VDE-AR-N 4105",
+    "typ": "einfach",
+    "frage": "Womit wird gegenüber dem Netzbetreiber nachgewiesen, dass ein PV-Wechselrichter die elektrischen Anforderungen der VDE-AR-N 4105 erfüllt?",
+    "antworten": [
+      "Mit dem CE-Zeichen auf dem Typenschild des Wechselrichters",
+      "Mit einem Einheitenzertifikat für den Wechselrichtertyp",
+      "Mit der Registrierung im Marktstammdatenregister",
+      "Mit dem Prüfbericht der Erstprüfung nach DIN VDE 0100-600"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Das Einheitenzertifikat einer Zertifizierungsstelle bestätigt für den Gerätetyp die Eigenschaften nach VDE-AR-N 4105, z. B. NA-Schutz, Blindleistung und Verhalten bei Überfrequenz; es gehört zu den Anmeldeunterlagen. Das CE-Zeichen betrifft die Produktsicherheit, das Marktstammdatenregister die Registrierung und der Prüfbericht die Installation. Ob für größere Anlagen zusätzlich ein Anlagenzertifikat nötig ist, hängt von Leistungsgrenzen ab, die mehrfach geändert wurden – Stand prüfen.",
+    "quelle": "VDE-AR-N 4105",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-011",
+    "thema": "erzeugung",
+    "unterthema": "VDE-AR-N 4105",
+    "typ": "einfach",
+    "frage": "Ab welcher Netzfrequenz müssen Erzeugungsanlagen nach VDE-AR-N 4105 ihre Wirkleistung verringern?",
+    "antworten": [
+      "49,8 Hz",
+      "50,0 Hz",
+      "50,2 Hz",
+      "51,5 Hz"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Steigt die Frequenz (zu viel Erzeugung im Netz), müssen Erzeugungsanlagen ab 50,2 Hz ihre Wirkleistung kontinuierlich verringern. Bei 51,5 Hz trennt der NA-Schutz die Anlage vom Netz. Stand prüfen.",
+    "quelle": "VDE-AR-N 4105",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-012",
+    "thema": "erzeugung",
+    "unterthema": "PV-Anlage",
+    "typ": "einfach",
+    "frage": "Was muss vor der Inbetriebnahme einer PV-Anlage auf dem Hausdach (kein Steckersolargerät) geschehen?",
+    "antworten": [
+      "Nichts, der Netzbetreiber erkennt die Einspeisung automatisch über den vorhandenen Zähler",
+      "Anmeldung beim Netzbetreiber mit den geforderten Unterlagen über das eingetragene Installationsunternehmen",
+      "Eine Genehmigung der Handwerkskammer, die dabei auch die Eintragung des Betriebs prüft",
+      "Eine Meldung an den Stromlieferanten, der die Einspeisung anschließend beim Netzbetreiber anmeldet"
+    ],
+    "richtig": [
+      1
+    ],
+    "erklaerung": "Erzeugungsanlagen werden vor der Inbetriebnahme beim Netzbetreiber angemeldet (z. B. Datenblatt, Einheitenzertifikat, Lageplan, Schaltbild); er prüft den Netzanschluss und gibt den Anschluss frei. Danach folgen Inbetriebsetzung mit Protokoll und die Registrierung im Marktstammdatenregister durch den Betreiber. Stand prüfen.",
+    "quelle": "VDE-AR-N 4105; NAV § 19; TAB",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-k01",
+    "thema": "erzeugung",
+    "unterthema": "PV-Anlage",
+    "typ": "karte",
+    "frage": "Beschreiben Sie den Ablauf von der Planung bis zur Inbetriebnahme einer PV-Anlage mit Speicher am Einfamilienhaus.",
+    "antworten": [],
+    "richtig": "1. Bedarf und Dachfläche aufnehmen, Anlagengröße, Speicher und Messkonzept planen.\n2. Anmeldung beim Netzbetreiber (Datenblätter, Einheitenzertifikate, Schaltplan, Messkonzept) und Zusage abwarten.\n3. Montage: Unterkonstruktion, Module, DC-Verkabelung nach DIN VDE 0100-712, Wechselrichter und Speicher, Überspannungsschutz, Potentialausgleich.\n4. Zählerplatz anpassen (Zweirichtungszähler, ggf. Platz für Smart-Meter-Gateway).\n5. Prüfung: AC-Seite nach DIN VDE 0100-600, DC-Seite z. B. Leerlaufspannung, Kurzschlussstrom und Isolationswiderstand nach DIN EN 62446-1.\n6. Inbetriebsetzung, Inbetriebsetzungsprotokoll an den Netzbetreiber, Zählersetzung durch den Messstellenbetreiber.\n7. Der Betreiber registriert Anlage und Speicher im Marktstammdatenregister (innerhalb eines Monats).\n8. Einweisung und Übergabe der Dokumentation.",
+    "erklaerung": "Fachgespräch: Ablauf mit Zuständigkeiten nennen. Formulare und Fristen je Netzbetreiber – Stand prüfen.",
+    "quelle": "VDE-AR-N 4105; DIN VDE 0100-712; DIN EN 62446-1; MaStRV",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-k02",
+    "thema": "erzeugung",
+    "unterthema": "VDE-AR-N 4105",
+    "typ": "karte",
+    "frage": "Was regelt die VDE-AR-N 4105, und welche Nachweise braucht der Netzbetreiber?",
+    "antworten": [],
+    "richtig": "Die VDE-AR-N 4105 regelt Anschluss und Parallelbetrieb von Erzeugungsanlagen und Speichern am Niederspannungsnetz, u. a.:\n• Netzverträglichkeit und Symmetrie (einphasig bis 4,6 kVA)\n• NA-Schutz (Netz- und Anlagenschutz): bis 30 kVA im Wechselrichter integriert, darüber zentral mit Kuppelschalter\n• Blindleistungsbereitstellung zur Spannungshaltung\n• Wirkleistungsreduktion bei Überfrequenz ab 50,2 Hz\n• Verhalten bei Netzfehlern\nNachweise: Datenblatt der Anlage, Einheitenzertifikate (z. B. Wechselrichter), Nachweis des NA-Schutzes, Inbetriebsetzungsprotokoll; bei größeren Anlagen ggf. zusätzlich ein Anlagenzertifikat (die Leistungsgrenzen wurden mehrfach geändert).",
+    "erklaerung": "Fachgespräch: Inhalte und Nachweise nennen. Grenzwerte mit der aktuellen Ausgabe abgleichen – Stand prüfen.",
+    "quelle": "VDE-AR-N 4105",
+    "schwierigkeit": 3,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "erzeugung-k03",
+    "thema": "erzeugung",
+    "unterthema": "PV-Anlage",
+    "typ": "karte",
+    "frage": "Welche Sicherheitsregeln gelten bei Arbeiten an PV-Anlagen und Speichern?",
+    "antworten": [],
+    "richtig": "• Der PV-Generator steht bei Licht immer unter Spannung. Freischalten heißt: AC-Seite trennen und DC-Seite am DC-Lasttrennschalter trennen – die Leitungen zum Generator bleiben trotzdem spannungsführend.\n• Steckverbinder nie unter Last trennen (Gleichstrom-Lichtbogen).\n• Arbeiten an den Modulen: abdecken oder bei geringer Einstrahlung arbeiten, isoliertes Werkzeug, PSA.\n• Speicher: auch ohne PV und Netz ist Energie vorhanden – Herstellervorgaben zum sicheren Abschalten beachten.\n• Rückspeisung aus Wechselrichter oder Speicher beim Feststellen der Spannungsfreiheit berücksichtigen.\n• Absturzsicherung auf dem Dach.\n• Kennzeichnung der Anlage für Feuerwehr und Rettungskräfte nach örtlichen Vorgaben.",
+    "erklaerung": "Fachgespräch: Besonderheiten der Gleichstromseite und der Rückspeisung erklären.",
+    "quelle": "DIN VDE 0100-712; DIN VDE 0105-100",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-erzeugung-001",
+    "thema": "erzeugung",
+    "unterthema": "NA-Schutz",
+    "typ": "einfach",
+    "frage": "Ein Kunde hat zwei PV-Wechselrichter mit je 15 kVA und lässt einen weiteren mit 5 kVA nachrüsten. Was ist für den NA-Schutz zu beachten?",
+    "antworten": [
+      "Ein zentraler NA-Schutz ist erst ab 100 kVA nötig.",
+      "Nur der neue Wechselrichter braucht einen eigenen Kuppelschalter.",
+      "Nichts – jeder Wechselrichter hat einen integrierten NA-Schutz.",
+      "Ein zentraler NA-Schutz ist nötig, weil die Summe 35 kVA beträgt und damit 30 kVA übersteigt."
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Nach VDE-AR-N 4105 zählt die Summe der maximalen Scheinleistungen der Erzeugungseinheiten: 15 + 15 + 5 = 35 kVA > 30 kVA → zentraler NA-Schutz mit Kuppelschalter. Bis 30 kVA genügt der in den Wechselrichtern integrierte NA-Schutz. Stand prüfen.",
+    "quelle": "VDE-AR-N 4105:2026-03",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-erzeugung-002",
+    "thema": "erzeugung",
+    "unterthema": "VDE-AR-N 4105",
+    "typ": "einfach",
+    "frage": "Für welche Erzeugungsanlagen gilt ein vereinfachtes Verfahren statt der regulären Anmeldung durch das Installationsunternehmen?",
+    "antworten": [
+      "Für Anlagen bis 7 kW",
+      "Für alle PV-Anlagen bis 30 kVA",
+      "Für Kleinsterzeugungsanlagen bis 800 VA, z. B. Steckersolargeräte",
+      "Für Anlagen bis 4,6 kVA"
+    ],
+    "richtig": [
+      2
+    ],
+    "erklaerung": "Für Kleinsterzeugungsanlagen bis 800 VA gilt ein vereinfachtes Verfahren; bei Steckersolargeräten genügt seit dem Solarpaket I die Registrierung im Marktstammdatenregister, eine gesonderte Anmeldung beim Netzbetreiber entfällt (Modulleistung höchstens 2.000 Wp; Produktnorm DIN VDE V 0126-95). Alle übrigen Anlagen meldet das Installationsunternehmen beim Netzbetreiber an. Stand prüfen.",
+    "quelle": "VDE-AR-N 4105:2026-03; EEG; DIN VDE V 0126-95",
+    "schwierigkeit": 2,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  },
+  {
+    "id": "lf-erzeugung-003",
+    "thema": "erzeugung",
+    "unterthema": "PV-Anlage",
+    "typ": "einfach",
+    "frage": "Wer darf nach VDE-AR-N 4105 die Gleichstromseite (DC-Seite) einer PV-Anlage errichten?",
+    "antworten": [
+      "Nur der Netzbetreiber",
+      "Jeder Dachdecker, weil auf der DC-Seite keine Netzspannung anliegt",
+      "Der Anlagenbetreiber selbst bei Anlagen bis 10 kWp",
+      "Nur ein Elektrofachbetrieb"
+    ],
+    "richtig": [
+      3
+    ],
+    "erklaerung": "Die VDE-AR-N 4105 stellt klar, dass auch die DC-Seite nur ein Elektrofachbetrieb errichtet: Der PV-Generator erzeugt bei Licht mehrere hundert Volt Gleichspannung, und Gleichstrom-Lichtbögen erlöschen schlecht. Stand prüfen.",
+    "quelle": "VDE-AR-N 4105:2026-03; DIN VDE 0100-712",
+    "schwierigkeit": 1,
+    "bild": null,
+    "geprueft": false,
+    "stand": "2026-10"
+  }
+]
