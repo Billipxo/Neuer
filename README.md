@@ -6,18 +6,21 @@ Baue eine Festung im Stil von Clash of Clans, lass deine Truppen automatisch kä
 
 ## Starten
 
-Keine Installation nötig: `index.html` im Browser öffnen (Chrome, Edge oder Firefox).
+Keine Installation nötig: `index.html` im Browser öffnen (Chrome, Edge, Firefox oder Safari).
+Auch am **Handy und Tablet** spielbar (Touch-Steuerung: Wischen = Karte bewegen, zwei Finger = Zoom,
+Tippen = auswählen/bauen, lange drücken = Held bewegen im manuellen Modus, ☰ = Menü).
 Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http://localhost:8000` öffnen.
 
-## Was schon drin ist (Prototyp v0.3)
+## Was schon drin ist (Prototyp v0.4)
 
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
   Gegner-Völker werden jede Runde ausgelost. Spieldauer 20/30/45 Minuten oder unbegrenzt.
-- **Kampagne „Die Funkenkriege“:** 8 Missionen mit Geschichte und Zielen (vernichten, überleben, Drachen erschlagen),
-  du wählst dein Volk selbst. Missionen werden nacheinander freigeschaltet.
-- **Volks-XP & Skins:** Jede Partie gibt deinem Volk Erfahrung. Mit steigender Volksstufe werden Skins frei
-  (Veteran, Elite, Legendär mit leuchtender Aura). Fortschritt wird im Browser gespeichert.
+- **6 Volkskampagnen** mit eigener Geschichte (je 5 Missionen: vernichten, überleben, Drachen erschlagen,
+  Bündnis-Schlacht, Finale auf „Schwer“), z. B. „Die Krone von Valenmark“ (Menschen) oder „Blut und Steppe“ (Orks).
+- **Volks-XP & Belohnungen:** Jede Partie gibt deinem Volk Erfahrung. Pro Volksstufe gibt es Skins (Veteran, Elite,
+  Legendär), Banner (Schwalbenwimpel, Kriegsstandarte), Titel (Rekrut bis Legende) und ab Stufe 3 einen vierten Helden.
+  Fortschritt wird im Browser gespeichert.
 
 **Völker**
 - 6 Völker + Zufall mit Passiv, **3 Volksfähigkeiten** (freigeschaltet über Haupthaus-Stufe 1/3/5), eigener **Heimatkarte**,

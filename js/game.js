@@ -76,7 +76,8 @@
   G.newGame = function (cfg) {
     const race = cfg.race === 'zufall' ? pick(G.RACE_KEYS) : cfg.race;
     const heroes = G.RACES[race].heroes;
-    const heroDef = heroes.find((h) => h.id === cfg.hero) || pick(heroes);
+    const allowed = heroes.filter((h) => !h.unlock || !G.Profile || G.Profile.heroUnlocked(race, h));
+    const heroDef = allowed.find((h) => h.id === cfg.hero) || pick(allowed);
     const layout = G.LAYOUTS[cfg.mode];
     // Völker je Startplatz: Kampagnen-Gegner gehen auf die gegnerischen Plätze, der Rest wird ausgelost
     const fixed = (cfg.enemies || []).filter((r) => r !== race && G.RACES[r]);
@@ -124,6 +125,7 @@
       id: i, race, rd, heroDef, team, human: isHuman, diff, color: G.PLAYER_COLORS[i],
       name: isHuman ? 'Du' : `${rd.name} (KI)`,
       skin: isHuman ? (cfg.skin || 'standard') : pick(['standard', 'standard', 'veteran', 'elite', 'legende']),
+      banner: isHuman ? (cfg.banner || 'standard') : pick(['standard', 'wimpel', 'standarte']),
       ecoMul: isHuman ? 1 : diff.eco * (cfg.enemyEco && enemyOfHuman ? cfg.enemyEco : 1),
       gold: isHuman && cfg.playerGold ? cfg.playerGold : 400, wood: 250, workers: 5, workerT: 0, goldRatio: 0.65, autoRatio: true,
       incomeG: 0, incomeW: 0,

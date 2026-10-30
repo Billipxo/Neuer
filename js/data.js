@@ -445,3 +445,49 @@ G.DIFFICULTY = {
 // Blutfarben (Treffer, Leichen, Flecken)
 G.BLOOD = { menschen: '#8a0a0a', elfen: '#7a0a1a', untote: '#3e5a2a', orks: '#6a0a06', zwerge: '#8a0a0a', daemonen: '#4a0404' };
 G.CREEP_BLOOD = { wolf: '#7a0a0a', bandit: '#8a0a0a', schuetze: '#8a0a0a', troll: '#3a6a5a', hexer: '#3a6a5a', golem: '#8a8478', drache: '#6a0a0a' };
+
+// ---------------------------------------------------------------------------
+// Freischaltbare 4. Helden (ab Volksstufe 3)
+G.UNLOCK_HERO_LVL = 3;
+G.RACES.menschen.heroes.push({ id: 'mira', unlock: true, name: 'Hexenjägerin Mira', title: 'Die Silberklinge', ranged: true, stats: { hp: 760, dmg: 42, armor: 3 },
+  bonus: [{ roles: ['fernkampf', 'support'], dmg: 0.15 }, { roles: ['all'], atkspd: 0.05 }], bonusDesc: 'Fernkampf & Support +15% Schaden, alle +5% Angriffstempo',
+  abilities: [{ name: 'Silberbolzen', type: 'nuke', dmg: 240, stun: 1, cd: 9 }, { name: 'Jagdinstinkt', type: 'buff', stat: 'atkspd', value: 0.3, duration: 10, radius: 300, cd: 22 }] });
+G.RACES.elfen.heroes.push({ id: 'aerin', unlock: true, name: 'Wächterin Aerin', title: 'Rinde und Dorn', ranged: false, stats: { hp: 1000, dmg: 36, armor: 6 },
+  bonus: [{ roles: ['tank'], hp: 0.2, armor: 2 }, { roles: ['all'], regen: 1 }], bonusDesc: 'Tanks +20% LP und +2 Rüstung, alle +1 LP/s',
+  abilities: [{ name: 'Dornenwall', type: 'stun', self: true, dmg: 120, radius: 140, stun: 1.5, cd: 14 }, { name: 'Lebensborke', type: 'heal', amount: 220, radius: 230, cd: 15 }] });
+G.RACES.untote.heroes.push({ id: 'varuk', unlock: true, name: 'Knochenfürst Varuk', title: 'Der Unersättliche', ranged: false, stats: { hp: 980, dmg: 44, armor: 5 },
+  bonus: [{ roles: ['nahkampf'], dmg: 0.15, lifesteal: 0.1 }], bonusDesc: 'Nahkampf +15% Schaden, 10% Lebensraub',
+  abilities: [{ name: 'Knochensturm', type: 'aoe', self: true, dmg: 200, radius: 130, cd: 11 }, { name: 'Ghulrudel', type: 'summon', count: 3, duration: 30, cd: 26, unit: { name: 'Ghul', hp: 320, dmg: 24, range: 24, cd: 0.8, speed: 80, armor: 2, r: 11 } }] });
+G.RACES.orks.heroes.push({ id: 'gruk', unlock: true, name: 'Blutschamane Gruk', title: 'Stimme der Ahnen', ranged: true, stats: { hp: 780, dmg: 38, armor: 3 },
+  bonus: [{ roles: ['all'], lifesteal: 0.08 }, { roles: ['heiler'], heal: 0.25 }], bonusDesc: 'Alle 8% Lebensraub, Heiler +25%',
+  abilities: [{ name: 'Ahnenruf', type: 'heal', amount: 250, radius: 240, cd: 14 }, { name: 'Blutfluch', type: 'drain', dmg: 230, cd: 10 }] });
+G.RACES.zwerge.heroes.push({ id: 'rurik', unlock: true, name: 'Donnerpriester Rurik', title: 'Hammer des Himmels', ranged: true, stats: { hp: 820, dmg: 40, armor: 4 },
+  bonus: [{ roles: ['magier'], dmg: 0.2 }, { roles: ['all'], armor: 1 }], bonusDesc: 'Magier +20% Schaden, alle +1 Rüstung',
+  abilities: [{ name: 'Donnerschlag', type: 'aoe', dmg: 210, radius: 130, cd: 12 }, { name: 'Runenschild', type: 'buff', stat: 'armor', value: 5, duration: 10, radius: 280, cd: 20 }] });
+G.RACES.daemonen.heroes.push({ id: 'vexa', unlock: true, name: 'Schattenklinge Vexa', title: 'Der lautlose Tod', ranged: false, stats: { hp: 840, dmg: 50, armor: 3 },
+  bonus: [{ roles: ['nahkampf'], dmg: 0.15 }, { roles: ['all'], speed: 0.1 }], bonusDesc: 'Nahkampf +15% Schaden, alle +10% Tempo',
+  abilities: [{ name: 'Schattenstoß', type: 'nuke', dmg: 280, cd: 9 }, { name: 'Klingensturm', type: 'aoe', self: true, dmg: 200, radius: 120, cd: 12 }] });
+
+// ---------------------------------------------------------------------------
+// Belohnungen pro Volksstufe
+G.BANNERS = [
+  { id: 'standard', name: 'Fahne', lvl: 1 },
+  { id: 'wimpel', name: 'Schwalbenwimpel', lvl: 5 },
+  { id: 'standarte', name: 'Kriegsstandarte', lvl: 8 },
+];
+G.TITLES = [
+  { lvl: 1, name: 'Rekrut' }, { lvl: 3, name: 'Hauptmann' }, { lvl: 6, name: 'Feldherr' }, { lvl: 9, name: 'Kriegsfürst' }, { lvl: 10, name: 'Legende' },
+];
+G.titleFor = (lvl) => G.TITLES.filter((t) => t.lvl <= lvl).pop().name;
+G.REWARDS = [
+  { lvl: 2, kind: 'skin', id: 'veteran', text: 'Skin „Veteran“' },
+  { lvl: 3, kind: 'hero', text: 'Vierter Held' },
+  { lvl: 3, kind: 'title', text: 'Titel „Hauptmann“' },
+  { lvl: 4, kind: 'skin', id: 'elite', text: 'Skin „Elite“' },
+  { lvl: 5, kind: 'banner', id: 'wimpel', text: 'Banner „Schwalbenwimpel“' },
+  { lvl: 6, kind: 'title', text: 'Titel „Feldherr“' },
+  { lvl: 7, kind: 'skin', id: 'legende', text: 'Skin „Legendär“ (leuchtende Aura)' },
+  { lvl: 8, kind: 'banner', id: 'standarte', text: 'Banner „Kriegsstandarte“' },
+  { lvl: 9, kind: 'title', text: 'Titel „Kriegsfürst“' },
+  { lvl: 10, kind: 'title', text: 'Titel „Legende“ + goldener Rahmen' },
+];

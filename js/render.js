@@ -6,6 +6,7 @@
   const INK = '#1b1410';
   let canvas, ctx, dpr = 1, ground = null, groundScale = 0.5;
   R.cam = { x: 0, y: 0, z: 1 };
+  R.touch = typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0);
   R.mouse = { x: 0, y: 0, wx: 0, wy: 0, inside: false };
 
   R.init = function (c) {
@@ -17,7 +18,7 @@
   };
   R.ready = () => !!canvas;
   function resize() {
-    dpr = Math.min(2, window.devicePixelRatio || 1);
+    dpr = Math.min(R.touch ? 1.5 : 2, window.devicePixelRatio || 1);
     canvas.width = Math.floor(canvas.clientWidth * dpr);
     canvas.height = Math.floor(canvas.clientHeight * dpr);
   }
@@ -361,6 +362,20 @@
     label('Goldader', x, y + 34, '#ffe066', 10);
   }
 
+  // Banner in Spielerfarbe (Form je nach freigeschaltetem Banner)
+  function drawBanner(p, pal, fx, fy, ph) {
+    const w = Math.sin(ph) * 1.5;
+    ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(fx, fy + 16); ctx.lineTo(fx, fy - 8); ctx.stroke();
+    ctx.beginPath();
+    if (p.banner === 'wimpel') {
+      ctx.moveTo(fx, fy - 8); ctx.lineTo(fx + 15, fy - 6 + w); ctx.lineTo(fx + 9, fy - 2 + w); ctx.lineTo(fx + 15, fy + 2 + w); ctx.lineTo(fx, fy + 3);
+    } else if (p.banner === 'standarte') {
+      ctx.moveTo(fx - 1, fy - 8); ctx.lineTo(fx + 11, fy - 8 + w * 0.5); ctx.lineTo(fx + 11, fy + 6 + w); ctx.lineTo(fx + 5, fy + 3 + w); ctx.lineTo(fx - 1, fy + 6);
+    } else { ctx.moveTo(fx, fy - 6); ctx.lineTo(fx + 12, fy - 2 + w); ctx.lineTo(fx, fy + 3); }
+    ctx.closePath(); ctx.fillStyle = p.color; ctx.fill(); outline(1.5);
+    if (p.banner === 'standarte') { circ(fx + 5, fy - 1 + w * 0.5, 2.5, pal.trim, 1); circ(fx, fy - 10, 2.2, '#ffd23a', 1); }
+  }
+
   // -------------------------------------------------------------------------
   // Gebäude
   function drawBuilding(b) {
@@ -414,10 +429,7 @@
         ctx.restore();
       }
     }
-    const fx = x + hs - 8, fy = y - hs * (b.size === 1 ? 1.4 : 1.0);
-    ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(fx, fy + 16); ctx.lineTo(fx, fy - 6); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(fx, fy - 6); ctx.lineTo(fx + 12, fy - 2 + Math.sin(S.time * 4 + b.id) * 1.5); ctx.lineTo(fx, fy + 3); ctx.closePath();
-    ctx.fillStyle = p.color; ctx.fill(); outline(1.5);
+    drawBanner(p, pal, x + hs - 8, y - hs * (b.size === 1 ? 1.4 : 1.0), S.time * 4 + b.id);
     ctx.restore();
 
     if (constructing) {

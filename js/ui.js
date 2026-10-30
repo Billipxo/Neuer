@@ -28,7 +28,7 @@
     return G.RACE_KEYS.map((k) => {
       const r = G.RACES[k], lvl = Prof().raceLevel(k);
       return `<button class="card race ${c.race === k ? 'sel' : ''}" data-act="m-race" data-v="${k}" style="--rc:${r.color};--rd:${r.dark}">
-        <div class="crest" style="background:${r.color}"><span>${r.name[0]}</span></div><span class="lvlbadge">Stufe ${lvl}</span>
+        <div class="crest" style="background:${r.color}"><span>${r.name[0]}</span></div><span class="lvlbadge">Stufe ${lvl} · ${G.titleFor(lvl)}</span>
         <h3>${r.name}</h3><p>${r.desc}</p>
         <div class="kv"><b>Passiv:</b> ${r.passive.name} – ${r.passive.desc}</div>
         <div class="kv"><b>Volksfähigkeiten:</b> ${r.abilities.map((a) => a.name).join(' · ')}</div>
@@ -41,11 +41,12 @@
     if (c.race === 'zufall') return '<p class="note">Bei zufälligem Volk wird auch der Held zufällig bestimmt.</p>';
     const rd = G.RACES[c.race];
     if (c.hero !== 'zufall' && !rd.heroes.find((h) => h.id === c.hero)) c.hero = rd.heroes[0].id;
-    return rd.heroes.map((h) => `<button class="card hero ${c.hero === h.id ? 'sel' : ''}" data-act="m-hero" data-v="${h.id}" style="--rc:${rd.color};--rd:${rd.dark}">
+    if (c.hero !== 'zufall' && !Prof().heroUnlocked(c.race, rd.heroes.find((h) => h.id === c.hero))) c.hero = rd.heroes[0].id;
+    return rd.heroes.map((h) => { const ok = Prof().heroUnlocked(c.race, h); return `<button class="card hero ${c.hero === h.id ? 'sel' : ''} ${ok ? '' : 'locked'}" data-act="m-hero" data-v="${h.id}" ${ok ? '' : `disabled title="Freischaltung ab Volksstufe ${G.UNLOCK_HERO_LVL}"`} style="--rc:${rd.color};--rd:${rd.dark}">${ok ? '' : `<span class="lvlbadge">🔒 ab Volksstufe ${G.UNLOCK_HERO_LVL}</span>`}
         <div class="crest small" style="background:${rd.color}"><span>${h.name.split(' ').pop()[0]}</span></div>
         <h3>${h.name}</h3><div class="sub">${h.title} · ${h.ranged ? 'Fernkampf' : 'Nahkampf'}</div>
         <div class="kv"><b>Commander-Bonus:</b> ${h.bonusDesc}</div>
-        <div class="kv"><b>Fähigkeiten:</b> ${h.abilities.map((a) => a.name).join(', ')}</div></button>`).join('')
+        <div class="kv"><b>Fähigkeiten:</b> ${h.abilities.map((a) => a.name).join(', ')}</div></button>`; }).join('')
       + `<button class="card hero ${c.hero === 'zufall' ? 'sel' : ''}" data-act="m-hero" data-v="zufall" style="--rc:#888;--rd:#333"><div class="crest small" style="background:#777"><span>?</span></div><h3>Zufälliger Held</h3></button>`;
   }
   function skinRow(c) {
@@ -54,6 +55,9 @@
     return `<div class="skins"><b>Skin:</b> ${G.SKINS.map((s) => {
       const ok = Prof().skinUnlocked(c.race, s.id);
       return `<button class="chip ${cur === s.id ? 'sel' : ''}" data-act="m-skin" data-v="${s.id}" ${ok ? '' : `disabled title="Freischaltung ab Volksstufe ${s.lvl}"`}>${ok ? '' : '🔒 '}${s.name}</button>`;
+    }).join('')} <b>Banner:</b> ${G.BANNERS.map((bn) => {
+      const ok = Prof().bannerUnlocked(c.race, bn.id), curB = Prof().data.banner[c.race] || 'standard';
+      return `<button class="chip ${curB === bn.id ? 'sel' : ''}" data-act="m-banner" data-v="${bn.id}" ${ok ? '' : `disabled title="Freischaltung ab Volksstufe ${bn.lvl}"`}>${ok ? '' : '🔒 '}${bn.name}</button>`;
     }).join('')}</div>`;
   }
 
@@ -74,24 +78,33 @@
       </section>
       <div class="start-row"><button class="big" data-act="m-start">⚔ Schlacht beginnen</button></div>`;
     } else if (UI.menuTab === 'kampagne') {
-      const ms = G.CAMPAIGN, sel = ms[UI.mission];
-      body += `<section><h2>Die Funkenkriege</h2><div class="campaign">
+      if (c.race === 'zufall') c.race = 'menschen';
+      const camp = G.CAMPAIGNS[c.race], ms = camp.missions;
+      if (UI.mission >= ms.length) UI.mission = 0;
+      const sel = ms[UI.mission];
+      const done = ms.filter((m, i) => Prof().missionDone(c.race, i)).length;
+      body += `<section><h2>Wähle die Kampagne deines Volkes</h2><div class="chips campraces">${G.RACE_KEYS.map((k) => {
+          const n = G.CAMPAIGNS[k].missions.filter((m, i) => Prof().missionDone(k, i)).length;
+          return `<button class="chip ${c.race === k ? 'sel' : ''}" data-act="m-craces" data-v="${k}" style="border-color:${G.RACES[k].color}">${G.RACES[k].name} <small>${n}/5</small></button>`;
+        }).join('')}</div></section>
+        <section><h2>${G.RACES[c.race].name}: ${camp.title} <small>(${done}/5)</small></h2><p class="story">${camp.intro}</p><div class="campaign">
         <div class="mlist">${ms.map((m, i) => {
-          const ok = Prof().missionUnlocked(i), done = Prof().data.campaign.done[m.id];
-          return `<button class="mission ${UI.mission === i ? 'sel' : ''}" data-act="m-mission" data-v="${i}" ${ok ? '' : 'disabled'}><span>${done ? '✔' : ok ? '⚔' : '🔒'}</span> ${i + 1}. ${m.title}</button>`;
+          const ok = Prof().missionUnlocked(c.race, i), dn = Prof().missionDone(c.race, i);
+          return `<button class="mission ${UI.mission === i ? 'sel' : ''}" data-act="m-mission" data-v="${i}" ${ok ? '' : 'disabled'}><span>${dn ? '✔' : ok ? '⚔' : '🔒'}</span> ${i + 1}. ${m.title}</button>`;
         }).join('')}</div>
         <div class="brief"><h3>${UI.mission + 1}. ${sel.title}</h3><p class="story">${sel.story}</p><p><b>Ziel:</b> ${sel.goal}</p>
-          <p class="note">Modus: ${G.LAYOUTS[sel.cfg.mode].name} · Schwierigkeit: ${G.DIFFICULTY[sel.cfg.difficulty].name} · ${sel.cfg.duration} Minuten</p></div></div></section>
-        <section><h2>Dein Volk für diese Mission</h2><div class="grid races">${raceCards(c)}</div>${skinRow(c)}</section>
-        <section><h2>Dein Held</h2><div class="grid heroes">${heroCards(c)}</div></section>
-        <div class="start-row"><button class="big" data-act="m-campaign" ${Prof().missionUnlocked(UI.mission) ? '' : 'disabled'}>⚔ Mission starten</button></div>`;
+          <p class="note">Modus: ${G.LAYOUTS[sel.cfg.mode].name} · Schwierigkeit: ${G.DIFFICULTY[sel.cfg.difficulty].name} · ${sel.cfg.duration} Minuten · Karte: ${G.THEMES[sel.cfg.map].name}</p>
+          <button class="big" data-act="m-campaign" ${Prof().missionUnlocked(c.race, UI.mission) ? '' : 'disabled'}>⚔ Mission starten</button></div></div>${skinRow(c)}</section>
+        <section><h2>Dein Held</h2><div class="grid heroes">${heroCards(c)}</div></section>`;
     } else if (UI.menuTab === 'voelker') {
-      body += `<section><h2>Volks-Erfahrung</h2><p class="note">Jede Partie bringt deinem gespielten Volk Erfahrung (mehr bei Siegen, höherer Schwierigkeit und in der Kampagne). Mit steigender Volksstufe schaltest du Skins frei.</p>
+      body += `<section><h2>Volks-Erfahrung</h2><p class="note">Jede Partie bringt deinem gespielten Volk Erfahrung (mehr bei Siegen, höherer Schwierigkeit und in der Kampagne). Mit steigender Volksstufe schaltest du Skins, Banner, Titel und einen vierten Helden frei.</p>
         <div class="grid races">${G.RACE_KEYS.map((k) => {
           const r = G.RACES[k], xp = Prof().data.xp[k] || 0, l = Prof().raceLevel(k), a = Prof().xpFor(l), b = Prof().xpFor(l + 1);
           return `<div class="card race" style="--rc:${r.color}"><div class="crest" style="background:${r.color}"><span>${r.name[0]}</span></div>
             <h3>${r.name} – Stufe ${l}</h3><div class="xpbar"><div style="width:${Math.floor(100 * (xp - a) / (b - a))}%"></div></div><small>${fmt(xp)} / ${fmt(b)} XP</small>
-            <div class="skinlist">${G.SKINS.map((s) => `<div class="skin ${l >= s.lvl ? 'ok' : ''}"><span class="sw" style="${swatch(k, s.id)}"></span>${s.name}<small>${l >= s.lvl ? (s.desc || 'Standardaussehen') : 'ab Stufe ' + s.lvl}</small></div>`).join('')}</div></div>`;
+            <div class="kv">Titel: <b>${G.titleFor(l)}</b></div>
+            <div class="skinlist">${G.SKINS.map((s) => `<div class="skin ${l >= s.lvl ? 'ok' : ''}"><span class="sw" style="${swatch(k, s.id)}"></span>${s.name}<small>${l >= s.lvl ? (s.desc || 'Standardaussehen') : 'ab Stufe ' + s.lvl}</small></div>`).join('')}</div>
+            <div class="rewards">${G.REWARDS.map((rw) => `<div class="rw ${l >= rw.lvl ? 'ok' : ''}"><span>${l >= rw.lvl ? '✔' : rw.lvl}</span>${rw.kind === 'hero' ? 'Held: ' + r.heroes.find((h) => h.unlock).name : rw.text}</div>`).join('')}</div></div>`;
         }).join('')}</div><p class="note">Partien gesamt: ${Prof().data.games} · Siege: ${Prof().data.wins}</p></section>`;
     } else {
       const s = Prof().data.settings;
@@ -118,9 +131,10 @@
     const cfg = { ...UI.cfg, ...(extra || {}) };
     if (cfg.race === 'zufall') cfg.hero = 'zufall';
     cfg.skin = cfg.race === 'zufall' ? 'standard' : (Prof().data.skin[cfg.race] || 'standard');
+    cfg.banner = cfg.race === 'zufall' ? 'standard' : (Prof().data.banner[cfg.race] || 'standard');
     UI.lastCfg = cfg;
     const S = G.newGame(cfg);
-    if (cfg.race === 'zufall') { const r = S.players[0].race; S.players[0].skin = Prof().data.skin[r] || 'standard'; }
+    if (cfg.race === 'zufall') { const r = S.players[0].race; S.players[0].skin = Prof().data.skin[r] || 'standard'; S.players[0].banner = Prof().data.banner[r] || 'standard'; }
     G.R.buildGround(S);
     $('#menu').classList.add('hidden');
     $('#end').classList.add('hidden');
@@ -131,11 +145,13 @@
       G.R.init($('#view'));
       const mm = $('#minimap');
       const W = 210; mm.width = W; mm.height = Math.round(W * S.h / S.w);
-      G.R.centerOn(me().base.x + me().dir.x * 200, me().base.y);
+      G.R.centerOn(me().base.x + me().dir.x * 150, me().base.y);
     });
     UI.selected = null; UI.placing = null; UI.casting = null; UI.pickTarget = false;
     UI.tab = 'bauen'; UI.awarded = null;
-    if (cfg.mission) G.msg(`Mission: ${G.CAMPAIGN.find((m) => m.id === cfg.mission).goal}`, 'gold');
+    document.body.classList.remove('panel-open');
+    if (G.R.touch) { G.R.cam.z = 0.8; G.msg('Wischen: Karte bewegen · Zwei Finger: Zoom · Tippen: Auswählen · ☰: Menü · Lange drücken: Held bewegen (manuell)', ''); }
+    if (cfg.mission) G.msg(`Mission: ${Prof().findMission(cfg.mission).m.goal}`, 'gold');
     renderPanel(true);
   };
 
@@ -324,6 +340,7 @@
       const why = G.raceAbilityCheck(p, i);
       return `<button class="race-btn" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.desc)}"><b>${i + 1}${i === 0 ? '/R' : ''}: ${ab.name}</b><small>${why || 'Bereit!'}</small></button>`;
     }).join('');
+    renderQuick(p);
     const tabs = [['bauen', 'Bauen'], ['armee', 'Armee'], ['held', 'Held'], ['volk', 'Volk' + (p.talentPoints ? ' ★' : '')], ['haendler', 'Händler'], ['wirtschaft', 'Wirtsch.']];
     $('#tabs').innerHTML = tabs.map(([k, n]) => `<button class="${UI.tab === k ? 'sel' : ''}" data-act="tab" data-v="${k}">${n}</button>`).join('');
     const fn = { bauen: tabBauen, armee: tabArmee, held: tabHeld, volk: tabVolk, haendler: tabHaendler, wirtschaft: tabWirtschaft }[UI.tab];
@@ -334,6 +351,18 @@
     renderSelection();
   }
   UI.renderPanel = renderPanel;
+  const isMobile = () => window.matchMedia('(max-width: 900px), (max-height: 560px)').matches;
+  function renderQuick(p) {
+    const h = p.hero;
+    let q = p.rd.abilities.map((ab, i) => {
+      const why = G.raceAbilityCheck(p, i);
+      const short = ab.name.split(/[ -]/)[0].slice(0, 9);
+      return `<button class="qr" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.name + ': ' + ab.desc)}">${short}<small>${why ? (p.th.level < ab.th ? '🔒' : Math.ceil(p.abCd[i]) + ' s') : 'bereit'}</small></button>`;
+    }).join('');
+    q += h.abilities.map((a, i) => `<button data-act="cast" data-idx="${i}" ${a.t > 0 || h.dead ? 'disabled' : ''} title="${esc(a.name)}">${a.name.split(/[ -]/)[0].slice(0, 9)}<small>${h.dead ? 'Held tot' : a.t > 0 ? Math.ceil(a.t) + ' s' : 'Held'}</small></button>`).join('');
+    q += `<button class="qa" data-act="launch" ${p.poolSupply ? '' : 'disabled'}>⚔ Angriff<small>${p.poolSupply} Vers.</small></button>`;
+    $('#quick').innerHTML = q;
+  }
 
   // -------------------------------------------------------------------------
   // Auswahl-Fenster
@@ -402,26 +431,27 @@
     const S = G.S, p = me(), o = S.over;
     if (!UI.awarded) UI.awarded = Prof().award(S);
     const a = UI.awarded;
-    const mission = S.cfg.mission ? G.CAMPAIGN.findIndex((m) => m.id === S.cfg.mission) : -1;
+    const fm = S.cfg.mission ? Prof().findMission(S.cfg.mission) : null;
+    const hasNext = fm && fm.index + 1 < 5;
     $('#end').classList.remove('hidden');
     $('#end-body').innerHTML = `<h1 class="${o.win ? 'win' : 'lose'}">${o.win ? 'Sieg!' : 'Niederlage'}</h1>
       <p>${o.reason || (o.byTime ? (o.win ? 'Die Zeit ist abgelaufen – dein Team liegt nach Punkten vorn.' : 'Die Zeit ist abgelaufen – der Gegner liegt nach Punkten vorn.') : o.win ? 'Alle gegnerischen Völker wurden bezwungen.' : 'Dein Haupthaus ist gefallen.')}</p>
       ${o.scores ? `<div class="stats">${o.scores.map((x) => `<span style="color:${x.color}">${x.name} <b>${x.score}</b></span>`).join('')}</div>` : ''}
       <div class="stats"><span>Spielzeit <b>${fmtTime(o.time)}</b></span><span>Besiegte Gegner <b>${p.stats.kills}</b></span><span>Verlorene Einheiten <b>${p.stats.lost}</b></span><span>Heldenstufe <b>${p.hero.level}</b></span></div>
       <div class="xpgain">+${a.xp} Volks-XP für ${G.RACES[a.race].name}${a.after > a.before ? ` – <b>Stufe ${a.after} erreicht!</b>` : ` (Stufe ${a.after})`}
-      ${a.unlocked.map((s) => `<div class="good">Neuer Skin freigeschaltet: ${s.name}</div>`).join('')}
-      ${a.missionNew ? `<div class="good">Mission abgeschlossen!${mission + 1 < G.CAMPAIGN.length ? ' Nächste Mission freigeschaltet.' : ' Kampagne gemeistert!'}</div>` : ''}</div>
+      ${a.unlocked.map((rw) => `<div class="good">Freigeschaltet: ${rw.kind === 'hero' ? 'Held ' + G.RACES[a.race].heroes.find((h) => h.unlock).name : rw.text}</div>`).join('')}
+      ${a.missionNew ? `<div class="good">Mission abgeschlossen!${hasNext ? ' Nächste Mission freigeschaltet.' : ` Kampagne „${G.CAMPAIGNS[fm.race].title}“ gemeistert!`}</div>` : ''}</div>
       <button class="big" data-act="menu">Zum Hauptmenü</button> <button class="big" data-act="again">${S.cfg.mission ? 'Mission wiederholen' : 'Revanche (neue Gegner)'}</button>
-      ${a.missionNew && mission + 1 < G.CAMPAIGN.length ? '<button class="big" data-act="nextmission">Nächste Mission</button>' : ''}`;
+      ${o.win && hasNext ? '<button class="big" data-act="nextmission">Nächste Mission</button>' : ''}`;
   }
 
   // -------------------------------------------------------------------------
   // Aktionen
   function findEnt(id) { return G.S.ents.find((e) => e.id === +id); }
-  function startMission(i) {
-    const m = G.CAMPAIGN[i];
-    UI.mission = i;
-    UI.startGame({ ...m.cfg, map: m.cfg.map || 'heimat', mission: m.id });
+  function startMission(race, i) {
+    const m = G.CAMPAIGNS[race].missions[i];
+    UI.mission = i; UI.cfg.race = race;
+    UI.startGame({ ...m.cfg, race, map: m.cfg.map || 'heimat', mission: m.id });
   }
   function act(el) {
     const a = el.dataset.act, v = el.dataset.v;
@@ -437,15 +467,19 @@
       case 'm-dur': UI.cfg.duration = +v; renderMenu(); return;
       case 'm-mission': UI.mission = +v; renderMenu(); return;
       case 'm-start': UI.startGame(); return;
-      case 'm-campaign': startMission(UI.mission); return;
+      case 'm-campaign': startMission(UI.cfg.race, UI.mission); return;
+      case 'm-craces': UI.cfg.race = v; UI.cfg.hero = null; UI.mission = 0; renderMenu(); return;
+      case 'm-banner': Prof().data.banner[UI.cfg.race] = v; Prof().save(); renderMenu(); return;
       case 'm-set': Prof().data.settings[el.dataset.key] = el.checked; Prof().save(); Prof().applySettings(); return;
       case 'm-testsound': G.Audio.init(); G.Audio.apply(); setTimeout(() => { G.sfx('schwert', 0, 0, 1, true); setTimeout(() => G.sfx('tod', 0, 0, 1, true), 250); setTimeout(() => G.sfx('horn', 0, 0, 1, true), 700); }, 100); return;
-      case 'm-reset': if (confirm('Gesamten Fortschritt (Volks-XP, Skins, Kampagne) löschen?')) { Prof().reset(); renderMenu(); } return;
-      case 'again': if (UI.lastCfg.mission) startMission(G.CAMPAIGN.findIndex((m) => m.id === UI.lastCfg.mission)); else UI.startGame(); return;
-      case 'nextmission': startMission(G.CAMPAIGN.findIndex((m) => m.id === UI.lastCfg.mission) + 1); return;
+      case 'm-reset': if (armed(el, 'Wirklich alles löschen? Nochmal tippen')) { Prof().reset(); renderMenu(); } return;
+      case 'again': if (UI.lastCfg.mission) { const f = Prof().findMission(UI.lastCfg.mission); startMission(f.race, f.index); } else UI.startGame(); return;
+      case 'nextmission': { const f = Prof().findMission(UI.lastCfg.mission); startMission(f.race, f.index + 1); return; }
       case 'menu': G.S = null; UI.showMenu(); return;
       case 'tab': UI.tab = v; break;
+      case 'panel': document.body.classList.toggle('panel-open'); return;
       case 'build': UI.placing = UI.placing === el.dataset.type ? null : el.dataset.type; UI.casting = null;
+        if (UI.placing && isMobile()) { document.body.classList.remove('panel-open'); G.msg('Tippe auf einen freien Platz in deiner Basis.', ''); G.R.centerOn(p.base.x, p.base.y); }
         if (UI.placing && G.BUILDINGS[UI.placing].outpost) G.msg('Klicke auf eine freie Goldader (gelb markiert) außerhalb deiner Basis.', '');
         break;
       case 'wall': G.upgradeWall(p); break;
@@ -460,7 +494,7 @@
       case 'armystyle': p.armyStyle = v; p.waveT = Math.min(p.waveT, p.waveInterval); p.armyT = 0; break;
       case 'launch': G.launchNow(p); break;
       case 'target': p.targetMode = v === 'auto' ? 'auto' : +v; p.manualPoint = null; p.armyT = 0; break;
-      case 'pickpoint': UI.pickTarget = true; G.msg('Linksklick auf die Karte: Angriffsziel festlegen.', ''); break;
+      case 'pickpoint': UI.pickTarget = true; document.body.classList.remove('panel-open'); G.msg('Tippe/klicke auf die Karte: Angriffsziel festlegen.', ''); break;
       case 'upgrade': if (UI.selected) G.upgradeBuilding(p, UI.selected); break;
       case 'upgradeid': { const b = findEnt(el.dataset.id); if (b) G.upgradeBuilding(p, b); break; }
       case 'selbld': { const b = findEnt(el.dataset.id); if (b) { UI.selected = b; G.R.centerOn(b.x, b.y); } break; }
@@ -486,16 +520,25 @@
       case 'centerhero': if (!p.hero.dead) G.R.centerOn(p.hero.x, p.hero.y); break;
       case 'centerbase': G.R.centerOn(p.base.x, p.base.y); break;
       case 'zoom': G.R.cam.z = G.clamp(G.R.cam.z * (+v), 0.35, 2.2); G.R.clampCam(); break;
-      case 'quit': if (confirm('Spiel wirklich beenden?')) { G.S = null; UI.showMenu(); } return;
+      case 'quit': if (armed(el, 'Beenden?')) { G.S = null; UI.showMenu(); } return;
     }
     renderPanel(true);
     if (S) renderTop();
+  }
+  // Bestätigung durch zweites Antippen (Browser-Dialoge sind nicht überall erlaubt)
+  function armed(el, text) {
+    if (el.dataset.armed) return true;
+    el.dataset.armed = '1';
+    const old = el.innerHTML;
+    el.innerHTML = text; el.classList.add('armed');
+    setTimeout(() => { if (el.isConnected) { delete el.dataset.armed; el.innerHTML = old; el.classList.remove('armed'); } }, 3000);
+    return false;
   }
   function castBtn(i) {
     const p = me(), h = p.hero, ab = h.abilities[i];
     if (!ab || h.dead) return;
     if (ab.type === 'heal' || ab.type === 'buff' || ab.type === 'summon' || ab.self) G.heroCastManual(p, i, h.x, h.y);
-    else { UI.casting = i; UI.placing = null; G.msg(`${ab.name}: Ziel mit Linksklick wählen (Rechtsklick bricht ab).`, ''); }
+    else { UI.casting = i; UI.placing = null; document.body.classList.remove('panel-open'); G.msg(`${ab.name}: Ziel antippen bzw. mit Linksklick wählen.`, ''); }
   }
 
   document.addEventListener('click', (ev) => {
@@ -549,28 +592,66 @@
   UI.bindInput = function () {
     const cv = $('#view');
     cv.addEventListener('contextmenu', (e) => e.preventDefault());
-    cv.addEventListener('pointermove', (ev) => {
+    const touches = new Map();
+    let pinch = null, longT = null;
+    const setMouse = (ev) => {
       const r = cv.getBoundingClientRect();
-      G.R.mouse.x = ev.clientX - r.left; G.R.mouse.y = ev.clientY - r.top; G.R.mouse.inside = true;
+      G.R.mouse.x = ev.clientX - r.left; G.R.mouse.y = ev.clientY - r.top;
       const w = G.R.toWorld(G.R.mouse.x, G.R.mouse.y); G.R.mouse.wx = w.x; G.R.mouse.wy = w.y;
+    };
+    const pinchState = () => { const [a, b] = [...touches.values()]; return { d: Math.hypot(a.x - b.x, a.y - b.y), mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2 }; };
+    cv.addEventListener('pointermove', (ev) => {
+      setMouse(ev);
+      G.R.mouse.inside = ev.pointerType === 'mouse';
+      if (touches.has(ev.pointerId)) touches.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
+      if (pinch && touches.size === 2) {
+        const st = pinchState(), R = G.R, r = cv.getBoundingClientRect();
+        const z1 = G.clamp(pinch.z * st.d / pinch.d, 0.35, 2.2);
+        const sx = st.mx - r.left, sy = st.my - r.top;
+        R.cam.z = z1; R.cam.x = pinch.wx - sx / z1; R.cam.y = pinch.wy - sy / z1; R.clampCam();
+        return;
+      }
       if (drag) {
         const dx = ev.clientX - drag.sx, dy = ev.clientY - drag.sy;
-        if (Math.abs(dx) + Math.abs(dy) > 6) drag.moved = true;
+        if (Math.abs(dx) + Math.abs(dy) > (ev.pointerType === 'mouse' ? 6 : 12)) { drag.moved = true; clearTimeout(longT); }
         if (drag.moved) { G.R.cam.x = drag.cx - dx / G.R.cam.z; G.R.cam.y = drag.cy - dy / G.R.cam.z; G.R.clampCam(); }
       }
     });
     cv.addEventListener('pointerleave', () => { G.R.mouse.inside = false; });
     cv.addEventListener('pointerdown', (ev) => {
       if (!G.S) return;
-      if (ev.button === 0 || ev.button === 1) { drag = { sx: ev.clientX, sy: ev.clientY, cx: G.R.cam.x, cy: G.R.cam.y, moved: false, button: ev.button, shift: ev.shiftKey }; cv.setPointerCapture(ev.pointerId); }
+      setMouse(ev);
+      if (ev.pointerType !== 'mouse') {
+        touches.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
+        if (touches.size === 2) { // Zwei Finger: Zoom statt Ziehen
+          clearTimeout(longT); drag = null;
+          const st = pinchState(), r = cv.getBoundingClientRect();
+          const w = G.R.toWorld(st.mx - r.left, st.my - r.top);
+          pinch = { d: st.d || 1, z: G.R.cam.z, wx: w.x, wy: w.y };
+          return;
+        }
+      }
+      if (ev.button === 0 || ev.button === 1) {
+        drag = { sx: ev.clientX, sy: ev.clientY, cx: G.R.cam.x, cy: G.R.cam.y, moved: false, button: ev.button, shift: ev.shiftKey, long: false };
+        try { cv.setPointerCapture(ev.pointerId); } catch (e) { /* egal */ }
+        if (ev.pointerType !== 'mouse') {
+          clearTimeout(longT);
+          longT = setTimeout(() => { if (drag && !drag.moved) { drag.long = true; rightClick(); if (navigator.vibrate) navigator.vibrate(30); } }, 480);
+        }
+      }
       if (ev.button === 2) rightClick();
     });
-    cv.addEventListener('pointerup', () => {
+    const endPointer = (ev) => {
+      touches.delete(ev.pointerId);
+      if (pinch) { if (touches.size < 2) pinch = null; drag = null; return; }
+      clearTimeout(longT);
       if (!drag) return;
       const d = drag; drag = null;
-      if (d.moved || d.button !== 0) return;
+      if (d.moved || d.long || d.button !== 0) return;
       leftClick(d.shift);
-    });
+    };
+    cv.addEventListener('pointerup', endPointer);
+    cv.addEventListener('pointercancel', (ev) => { touches.delete(ev.pointerId); pinch = null; drag = null; clearTimeout(longT); });
     cv.addEventListener('wheel', (ev) => {
       ev.preventDefault();
       const R = G.R, z0 = R.cam.z;
@@ -629,13 +710,14 @@
     if (UI.casting !== null) { G.heroCastManual(p, UI.casting, wx, wy); UI.casting = null; renderPanel(true); return; }
     if (UI.pickTarget) { setManualPoint(wx, wy); return; }
     UI.selected = pickAt(wx, wy);
+    if (isMobile()) document.body.classList.remove('panel-open');
     renderPanel(true);
   }
   function rightClick() {
     const p = me();
     if (UI.placing || UI.casting !== null || UI.pickTarget) { UI.placing = null; UI.casting = null; UI.pickTarget = false; renderPanel(true); return; }
     if (p.hero.manual && !p.hero.dead) G.heroCommand(p, G.R.mouse.wx, G.R.mouse.wy);
-    else if (!p.hero.dead) G.msg('Taste H: manuelle Heldensteuerung aktivieren, dann Rechtsklick zum Bewegen.', '');
+    else if (!p.hero.dead) G.msg(G.R.touch ? 'Im Held-Tab „Manuelle Steuerung“ einschalten, dann lange drücken zum Bewegen.' : 'Taste H: manuelle Heldensteuerung aktivieren, dann Rechtsklick zum Bewegen.', '');
   }
 
   UI.updateCamera = function (dt) {
