@@ -8,6 +8,10 @@
   const costHtml = (c) => `<span class="c-g">${fmt(c.g)}</span> <span class="c-w">${fmt(c.w)}</span>`;
   const me = () => G.S.players[0];
   const esc = (s) => String(s).replace(/"/g, '&quot;');
+  // Nur neu schreiben, wenn sich der Inhalt geändert hat (spart Arbeit, Animationen laufen ungestört weiter)
+  const setHTML = (el, html) => { if (el._h !== html) { el.innerHTML = html; el._h = html; } };
+  // Leucht-Animation bereiter Knöpfe an einer gemeinsamen Uhr ausrichten, damit Neuaufbau sie nicht neu startet
+  const glowSync = () => `animation-delay:-${((performance.now() / 1000) % 2.2).toFixed(2)}s`;
   const Prof = () => G.Profile;
 
   // Wappen je Volk (einfarbig, übernimmt die Textfarbe)
@@ -151,6 +155,7 @@
         <label>Geräusche <input type="range" min="0" max="100" value="${Math.round(s.sfx * 100)}" data-slider="sfxvol"></label>
         <label class="tgl"><input type="checkbox" data-act="m-set" data-key="muted" ${s.muted ? 'checked' : ''}><span></span>Ton aus</label>
         <label class="tgl"><input type="checkbox" data-act="m-set" data-key="blood" ${s.blood ? 'checked' : ''}><span></span>Blut und Gefallene anzeigen</label>
+        <label class="tgl"><input type="checkbox" data-act="m-set" data-key="effects" ${s.effects !== false ? 'checked' : ''}><span></span>Aufwendige Effekte (Wetter, Kamerawackeln, Geschossspuren) – auf schwachen Handys ausschalten</label>
         <button data-act="m-testsound">Klangprobe</button>
         <button data-act="m-tutorial" ${Prof().data.tutorialDone ? '' : 'disabled'}>${Prof().data.tutorialDone ? 'Einführung im nächsten Spiel erneut zeigen' : 'Einführung wird im nächsten Spiel gezeigt'}</button>
         <p class="note">Profil und Fortschritt werden in diesem Browser gespeichert.</p>
@@ -250,7 +255,7 @@
   function renderTop() {
     const S = G.S, p = me();
     const busy = G.buildersBusy(p), bmax = G.builders(p);
-    $('#top-res').innerHTML = `
+    setHTML($('#top-res'), `
       <span class="realm" title="${esc(p.rd.name + ' – ' + Prof().title(p.race))}">${emblem(p.race)}${p.rd.name}<small>${Prof().title(p.race)}</small></span>
       <span class="res gold" title="Gold">${ico('gold')}${fmt(p.gold)} <small>+${p.incomeG.toFixed(1)}/s</small></span>
       <span class="res wood" title="Holz">${ico('wood')}${fmt(p.wood)} <small>+${p.incomeW.toFixed(1)}/s</small></span>
@@ -259,7 +264,7 @@
       <span class="res" title="Baumeister">${ico('builder')}${busy}/${bmax}</span>
       <span class="res" title="${esc(G.bname(p.race, 'haupthaus'))}-Stufe">${ico('castle')}${p.th.level}</span>
       ${p.talentPoints ? `<span class="res tp" title="Talentpunkte im Tab „Volk“ verteilen">${ico('star')}${p.talentPoints}</span>` : ''}
-      <span class="res time ${S.endphase ? 'endphase' : ''}" title="${S.limit ? 'Verbleibende Spielzeit' : 'Spielzeit'}">${ico('time')}${S.limit ? fmtTime(G.timeLeft()) + (S.endphase ? ' · ENDPHASE' : '') : fmtTime(S.time)}</span>`;
+      <span class="res time ${S.endphase ? 'endphase' : ''}" title="${S.limit ? 'Verbleibende Spielzeit' : 'Spielzeit'}">${ico('time')}${S.limit ? fmtTime(G.timeLeft()) + (S.endphase ? ' · ENDPHASE' : '') : fmtTime(S.time)}</span>`);
     document.querySelectorAll('[data-act="speed"]').forEach((b) => b.classList.toggle('sel', !S.paused && +b.dataset.v === S.speed));
     $('[data-act="pause"]').classList.toggle('sel', S.paused);
     $('[data-act="mute"]').textContent = G.Audio && G.Audio.muted ? '🔇' : '🔊';
@@ -438,15 +443,15 @@
     const S = G.S; if (!S) return;
     if (!force && UI.pointerDownPanel) return;
     const p = me();
-    $('#panelhead').innerHTML = `${emblem(p.race)}<div><div class="ph-name">${p.rd.name}</div><small>${Prof().title(p.race)} · ${p.heroDef.name}</small></div>`;
-    $('#race-ab').innerHTML = p.rd.abilities.map((ab, i) => {
+    setHTML($('#panelhead'), `${emblem(p.race)}<div><div class="ph-name">${p.rd.name}</div><small>${Prof().title(p.race)} · ${p.heroDef.name}</small></div>`);
+    setHTML($('#race-ab'), p.rd.abilities.map((ab, i) => {
       const why = G.raceAbilityCheck(p, i);
       const cdf = p.th.level >= ab.th && p.abCd[i] > 0 ? Math.min(1, p.abCd[i] / (ab.cd * (1 - (p.teco.abilityCdr || 0)))) : 0;
-      return `<button class="race-btn" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.desc)}"><span class="cdfill" style="width:${Math.round(cdf * 100)}%"></span><b>${i + 1}${i === 0 ? '/R' : ''}: ${ab.name}</b><small>${why || 'Bereit!'}</small></button>`;
-    }).join('');
+      return `<button class="race-btn" style="${why ? '' : glowSync()}" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.desc)}"><span class="cdfill" style="width:${Math.round(cdf * 100)}%"></span><b>${i + 1}${i === 0 ? '/R' : ''}: ${ab.name}</b><small>${why || 'Bereit!'}</small></button>`;
+    }).join(''));
     renderQuick(p);
     const tabs = [['bauen', 'Bauen'], ['armee', 'Armee'], ['held', 'Held'], ['volk', 'Volk' + (p.talentPoints ? ' ★' : '')], ['haendler', 'Händler'], ['wirtschaft', 'Wirtsch.']];
-    $('#tabs').innerHTML = tabs.map(([k, n]) => `<button class="${UI.tab === k ? 'sel' : ''}" data-act="tab" data-v="${k}">${n}</button>`).join('');
+    setHTML($('#tabs'), tabs.map(([k, n]) => `<button class="${UI.tab === k ? 'sel' : ''}" data-act="tab" data-v="${k}">${n}</button>`).join(''));
     const fn = { bauen: tabBauen, armee: tabArmee, held: tabHeld, volk: tabVolk, haendler: tabHaendler, wirtschaft: tabWirtschaft }[UI.tab];
     const body = $('#tab-body');
     const st = body.scrollTop;
@@ -472,7 +477,7 @@
       <div class="hc-info"><div class="hc-name"><b>${d.name.split(' ').pop()}</b> St. ${h.level}${p.talentPoints ? ' <span class="tp">★</span>' : ''}</div>
       ${h.dead ? `<div class="hc-dead">Wiederbelebung in ${Math.ceil(p.heroRespawn)} s</div>` : `<div class="hc-bar hp"><div style="width:${Math.max(0, 100 * h.hp / h.maxHp)}%"></div></div>`}
       <div class="hc-bar xp"><div style="width:${xpPct}%"></div></div></div></div>
-      <div class="hc-btns">${h.abilities.map((a, i) => `<button class="cd" style="--cd:${a.t > 0 ? Math.min(1, a.t / (a.cd * (1 - h.cdr))).toFixed(3) : 0}" data-act="cast" data-idx="${i}" ${a.t > 0 || h.dead ? 'disabled' : ''} title="${esc(a.name + ' – ' + abilityDesc(a))}">${G.R.touch ? '' : (i ? 'E ' : 'Q ')}${a.name.split(/[ -]/)[0].slice(0, 8)}<small>${a.t > 0 ? Math.ceil(a.t) + ' s' : 'bereit'}</small></button>`).join('')}
+      <div class="hc-btns">${h.abilities.map((a, i) => `<button class="cd" style="--cd:${a.t > 0 ? Math.min(1, a.t / (a.cd * (1 - h.cdr))).toFixed(3) : 0};${a.t > 0 ? '' : glowSync()}" data-act="cast" data-idx="${i}" ${a.t > 0 || h.dead ? 'disabled' : ''} title="${esc(a.name + ' – ' + abilityDesc(a))}">${G.R.touch ? '' : (i ? 'E ' : 'Q ')}${a.name.split(/[ -]/)[0].slice(0, 8)}<small>${a.t > 0 ? Math.ceil(a.t) + ' s' : 'bereit'}</small></button>`).join('')}
         <button data-act="potion" ${potions && !h.dead ? '' : 'disabled'} title="Heiltrank trinken">🧪<small>${potions}×</small></button>
         <button data-act="retreat" ${h.dead ? 'disabled' : ''} title="Rückzug zur Basis">↩<small>Rückzug</small></button>
         <button data-act="follow" class="${UI.follow ? 'sel' : ''}" title="Kamera folgt dem Helden">🎥<small>${UI.follow ? 'folgt' : 'Kamera'}</small></button></div>
@@ -486,10 +491,10 @@
       const why = G.raceAbilityCheck(p, i);
       const short = ab.name.split(/[ -]/)[0].slice(0, 9);
       const cdf = p.th.level >= ab.th && p.abCd[i] > 0 ? Math.min(1, p.abCd[i] / (ab.cd * (1 - (p.teco.abilityCdr || 0)))) : 0;
-      return `<button class="qr cd" style="--cd:${cdf.toFixed(3)}" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.name + ': ' + ab.desc)}">${short}<small>${why ? (p.th.level < ab.th ? '🔒' : Math.ceil(p.abCd[i]) + ' s') : 'bereit'}</small></button>`;
+      return `<button class="qr cd" style="--cd:${cdf.toFixed(3)};${why ? '' : glowSync()}" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.name + ': ' + ab.desc)}">${short}<small>${why ? (p.th.level < ab.th ? '🔒' : Math.ceil(p.abCd[i]) + ' s') : 'bereit'}</small></button>`;
     }).join('');
     q += `<button class="qa" data-act="launch" ${p.poolSupply ? '' : 'disabled'}>⚔ Angriff<small>${p.poolSupply} Vers.</small></button>`;
-    $('#quick').innerHTML = q;
+    setHTML($('#quick'), q);
   }
 
   // -------------------------------------------------------------------------

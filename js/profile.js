@@ -8,7 +8,7 @@
     const xp = {}, skin = {};
     const banner = {};
     for (const r of G.RACE_KEYS) { xp[r] = 0; skin[r] = 'standard'; banner[r] = 'standard'; }
-    return { xp, skin, banner, campaign: { done: {} }, settings: { music: 0.5, sfx: 0.7, blood: true, muted: false }, tutorialDone: false, games: 0, wins: 0 };
+    return { xp, skin, banner, campaign: { done: {} }, settings: { music: 0.5, sfx: 0.7, blood: true, muted: false, effects: true }, tutorialDone: false, games: 0, wins: 0 };
   }
   P.data = fresh();
   P.load = function () {
@@ -26,6 +26,7 @@
   P.applySettings = function () {
     const s = P.data.settings;
     G.settings.blood = s.blood;
+    G.settings.effects = s.effects !== false;
     if (G.Audio) { G.Audio.music = s.music; G.Audio.sfx = s.sfx; G.Audio.muted = s.muted; G.Audio.apply(); }
   };
 

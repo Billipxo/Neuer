@@ -11,7 +11,7 @@ Auch am **Handy und Tablet** spielbar (Touch-Steuerung: Wischen = Karte bewegen,
 Tippen = auswählen/bauen, Held antippen und dann Ziel antippen = Held steuern, ☰ = Menü).
 Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http://localhost:8000` öffnen.
 
-## Was schon drin ist (Prototyp v0.9)
+## Was schon drin ist (Prototyp v1.0)
 
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
@@ -64,7 +64,12 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - **Musik** je Heimatkarte (live erzeugt, wird bei Kämpfen intensiver) und **Kampfgeräusche** (Klingen, Bögen, Magie,
   Explosionen, Todesschreie) – ohne Audiodateien, mit der Web-Audio-API synthetisiert.
 - **Gezeichnete Figuren** je Volk und Rolle (Rüstung, Helme, Kapuzen, Bärte, Hauer, Hörner, Totenschädel, Waffen, Schilde in Spielerfarbe), Tiere und Monster mit eigener Gestalt.
-- **Animationen:** Laufen, Ausfallschritte, Waffenschwünge, umfallende Gefallene, hämmernde Baumeister.
+- **Animationen:** Laufen, Atmen im Stand, Ausfallschritte, Waffenschwünge, Rückstoß bei Treffern, umfallende Gefallene,
+  hämmernde Baumeister. Bewegungen werden zwischen den Rechenschritten weich überblendet (flüssig bei 60 Bildern/s).
+- **Effekte:** Pfeile und Kanonenkugeln im Bogenflug mit Schatten und Spur, Klingenhiebe, Trefferfunken, Explosionen mit
+  Druckwelle/Feuer/Rauch, einstürzende Gebäude mit Trümmern, Kamerawackeln, Lichtsäulen (Stufenaufstieg, Beschwörung),
+  Heilkreuze, Runenkreise, brennende beschädigte Gebäude, Wetter je Karte (Schnee, Blätter, Pollen, Nebel, Staub, Asche)
+  und Wolkenschatten. Aufwendige Effekte lassen sich in den Einstellungen abschalten.
 - **Blut** (abschaltbar): Spritzer, Lachen, Leichen; Trümmer zerstörter Gebäude.
 - **Tiere passend zur Karte** (Hasen, Rehe, Krähen, Kröten, Geier, Füchse, Glühwürmchen, Fledermäuse …), die vor Truppen fliehen.
 

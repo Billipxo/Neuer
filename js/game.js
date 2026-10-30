@@ -67,6 +67,10 @@
   }
   function pay(p, c) { p.gold -= c.g; p.wood -= c.w; }
 
+  // Effekte: fx-Liste begrenzen; Kamerawackeln übernimmt die Darstellung (falls vorhanden)
+  function fx(o) { if (S.fx.length < 400) { o.t = 0; S.fx.push(o); } }
+  G.fx = fx;
+  G.shake = (x, y, amp) => { if (G.R && G.R.shake) G.R.shake(x, y, amp); };
   G.msg = function (text, cls) { if (!S) return; S.msgs.push({ text, t: S.time, cls: cls || '' }); if (S.msgs.length > 40) S.msgs.shift(); };
   const human = () => S.players[0];
 
@@ -445,6 +449,7 @@
         b.hp = Math.min(b.maxHp, b.hp + (b.maxHp - old));
         if (p.human) {
           G.msg(`${b.name} ${wasNew ? 'fertiggestellt' : 'auf Stufe ' + b.level + ' ausgebaut'}.`, 'good');
+          fx({ type: 'dust', x: b.x, y: b.y + b.r * 0.5, r: b.r * 1.2, dur: 0.9, seed: Math.random(), gold: true });
           if (b.type === 'haupthaus') G.msg(`${b.name} Stufe ${b.level}! Neue Gebäude und Stufen${b.level === 3 || b.level === 5 ? ' sowie eine Volksfähigkeit' : ''} freigeschaltet.`, 'gold');
           G.sfx('fertig', b.x, b.y);
         }
@@ -563,6 +568,7 @@
     if (G.hasTalentSpecial(p, 'veteranen')) level = (level || 1) + 1;
     setUnitLevel(e, Math.min(5, level || 1));
     e.hp = e.maxHp;
+    fx({ type: 'dust', x, y: y + 6, r: 14, dur: 0.6, seed: Math.random() });
     e.xp = G.UNIT_XP[e.level - 1];
     S.ents.push(e);
     return e;
@@ -582,6 +588,7 @@
       setUnitLevel(e, e.level + 1);
       e.hp = Math.min(e.maxHp, e.hp + e.maxHp * 0.25);
       S.fx.push({ type: 'text', x: e.x, y: e.y - 20, text: '▲ Stufe ' + e.level, color: '#ffe066', t: 0, dur: 1.2 });
+      fx({ type: 'pillar', x: e.x, y: e.y, r: e.r + 6, color: '#ffe066', dur: 0.9 });
     }
   }
   // Beschwörungen & Söldner (keine Versorgung)
@@ -644,6 +651,7 @@
       recalcHero(h);
       h.hp = Math.min(h.maxHp, h.hp + h.maxHp * 0.3);
       S.fx.push({ type: 'text', x: h.x, y: h.y - 30, text: 'HELD STUFE ' + h.level, color: '#ffd23a', t: 0, dur: 1.8, big: true });
+      fx({ type: 'pillar', x: h.x, y: h.y, r: 34, color: '#ffd23a', dur: 1.4, big: true });
       if (p.human) { G.msg(`${h.name} erreicht Stufe ${h.level}! +1 Talentpunkt.`, 'gold'); G.sfx('level', h.x, h.y, 1, true); }
     }
     if (p.auto.talents) autoTalents(p);
@@ -733,14 +741,14 @@
       }
       case 'heal': {
         for (const o of alliesNear(h.team, h.x, h.y, ab.radius)) o.hp = Math.min(o.maxHp, o.hp + ab.amount * sc);
-        S.fx.push({ type: 'blast', x: h.x, y: h.y, r: ab.radius, color: '#8aff8a', t: 0, dur: 0.7 });
+        fx({ type: 'heal', x: h.x, y: h.y, r: ab.radius, color: '#8aff8a', dur: 1.1, seed: Math.random() });
         G.sfx('heilung', h.x, h.y);
         break;
       }
       case 'buff': {
         const mods = { [ab.stat]: ab.value, ...(ab.extra || {}) };
         for (const o of alliesNear(h.team, h.x, h.y, ab.radius)) o.buffs.push({ t: ab.duration, mods });
-        S.fx.push({ type: 'blast', x: h.x, y: h.y, r: ab.radius, color: '#ffe066', t: 0, dur: 0.7 });
+        fx({ type: 'rune', x: h.x, y: h.y, r: ab.radius * 0.55, color: '#ffe066', dur: 1.2 });
         G.sfx('faehigkeit', h.x, h.y);
         break;
       }
@@ -751,6 +759,7 @@
           makeSummon(p, ab.unit, h.x + Math.cos(a) * 40, h.y + Math.sin(a) * 40, ab.duration, sc, null, far);
         }
         G.sfx('beschwoerung', h.x, h.y);
+        fx({ type: 'pillar', x: h.x, y: h.y, r: 44, color: p.rd.palette.trim, dur: 1.0, big: true });
         break;
       }
       default: return false;
@@ -964,13 +973,13 @@
   function updateGore(dt) {
     for (const q of S.parts) {
       q.vz -= 320 * dt; q.z += q.vz * dt; q.x += q.vx * dt; q.y += q.vy * dt;
-      if (q.z <= 0) { q.dead = true; if (Math.random() < 0.35) addDecal(q.x, q.y, q.s * 1.6, q.col, 'tropfen'); }
+      if (q.z <= 0) { q.dead = true; if (Math.random() < 0.2) addDecal(q.x, q.y, q.s * 1.6, q.col, 'tropfen'); }
     }
     S.parts = S.parts.filter((q) => !q.dead);
     for (const d of S.decals) d.t += dt;
     S.decals = S.decals.filter((d) => d.t < (d.kind === 'truemmer' ? 120 : 60));
     for (const c of S.corpses) c.t += dt;
-    S.corpses = S.corpses.filter((c) => c.t < 14);
+    S.corpses = S.corpses.filter((c) => c.t < 9);
   }
 
   // -------------------------------------------------------------------------
@@ -986,6 +995,7 @@
     }
     t.hp -= dmg;
     t.hitT = 0.12;
+    if (src && t.kind !== 'building') t.hitAng = Math.atan2(t.y - src.y, t.x - src.x);
     if (t.kind !== 'building' && dmg > 2) bleed(t, src, dmg);
     if (src && !src.dead && src.m) {
       const ls = (src.lifesteal || 0) + src.m.lifesteal;
@@ -1015,14 +1025,15 @@
     if (t.dead) return;
     t.dead = true;
     if (t.kind === 'building') {
-      S.fx.push({ type: 'boom', x: t.x, y: t.y, r: t.r, t: 0, dur: 1.0 });
+      fx({ type: t.type === 'mauer' ? 'dust' : 'collapse', x: t.x, y: t.y, r: t.r, dur: t.type === 'mauer' ? 0.7 : 1.4, seed: Math.random() });
+      if (t.type !== 'mauer') G.shake(t.x, t.y, t.type === 'haupthaus' ? 9 : 4);
       addDecal(t.x, t.y, t.r * 1.2, '#3a3430', 'truemmer');
       G.sfx(t.type === 'mauer' ? 'treffer' : 'einsturz', t.x, t.y);
       if (t.site) t.site.b = null;
       S.navDirty = true;
     } else if (!silent) {
       S.corpses.push({ x: t.x, y: t.y, r: t.r, face: t.face || 0, t: 0, col: t.kind === 'creep' ? t.def.color : S.players[t.owner].rd.color, hero: t.kind === 'hero', kind: t.kind, ctype: t.ctype, owner: t.owner });
-      if (S.corpses.length > 140) S.corpses.shift();
+      if (S.corpses.length > 90) S.corpses.shift();
       addDecal(t.x, t.y, t.r * 1.5, bloodOf(t), 'lache');
       bleed(t, src, 60);
       G.sfx('tod', t.x, t.y, t.kind === 'hero' || t.r > 16 ? 1 : 0.5);
@@ -1278,6 +1289,7 @@
       G.sfx(!e.proj || e.proj === 'pfeil' ? 'pfeil' : e.proj === 'feuer' ? 'feuer' : 'zauber', e.x, e.y, 0.5);
     } else {
       dealDamage(e, t, dmg);
+      fx({ type: 'slash', x: e.x + Math.cos(e.face) * e.r * 0.9, y: e.y + Math.sin(e.face) * e.r * 0.9 - e.r * 0.3, ang: e.face, r: e.r * 1.5 + 6, color: t.kind === 'building' ? '#e8e0d0' : '#ffffff', dur: 0.16 });
       G.sfx(t.kind === 'building' ? 'treffer' : 'schwert', e.x, e.y, 0.55);
     }
   }
@@ -1384,10 +1396,14 @@
   function updateProjectiles(dt) {
     for (const pr of S.proj) {
       if (pr.done) continue;
+      pr.px = pr.x; pr.py = pr.y;
       if (pr.t && !pr.t.dead) { pr.tx = pr.t.x; pr.ty = pr.t.y; }
       const dx = pr.tx - pr.x, dy = pr.ty - pr.y, d = Math.hypot(dx, dy);
       const step = pr.speed * dt;
       pr.ang = Math.atan2(dy, dx);
+      if (pr.d0 === undefined) { pr.d0 = Math.max(1, d); pr.trav = 0; }
+      pr.trav += step;
+      pr.k = Math.min(1, pr.trav / pr.d0);
       if (d <= step + 4) {
         pr.done = true;
         const tgt = pr.t && !pr.t.dead ? pr.t : null;
@@ -1397,6 +1413,7 @@
         }
         if (tgt) {
           dealDamage(pr.src, tgt, pr.dmg);
+          fx({ type: 'hit', x: tgt.x, y: tgt.y - tgt.r * 0.4, ang: pr.ang, color: pr.kind === 'pfeil' ? '#fff0c0' : (pr.color || '#ffd080'), dur: 0.25, big: pr.kind === 'zauber' });
           if (pr.stun) tgt.stun = Math.max(tgt.stun || 0, pr.stun);
           if (pr.drain && pr.src && !pr.src.dead) pr.src.hp = Math.min(pr.src.maxHp, pr.src.hp + pr.dmg * 0.6);
         }
@@ -1406,8 +1423,9 @@
             if (o.kind === 'creep' && pr.team !== -1 && !o.camp.active) return;
             dealDamage(pr.src && !pr.src.dead ? pr.src : null, o, pr.dmg * 0.5);
           });
-          S.fx.push({ type: 'blast', x: pr.tx, y: pr.ty, r: pr.splash, color: pr.kind === 'feuer' ? '#ff6a2a' : '#ffcc66', t: 0, dur: 0.35 });
+          fx({ type: 'explo', x: pr.tx, y: pr.ty, r: pr.splash, color: pr.kind === 'feuer' ? '#ff6a2a' : '#ffcc66', dur: 0.55, seed: Math.random() });
           G.sfx('explosion', pr.tx, pr.ty, 0.5);
+          G.shake(pr.tx, pr.ty, pr.kind === 'kanone' || pr.kind === 'feuer' ? 2.5 : 1.2);
         }
         if (pr.kind === 'zauber') S.fx.push({ type: 'blast', x: pr.tx, y: pr.ty, r: 30, color: pr.color, t: 0, dur: 0.4 });
       } else {
@@ -1912,6 +1930,8 @@
             if (!p.alive) return;
             S.fx.push({ type: ab.meteor ? 'boom' : 'blast', x, y, r: ab.radius, color: ab.color, t: 0, dur: 0.6 });
             G.sfx('explosion', x, y, ab.shells > 1 ? 0.6 : 1);
+            fx({ type: 'explo', x, y, r: ab.radius, color: ab.color, dur: 0.7, seed: Math.random(), big: !!ab.meteor });
+            G.shake(x, y, ab.meteor ? 10 : ab.shells > 1 ? 2.5 : 6);
             G.query(x, y, ab.radius, (o) => { if (!o.dead && o.team !== p.team) { dealDamage(p.th, o, ab.dmg); if (ab.stun) o.stun = Math.max(o.stun || 0, ab.stun); } });
             if (ab.summon) makeSummon(p, ab.summon, x, y, ab.life, 1, null, true);
           } });
@@ -1988,6 +2008,7 @@
   }
 
   function step(dt) {
+    for (const e of S.ents) if (e.kind !== 'building') { e.px = e.x; e.py = e.y; }
     S.time += dt;
     S.tick++;
     buildGrid();
