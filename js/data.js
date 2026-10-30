@@ -3,6 +3,11 @@
 window.G = window.G || {};
 
 G.TILE = 40;
+// Spieltempo: Faktor für Einkommen und Bau-/Forschungszeiten. 2.6 ≈ Basis in knapp 30 min auf Maximalstufe.
+G.PACE = 2.6;
+// Spieldauer (Minuten). In den letzten 5 Minuten läuft die Endphase, danach entscheidet die Punktzahl.
+G.DURATIONS = [[20, '20 Minuten'], [30, '30 Minuten'], [45, '45 Minuten'], [0, 'Unbegrenzt']];
+G.ENDPHASE = 5 * 60;
 G.BASE_RADIUS = 380;
 G.MAX_LEVEL = 5;
 
@@ -277,7 +282,7 @@ G.RACES = {
 G.RACE_KEYS = Object.keys(G.RACES);
 
 G.HERO_BASE = { hp: 800, dmg: 36, range: 28, rangedRange: 165, cd: 1.2, speed: 80, armor: 4, r: 16 };
-G.HERO_XP = (lvl) => 160 * lvl * (lvl + 1) / 2; // XP benötigt, um von lvl auf lvl+1 zu steigen (kumulativ)
+G.HERO_XP = (lvl) => 110 * lvl * (lvl + 1) / 2; // XP benötigt, um von lvl auf lvl+1 zu steigen (kumulativ)
 G.HERO_MAX = 10;
 G.UNIT_XP = [0, 40, 110, 220, 380]; // Schwellen für Stufe 1..5
 
@@ -321,7 +326,7 @@ G.CAMPS = {
   golem:    { name: 'Golem-Steinbruch', units: ['golem', 'golem'], minTH: 2, gold: 420, wood: 260, item: 0.7, extra: 'segen', extraDesc: 'Steinhaut: 90 s lang +3 Rüstung für die Armee' },
   drache:   { name: 'Drachenhort', units: ['drache'], minTH: 3, gold: 1000, wood: 450, item: 1.0, rareItem: true, extra: 'drachenblut', extraDesc: 'Drachenblut: 180 s lang +15% Schaden für die Armee' },
 };
-G.CAMP_RESPAWN = 240;
+G.CAMP_RESPAWN = 150;
 
 // Kartenthemen (Heimatkarten der Völker)
 G.THEMES = {
@@ -335,7 +340,7 @@ G.THEMES = {
 
 G.PLAYER_COLORS = ['#3d7bff', '#e0453a', '#3fbf5a', '#e8b030'];
 G.DIFFICULTY = {
-  einfach: { name: 'Einfach', eco: 0.8,  think: 2.5, attackFrac: 0.85, minAttack: 720, focus: false, abilityChance: 0.4 },
-  mittel:  { name: 'Mittel',  eco: 1.0,  think: 1.2, attackFrac: 0.75, minAttack: 480, focus: false, abilityChance: 0.8 },
-  schwer:  { name: 'Schwer',  eco: 1.25, think: 0.5, attackFrac: 0.65, minAttack: 330, focus: true,  abilityChance: 1.0 },
+  einfach: { name: 'Einfach', eco: 0.8,  think: 2.5, attackFrac: 0.85, minAttack: 480, focus: false, abilityChance: 0.4 },
+  mittel:  { name: 'Mittel',  eco: 1.0,  think: 1.2, attackFrac: 0.75, minAttack: 360, focus: false, abilityChance: 0.8 },
+  schwer:  { name: 'Schwer',  eco: 1.25, think: 0.5, attackFrac: 0.65, minAttack: 270, focus: true,  abilityChance: 1.0 },
 };

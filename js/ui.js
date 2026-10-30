@@ -11,7 +11,7 @@
 
   // -------------------------------------------------------------------------
   // Hauptmenü
-  UI.cfg = { race: 'menschen', hero: null, mode: '1v1', difficulty: 'mittel', map: 'heimat' };
+  UI.cfg = { race: 'menschen', hero: null, mode: '1v1', difficulty: 'mittel', map: 'heimat', duration: 30 };
 
   UI.showMenu = function () {
     $('#menu').classList.remove('hidden');
@@ -54,6 +54,7 @@
         <div><h2>3. Spielmodus</h2>${opt('m-mode', c.mode, [['1v1', '1 gegen 1', 'Du gegen einen Computer'], ['2v2', '2 gegen 2', 'Du + KI-Verbündeter gegen 2 KI'], ['ffa', '1 vs 1 vs 1 vs 1', 'Jeder gegen jeden']])}</div>
         <div><h2>4. Schwierigkeit</h2>${opt('m-diff', c.difficulty, [['einfach', 'Einfach', 'Langsame KI, weniger Einkommen'], ['mittel', 'Mittel', 'Ausgeglichen'], ['schwer', 'Schwer', 'Schnelle KI, Bonus-Einkommen, fokussiert Heiler']])}</div>
         <div><h2>5. Karte</h2><div class="maps">${opt('m-map', c.map, maps)}</div></div>
+        <div><h2>6. Spieldauer</h2>${opt('m-dur', String(c.duration), G.DURATIONS.map(([v, n]) => [String(v), n, v ? 'Danach entscheidet die Punktzahl' : 'Bis ein Team besiegt ist']))}</div>
       </section>
       <div class="start-row"><button class="big" data-act="m-start">⚔ Schlacht beginnen</button></div>`;
   }
@@ -92,7 +93,7 @@
       <span class="res" title="Arbeiter">⚒ ${p.workers}/${p.workerCap || 0}</span>
       <span class="res" title="Baumeister">🔨 ${busy}/${bmax}</span>
       <span class="res" title="Haupthaus-Stufe">♜ Stufe ${p.th.level}</span>
-      <span class="res time">⏱ ${fmtTime(S.time)}</span>`;
+      <span class="res time ${S.endphase ? 'endphase' : ''}" title="${S.limit ? 'Verbleibende Spielzeit' : 'Spielzeit'}">⏱ ${S.limit ? 'noch ' + fmtTime(G.timeLeft()) + (S.endphase ? ' · ENDPHASE' : '') : fmtTime(S.time)}</span>`;
     document.querySelectorAll('[data-act="speed"]').forEach((b) => b.classList.toggle('sel', !S.paused && +b.dataset.v === S.speed));
     $('[data-act="pause"]').classList.toggle('sel', S.paused);
   }
@@ -311,7 +312,8 @@
     const o = S.over;
     $('#end').classList.remove('hidden');
     $('#end-body').innerHTML = `<h1 class="${o.win ? 'win' : 'lose'}">${o.win ? 'Sieg!' : 'Niederlage'}</h1>
-      <p>${o.win ? 'Alle gegnerischen Völker wurden bezwungen.' : 'Dein Haupthaus ist gefallen.'}</p>
+      <p>${o.byTime ? (o.win ? 'Die Zeit ist abgelaufen – dein Team liegt nach Punkten vorn.' : 'Die Zeit ist abgelaufen – der Gegner liegt nach Punkten vorn.') : o.win ? 'Alle gegnerischen Völker wurden bezwungen.' : 'Dein Haupthaus ist gefallen.'}</p>
+      ${o.scores ? `<div class="stats">${o.scores.map((x) => `<span style="color:${x.color}">${x.name} <b>${x.score}</b></span>`).join('')}</div>` : ''}
       <div class="stats"><span>Spielzeit <b>${fmtTime(o.time)}</b></span><span>Besiegte Gegner <b>${p.stats.kills}</b></span><span>Verlorene Einheiten <b>${p.stats.lost}</b></span><span>Heldenstufe <b>${p.hero.level}</b></span><span>Haupthaus <b>Stufe ${p.th.level}</b></span></div>
       <button class="big" data-act="menu">Zum Hauptmenü</button> <button class="big" data-act="again">Revanche (neue Gegner)</button>`;
   }
@@ -328,6 +330,7 @@
       case 'm-mode': UI.cfg.mode = v; renderMenu(); return;
       case 'm-diff': UI.cfg.difficulty = v; renderMenu(); return;
       case 'm-map': UI.cfg.map = v; renderMenu(); return;
+      case 'm-dur': UI.cfg.duration = +v; renderMenu(); return;
       case 'm-start': case 'again': UI.startGame(); return;
       case 'menu': G.S = null; UI.showMenu(); return;
       case 'tab': UI.tab = v; break;

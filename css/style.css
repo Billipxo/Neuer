@@ -68,6 +68,8 @@ button.big:hover { background: linear-gradient(#e0703a, #a04020) !important; }
 .res small { font-weight: 400; }
 .res.gold { color: var(--gold); }
 .res.wood { color: var(--wood); }
+.res.endphase { color: var(--bad); animation: pulse 1s infinite alternate; }
+@keyframes pulse { to { opacity: .55; } }
 .top-ctrl { display: flex; gap: 4px; white-space: nowrap; }
 .top-ctrl button { padding: 2px 8px; }
 #main { flex: 1; display: flex; min-height: 0; }

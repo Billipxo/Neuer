@@ -42,9 +42,9 @@
   // Hilfen für Kosten und Stufen
   const round5 = (v) => Math.round(v / 5) * 5;
   G.costOf = (type, lvl) => { const c = G.BUILDINGS[type].cost, m = Math.pow(lvl, 1.5); return { g: round5(c.g * m), w: round5(c.w * m) }; };
-  G.timeOf = (type, lvl) => G.BUILDINGS[type].time * Math.pow(lvl, 1.2);
+  G.timeOf = (type, lvl) => G.BUILDINGS[type].time * Math.pow(lvl, 1.2) / G.PACE;
   G.researchCost = (lvl) => ({ g: 150 * lvl, w: 100 * lvl });
-  G.researchTime = (lvl) => 30 * lvl;
+  G.researchTime = (lvl) => 30 * lvl / G.PACE;
   G.unitCost = (p, role) => { const b = G.UNIT_BASE[role], disc = (p.rd.passive.eco && p.rd.passive.eco.unitDiscount) || 0; return { g: Math.round(b.gold * (1 - disc)), w: b.wood }; };
   G.builders = (p) => 2 + (p.th.level >= 3 ? 1 : 0) + (p.th.level >= 5 ? 1 : 0);
   G.buildersBusy = (p) => p.blds.reduce((n, b) => n + (b.upgrading ? 1 : 0), 0);
@@ -75,6 +75,7 @@
       time: 0, ents: [], proj: [], fx: [], timers: [], players: [], camps: [], shops: [], decor: [],
       w: layout.w, h: layout.h, theme: themeKey, mode: cfg.mode, layout, over: null, msgs: [],
       speed: 1, paused: false, nextId: 1, grid: new Map(), bonusT: 0, victoryT: 0, cfg,
+      limit: (cfg.duration === undefined ? 30 : cfg.duration) * 60, endphase: false,
     };
     layout.bases.forEach((b, i) => {
       const isHuman = i === 0;
@@ -109,7 +110,7 @@
       research: { waffen: 0, ruestung: 0, ausbildung: 0 }, researching: null,
       auto: { build: !isHuman, produce: true, army: true, hero: true, ability: !isHuman },
       armyMode: 'auto', armyState: 'sammeln', armyPoint: null, attackFrac: isHuman ? 0.7 : diff.attackFrac,
-      minAttack: isHuman ? 420 : diff.minAttack, attackStart: 0, targetPlayer: null, manualPoint: null, campTarget: null, campsAllowed: true,
+      minAttack: isHuman ? 300 : diff.minAttack, attackStart: 0, targetPlayer: null, manualPoint: null, campTarget: null, campsAllowed: true,
       comp: { tank: 2, nahkampf: 3, fernkampf: 3, magier: 2, heiler: 1, support: 1, beschwoerer: 1 },
       buffs: [], abilityT: 30, alive: true, hero: null, heroRespawn: 0, reserve: { g: 0, w: 0 },
       thinkT: Math.random(), armyT: Math.random(), abilT: Math.random(), blds: [], th: null,
@@ -646,7 +647,8 @@
     if (!t || t.dead) return 0;
     const armor = (t.armor || 0) + (t.m ? t.m.armor : 0);
     const mul = armor >= 0 ? 1 - (armor * 0.06) / (1 + armor * 0.06) : 2 - Math.pow(0.94, -armor);
-    const dmg = amount * mul;
+    let dmg = amount * mul;
+    if (t.kind === 'building' && S.endphase) dmg *= G.endphaseSiege();
     t.hp -= dmg;
     t.hitT = 0.12;
     if (src && !src.dead && src.m) {
@@ -1011,7 +1013,7 @@
     p.workerCap = cap;
     if (p.workers < cap) {
       p.workerT += dt;
-      if (p.workerT >= 6) { if (p.gold >= 40) { p.gold -= 40; p.workers++; } p.workerT = 0; }
+      if (p.workerT >= 6 / G.PACE) { if (p.gold >= 40) { p.gold -= 40; p.workers++; } p.workerT = 0; }
     }
     if (p.autoRatio) {
       const ng = Math.max(0, p.reserve.g - p.gold), nw = Math.max(0, p.reserve.w - p.wood);
@@ -1029,8 +1031,8 @@
     }
     const gw = p.workers * p.goldRatio, ww = p.workers - gw;
     const gp = (p.rd.passive.eco && p.rd.passive.eco.goldPct) || 0;
-    p.incomeG = (th * 1.5 + gw * 1.1 + mines * 1.8) * (1 + gp) * p.ecoMul;
-    p.incomeW = (ww * 1.0 + saws * 1.5) * p.ecoMul;
+    p.incomeG = (th * 1.5 + gw * 1.1 + mines * 1.8) * (1 + gp) * p.ecoMul * G.PACE;
+    p.incomeW = (ww * 1.0 + saws * 1.5) * p.ecoMul * G.PACE;
     p.gold += p.incomeG * dt;
     p.wood += p.incomeW * dt;
 
@@ -1268,9 +1270,9 @@
       if (threat) { p.armyState = 'verteidigen'; p.armyPoint = threat; p.campTarget = null; return; }
       if (p.armyState === 'verteidigen') p.armyState = 'sammeln';
       const threshold = Math.max(10, p.supplyCap * p.attackFrac);
-      const canAttack = sup >= threshold && S.time >= p.minAttack;
+      const canAttack = S.endphase ? sup >= 6 : sup >= threshold && S.time >= p.minAttack;
       if (p.armyState === 'angriff') {
-        if (sup < p.attackStart * 0.35) { p.armyState = 'sammeln'; if (p.human) G.msg('Armee zieht sich zum Sammelpunkt zurück.', ''); }
+        if (!S.endphase && sup < p.attackStart * 0.35) { p.armyState = 'sammeln'; if (p.human) G.msg('Armee zieht sich zum Sammelpunkt zurück.', ''); }
         else { p.armyPoint = attackPoint(p, units); if (p.armyPoint) return; p.armyState = 'sammeln'; }
       }
       if (canAttack) {
@@ -1289,7 +1291,7 @@
         } else { p.armyPoint = { x: p.campTarget.x, y: p.campTarget.y }; return; }
       }
       p.campTarget = null;
-      if (p.campsAllowed && units.length >= 3) {
+      if (p.campsAllowed && !S.endphase && units.length >= 3) {
         const c = chooseCamp(p, units);
         if (c) { p.armyState = 'camps'; p.campTarget = c; p.campStart = sup; p.armyPoint = { x: c.x, y: c.y }; return; }
       }
@@ -1459,12 +1461,36 @@
     if (S.victoryT <= 0) { S.victoryT = 1; checkVictory(); }
   }
 
+  // Punktzahl für die Entscheidung nach Zeitablauf
+  G.score = function (p) {
+    if (!p.alive) return 0;
+    let s = 1000 * p.th.hp / p.th.maxHp;
+    for (const b of p.blds) s += 40 * Math.max(1, b.level);
+    s += 15 * p.armySupply + 40 * p.hero.level + 5 * p.stats.kills;
+    s += 30 * (p.research.waffen + p.research.ruestung + p.research.ausbildung);
+    return Math.round(s);
+  };
+  G.timeLeft = () => (S.limit ? Math.max(0, S.limit - S.time) : Infinity);
+  // Belagerungsbonus gegen Gebäude in der Endphase: steigt von +25 % auf +150 %
+  G.endphaseSiege = () => 1.25 + 1.25 * G.clamp((S.time - (S.limit - G.ENDPHASE)) / G.ENDPHASE, 0, 1);
+
   function checkVictory() {
     if (S.over) return;
     const me = human();
     if (!me.alive) { S.over = { win: false, time: S.time }; return; }
     const teams = new Set(S.players.filter((p) => p.alive).map((p) => p.team));
-    if (teams.size === 1) S.over = { win: teams.has(me.team), time: S.time };
+    if (teams.size === 1) { S.over = { win: teams.has(me.team), time: S.time }; return; }
+    if (!S.limit) return;
+    if (!S.endphase && S.time >= S.limit - G.ENDPHASE) {
+      S.endphase = true;
+      G.msg('Endphase! Alle Armeen greifen an, Gebäude erleiden stark erhöhten Schaden. Noch 5 Minuten.', 'bad');
+    }
+    if (S.time >= S.limit) {
+      const byTeam = {};
+      for (const p of S.players) byTeam[p.team] = (byTeam[p.team] || 0) + G.score(p);
+      const best = Object.keys(byTeam).reduce((a, b) => (byTeam[b] > byTeam[a] ? b : a));
+      S.over = { win: +best === me.team, time: S.time, byTime: true, scores: S.players.map((p) => ({ name: p.name, team: p.team, color: p.color, score: G.score(p) })) };
+    }
   }
 
   G.update = function (realDt) {

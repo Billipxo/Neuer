@@ -17,7 +17,7 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - **7 Einheitenrollen je Volk:** Tank, Nahkampf, Fernkampf, Magier, Heiler, Support (mit Aura), Beschwörer.
 - **3 Helden je Volk** mit unterschiedlichen **Commander-Boni** und je 2 Fähigkeiten. Helden steigen bis Stufe 10 auf.
 - **Basisbau:** 11 Gebäudetypen, platzierbar innerhalb des Basisrings, Ausbau bis Stufe 5.
-  Das Haupthaus bestimmt Limits und Höchststufen. Bei optimalem Spiel dauert der Weg zur Maximalstufe etwa eine Stunde.
+  Das Haupthaus bestimmt Limits und Höchststufen. Der Weg zur Maximalstufe dauert knapp 30 Minuten.
 - **Rohstoffe:** Gold und Holz, Arbeiter werden automatisch ausgebildet und verteilt (manuell einstellbar).
 - **Produktion:** automatisch nach einstellbarer Armee-Zusammensetzung, pro Gebäude mit Fokus, an/aus und Warteschlange.
 - **Abwehr:** Wachturm, Kanonenturm, schießendes Haupthaus. **Schmiede:** Waffen, Rüstung und Ausbildung.
@@ -28,6 +28,11 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - **Modi:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4 Spieler).
 - **KI-Gegner:** einfach, mittel, schwer – gegnerische Völker werden jede Runde zufällig gewählt.
 - **Spielende:** Ein Volk ist besiegt, wenn sein Haupthaus fällt.
+- **Spieldauer:** wählbar 20 / 30 (Standard) / 45 Minuten oder unbegrenzt. In den letzten 5 Minuten läuft die
+  **Endphase**: Alle Armeen greifen an, Gebäude erleiden steigenden Belagerungsschaden (+25 % bis +150 %).
+  Ist danach niemand besiegt, gewinnt das Team mit der höchsten Punktzahl
+  (Haupthaus-LP, Gebäudestufen, Armee, Heldenstufe, Siege, Forschung).
+- **Spieltempo:** zentral über `G.PACE` in `js/data.js` einstellbar.
 
 ## Steuerung
 
