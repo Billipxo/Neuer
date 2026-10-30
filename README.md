@@ -11,7 +11,7 @@ Auch am **Handy und Tablet** spielbar (Touch-Steuerung: Wischen = Karte bewegen,
 Tippen = auswählen/bauen, lange drücken = Held bewegen im manuellen Modus, ☰ = Menü).
 Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http://localhost:8000` öffnen.
 
-## Was schon drin ist (Prototyp v0.5)
+## Was schon drin ist (Prototyp v0.6)
 
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
@@ -31,7 +31,8 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - 7 Einheitenrollen je Volk, 3 Helden je Volk mit Commander-Boni und 2 Fähigkeiten, Helden bis Stufe 10.
 
 **Basis & Wirtschaft**
-- 12 Gebäudetypen bis Stufe 5, Maximalstufe in knapp 30 Minuten.
+- 12 Gebäudetypen bis Stufe 5, Maximalstufe in knapp 30 Minuten. Jede Stufe ist sichtbar: Fenster (2), Seitenturm (3),
+  Zierleiste und Feuerschalen (4), zweiter Turm und leuchtende Turmspitze (5); Gebäude wachsen mit.
 - **Mauer-Upgrade** (Holzpalisade → Steinmauer → Festungsmauer): Ring um die ganze Basis, eigene Truppen gehen hindurch.
 - **Goldadern** auf der Karte: Außenposten dort bringen Bonus-Einkommen und sind umkämpft.
 - Sichtbare **Arbeiter**, die Gold schürfen und Holz schlagen.
@@ -39,6 +40,8 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 **Kampf**
 - **Armee-Stile:** „Sammeln & Angreifen“, „Wellen losschicken“ (regelmäßige Angriffswellen), „Nur verteidigen“ +
   „Jetzt angreifen!“. Losgeschickte Einheiten kämpfen, bis sie fallen.
+- **Wegfindung:** Einheiten laufen um Gebäude herum (Strömungsfelder auf einem 40-px-Raster). Eigene Mauern sind
+  durchlässig; gegnerische Mauern werden umgangen, wenn es eine Lücke gibt, sonst eingerissen.
 - Neutrale Monster mit Beute und Extra-Belohnungen, Händler, Endphase mit Punktewertung.
 
 **Atmosphäre**

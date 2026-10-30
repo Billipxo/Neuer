@@ -362,6 +362,66 @@
     label('Goldader', x, y + 34, '#ffe066', 10);
   }
 
+
+  // -------------------------------------------------------------------------
+  // Ausbaustufen sichtbar machen: Fenster, Anbauten, Zierrat, Turmspitze
+  function towerRoof(race, x, top, w, pal) {
+    ctx.beginPath();
+    if (race === 'elfen') ctx.ellipse(x, top, w * 0.75, w * 0.55, 0, 0, 7);
+    else if (race === 'zwerge') ctx.rect(x - w * 0.6, top - 5, w * 1.2, 8);
+    else if (race === 'orks') { ctx.moveTo(x - w * 0.65, top + 4); ctx.lineTo(x, top - w * 0.9); ctx.lineTo(x + w * 0.65, top + 4); ctx.closePath(); }
+    else { ctx.moveTo(x - w * 0.6, top + 4); ctx.lineTo(x, top - w * (race === 'untote' || race === 'daemonen' ? 1.5 : 1.1)); ctx.lineTo(x + w * 0.6, top + 4); ctx.closePath(); }
+    ctx.fillStyle = pal.roof; ctx.fill(); outline(2);
+    if (race === 'orks') { ctx.beginPath(); ctx.moveTo(x - 2, top - w * 0.8); ctx.quadraticCurveTo(x + w * 0.6, top - w * 1.3, x + w * 0.5, top - w * 1.6); ctx.lineTo(x + 1, top - w * 0.95); ctx.closePath(); ctx.fillStyle = '#efe6d0'; ctx.fill(); outline(1.2); }
+  }
+  function drawAnnex(p, pal, ax, y, hs, L, flash) {
+    const w = hs * 0.42, top = y - hs * (L >= 5 ? 1.25 : 1.05);
+    ctx.fillStyle = flash ? '#fff' : shade(pal.wall, -0.08);
+    roundRect(ax - w / 2, top, w, y + hs * 0.2 - top, 3); ctx.fill(); outline(2);
+    ctx.fillStyle = p.race === 'untote' || p.race === 'daemonen' ? pal.trim : '#ffd27a';
+    roundRect(ax - 2.5, top + 8, 5, 7, 2); ctx.fill();
+    towerRoof(p.race, ax, top, w, pal);
+  }
+  function drawLevelDetails(b, p, pal, x, y, hs, S, flash) {
+    const L = b.level;
+    if (L < 2 || b.size < 2) return;
+    const glow = p.race === 'untote' || p.race === 'daemonen' ? pal.trim : '#ffd27a';
+    // Fenster mit warmem Licht
+    ctx.save(); ctx.shadowColor = glow; ctx.shadowBlur = 6; ctx.fillStyle = glow;
+    for (const s2 of [-1, 1]) {
+      const wx = x + s2 * hs * 0.58, wy = y + hs * 0.02;
+      ctx.globalAlpha = 0.75 + 0.2 * Math.sin(S.time * 1.5 + b.id + s2);
+      roundRect(wx - 3.5, wy - 5, 7, 10, 3); ctx.fill();
+    }
+    ctx.restore();
+    for (const s2 of [-1, 1]) { const wx = x + s2 * hs * 0.58, wy = y + hs * 0.02; ctx.strokeStyle = INK; ctx.lineWidth = 1.6; roundRect(wx - 3.5, wy - 5, 7, 10, 3); ctx.stroke(); ctx.beginPath(); ctx.moveTo(wx, wy - 5); ctx.lineTo(wx, wy + 5); ctx.stroke(); }
+    // Sockel aus Stein
+    ctx.fillStyle = shade(pal.wall, -0.2);
+    roundRect(x - hs + 4, y + hs * 0.72, hs * 2 - 8, hs * 0.14, 2); ctx.fill(); outline(1.5);
+    if (L >= 4) { // Zierleiste an der Traufe und Feuerschalen am Eingang
+      ctx.strokeStyle = pal.trim; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.moveTo(x - hs + 6, y - hs * 0.33); ctx.lineTo(x + hs - 6, y - hs * 0.33); ctx.stroke();
+      for (const s2 of [-1, 1]) {
+        const fx = x + s2 * 13, fy = y + hs * 0.62;
+        ctx.fillStyle = '#3a3a40'; ctx.beginPath(); ctx.moveTo(fx - 4, fy - 4); ctx.lineTo(fx + 4, fy - 4); ctx.lineTo(fx + 2, fy + 2); ctx.lineTo(fx - 2, fy + 2); ctx.closePath(); ctx.fill(); outline(1.2);
+        const fl = 3 + Math.sin(S.time * 12 + b.id + s2) * 1.2;
+        ctx.save(); ctx.shadowColor = '#ff8a2a'; ctx.shadowBlur = 8; ctx.fillStyle = p.race === 'untote' ? '#7aff9a' : '#ffb040';
+        ctx.beginPath(); ctx.moveTo(fx - 3, fy - 4); ctx.quadraticCurveTo(fx, fy - 4 - fl * 2.4, fx + 3, fy - 4); ctx.fill(); ctx.restore();
+      }
+    }
+    if (L >= 5) { // Turmspitze mit leuchtendem Juwel und Funkeln
+      const top = y - hs * (p.race === 'zwerge' ? 1.0 : 1.1);
+      ctx.strokeStyle = INK; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, top - 16); ctx.stroke();
+      ctx.strokeStyle = '#ffd23a'; ctx.lineWidth = 2; ctx.stroke();
+      ctx.save(); ctx.shadowColor = pal.trim; ctx.shadowBlur = 14;
+      ctx.beginPath(); ctx.moveTo(x, top - 26); ctx.lineTo(x + 5, top - 19); ctx.lineTo(x, top - 13); ctx.lineTo(x - 5, top - 19); ctx.closePath();
+      ctx.fillStyle = pal.trim; ctx.fill(); ctx.restore(); ctx.beginPath(); ctx.moveTo(x, top - 26); ctx.lineTo(x + 5, top - 19); ctx.lineTo(x, top - 13); ctx.lineTo(x - 5, top - 19); ctx.closePath(); outline(1.4);
+      const k = (S.time * 0.7 + b.id * 0.13) % 1;
+      ctx.save(); ctx.globalAlpha = 1 - k; ctx.fillStyle = '#fff6c0';
+      ctx.beginPath(); ctx.arc(x + Math.sin(b.id + S.time) * hs * 0.6, y - hs * 0.4 - k * 30, 1.6, 0, 7); ctx.fill(); ctx.restore();
+    }
+  }
+
   // Banner in Spielerfarbe (Form je nach freigeschaltetem Banner)
   function drawBanner(p, pal, fx, fy, ph) {
     const w = Math.sin(ph) * 1.5;
@@ -378,6 +438,7 @@
 
   // -------------------------------------------------------------------------
   // Gebäude
+  R._drawBuilding = (b) => drawBuilding(b); // für Vorschau und Tests
   function drawBuilding(b) {
     if (b.type === 'mauer') return drawWall(b);
     const S = G.S, p = S.players[b.owner], pal = R.palOf(p);
@@ -386,13 +447,20 @@
     if (b.site) drawSite(b.site);
     ctx.save();
     if (constructing) ctx.globalAlpha = 0.55 + 0.4 * (b.upgrading ? b.upgrading.t / b.upgrading.total : 0);
-    shadow(x + 6, y + hs * 0.55, hs * 1.05, hs * 0.5);
+    const L = b.level;
+    shadow(x + 6, y + hs * 0.55, hs * (1.0 + L * 0.03), hs * 0.5);
+    const grow = 0.94 + Math.max(1, L) * 0.025; // Stufe 1: 0,965 … Stufe 5: 1,065
+    ctx.translate(x, y + hs * 0.6); ctx.scale(grow, grow); ctx.translate(-x, -(y + hs * 0.6));
     const flash = b.hitT > 0;
     if (b.type === 'turm' || b.type === 'kanone') {
       const r = hs * 0.95;
+      if (L >= 2) { ctx.fillStyle = shade(pal.wall, -0.4); ctx.beginPath(); ctx.ellipse(x, y + 8, r * 1.12, r * 0.85, 0, 0, 7); ctx.fill(); outline(2); }
       ctx.fillStyle = shade(pal.wall, -0.25); ctx.beginPath(); ctx.ellipse(x, y + 4, r, r * 0.8, 0, 0, 7); ctx.fill(); outline();
       ctx.fillStyle = flash ? '#fff' : pal.wall; ctx.beginPath(); ctx.ellipse(x, y - 8, r * 0.9, r * 0.72, 0, 0, 7); ctx.fill(); outline();
-      for (let i = 0; i < 6; i++) { const a = (i / 6) * Math.PI * 2; ctx.fillStyle = shade(pal.wall, 0.15); ctx.fillRect(x + Math.cos(a) * r * 0.7 - 2.5, y - 8 + Math.sin(a) * r * 0.55 - 2.5, 5, 5); }
+      const teeth = L >= 3 ? 8 : 6;
+      for (let i = 0; i < teeth; i++) { const a = (i / teeth) * Math.PI * 2; ctx.fillStyle = shade(pal.wall, 0.15); ctx.fillRect(x + Math.cos(a) * r * 0.7 - 2.5, y - 8 + Math.sin(a) * r * 0.55 - 2.5, 5, 5); }
+      if (L >= 4) { ctx.strokeStyle = pal.trim; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(x, y - 8, r * 0.9, r * 0.72, 0, 0.2, Math.PI - 0.2); ctx.stroke(); }
+      if (L >= 5) { ctx.save(); ctx.shadowColor = pal.trim; ctx.shadowBlur = 12; circ(x + r * 0.55, y - 2, 2.5, pal.trim, 0); circ(x - r * 0.55, y - 2, 2.5, pal.trim, 0); ctx.restore(); }
       if (b.type === 'kanone') {
         const ang = b.lastAng !== undefined ? b.lastAng : -Math.PI / 4;
         ctx.save(); ctx.translate(x, y - 10); ctx.rotate(ang); ctx.fillStyle = '#2a2a2e'; ctx.fillRect(0, -3.5, 14, 7); ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.strokeRect(0, -3.5, 14, 7); ctx.restore();
@@ -406,6 +474,10 @@
         if (p.race === 'daemonen' || p.race === 'untote') { ctx.save(); ctx.shadowColor = pal.trim; ctx.shadowBlur = 10; circ(x, y - 22, 3, pal.trim, 0); ctx.restore(); }
       }
     } else {
+      if (L >= 3 && b.size >= 2) {
+        drawAnnex(p, pal, x - hs * 0.78, y - hs * 0.15, hs, L, flash);
+        if (b.type === 'haupthaus' || L >= 5) drawAnnex(p, pal, x + hs * 0.78, y - hs * 0.15, hs, L, flash);
+      }
       ctx.fillStyle = shade(pal.wall, -0.35);
       roundRect(x - hs + 2, y - hs + 6, hs * 2 - 4, hs * 2 - 6, 6); ctx.fill(); outline();
       ctx.fillStyle = flash ? '#fff' : pal.wall;
@@ -415,6 +487,7 @@
         for (let r = 0; r < 3; r++) { const yy = y - hs * 0.35 + (r + 1) * hs * 0.3; ctx.beginPath(); ctx.moveTo(x - hs + 7, yy); ctx.lineTo(x + hs - 7, yy); ctx.stroke(); }
       }
       drawRoof(p.race, b.type, x, y, hs, pal, flash, S);
+      drawLevelDetails(b, p, pal, x, y, hs, S, flash);
       ctx.fillStyle = INK; roundRect(x - 6, y + hs * 0.35, 12, hs * 0.45, 5); ctx.fill();
       if (p.race === 'untote' || p.race === 'daemonen') { ctx.save(); ctx.globalAlpha *= 0.5 + 0.3 * Math.sin(S.time * 2 + b.id); ctx.fillStyle = pal.trim; roundRect(x - 4, y + hs * 0.42, 8, hs * 0.35, 4); ctx.fill(); ctx.restore(); }
       buildingIcon(b.type, x, y + hs * 0.05, b.size === 3 ? 1.5 : 1.05, pal.trim);

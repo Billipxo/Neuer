@@ -333,6 +333,7 @@
     b.maxHp = bldMaxHp(p, type, level);
     b.hp = level > 0 ? b.maxHp : b.maxHp * 0.1;
     S.ents.push(b);
+    S.navDirty = true;
     return b;
   }
   G.buildingCheck = function (p, type) {
@@ -423,6 +424,7 @@
       if (s.x < 10 || s.y < 10 || s.x > S.w - 10 || s.y > S.h - 10) continue;
       p.walls.push(s); S.ents.push(s);
     }
+    S.navDirty = true;
     if (p.human) { G.msg(`${w.name} errichtet!`, 'good'); G.sfx('fertig', p.base.x, p.base.y); }
   }
 
@@ -954,6 +956,7 @@
       addDecal(t.x, t.y, t.r * 1.2, '#3a3430', 'truemmer');
       G.sfx(t.type === 'mauer' ? 'treffer' : 'einsturz', t.x, t.y);
       if (t.site) t.site.b = null;
+      S.navDirty = true;
     } else if (!silent) {
       S.corpses.push({ x: t.x, y: t.y, r: t.r, face: t.face || 0, t: 0, col: t.kind === 'creep' ? t.def.color : S.players[t.owner].rd.color, hero: t.kind === 'hero', kind: t.kind, ctype: t.ctype, owner: t.owner });
       if (S.corpses.length > 140) S.corpses.shift();
@@ -1019,6 +1022,7 @@
   function eliminate(p) {
     if (!p.alive) return;
     p.alive = false;
+    S.navDirty = true;
     for (const e of S.ents) if (e.owner === p.id && !e.dead) { e.dead = true; S.fx.push({ type: e.kind === 'building' ? 'boom' : 'puff', x: e.x, y: e.y, r: e.r, t: 0, dur: 1 }); }
     G.msg(`${p.human ? 'Dein Volk' : p.name} wurde vernichtet!`, p.human ? 'bad' : (S.players[0].team === p.team ? 'bad' : 'good'));
   }
@@ -1074,7 +1078,7 @@
   function moveTo(e, tx, ty, dt, stop) {
     const dx = tx - e.x, dy = ty - e.y;
     const d = Math.hypot(dx, dy);
-    if (d <= (stop || 4)) { e.moving = false; return true; }
+    if (d <= (stop || 4) + 0.5) { e.moving = false; return true; }
     const sp = e.speed * Math.max(0.2, 1 + e.m.speed) * dt;
     if (sp <= 0) return false;
     const k = Math.min(sp, d - (stop || 4)) / d;
@@ -1082,6 +1086,120 @@
     e.face = Math.atan2(dy, dx);
     e.moving = true;
     e.walkT = (e.walkT || 0) + sp * 0.18;
+    return false;
+  }
+
+
+  // -------------------------------------------------------------------------
+  // Wegfindung: Raster (eine Kachel = 40 px) mit zwischengespeicherten Strömungsfeldern.
+  // Gebäude blockieren alle, Mauern nur gegnerische Teams. Ist das Ziel unerreichbar
+  // (geschlossene Mauer), laufen Einheiten direkt darauf zu und reißen die Mauer ein.
+  const NAV = { W: 0, H: 0, bld: null, wall: null, cache: new Map() };
+  const DX = [1, -1, 0, 0, 1, 1, -1, -1], DY = [0, 0, 1, -1, 1, -1, 1, -1];
+  function cellAt(x, y) {
+    const cx = Math.floor(x / T), cy = Math.floor(y / T);
+    return cx < 0 || cy < 0 || cx >= NAV.W || cy >= NAV.H ? -1 : cy * NAV.W + cx;
+  }
+  const blockedFor = (c, team) => NAV.bld[c] === 1 || (NAV.wall[c] !== -1 && NAV.wall[c] !== team);
+  function navRebuild() {
+    NAV.W = Math.ceil(S.w / T); NAV.H = Math.ceil(S.h / T);
+    const n = NAV.W * NAV.H;
+    if (!NAV.bld || NAV.bld.length !== n) { NAV.bld = new Uint8Array(n); NAV.wall = new Int8Array(n); }
+    NAV.bld.fill(0); NAV.wall.fill(-1);
+    for (const b of S.ents) {
+      if (b.dead || b.kind !== 'building') continue;
+      if (b.type === 'mauer') { const c = cellAt(b.x, b.y); if (c >= 0) NAV.wall[c] = b.team; continue; }
+      for (const c of footprint(b)) NAV.bld[c] = 1;
+    }
+    NAV.cache.clear();
+    S.navDirty = false;
+  }
+  function footprint(b) {
+    const out = [], x0 = Math.round(b.x / T - b.size / 2), y0 = Math.round(b.y / T - b.size / 2);
+    for (let i = 0; i < b.size; i++) for (let j = 0; j < b.size; j++) {
+      const cx = x0 + i, cy = y0 + j;
+      if (cx >= 0 && cy >= 0 && cx < NAV.W && cy < NAV.H) out.push(cy * NAV.W + cx);
+    }
+    return out;
+  }
+  function flowField(team, seeds, key) {
+    const k = team + '|' + key;
+    let f = NAV.cache.get(k);
+    if (f) return f;
+    if (NAV.cache.size > 150) NAV.cache.clear();
+    const W = NAV.W, H = NAV.H, n = W * H;
+    f = new Float32Array(n).fill(Infinity);
+    const q = new Int32Array(n);
+    let qh = 0, qt = 0;
+    for (const c of seeds) if (c >= 0 && f[c] === Infinity) { f[c] = 0; q[qt++] = c; }
+    while (qh < qt) {
+      const c = q[qh++], cx = c % W, cy = (c / W) | 0, d = f[c];
+      for (let i = 0; i < 8; i++) {
+        const nx = cx + DX[i], ny = cy + DY[i];
+        if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+        const nc = ny * W + nx;
+        if (f[nc] !== Infinity || blockedFor(nc, team)) continue;
+        if (i >= 4 && (blockedFor(cy * W + nx, team) || blockedFor(ny * W + cx, team))) continue; // keine Ecken schneiden
+        f[nc] = d + (i >= 4 ? 1.41 : 1);
+        q[qt++] = nc;
+      }
+    }
+    NAV.cache.set(k, f);
+    return f;
+  }
+  function losClear(x0, y0, x1, y1, team) {
+    const n = Math.ceil(Math.hypot(x1 - x0, y1 - y0) / 18);
+    const cEnd = cellAt(x1, y1);
+    for (let i = 1; i < n; i++) {
+      const t = i / n, c = cellAt(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t);
+      if (c >= 0 && c !== cEnd && blockedFor(c, team)) return false;
+    }
+    return true;
+  }
+  function bestNeighbor(c, f, team) {
+    const W = NAV.W, cx = c % W, cy = (c / W) | 0;
+    let bv = f[c], bc = -1;
+    for (let i = 0; i < 8; i++) {
+      const nx = cx + DX[i], ny = cy + DY[i];
+      if (nx < 0 || ny < 0 || nx >= W || ny >= NAV.H) continue;
+      const nc = ny * W + nx;
+      if (f[nc] >= bv) continue;
+      if (i >= 4 && (blockedFor(cy * W + nx, team) || blockedFor(ny * W + cx, team))) continue;
+      bv = f[nc]; bc = nc;
+    }
+    return bc;
+  }
+  function navWaypoint(e, tx, ty, tgt) {
+    const team = e.team === -1 ? -2 : e.team; // neutrale Monster werden von allen Mauern aufgehalten
+    if (d2(e.x, e.y, tx, ty) < 70 * 70 || losClear(e.x, e.y, tx, ty, team)) return null;
+    let seeds, key;
+    if (tgt && tgt.kind === 'building') { key = 'b' + tgt.id; seeds = footprint(tgt); }
+    else { const c = cellAt(tx, ty); key = 'c' + c; seeds = [c]; }
+    const f = flowField(team, seeds, key);
+    let cur = cellAt(e.x, e.y);
+    if (cur < 0) return null;
+    let best = null;
+    for (let s = 0; s < 5; s++) { // dem Feld folgen und den weitesten noch sichtbaren Punkt nehmen
+      const nx = bestNeighbor(cur, f, team);
+      if (nx < 0) break;
+      cur = nx;
+      const px = (cur % NAV.W + 0.5) * T, py = (((cur / NAV.W) | 0) + 0.5) * T;
+      if (s === 0 || losClear(e.x, e.y, px, py, team)) best = { x: px, y: py }; else break;
+      if (f[cur] === 0) break;
+    }
+    return best;
+  }
+  G.navWaypoint = navWaypoint;
+  function navMove(e, tx, ty, dt, stop, tgt) {
+    if (e.speed <= 0) return false;
+    e.navT = (e.navT || 0) - dt;
+    if (e.navT <= 0 || e.navTx === undefined || Math.abs(e.navTx - tx) + Math.abs(e.navTy - ty) > 60) {
+      e.navT = 0.25 + Math.random() * 0.1; e.navTx = tx; e.navTy = ty;
+      e.navWp = navWaypoint(e, tx, ty, tgt);
+    }
+    const wp = e.navWp;
+    if (!wp) return moveTo(e, tx, ty, dt, stop);
+    if (moveTo(e, wp.x, wp.y, dt, 3)) e.navT = 0; // Wegpunkt erreicht: sofort den nächsten bestimmen
     return false;
   }
 
@@ -1155,7 +1273,7 @@
     if (e.order) {
       if (e.order.type === 'move') {
         e.target = null;
-        if (moveTo(e, e.order.x, e.order.y, dt, 6)) e.order = null;
+        if (navMove(e, e.order.x, e.order.y, dt, 6)) e.order = null;
         return;
       }
       if (e.order.type === 'attack') {
@@ -1180,7 +1298,7 @@
             gainUnitXp(e, 1.5);
           }
           e.moving = false;
-        } else moveTo(e, ht.x, ht.y, dt, 0);
+        } else navMove(e, ht.x, ht.y, dt, 0, ht);
         return;
       }
     }
@@ -1190,10 +1308,10 @@
       const range = e.range * (1 + e.m.range);
       const dd = Math.sqrt(d2(e.x, e.y, t.x, t.y)) - t.r - e.r;
       if (dd <= range) { attack(e, t); e.moving = false; }
-      else moveTo(e, t.x, t.y, dt, 0);
+      else navMove(e, t.x, t.y, dt, 0, t);
     } else {
       const g = unitGoal(e);
-      if (g) moveTo(e, g.x, g.y, dt, 6);
+      if (g) navMove(e, g.x, g.y, dt, 6);
     }
   }
 
@@ -1768,6 +1886,7 @@
     S.time += dt;
     S.tick++;
     buildGrid();
+    if (S.navDirty) navRebuild();
     S.bonusT -= dt;
     if (S.bonusT <= 0) { S.bonusT = 1; updateBonusCaches(); }
     for (const p of S.players) updatePlayer(p, dt);
