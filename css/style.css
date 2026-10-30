@@ -254,3 +254,40 @@ button.armed { background: linear-gradient(#a02a1a, #6a140c) !important; border-
   #tutorial { top: 6px; left: 6px; right: 62px; transform: none; width: auto; font-size: 12.5px; padding: 7px 9px; }
   body.tut-on #msgs { display: none; }
 }
+
+/* Heldenfenster */
+#herocard { position: absolute; left: 10px; width: 236px; z-index: 4; background: rgba(30,22,14,.93); border: 2px solid var(--ink); border-radius: 10px; padding: 6px; font-size: 12.5px; box-shadow: 0 4px 12px rgba(0,0,0,.45); }
+#herocard.sel { border-color: #7aff7a; }
+.hc-top { display: flex; gap: 6px; align-items: center; }
+.hc-crest { width: 38px; height: 38px; min-height: 0; border-radius: 50%; padding: 0; font-family: 'Cinzel', serif; font-weight: 800; font-size: 18px; color: var(--ink); border: 3px solid #ffd23a; flex: none; }
+.hc-info { flex: 1; min-width: 0; }
+.hc-name b { color: var(--gold); }
+.hc-name .tp { color: #ffd23a; }
+.hc-bar { height: 6px; background: #111; border: 1px solid var(--ink); border-radius: 3px; overflow: hidden; margin-top: 3px; }
+.hc-bar div { height: 100%; background: linear-gradient(90deg, #ffd23a, #ffe9a0); }
+.hc-bar.hp div { background: linear-gradient(90deg, #3fae3f, #7ae07a); }
+.hc-bar.xp { height: 4px; }
+.hc-bar.xp div { background: linear-gradient(90deg, #b080ff, #e0c0ff); }
+.hc-dead { color: var(--bad); font-weight: 700; }
+.hc-btns { display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; margin-top: 5px; }
+.hc-btns button { padding: 2px 1px; font-size: 11px; line-height: 1.1; display: flex; flex-direction: column; align-items: center; min-height: 36px; justify-content: center; }
+.hc-btns small { font-size: 9.5px; }
+.hc-modes { display: flex; gap: 3px; margin-top: 4px; }
+.hc-modes .chip { flex: 1; padding: 2px 0; font-size: 11px; min-height: 26px; }
+.hc-hint { font-size: 11px; color: #a8e8a8; margin-top: 3px; text-align: center; }
+/* Produktion */
+.training { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 8px; margin: 6px 0; }
+.tr { font-size: 12px; }
+.tr span { color: #f5dfa8; }
+.recruit { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 4px 0 6px; }
+.rcard { text-align: left; padding: 4px 6px; display: flex; flex-direction: column; font-size: 12.5px; }
+.rcard small { font-size: 11px; }
+@media (max-width: 900px), (max-height: 560px) {
+  #herocard { left: 6px; width: 212px; padding: 4px; font-size: 11.5px; }
+  .hc-crest { width: 32px; height: 32px; font-size: 15px; }
+  .hc-btns button { min-height: 34px; }
+  #selection { left: 226px; }
+}
+@media (max-width: 560px) {
+  #selection { left: 6px; bottom: auto; top: 50px; }
+}

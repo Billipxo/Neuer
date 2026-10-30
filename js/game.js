@@ -136,7 +136,7 @@
       attackFrac: isHuman ? 0.7 : diff.attackFrac, minAttack: isHuman ? 0 : diff.minAttack,
       targetMode: 'auto', targetPlayer: null, manualPoint: null, campTarget: null, campsAllowed: true, campStart: 0,
       armyState: 'sammeln', armyPoint: null, attackPoint: null, armyCentroid: null, poolSupply: 0, committedCount: 0,
-      comp: { tank: 2, nahkampf: 3, fernkampf: 3, magier: 2, heiler: 1, support: 1, beschwoerer: 1 },
+      comp: { tank: 2, nahkampf: 3, fernkampf: 3, magier: 2, heiler: 1, support: 1, beschwoerer: 1 }, preset: 'ausgewogen',
       buffs: [], abCd: [25, 0, 0], alive: true, hero: null, heroRespawn: 0, reserve: { g: 0, w: 0 },
       thinkT: Math.random(), armyT: Math.random(), abilT: Math.random(), blds: [], th: null,
       walls: [], wallLevel: 0, wallUp: null, wallAlive: 0,
@@ -610,7 +610,7 @@
       id: S.nextId++, kind: 'hero', name: d.name, def: d, owner: p.id, team: p.team,
       x: p.base.x + p.dir.x * 110, y: p.base.y + p.dir.y * 110, r: hb.r, level: 1, xp: 0, items: [],
       range: d.ranged ? hb.rangedRange : hb.range, cd: hb.cd, proj: d.ranged ? 'kugel' : null, splash: 0, heal: 0,
-      abilities: d.abilities.map((a) => ({ ...a, t: 4 })), manual: false, order: null, goal: null, hold: null,
+      abilities: d.abilities.map((a) => ({ ...a, t: 4 })), manual: false, mode: 'armee', huntCamp: null, order: null, goal: null, hold: null,
       atkT: 0, retargetT: 0, target: null, buffs: [], m: zeroMods(), face: 0, castT: 0, retreat: false, shopping: null, hitT: 0, walkT: 0,
     };
     recalcHero(h);
@@ -846,9 +846,47 @@
         h.shopping = null;
       } else { h.goal = h.shopping; return; }
     }
+    // Verhalten: Armee folgen, Basis verteidigen oder auf eigene Faust Monster jagen
+    if (h.mode === 'basis') { h.goal = { x: p.base.x + p.dir.x * 150, y: p.base.y + p.dir.y * 150 }; return; }
+    if (h.mode === 'jagen') {
+      if (!h.huntCamp || h.huntCamp.left <= 0 || (h.huntCamp.avoidHero || 0) > S.time) h.huntCamp = pickHuntCamp(h);
+      if (h.huntCamp) {
+        if (h.hp < h.maxHp * 0.4 && h.huntCamp.active) { h.huntCamp.avoidHero = S.time + 60; h.huntCamp = null; h.retreat = true; return; }
+        h.goal = { x: h.huntCamp.x, y: h.huntCamp.y }; return;
+      }
+    }
     const c = p.armyCentroid;
     h.goal = c ? { x: c.x - p.dir.x * 20, y: c.y - p.dir.y * 20 } : p.armyPoint;
   }
+  function pickHuntCamp(h) {
+    const mine = strength([h]) * (1 + h.level * 0.15);
+    let best = null, bd = Infinity;
+    for (const c of S.camps) {
+      if (c.left <= 0 || (c.avoidHero || 0) > S.time) continue;
+      if (strength(c.creeps.filter((e) => !e.dead)) > mine) continue;
+      const dd = dist(c, h);
+      if (dd < bd) { bd = dd; best = c; }
+    }
+    return best;
+  }
+  G.heroRetreat = function (p) {
+    const h = p.hero; if (!h || h.dead) return;
+    h.target = null; h.shopping = null;
+    if (h.manual) h.order = { type: 'move', x: p.base.x + p.dir.x * 60, y: p.base.y + p.dir.y * 60 };
+    else h.retreat = true;
+    if (p.human) G.msg(`${h.name} zieht sich zur Basis zurück.`, '');
+  };
+  G.heroPotion = function (p) {
+    const h = p.hero; if (!h || h.dead) return;
+    if (!h.items.includes('trank')) { G.msg('Kein Heiltrank im Inventar (beim Händler kaufen).', 'bad'); return; }
+    usePotion(h);
+  };
+  G.heroMode = function (p, mode) {
+    const h = p.hero;
+    h.manual = mode === 'manuell';
+    if (!h.manual) h.mode = mode;
+    h.order = null; h.hold = null; h.huntCamp = null;
+  };
   function nextWish(p) {
     for (const id of G.HERO_WISHLIST) if (!p.hero.items.includes(id)) return id;
     return null;
@@ -1048,7 +1086,7 @@
         if (o.kind === 'building') return;
         if (dist(o, e.home) > 420) return;
       } else if (o.kind === 'creep') {
-        if (!o.camp.active && p.campTarget !== o.camp && d2(o.x, o.y, e.x, e.y) > 90 * 90) return;
+        if (!o.camp.active && p.campTarget !== o.camp && !(e.kind === 'hero' && e.huntCamp === o.camp) && d2(o.x, o.y, e.x, e.y) > 90 * 90) return;
       }
       let s = Math.sqrt(d2(o.x, o.y, e.x, e.y)) - o.r;
       if (o.kind === 'building') {
@@ -1519,6 +1557,26 @@
       }
     }
   }
+  // Einheit rekrutieren: wählt automatisch das passende, am wenigsten beschäftigte Gebäude
+  G.producerType = (role) => Object.keys(G.PRODUCTION).find((t) => G.PRODUCTION[t][role] !== undefined);
+  G.recruitCheck = function (p, role) {
+    const type = G.producerType(role), need = G.PRODUCTION[type][role];
+    const list = p.blds.filter((b) => b.type === type);
+    if (!list.length) return `Benötigt ${G.bname(p.race, type)}`;
+    const ok = list.filter((b) => b.level >= need);
+    if (!ok.length) return `Benötigt ${G.bname(p.race, type)} Stufe ${need}`;
+    if (ok.every((b) => b.queue.length >= 5)) return 'Warteschlangen voll';
+    return null;
+  };
+  G.recruit = function (p, role) {
+    const why = G.recruitCheck(p, role);
+    if (why) { G.msg(why, 'bad'); return false; }
+    const type = G.producerType(role), need = G.PRODUCTION[type][role];
+    const b = p.blds.filter((x) => x.type === type && x.level >= need && x.queue.length < 5)
+      .sort((a, c) => (a.queue.length + (a.prod || a.upgrading ? 1 : 0)) - (c.queue.length + (c.prod || c.upgrading ? 1 : 0)))[0];
+    b.queue.push(role);
+    return true;
+  };
   G.queueUnit = function (p, b, role) {
     if (!unlockedRoles(b).includes(role)) return;
     if (b.queue.length >= 5) { G.msg('Warteschlange voll (5)', 'bad'); return; }

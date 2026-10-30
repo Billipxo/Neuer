@@ -8,10 +8,10 @@ Baue eine Festung im Stil von Clash of Clans, lass deine Truppen automatisch kä
 
 Keine Installation nötig: `index.html` im Browser öffnen (Chrome, Edge, Firefox oder Safari).
 Auch am **Handy und Tablet** spielbar (Touch-Steuerung: Wischen = Karte bewegen, zwei Finger = Zoom,
-Tippen = auswählen/bauen, lange drücken = Held bewegen im manuellen Modus, ☰ = Menü).
+Tippen = auswählen/bauen, Held antippen und dann Ziel antippen = Held steuern, ☰ = Menü).
 Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http://localhost:8000` öffnen.
 
-## Was schon drin ist (Prototyp v0.6)
+## Was schon drin ist (Prototyp v0.7)
 
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
@@ -42,6 +42,11 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
   „Jetzt angreifen!“. Losgeschickte Einheiten kämpfen, bis sie fallen.
 - **Wegfindung:** Einheiten laufen um Gebäude herum (Strömungsfelder auf einem 40-px-Raster). Eigene Mauern sind
   durchlässig; gegnerische Mauern werden umgangen, wenn es eine Lücke gibt, sonst eingerissen.
+- **Heldenfenster** (immer sichtbar): Lebenspunkte, Erfahrung, Fähigkeiten mit Abklingzeit, Heiltrank, Rückzug,
+  Kamera folgt dem Helden, Verhalten „Folgt Armee“ / „Verteidigt Basis“ / „Jagt Monster“ / „Manuell“.
+  Steuern: Held auswählen, dann Ziel anklicken bzw. antippen. Beim Zielen zeigen Kreise Reichweite und Wirkungsbereich.
+- **Einfache Produktion:** Armee-Vorlagen (Ausgewogen, Schildwall, Sturmangriff, Fernkampf, Arkane Macht),
+  Rekrutieren per Einheitenkarte ohne Gebäudeauswahl, Übersicht der laufenden Ausbildung; Regler unter „Feineinstellung“.
 - Neutrale Monster mit Beute und Extra-Belohnungen, Händler, Endphase mit Punktewertung.
 
 **Atmosphäre**
@@ -59,7 +64,8 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 | WASD / Pfeiltasten / Mausrand / Ziehen | Kamera bewegen |
 | Mausrad | Zoom |
 | Linksklick | Auswählen, Gebäude platzieren, Fähigkeitsziel |
-| Rechtsklick | Held bewegen/angreifen (manueller Modus), Abbrechen |
+| Rechtsklick | Held bewegen/angreifen, Abbrechen |
+| Held auswählen + Linksklick | Held bewegen/angreifen (schaltet auf manuell) |
 | H | Held manuell / automatisch |
 | Q / E | Heldenfähigkeit 1 / 2 auf Mausposition |
 | 1 / 2 / 3 (R = 1) | Volksfähigkeiten |

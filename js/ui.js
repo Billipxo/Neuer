@@ -112,11 +112,11 @@
         <div><h3>Ziel</h3><p>Zerstöre das Haupthaus aller gegnerischen Völker. Fällt dein eigenes, ist die Partie verloren. In der Endphase (letzte 5 Minuten) greifen alle an, danach entscheidet die Punktzahl.</p></div>
         <div><h3>Basisbau</h3><p>Baue innerhalb des gestrichelten Rings. Das Haupthaus bestimmt, wie viele Gebäude du bauen und wie hoch du sie ausbauen kannst. Baumeister begrenzen, wie viel gleichzeitig entsteht. Die Mauer kaufst du im Bauen-Tab; sie umschließt die ganze Basis.</p></div>
         <div><h3>Wirtschaft</h3><p>Arbeiter entstehen automatisch und sammeln Gold und Holz. Minen und Sägewerke erhöhen das Einkommen. Außenposten auf Goldadern bringen viel Gold, stehen aber ungeschützt auf der Karte.</p></div>
-        <div><h3>Armee</h3><p>Truppengebäude bilden Einheiten nach deiner Zusammensetzung aus. Höhere Gebäudestufen schalten Rollen frei (Tank, Magier, Support …). Im Armee-Tab wählst du: Sammeln &amp; Angreifen, Wellen oder Nur verteidigen. Losgeschickte Einheiten kämpfen bis zum Tod.</p></div>
-        <div><h3>Held</h3><p>Dein Held gibt der ganzen Armee einen Commander-Bonus, steigt bis Stufe 10 auf und bringt pro Stufe einen Talentpunkt. Er kann automatisch kämpfen oder manuell gesteuert werden und kauft beim Händler Ausrüstung.</p></div>
+        <div><h3>Armee</h3><p>Truppengebäude bilden automatisch Einheiten nach der gewählten Armee-Vorlage aus; über die Einheitenkarten im Armee-Tab rekrutierst du zusätzlich gezielt. Höhere Gebäudestufen schalten Rollen frei (Tank, Magier, Support …). Im Armee-Tab wählst du: Sammeln &amp; Angreifen, Wellen oder Nur verteidigen. Losgeschickte Einheiten kämpfen bis zum Tod.</p></div>
+        <div><h3>Held</h3><p>Dein Held gibt der ganzen Armee einen Commander-Bonus, steigt bis Stufe 10 auf und bringt pro Stufe einen Talentpunkt. Im Heldenfenster wählst du sein Verhalten (Armee folgen, Basis verteidigen, Monster jagen oder manuell), nutzt Fähigkeiten, Tränke und den Rückzug.</p></div>
         <div><h3>Volk</h3><p>Jedes Volk hat ein Passiv und drei Volksfähigkeiten (ab Haupthaus-Stufe 1, 3 und 5). Im Tab „Volk“ verteilst du Talente in Krieg, Bollwerk und Wohlstand.</p></div>
         <div><h3>Neutrale Monster</h3><p>Lager auf der Karte geben Gold, Holz, Erfahrung und Beute. Trolle schließen sich dir als Söldner an, Golems und Drachen stärken die ganze Armee.</p></div>
-        <div><h3>Steuerung</h3><p><b>PC:</b> WASD/Ziehen = Kamera, Mausrad = Zoom, Linksklick = auswählen/bauen, Rechtsklick = Held (manuell), Q/E = Heldenfähigkeit, 1–3 = Volksfähigkeit, H = Held manuell.<br><b>Handy:</b> Wischen = Kamera, zwei Finger = Zoom, Tippen = auswählen/bauen, lange drücken = Held bewegen (manuell), ☰ = Menü, rote Knöpfe = Fähigkeiten.</p></div>
+        <div><h3>Steuerung</h3><p><b>PC:</b> WASD/Ziehen = Kamera, Mausrad = Zoom, Linksklick = auswählen/bauen, Held auswählen und Linksklick aufs Ziel (oder Rechtsklick) = Held steuern, Q/E = Heldenfähigkeit, 1–3 = Volksfähigkeit, H = Held manuell/automatisch.<br><b>Handy:</b> Wischen = Kamera, zwei Finger = Zoom, Tippen = auswählen/bauen, Held (Wappen im Heldenfenster) antippen und dann Ziel antippen = Held steuern, ☰ = Menü, rote Knöpfe = Volksfähigkeiten.</p></div>
         </div></section>`;
     } else {
       const s = Prof().data.settings;
@@ -196,11 +196,11 @@
       G.R.centerOn(me().base.x + me().dir.x * 150, me().base.y);
     });
     UI.selected = null; UI.placing = null; UI.casting = null; UI.pickTarget = false;
-    UI.tab = 'bauen'; UI.awarded = null;
+    UI.tab = 'bauen'; UI.awarded = null; UI.follow = false;
     UI.tut = Prof().data.tutorialDone ? null : { step: 0 };
     renderTutorial();
     document.body.classList.remove('panel-open');
-    if (G.R.touch) { G.R.cam.z = 0.8; G.msg('Wischen: Karte bewegen · Zwei Finger: Zoom · Tippen: Auswählen · ☰: Menü · Lange drücken: Held bewegen (manuell)', ''); }
+    if (G.R.touch) { G.R.cam.z = 0.8; G.msg('Wischen: Karte bewegen · Zwei Finger: Zoom · Tippen: Auswählen · ☰: Menü · Held antippen, dann Ziel antippen: Held steuern', ''); }
     if (cfg.mission) G.msg(`Mission: ${Prof().findMission(cfg.mission).m.goal}`, 'gold');
     renderPanel(true);
   };
@@ -291,11 +291,22 @@
     const counts = {}; G.ROLES.forEach((r) => (counts[r] = 0));
     let summons = 0;
     for (const e of S.ents) if (!e.dead && e.owner === p.id && e.kind === 'unit') { if (counts[e.role] !== undefined) counts[e.role]++; else summons++; }
-    h += `<div class="box">${toggle('auto.produce', 'Automatische Produktion', p.auto.produce, 'Gebäude im Fokus „Auto" bilden Einheiten gemäß Zusammensetzung aus.')}
-      <div class="lbl">Armee-Zusammensetzung (Gewichtung)</div>`;
-    for (const r of G.ROLES) {
-      h += `<div class="comp"><span class="rn">${G.ROLE_NAMES[r]} <small>${p.rd.units[r].name}</small></span>
-        <input type="range" min="0" max="6" step="1" value="${p.comp[r]}" data-slider="comp" data-role="${r}"><span class="cv">${p.comp[r]}</span><span class="cc">${counts[r]}×</span></div>`;
+    const training = p.blds.filter((b) => b.prod);
+    const queued = p.blds.reduce((n, b) => n + b.queue.length, 0);
+    h += `<div class="box"><div class="lbl">Produktion ${toggle('auto.produce', 'automatisch', p.auto.produce, 'Gebäude bilden laufend Einheiten nach der gewählten Vorlage aus.')}</div>
+      <div class="chips">${G.ARMY_PRESETS.map((pr) => `<button class="chip ${p.preset === pr.id ? 'sel' : ''}" data-act="preset" data-v="${pr.id}" title="${esc(pr.desc)}">${pr.name}</button>`).join('')}${p.preset === 'eigene' ? '<button class="chip sel" disabled>Eigene</button>' : ''}</div>
+      <div class="hint">${(G.ARMY_PRESETS.find((x) => x.id === p.preset) || { desc: 'Eigene Gewichtung aus der Feineinstellung.' }).desc}</div>
+      <div class="training">${training.length ? training.map((b) => `<div class="tr" title="${esc(b.name)}"><span>${p.rd.units[b.prod.role].name}</span><div class="hc-bar"><div style="width:${Math.floor(100 * b.prod.t / b.prod.total)}%"></div></div></div>`).join('') : '<div class="hint">Gerade wird niemand ausgebildet.</div>'}
+      ${queued ? `<div class="hint">In der Warteschlange: ${queued}</div>` : ''}</div>
+      <div class="lbl">Rekrutieren <small>(zusätzlich zur Automatik, kostet beim Start der Ausbildung)</small></div>
+      <div class="recruit">${G.ROLES.map((r) => { const why = G.recruitCheck(p, r), c = G.unitCost(p, r);
+        return `<button class="rcard" data-act="recruit" data-v="${r}" ${why ? `disabled title="${esc(why)}"` : `title="${esc(G.ROLE_NAMES[r] + ' ausbilden')}"`}><b>${p.rd.units[r].name}</b><small>${G.ROLE_NAMES[r]} · ${counts[r]}×</small><small>${why ? why : costHtml(c)}</small></button>`; }).join('')}</div>
+      <button class="mini" data-act="finetune">${UI.fineOpen ? '▾ Feineinstellung ausblenden' : '▸ Feineinstellung (Gewichtung je Rolle)'}</button>`;
+    if (UI.fineOpen) {
+      for (const r of G.ROLES) {
+        h += `<div class="comp"><span class="rn">${G.ROLE_NAMES[r]} <small>${p.rd.units[r].name}</small></span>
+          <input type="range" min="0" max="6" step="1" value="${p.comp[r]}" data-slider="comp" data-role="${r}"><span class="cv">${p.comp[r]}</span><span class="cc">${counts[r]}×</span></div>`;
+      }
     }
     return h + `<div class="hint">Beschwörungen/Söldner: ${summons}. Rollen werden je Gebäudestufe freigeschaltet (Kaserne St. 2 = Tank, Sanktum St. 2 = Magier, St. 3 = Support).</div></div>`;
   }
@@ -321,8 +332,8 @@
     s += `<div class="stats"><span>Stufe <b>${h.level}</b>/10</span><span>LP <b>${fmt(h.hp)}/${fmt(h.maxHp)}</b></span><span>Schaden <b>${Math.round(h.dmg)}</b></span><span>Rüstung <b>${h.armor}</b></span></div>
       <div class="xpbar"><div style="width:${h.level >= 10 ? 100 : Math.floor(100 * (h.xp - prev) / (need - prev))}%"></div></div>
       <div class="kv"><b>Commander-Bonus:</b> ${d.bonusDesc}</div>
-      ${toggle('heroManual', 'Manuelle Steuerung (H)', h.manual, 'Rechtsklick: bewegen/angreifen, Q/E: Fähigkeiten auf Mausposition')}
-      ${h.manual ? '<div class="hint">Rechtsklick = Bewegen / Angreifen · Q / E = Fähigkeit auf Mauszeiger · Leertaste = Kamera auf Held</div>' : '<div class="hint">Der Held folgt der Armee, wirkt Fähigkeiten selbst und kauft automatisch beim Händler ein.</div>'}</div>`;
+      <div class="lbl">Verhalten</div><div class="chips">${G.HERO_MODES.map((m) => `<button class="chip ${(h.manual ? 'manuell' : (h.mode || 'armee')) === m.id ? 'sel' : ''}" data-act="heromode" data-v="${m.id}">${m.name}</button>`).join('')}</div>
+      <div class="hint">${G.HERO_MODES.find((m) => m.id === (h.manual ? 'manuell' : (h.mode || 'armee'))).desc} ${h.manual ? (G.R.touch ? 'Fähigkeit antippen, dann Ziel antippen.' : 'Q / E wirken auf den Mauszeiger, Rechtsklick bewegt immer.') : 'Wirkt Fähigkeiten selbst und kauft beim Händler ein.'}</div></div>`;
     s += '<div class="box"><div class="lbl">Fähigkeiten</div>';
     h.abilities.forEach((a, i) => {
       s += `<div class="abil"><button data-act="cast" data-idx="${i}" ${a.t > 0 || h.dead ? 'disabled' : ''}>${i === 0 ? 'Q' : 'E'}: ${a.name}${a.t > 0 ? ` (${Math.ceil(a.t)} s)` : ''}</button><small>${abilityDesc(a)} · ${a.cd} s</small></div>`;
@@ -401,6 +412,30 @@
     renderSelection();
   }
   UI.renderPanel = renderPanel;
+
+  // Heldenfenster: immer sichtbar, mit Fähigkeiten, Trank, Rückzug, Kamera und Verhalten
+  const MODE_SHORT = { armee: 'Armee', basis: 'Basis', jagen: 'Jagd', manuell: 'Manuell' };
+  function renderHeroCard() {
+    const p = me(), h = p.hero, d = p.heroDef, card = $('#herocard');
+    if (UI.pointerDownPanel) return;
+    card.style.bottom = ($('#mmwrap').offsetHeight + 16) + 'px';
+    const mode = h.manual ? 'manuell' : (h.mode || 'armee');
+    const need = G.heroXpNeeded(h.level), prev = h.level > 1 ? G.heroXpNeeded(h.level - 1) : 0;
+    const xpPct = h.level >= 10 ? 100 : Math.floor(100 * (h.xp - prev) / (need - prev));
+    const potions = h.items.filter((i) => i === 'trank').length;
+    const sel = UI.selected === h;
+    card.className = sel ? 'sel' : '';
+    card.innerHTML = `<div class="hc-top"><button class="hc-crest" data-act="herosel" title="Held auswählen und Kamera hinbewegen" style="background:${p.rd.color}">${d.name.split(' ').pop()[0]}</button>
+      <div class="hc-info"><div class="hc-name"><b>${d.name.split(' ').pop()}</b> St. ${h.level}${p.talentPoints ? ' <span class="tp">★</span>' : ''}</div>
+      ${h.dead ? `<div class="hc-dead">Wiederbelebung in ${Math.ceil(p.heroRespawn)} s</div>` : `<div class="hc-bar hp"><div style="width:${Math.max(0, 100 * h.hp / h.maxHp)}%"></div></div>`}
+      <div class="hc-bar xp"><div style="width:${xpPct}%"></div></div></div></div>
+      <div class="hc-btns">${h.abilities.map((a, i) => `<button data-act="cast" data-idx="${i}" ${a.t > 0 || h.dead ? 'disabled' : ''} title="${esc(a.name + ' – ' + abilityDesc(a))}">${G.R.touch ? '' : (i ? 'E ' : 'Q ')}${a.name.split(/[ -]/)[0].slice(0, 8)}<small>${a.t > 0 ? Math.ceil(a.t) + ' s' : 'bereit'}</small></button>`).join('')}
+        <button data-act="potion" ${potions && !h.dead ? '' : 'disabled'} title="Heiltrank trinken">🧪<small>${potions}×</small></button>
+        <button data-act="retreat" ${h.dead ? 'disabled' : ''} title="Rückzug zur Basis">↩<small>Rückzug</small></button>
+        <button data-act="follow" class="${UI.follow ? 'sel' : ''}" title="Kamera folgt dem Helden">🎥<small>${UI.follow ? 'folgt' : 'Kamera'}</small></button></div>
+      <div class="hc-modes">${G.HERO_MODES.map((m) => `<button class="chip ${mode === m.id ? 'sel' : ''}" data-act="heromode" data-v="${m.id}" title="${esc(m.desc)}">${MODE_SHORT[m.id]}</button>`).join('')}</div>
+      ${mode === 'manuell' ? `<div class="hc-hint">${sel ? (G.R.touch ? 'Ziel antippen: laufen / angreifen' : 'Linksklick aufs Ziel: laufen / angreifen') : 'Held antippen, dann Ziel antippen'}</div>` : ''}`;
+  }
   const isMobile = () => window.matchMedia('(max-width: 900px), (max-height: 560px)').matches;
   function renderQuick(p) {
     const h = p.hero;
@@ -409,7 +444,6 @@
       const short = ab.name.split(/[ -]/)[0].slice(0, 9);
       return `<button class="qr" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.name + ': ' + ab.desc)}">${short}<small>${why ? (p.th.level < ab.th ? '🔒' : Math.ceil(p.abCd[i]) + ' s') : 'bereit'}</small></button>`;
     }).join('');
-    q += h.abilities.map((a, i) => `<button data-act="cast" data-idx="${i}" ${a.t > 0 || h.dead ? 'disabled' : ''} title="${esc(a.name)}">${a.name.split(/[ -]/)[0].slice(0, 9)}<small>${h.dead ? 'Held tot' : a.t > 0 ? Math.ceil(a.t) + ' s' : 'Held'}</small></button>`).join('');
     q += `<button class="qa" data-act="launch" ${p.poolSupply ? '' : 'disabled'}>⚔ Angriff<small>${p.poolSupply} Vers.</small></button>`;
     $('#quick').innerHTML = q;
   }
@@ -419,7 +453,8 @@
   function renderSelection() {
     const box = $('#selection');
     const e = UI.selected;
-    if (!e || e.dead) { UI.selected = null; box.classList.add('hidden'); return; }
+    if (!e || e.dead) { if (e && e.dead && e.kind !== 'hero') UI.selected = null; box.classList.add('hidden'); return; }
+    if (e.kind === 'hero' && e.owner === 0) { box.classList.add('hidden'); return; } // eigener Held: Heldenfenster genügt
     box.classList.remove('hidden');
     const S = G.S, p = me();
     const owner = e.owner >= 0 ? S.players[e.owner] : null;
@@ -538,7 +573,7 @@
       case 'wall': G.upgradeWall(p); break;
       case 'toggle': {
         const k = el.dataset.key, on = el.checked;
-        if (k === 'heroManual') { p.hero.manual = on; p.hero.order = null; p.hero.hold = null; if (on) UI.selected = p.hero; }
+        if (k === 'heroManual') { G.heroMode(p, on ? 'manuell' : (p.hero.mode || 'armee')); if (on) UI.selected = p.hero; }
         else if (k === 'prodOn') { if (UI.selected) UI.selected.prodOn = on; }
         else if (k.startsWith('auto.')) p.auto[k.slice(5)] = on;
         else p[k] = on;
@@ -565,6 +600,14 @@
         break;
       }
       case 'cast': castBtn(+el.dataset.idx); break;
+      case 'potion': G.heroPotion(p); break;
+      case 'retreat': G.heroRetreat(p); break;
+      case 'follow': UI.follow = !UI.follow; if (UI.follow && !p.hero.dead) G.R.centerOn(p.hero.x, p.hero.y); break;
+      case 'heromode': G.heroMode(p, v); if (v === 'manuell') { UI.selected = p.hero; G.msg(G.R.touch ? 'Manuell: Ziel antippen, um den Helden zu bewegen oder angreifen zu lassen.' : 'Manuell: Linksklick aufs Ziel (Held ausgewählt) oder Rechtsklick.', ''); } break;
+      case 'herosel': if (!p.hero.dead) { UI.selected = p.hero; G.R.centerOn(p.hero.x, p.hero.y); } break;
+      case 'preset': { const pr = G.ARMY_PRESETS.find((x) => x.id === v); p.comp = { ...pr.comp }; p.preset = v; G.msg(`Armee-Vorlage: ${pr.name}`, ''); break; }
+      case 'recruit': G.recruit(p, v); break;
+      case 'finetune': UI.fineOpen = !UI.fineOpen; break;
       case 'race': G.castRaceAbility(p, +el.dataset.idx || 0); break;
       case 'speed': S.speed = +v; S.paused = false; break;
       case 'pause': S.paused = !S.paused; break;
@@ -616,12 +659,12 @@
     if (k === 'attackFrac') p.attackFrac = v / 100;
     if (k === 'waveInterval') { p.waveInterval = v; p.waveT = Math.min(p.waveT, v); }
     if (k === 'goldRatio') p.goldRatio = v / 100;
-    if (k === 'comp') p.comp[el.dataset.role] = v;
+    if (k === 'comp') { p.comp[el.dataset.role] = v; p.preset = 'eigene'; }
     const lab = el.previousElementSibling && el.previousElementSibling.querySelector('b');
     if (lab && (k === 'attackFrac' || k === 'waveInterval')) lab.textContent = k === 'attackFrac' ? v + '%' : v;
     if (el.nextElementSibling && el.nextElementSibling.classList.contains('cv')) el.nextElementSibling.textContent = v;
   });
-  document.addEventListener('pointerdown', (ev) => { if (ev.target.closest('#panel, #selection')) UI.pointerDownPanel = true; });
+  document.addEventListener('pointerdown', (ev) => { if (ev.target.closest('#panel, #selection, #herocard, #quick')) UI.pointerDownPanel = true; });
   document.addEventListener('pointerup', () => { UI.pointerDownPanel = false; });
 
   // -------------------------------------------------------------------------
@@ -667,7 +710,7 @@
       if (drag) {
         const dx = ev.clientX - drag.sx, dy = ev.clientY - drag.sy;
         if (Math.abs(dx) + Math.abs(dy) > (ev.pointerType === 'mouse' ? 6 : 12)) { drag.moved = true; clearTimeout(longT); }
-        if (drag.moved) { G.R.cam.x = drag.cx - dx / G.R.cam.z; G.R.cam.y = drag.cy - dy / G.R.cam.z; G.R.clampCam(); }
+        if (drag.moved) { UI.follow = false; G.R.cam.x = drag.cx - dx / G.R.cam.z; G.R.cam.y = drag.cy - dy / G.R.cam.z; G.R.clampCam(); }
       }
     });
     cv.addEventListener('pointerleave', () => { G.R.mouse.inside = false; });
@@ -737,7 +780,7 @@
       if (k === 'r' || k === '1') G.castRaceAbility(p, 0);
       if (k === '2') G.castRaceAbility(p, 1);
       if (k === '3') G.castRaceAbility(p, 2);
-      if (k === 'h') { p.hero.manual = !p.hero.manual; p.hero.order = null; p.hero.hold = null; G.msg(`Held: ${p.hero.manual ? 'manuelle Steuerung' : 'automatisch'}`, ''); renderPanel(true); }
+      if (k === 'h') { G.heroMode(p, p.hero.manual ? (p.hero.mode || 'armee') : 'manuell'); if (p.hero.manual) UI.selected = p.hero; G.msg(`Held: ${p.hero.manual ? 'manuelle Steuerung' : 'automatisch'}`, ''); renderPanel(true); }
       if (k === ' ') { ev.preventDefault(); if (!p.hero.dead) G.R.centerOn(p.hero.x, p.hero.y); }
       if (k === 'p') G.S.paused = !G.S.paused;
       if (k === 'b') { UI.tab = 'bauen'; renderPanel(true); }
@@ -762,7 +805,13 @@
     }
     if (UI.casting !== null) { G.heroCastManual(p, UI.casting, wx, wy); UI.casting = null; renderPanel(true); return; }
     if (UI.pickTarget) { setManualPoint(wx, wy); return; }
-    UI.selected = pickAt(wx, wy);
+    const hit = pickAt(wx, wy), h = p.hero;
+    if (UI.selected === h && !h.dead && hit !== h && (!hit || hit.team !== p.team)) {
+      if (!h.manual) { G.heroMode(p, 'manuell'); G.msg('Held: manuelle Steuerung (zurück über „Armee“ im Heldenfenster).', ''); }
+      G.heroCommand(p, wx, wy);
+      renderPanel(true); return;
+    }
+    UI.selected = hit;
     if (isMobile()) document.body.classList.remove('panel-open');
     renderPanel(true);
   }
@@ -775,6 +824,12 @@
 
   UI.updateCamera = function (dt) {
     const R = G.R, sp = 900 * dt / R.cam.z;
+    if (UI.follow && G.S) {
+      const h = me().hero;
+      if (!h.dead) { const tx = h.x - R.viewW() / 2, ty = h.y - R.viewH() / 2; R.cam.x += (tx - R.cam.x) * Math.min(1, dt * 4); R.cam.y += (ty - R.cam.y) * Math.min(1, dt * 4); R.clampCam(); }
+      if (keys['a'] || keys['d'] || keys['w'] || keys['s'] || keys['arrowleft'] || keys['arrowright'] || keys['arrowup'] || keys['arrowdown']) UI.follow = false;
+      else return;
+    }
     if (keys['a'] || keys['arrowleft']) R.cam.x -= sp;
     if (keys['d'] || keys['arrowright']) R.cam.x += sp;
     if (keys['w'] || keys['arrowup']) R.cam.y -= sp;
@@ -802,7 +857,7 @@
   UI.tick = function (dt) {
     const S = G.S; if (!S) return;
     tTop -= dt; tPanel -= dt; tMini -= dt;
-    if (tTop <= 0) { tTop = 0.2; renderTop(); renderMsgs(); if (G.Audio) updateIntensity(); }
+    if (tTop <= 0) { tTop = 0.2; renderTop(); renderMsgs(); renderHeroCard(); if (G.Audio) updateIntensity(); }
     if (tPanel <= 0) { tPanel = 0.5; renderPanel(false); tutorialTick(); }
     if (tMini <= 0) { tMini = 0.15; G.R.drawMinimap($('#minimap')); }
     if (S.over && !endShown) { endShown = true; showEnd(); }

@@ -1123,6 +1123,20 @@
       ctx.strokeStyle = ok ? '#6f6' : '#f55'; ctx.lineWidth = 2; ctx.strokeRect(pos.x - hs, pos.y - hs, hs * 2, hs * 2);
       buildingIcon(type, pos.x, pos.y, 1.2, '#fff');
     }
+    // Zielvorschau beim Wirken einer Heldenfähigkeit: Reichweite um den Helden, Wirkungsbereich am Zeiger
+    if (UI && UI.casting !== null && UI.casting !== undefined && !me.hero.dead) {
+      const h = me.hero, ab = h.abilities[UI.casting];
+      const mx = R.mouse.wx, my = R.mouse.wy, inRange = Math.hypot(mx - h.x, my - h.y) <= 470;
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255,230,120,0.6)'; ctx.setLineDash([8, 6]); ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(h.x, h.y, 470, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+      const rad = ab.radius || 28;
+      ctx.fillStyle = inRange ? 'rgba(255,160,60,0.22)' : 'rgba(255,60,60,0.22)';
+      ctx.strokeStyle = inRange ? '#ffb040' : '#ff5050'; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.arc(mx, my, rad, 0, 7); ctx.fill(); ctx.stroke();
+      label(ab.name, mx, my - rad - 8, inRange ? '#ffe9a8' : '#ff9a9a', 12);
+      ctx.restore();
+    }
     if (UI && UI.selected && UI.selected.kind === 'building' && !UI.selected.dead && UI.selected.def.attack) {
       const b = UI.selected;
       ctx.strokeStyle = 'rgba(255,220,120,0.5)'; ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5;

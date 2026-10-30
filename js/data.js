@@ -491,3 +491,18 @@ G.REWARDS = [
   { lvl: 9, kind: 'title', text: 'Titel „Kriegsfürst“' },
   { lvl: 10, kind: 'title', text: 'Titel „Legende“ + goldener Rahmen' },
 ];
+
+// Armee-Vorlagen: setzen die Gewichtung der automatischen Produktion mit einem Tipp
+G.ARMY_PRESETS = [
+  { id: 'ausgewogen', name: 'Ausgewogen', desc: 'Von allem etwas – solide in jeder Lage.', comp: { tank: 2, nahkampf: 3, fernkampf: 3, magier: 2, heiler: 1, support: 1, beschwoerer: 1 } },
+  { id: 'schildwall', name: 'Schildwall', desc: 'Viele Tanks und Heiler halten jede Front.', comp: { tank: 5, nahkampf: 2, fernkampf: 2, magier: 0, heiler: 3, support: 1, beschwoerer: 0 } },
+  { id: 'sturm', name: 'Sturmangriff', desc: 'Eine Flut aus Nahkämpfern mit Kriegs-Support.', comp: { tank: 1, nahkampf: 6, fernkampf: 1, magier: 0, heiler: 1, support: 2, beschwoerer: 0 } },
+  { id: 'fernkampf', name: 'Fernkampf', desc: 'Schützen und Magier hinter wenigen Tanks.', comp: { tank: 2, nahkampf: 0, fernkampf: 6, magier: 2, heiler: 1, support: 1, beschwoerer: 0 } },
+  { id: 'magie', name: 'Arkane Macht', desc: 'Magier, Heiler und Beschwörer.', comp: { tank: 2, nahkampf: 1, fernkampf: 0, magier: 5, heiler: 2, support: 1, beschwoerer: 3 } },
+];
+G.HERO_MODES = [
+  { id: 'armee', name: 'Folgt Armee', desc: 'Kämpft an der Seite deiner Truppen.' },
+  { id: 'basis', name: 'Verteidigt Basis', desc: 'Bleibt in der Basis und wehrt Angriffe ab.' },
+  { id: 'jagen', name: 'Jagt Monster', desc: 'Säubert allein passende Monsterlager für Erfahrung und Beute.' },
+  { id: 'manuell', name: 'Manuell', desc: 'Du steuerst: Held antippen, dann Ziel antippen.' },
+];
