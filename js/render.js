@@ -1341,6 +1341,29 @@
     }
   }
 
+  // Nebel des Krieges: kleines Bild mit einem Pixel je 40-px-Feld, weich hochskaliert. Aufdecken und Zuziehen blenden sanft über.
+  let fogCv = null, fogImg = null, fogA = null, fogFor = null;
+  function updateFogLayer(S, rdt) {
+    const F = S.fog, n = F.FW * F.FH;
+    if (fogFor !== S || !fogCv) {
+      if (!fogCv || fogCv.width !== F.FW || fogCv.height !== F.FH) {
+        fogCv = document.createElement('canvas'); fogCv.width = F.FW; fogCv.height = F.FH;
+        fogImg = fogCv.getContext('2d').createImageData(F.FW, F.FH);
+      }
+      fogA = new Float32Array(n).fill(-1); // -1: beim ersten Bild sofort übernehmen
+      fogFor = S;
+    }
+    const d = fogImg.data, vis = F.vis, exp = F.exp, k = Math.min(1, rdt * 6);
+    for (let c = 0; c < n; c++) {
+      const target = (0.93 - 0.43 * exp[c] / 255) * (1 - vis[c] / 255);
+      const a = fogA[c] < 0 ? target : fogA[c] + (target - fogA[c]) * k;
+      fogA[c] = a;
+      const j = c * 4;
+      d[j] = 7; d[j + 1] = 9; d[j + 2] = 15; d[j + 3] = a * 255;
+    }
+    fogCv.getContext('2d').putImageData(fogImg, 0, 0);
+  }
+
   R.draw = function () {
     const S = G.S; if (!S) return;
     const cam = R.cam, z = cam.z;
@@ -1367,10 +1390,12 @@
     ctx.setTransform(dpr * z, 0, 0, dpr * z, (-cam.x * z + sx) * dpr, (-cam.y * z + sy) * dpr);
     if (ground) ctx.drawImage(ground, 0, 0, S.w, S.h);
     const inView = (x, y, m) => x > cam.x - m && x < cam.x + vw + m && y > cam.y - m && y < cam.y + vh + m;
+    // Nebel: Gegner nur zeigen, wo gerade Sicht ist; Gelände, Lager und Händler, sobald erkundet
+    const fogOn = G.fogActive(), seen = G.visibleAt, known = G.exploredAt;
 
     // Lager-Beschriftungen
     for (const c of S.camps) {
-      if (!inView(c.x, c.y, 120)) continue;
+      if (!inView(c.x, c.y, 120) || !known(c.x, c.y)) continue;
       const txt = c.left > 0 ? c.name : `${c.name} – kehrt in ${Math.ceil(c.respawnT)} s zurück`;
       ctx.globalAlpha = 0.85; label(txt, c.x, c.y + 62, c.left > 0 ? '#ffcf8a' : '#aaa', 11); ctx.globalAlpha = 1;
     }
@@ -1385,18 +1410,23 @@
     }
 
     // Blut, Trümmer und Gefallene liegen auf dem Boden
-    for (const d of S.decals) if (inView(d.x, d.y, 60)) drawDecal(d);
-    for (const c of S.corpses) if (inView(c.x, c.y, 40)) drawCorpse(c);
+    for (const d of S.decals) if (inView(d.x, d.y, 60) && seen(d.x, d.y)) drawDecal(d);
+    for (const c of S.corpses) if (inView(c.x, c.y, 40) && seen(c.x, c.y)) drawCorpse(c);
 
     // Tiefensortierung: Deko, Gebäude, Einheiten, Arbeiter, Tiere
     const th = G.THEMES[S.theme];
-    const list = [];
+    const list = [], ghosts = fogOn ? S.fog.ghosts : null;
     for (const d of S.decor) if (inView(d.x, d.y, 60)) list.push({ y: d.y, d });
-    for (const s of S.sites) if ((!s.b || s.b.dead) && inView(s.x, s.y, 80)) list.push({ y: s.y, site: s });
-    for (const p of S.players) if (p.alive) for (const w of p.wv) if (inView(w.x, w.y, 20)) list.push({ y: w.y, w, p });
-    for (const c of S.critters) if (!c.fly && inView(c.hx || c.x, c.hy || c.y, 120)) list.push({ y: c.y, c });
-    for (const e of S.ents) if (!e.dead && inView(e.x, e.y, 80)) list.push({ y: e.y + (e.kind === 'building' ? e.size * T / 2 - 10 : 0), e });
-    for (const s of S.shops) if (inView(s.x, s.y, 80)) list.push({ y: s.y + 10, s });
+    for (const s of S.sites) {
+      if (!inView(s.x, s.y, 80) || !known(s.x, s.y)) continue;
+      const hidden = s.b && !s.b.dead && fogOn && !G.canSee(s.b) && !ghosts.has(s.b.id); // unbemerkt bebaut: noch leer zeigen
+      if (!s.b || s.b.dead || hidden) list.push({ y: s.y, site: s });
+    }
+    for (const p of S.players) if (p.alive) for (const w of p.wv) if (inView(w.x, w.y, 20) && (p.team === me.team || seen(w.x, w.y))) list.push({ y: w.y, w, p });
+    for (const c of S.critters) if (!c.fly && inView(c.hx || c.x, c.hy || c.y, 120) && seen(c.x, c.y)) list.push({ y: c.y, c });
+    for (const e of S.ents) if (!e.dead && inView(e.x, e.y, 80) && G.canSee(e)) list.push({ y: e.y + (e.kind === 'building' ? e.size * T / 2 - 10 : 0), e });
+    if (ghosts) for (const g of ghosts.values()) if (inView(g.x, g.y, 80) && !seen(g.x, g.y)) list.push({ y: g.y + g.size * T / 2 - 10, e: g }); // zuletzt gesehen
+    for (const s of S.shops) if (inView(s.x, s.y, 80) && known(s.x, s.y)) list.push({ y: s.y + 10, s });
     let nMob = 0;
     for (const it of list) if (it.e && it.e.kind !== 'building') nMob++;
     R.lodSimple = z < 0.6 || nMob > 90;
@@ -1410,18 +1440,23 @@
       else if (it.e.kind === 'building') drawBuilding(it.e);
       else drawMobile(it.e);
     }
-    for (const q of S.parts) if (inView(q.x, q.y, 20)) drawParticle(q);
-    for (const pr of S.proj) if (inView(pr.x, pr.y, 40)) drawProjectile(pr);
-    for (const c of S.critters) if (c.fly && inView(c.x, c.y, 80)) drawCritter(c);
-    for (const f of S.fx) if (inView(f.x, f.y, 200)) drawFx(f);
+    for (const q of S.parts) if (inView(q.x, q.y, 20) && seen(q.x, q.y)) drawParticle(q);
+    for (const pr of S.proj) if (inView(pr.x, pr.y, 40) && seen(pr.x, pr.y)) drawProjectile(pr);
+    for (const c of S.critters) if (c.fly && inView(c.x, c.y, 80) && seen(c.x, c.y)) drawCritter(c);
+    for (const f of S.fx) if (inView(f.x, f.y, 200) && seen(f.x, f.y)) drawFx(f);
     if (R.fxHigh) drawClouds(S);
+    if (fogOn) {
+      updateFogLayer(S, rdt);
+      ctx.imageSmoothingEnabled = true;
+      ctx.drawImage(fogCv, 0, 0, S.fog.FW * S.fog.cell, S.fog.FH * S.fog.cell);
+    }
 
     // Bauvorschau
     const UI = G.UI;
     if (UI && UI.placing) {
       const type = UI.placing;
       let pos = G.snap(type, R.mouse.wx, R.mouse.wy);
-      if (G.BUILDINGS[type].outpost) { const st = G.freeSiteNear(R.mouse.wx, R.mouse.wy, 140); if (st) pos = { x: st.x, y: st.y }; for (const s2 of S.sites) if (!s2.b || s2.b.dead) { ctx.strokeStyle = '#ffe066'; ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.arc(s2.x, s2.y, 60, 0, 7); ctx.stroke(); ctx.setLineDash([]); } }
+      if (G.BUILDINGS[type].outpost) { const st = G.freeSiteNear(R.mouse.wx, R.mouse.wy, 140); if (st) pos = { x: st.x, y: st.y }; for (const s2 of S.sites) if ((!s2.b || s2.b.dead) && known(s2.x, s2.y)) { ctx.strokeStyle = '#ffe066'; ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.arc(s2.x, s2.y, 60, 0, 7); ctx.stroke(); ctx.setLineDash([]); } }
       const ok = G.canPlace(me, type, pos.x, pos.y) && !G.buildingCheck(me, type);
       const hs = G.BUILDINGS[type].size * T / 2;
       ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.setLineDash([8, 6]); ctx.lineWidth = 2;
@@ -1467,14 +1502,22 @@
     const W = mc.width, H = mc.height, sx = W / S.w, sy = H / S.h;
     if (ground) m.drawImage(ground, 0, 0, W, H); else { m.fillStyle = '#333'; m.fillRect(0, 0, W, H); }
     m.fillStyle = 'rgba(0,0,0,0.25)'; m.fillRect(0, 0, W, H);
-    for (const c of S.camps) { m.fillStyle = c.left > 0 ? '#e0a030' : '#555'; m.beginPath(); m.arc(c.x * sx, c.y * sy, 3, 0, 7); m.fill(); }
-    for (const s of S.shops) { m.fillStyle = '#ffe066'; m.fillRect(s.x * sx - 3, s.y * sy - 3, 6, 6); }
-    for (const s of S.sites) { m.strokeStyle = '#ffd23a'; m.lineWidth = 1.5; m.beginPath(); m.arc(s.x * sx, s.y * sy, 4, 0, 7); m.stroke(); }
+    const fogOn = G.fogActive(), known = G.exploredAt;
+    if (fogOn && fogCv && fogFor === S) { m.imageSmoothingEnabled = true; m.drawImage(fogCv, 0, 0, S.fog.FW * S.fog.cell * sx, S.fog.FH * S.fog.cell * sy); }
+    for (const c of S.camps) { if (!known(c.x, c.y)) continue; m.fillStyle = c.left > 0 ? '#e0a030' : '#555'; m.beginPath(); m.arc(c.x * sx, c.y * sy, 3, 0, 7); m.fill(); }
+    for (const s of S.shops) { if (!known(s.x, s.y)) continue; m.fillStyle = '#ffe066'; m.fillRect(s.x * sx - 3, s.y * sy - 3, 6, 6); }
+    for (const s of S.sites) { if (!known(s.x, s.y)) continue; m.strokeStyle = '#ffd23a'; m.lineWidth = 1.5; m.beginPath(); m.arc(s.x * sx, s.y * sy, 4, 0, 7); m.stroke(); }
+    const bld = (e, p) => { const q = e.type === 'mauer' ? 1 : 2.5; m.fillStyle = p.color; m.fillRect(e.x * sx - q, e.y * sy - q, q * 2, q * 2); };
+    if (fogOn) { // zuletzt gesehene gegnerische Gebäude
+      m.globalAlpha = 0.6;
+      for (const g of S.fog.ghosts.values()) if (!G.visibleAt(g.x, g.y)) bld(g, S.players[g.owner]);
+      m.globalAlpha = 1;
+    }
     for (const e of S.ents) {
-      if (e.dead || e.kind === 'creep') continue;
+      if (e.dead || e.kind === 'creep' || !G.canSee(e)) continue;
       const p = S.players[e.owner];
       m.fillStyle = p.color;
-      if (e.kind === 'building') { const q = e.type === 'mauer' ? 1 : 2.5; m.fillRect(e.x * sx - q, e.y * sy - q, q * 2, q * 2); }
+      if (e.kind === 'building') bld(e, p);
       else if (e.kind === 'hero') { m.beginPath(); m.arc(e.x * sx, e.y * sy, 3.5, 0, 7); m.fill(); m.strokeStyle = '#fff'; m.lineWidth = 1; m.stroke(); }
       else m.fillRect(e.x * sx - 1, e.y * sy - 1, 2, 2);
     }

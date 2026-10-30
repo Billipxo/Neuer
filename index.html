@@ -38,7 +38,8 @@
         <button data-act="speed" data-v="1">1×</button>
         <button data-act="speed" data-v="2">2×</button>
         <button data-act="speed" data-v="4">4×</button>
-        <button data-act="quit" title="Zum Hauptmenü">✕</button>
+        <button data-act="saveui" title="Spiel speichern / laden">💾</button>
+        <button data-act="quit" title="Zum Hauptmenü (wird automatisch gesichert)">✕</button>
       </div>
     </div>
     <div id="main">
@@ -60,6 +61,7 @@
         <div id="tab-body"></div>
       </aside>
     </div>
+    <div id="saveui" class="hidden"><div id="saveui-body" class="framed"></div></div>
   </div>
 
   <!-- Spielende -->
@@ -69,6 +71,7 @@
   <script src="js/game.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/profile.js"></script>
+  <script src="js/save.js"></script>
   <script src="js/render.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/main.js"></script>

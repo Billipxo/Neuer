@@ -94,7 +94,7 @@
       w: layout.w, h: layout.h, theme: themeKey, mode: cfg.mode, layout, over: null, msgs: [],
       speed: 1, paused: false, nextId: 1, grid: new Map(), bonusT: 0, victoryT: 0, cfg,
       limit: (cfg.duration === undefined ? 30 : cfg.duration) * 60, endphase: false, objective: cfg.objective || 'vernichten',
-      dragonSlainBy: null, alarmT: 0,
+      dragonSlainBy: null, alarmT: 0, gid: Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36),
     };
     layout.bases.forEach((b, i) => {
       const isHuman = i === 0;
@@ -110,6 +110,9 @@
     genCritters();
     updateBonusCaches();
     for (const pl of S.players) { pl.th.maxHp = bldMaxHp(pl, 'haupthaus', 1); pl.th.hp = pl.th.maxHp; }
+    fogInit(cfg.fog !== false);
+    if (S.objective === 'drache') for (const c of S.camps) if (c.type === 'drache') fogReveal(c.x, c.y, 240); // Missionsziel ist bekannt
+    updateFog();
     const p = human();
     G.msg(`Du spielst ${p.rd.name} mit ${p.heroDef.name}. Karte: ${G.THEMES[themeKey].name}.`, 'gold');
     S.players.slice(1).forEach((o) => G.msg(`${o.team === p.team ? 'Verbündeter' : 'Gegner'}: ${o.rd.name} (${o.heroDef.name})`, o.team === p.team ? 'ally' : 'enemy'));
@@ -411,6 +414,7 @@
     G.sfx('bau', p.base.x, p.base.y);
     return true;
   };
+  const WALL_DEFS = G.WALLS.map((w) => ({ name: w.name, hp: w.hp, desc: 'Teil der Basismauer. Eigene Truppen können sie passieren.' }));
   function finishWall(p) {
     p.wallLevel = p.wallUp.to; p.wallUp = null;
     const w = G.WALLS[p.wallLevel - 1];
@@ -421,7 +425,7 @@
     for (let i = 0; i < n; i++) {
       const a = (i / n) * Math.PI * 2;
       const s = {
-        id: S.nextId++, kind: 'building', type: 'mauer', def: { name: w.name, hp: w.hp, desc: 'Teil der Basismauer. Eigene Truppen können sie passieren.' },
+        id: S.nextId++, kind: 'building', type: 'mauer', def: WALL_DEFS[p.wallLevel - 1],
         name: w.name, owner: p.id, team: p.team, x: p.base.x + Math.cos(a) * R, y: p.base.y + Math.sin(a) * R, ang: a, size: 1, r: 18,
         level: p.wallLevel, upgrading: null, prod: null, queue: [], armor: w.armor, hp: w.hp * hpMul, maxHp: w.hp * hpMul, m: zeroMods(), buffs: [], atkT: 0,
       };
@@ -804,7 +808,7 @@
   G.heroCommand = function (p, wx, wy) {
     const h = p.hero; if (!h || h.dead) return;
     let target = null, bd = 30 * 30;
-    G.query(wx, wy, 40, (o) => { if (o.dead || o.team === h.team) return; const dd = d2(o.x, o.y, wx, wy) - o.r * o.r; if (dd < bd) { bd = dd; target = o; } });
+    G.query(wx, wy, 40, (o) => { if (o.dead || o.team === h.team || (p.human && !G.canSee(o))) return; const dd = d2(o.x, o.y, wx, wy) - o.r * o.r; if (dd < bd) { bd = dd; target = o; } });
     if (target) { h.order = { type: 'attack', target }; S.fx.push({ type: 'ring', x: target.x, y: target.y, r: target.r + 6, color: '#ff4040', t: 0, dur: 0.4 }); }
     else { h.order = { type: 'move', x: wx, y: wy }; S.fx.push({ type: 'ring', x: wx, y: wy, r: 12, color: '#60ff60', t: 0, dur: 0.4 }); }
   };
@@ -813,8 +817,8 @@
     const ab = h.abilities[idx]; if (!ab) return;
     if (ab.t > 0) { G.msg(`${ab.name} lädt noch (${Math.ceil(ab.t)} s)`, 'bad'); return; }
     if (ab.type === 'nuke' || ab.type === 'drain') {
-      const foes = enemiesNear(h, wx, wy, 140, true).filter((o) => o.kind !== 'building');
-      G.query(wx, wy, 140, (o) => { if (o.kind === 'creep' && !foes.includes(o)) foes.push(o); });
+      const foes = enemiesNear(h, wx, wy, 140, true).filter((o) => o.kind !== 'building' && (!p.human || G.canSee(o)));
+      G.query(wx, wy, 140, (o) => { if (o.kind === 'creep' && !foes.includes(o) && (!p.human || G.canSee(o))) foes.push(o); });
       const t = foes.sort((a, b) => d2(a.x, a.y, wx, wy) - d2(b.x, b.y, wx, wy))[0];
       const ok = t && castAbility(h, ab, t.x, t.y, t);
       if (!ok) G.msg(t ? 'Ziel zu weit entfernt' : 'Kein Ziel unter dem Mauszeiger', 'bad');
@@ -1926,15 +1930,7 @@
           const delay = ab.meteor ? 1.0 : 0.5 + k * 0.18;
           S.fx.push({ type: 'mark', x, y, r: ab.radius, t: 0, dur: delay, color: ab.color });
           if (ab.meteor) S.fx.push({ type: 'meteor', x, y, t: 0, dur: delay });
-          S.timers.push({ t: delay, fn: () => {
-            if (!p.alive) return;
-            S.fx.push({ type: ab.meteor ? 'boom' : 'blast', x, y, r: ab.radius, color: ab.color, t: 0, dur: 0.6 });
-            G.sfx('explosion', x, y, ab.shells > 1 ? 0.6 : 1);
-            fx({ type: 'explo', x, y, r: ab.radius, color: ab.color, dur: 0.7, seed: Math.random(), big: !!ab.meteor });
-            G.shake(x, y, ab.meteor ? 10 : ab.shells > 1 ? 2.5 : 6);
-            G.query(x, y, ab.radius, (o) => { if (!o.dead && o.team !== p.team) { dealDamage(p.th, o, ab.dmg); if (ab.stun) o.stun = Math.max(o.stun || 0, ab.stun); } });
-            if (ab.summon) makeSummon(p, ab.summon, x, y, ab.life, 1, null, true);
-          } });
+          S.timers.push({ t: delay, kind: 'strike', pid: p.id, ab: i, x, y }); // als Daten, damit Spielstände sie enthalten
         }
         break;
       }
@@ -1951,6 +1947,16 @@
     else S.fx.push({ type: 'text', x: at.x, y: at.y - 40, text: ab.name, color: '#ff8080', t: 0, dur: 1.6, big: true });
     return true;
   };
+  // Einschlag einer verzögerten Volksfähigkeit (Bombardement, Meteor …)
+  function strikeHit(p, ab, x, y) {
+    if (!p.alive || !ab) return;
+    S.fx.push({ type: ab.meteor ? 'boom' : 'blast', x, y, r: ab.radius, color: ab.color, t: 0, dur: 0.6 });
+    G.sfx('explosion', x, y, ab.shells > 1 ? 0.6 : 1);
+    fx({ type: 'explo', x, y, r: ab.radius, color: ab.color, dur: 0.7, seed: Math.random(), big: !!ab.meteor });
+    G.shake(x, y, ab.meteor ? 10 : ab.shells > 1 ? 2.5 : 6);
+    G.query(x, y, ab.radius, (o) => { if (!o.dead && o.team !== p.team) { dealDamage(p.th, o, ab.dmg); if (ab.stun) o.stun = Math.max(o.stun || 0, ab.stun); } });
+    if (ab.summon) makeSummon(p, ab.summon, x, y, ab.life, 1, null, true);
+  }
   function abilityThink(p) {
     const own = S.ents.filter((e) => !e.dead && e.owner === p.id && (e.kind === 'unit' || e.kind === 'hero'));
     const fighting = own.filter((e) => e.target && e.target.kind !== 'building' && !e.target.dead).length;
@@ -1968,6 +1974,79 @@
       } else if (own.length >= 4 && fighting >= Math.min(6, Math.max(3, own.length * 0.4))) G.castRaceAbility(p, i);
     });
   }
+
+  // -------------------------------------------------------------------------
+  // Nebel des Krieges: Sicht des Spieler-Teams (inkl. Verbündeter) auf einem 40-px-Raster. Erkundete Felder bleiben
+  // abgedunkelt sichtbar, gegnerische Gebäude erscheinen dort so, wie sie zuletzt gesehen wurden. Die KI sieht alles.
+  const FOG = 40, VIS_MIN = 80;
+  function fogInit(on) {
+    const FW = Math.ceil(S.w / FOG), FH = Math.ceil(S.h / FOG), n = FW * FH;
+    S.fog = { on, FW, FH, cell: FOG, vis: new Uint8Array(n), exp: new Uint8Array(n), ghosts: new Map(), t: 0, n: 0 };
+  }
+  function sightOf(e) {
+    if (e.kind === 'hero') return 480;
+    if (e.kind !== 'building') return e.range > 100 ? 360 : 300;
+    if (e.type === 'haupthaus') return 480;
+    const atk = e.def.attack;
+    return atk ? atk.range + 100 : 200 + e.size * 20;
+  }
+  const stamps = new Map();
+  function stampOf(rad) { // Sichtkreis mit weichem Rand über gut zwei Felder: dx, dy, Wert (0…255) je Feld
+    let st = stamps.get(rad);
+    if (st) return st;
+    const rc = rad / FOG, n = Math.ceil(rc + 1), out = [];
+    for (let dy = -n; dy <= n; dy++) for (let dx = -n; dx <= n; dx++) {
+      const v = clamp((rc + 1 - Math.hypot(dx, dy)) / 2.4, 0, 1);
+      if (v > 0) out.push(dx, dy, Math.round(v * 255));
+    }
+    st = new Int16Array(out);
+    stamps.set(rad, st);
+    return st;
+  }
+  const fogCell = (x, y) => clamp((y / FOG) | 0, 0, S.fog.FH - 1) * S.fog.FW + clamp((x / FOG) | 0, 0, S.fog.FW - 1);
+  function fogReveal(x, y, rad) { // Gebiet als erkundet markieren
+    const F = S.fog, st = stampOf(rad), c0 = fogCell(x, y), cx = c0 % F.FW, cy = (c0 / F.FW) | 0;
+    for (let i = 0; i < st.length; i += 3) {
+      const px = cx + st[i], py = cy + st[i + 1];
+      if (px >= 0 && py >= 0 && px < F.FW && py < F.FH && st[i + 2] > F.exp[py * F.FW + px]) F.exp[py * F.FW + px] = st[i + 2];
+    }
+  }
+  let fogSeen = null, fogSeenR = null;
+  function updateFog() {
+    const F = S.fog, W = F.FW, H = F.FH, vis = F.vis, exp = F.exp, team = human().team;
+    if (!fogSeen || fogSeen.length !== vis.length) { fogSeen = new Uint32Array(vis.length); fogSeenR = new Uint16Array(vis.length); }
+    const stampId = ++F.n;
+    vis.fill(0);
+    for (const e of S.ents) {
+      if (e.dead || e.team !== team || e.type === 'mauer') continue;
+      const rad = sightOf(e), c0 = fogCell(e.x, e.y), cx = c0 % W, cy = (c0 / W) | 0;
+      if (fogSeen[c0] === stampId && fogSeenR[c0] >= rad) continue; // gleiche Stelle schon mit mindestens dieser Sichtweite
+      fogSeen[c0] = stampId; fogSeenR[c0] = rad;
+      const st = stampOf(rad);
+      for (let i = 0; i < st.length; i += 3) {
+        const x = cx + st[i], y = cy + st[i + 1];
+        if (x < 0 || y < 0 || x >= W || y >= H) continue;
+        const c = y * W + x;
+        if (st[i + 2] > vis[c]) vis[c] = st[i + 2];
+      }
+    }
+    for (let c = 0; c < vis.length; c++) if (vis[c] > exp[c]) exp[c] = vis[c]; // erkundet = beste je erreichte Sicht
+    // Gegnerische Gebäude: zuletzt gesehenen Zustand merken, verschwundene beim nächsten Hinsehen vergessen
+    for (const b of S.ents) {
+      if (b.dead || b.kind !== 'building' || b.team === team || vis[fogCell(b.x, b.y)] < VIS_MIN) continue;
+      let g = F.ghosts.get(b.id);
+      if (!g) { g = { ghost: true, id: b.id, kind: 'building', type: b.type, owner: b.owner, team: b.team, x: b.x, y: b.y, size: b.size, r: b.r, ang: b.ang, site: b.site || null }; F.ghosts.set(b.id, g); }
+      g.level = b.level; g.hp = b.hp; g.maxHp = b.maxHp; g.lastAng = b.lastAng; g.seen = stampId;
+      g.upgrading = b.upgrading ? { t: b.upgrading.t, total: b.upgrading.total, to: b.upgrading.to } : null;
+    }
+    for (const [id, g] of F.ghosts) if (g.seen !== stampId && vis[fogCell(g.x, g.y)] >= VIS_MIN) F.ghosts.delete(id);
+  }
+  // Für Darstellung und Eingabe: Ist ein Punkt bzw. ein Objekt für den Spieler gerade sichtbar, ein Feld schon erkundet?
+  const fogActive = () => !!(S && S.fog && S.fog.on && !S.over);
+  G.fogActive = fogActive;
+  G.visibleAt = (x, y) => !fogActive() || S.fog.vis[fogCell(x, y)] >= VIS_MIN;
+  G.exploredAt = (x, y) => !fogActive() || S.fog.exp[fogCell(x, y)] >= VIS_MIN;
+  G.canSee = (e) => !fogActive() || e.team === human().team || S.fog.vis[fogCell(e.x, e.y)] >= VIS_MIN;
 
   // -------------------------------------------------------------------------
   // Hauptschleife
@@ -2027,7 +2106,10 @@
     separate();
     updateCritters(dt);
     updateGore(dt);
-    for (const tm of S.timers) { tm.t -= dt; if (tm.t <= 0 && !tm.done) { tm.done = true; tm.fn(); } }
+    for (const tm of S.timers) {
+      tm.t -= dt;
+      if (tm.t <= 0 && !tm.done) { tm.done = true; if (tm.kind === 'strike') { const p = S.players[tm.pid]; strikeHit(p, p.rd.abilities[tm.ab], tm.x, tm.y); } }
+    }
     S.timers = S.timers.filter((t) => !t.done);
     for (const c of S.camps) {
       if (c.activeT > 0) { c.activeT -= dt; if (c.activeT <= 0) c.active = false; }
@@ -2042,6 +2124,7 @@
     }
     for (const f of S.fx) f.t += dt;
     S.fx = S.fx.filter((f) => f.t < f.dur);
+    if (S.fog.on) { S.fog.t -= dt; if (S.fog.t <= 0) { S.fog.t = 0.2; updateFog(); } }
     S.ents = S.ents.filter((e) => !e.dead);
     S.victoryT -= dt;
     if (S.victoryT <= 0) { S.victoryT = 1; checkVictory(); }
@@ -2098,5 +2181,142 @@
   G.simulate = function (seconds) { // für Tests
     const STEP = 1 / 30;
     for (let i = 0; i < seconds * 30 && !S.over; i++) step(STEP);
+  };
+
+  // -------------------------------------------------------------------------
+  // Spielstände: Der ganze Zustand wird zu reinem JSON. Verweise auf Spielobjekte werden zu Kennungen
+  // ($e Einheit/Gebäude, $p Spieler, $c Lager, $s Goldader, $sh Händler), feste Spieldaten zu Schlüsseln
+  // ($hero, $creep, $bld, $camp). Kurzlebiges (Effekte, Partikel, Raster, Wegpunkte) wird neu aufgebaut.
+  G.SAVE_VERSION = 1;
+  const SAVE_SKIP = { m: 1, _aura: 1, _auraT: 1, navWp: 1, navT: 1, navTx: 1, navTy: 1, px: 1, py: 1, healTgt: 1, rd: 1, diff: 1, bonus: 1, teco: 1 };
+  const SAVE_SKIP_DEAD = { target: 1, order: 1, summoner: 1, goal: 1, hold: 1, shopping: 1, huntCamp: 1 }; // keine Ketten über Gefallene
+  const SAVE_SKIP_STATE = { ents: 1, players: 1, camps: 1, sites: 1, shops: 1, fx: 1, parts: 1, layout: 1, grid: 1, gridArr: 1, teamGrids: 1, sepGrid: 1, acc: 1, fog: 1, paused: 1, navDirty: 1 };
+  const ENT_KINDS = { unit: 1, hero: 1, creep: 1, building: 1 };
+  let dataRefs = null;
+  function dataRefMap() {
+    if (dataRefs) return dataRefs;
+    dataRefs = new Map();
+    for (const r of G.RACE_KEYS) for (const h of G.RACES[r].heroes) dataRefs.set(h, { $hero: [r, h.id] });
+    for (const k in G.CREEPS) dataRefs.set(G.CREEPS[k], { $creep: k });
+    for (const k in G.BUILDINGS) dataRefs.set(G.BUILDINGS[k], { $bld: k });
+    for (const k in G.CAMPS) dataRefs.set(G.CAMPS[k], { $camp: k });
+    WALL_DEFS.forEach((d, i) => dataRefs.set(d, { $wall: i }));
+    return dataRefs;
+  }
+  // Listen gleichartiger Objekte spaltenweise ablegen: Feldnamen je Form nur einmal (halbiert die Größe)
+  const PACKED = ['decor', 'decals', 'corpses', 'critters', 'proj'];
+  function pack(list) {
+    const shapes = [], bySig = new Map(), rows = [];
+    for (const o of list) {
+      const keys = Object.keys(o), sig = keys.join(',');
+      let si = bySig.get(sig);
+      if (si === undefined) { si = shapes.length; shapes.push(keys); bySig.set(sig, si); }
+      const row = [si];
+      for (const k of keys) row.push(o[k]);
+      rows.push(row);
+    }
+    return { shapes, rows };
+  }
+  const unpack = (P) => P.rows.map((row) => { const keys = P.shapes[row[0]], o = {}; for (let i = 0; i < keys.length; i++) o[keys[i]] = row[i + 1]; return o; });
+  function rle(a) { const out = []; let cur = a[0], n = 0; for (let i = 0; i < a.length; i++) { if (a[i] === cur) n++; else { out.push(cur, n); cur = a[i]; n = 1; } } out.push(cur, n); return out; } // Wert, Anzahl, …
+  function unrle(runs, a) { let i = 0; for (let k = 0; k < runs.length; k += 2) { a.fill(runs[k], i, i + runs[k + 1]); i += runs[k + 1]; } return a; }
+
+  G.serializeGame = function (extra) {
+    const refs = dataRefMap();
+    const idx = (list) => new Map(list.map((o, i) => [o, i]));
+    const pIdx = idx(S.players), cIdx = idx(S.camps), sIdx = idx(S.sites), shIdx = idx(S.shops);
+    const E = {}, queue = [];
+    function enc(v, k) {
+      if (typeof v === 'number') return Number.isInteger(v) || k === 'seed' ? v : Number.isFinite(v) ? Math.round(v * 1000) / 1000 : { $num: String(v) };
+      if (v === null || typeof v !== 'object') return typeof v === 'function' ? undefined : v;
+      if (Array.isArray(v)) return v.map((x) => { const y = enc(x); return y === undefined ? null : y; });
+      const r = refs.get(v);
+      if (r) return r;
+      if (ENT_KINDS[v.kind] && typeof v.id === 'number' && !v.ghost) { if (!(v.id in E)) { E[v.id] = null; queue.push(v); } return { $e: v.id }; }
+      if (pIdx.has(v)) return { $p: pIdx.get(v) };
+      if (cIdx.has(v)) return { $c: cIdx.get(v) };
+      if (sIdx.has(v)) return { $s: sIdx.get(v) };
+      if (shIdx.has(v)) return { $sh: shIdx.get(v) };
+      if (Object.getPrototypeOf(v) !== Object.prototype) return undefined; // Raster, Typed Arrays u. Ä.
+      return fields(v);
+    }
+    function fields(v, skip) {
+      const o = {};
+      for (const k in v) {
+        if (SAVE_SKIP[k] || (skip && skip[k])) continue;
+        const x = enc(v[k], k);
+        if (x !== undefined) o[k] = x;
+      }
+      return o;
+    }
+    const D = {
+      v: G.SAVE_VERSION, S: fields(S, SAVE_SKIP_STATE), ents: S.ents.map((e) => enc(e).$e),
+      players: S.players.map((p) => fields(p)), camps: S.camps.map((c) => fields(c)), sites: S.sites.map((s) => fields(s)), shops: S.shops.map((s) => fields(s)),
+      fog: { on: S.fog.on, exp: rle(S.fog.exp), ghosts: [...S.fog.ghosts.values()].map((g) => fields(g)) },
+      ui: extra || null,
+    };
+    for (let i = 0; i < queue.length; i++) { const e = queue[i]; E[e.id] = fields(e, e.dead && e.kind !== 'hero' ? SAVE_SKIP_DEAD : null); }
+    D.E = pack(Object.values(E));
+    for (const k of PACKED) D.S[k] = pack(D.S[k]);
+    return D;
+  };
+
+  G.loadGame = function (D) {
+    if (!D || D.v !== G.SAVE_VERSION || !D.S || !G.LAYOUTS[D.S.mode]) throw new Error('Spielstand passt nicht zu dieser Spielversion');
+    const E = new Map(), Elist = unpack(D.E);
+    for (const o of Elist) E.set(o.id, {});
+    const shells = (list) => list.map(() => ({}));
+    const players = shells(D.players), camps = shells(D.camps), sites = shells(D.sites), shops = shells(D.shops);
+    function dec(v) {
+      if (v === null || typeof v !== 'object') return v;
+      if (Array.isArray(v)) return v.map(dec);
+      if (v.$e !== undefined) return E.get(v.$e) || null;
+      if (v.$p !== undefined) return players[v.$p] || null;
+      if (v.$c !== undefined) return camps[v.$c] || null;
+      if (v.$s !== undefined) return sites[v.$s] || null;
+      if (v.$sh !== undefined) return shops[v.$sh] || null;
+      if (v.$hero) { const r = G.RACES[v.$hero[0]], h = r && r.heroes.find((x) => x.id === v.$hero[1]); if (!h) throw new Error('Unbekannter Held'); return h; }
+      if (v.$creep) return G.CREEPS[v.$creep];
+      if (v.$bld) return G.BUILDINGS[v.$bld];
+      if (v.$camp) return G.CAMPS[v.$camp];
+      if (v.$wall !== undefined) return WALL_DEFS[v.$wall];
+      if (v.$num !== undefined) return Number(v.$num);
+      const o = {};
+      for (const k in v) o[k] = dec(v[k]);
+      return o;
+    }
+    const fill = (o, src) => { for (const k in src) o[k] = dec(src[k]); return o; };
+    for (const o of Elist) fill(E.get(o.id), o);
+    players.forEach((p, i) => fill(p, D.players[i]));
+    camps.forEach((c, i) => fill(c, D.camps[i]));
+    sites.forEach((s, i) => fill(s, D.sites[i]));
+    shops.forEach((s, i) => fill(s, D.shops[i]));
+    const DS = { ...D.S };
+    for (const k of PACKED) if (DS[k] && DS[k].rows) DS[k] = unpack(DS[k]);
+    const s = fill({}, DS);
+    Object.assign(s, { players, camps, sites, shops, ents: D.ents.map((id) => E.get(id)).filter(Boolean), fx: [], parts: [], grid: new Map(), layout: G.LAYOUTS[s.mode], acc: 0, paused: false, navDirty: true });
+    for (const p of players) {
+      if (!G.RACES[p.race]) throw new Error('Unbekanntes Volk');
+      p.rd = G.RACES[p.race]; p.diff = G.DIFFICULTY[s.cfg.difficulty] || G.DIFFICULTY.mittel; p.bonus = {}; p.teco = {};
+    }
+    for (const e of E.values()) { e.m = zeroMods(); if (e.kind !== 'building') { e.px = e.x; e.py = e.y; } }
+    for (const pr of s.proj) { pr.px = pr.x; pr.py = pr.y; }
+    const prev = S;
+    try {
+      S = G.S = s;
+      fogInit(!!(D.fog && D.fog.on));
+      if (D.fog) {
+        unrle(D.fog.exp, S.fog.exp);
+        for (const g of D.fog.ghosts) S.fog.ghosts.set(g.id, dec(g));
+      }
+      updateBonusCaches();
+      buildGrid();
+      updateFog();
+    } catch (e) { // laufendes Spiel unverändert weiterführen
+      S = G.S = prev;
+      if (prev) { prev.gridArr = null; prev.navDirty = true; }
+      throw e;
+    }
+    return S;
   };
 })();

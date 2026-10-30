@@ -11,11 +11,15 @@ Auch am **Handy und Tablet** spielbar (Touch-Steuerung: Wischen = Karte bewegen,
 Tippen = auswählen/bauen, Held antippen und dann Ziel antippen = Held steuern, ☰ = Menü).
 Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http://localhost:8000` öffnen.
 
-## Was schon drin ist (Prototyp v1.0)
+## Was schon drin ist (Prototyp v1.1)
 
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
-  Gegner-Völker werden jede Runde ausgelost. Spieldauer 20/30/45 Minuten oder unbegrenzt.
+  Gegner-Völker werden jede Runde ausgelost. Spieldauer 20/30/45 Minuten oder unbegrenzt, Nebel des Krieges oder offene Karte.
+- **Spielstände:** 💾 im Spiel speichert auf drei Plätze und lädt jeden Stand (das Spiel pausiert dabei). Zusätzlich
+  sichert das Spiel automatisch jede Spielminute, beim Beenden und beim Wechsel in eine andere App; „Weiterspielen“ im
+  Hauptmenü setzt die letzte Partie fort, der Tab „Spielstände“ zeigt alle Plätze. Gespeichert wird der komplette
+  Zustand (Armeen, Gebäude, Held, Talente, Kampagnen-Mission, erkundete Karte, Kamera), etwa 50–200 KB je Stand im Browser.
 - **6 Volkskampagnen** mit eigener Geschichte (je 5 Missionen: vernichten, überleben, Drachen erschlagen,
   Bündnis-Schlacht, Finale auf „Schwer“), z. B. „Die Krone von Valenmark“ (Menschen) oder „Blut und Steppe“ (Orks).
 - **Einführung** im ersten Spiel (abschaltbar) und **Anleitung** im Hauptmenü.
@@ -52,6 +56,10 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - **Einfache Produktion:** Armee-Vorlagen (Ausgewogen, Schildwall, Sturmangriff, Fernkampf, Arkane Macht),
   Rekrutieren per Einheitenkarte ohne Gebäudeauswahl, Übersicht der laufenden Ausbildung; Regler unter „Feineinstellung“.
 - Neutrale Monster mit Beute und Extra-Belohnungen, Händler, Endphase mit Punktewertung.
+- **Nebel des Krieges:** Du siehst nur, was deine Einheiten, dein Held, deine Gebäude und Verbündete sehen (Held und
+  Haupthaus weiter, Fernkämpfer weiter als Nahkämpfer). Erkundetes Gebiet bleibt abgedunkelt sichtbar, gegnerische Gebäude
+  erscheinen dort so, wie du sie zuletzt gesehen hast; Gegner im Nebel sind weder zu sehen, zu hören noch anwählbar.
+  Auch die Minikarte zeigt nur Erkundetes. Die Computergegner spielen ohne Nebel. Bei Spielende wird die Karte aufgedeckt.
 
 **Oberfläche**
 - **Volks-Designs:** Die Oberfläche passt sich dem gespielten Volk an – Farben, Überschrift-Schrift und Wappen
@@ -88,7 +96,8 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 | + / − | Zoom |
 | Leertaste | Kamera auf Held |
 | P | Pause |
-| Esc | Abbrechen / Auswahl aufheben |
+| 💾 (oben rechts) | Spiel speichern / laden |
+| Esc | Abbrechen / Auswahl aufheben / Speicherfenster schließen |
 
 ## Projektstruktur
 
@@ -96,9 +105,10 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 index.html        Einstieg
 css/style.css     Oberfläche
 js/data.js        Spieldaten: Völker, Einheiten, Helden, Gebäude, Gegenstände, Monster, Karten
-js/game.js        Engine: Wirtschaft, Basisbau, Produktion, Kampf, Helden, KI, Atmosphäre
+js/game.js        Engine: Wirtschaft, Basisbau, Produktion, Kampf, Helden, KI, Nebel des Krieges, Spielstand-Format
 js/audio.js       Musik und Geräusche (Web-Audio-Synthese)
 js/profile.js     Profil, Volks-XP, Skins, Kampagne
+js/save.js        Spielstände (drei Plätze + automatisch) im Browser
 js/render.js      Canvas-Darstellung (Comic-Stil), Heimatkarten, Minikarte
 js/ui.js          Menü, HUD, Seitenleiste, Eingabe
 js/main.js        Spielschleife

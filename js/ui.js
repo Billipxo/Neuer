@@ -42,7 +42,7 @@
 
   // -------------------------------------------------------------------------
   // Hauptmenü
-  UI.cfg = { race: 'menschen', hero: null, mode: '1v1', difficulty: 'mittel', map: 'heimat', duration: 30 };
+  UI.cfg = { race: 'menschen', hero: null, mode: '1v1', difficulty: 'mittel', map: 'heimat', duration: 30, fog: true };
 
   UI.showMenu = function () {
     $('#menu').classList.remove('hidden');
@@ -50,6 +50,7 @@
     $('#end').classList.add('hidden');
     if (G.Audio) G.Audio.setTheme(null);
     renderMenu();
+    $('#menu').scrollTop = 0; // „Weiterspielen“ steht ganz oben
   };
 
   const opt = (act, cur, list) => list.map(([v, n, d, dis]) => `<button class="opt ${cur === v ? 'sel' : ''}" data-act="${act}" data-v="${v}" ${dis ? 'disabled' : ''}>${n}${d ? `<small>${d}</small>` : ''}</button>`).join('');
@@ -93,8 +94,12 @@
 
   function renderMenu() {
     const c = UI.cfg;
-    const tabs = [['frei', 'Freies Spiel'], ['kampagne', 'Kampagne'], ['voelker', 'Völker & Skins'], ['hilfe', 'Anleitung'], ['optionen', 'Einstellungen']];
-    let body = `<nav class="menutabs">${tabs.map(([k, n]) => `<button class="${UI.menuTab === k ? 'sel' : ''}" data-act="m-tab" data-v="${k}">${n}</button>`).join('')}</nav>`;
+    const tabs = [['frei', 'Freies Spiel'], ['kampagne', 'Kampagne'], ['spielstaende', 'Spielstände'], ['voelker', 'Völker & Skins'], ['hilfe', 'Anleitung'], ['optionen', 'Einstellungen']];
+    const last = G.Saves.latest();
+    let body = UI.menuNote ? `<div class="menunote bad">${UI.menuNote}</div>` : '';
+    if (last) body += `<div class="continue framed">${emblem(last.meta.race)}<div class="ct-info"><b>Weiterspielen</b><small>${saveSummary(last.meta)}</small></div>
+      <button class="big" data-act="sv-load" data-v="${last.slot}">▶ Fortsetzen</button></div>`;
+    body += `<nav class="menutabs">${tabs.map(([k, n]) => `<button class="${UI.menuTab === k ? 'sel' : ''}" data-act="m-tab" data-v="${k}">${n}</button>`).join('')}</nav>`;
     if (UI.menuTab === 'frei') {
       const maps = [['heimat', 'Heimatkarte', 'Karte deines Volkes'], ['zufall', 'Zufall', '']].concat(Object.keys(G.THEMES).map((k) => [k, G.THEMES[k].name, '']));
       body += `
@@ -105,6 +110,7 @@
         <div><h2>4. Schwierigkeit</h2>${opt('m-diff', c.difficulty, [['einfach', 'Einfach', 'Langsame KI, weniger Einkommen'], ['mittel', 'Mittel', 'Ausgeglichen'], ['schwer', 'Schwer', 'Schnelle KI, Bonus-Einkommen, fokussiert Heiler']])}</div>
         <div><h2>5. Karte</h2><div class="maps">${opt('m-map', c.map, maps)}</div></div>
         <div><h2>6. Spieldauer</h2>${opt('m-dur', String(c.duration), G.DURATIONS.map(([v, n]) => [String(v), n, v ? 'Danach entscheidet die Punktzahl' : 'Bis ein Team besiegt ist']))}</div>
+        <div><h2>7. Sicht</h2>${opt('m-fog', c.fog === false ? 'aus' : 'an', [['an', 'Nebel des Krieges', 'Du siehst nur, was deine Truppen und Gebäude sehen'], ['aus', 'Offene Karte', 'Die ganze Karte ist aufgedeckt']])}</div>
       </section>
       <div class="start-row"><button class="big" data-act="m-start">⚔ Schlacht beginnen</button></div>`;
     } else if (UI.menuTab === 'kampagne') {
@@ -126,6 +132,9 @@
           <p class="note">Modus: ${G.LAYOUTS[sel.cfg.mode].name} · Schwierigkeit: ${G.DIFFICULTY[sel.cfg.difficulty].name} · ${sel.cfg.duration} Minuten · Karte: ${G.THEMES[sel.cfg.map].name}</p>
           <button class="big" data-act="m-campaign" ${Prof().missionUnlocked(c.race, UI.mission) ? '' : 'disabled'}>⚔ Mission starten</button></div></div>${skinRow(c)}</section>
         <section><h2>Dein Held</h2><div class="grid heroes">${heroCards(c)}</div></section>`;
+    } else if (UI.menuTab === 'spielstaende') {
+      body += `<section class="saves"><h2>Spielstände</h2>${saveList(false)}
+        <p class="note">Spielstände liegen in diesem Browser. Im Spiel speicherst du über 💾 oben rechts; automatisch gesichert wird jede Spielminute und beim Verlassen der Partie.</p></section>`;
     } else if (UI.menuTab === 'voelker') {
       body += `<section><h2>Volks-Erfahrung</h2><p class="note">Jede Partie bringt deinem gespielten Volk Erfahrung (mehr bei Siegen, höherer Schwierigkeit und in der Kampagne). Mit steigender Volksstufe schaltest du Skins, Banner, Titel und einen vierten Helden frei.</p>
         <div class="grid races">${G.RACE_KEYS.map((k) => {
@@ -146,6 +155,8 @@
         <div><h3>Held</h3><p>Dein Held gibt der ganzen Armee einen Commander-Bonus, steigt bis Stufe 10 auf und bringt pro Stufe einen Talentpunkt. Im Heldenfenster wählst du sein Verhalten (Armee folgen, Basis verteidigen, Monster jagen oder manuell), nutzt Fähigkeiten, Tränke und den Rückzug.</p></div>
         <div><h3>Volk</h3><p>Jedes Volk hat ein Passiv und drei Volksfähigkeiten (ab Haupthaus-Stufe 1, 3 und 5). Im Tab „Volk“ verteilst du Talente in Krieg, Bollwerk und Wohlstand.</p></div>
         <div><h3>Neutrale Monster</h3><p>Lager auf der Karte geben Gold, Holz, Erfahrung und Beute. Trolle schließen sich dir als Söldner an, Golems und Drachen stärken die ganze Armee.</p></div>
+        <div><h3>Nebel des Krieges</h3><p>Du siehst nur, was deine Einheiten, dein Held, deine Gebäude und Verbündete sehen. Erkundetes Gebiet bleibt abgedunkelt sichtbar, gegnerische Gebäude erscheinen dort so, wie du sie zuletzt gesehen hast. Im Freien Spiel unter „7. Sicht“ abschaltbar.</p></div>
+        <div><h3>Speichern</h3><p>💾 oben rechts speichert auf drei Plätze oder lädt einen Stand. Zusätzlich wird jede Spielminute und beim Verlassen der Partie automatisch gesichert – „Weiterspielen“ im Hauptmenü setzt die letzte Partie fort.</p></div>
         <div><h3>Steuerung</h3><p><b>PC:</b> WASD/Ziehen = Kamera, Mausrad = Zoom, Linksklick = auswählen/bauen, Held auswählen und Linksklick aufs Ziel (oder Rechtsklick) = Held steuern, Q/E = Heldenfähigkeit, 1–3 = Volksfähigkeit, H = Held manuell/automatisch.<br><b>Handy:</b> Wischen = Kamera, zwei Finger = Zoom, Tippen = auswählen/bauen, Held (Wappen im Heldenfenster) antippen und dann Ziel antippen = Held steuern, ☰ = Menü, rote Knöpfe = Volksfähigkeiten.</p></div>
         </div></section>`;
     } else {
@@ -218,37 +229,104 @@
   }
 
   // -------------------------------------------------------------------------
-  // Spielstart
-  UI.startGame = function (extra) {
-    const cfg = { ...UI.cfg, ...(extra || {}) };
-    if (cfg.race === 'zufall') cfg.hero = 'zufall';
-    cfg.skin = cfg.race === 'zufall' ? 'standard' : (Prof().data.skin[cfg.race] || 'standard');
-    cfg.banner = cfg.race === 'zufall' ? 'standard' : (Prof().data.banner[cfg.race] || 'standard');
-    UI.lastCfg = cfg;
-    const S = G.newGame(cfg);
-    if (cfg.race === 'zufall') { const r = S.players[0].race; S.players[0].skin = Prof().data.skin[r] || 'standard'; S.players[0].banner = Prof().data.banner[r] || 'standard'; }
+  // Spielstart (neu oder aus einem Spielstand)
+  function enterGame(S, ui) {
     G.R.buildGround(S);
     $('#menu').classList.add('hidden');
     $('#end').classList.add('hidden');
+    $('#saveui').classList.add('hidden'); UI.saveOpen = false;
     $('#game').classList.remove('hidden');
-    G.R.cam.z = 1;
+    G.R.cam.z = ui && ui.cam ? G.clamp(ui.cam.z, 0.35, 2.2) : G.R.touch ? 0.8 : 1;
     if (G.Audio) { G.Audio.init(); G.Audio.setTheme(S.theme); }
     document.body.dataset.race = S.players[0].race;
     requestAnimationFrame(() => {
       G.R.init($('#view'));
       const mm = $('#minimap');
       const W = 210; mm.width = W; mm.height = Math.round(W * S.h / S.w);
-      G.R.centerOn(me().base.x + me().dir.x * 150, me().base.y);
+      if (ui && ui.cam) { G.R.cam.x = ui.cam.x; G.R.cam.y = ui.cam.y; G.R.clampCam(); }
+      else G.R.centerOn(me().base.x + me().dir.x * 150, me().base.y);
     });
     UI.selected = null; UI.placing = null; UI.casting = null; UI.pickTarget = false;
-    UI.tab = 'bauen'; UI.awarded = null; UI.follow = false;
+    UI.tab = (ui && ui.tab) || 'bauen'; UI.awarded = null; UI.follow = false; UI.menuNote = null;
+    UI.lastCfg = S.cfg; UI.lastAutosave = S.time;
+    document.body.classList.remove('panel-open');
+  }
+  UI.startGame = function (extra) {
+    const cfg = { ...UI.cfg, ...(extra || {}) };
+    if (cfg.race === 'zufall') cfg.hero = 'zufall';
+    cfg.skin = cfg.race === 'zufall' ? 'standard' : (Prof().data.skin[cfg.race] || 'standard');
+    cfg.banner = cfg.race === 'zufall' ? 'standard' : (Prof().data.banner[cfg.race] || 'standard');
+    const S = G.newGame(cfg);
+    if (cfg.race === 'zufall') { const r = S.players[0].race; S.players[0].skin = Prof().data.skin[r] || 'standard'; S.players[0].banner = Prof().data.banner[r] || 'standard'; }
+    enterGame(S, null);
     UI.tut = Prof().data.tutorialDone ? null : { step: 0 };
     renderTutorial();
-    document.body.classList.remove('panel-open');
-    if (G.R.touch) { G.R.cam.z = 0.8; G.msg('Wischen: Karte bewegen · Zwei Finger: Zoom · Tippen: Auswählen · ☰: Menü · Held antippen, dann Ziel antippen: Held steuern', ''); }
+    if (G.R.touch) G.msg('Wischen: Karte bewegen · Zwei Finger: Zoom · Tippen: Auswählen · ☰: Menü · Held antippen, dann Ziel antippen: Held steuern', '');
     if (cfg.mission) G.msg(`Mission: ${Prof().findMission(cfg.mission).m.goal}`, 'gold');
     renderPanel(true);
   };
+
+  // -------------------------------------------------------------------------
+  // Spielstände: Fenster im Spiel (💾), Liste im Hauptmenü, automatisches Sichern
+  const fmtDate = (ms) => { const d = new Date(ms); return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ', ' + d.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }); };
+  function saveSummary(m) {
+    return `${m.raceName} · ${m.hero} (St. ${m.heroLvl}) · ${m.mission ? 'Kampagne: ' + m.mission : m.mode} · ${m.diff} · Spielzeit ${fmtTime(m.time)} · ${fmtDate(m.date)}`;
+  }
+  function saveList(inGame) {
+    return '<div class="savelist">' + G.Saves.list().map(({ slot, meta }) => {
+      const ok = meta && meta.v === G.SAVE_VERSION;
+      const btns = (inGame && slot !== 'auto' ? `<button data-act="sv-save" data-v="${slot}">${meta ? 'Überschreiben' : 'Speichern'}</button>` : '')
+        + `<button data-act="sv-load" data-v="${slot}" ${ok ? '' : 'disabled'}>Laden</button>`
+        + (!inGame && meta ? `<button data-act="sv-del" data-v="${slot}">Löschen</button>` : '');
+      const info = !meta ? '<small>leer</small>' : !ok ? '<small>Spielstand einer älteren Version – kann nicht geladen werden</small>'
+        : `<b>${meta.raceName} · ${meta.hero}</b><small>${meta.mission ? 'Kampagne: ' + meta.mission : meta.mode} · ${meta.diff} · ${meta.map} · ${G.bname(meta.race, 'haupthaus')} St. ${meta.th} · Held St. ${meta.heroLvl}</small>
+          <small>Spielzeit ${fmtTime(meta.time)}${meta.limit ? ' von ' + Math.round(meta.limit / 60) + ' min' : ''} · ${fmtDate(meta.date)}</small>`;
+      return `<div class="saveslot ${meta ? '' : 'empty'}">${emblem(meta ? meta.race : 'zufall')}<div class="sv-info"><span class="sv-slot">${G.Saves.slotName(slot)}</span>${info}</div><div class="sv-btns">${btns}</div></div>`;
+    }).join('') + '</div>';
+  }
+  const uiState = () => ({ cam: { x: G.R.cam.x, y: G.R.cam.y, z: G.R.cam.z }, tab: UI.tab });
+  function renderSaveUI() {
+    $('#saveui-body').innerHTML = `<div class="sv-head">${emblem(me().race)}<h2>Spielstand</h2><button class="x" data-act="sv-close" title="Schließen (Esc)">×</button></div>
+      ${saveList(true)}<p class="note">Das Spiel ist pausiert. Gespeichert wird in diesem Browser; „Automatisch“ sichert jede Spielminute und beim Verlassen der Partie.</p>`;
+  }
+  function openSaveUI() {
+    if (!G.S || G.S.over || UI.saveOpen) return;
+    UI.saveOpen = true; UI.saveWasPaused = G.S.paused; G.S.paused = true;
+    renderSaveUI();
+    $('#saveui').classList.remove('hidden');
+  }
+  function closeSaveUI() {
+    if (!UI.saveOpen) return;
+    UI.saveOpen = false;
+    $('#saveui').classList.add('hidden');
+    if (G.S) G.S.paused = !!UI.saveWasPaused;
+  }
+  function autosave() {
+    const S = G.S;
+    if (!S || S.over || $('#game').classList.contains('hidden')) return;
+    const err = G.Saves.save('auto', uiState());
+    if (err && !UI.autosaveWarned) { UI.autosaveWarned = true; G.msg(`Automatisches Speichern fehlgeschlagen: ${err}.`, 'bad'); }
+    const b = $('[data-act="saveui"]');
+    if (!err && b) { b.classList.add('flash'); setTimeout(() => b.classList.remove('flash'), 1400); }
+  }
+  function loadSlot(slot) {
+    let r;
+    try { r = G.Saves.load(slot); }
+    catch (e) {
+      console.error(e);
+      const why = `Spielstand „${G.Saves.slotName(slot)}“ konnte nicht geladen werden (${String(e.message).replace(/&/g, '&amp;').replace(/</g, '&lt;')}).`;
+      if (G.S && !$('#game').classList.contains('hidden')) G.msg(why, 'bad');
+      else { UI.menuNote = why; renderMenu(); }
+      return;
+    }
+    enterGame(r.S, r.ui);
+    UI.tut = null; renderTutorial();
+    G.msg(`Spielstand geladen: ${G.Saves.slotName(slot)} (Spielzeit ${fmtTime(r.S.time)}).`, 'good');
+    renderPanel(true);
+  }
+  // Beim Wechsel in eine andere App oder beim Schließen des Tabs sichern
+  document.addEventListener('visibilitychange', () => { if (document.hidden) autosave(); });
+  window.addEventListener('pagehide', autosave);
 
   // -------------------------------------------------------------------------
   // HUD oben
@@ -501,6 +579,7 @@
   // Auswahl-Fenster
   function renderSelection() {
     const box = $('#selection');
+    if (UI.selected && !UI.selected.dead && !G.canSee(UI.selected)) UI.selected = null; // in den Nebel verschwunden
     const e = UI.selected;
     if (!e || e.dead) { if (e && e.dead && e.kind !== 'hero') UI.selected = null; box.classList.add('hidden'); return; }
     if (e.kind === 'hero' && e.owner === 0) { box.classList.add('hidden'); return; } // eigener Held: Heldenfenster genügt
@@ -599,6 +678,18 @@
       case 'm-diff': UI.cfg.difficulty = v; renderMenu(); return;
       case 'm-map': UI.cfg.map = v; renderMenu(); return;
       case 'm-dur': UI.cfg.duration = +v; renderMenu(); return;
+      case 'm-fog': UI.cfg.fog = v === 'an'; renderMenu(); return;
+      case 'saveui': openSaveUI(); return;
+      case 'sv-close': closeSaveUI(); return;
+      case 'sv-save': {
+        if (G.Saves.meta(v) && !armed(el, 'Überschreiben?')) return;
+        const err = G.Saves.save(v, uiState());
+        G.msg(err ? `Speichern fehlgeschlagen: ${err}.` : `Gespeichert: ${G.Saves.slotName(v)}.`, err ? 'bad' : 'good');
+        if (!err) G.sfx('fertig', 0, 0, 0.6, true);
+        renderSaveUI(); renderMsgs(); return;
+      }
+      case 'sv-load': if (S && !S.over && !$('#game').classList.contains('hidden') && !armed(el, 'Aktuelles Spiel verlassen?')) return; loadSlot(v); return;
+      case 'sv-del': if (armed(el, 'Wirklich löschen?')) { G.Saves.remove(v); renderMenu(); } return;
       case 'm-mission': UI.mission = +v; renderMenu(); return;
       case 'm-start': UI.startGame(); return;
       case 'm-campaign': startMission(UI.cfg.race, UI.mission); return;
@@ -607,7 +698,7 @@
       case 'm-set': Prof().data.settings[el.dataset.key] = el.checked; Prof().save(); Prof().applySettings(); return;
       case 'm-testsound': G.Audio.init(); G.Audio.apply(); setTimeout(() => { G.sfx('schwert', 0, 0, 1, true); setTimeout(() => G.sfx('tod', 0, 0, 1, true), 250); setTimeout(() => G.sfx('horn', 0, 0, 1, true), 700); }, 100); return;
       case 'm-reset': if (armed(el, 'Wirklich alles löschen? Nochmal tippen')) { Prof().reset(); renderMenu(); } return;
-      case 'again': if (UI.lastCfg.mission) { const f = Prof().findMission(UI.lastCfg.mission); startMission(f.race, f.index); } else UI.startGame(); return;
+      case 'again': if (UI.lastCfg.mission) { const f = Prof().findMission(UI.lastCfg.mission); startMission(f.race, f.index); } else UI.startGame({ ...UI.lastCfg }); return;
       case 'nextmission': { const f = Prof().findMission(UI.lastCfg.mission); startMission(f.race, f.index + 1); return; }
       case 'menu': G.S = null; UI.showMenu(); return;
       case 'tab': UI.tab = v; break;
@@ -665,7 +756,7 @@
       case 'centerhero': if (!p.hero.dead) G.R.centerOn(p.hero.x, p.hero.y); break;
       case 'centerbase': G.R.centerOn(p.base.x, p.base.y); break;
       case 'zoom': G.R.cam.z = G.clamp(G.R.cam.z * (+v), 0.35, 2.2); G.R.clampCam(); break;
-      case 'quit': if (armed(el, 'Beenden?')) { G.S = null; UI.showMenu(); } return;
+      case 'quit': if (armed(el, 'Beenden?')) { autosave(); G.S = null; UI.showMenu(); } return;
     }
     renderPanel(true);
     if (S) renderTop();
@@ -723,7 +814,7 @@
   function pickAt(wx, wy) {
     let best = null, bd = Infinity;
     for (const e of G.S.ents) {
-      if (e.dead) continue;
+      if (e.dead || !G.canSee(e)) continue; // im Nebel Verborgenes ist nicht anwählbar
       if (e.kind === 'building') {
         const hs = e.size * G.TILE / 2;
         if (Math.abs(e.x - wx) < hs && Math.abs(e.y - wy) < hs + 10) { const d = e.type === 'mauer' ? 40 : 30; if (d < bd) { bd = d; best = e; } }
@@ -822,6 +913,7 @@
       if (!G.S || $('#game').classList.contains('hidden')) return;
       if (ev.target.tagName === 'INPUT' && ev.target.type !== 'range' && ev.target.type !== 'checkbox') return;
       const k = ev.key.toLowerCase();
+      if (UI.saveOpen) { if (k === 'escape') closeSaveUI(); return; }
       keys[k] = true;
       const p = me();
       if (k === 'escape') { UI.placing = null; UI.casting = null; UI.pickTarget = false; UI.selected = null; renderPanel(true); }
@@ -909,7 +1001,13 @@
     if (tTop <= 0) { tTop = 0.2; renderTop(); renderMsgs(); renderHeroCard(); if (G.Audio) updateIntensity(); }
     if (tPanel <= 0) { tPanel = 0.5; renderPanel(false); tutorialTick(); }
     if (tMini <= 0) { tMini = 0.15; G.R.drawMinimap($('#minimap')); }
-    if (S.over && !endShown) { endShown = true; showEnd(); }
+    if (!S.over && S.time - UI.lastAutosave >= 60) { UI.lastAutosave = S.time; autosave(); }
+    if (S.over && !endShown) {
+      endShown = true;
+      const am = G.Saves.meta('auto'); // beendete Partie nicht mehr zum Fortsetzen anbieten
+      if (am && am.gid === S.gid) G.Saves.remove('auto');
+      showEnd();
+    }
     if (!S.over) endShown = false;
     $('#view').style.cursor = UI.placing || UI.casting !== null || UI.pickTarget ? 'crosshair' : 'default';
   };

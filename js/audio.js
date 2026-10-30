@@ -99,6 +99,7 @@
     if (lastPlay[name] && now - lastPlay[name] < (MIN_GAP[name] || 0.05)) return;
     let v = vol === undefined ? 1 : vol, pan = 0;
     if (!global && x !== undefined) {
+      if (G.visibleAt && G.S && !G.visibleAt(x, y)) return; // im Nebel bleibt es still
       const cam = G.R.cam, vw = G.R.viewW(), vh = G.R.viewH();
       const cx = cam.x + vw / 2, cy = cam.y + vh / 2;
       const dx = (x - cx) / (vw / 2), dy = (y - cy) / (vh / 2);

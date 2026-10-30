@@ -310,6 +310,33 @@ input[type=range] { width: 100%; accent-color: var(--accent2); }
 #end-body .stats { justify-content: center; margin: 14px 0 20px; font-size: 15px; }
 .xpgain { margin: 0 0 16px; font-size: 15px; }
 
+/* Spielstände: Weiterspielen-Leiste, Liste der Plätze, Fenster im Spiel */
+.continue { display: flex; align-items: center; gap: 14px; max-width: 820px; margin: 0 auto 16px; padding: 10px 16px; }
+.continue > .emblem { width: 40px; height: 40px; color: var(--accent2); filter: drop-shadow(0 0 8px var(--glow)); flex: none; }
+.ct-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.ct-info b { font-family: var(--font-head); font-weight: 400; font-size: 20px; color: var(--head); }
+.ct-info small { font-size: 13px; line-height: 1.35; }
+.continue button.big { font-size: 17px; padding: 10px 22px; flex: none; }
+.menunote { max-width: 820px; margin: 0 auto 12px; padding: 8px 12px; border: 1px solid var(--bad); border-radius: 8px; background: rgba(60,10,8,.5); }
+.savelist { display: flex; flex-direction: column; gap: 8px; max-width: 820px; margin: 0 auto; }
+.saveslot { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: linear-gradient(170deg, var(--panel2), var(--panel)); }
+.saveslot > .emblem { width: 34px; height: 34px; color: var(--accent2); flex: none; }
+.saveslot.empty > .emblem { color: var(--line); }
+.sv-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.sv-slot { font-family: var(--font-head); color: var(--head); font-size: 15px; }
+.sv-info b { font-size: 14.5px; }
+.sv-info small { font-size: 12.5px; line-height: 1.35; }
+.sv-btns { display: flex; gap: 6px; flex: none; }
+.saves .note { max-width: 820px; margin: 10px auto 0; }
+#saveui { position: absolute; inset: 0; z-index: 9; display: flex; align-items: center; justify-content: center; padding: 12px; background: radial-gradient(ellipse at center, rgba(0,0,0,.45), rgba(0,0,0,.78)); }
+#saveui-body { width: min(720px, 100%); max-height: 100%; overflow-y: auto; padding: 14px 18px 12px; }
+.sv-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.sv-head .emblem { width: 28px; height: 28px; color: var(--accent2); filter: drop-shadow(0 0 6px var(--glow)); }
+.sv-head h2 { flex: 1; font-size: 22px; color: var(--head); }
+.sv-head .x { padding: 0 10px; font-size: 18px; }
+#saveui .note { font-size: 12.5px; margin: 10px 0 0; }
+.top-ctrl button.flash { border-color: var(--good); box-shadow: 0 0 10px var(--good); }
+
 /* ---------------- Handy & Tablet ---------------- */
 @media (max-width: 900px), (max-height: 560px) {
   body { font-size: 14px; }
@@ -353,6 +380,9 @@ input[type=range] { width: 100%; accent-color: var(--accent2); }
 @media (max-width: 560px) {
   #selection { left: 6px; bottom: auto; top: 50px; }
   #quick { max-width: calc(100% - 140px); }
+  .saveslot, .continue { flex-wrap: wrap; }
+  .sv-btns { width: 100%; justify-content: flex-end; }
+  .continue button.big { width: 100%; }
 }
 
 .crest { align-self: flex-start; width: 52px; height: 52px; border-radius: 50%; border: 3px solid var(--ink); display: flex; align-items: center; justify-content: center; box-shadow: inset -6px -6px 0 rgba(0,0,0,.25), inset 4px 4px 0 rgba(255,255,255,.25), 0 0 14px var(--glow); }
