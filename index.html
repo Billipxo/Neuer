@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reichsfeuer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Alegreya+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Hauptmenü -->
+  <div id="menu" class="hidden">
+    <header class="title">
+      <h1>Reichsfeuer</h1>
+      <p>Baue deine Festung, führe deinen Helden und zerschmettere die feindlichen Völker.</p>
+    </header>
+    <div id="menu-body"></div>
+  </div>
+
+  <!-- Spiel -->
+  <div id="game" class="hidden">
+    <div id="top">
+      <div id="top-res"></div>
+      <div class="top-ctrl">
+        <button data-act="centerbase" title="Kamera auf Basis">⌂ Basis</button>
+        <button data-act="centerhero" title="Kamera auf Held (Leertaste)">♛ Held</button>
+        <button data-act="pause" title="Pause (P)">❚❚</button>
+        <button data-act="speed" data-v="1">1×</button>
+        <button data-act="speed" data-v="2">2×</button>
+        <button data-act="speed" data-v="4">4×</button>
+        <button data-act="quit" title="Zum Hauptmenü">✕</button>
+      </div>
+    </div>
+    <div id="main">
+      <div id="viewwrap">
+        <canvas id="view"></canvas>
+        <div id="msgs"></div>
+        <div id="selection" class="hidden"></div>
+        <div id="mmwrap"><canvas id="minimap"></canvas></div>
+        <div id="keys">WASD/Pfeile: Kamera · Ziehen: Karte verschieben · Mausrad: Zoom · H: Held manuell · Q/E: Heldenfähigkeit · R: Volksfähigkeit · Esc: Abbrechen</div>
+      </div>
+      <aside id="panel">
+        <div id="race-ab"></div>
+        <nav id="tabs"></nav>
+        <div id="tab-body"></div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Spielende -->
+  <div id="end" class="hidden"><div id="end-body"></div></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
