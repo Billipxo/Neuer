@@ -65,20 +65,22 @@
       g.fill();
     }
     g.globalAlpha = 1;
-    // Wege zwischen Basen, Händlern und Kartenmitte
     const sc = groundScale;
-    const pts = S.players.map((p) => p.base);
-    const hub = { x: S.w / 2, y: S.h / 2 };
-    const roads = [];
-    for (const p of pts) roads.push([p, hub]);
-    for (const s of S.shops) roads.push([s, hub]);
-    for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) if (Math.abs(pts[i].x - pts[j].x) < 10 || Math.abs(pts[i].y - pts[j].y) < 10) roads.push([pts[i], pts[j]]);
+    R.L.bakeGround(g, S, sc); // großflächige Farbwechsel und feine Halme, Kiesel, Asche …
+    // Wege zwischen Basen, Händlern und Kartenmitte (vom Spiel festgelegt; ältere Spielstände: wie früher ausgelost)
+    let roads = S.roads;
+    if (!roads) {
+      const pts = S.players.map((p) => p.base), hub = { x: S.w / 2, y: S.h / 2 }, pairs = [];
+      for (const p of pts) pairs.push([p, hub]);
+      for (const s of S.shops) pairs.push([s, hub]);
+      for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) if (Math.abs(pts[i].x - pts[j].x) < 10 || Math.abs(pts[i].y - pts[j].y) < 10) pairs.push([pts[i], pts[j]]);
+      roads = pairs.map(([a, b]) => ({ ax: a.x, ay: a.y, bx: b.x, by: b.y, mx: (a.x + b.x) / 2 + (rnd() - 0.5) * 200, my: (a.y + b.y) / 2 + (rnd() - 0.5) * 200 }));
+    }
     g.lineCap = 'round';
-    for (const [a, b] of roads) {
-      const mx = (a.x + b.x) / 2 + (rnd() - 0.5) * 200, my = (a.y + b.y) / 2 + (rnd() - 0.5) * 200;
+    for (const r of roads) {
       for (const [w, col, al] of [[70, shade(th.road, -0.3), 0.35], [56, th.road, 0.6]]) {
         g.strokeStyle = col; g.globalAlpha = al; g.lineWidth = w * sc;
-        g.beginPath(); g.moveTo(a.x * sc, a.y * sc); g.quadraticCurveTo(mx * sc, my * sc, b.x * sc, b.y * sc); g.stroke();
+        g.beginPath(); g.moveTo(r.ax * sc, r.ay * sc); g.quadraticCurveTo(r.mx * sc, r.my * sc, r.bx * sc, r.by * sc); g.stroke();
       }
     }
     g.globalAlpha = 1;
@@ -111,6 +113,7 @@
       }
     }
     g.globalAlpha = 1;
+    R.L.bakeFeatures(g, S, sc); // Ufer, Lavaränder, Blumenwiesen, Schneewehen, Felsfüße …
     // Basisplätze (gepflastert)
     for (const p of S.players) {
       const x = p.base.x * sc, y = p.base.y * sc, r = G.BASE_RADIUS * sc;
@@ -136,78 +139,9 @@
   function circ(x, y, r, fill, lw) { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fillStyle = fill; ctx.fill(); if (lw !== 0) outline(lw); }
   function shadow(x, y, rx, ry) { ctx.fillStyle = 'rgba(0,0,0,0.28)'; ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); ctx.fill(); }
 
-  function drawDecor(d, th) {
-    const s = d.s, x = d.x, y = d.y, c = th.decorCols;
-    switch (th.decor) {
-      case 'eiche': {
-        shadow(x + 6, y + 6, 24 * s, 10 * s);
-        ctx.fillStyle = '#5a3a22'; ctx.fillRect(x - 3 * s, y - 6 * s, 6 * s, 14 * s); ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.strokeRect(x - 3 * s, y - 6 * s, 6 * s, 14 * s);
-        circ(x - 9 * s, y - 14 * s, 13 * s, c[d.v % 2]); circ(x + 9 * s, y - 15 * s, 13 * s, c[(d.v + 1) % 2]); circ(x, y - 26 * s, 15 * s, c[0]);
-        ctx.fillStyle = 'rgba(255,255,200,0.18)'; ctx.beginPath(); ctx.arc(x - 4 * s, y - 31 * s, 7 * s, 0, 7); ctx.fill();
-        break;
-      }
-      case 'hochbaum': {
-        shadow(x + 6, y + 6, 18 * s, 8 * s);
-        ctx.fillStyle = '#c8c0b0'; ctx.fillRect(x - 3 * s, y - 10 * s, 6 * s, 18 * s); ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.strokeRect(x - 3 * s, y - 10 * s, 6 * s, 18 * s);
-        for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.ellipse(x, y - (16 + i * 14) * s, (16 - i * 3) * s, 10 * s, 0, 0, 7); ctx.fillStyle = c[i % 2]; ctx.fill(); outline(2); }
-        ctx.fillStyle = c[2]; ctx.globalAlpha = 0.6 + 0.3 * Math.sin(G.S.time * 2 + d.seed * 10);
-        ctx.beginPath(); ctx.arc(x + 8 * s, y - 20 * s, 2.5 * s, 0, 7); ctx.arc(x - 7 * s, y - 34 * s, 2 * s, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
-        break;
-      }
-      case 'totbaum': {
-        if (d.v === 0) { // Grabstein
-          shadow(x + 3, y + 4, 12 * s, 5 * s);
-          ctx.beginPath(); ctx.moveTo(x - 8 * s, y); ctx.lineTo(x - 8 * s, y - 14 * s); ctx.arc(x, y - 14 * s, 8 * s, Math.PI, 0); ctx.lineTo(x + 8 * s, y); ctx.closePath();
-          ctx.fillStyle = '#6a6a72'; ctx.fill(); outline(2);
-          ctx.strokeStyle = '#3a3a40'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, y - 18 * s); ctx.lineTo(x, y - 8 * s); ctx.moveTo(x - 4 * s, y - 14 * s); ctx.lineTo(x + 4 * s, y - 14 * s); ctx.stroke();
-        } else {
-          shadow(x + 6, y + 4, 16 * s, 6 * s);
-          ctx.strokeStyle = INK; ctx.lineCap = 'round'; ctx.lineWidth = 7 * s;
-          const br = () => { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - 26 * s); ctx.moveTo(x, y - 16 * s); ctx.lineTo(x - 12 * s, y - 30 * s); ctx.moveTo(x, y - 22 * s); ctx.lineTo(x + 13 * s, y - 34 * s); ctx.moveTo(x - 6 * s, y - 24 * s); ctx.lineTo(x - 4 * s, y - 38 * s); ctx.stroke(); };
-          br(); ctx.strokeStyle = '#3a3430'; ctx.lineWidth = 4 * s; br(); ctx.lineCap = 'butt';
-        }
-        break;
-      }
-      case 'fels': {
-        shadow(x + 5, y + 4, 18 * s, 7 * s);
-        if (d.v === 2) { // Knochen
-          ctx.strokeStyle = INK; ctx.lineWidth = 5 * s; ctx.lineCap = 'round';
-          ctx.beginPath(); ctx.moveTo(x - 12 * s, y - 2 * s); ctx.lineTo(x + 12 * s, y - 8 * s); ctx.moveTo(x - 8 * s, y - 10 * s); ctx.lineTo(x + 10 * s, y + 2 * s); ctx.stroke();
-          ctx.strokeStyle = c[2]; ctx.lineWidth = 3 * s; ctx.stroke(); ctx.lineCap = 'butt';
-        } else {
-          ctx.beginPath(); ctx.moveTo(x - 16 * s, y + 2 * s); ctx.lineTo(x - 12 * s, y - 12 * s); ctx.lineTo(x - 2 * s, y - 20 * s); ctx.lineTo(x + 12 * s, y - 14 * s); ctx.lineTo(x + 17 * s, y + 2 * s); ctx.closePath();
-          ctx.fillStyle = c[d.v % 2]; ctx.fill(); outline(2.5);
-          ctx.fillStyle = 'rgba(255,230,200,0.25)'; ctx.beginPath(); ctx.moveTo(x - 12 * s, y - 12 * s); ctx.lineTo(x - 2 * s, y - 20 * s); ctx.lineTo(x + 2 * s, y - 8 * s); ctx.closePath(); ctx.fill();
-        }
-        break;
-      }
-      case 'tanne': {
-        shadow(x + 6, y + 5, 18 * s, 7 * s);
-        ctx.fillStyle = '#4a3020'; ctx.fillRect(x - 3 * s, y - 6 * s, 6 * s, 10 * s);
-        for (let i = 0; i < 3; i++) {
-          const yy = y - 6 * s - i * 12 * s, w = (18 - i * 4) * s;
-          ctx.beginPath(); ctx.moveTo(x - w, yy); ctx.lineTo(x, yy - 18 * s); ctx.lineTo(x + w, yy); ctx.closePath();
-          ctx.fillStyle = c[i % 2]; ctx.fill(); outline(2);
-          ctx.beginPath(); ctx.moveTo(x - w * 0.45, yy - 10 * s); ctx.lineTo(x, yy - 18 * s); ctx.lineTo(x + w * 0.45, yy - 10 * s); ctx.closePath(); ctx.fillStyle = c[2]; ctx.fill();
-        }
-        break;
-      }
-      case 'lava': {
-        if (d.v === 0) {
-          ctx.save(); ctx.shadowColor = '#ff5a1a'; ctx.shadowBlur = 14;
-          ctx.beginPath(); ctx.ellipse(x, y, 20 * s, 10 * s, 0, 0, 7); ctx.fillStyle = '#ff7a2a'; ctx.fill(); ctx.restore();
-          ctx.beginPath(); ctx.ellipse(x, y, 20 * s, 10 * s, 0, 0, 7); outline(2.5);
-          ctx.fillStyle = '#ffd04a'; ctx.globalAlpha = 0.5 + 0.4 * Math.sin(G.S.time * 3 + d.seed * 9); ctx.beginPath(); ctx.ellipse(x - 4 * s, y - 2 * s, 8 * s, 3 * s, 0, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
-        } else {
-          shadow(x + 5, y + 4, 14 * s, 6 * s);
-          ctx.beginPath(); ctx.moveTo(x - 10 * s, y + 2 * s); ctx.lineTo(x - 4 * s, y - 30 * s); ctx.lineTo(x + 2 * s, y - 10 * s); ctx.lineTo(x + 8 * s, y - 22 * s); ctx.lineTo(x + 12 * s, y + 2 * s); ctx.closePath();
-          ctx.fillStyle = c[d.v % 2]; ctx.fill(); outline(2.5);
-          ctx.strokeStyle = '#ff6a1a'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x - 4 * s, y - 24 * s); ctx.lineTo(x - 2 * s, y - 6 * s); ctx.stroke();
-        }
-        break;
-      }
-    }
-  }
+  // Pflanzen, Steine und Geländemerkmale zeichnet js/landschaft.js; hier nur die gemeinsamen Werkzeuge
+  const drawDecor = (d, th) => R.L.flora(d, th);
+  R.lib = { ctx: () => ctx, INK, shade, label };
 
   // -------------------------------------------------------------------------
   // Symbole
@@ -1392,6 +1326,7 @@
     const inView = (x, y, m) => x > cam.x - m && x < cam.x + vw + m && y > cam.y - m && y < cam.y + vh + m;
     // Nebel: Gegner nur zeigen, wo gerade Sicht ist; Gelände, Lager und Händler, sobald erkundet
     const fogOn = G.fogActive(), seen = G.visibleAt, known = G.exploredAt;
+    R.L.ground(S, inView); // Wasser, Lava, Eis, Moor, Wiesen und Feenringe – lebendig, aber flach
 
     // Lager-Beschriftungen
     for (const c of S.camps) {
@@ -1417,6 +1352,7 @@
     const th = G.THEMES[S.theme];
     const list = [], ghosts = fogOn ? S.fog.ghosts : null;
     for (const d of S.decor) if (inView(d.x, d.y, 60)) list.push({ y: d.y, d });
+    R.L.items(S, inView, list); // hohe Geländemerkmale (Felsen, Urbäume, Ruinen …) mit Tiefe
     for (const s of S.sites) {
       if (!inView(s.x, s.y, 80) || !known(s.x, s.y)) continue;
       const hidden = s.b && !s.b.dead && fogOn && !G.canSee(s.b) && !ghosts.has(s.b.id); // unbemerkt bebaut: noch leer zeigen
@@ -1437,6 +1373,7 @@
       else if (it.site) drawSite(it.site);
       else if (it.w) drawWorker(it.w, it.p);
       else if (it.c) drawCritter(it.c);
+      else if (it.tf) R.L.tall(it.tf);
       else if (it.e.kind === 'building') drawBuilding(it.e);
       else drawMobile(it.e);
     }
@@ -1444,6 +1381,7 @@
     for (const pr of S.proj) if (inView(pr.x, pr.y, 40) && seen(pr.x, pr.y)) drawProjectile(pr);
     for (const c of S.critters) if (c.fly && inView(c.x, c.y, 80) && seen(c.x, c.y)) drawCritter(c);
     for (const f of S.fx) if (inView(f.x, f.y, 200) && seen(f.x, f.y)) drawFx(f);
+    R.L.air(S, inView, rdt); // Schmetterlinge, Irrlichter, Staubteufel, Glut, Rauch, Lichtschein
     if (R.fxHigh) drawClouds(S);
     if (fogOn) {
       updateFogLayer(S, rdt);

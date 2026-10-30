@@ -89,8 +89,14 @@
     faehigkeit(t, v, pan) { tone(sfxBus, 220, t, 0.8, 'sawtooth', 0.08 * v, { pan, lp: 1600, a: 0.05 }); tone(sfxBus, 330, t + 0.05, 0.8, 'sawtooth', 0.06 * v, { pan, lp: 1600, a: 0.05 }); noise(sfxBus, t, 0.6, 0.1 * v, 'highpass', 3000, 1, { pan, a: 0.2 }); },
     horn(t, v) { [0, 0.45].forEach((d, i) => { tone(sfxBus, mtof(50 + i * 7), t + d, 0.9, 'sawtooth', 0.12 * v, { lp: 900, a: 0.08 }); tone(sfxBus, mtof(62 + i * 7), t + d, 0.9, 'sawtooth', 0.06 * v, { lp: 1200, a: 0.08 }); }); },
     alarm(t, v) { for (let i = 0; i < 3; i++) tone(sfxBus, 660, t + i * 0.3, 0.2, 'square', 0.07 * v, { lp: 1800 }); },
+    // Umgebung: Lava- und Moorblasen, Fischsprung, Vogelruf, Froschquaken, zischender Schlot
+    blubb(t, v, pan) { const f = 140 + Math.random() * 120; tone(sfxBus, f, t, 0.12, 'sine', 0.16 * v, { pan, slide: 2.4 }); noise(sfxBus, t + 0.05, 0.06, 0.05 * v, 'lowpass', 500, 1, { pan }); },
+    platsch(t, v, pan) { noise(sfxBus, t, 0.22, 0.14 * v, 'bandpass', 1400, 1.5, { pan, sweep: 500 }); tone(sfxBus, 320, t, 0.08, 'sine', 0.05 * v, { pan, slide: 0.5 }); },
+    zwitschern(t, v, pan) { const b = 2600 + Math.random() * 1400; for (let i = 0; i < 2 + Math.floor(Math.random() * 3); i++) tone(sfxBus, b * (1 + (i % 2) * 0.18), t + i * 0.11, 0.07, 'sine', 0.045 * v, { pan, slide: 1.35 }); },
+    quaken(t, v, pan) { for (let i = 0; i < 2; i++) tone(sfxBus, 105 + Math.random() * 25, t + i * 0.2, 0.13, 'sawtooth', 0.07 * v, { pan, lp: 650, slide: 1.25 }); },
+    zischen(t, v, pan) { noise(sfxBus, t, 0.9, 0.11 * v, 'highpass', 2800, 0.8, { pan, sweep: 5000, a: 0.08 }); },
   };
-  const MIN_GAP = { schwert: 0.05, treffer: 0.08, pfeil: 0.06, zauber: 0.08, feuer: 0.15, kanone: 0.1, explosion: 0.08, tod: 0.07, einsturz: 0.3, bau: 0.3 };
+  const MIN_GAP = { schwert: 0.05, treffer: 0.08, pfeil: 0.06, zauber: 0.08, feuer: 0.15, kanone: 0.1, explosion: 0.08, tod: 0.07, einsturz: 0.3, bau: 0.3, blubb: 0.35, platsch: 1, zwitschern: 1.5, quaken: 2, zischen: 1.5 };
 
   // Positionsbezogen: nur hörbar, wenn im Bild; Lautstärke nach Entfernung zur Kameramitte
   G.sfx = function (name, x, y, vol, global) {

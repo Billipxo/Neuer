@@ -90,7 +90,7 @@
     const themeKey = cfg.map === 'heimat' ? G.RACES[race].map.theme : cfg.map === 'zufall' ? pick(Object.keys(G.THEMES)) : cfg.map;
     S = G.S = {
       time: 0, tick: 0, ents: [], proj: [], fx: [], timers: [], players: [], camps: [], shops: [], decor: [], sites: [],
-      critters: [], parts: [], decals: [], corpses: [],
+      critters: [], parts: [], decals: [], corpses: [], terrain: [], roads: [],
       w: layout.w, h: layout.h, theme: themeKey, mode: cfg.mode, layout, over: null, msgs: [],
       speed: 1, paused: false, nextId: 1, grid: new Map(), bonusT: 0, victoryT: 0, cfg,
       limit: (cfg.duration === undefined ? 30 : cfg.duration) * 60, endphase: false, objective: cfg.objective || 'vernichten',
@@ -105,6 +105,8 @@
     layout.shops.forEach((s) => S.shops.push({ x: s[0] * layout.w, y: s[1] * layout.h, r: 40 }));
     layout.sites.forEach((s) => { const pos = G.snap('aussenposten', s[0] * layout.w, s[1] * layout.h); S.sites.push({ x: pos.x, y: pos.y, b: null }); });
     layout.camps.forEach((c) => makeCamp(c[2], c[0] * layout.w, c[1] * layout.h));
+    genRoads();
+    genTerrain();
     genDecor();
     for (const p of S.players) placeResourceSpots(p);
     genCritters();
@@ -191,12 +193,166 @@
     for (const s of S.sites) if (d2(x, y, s.x, s.y) < shopM ** 2) return false;
     return true;
   }
+  // -------------------------------------------------------------------------
+  // Landschaft: Wege, große Geländemerkmale (Teiche, Lavaseen, Felsen …) und Pflanzen in Hainen.
+  // Merkmale mit block sind Hindernisse für alle Truppen; Wegfindung und Kollision weichen ihnen aus.
+  const TREES = { eiche: 1, birke: 1, hochbaum: 1, totbaum: 1, akazie: 1, tanne: 1, kohlebaum: 1 };
+  const SMALL = { blumen: 1, gras: 1, farn: 1, leuchtpilz: 1, schilf: 1, fliegenpilz: 1, eiskristall: 1, glutpilz: 1 };
+  G.FLORA_SMALL = SMALL;
+  function genRoads() { // leicht geschwungene Wege: Basen und Händler zur Kartenmitte, gegenüberliegende Basen untereinander
+    const hub = { x: S.w / 2, y: S.h / 2 }, pts = S.players.map((p) => p.base), pairs = [];
+    for (const p of pts) pairs.push([p, hub]);
+    for (const s of S.shops) pairs.push([s, hub]);
+    for (let i = 0; i < pts.length; i++) for (let j = i + 1; j < pts.length; j++) if (Math.abs(pts[i].x - pts[j].x) < 10 || Math.abs(pts[i].y - pts[j].y) < 10) pairs.push([pts[i], pts[j]]);
+    S.roads = pairs.map(([a, b]) => ({ ax: a.x, ay: a.y, bx: b.x, by: b.y, mx: (a.x + b.x) / 2 + rand(-100, 100), my: (a.y + b.y) / 2 + rand(-100, 100) }));
+  }
+  function segDist(x, y, ax, ay, bx, by) {
+    const dx = bx - ax, dy = by - ay, l = dx * dx + dy * dy;
+    const t = l ? clamp(((x - ax) * dx + (y - ay) * dy) / l, 0, 1) : 0;
+    return Math.hypot(x - ax - dx * t, y - ay - dy * t);
+  }
+  function roadDist(x, y) { // Abstand zum nächsten Weg (Kurve in 12 Stücken angenähert)
+    let best = Infinity;
+    for (const r of S.roads) {
+      let px = r.ax, py = r.ay;
+      for (let i = 1; i <= 12; i++) {
+        const t = i / 12, u = 1 - t;
+        const qx = u * u * r.ax + 2 * u * t * r.mx + t * t * r.bx, qy = u * u * r.ay + 2 * u * t * r.my + t * t * r.by;
+        best = Math.min(best, segDist(x, y, px, py, qx, qy));
+        px = qx; py = qy;
+      }
+    }
+    return best;
+  }
+  // Liegt ein Punkt (plus Rand m) in einem Geländemerkmal? onlyBlock: nur Hindernisse prüfen
+  function inTerrain(x, y, m, onlyBlock) {
+    for (const f of S.terrain) {
+      if (onlyBlock && !f.block) continue;
+      const dx = (x - f.x) / (f.rx + m), dy = (y - f.y) / (f.ry + m);
+      if (dx * dx + dy * dy < 1) return true;
+    }
+    return false;
+  }
+  G.inTerrain = (x, y, m) => inTerrain(x, y, m || 0, true);
+  // Objekt aus einem Hindernis (Oval plus Radius r) an den Rand schieben
+  function pushOutOf(e, f, r) {
+    const ax = f.rx + r, ay = f.ry + r, dx = e.x - f.x, dy = e.y - f.y;
+    if (dx >= ax || dx <= -ax || dy >= ay || dy <= -ay) return;
+    const q = (dx * dx) / (ax * ax) + (dy * dy) / (ay * ay);
+    if (q >= 1) return;
+    if (q < 1e-6) { e.x = f.x + ax; return; }
+    const k = 1 / Math.sqrt(q);
+    e.x = f.x + dx * k; e.y = f.y + dy * k;
+  }
+  // Hindernis-Raster (40-px-Felder) für Wegfindung und Erreichbarkeitsprüfung
+  function terrainMask(W, H, list) {
+    const m = new Uint8Array(W * H);
+    for (const f of list) {
+      if (!f.block) continue;
+      const ax = f.rx + 4, ay = f.ry + 4;
+      const x0 = Math.max(0, Math.floor((f.x - ax) / T)), x1 = Math.min(W - 1, Math.floor((f.x + ax) / T));
+      const y0 = Math.max(0, Math.floor((f.y - ay) / T)), y1 = Math.min(H - 1, Math.floor((f.y + ay) / T));
+      for (let cy = y0; cy <= y1; cy++) for (let cx = x0; cx <= x1; cx++) {
+        const dx = ((cx + 0.5) * T - f.x) / ax, dy = ((cy + 0.5) * T - f.y) / ay;
+        if (dx * dx + dy * dy < 1) m[cy * W + cx] = 1;
+      }
+    }
+    return m;
+  }
+  // Bleiben alle Basen, Lager, Händler und Goldadern miteinander verbunden?
+  function terrainConnected(list) {
+    const W = Math.ceil(S.w / T), H = Math.ceil(S.h / T), m = terrainMask(W, H, list);
+    const cell = (x, y) => clamp(Math.floor(y / T), 0, H - 1) * W + clamp(Math.floor(x / T), 0, W - 1);
+    const seen = new Uint8Array(W * H), q = new Int32Array(W * H);
+    let qh = 0, qt = 0;
+    const s0 = cell(S.players[0].base.x, S.players[0].base.y);
+    seen[s0] = 1; q[qt++] = s0;
+    while (qh < qt) {
+      const c = q[qh++], cx = c % W, cy = (c / W) | 0;
+      for (let i = 0; i < 4; i++) {
+        const nx = cx + DX[i], ny = cy + DY[i];
+        if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+        const n = ny * W + nx;
+        if (!seen[n] && !m[n]) { seen[n] = 1; q[qt++] = n; }
+      }
+    }
+    return [...S.players.map((p) => p.base), ...S.camps, ...S.shops, ...S.sites].every((p) => seen[cell(p.x, p.y)]);
+  }
+  function pickWeighted(list) {
+    let sum = 0;
+    for (const [, w] of list) sum += w;
+    let r = Math.random() * sum;
+    for (const [k, w] of list) { r -= w; if (r <= 0) return k; }
+    return list[0][0];
+  }
+  function placeFeature(kind) {
+    const F = G.FEATURES[kind];
+    const rx = rand(F.r[0], F.r[1]), ry = rx * F.ry;
+    const x = rand(rx + 50, S.w - rx - 50), y = rand(ry + 60, S.h - ry - 50);
+    if (F.block ? !freeOfStuff(x, y, rx + 110, rx + 160, rx + 120) : !freeOfStuff(x, y, rx + 40, rx + 80, rx + 60)) return false;
+    if (roadDist(x, y) < (F.block ? rx + 90 : rx * 0.8 + 30)) return false;
+    if (S.terrain.some((o) => Math.hypot(o.x - x, o.y - y) < o.rx + rx + 90)) return false;
+    const f = { kind, x, y, rx, ry, block: !!F.block, seed: Math.random() };
+    if (f.block && !terrainConnected(S.terrain.concat(f))) return false;
+    S.terrain.push(f);
+    return true;
+  }
+  function genTerrain() {
+    const L = G.LANDSCAPE[S.theme];
+    if (!L) return;
+    const want = Math.round((S.w * S.h) / 850000) + 2;
+    // jede Art einmal (große zuerst), dann nach Gewicht auffüllen – Häufiges wird dabei seltener gewählt
+    for (const [kind] of L.features.slice().sort((a, b) => G.FEATURES[b[0]].r[1] - G.FEATURES[a[0]].r[1])) {
+      for (let t = 0; t < 60 && !placeFeature(kind); t++);
+    }
+    const count = (k) => S.terrain.filter((f) => f.kind === k).length;
+    for (let tries = 0; tries < want * 40 && S.terrain.length < want; tries++) {
+      placeFeature(pickWeighted(L.features.map(([k, w]) => [k, w / (1 + 1.5 * count(k))])));
+    }
+  }
   function genDecor() {
-    const n = Math.floor((S.w * S.h) / 26000);
+    const L = G.LANDSCAPE[S.theme];
+    const grid = new Map(), GC = 32;
+    const key = (cx, cy) => cx * 4096 + cy;
+    const free = (x, y, gap) => {
+      const cx = (x / GC) | 0, cy = (y / GC) | 0;
+      for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) {
+        const a = grid.get(key(cx + i, cy + j));
+        if (a) for (const d of a) if (d2(d.x, d.y, x, y) < gap * gap) return false;
+      }
+      return true;
+    };
+    const add = (k, x, y, s) => {
+      const small = SMALL[k];
+      if (x < 20 || y < 20 || x > S.w - 20 || y > S.h - 20) return;
+      if (!freeOfStuff(x, y, 90, 150, 130) || inTerrain(x, y, small ? 6 : 36) || roadDist(x, y) < (small ? 22 : 40) || !free(x, y, small ? 14 : 26)) return;
+      const d = { x, y, s, v: Math.floor(rand(0, 3)), seed: Math.random(), k };
+      S.decor.push(d);
+      const gk = key((x / GC) | 0, (y / GC) | 0);
+      if (!grid.has(gk)) grid.set(gk, []);
+      grid.get(gk).push(d);
+    };
+    // Haine: dichte Baumgruppen mit Unterholz am Rand, dazwischen bleibt offenes Gelände für Schlachten
+    const smallKinds = L.flora.filter(([k]) => SMALL[k]);
+    const groves = Math.round((S.w * S.h) / 1000000) + 3;
+    for (let g = 0; g < groves; g++) {
+      const cx = rand(120, S.w - 120), cy = rand(120, S.h - 120);
+      if (!freeOfStuff(cx, cy, 150, 220, 180) || inTerrain(cx, cy, 60)) continue;
+      const n = 5 + Math.floor(rand(0, 9)), R = 55 + n * 10;
+      for (let i = 0; i < n * 3; i++) {
+        const a = rand(0, 6.28), r = R * Math.sqrt(Math.random());
+        add(L.grove, cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.8, rand(0.85, 1.4));
+      }
+      for (let i = 0; i < n && smallKinds.length; i++) {
+        const a = rand(0, 6.28), r = R * rand(0.9, 1.3);
+        add(pickWeighted(smallKinds), cx + Math.cos(a) * r, cy + Math.sin(a) * r * 0.8, rand(0.8, 1.2));
+      }
+    }
+    // Verstreute Pflanzen, Büsche und Steine
+    const n = Math.floor((S.w * S.h) / 22000);
     for (let i = 0; i < n; i++) {
-      const x = rand(20, S.w - 20), y = rand(20, S.h - 20);
-      if (!freeOfStuff(x, y, 90, 150, 130)) continue;
-      S.decor.push({ x, y, s: rand(0.7, 1.35), v: Math.floor(rand(0, 3)), seed: Math.random() });
+      const k = pickWeighted(L.flora);
+      add(k, rand(20, S.w - 20), rand(20, S.h - 20), SMALL[k] ? rand(0.8, 1.25) : rand(0.7, 1.3));
     }
     S.decor.sort((a, b) => a.y - b.y);
   }
@@ -207,6 +363,7 @@
     p.goldVein = { x: p.base.x + (back.x * 0.6 + side.x * 0.8) * 250, y: p.base.y + (back.y * 0.6 + side.y * 0.8) * 250 };
     let best = null, bd = Infinity;
     for (const d of S.decor) {
+      if (d.k && !TREES[d.k]) continue; // Holz gibt es an Bäumen
       const dd = d2(d.x, d.y, p.base.x, p.base.y);
       if (dd < bd && dd > (G.BASE_RADIUS + 60) ** 2) { bd = dd; best = d; }
     }
@@ -223,7 +380,7 @@
     for (let i = 0; i < n * 3 && S.critters.length < n; i++) {
       const type = pick(types);
       const x = rand(60, S.w - 60), y = rand(60, S.h - 60);
-      if (!FLYERS[type] && !freeOfStuff(x, y, 120, 200, 100)) continue;
+      if (!FLYERS[type] && (!freeOfStuff(x, y, 120, 200, 100) || inTerrain(x, y, 30, true))) continue;
       if (FLYERS[type]) S.critters.push({ type, fly: true, x, y, ang: rand(0, 6.28), sp: rand(60, 110), t: 0 });
       else if (GLOW[type]) S.critters.push({ type, glow: true, x, y, hx: x, hy: y, t: rand(0, 10), n: 5 + Math.floor(rand(0, 5)) });
       else S.critters.push({ type, x, y, hx: x, hy: y, tx: x, ty: y, wait: rand(0, 3), t: 0, face: rand(0, 6.28), moving: false, flee: 0 });
@@ -265,6 +422,7 @@
           c.tx = c.hx + rand(-110, 110); c.ty = c.hy + rand(-110, 110);
         }
       }
+      for (const f of S.terrain) if (f.block) pushOutOf(c, f, 6); // nicht durch Teiche und Felsen
       c.x = clamp(c.x, 10, S.w - 10); c.y = clamp(c.y, 10, S.h - 10);
     }
   }
@@ -1172,18 +1330,20 @@
   // Wegfindung: Raster (eine Kachel = 40 px) mit zwischengespeicherten Strömungsfeldern.
   // Gebäude und Mauern blockieren nur gegnerische Teams – eigene und verbündete Truppen gehen hindurch.
   // Ist das Ziel unerreichbar (geschlossene Mauer), laufen Einheiten direkt darauf zu und reißen sie ein.
-  const NAV = { W: 0, H: 0, bld: null, wall: null, cache: new Map() };
+  // Geländehindernisse (Teiche, Lava, Felsen) blockieren alle.
+  const NAV = { W: 0, H: 0, bld: null, wall: null, terr: null, cache: new Map() };
   const DX = [1, -1, 0, 0, 1, 1, -1, -1], DY = [0, 0, 1, -1, 1, -1, 1, -1];
   function cellAt(x, y) {
     const cx = Math.floor(x / T), cy = Math.floor(y / T);
     return cx < 0 || cy < 0 || cx >= NAV.W || cy >= NAV.H ? -1 : cy * NAV.W + cx;
   }
-  const blockedFor = (c, team) => (NAV.bld[c] !== -1 && NAV.bld[c] !== team) || (NAV.wall[c] !== -1 && NAV.wall[c] !== team);
+  const blockedFor = (c, team) => NAV.terr[c] === 1 || (NAV.bld[c] !== -1 && NAV.bld[c] !== team) || (NAV.wall[c] !== -1 && NAV.wall[c] !== team);
   function navRebuild() {
     NAV.W = Math.ceil(S.w / T); NAV.H = Math.ceil(S.h / T);
     const n = NAV.W * NAV.H;
     if (!NAV.bld || NAV.bld.length !== n) { NAV.bld = new Int8Array(n); NAV.wall = new Int8Array(n); }
     NAV.bld.fill(-1); NAV.wall.fill(-1);
+    NAV.terr = terrainMask(NAV.W, NAV.H, S.terrain);
     for (const b of S.ents) {
       if (b.dead || b.kind !== 'building') continue;
       if (b.type === 'mauer') { const c = cellAt(b.x, b.y); if (c >= 0) NAV.wall[c] = b.team; continue; }
@@ -1270,6 +1430,11 @@
   G.navWaypoint = navWaypoint;
   function navMove(e, tx, ty, dt, stop, tgt) {
     if (e.speed <= 0) return false;
+    if (!tgt && S.terrain.length) { // Zielpunkt im Teich, in Lava oder Fels: an den Rand legen
+      const g = { x: tx, y: ty };
+      for (const f of S.terrain) if (f.block) pushOutOf(g, f, e.r * 0.6 + 3);
+      tx = g.x; ty = g.y;
+    }
     e.navT = (e.navT || 0) - dt;
     if (e.navT <= 0 || e.navTx === undefined || Math.abs(e.navTx - tx) + Math.abs(e.navTy - ty) > 60) {
       e.navT = 0.25 + Math.random() * 0.1; e.navTx = tx; e.navTy = ty;
@@ -1311,7 +1476,9 @@
       if (e.range > 100) { x -= p.dir.x * 55; y -= p.dir.y * 55; }
       if (e.role === 'tank') { x += p.dir.x * 30; y += p.dir.y * 30; }
     }
-    return { x, y };
+    const g = { x, y };
+    for (const f of S.terrain) if (f.block) pushOutOf(g, f, 14); // Formation schmiegt sich um Teiche und Felsen
+    return g;
   }
 
   function updateMobile(e, dt) {
@@ -1343,7 +1510,7 @@
     if (e.kind === 'creep') {
       if (e.returning) {
         e.hp = Math.min(e.maxHp, e.hp + e.maxHp * 0.15 * dt);
-        if (moveTo(e, e.home.x, e.home.y, dt, 6)) e.returning = false;
+        if (navMove(e, e.home.x, e.home.y, dt, 6)) e.returning = false;
         return;
       }
       if (dist(e, e.home) > 430) { e.returning = true; e.target = null; return; }
@@ -1446,7 +1613,7 @@
     if (!S.sepGrid) { S.sepGrid = new Array(SW * SH); for (let i = 0; i < S.sepGrid.length; i++) S.sepGrid[i] = []; }
     const sg = S.sepGrid;
     for (const a of sg) a.length = 0;
-    const mobs = [];
+    const mobs = [], terr = S.terrain.filter((f) => f.block);
     for (const e of S.ents) {
       if (e.dead || e.kind === 'building') continue;
       mobs.push(e);
@@ -1454,6 +1621,7 @@
     }
     for (const e of mobs) {
       if (e.dead) continue;
+      for (const f of terr) pushOutOf(e, f, e.r * 0.6); // Teiche, Lava und Felsen umgehen
       // gegnerische Gebäude und Mauern: aus dem Grundriss schieben (eigene sind durchlässig)
       G.queryFoes(e.x, e.y, e.r + 26, e.team, (o) => {
         if (o.kind !== 'building') return;
@@ -2294,7 +2462,7 @@
     const DS = { ...D.S };
     for (const k of PACKED) if (DS[k] && DS[k].rows) DS[k] = unpack(DS[k]);
     const s = fill({}, DS);
-    Object.assign(s, { players, camps, sites, shops, ents: D.ents.map((id) => E.get(id)).filter(Boolean), fx: [], parts: [], grid: new Map(), layout: G.LAYOUTS[s.mode], acc: 0, paused: false, navDirty: true });
+    Object.assign(s, { players, camps, sites, shops, ents: D.ents.map((id) => E.get(id)).filter(Boolean), fx: [], parts: [], grid: new Map(), layout: G.LAYOUTS[s.mode], acc: 0, paused: false, navDirty: true, terrain: s.terrain || [] });
     for (const p of players) {
       if (!G.RACES[p.race]) throw new Error('Unbekanntes Volk');
       p.rd = G.RACES[p.race]; p.diff = G.DIFFICULTY[s.cfg.difficulty] || G.DIFFICULTY.mittel; p.bonus = {}; p.teco = {};

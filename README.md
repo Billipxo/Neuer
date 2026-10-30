@@ -11,7 +11,7 @@ Auch am **Handy und Tablet** spielbar (Touch-Steuerung: Wischen = Karte bewegen,
 Tippen = auswählen/bauen, Held antippen und dann Ziel antippen = Held steuern, ☰ = Menü).
 Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http://localhost:8000` öffnen.
 
-## Was schon drin ist (Prototyp v1.1)
+## Was schon drin ist (Prototyp v1.2)
 
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
@@ -69,6 +69,20 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - Rohstoffleiste mit Symbolen, Fähigkeiten mit sichtbarer Abklingzeit, Seitenleiste mit Wappen und Titel.
 
 **Atmosphäre**
+- **Lebendige Karten:** Jede Partie erzeugt eine neue Landschaft mit Geländemerkmalen, die zur Karte passen:
+  - Grüne Auen: Teiche mit Seerosen, Schilf, Enten und springenden Fischen, Blumenwiesen mit Schmetterlingen,
+    bemooste Felsgruppen, alte Steinkreise mit leuchtenden Runen
+  - Silberwald: leuchtende Mondseen, uralte Riesenbäume mit Runen und Lichtfrüchten, Kristallgruppen, Feenringe aus Leuchtpilzen
+  - Verfluchte Sümpfe: blubbernde Moortümpel mit Irrlichtern und Nebelschwaden, versunkene Ruinen, Knochenfelder
+  - Rote Steppe: geschichtete Tafelberge, Felsnadeln mit Deckstein, Wasserlöcher, Bestiengerippe, umherziehende Staubteufel
+  - Frostgipfel: gefrorene Seen mit Rissen und wanderndem Lichtreflex, Eisspitzen, verschneite Felsen, Schneewehen
+  - Aschenlande: brodelnde Lavaseen mit treibenden Krusten und Funkenflug, rauchende Vulkanschlote, glühende Spalten, Obsidianspitzen
+
+  Seen, Lava, Felsen, Bäume und Ruinen sind **Hindernisse**: Truppen laufen außen herum (Wege, Basen, Lager, Händler und
+  Goldadern bleiben immer erreichbar). Bäume stehen in Hainen mit Unterholz, dazu Büsche, Blumen, Gräser, Farne, Pilze,
+  Schilf und Akazien, die sich im Wind wiegen. Lava, Kristalle und Mondseen werfen Licht auf die Umgebung.
+  Leise **Umgebungsgeräusche**: Blubbern, Platschen, Vogelrufe, Froschquaken, zischende Schlote. Die Werte stehen in
+  `G.LANDSCAPE` und `G.FEATURES` (`js/data.js`).
 - **Musik** je Heimatkarte (live erzeugt, wird bei Kämpfen intensiver) und **Kampfgeräusche** (Klingen, Bögen, Magie,
   Explosionen, Todesschreie) – ohne Audiodateien, mit der Web-Audio-API synthetisiert.
 - **Gezeichnete Figuren** je Volk und Rolle (Rüstung, Helme, Kapuzen, Bärte, Hauer, Hörner, Totenschädel, Waffen, Schilde in Spielerfarbe), Tiere und Monster mit eigener Gestalt.
@@ -110,6 +124,7 @@ js/audio.js       Musik und Geräusche (Web-Audio-Synthese)
 js/profile.js     Profil, Volks-XP, Skins, Kampagne
 js/save.js        Spielstände (drei Plätze + automatisch) im Browser
 js/render.js      Canvas-Darstellung (Comic-Stil), Heimatkarten, Minikarte
+js/landschaft.js  Landschaft: Pflanzen, Geländemerkmale, belebte Luftschicht
 js/ui.js          Menü, HUD, Seitenleiste, Eingabe
 js/main.js        Spielschleife
 ```

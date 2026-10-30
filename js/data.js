@@ -437,6 +437,48 @@ G.THEMES = {
                 music: { scale: [0, 1, 4, 5, 7, 8, 10], root: 43, tempo: 96, lead: 'horn', pad: 'dunkel', drums: 'schwer' } },
 };
 
+// Landschaft je Karte: Haine aus einer Baumart, verstreute Pflanzen und Steine [Art, Gewicht] und große Geländemerkmale.
+G.LANDSCAPE = {
+  auen:       { grove: 'eiche', flora: [['eiche', 3], ['birke', 2], ['busch', 3], ['blumen', 5], ['gras', 5], ['stein', 1], ['stumpf', 1]],
+                features: [['teich', 3], ['felsen', 2], ['steinkreis', 1], ['wiese', 3]] },
+  silberwald: { grove: 'hochbaum', flora: [['hochbaum', 3], ['farn', 5], ['leuchtpilz', 3], ['moosstein', 2]],
+                features: [['mondsee', 2], ['urbaum', 2], ['kristalle', 2], ['pilzring', 2]] },
+  suempfe:    { grove: 'totbaum', flora: [['totbaum', 3], ['grabstein', 2], ['schilf', 5], ['fliegenpilz', 3], ['wurzel', 2]],
+                features: [['moor', 4], ['ruine', 2], ['knochenfeld', 2]] },
+  steppe:     { grove: 'akazie', flora: [['fels', 3], ['dornbusch', 3], ['gras', 5], ['knochen', 1], ['schaedel', 1], ['akazie', 1]],
+                features: [['tafelberg', 3], ['felsnadeln', 2], ['wasserloch', 2], ['gerippe', 1]] },
+  frost:      { grove: 'tanne', flora: [['tanne', 3], ['schneefels', 2], ['eiskristall', 3], ['frostbusch', 2]],
+                features: [['eissee', 3], ['eisspitzen', 2], ['schneefelsen', 2], ['schneewehe', 2]] },
+  asche:      { grove: 'kohlebaum', flora: [['obsidian', 3], ['glutloch', 2], ['kohlebaum', 1], ['glutpilz', 3], ['knochen', 1]],
+                features: [['lavasee', 4], ['schlot', 2], ['obsidianspitzen', 2], ['spalte', 2]] },
+};
+// Geländemerkmale: Radius-Spanne, Verhältnis Höhe/Breite des Grundrisses; block = Hindernis, um das Truppen herumlaufen
+G.FEATURES = {
+  teich:           { name: 'Teich', r: [70, 110], ry: 0.62, block: true },
+  mondsee:         { name: 'Mondsee', r: [75, 110], ry: 0.62, block: true },
+  moor:            { name: 'Moortümpel', r: [60, 100], ry: 0.6, block: true },
+  wasserloch:      { name: 'Wasserloch', r: [52, 74], ry: 0.6, block: true },
+  eissee:          { name: 'Gefrorener See', r: [80, 120], ry: 0.6, block: true },
+  lavasee:         { name: 'Lavasee', r: [60, 100], ry: 0.62, block: true },
+  felsen:          { name: 'Felsgruppe', r: [45, 68], ry: 0.7, block: true },
+  schneefelsen:    { name: 'Schneefelsen', r: [45, 68], ry: 0.7, block: true },
+  tafelberg:       { name: 'Tafelberg', r: [70, 100], ry: 0.62, block: true },
+  felsnadeln:      { name: 'Felsnadeln', r: [45, 62], ry: 0.7, block: true },
+  eisspitzen:      { name: 'Eisspitzen', r: [38, 54], ry: 0.7, block: true },
+  obsidianspitzen: { name: 'Obsidianspitzen', r: [38, 54], ry: 0.7, block: true },
+  kristalle:       { name: 'Kristallgruppe', r: [36, 50], ry: 0.7, block: true },
+  urbaum:          { name: 'Uralter Baum', r: [44, 52], ry: 0.7, block: true },
+  steinkreis:      { name: 'Steinkreis', r: [60, 74], ry: 0.66, block: true },
+  ruine:           { name: 'Versunkene Ruine', r: [50, 68], ry: 0.66, block: true },
+  schlot:          { name: 'Vulkanschlot', r: [30, 40], ry: 0.72, block: true },
+  wiese:           { name: 'Blumenwiese', r: [80, 125], ry: 0.7, block: false },
+  pilzring:        { name: 'Feenring', r: [40, 56], ry: 0.7, block: false },
+  knochenfeld:     { name: 'Knochenfeld', r: [60, 90], ry: 0.7, block: false },
+  gerippe:         { name: 'Bestiengerippe', r: [55, 70], ry: 0.6, block: false },
+  schneewehe:      { name: 'Schneewehe', r: [80, 125], ry: 0.55, block: false },
+  spalte:          { name: 'Glutspalte', r: [90, 140], ry: 0.3, block: false },
+};
+
 G.PLAYER_COLORS = ['#3d7bff', '#e0453a', '#3fbf5a', '#e8b030'];
 G.DIFFICULTY = {
   einfach: { name: 'Einfach', eco: 0.8,  think: 2.5, attackFrac: 0.85, minAttack: 480, focus: false, abilityChance: 0.4 },
