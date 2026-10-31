@@ -349,6 +349,37 @@ input[type=range] { width: 100%; accent-color: var(--accent2); }
 #saveui .note { font-size: 12.5px; margin: 10px 0 0; }
 .top-ctrl button.flash { border-color: var(--good); box-shadow: 0 0 10px var(--good); }
 
+/* Chronik des Reichsfeuers */
+.chronik { max-width: 900px; margin: 0 auto; }
+.chronik > .note { max-width: 70ch; margin-bottom: 12px; }
+.chap { display: grid; grid-template-columns: 170px 1fr; gap: 0; margin: 10px 0; overflow: hidden; border-radius: 12px; border: 2px solid var(--ink);
+  border-left: 5px solid var(--rc); background: linear-gradient(170deg, var(--panel2), var(--panel)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--frame) 25%, transparent), 0 4px 12px rgba(0,0,0,.35); }
+.chap .chfig { width: 170px; height: 100%; min-height: 150px; display: block; border-right: 2px solid var(--ink); }
+.ch-body { padding: 10px 16px 12px; }
+.ch-no { font-size: 11.5px; text-transform: uppercase; letter-spacing: .08em; color: color-mix(in srgb, var(--rc) 75%, #fff); }
+.ch-foreign { text-transform: none; letter-spacing: 0; font-style: italic; }
+.chap h4 { font-family: var(--font-head); font-weight: 400; font-size: 20px; color: var(--head); margin: 2px 0 1px; }
+.ch-by { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+.ch-by b { color: var(--text); font-weight: 700; }
+.chap p { margin: 0; line-height: 1.55; font-size: 15px; color: color-mix(in srgb, var(--text) 90%, var(--head)); font-style: italic; max-width: 72ch; }
+.chron-races { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin: 18px 0 8px; }
+.chron-races button { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px; font-size: 13px; border-color: color-mix(in srgb, var(--rc) 55%, var(--ink)); }
+.chron-races button .emblem { width: 26px; height: 26px; color: var(--rc); }
+.chron-races button.sel { box-shadow: 0 0 0 2px var(--rc), 0 0 14px color-mix(in srgb, var(--rc) 60%, transparent); }
+.chron-head { margin: 14px 0 4px; padding: 10px 14px; border-radius: 10px; background: linear-gradient(90deg, color-mix(in srgb, var(--rc) 22%, transparent), transparent); border-left: 4px solid var(--rc); }
+.chron-head h3 { font-size: 24px; display: flex; align-items: center; gap: 8px; }
+.chron-head h3 .emblem { width: 28px; height: 28px; }
+.chron-head p { margin: 2px 0 0; color: var(--muted); font-style: italic; }
+.chron-play { text-align: center; margin: 14px 0 6px; }
+.chron-link { display: block; margin: 0 0 10px; text-align: left; white-space: normal; }
+@media (max-width: 640px) {
+  .chap { grid-template-columns: 1fr; }
+  .chap .chfig { width: 100%; height: 120px; min-height: 0; border-right: 0; border-bottom: 2px solid var(--ink); }
+  .ch-body { padding: 8px 12px 10px; }
+  .chap p { font-size: 14.5px; }
+  .chron-races { grid-template-columns: repeat(3, 1fr); }
+}
+
 /* Autopilot */
 .autobox .big { width: 100%; font-size: 15px; padding: 8px 10px; }
 .autobox.on { border-color: #7aff7a; box-shadow: 0 0 12px rgba(122,255,122,.25); }

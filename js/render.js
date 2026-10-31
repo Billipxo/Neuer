@@ -1174,9 +1174,11 @@
       };
       const hd = rd.heroes.find((x) => x.id === heroId) || rd.heroes[0];
       const hero = { kind: 'hero', def: hd, name: hd.name, r: 16, face: 1.35, range: hd.ranged ? 165 : 28, speed: 80 };
-      const unit = (role) => ({ kind: 'unit', role, name: rd.units[role].name, r: G.UNIT_BASE[role].r, face: 1.35, range: G.UNIT_BASE[role].range, speed: 60 });
+      const unit = (role) => { const ub = G.unitBase({ rd }, role), u = rd.units[role]; return { kind: 'unit', role, name: u.name, r: ub.r, face: 1.35, range: ub.range, speed: 60, fly: role === 'flieger', spec: u.spec }; };
       const s0 = h / 120;
       if (mode === 'hero') fig(hero, w / 2, h * 0.66, s0 * 1.9, 0.3);
+      else if (mode === 'unit' && rd.units[heroId]) { const big = heroId === 'elite' || heroId === 'flieger'; fig(unit(heroId), w / 2, h * (heroId === 'flieger' ? 0.74 : 0.68), s0 * (big ? 1.55 : 1.9), 0.5); }
+      else if (mode === 'haendler') { const sc = Math.min(s0 * 0.85, w / 110); c2.save(); c2.translate(w / 2, h * 0.62); c2.scale(sc, sc); drawShop({ x: 0, y: 0 }); c2.restore(); }
       else {
         fig(unit('tank'), w * 0.26, h * 0.52, s0 * 1.3, 0.9);
         fig(unit('fernkampf'), w * 0.74, h * 0.52, s0 * 1.3, 1.7);

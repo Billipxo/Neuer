@@ -23,6 +23,14 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
   Zustand (Armeen, Gebäude, Held, Talente, Kampagnen-Mission, erkundete Karte, Kamera), etwa 50–200 KB je Stand im Browser.
   **Übertragen zwischen Geräten:** Im Tab „Spielstände“ lässt sich jeder Stand als Datei (⬇) oder als gepackter Text-Code (📋,
   rund 25 KB) exportieren und auf einem anderen Gerät importieren – z. B. am Handy weiterspielen, was am PC begann.
+- **Chronik des Reichsfeuers** (Menüpunkt „Chronik“): Die Vorgeschichte aller Völker als kleine Erzählung aus verschiedenen
+  Sichten. In der Nacht, in der König Aldwin stirbt, fällt ein Stern – das Reichsfeuer – und jedes Volk erlebt ihn anders.
+  Ein fahrender Händler erzählt Prolog und Epilog. Je Volk berichten vier Stimmen in der Ich-Form: Helden wie Paladin Aldric,
+  Lich Morvath oder Königin Lysara, einfache Leute wie eine Priesterin, ein Holzfäller, ein Bergmann oder ein junger Ork, und
+  jeweils eine Stimme von außen (z. B. ein Ork-Späher über die Menschen oder ein Zwergen-Musketier über die Orks). Die Kapitel
+  greifen ineinander: Die Priesterin sieht den Schatten des Königs verschwinden, den die Dämonenkönigin Lysara mitnimmt; der
+  gefallene Paladin Kael erinnert sich an Aldric; die Müllerstochter Hanna und ihr untoter Großvater erzählen dieselbe Nacht.
+  Jede Geschichte führt direkt in die Kampagne des Volkes.
 - **6 Volkskampagnen** mit eigener Geschichte (je 5 Missionen: vernichten, überleben, Drachen erschlagen,
   Bündnis-Schlacht, Finale auf „Schwer“), z. B. „Die Krone von Valenmark“ (Menschen) oder „Blut und Steppe“ (Orks).
 - **Einführung** im ersten Spiel (abschaltbar) und **Anleitung** im Hauptmenü.
@@ -165,6 +173,7 @@ js/data.js        Spieldaten: Völker, Einheiten, Helden, Gebäude, Gegenstände
 js/game.js        Engine: Wirtschaft, Basisbau, Produktion, Kampf, Helden, KI, Nebel des Krieges, Spielstand-Format
 js/audio.js       Musik und Geräusche (Web-Audio-Synthese)
 js/profile.js     Profil, Volks-XP, Skins, Kampagne
+js/chronik.js     Chronik des Reichsfeuers: Vorgeschichte der Völker aus verschiedenen Sichten
 js/save.js        Spielstände (drei Plätze + automatisch) im Browser
 js/render.js      Canvas-Darstellung (Comic-Stil), Heimatkarten, Minikarte
 js/landschaft.js  Landschaft: Pflanzen, Geländemerkmale, belebte Luftschicht

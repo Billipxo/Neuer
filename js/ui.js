@@ -70,6 +70,25 @@
         <div class="crest" style="background:linear-gradient(135deg,#d6c39a,#9fd18c,#a9b5ac,#7aa04a,#c99a6a,#c0484a);margin-top:12px"><span>?</span></div>
         <h3>${emblem('zufall')} Zufall</h3><p>Das Schicksal entscheidet über dein Volk und deinen Helden.</p></button>`;
   }
+  // Chronik des Reichsfeuers: Prolog, je Volk vier Kapitel aus verschiedenen Sichten, Epilog
+  function chronikHtml() {
+    const CH = G.CHRONIK;
+    const race = CH.voelker[UI.chronRace] ? UI.chronRace : CH.voelker[UI.cfg.race] ? UI.cfg.race : 'menschen';
+    const V = CH.voelker[race], rd = G.RACES[race];
+    const chap = (c, label) => {
+      const f = c.fig, col = f.mode === 'haendler' ? '#e8c27a' : G.RACES[f.race].color;
+      return `<article class="chap" style="--rc:${col}"><canvas class="preview chfig" data-race="${f.race}" data-mode="${f.mode}" data-hero="${f.id || ''}" data-skin="standard" aria-hidden="true"></canvas>
+        <div class="ch-body"><div class="ch-no">${label}${f.mode !== 'haendler' && f.race !== race ? ` · <span class="ch-foreign">Stimme der ${G.RACES[f.race].name}</span>` : ''}</div><h4>${c.title}</h4>
+        <div class="ch-by">Aus Sicht von <b>${c.who}</b>, ${c.role}</div><p>${c.text}</p></div></article>`;
+    };
+    return `<section class="chronik"><h2>${CH.title}</h2><p class="note">${CH.intro}</p>
+      ${chap(CH.prolog, 'Prolog')}
+      <nav class="chron-races">${G.RACE_KEYS.map((k) => `<button class="${k === race ? 'sel' : ''}" data-act="m-chron" data-v="${k}" style="--rc:${G.RACES[k].color}">${emblem(k)}<span>${G.RACES[k].name}</span></button>`).join('')}</nav>
+      <div class="chron-head" style="--rc:${rd.color}"><h3 style="color:${rd.color};font-family:${RACE_FONT[race]}">${emblem(race)} ${V.title}</h3><p>${V.motto}</p></div>
+      ${V.kapitel.map((c, i) => chap(c, 'Kapitel ' + (i + 1))).join('')}
+      <div class="chron-play"><button class="big" data-act="m-chron-play" data-v="${race}">⚔ Weiter in der Kampagne „${G.CAMPAIGNS[race].title}“</button></div>
+      ${chap(CH.epilog, 'Epilog')}</section>`;
+  }
   function heroCards(c) {
     if (c.race === 'zufall') return '<p class="note">Bei zufälligem Volk wird auch der Held zufällig bestimmt.</p>';
     const rd = G.RACES[c.race];
@@ -96,7 +115,7 @@
 
   function renderMenu() {
     const c = UI.cfg;
-    const tabs = [['frei', 'Freies Spiel'], ['kampagne', 'Kampagne'], ['spielstaende', 'Spielstände'], ['voelker', 'Völker & Skins'], ['hilfe', 'Anleitung'], ['optionen', 'Einstellungen']];
+    const tabs = [['frei', 'Freies Spiel'], ['kampagne', 'Kampagne'], ['chronik', 'Chronik'], ['spielstaende', 'Spielstände'], ['voelker', 'Völker & Skins'], ['hilfe', 'Anleitung'], ['optionen', 'Einstellungen']];
     const last = G.Saves.latest();
     const note = UI.menuNote && (typeof UI.menuNote === 'string' ? { text: UI.menuNote, cls: 'bad' } : UI.menuNote);
     let body = note ? `<div class="menunote ${note.cls}">${note.text}</div>` : '';
@@ -128,7 +147,8 @@
           const n = G.CAMPAIGNS[k].missions.filter((m, i) => Prof().missionDone(k, i)).length;
           return `<button class="chip ${c.race === k ? 'sel' : ''}" data-act="m-craces" data-v="${k}" style="border-color:${G.RACES[k].color}">${G.RACES[k].name} <small>${n}/5</small></button>`;
         }).join('')}</div></section>
-        <section><h2>${G.RACES[c.race].name}: ${camp.title} <small>(${done}/5)</small></h2><p class="story">${camp.intro}</p><div class="campaign">
+        <section><h2>${G.RACES[c.race].name}: ${camp.title} <small>(${done}/5)</small></h2><p class="story">${camp.intro}</p>
+        <button class="mini chron-link" data-act="m-chron-read" data-v="${c.race}">📜 Die Vorgeschichte lesen: ${G.CHRONIK.voelker[c.race].title} – die Nacht des Reichsfeuers aus vier Sichten</button><div class="campaign">
         <div class="mlist">${ms.map((m, i) => {
           const ok = Prof().missionUnlocked(c.race, i), dn = Prof().missionDone(c.race, i);
           return `<button class="mission ${UI.mission === i ? 'sel' : ''}" data-act="m-mission" data-v="${i}" ${ok ? '' : 'disabled'}><span>${dn ? '✔' : ok ? '⚔' : '🔒'}</span> ${i + 1}. ${m.title}</button>`;
@@ -137,6 +157,8 @@
           <p class="note">Modus: ${G.LAYOUTS[sel.cfg.mode].name} · Schwierigkeit: ${G.DIFFICULTY[sel.cfg.difficulty].name} · ${sel.cfg.duration} Minuten · Karte: ${G.THEMES[sel.cfg.map].name}</p>
           <button class="big" data-act="m-campaign" ${Prof().missionUnlocked(c.race, UI.mission) ? '' : 'disabled'}>⚔ Mission starten</button></div></div>${skinRow(c)}</section>
         <section><h2>Dein Held</h2><div class="grid heroes">${heroCards(c)}</div></section>`;
+    } else if (UI.menuTab === 'chronik') {
+      body += chronikHtml();
     } else if (UI.menuTab === 'spielstaende') {
       body += `<section class="saves"><h2>Spielstände</h2>${saveList(false)}
         <p class="note">Spielstände liegen in diesem Browser. Im Spiel speicherst du über 💾 oben rechts; automatisch gesichert wird jede Spielminute und beim Verlassen der Partie.</p>
@@ -190,7 +212,12 @@
   }
   // Gezeichnete Figuren in den Menükarten (leicht animiert: Waffenschwünge, Banner, Leuchten)
   function drawPreviews() {
-    document.querySelectorAll('#menu canvas.preview').forEach((cv) => G.R.drawPreview(cv, cv.dataset.race, cv.dataset.mode, cv.dataset.hero, cv.dataset.skin));
+    const vh = window.innerHeight;
+    document.querySelectorAll('#menu canvas.preview').forEach((cv) => {
+      const r = cv.getBoundingClientRect();
+      if (r.bottom < -40 || r.top > vh + 40) return; // außerhalb des Bildes: nicht zeichnen
+      G.R.drawPreview(cv, cv.dataset.race, cv.dataset.mode, cv.dataset.hero, cv.dataset.skin);
+    });
   }
   let menuT = 0;
   UI.menuTick = function (dt) {
@@ -827,6 +854,9 @@
       case 'm-dur': UI.cfg.duration = +v; renderMenu(); return;
       case 'm-fog': UI.cfg.fog = v === 'an'; renderMenu(); return;
       case 'm-events': UI.cfg.events = v === 'an'; renderMenu(); return;
+      case 'm-chron': UI.chronRace = v; renderMenu(); { const hd = $('.chron-head'); if (hd) hd.scrollIntoView({ block: 'start', behavior: 'smooth' }); } return;
+      case 'm-chron-read': UI.chronRace = v; UI.menuTab = 'chronik'; renderMenu(); $('#menu').scrollTop = 0; return;
+      case 'm-chron-play': UI.cfg.race = v; UI.cfg.hero = null; UI.mission = 0; UI.menuTab = 'kampagne'; renderMenu(); $('#menu').scrollTop = 0; return;
       case 'm-auto': UI.cfg.autopilot = v === 'auto'; Prof().data.autopilot = UI.cfg.autopilot; Prof().save(); renderMenu(); return;
       case 'saveui': openSaveUI(); return;
       case 'sv-close': closeSaveUI(); return;
