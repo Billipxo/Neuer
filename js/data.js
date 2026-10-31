@@ -76,11 +76,11 @@ G.RACES = {
     name: 'Menschen', color: '#d6c39a', dark: '#6b5a3e',
     palette: { wall: '#9a9286', roof: '#3f63a8', trim: '#d9c27a' },
     desc: 'Disziplinierte Königreiche mit starker Wirtschaft und vielseitigen Truppen.',
-    passive: { name: 'Handelsgilden', desc: '+10% Goldeinkommen', eco: { goldPct: 0.10 } },
+    passive: { name: 'Handelsgilden', desc: '+15% Goldeinkommen', eco: { goldPct: 0.15 } },
     map: { name: 'Grüne Auen', theme: 'auen' },
     units: {
-      tank: { name: 'Schildwache' },
-      nahkampf: { name: 'Schwertkämpfer' },
+      tank: { name: 'Schildwache', mods: { hp: 1.1, armor: 1 } },
+      nahkampf: { name: 'Schwertkämpfer', mods: { hp: 1.08 } },
       fernkampf: { name: 'Armbrustschütze', mods: { dmg: 1.12, cd: 1.08 } },
       magier: { name: 'Kampfmagier' },
       heiler: { name: 'Priesterin' },
@@ -88,20 +88,20 @@ G.RACES = {
       beschwoerer: { name: 'Elementarist', summon: { name: 'Wasserelementar', hp: 320, dmg: 20, range: 120, cd: 1.4, speed: 55, armor: 1, proj: 'kugel', life: 40, r: 11 } },
     },
     heroes: [
-      { id: 'aldric', name: 'Paladin Aldric', title: 'Hüter des Lichts', ranged: false, stats: { hp: 950, dmg: 34, armor: 6 },
-        bonus: [{ roles: ['tank'], hp: 0.25 }, { roles: ['all'], armor: 2 }], bonusDesc: 'Tanks +25% LP, alle Einheiten +2 Rüstung',
+      { id: 'aldric', name: 'Paladin Aldric', title: 'Hüter des Lichts', ranged: false, stats: { hp: 1050, dmg: 34, armor: 6 },
+        bonus: [{ roles: ['tank'], hp: 0.25 }, { roles: ['all'], armor: 2, regen: 2 }], bonusDesc: 'Tanks +25% LP, alle Einheiten +2 Rüstung und +2 LP/s',
         abilities: [
-          { name: 'Heiliges Licht', type: 'heal', amount: 240, radius: 230, cd: 14 },
-          { name: 'Gottesschild', type: 'buff', stat: 'armor', value: 6, duration: 8, radius: 260, cd: 24 }] },
+          { name: 'Heiliges Licht', type: 'heal', amount: 300, radius: 260, cd: 14 },
+          { name: 'Gottesschild', type: 'buff', stat: 'armor', value: 6, duration: 10, radius: 260, cd: 24 }] },
       { id: 'lyra', name: 'Erzmagierin Lyra', title: 'Stimme des Turms', ranged: true, stats: { hp: 700, dmg: 40, armor: 2 },
-        bonus: [{ roles: ['magier', 'heiler'], dmg: 0.25, heal: 0.25 }], bonusDesc: 'Magier & Heiler +25% Schaden/Heilung',
+        bonus: [{ roles: ['magier', 'heiler'], dmg: 0.20, heal: 0.20 }], bonusDesc: 'Magier & Heiler +20% Schaden/Heilung',
         abilities: [
-          { name: 'Feuerball', type: 'nuke', dmg: 260, cd: 9 },
-          { name: 'Blizzard', type: 'aoe', dmg: 190, radius: 130, cd: 18 }] },
-      { id: 'gareth', name: 'Feldherr Gareth', title: 'Schwert des Königs', ranged: false, stats: { hp: 850, dmg: 42, armor: 4 },
-        bonus: [{ roles: ['nahkampf', 'fernkampf'], dmg: 0.15 }, { roles: ['all'], speed: 0.10 }], bonusDesc: 'Nah- & Fernkampf +15% Schaden, alle +10% Tempo',
+          { name: 'Feuerball', type: 'nuke', dmg: 320, cd: 9 },
+          { name: 'Blizzard', type: 'aoe', dmg: 190, radius: 130, cd: 15 }] },
+      { id: 'gareth', name: 'Feldherr Gareth', title: 'Schwert des Königs', ranged: false, stats: { hp: 950, dmg: 42, armor: 4 },
+        bonus: [{ roles: ['nahkampf', 'fernkampf'], dmg: 0.18 }, { roles: ['all'], speed: 0.10 }], bonusDesc: 'Nah- & Fernkampf +18% Schaden, alle +10% Tempo',
         abilities: [
-          { name: 'Sturmangriff', type: 'stun', dmg: 120, radius: 120, stun: 1.5, cd: 14 },
+          { name: 'Sturmangriff', type: 'stun', dmg: 170, radius: 135, stun: 1.5, cd: 14 },
           { name: 'Schlachtruf', type: 'buff', stat: 'dmg', value: 0.3, duration: 10, radius: 300, cd: 26 }] },
     ],
   },
@@ -109,11 +109,11 @@ G.RACES = {
     name: 'Elfen', color: '#9fd18c', dark: '#2f5a33',
     palette: { wall: '#d8d0b8', roof: '#3f8a4a', trim: '#e8e2c0' },
     desc: 'Uralte Waldvölker – flink, präzise und eng mit der Natur verbunden.',
-    passive: { name: 'Lebenshauch', desc: 'Alle Einheiten regenerieren +2 LP/s', bonus: [{ roles: ['all', 'summon'], regen: 2 }] },
+    passive: { name: 'Lebenshauch', desc: 'Alle Einheiten regenerieren +3 LP/s', bonus: [{ roles: ['all', 'summon'], regen: 3 }] },
     map: { name: 'Silberwald', theme: 'silberwald' },
     units: {
       tank: { name: 'Baumhüter', mods: { hp: 1.1, speed: 0.9 } },
-      nahkampf: { name: 'Klingentänzerin', mods: { cd: 0.85, hp: 0.9 } },
+      nahkampf: { name: 'Klingentänzerin', mods: { cd: 0.85 } },
       fernkampf: { name: 'Waldläuferin', mods: { range: 1.15 } },
       magier: { name: 'Sternenruferin' },
       heiler: { name: 'Druidin', mods: { heal: 1.15 } },
@@ -124,17 +124,17 @@ G.RACES = {
       { id: 'ilyria', name: 'Schattenpfeil Ilyria', title: 'Jägerin der Nacht', ranged: true, stats: { hp: 720, dmg: 44, armor: 2 },
         bonus: [{ roles: ['fernkampf'], dmg: 0.20, range: 0.15 }], bonusDesc: 'Fernkampf +20% Schaden, +15% Reichweite',
         abilities: [
-          { name: 'Pfeilhagel', type: 'aoe', dmg: 170, radius: 140, cd: 12 },
+          { name: 'Pfeilhagel', type: 'aoe', dmg: 155, radius: 140, cd: 12 },
           { name: 'Eulenblick', type: 'buff', stat: 'atkspd', value: 0.35, duration: 10, radius: 300, cd: 24 }] },
       { id: 'thalia', name: 'Hohedruidin Thalia', title: 'Herz des Hains', ranged: true, stats: { hp: 760, dmg: 30, armor: 3 },
         bonus: [{ roles: ['heiler'], heal: 0.30 }, { roles: ['all'], regen: 2 }], bonusDesc: 'Heiler +30% Heilung, alle +2 LP/s',
         abilities: [
           { name: 'Verjüngung', type: 'heal', amount: 260, radius: 240, cd: 13 },
-          { name: 'Wurzelgriff', type: 'stun', dmg: 60, radius: 150, stun: 2.5, cd: 20 }] },
-      { id: 'faelar', name: 'Klingenmeister Faelar', title: 'Tanz der Klingen', ranged: false, stats: { hp: 820, dmg: 46, armor: 3 },
-        bonus: [{ roles: ['nahkampf'], dmg: 0.20, atkspd: 0.15 }], bonusDesc: 'Nahkampf +20% Schaden, +15% Angriffstempo',
+          { name: 'Wurzelgriff', type: 'stun', dmg: 130, radius: 150, stun: 2.5, cd: 16 }] },
+      { id: 'faelar', name: 'Klingenmeister Faelar', title: 'Tanz der Klingen', ranged: false, stats: { hp: 950, dmg: 50, armor: 3 },
+        bonus: [{ roles: ['nahkampf'], dmg: 0.20 }, { roles: ['all'], atkspd: 0.12 }], bonusDesc: 'Nahkampf +20% Schaden, alle +12% Angriffstempo',
         abilities: [
-          { name: 'Klingenwirbel', type: 'aoe', self: true, dmg: 210, radius: 130, cd: 11 },
+          { name: 'Klingenwirbel', type: 'aoe', self: true, dmg: 255, radius: 130, cd: 11 },
           { name: 'Ahnengeister', type: 'summon', count: 2, duration: 30, cd: 30,
             unit: { name: 'Ahnengeist', hp: 380, dmg: 26, range: 24, cd: 1.0, speed: 75, armor: 2, r: 11 } }] },
     ],
@@ -156,15 +156,15 @@ G.RACES = {
     },
     heroes: [
       { id: 'morvath', name: 'Lich Morvath', title: 'Der Frostgebundene', ranged: true, stats: { hp: 700, dmg: 42, armor: 2 },
-        bonus: [{ roles: ['magier'], dmg: 0.25 }, { roles: ['beschwoerer'], summonExtra: 1 }], bonusDesc: 'Magier +25% Schaden, Beschwörer +1 Beschwörung',
+        bonus: [{ roles: ['magier'], dmg: 0.20 }, { roles: ['beschwoerer'], summonExtra: 1 }], bonusDesc: 'Magier +20% Schaden, Beschwörer +1 Beschwörung',
         abilities: [
-          { name: 'Frostnova', type: 'stun', dmg: 170, radius: 140, stun: 1.2, cd: 13 },
+          { name: 'Frostnova', type: 'stun', dmg: 150, radius: 140, stun: 1.2, cd: 13 },
           { name: 'Todesspirale', type: 'nuke', dmg: 300, cd: 10 }] },
-      { id: 'kael', name: 'Todesritter Kael', title: 'Der Gefallene', ranged: false, stats: { hp: 1000, dmg: 40, armor: 5 },
-        bonus: [{ roles: ['tank', 'nahkampf'], hp: 0.20, lifesteal: 0.10 }], bonusDesc: 'Tanks & Nahkampf +20% LP, 10% Lebensraub',
+      { id: 'kael', name: 'Todesritter Kael', title: 'Der Gefallene', ranged: false, stats: { hp: 1150, dmg: 46, armor: 6 },
+        bonus: [{ roles: ['tank', 'nahkampf'], hp: 0.20 }, { roles: ['all'], lifesteal: 0.10, dmg: 0.05 }], bonusDesc: 'Tanks & Nahkampf +20% LP, alle 10% Lebensraub und +5% Schaden',
         abilities: [
-          { name: 'Todesgriff', type: 'drain', dmg: 220, cd: 10 },
-          { name: 'Unheilige Raserei', type: 'buff', stat: 'speed', value: 0.3, extra: { atkspd: 0.25 }, duration: 10, radius: 300, cd: 25 }] },
+          { name: 'Todesgriff', type: 'drain', dmg: 300, cd: 10 },
+          { name: 'Unheilige Raserei', type: 'buff', stat: 'speed', value: 0.3, extra: { atkspd: 0.35 }, duration: 10, radius: 300, cd: 25 }] },
       { id: 'nyra', name: 'Seuchenfürstin Nyra', title: 'Mutter der Fäulnis', ranged: true, stats: { hp: 740, dmg: 36, armor: 2 },
         bonus: [{ roles: ['beschwoerer', 'support'], dmg: 0.25, hp: 0.15 }, { roles: ['summon'], hp: 0.25, dmg: 0.25 }], bonusDesc: 'Beschwörer & Support +25% Schaden, Beschwörungen +25%',
         abilities: [
@@ -177,7 +177,7 @@ G.RACES = {
     name: 'Orks', color: '#7aa04a', dark: '#3b4a22',
     palette: { wall: '#7a5838', roof: '#9a3a2a', trim: '#c8b080' },
     desc: 'Wilde Kriegerclans der Steppe – rohe Kraft und unbändiger Kampfgeist.',
-    passive: { name: 'Kriegerblut', desc: 'Nahkampf & Tanks +15% LP', bonus: [{ roles: ['nahkampf', 'tank'], hp: 0.15 }] },
+    passive: { name: 'Kriegerblut', desc: 'Nahkampf & Tanks +20% LP', bonus: [{ roles: ['nahkampf', 'tank'], hp: 0.20 }] },
     map: { name: 'Rote Steppe', theme: 'steppe' },
     units: {
       tank: { name: 'Orkbrecher' },
@@ -189,18 +189,18 @@ G.RACES = {
       beschwoerer: { name: 'Geisterrufer', summon: { name: 'Geisterwolf', hp: 280, dmg: 20, range: 24, cd: 0.9, speed: 85, armor: 1, life: 40, r: 10 } },
     },
     heroes: [
-      { id: 'urgash', name: 'Kriegshäuptling Urgash', title: 'Der Schädelspalter', ranged: false, stats: { hp: 1000, dmg: 46, armor: 4 },
-        bonus: [{ roles: ['nahkampf'], dmg: 0.20 }, { roles: ['tank'], hp: 0.15 }], bonusDesc: 'Nahkampf +20% Schaden, Tanks +15% LP',
+      { id: 'urgash', name: 'Kriegshäuptling Urgash', title: 'Der Schädelspalter', ranged: false, stats: { hp: 1120, dmg: 46, armor: 4 },
+        bonus: [{ roles: ['nahkampf'], dmg: 0.20 }, { roles: ['tank'], hp: 0.15 }, { roles: ['all'], dmg: 0.08 }], bonusDesc: 'Nahkampf +20% Schaden, Tanks +15% LP, alle +8% Schaden',
         abilities: [
-          { name: 'Erdbeben', type: 'stun', self: true, dmg: 140, radius: 150, stun: 1.5, cd: 15 },
-          { name: 'Kriegsschrei', type: 'buff', stat: 'dmg', value: 0.3, duration: 10, radius: 320, cd: 25 }] },
+          { name: 'Erdbeben', type: 'stun', self: true, dmg: 230, radius: 160, stun: 1.5, cd: 15 },
+          { name: 'Kriegsschrei', type: 'buff', stat: 'dmg', value: 0.4, duration: 10, radius: 320, cd: 25 }] },
       { id: 'mogra', name: 'Sturmseherin Mogra', title: 'Ruferin der Blitze', ranged: true, stats: { hp: 740, dmg: 38, armor: 2 },
-        bonus: [{ roles: ['magier', 'heiler'], dmg: 0.20, heal: 0.20 }], bonusDesc: 'Magier & Heiler +20% Schaden/Heilung',
+        bonus: [{ roles: ['magier', 'heiler'], dmg: 0.16, heal: 0.16 }], bonusDesc: 'Magier & Heiler +16% Schaden/Heilung',
         abilities: [
-          { name: 'Kettenblitz', type: 'aoe', dmg: 200, radius: 130, cd: 11 },
+          { name: 'Kettenblitz', type: 'aoe', dmg: 170, radius: 130, cd: 12 },
           { name: 'Geisterwölfe', type: 'summon', count: 3, duration: 30, cd: 26,
             unit: { name: 'Geisterwolf', hp: 300, dmg: 22, range: 24, cd: 0.9, speed: 85, armor: 1, r: 10 } }] },
-      { id: 'throk', name: 'Bestienmeister Throk', title: 'Herr der Wildnis', ranged: false, stats: { hp: 900, dmg: 40, armor: 3 },
+      { id: 'throk', name: 'Bestienmeister Throk', title: 'Herr der Wildnis', ranged: false, stats: { hp: 1000, dmg: 40, armor: 3 },
         bonus: [{ roles: ['summon'], hp: 0.30, dmg: 0.30 }, { roles: ['all'], speed: 0.10 }], bonusDesc: 'Beschwörungen +30% LP/Schaden, alle +10% Tempo',
         abilities: [
           { name: 'Bärengeist', type: 'summon', count: 1, duration: 35, cd: 28,
@@ -212,32 +212,32 @@ G.RACES = {
     name: 'Zwerge', color: '#c99a6a', dark: '#5a3a22',
     palette: { wall: '#8a8a8e', roof: '#a8742a', trim: '#e0c070' },
     desc: 'Sture Bergvölker – Meister der Schmiedekunst, Runen und Schießpulver.',
-    passive: { name: 'Steinerne Hallen', desc: 'Gebäude +25% LP, Türme +15% Schaden', bonus: [{ roles: ['buildings'], hp: 0.25 }, { roles: ['defense'], dmg: 0.15 }] },
+    passive: { name: 'Steinerne Hallen', desc: 'Gebäude +20% LP, Türme +10% Schaden', bonus: [{ roles: ['buildings'], hp: 0.20 }, { roles: ['defense'], dmg: 0.10 }] },
     map: { name: 'Frostgipfel', theme: 'frost' },
     units: {
       tank: { name: 'Eisenbrecher', mods: { armor: 2 } },
       nahkampf: { name: 'Axtschwinger', mods: { hp: 1.1, speed: 0.9 } },
-      fernkampf: { name: 'Musketier', mods: { dmg: 1.3, cd: 1.25 } },
+      fernkampf: { name: 'Musketier', mods: { dmg: 1.15, cd: 1.25 } },
       magier: { name: 'Runenschmied' },
       heiler: { name: 'Runenpriester' },
       support: { name: 'Bannermeister', aura: { side: 'ally', stat: 'armor', value: 3, desc: 'Verbündete in der Nähe +3 Rüstung' } },
       beschwoerer: { name: 'Golemschmied', summon: { name: 'Steingolem', hp: 480, dmg: 22, range: 26, cd: 1.3, speed: 48, armor: 4, life: 45, r: 12 } },
     },
     heroes: [
-      { id: 'thorgrim', name: 'Bergkönig Thorgrim', title: 'Der Unbeugsame', ranged: false, stats: { hp: 1050, dmg: 40, armor: 6 },
-        bonus: [{ roles: ['tank'], hp: 0.25 }, { roles: ['all'], armor: 1 }], bonusDesc: 'Tanks +25% LP, alle +1 Rüstung',
+      { id: 'thorgrim', name: 'Bergkönig Thorgrim', title: 'Der Unbeugsame', ranged: false, stats: { hp: 1180, dmg: 40, armor: 6 },
+        bonus: [{ roles: ['tank'], hp: 0.25 }, { roles: ['all'], armor: 2, dmg: 0.08 }], bonusDesc: 'Tanks +25% LP, alle +2 Rüstung und +8% Schaden',
         abilities: [
-          { name: 'Sturmhammer', type: 'nuke', dmg: 220, stun: 1.5, cd: 10 },
-          { name: 'Donnerknall', type: 'stun', self: true, dmg: 120, radius: 150, stun: 1.2, cd: 15 }] },
+          { name: 'Sturmhammer', type: 'nuke', dmg: 300, stun: 1.5, cd: 9 },
+          { name: 'Donnerknall', type: 'stun', self: true, dmg: 180, radius: 160, stun: 1.2, cd: 15 }] },
       { id: 'hilda', name: 'Runenmeisterin Hilda', title: 'Hüterin der Esse', ranged: true, stats: { hp: 760, dmg: 36, armor: 3 },
-        bonus: [{ roles: ['buildings'], hp: 0.30 }, { roles: ['defense'], dmg: 0.25 }, { roles: ['magier'], dmg: 0.15 }], bonusDesc: 'Gebäude +30% LP, Türme +25% Schaden, Magier +15%',
+        bonus: [{ roles: ['buildings'], hp: 0.20 }, { roles: ['defense'], dmg: 0.15 }, { roles: ['magier'], dmg: 0.10 }], bonusDesc: 'Gebäude +20% LP, Türme +15% Schaden, Magier +10%',
         abilities: [
           { name: 'Runensegen', type: 'buff', stat: 'armor', value: 5, duration: 10, radius: 280, cd: 20 },
-          { name: 'Runenexplosion', type: 'aoe', dmg: 220, radius: 130, cd: 13 }] },
+          { name: 'Runenexplosion', type: 'aoe', dmg: 195, radius: 130, cd: 13 }] },
       { id: 'brokk', name: 'Kanonier Brokk', title: 'Meister des Pulvers', ranged: true, stats: { hp: 800, dmg: 44, armor: 3 },
-        bonus: [{ roles: ['fernkampf'], dmg: 0.25 }], bonusDesc: 'Fernkampf +25% Schaden',
+        bonus: [{ roles: ['fernkampf'], dmg: 0.15 }], bonusDesc: 'Fernkampf +15% Schaden',
         abilities: [
-          { name: 'Sprenggranate', type: 'aoe', dmg: 200, radius: 120, cd: 10 },
+          { name: 'Sprenggranate', type: 'aoe', dmg: 180, radius: 120, cd: 11 },
           { name: 'Geschützturm', type: 'summon', count: 1, duration: 30, cd: 24,
             unit: { name: 'Geschütz', hp: 600, dmg: 30, range: 200, cd: 0.9, speed: 0, armor: 4, proj: 'kugel', r: 12 } }] },
     ],
@@ -246,7 +246,7 @@ G.RACES = {
     name: 'Dämonen', color: '#c0484a', dark: '#4a1418',
     palette: { wall: '#2e2426', roof: '#8a1e1e', trim: '#ff8a3a' },
     desc: 'Brut aus den Höllenschlünden – sie nähren sich vom Leben ihrer Feinde.',
-    passive: { name: 'Seelenhunger', desc: 'Alle Einheiten 10% Lebensraub', bonus: [{ roles: ['all', 'summon'], lifesteal: 0.10 }] },
+    passive: { name: 'Seelenhunger', desc: 'Alle Einheiten 12% Lebensraub', bonus: [{ roles: ['all', 'summon'], lifesteal: 0.12 }] },
     map: { name: 'Aschenlande', theme: 'asche' },
     units: {
       tank: { name: 'Höllenwächter' },
@@ -258,22 +258,22 @@ G.RACES = {
       beschwoerer: { name: 'Portalmeister', summon: { name: 'Wichtel', hp: 180, dmg: 16, range: 120, cd: 1.0, speed: 75, armor: 0, proj: 'kugel', life: 40, r: 9 } },
     },
     heroes: [
-      { id: 'azgaroth', name: 'Grubenlord Azgaroth', title: 'Die Flamme des Abgrunds', ranged: false, stats: { hp: 1050, dmg: 44, armor: 5 },
-        bonus: [{ roles: ['all'], dmg: 0.12 }], bonusDesc: 'Alle Einheiten +12% Schaden',
+      { id: 'azgaroth', name: 'Grubenlord Azgaroth', title: 'Die Flamme des Abgrunds', ranged: false, stats: { hp: 1150, dmg: 44, armor: 5 },
+        bonus: [{ roles: ['all'], dmg: 0.14 }], bonusDesc: 'Alle Einheiten +14% Schaden',
         abilities: [
-          { name: 'Feuerregen', type: 'aoe', dmg: 210, radius: 150, cd: 13 },
+          { name: 'Feuerregen', type: 'aoe', dmg: 195, radius: 150, cd: 13 },
           { name: 'Höllenschlag', type: 'stun', self: true, dmg: 130, radius: 130, stun: 1.5, cd: 16 }] },
       { id: 'lysara', name: 'Königin Lysara', title: 'Die Seelentrinkerin', ranged: true, stats: { hp: 760, dmg: 38, armor: 2 },
-        bonus: [{ roles: ['all'], lifesteal: 0.10 }, { roles: ['heiler'], heal: 0.20 }], bonusDesc: '+10% Lebensraub, Heiler +20%',
+        bonus: [{ roles: ['all'], lifesteal: 0.10, dmg: 0.08 }, { roles: ['heiler'], heal: 0.20 }], bonusDesc: 'Alle +10% Lebensraub und +8% Schaden, Heiler +20%',
         abilities: [
-          { name: 'Lebensentzug', type: 'drain', dmg: 240, cd: 9 },
-          { name: 'Bann', type: 'nuke', dmg: 80, stun: 3, cd: 18 }] },
+          { name: 'Lebensentzug', type: 'drain', dmg: 300, cd: 9 },
+          { name: 'Bann', type: 'stun', dmg: 150, radius: 120, stun: 2, cd: 16 }] },
       { id: 'malphas', name: 'Erzbeschwörer Malphas', title: 'Öffner der Tore', ranged: true, stats: { hp: 720, dmg: 36, armor: 2 },
-        bonus: [{ roles: ['beschwoerer'], summonExtra: 1 }, { roles: ['summon'], dmg: 0.2, hp: 0.2 }], bonusDesc: 'Beschwörer +1 Beschwörung, Beschwörungen +20%',
+        bonus: [{ roles: ['beschwoerer'], summonExtra: 1 }, { roles: ['summon'], dmg: 0.12, hp: 0.12 }], bonusDesc: 'Beschwörer +1 Beschwörung, Beschwörungen +12%',
         abilities: [
-          { name: 'Wichtelschwarm', type: 'summon', count: 4, duration: 30, cd: 24,
+          { name: 'Wichtelschwarm', type: 'summon', count: 3, duration: 30, cd: 24,
             unit: { name: 'Wichtel', hp: 200, dmg: 18, range: 120, cd: 1.0, speed: 75, armor: 0, proj: 'kugel', r: 9 } },
-          { name: 'Höllenriss', type: 'aoe', dmg: 220, radius: 130, cd: 14 }] },
+          { name: 'Höllenriss', type: 'aoe', dmg: 190, radius: 130, cd: 14 }] },
     ],
   },
 };
@@ -320,9 +320,9 @@ G.RACES.orks.abilities = [
   { id: 'erdspalter', name: 'Erdspalter', th: 5, cd: 120, type: 'strike', shells: 1, dmg: 300, radius: 190, stun: 2.5, color: '#c87a3a', desc: 'Die Erde bricht auf: hoher Schaden und 2,5 s Betäubung.' },
 ];
 G.RACES.zwerge.abilities = [
-  { id: 'moerser', name: 'Mörsersalve', th: 1, cd: 80, type: 'strike', shells: 8, dmg: 110, radius: 70, color: '#ffb040', desc: '8 Mörsergranaten schlagen in der größten Gegnergruppe ein.' },
+  { id: 'moerser', name: 'Mörsersalve', th: 1, cd: 80, type: 'strike', shells: 7, dmg: 90, radius: 70, color: '#ffb040', desc: '7 Mörsergranaten schlagen in der größten Gegnergruppe ein.' },
   { id: 'festung', name: 'Festungsbefehl', th: 3, cd: 100, type: 'fortify', heal: 0.35, mods: { armor: 6 }, dur: 20, desc: 'Alle Gebäude werden um 35% repariert, Einheiten erhalten 20 s lang +6 Rüstung.' },
-  { id: 'luftschiff', name: 'Luftschiff-Bombardement', th: 5, cd: 130, type: 'strike', shells: 14, dmg: 140, radius: 75, color: '#ff8a3a', desc: 'Ein Luftschiff wirft 14 Bomben ab.' },
+  { id: 'luftschiff', name: 'Luftschiff-Bombardement', th: 5, cd: 130, type: 'strike', shells: 12, dmg: 120, radius: 75, color: '#ff8a3a', desc: 'Ein Luftschiff wirft 12 Bomben ab.' },
 ];
 G.RACES.daemonen.abilities = [
   { id: 'hoellenfeuer', name: 'Höllenfeuer', th: 1, cd: 100, type: 'strike', shells: 1, meteor: true, dmg: 260, radius: 130, stun: 1.2, color: '#ff5020',
@@ -410,6 +410,13 @@ G.CREEPS = {
   hexer:   { name: 'Trollhexer', hp: 380, dmg: 26, range: 160, cd: 1.6, speed: 60, armor: 1, r: 12, xp: 80, gold: 25, proj: 'kugel', splash: 50, color: '#4a7a9a' },
   golem:   { name: 'Steingolem', hp: 1700, dmg: 48, range: 30, cd: 1.6, speed: 45, armor: 7, r: 18, xp: 160, gold: 40, color: '#8a8478' },
   drache:  { name: 'Uralter Drache', hp: 9500, dmg: 120, range: 130, cd: 1.8, speed: 50, armor: 8, r: 34, xp: 900, gold: 150, proj: 'feuer', splash: 100, color: '#a8322a' },
+  // wandernde Bosse und Händlerkarawanen (Karten-Ereignisse)
+  ogerkoenig: { name: 'Ogerkönig Gruumsh', hp: 5200, dmg: 85, range: 34, cd: 1.5, speed: 52, armor: 7, r: 24, xp: 700, gold: 0, splash: 55, color: '#8a6a4a', boss: true },
+  koloss:     { name: 'Uralter Koloss', hp: 7000, dmg: 95, range: 36, cd: 1.9, speed: 42, armor: 10, r: 28, xp: 800, gold: 0, splash: 70, color: '#7a7468', boss: true },
+  lindwurm:   { name: 'Lindwurm Vermithrax', hp: 6000, dmg: 90, range: 120, cd: 1.7, speed: 50, armor: 6, r: 28, xp: 800, gold: 0, proj: 'feuer', splash: 80, color: '#3a7a4a', boss: true },
+  wagen:      { name: 'Händlerwagen', hp: 1600, dmg: 0, range: 0, cd: 99, speed: 40, armor: 5, r: 17, xp: 120, gold: 0, color: '#8a6a3a', wagon: true },
+  wache:      { name: 'Karawanenwache', hp: 440, dmg: 24, range: 24, cd: 1.0, speed: 60, armor: 4, r: 11, xp: 50, gold: 10, color: '#6a5a4a' },
+  armbrust:   { name: 'Karawanenschütze', hp: 260, dmg: 22, range: 160, cd: 1.2, speed: 60, armor: 1, r: 10, xp: 45, gold: 10, proj: 'pfeil', color: '#5a4a3a' },
 };
 // reward: gold/wood beim Säubern, item = Chance auf Beute, extra = Zusatzbelohnung
 G.CAMPS = {
@@ -418,8 +425,23 @@ G.CAMPS = {
   troll:    { name: 'Trollhöhle', units: ['troll', 'troll', 'hexer'], minTH: 2, gold: 320, wood: 150, item: 0.5, extra: 'soeldner', extraDesc: '2 Trolle schließen sich dir als Söldner an' },
   golem:    { name: 'Golem-Steinbruch', units: ['golem', 'golem'], minTH: 2, gold: 420, wood: 260, item: 0.7, extra: 'segen', extraDesc: 'Steinhaut: 90 s lang +3 Rüstung für die Armee' },
   drache:   { name: 'Drachenhort', units: ['drache'], minTH: 3, gold: 1000, wood: 450, item: 1.0, rareItem: true, extra: 'drachenblut', extraDesc: 'Drachenblut: 180 s lang +15% Schaden für die Armee' },
+  // Ereignisse: ziehen über die Karte und kehren nicht wieder
+  boss:     { name: 'Wandernder Boss', units: [], minTH: 3, gold: 900, wood: 400, item: 1.0, rareItem: true, extra: 'siegesbanner', extraDesc: 'Siegesbanner: 180 s lang +15% Schaden und +3 Rüstung für die Armee' },
+  karawane: { name: 'Händlerkarawane', units: ['wagen', 'wache', 'wache', 'armbrust'], minTH: 1, gold: 450, wood: 150, item: 0.5, extra: null },
 };
 G.CAMP_RESPAWN = 150;
+G.BOSS_TYPES = ['ogerkoenig', 'koloss', 'lindwurm'];
+// Karten-Ereignisse (abschaltbar im Freien Spiel): erster Boss nach ~9 min, dann alle 10–13 min; Karawanen alle 7–9 min
+G.EVENTS = { bossFirst: 540, bossEvery: [600, 780], bossLife: 420, caravanFirst: 330, caravanEvery: [420, 540] };
+// Schreine: wer einen Schrein 8 s lang allein besetzt, erobert ihn – der Bonus gilt für das ganze Team
+G.SHRINES = {
+  krieg:     { name: 'Schrein des Krieges', short: 'Krieg', desc: 'Alle Einheiten +10% Schaden', mods: { dmg: 0.10 }, color: '#ff6a4a' },
+  leben:     { name: 'Schrein des Lebens', short: 'Leben', desc: 'Alle Einheiten +3 LP/s Regeneration', mods: { regen: 3 }, color: '#7aff8a' },
+  wohlstand: { name: 'Schrein des Wohlstands', short: 'Wohlstand', desc: '+4 Gold pro Sekunde', gold: 4, color: '#ffd23a' },
+  eile:      { name: 'Schrein der Eile', short: 'Eile', desc: 'Alle Einheiten +10% Tempo und +8% Angriffstempo', mods: { speed: 0.10, atkspd: 0.08 }, color: '#7ac8ff' },
+};
+G.SHRINE_CAPTURE = 8;
+G.SHRINE_RADIUS = 130;
 
 // Kartenthemen (Heimatkarten der Völker)
 G.THEMES = {
@@ -494,23 +516,82 @@ G.CREEP_BLOOD = { wolf: '#7a0a0a', bandit: '#8a0a0a', schuetze: '#8a0a0a', troll
 // Freischaltbare 4. Helden (ab Volksstufe 3)
 G.UNLOCK_HERO_LVL = 3;
 G.RACES.menschen.heroes.push({ id: 'mira', unlock: true, name: 'Hexenjägerin Mira', title: 'Die Silberklinge', ranged: true, stats: { hp: 760, dmg: 42, armor: 3 },
-  bonus: [{ roles: ['fernkampf', 'support'], dmg: 0.15 }, { roles: ['all'], atkspd: 0.05 }], bonusDesc: 'Fernkampf & Support +15% Schaden, alle +5% Angriffstempo',
-  abilities: [{ name: 'Silberbolzen', type: 'nuke', dmg: 240, stun: 1, cd: 9 }, { name: 'Jagdinstinkt', type: 'buff', stat: 'atkspd', value: 0.3, duration: 10, radius: 300, cd: 22 }] });
-G.RACES.elfen.heroes.push({ id: 'aerin', unlock: true, name: 'Wächterin Aerin', title: 'Rinde und Dorn', ranged: false, stats: { hp: 1000, dmg: 36, armor: 6 },
-  bonus: [{ roles: ['tank'], hp: 0.2, armor: 2 }, { roles: ['all'], regen: 1 }], bonusDesc: 'Tanks +20% LP und +2 Rüstung, alle +1 LP/s',
-  abilities: [{ name: 'Dornenwall', type: 'stun', self: true, dmg: 120, radius: 140, stun: 1.5, cd: 14 }, { name: 'Lebensborke', type: 'heal', amount: 220, radius: 230, cd: 15 }] });
-G.RACES.untote.heroes.push({ id: 'varuk', unlock: true, name: 'Knochenfürst Varuk', title: 'Der Unersättliche', ranged: false, stats: { hp: 980, dmg: 44, armor: 5 },
-  bonus: [{ roles: ['nahkampf'], dmg: 0.15, lifesteal: 0.1 }], bonusDesc: 'Nahkampf +15% Schaden, 10% Lebensraub',
-  abilities: [{ name: 'Knochensturm', type: 'aoe', self: true, dmg: 200, radius: 130, cd: 11 }, { name: 'Ghulrudel', type: 'summon', count: 3, duration: 30, cd: 26, unit: { name: 'Ghul', hp: 320, dmg: 24, range: 24, cd: 0.8, speed: 80, armor: 2, r: 11 } }] });
+  bonus: [{ roles: ['fernkampf', 'support'], dmg: 0.18 }, { roles: ['all'], atkspd: 0.08 }], bonusDesc: 'Fernkampf & Support +18% Schaden, alle +8% Angriffstempo',
+  abilities: [{ name: 'Silberbolzen', type: 'nuke', dmg: 340, stun: 1, cd: 8 }, { name: 'Jagdinstinkt', type: 'buff', stat: 'atkspd', value: 0.4, duration: 10, radius: 340, cd: 22 }] });
+G.RACES.elfen.heroes.push({ id: 'aerin', unlock: true, name: 'Wächterin Aerin', title: 'Rinde und Dorn', ranged: false, stats: { hp: 1100, dmg: 36, armor: 6 },
+  bonus: [{ roles: ['tank'], hp: 0.2, armor: 2 }, { roles: ['all'], regen: 2, armor: 1 }], bonusDesc: 'Tanks +20% LP und +2 Rüstung, alle +2 LP/s und +1 Rüstung',
+  abilities: [{ name: 'Dornenwall', type: 'stun', self: true, dmg: 170, radius: 150, stun: 1.5, cd: 14 }, { name: 'Lebensborke', type: 'heal', amount: 260, radius: 230, cd: 15 }] });
+G.RACES.untote.heroes.push({ id: 'varuk', unlock: true, name: 'Knochenfürst Varuk', title: 'Der Unersättliche', ranged: false, stats: { hp: 1100, dmg: 44, armor: 5 },
+  bonus: [{ roles: ['nahkampf'], dmg: 0.15 }, { roles: ['all'], lifesteal: 0.08 }], bonusDesc: 'Nahkampf +15% Schaden, alle 8% Lebensraub',
+  abilities: [{ name: 'Knochensturm', type: 'aoe', self: true, dmg: 250, radius: 130, cd: 11 }, { name: 'Ghulrudel', type: 'summon', count: 3, duration: 30, cd: 26, unit: { name: 'Ghul', hp: 320, dmg: 24, range: 24, cd: 0.8, speed: 80, armor: 2, r: 11 } }] });
 G.RACES.orks.heroes.push({ id: 'gruk', unlock: true, name: 'Blutschamane Gruk', title: 'Stimme der Ahnen', ranged: true, stats: { hp: 780, dmg: 38, armor: 3 },
-  bonus: [{ roles: ['all'], lifesteal: 0.08 }, { roles: ['heiler'], heal: 0.25 }], bonusDesc: 'Alle 8% Lebensraub, Heiler +25%',
-  abilities: [{ name: 'Ahnenruf', type: 'heal', amount: 250, radius: 240, cd: 14 }, { name: 'Blutfluch', type: 'drain', dmg: 230, cd: 10 }] });
+  bonus: [{ roles: ['all'], lifesteal: 0.06 }, { roles: ['heiler'], heal: 0.25 }], bonusDesc: 'Alle 6% Lebensraub, Heiler +25%',
+  abilities: [{ name: 'Ahnenruf', type: 'heal', amount: 280, radius: 240, cd: 14 }, { name: 'Blutfluch', type: 'drain', dmg: 300, cd: 10 }] });
 G.RACES.zwerge.heroes.push({ id: 'rurik', unlock: true, name: 'Donnerpriester Rurik', title: 'Hammer des Himmels', ranged: true, stats: { hp: 820, dmg: 40, armor: 4 },
-  bonus: [{ roles: ['magier'], dmg: 0.2 }, { roles: ['all'], armor: 1 }], bonusDesc: 'Magier +20% Schaden, alle +1 Rüstung',
-  abilities: [{ name: 'Donnerschlag', type: 'aoe', dmg: 210, radius: 130, cd: 12 }, { name: 'Runenschild', type: 'buff', stat: 'armor', value: 5, duration: 10, radius: 280, cd: 20 }] });
-G.RACES.daemonen.heroes.push({ id: 'vexa', unlock: true, name: 'Schattenklinge Vexa', title: 'Der lautlose Tod', ranged: false, stats: { hp: 840, dmg: 50, armor: 3 },
-  bonus: [{ roles: ['nahkampf'], dmg: 0.15 }, { roles: ['all'], speed: 0.1 }], bonusDesc: 'Nahkampf +15% Schaden, alle +10% Tempo',
-  abilities: [{ name: 'Schattenstoß', type: 'nuke', dmg: 280, cd: 9 }, { name: 'Klingensturm', type: 'aoe', self: true, dmg: 200, radius: 120, cd: 12 }] });
+  bonus: [{ roles: ['magier'], dmg: 0.15 }, { roles: ['all'], armor: 1 }], bonusDesc: 'Magier +15% Schaden, alle +1 Rüstung',
+  abilities: [{ name: 'Donnerschlag', type: 'aoe', dmg: 185, radius: 130, cd: 13 }, { name: 'Runenschild', type: 'buff', stat: 'armor', value: 5, duration: 10, radius: 280, cd: 20 }] });
+G.RACES.daemonen.heroes.push({ id: 'vexa', unlock: true, name: 'Schattenklinge Vexa', title: 'Der lautlose Tod', ranged: false, stats: { hp: 1020, dmg: 50, armor: 3 },
+  bonus: [{ roles: ['nahkampf'], dmg: 0.15 }, { roles: ['all'], speed: 0.1, dmg: 0.08 }], bonusDesc: 'Nahkampf +15% Schaden, alle +8% Schaden und +10% Tempo',
+  abilities: [{ name: 'Schattenstoß', type: 'nuke', dmg: 330, cd: 9 }, { name: 'Klingensturm', type: 'aoe', self: true, dmg: 250, radius: 135, cd: 12 }] });
+
+// ---------------------------------------------------------------------------
+// Ultimative Heldenfähigkeiten: ab Heldenstufe 6 wählt man eine von zwei (Taste R).
+// Neue Arten: meteor (verzögerte Einschläge am Ziel), avatar (Verwandlung), warcry (ganze Armee),
+// massheal (Heilung im großen Umkreis), drainnova (Lebensraub im Umkreis); dazu die bekannten Arten mit mehr Wucht.
+G.HERO_ULT_LVL = 6;
+G.HERO_ULTS = {
+  aldric:   [{ name: 'Göttliche Wiederkunft', type: 'massheal', pct: 0.6, radius: 520, armor: 4, duration: 10, cd: 110 },
+             { name: 'Avatar des Lichts', type: 'avatar', duration: 20, mods: { hp: 0.6, dmg: 0.4, armor: 5, regen: 15 }, color: '#ffe88a', cd: 110 }],
+  lyra:     [{ name: 'Meteorschauer', type: 'meteor', shells: 6, dmg: 230, radius: 90, stun: 0.8, color: '#ff8a3a', cd: 100 },
+             { name: 'Zeitstillstand', type: 'stun', self: true, dmg: 120, radius: 270, stun: 3.2, cd: 105 }],
+  gareth:   [{ name: 'Ruhm des Königs', type: 'warcry', duration: 15, mods: { dmg: 0.3, atkspd: 0.25, speed: 0.15 }, cd: 110 },
+             { name: 'Königsgarde', type: 'summon', count: 4, duration: 40, cd: 110, unit: { name: 'Königsgardist', hp: 700, dmg: 36, range: 26, cd: 1.0, speed: 70, armor: 6, r: 13 } }],
+  mira:     [{ name: 'Silbersturm', type: 'meteor', shells: 8, dmg: 170, radius: 65, color: '#e8f0ff', cd: 95 },
+             { name: 'Jagdfieber', type: 'warcry', duration: 15, mods: { atkspd: 0.4, lifesteal: 0.12 }, cd: 105 }],
+  ilyria:   [{ name: 'Sternenfall', type: 'meteor', shells: 10, dmg: 140, radius: 70, color: '#c8f0ff', cd: 100 },
+             { name: 'Schattengestalt', type: 'avatar', duration: 16, mods: { atkspd: 1.0, dmg: 0.5, speed: 0.3 }, color: '#7a6ad0', cd: 100 }],
+  thalia:   [{ name: 'Ruf des Waldes', type: 'summon', count: 1, duration: 45, cd: 120, unit: { name: 'Uralter Baumhirte', hp: 2600, dmg: 62, range: 30, cd: 1.3, speed: 55, armor: 6, r: 22 } },
+             { name: 'Blühende Erde', type: 'massheal', pct: 0.7, radius: 560, cd: 110 }],
+  faelar:   [{ name: 'Klingentanz', type: 'avatar', duration: 15, mods: { atkspd: 0.7, dmg: 0.4, speed: 0.35 }, color: '#a8ffd0', cd: 100 },
+             { name: 'Ahnenheer', type: 'summon', count: 5, duration: 40, cd: 110, unit: { name: 'Ahnenkrieger', hp: 520, dmg: 32, range: 24, cd: 0.9, speed: 80, armor: 3, r: 11 } }],
+  aerin:    [{ name: 'Dornenkrone', type: 'stun', self: true, dmg: 170, radius: 280, stun: 2.6, cd: 105 },
+             { name: 'Unsterbliche Rinde', type: 'warcry', duration: 15, mods: { armor: 8, regen: 6 }, cd: 110 }],
+  morvath:  [{ name: 'Ewiger Winter', type: 'stun', self: true, dmg: 190, radius: 300, stun: 3, cd: 110 },
+             { name: 'Seelensturm', type: 'meteor', shells: 8, dmg: 175, radius: 80, color: '#9affd0', cd: 100 }],
+  kael:     [{ name: 'Armee der Toten', type: 'summon', count: 8, duration: 40, cd: 115, unit: { name: 'Todesritter-Knecht', hp: 360, dmg: 24, range: 24, cd: 1.0, speed: 70, armor: 3, r: 11 } },
+             { name: 'Todesgestalt', type: 'avatar', duration: 20, mods: { hp: 0.8, dmg: 0.5, lifesteal: 0.3 }, color: '#7aff9a', cd: 110 }],
+  nyra:     [{ name: 'Große Seuche', type: 'meteor', shells: 1, dmg: 260, radius: 220, color: '#9aff7a', debuff: { armor: -5, speed: -0.4 }, debuffDur: 12, cd: 105 },
+             { name: 'Leichenflut', type: 'summon', count: 10, duration: 35, cd: 115, unit: { name: 'Zombie', hp: 300, dmg: 20, range: 24, cd: 1.1, speed: 55, armor: 2, r: 11 } }],
+  varuk:    [{ name: 'Knochenkoloss', type: 'summon', count: 1, duration: 45, cd: 120, unit: { name: 'Knochenkoloss', hp: 2800, dmg: 70, range: 30, cd: 1.3, speed: 55, armor: 6, r: 22 } },
+             { name: 'Unstillbarer Hunger', type: 'avatar', duration: 20, mods: { dmg: 0.5, lifesteal: 0.5, speed: 0.2 }, color: '#c8f0a0', cd: 105 }],
+  urgash:   [{ name: 'Waaagh!', type: 'warcry', duration: 15, mods: { dmg: 0.35, atkspd: 0.2, speed: 0.2 }, cd: 110 },
+             { name: 'Berserkerwut', type: 'avatar', duration: 20, mods: { hp: 0.7, dmg: 0.6, atkspd: 0.3 }, color: '#ff5a3a', cd: 105 }],
+  mogra:    [{ name: 'Gewittersturm', type: 'meteor', shells: 12, dmg: 130, radius: 70, stun: 0.5, color: '#bfe0ff', cd: 100 },
+             { name: 'Sturmgeist', type: 'summon', count: 1, duration: 45, cd: 115, unit: { name: 'Sturmelementar', hp: 1800, dmg: 55, range: 170, cd: 1.2, speed: 60, armor: 3, r: 18, proj: 'kugel', splash: 60 } }],
+  throk:    [{ name: 'Stampede', type: 'summon', count: 6, duration: 30, cd: 105, unit: { name: 'Kriegskeiler', hp: 520, dmg: 34, range: 24, cd: 1.0, speed: 95, armor: 3, r: 13 } },
+             { name: 'Urbestie', type: 'avatar', duration: 20, mods: { hp: 1.0, dmg: 0.4, armor: 4 }, color: '#c89a5a', cd: 110 }],
+  gruk:     [{ name: 'Blutmond', type: 'massheal', pct: 0.55, radius: 540, lifesteal: 0.15, duration: 12, cd: 110 },
+             { name: 'Ahnenzorn', type: 'meteor', shells: 6, dmg: 210, radius: 85, color: '#ff6a5a', cd: 100 }],
+  thorgrim: [{ name: 'Bergkönig', type: 'avatar', duration: 20, mods: { hp: 0.8, armor: 10, dmg: 0.3 }, color: '#d8b070', cd: 110 },
+             { name: 'Erdbeben', type: 'stun', self: true, dmg: 210, radius: 300, stun: 2.5, cd: 110 }],
+  hilda:    [{ name: 'Runenwall', type: 'warcry', duration: 15, mods: { armor: 8, dmg: 0.15 }, cd: 105 },
+             { name: 'Runensturm', type: 'meteor', shells: 8, dmg: 170, radius: 75, color: '#7ac8ff', cd: 100 }],
+  brokk:    [{ name: 'Großkanone', type: 'summon', count: 1, duration: 45, cd: 115, unit: { name: 'Belagerungskanone', hp: 1300, dmg: 70, range: 280, cd: 2.0, speed: 0, armor: 6, r: 16, proj: 'kugel', splash: 90 } },
+             { name: 'Pulversalve', type: 'meteor', shells: 10, dmg: 180, radius: 85, color: '#ffb040', cd: 105 }],
+  rurik:    [{ name: 'Hammer der Ahnen', type: 'meteor', shells: 1, dmg: 480, radius: 180, stun: 2, color: '#fff0a0', cd: 105 },
+             { name: 'Donnersegen', type: 'massheal', pct: 0.5, radius: 520, armor: 5, duration: 12, cd: 110 }],
+  azgaroth: [{ name: 'Inferno', type: 'meteor', shells: 1, meteor: true, dmg: 520, radius: 170, stun: 1.5, color: '#ff5020', cd: 110 },
+             { name: 'Höllengestalt', type: 'avatar', duration: 20, mods: { hp: 0.8, dmg: 0.5, armor: 3 }, color: '#ff7a1a', cd: 110 }],
+  lysara:   [{ name: 'Seelenernte', type: 'drainnova', dmg: 240, radius: 260, cd: 100 },
+             { name: 'Dämonenpakt', type: 'warcry', duration: 15, mods: { dmg: 0.25, lifesteal: 0.25 }, cd: 110 }],
+  malphas:  [{ name: 'Großes Höllentor', type: 'summon', count: 1, duration: 45, cd: 120, unit: { name: 'Abgrundfürst', hp: 3000, dmg: 78, range: 30, cd: 1.3, speed: 60, armor: 6, r: 22 } },
+             { name: 'Wichtelflut', type: 'summon', count: 10, duration: 30, cd: 110, unit: { name: 'Feuerwichtel', hp: 220, dmg: 22, range: 110, cd: 1.1, speed: 75, armor: 1, r: 9, proj: 'feuer' } }],
+  vexa:     [{ name: 'Tausend Klingen', type: 'avatar', duration: 15, mods: { atkspd: 0.8, dmg: 0.4, speed: 0.4 }, color: '#c060ff', cd: 100 },
+             { name: 'Todesmal', type: 'nuke', dmg: 750, stun: 1.5, cd: 90 }],
+};
+// Meisterung (Heldenstufe 3 und 8): eine Fähigkeit wird stärker (+35% Wirkung, −15% Abklingzeit je Rang);
+// auf Stufe 10 wird die Ultimative automatisch gemeistert.
+G.HERO_MASTERY_LVLS = [3, 8];
 
 // ---------------------------------------------------------------------------
 // Belohnungen pro Volksstufe

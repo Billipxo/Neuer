@@ -42,7 +42,7 @@
 
   // -------------------------------------------------------------------------
   // Hauptmenü
-  UI.cfg = { race: 'menschen', hero: null, mode: '1v1', difficulty: 'mittel', map: 'heimat', duration: 30, fog: true };
+  UI.cfg = { race: 'menschen', hero: null, mode: '1v1', difficulty: 'mittel', map: 'heimat', duration: 30, fog: true, events: true };
 
   UI.showMenu = function () {
     $('#menu').classList.remove('hidden');
@@ -96,7 +96,8 @@
     const c = UI.cfg;
     const tabs = [['frei', 'Freies Spiel'], ['kampagne', 'Kampagne'], ['spielstaende', 'Spielstände'], ['voelker', 'Völker & Skins'], ['hilfe', 'Anleitung'], ['optionen', 'Einstellungen']];
     const last = G.Saves.latest();
-    let body = UI.menuNote ? `<div class="menunote bad">${UI.menuNote}</div>` : '';
+    const note = UI.menuNote && (typeof UI.menuNote === 'string' ? { text: UI.menuNote, cls: 'bad' } : UI.menuNote);
+    let body = note ? `<div class="menunote ${note.cls}">${note.text}</div>` : '';
     if (last) body += `<div class="continue framed">${emblem(last.meta.race)}<div class="ct-info"><b>Weiterspielen</b><small>${saveSummary(last.meta)}</small></div>
       <button class="big" data-act="sv-load" data-v="${last.slot}">▶ Fortsetzen</button></div>`;
     body += `<nav class="menutabs">${tabs.map(([k, n]) => `<button class="${UI.menuTab === k ? 'sel' : ''}" data-act="m-tab" data-v="${k}">${n}</button>`).join('')}</nav>`;
@@ -111,6 +112,7 @@
         <div><h2>5. Karte</h2><div class="maps">${opt('m-map', c.map, maps)}</div></div>
         <div><h2>6. Spieldauer</h2>${opt('m-dur', String(c.duration), G.DURATIONS.map(([v, n]) => [String(v), n, v ? 'Danach entscheidet die Punktzahl' : 'Bis ein Team besiegt ist']))}</div>
         <div><h2>7. Sicht</h2>${opt('m-fog', c.fog === false ? 'aus' : 'an', [['an', 'Nebel des Krieges', 'Du siehst nur, was deine Truppen und Gebäude sehen'], ['aus', 'Offene Karte', 'Die ganze Karte ist aufgedeckt']])}</div>
+        <div><h2>8. Ereignisse</h2>${opt('m-events', c.events === false ? 'aus' : 'an', [['an', 'Schreine & Ereignisse', 'Eroberbare Schreine, wandernde Bosse und Händlerkarawanen'], ['aus', 'Klassisch', 'Nur Basen, Lager und Händler']])}</div>
       </section>
       <div class="start-row"><button class="big" data-act="m-start">⚔ Schlacht beginnen</button></div>`;
     } else if (UI.menuTab === 'kampagne') {
@@ -134,7 +136,8 @@
         <section><h2>Dein Held</h2><div class="grid heroes">${heroCards(c)}</div></section>`;
     } else if (UI.menuTab === 'spielstaende') {
       body += `<section class="saves"><h2>Spielstände</h2>${saveList(false)}
-        <p class="note">Spielstände liegen in diesem Browser. Im Spiel speicherst du über 💾 oben rechts; automatisch gesichert wird jede Spielminute und beim Verlassen der Partie.</p></section>`;
+        <p class="note">Spielstände liegen in diesem Browser. Im Spiel speicherst du über 💾 oben rechts; automatisch gesichert wird jede Spielminute und beim Verlassen der Partie.</p>
+        ${ioPanel()}</section>`;
     } else if (UI.menuTab === 'voelker') {
       body += `<section><h2>Volks-Erfahrung</h2><p class="note">Jede Partie bringt deinem gespielten Volk Erfahrung (mehr bei Siegen, höherer Schwierigkeit und in der Kampagne). Mit steigender Volksstufe schaltest du Skins, Banner, Titel und einen vierten Helden frei.</p>
         <div class="grid races">${G.RACE_KEYS.map((k) => {
@@ -156,8 +159,10 @@
         <div><h3>Volk</h3><p>Jedes Volk hat ein Passiv und drei Volksfähigkeiten (ab Haupthaus-Stufe 1, 3 und 5). Im Tab „Volk“ verteilst du Talente in Krieg, Bollwerk und Wohlstand.</p></div>
         <div><h3>Neutrale Monster</h3><p>Lager auf der Karte geben Gold, Holz, Erfahrung und Beute. Trolle schließen sich dir als Söldner an, Golems und Drachen stärken die ganze Armee.</p></div>
         <div><h3>Nebel des Krieges</h3><p>Du siehst nur, was deine Einheiten, dein Held, deine Gebäude und Verbündete sehen. Erkundetes Gebiet bleibt abgedunkelt sichtbar, gegnerische Gebäude erscheinen dort so, wie du sie zuletzt gesehen hast. Im Freien Spiel unter „7. Sicht“ abschaltbar.</p></div>
+        <div><h3>Schreine & Ereignisse</h3><p>Schreine geben dem ganzen Team einen Bonus (Schaden, Regeneration, Gold oder Tempo). Wer 8 Sekunden allein am Schrein steht, erobert ihn. Von Zeit zu Zeit zieht ein mächtiger Boss über die Karte oder eine Händlerkarawane fährt von Händler zu Händler – beides bringt reiche Beute.</p></div>
+        <div><h3>Helden-Ultimates</h3><p>Auf Heldenstufe 6 wählst du eine von zwei ultimativen Fähigkeiten (Taste R), auf Stufe 3 und 8 meisterst du eine Fähigkeit (+35% Wirkung). Auf Stufe 10 wird die ultimative Fähigkeit gemeistert.</p></div>
         <div><h3>Speichern</h3><p>💾 oben rechts speichert auf drei Plätze oder lädt einen Stand. Zusätzlich wird jede Spielminute und beim Verlassen der Partie automatisch gesichert – „Weiterspielen“ im Hauptmenü setzt die letzte Partie fort.</p></div>
-        <div><h3>Steuerung</h3><p><b>PC:</b> WASD/Ziehen = Kamera, Mausrad = Zoom, Linksklick = auswählen/bauen, Held auswählen und Linksklick aufs Ziel (oder Rechtsklick) = Held steuern, Q/E = Heldenfähigkeit, 1–3 = Volksfähigkeit, H = Held manuell/automatisch.<br><b>Handy:</b> Wischen = Kamera, zwei Finger = Zoom, Tippen = auswählen/bauen, Held (Wappen im Heldenfenster) antippen und dann Ziel antippen = Held steuern, ☰ = Menü, rote Knöpfe = Volksfähigkeiten.</p></div>
+        <div><h3>Steuerung</h3><p><b>PC:</b> WASD/Ziehen = Kamera, Mausrad = Zoom, Linksklick = auswählen/bauen, Held auswählen und Linksklick aufs Ziel (oder Rechtsklick) = Held steuern, Q/E/R = Heldenfähigkeiten (R = ultimative ab Stufe 6), 1–3 = Volksfähigkeit, H = Held manuell/automatisch.<br><b>Handy:</b> Wischen = Kamera, zwei Finger = Zoom, Tippen = auswählen/bauen, Held (Wappen im Heldenfenster) antippen und dann Ziel antippen = Held steuern, ☰ = Menü, rote Knöpfe = Volksfähigkeiten.</p></div>
         </div></section>`;
     } else {
       const s = Prof().data.settings;
@@ -240,6 +245,7 @@
     if (G.Audio) { G.Audio.init(); G.Audio.setTheme(S.theme); }
     document.body.dataset.race = S.players[0].race;
     requestAnimationFrame(() => {
+      if (G.S !== S) return; // inzwischen beendet
       G.R.init($('#view'));
       const mm = $('#minimap');
       const W = 210; mm.width = W; mm.height = Math.round(W * S.h / S.w);
@@ -277,12 +283,60 @@
       const ok = meta && meta.v === G.SAVE_VERSION;
       const btns = (inGame && slot !== 'auto' ? `<button data-act="sv-save" data-v="${slot}">${meta ? 'Überschreiben' : 'Speichern'}</button>` : '')
         + `<button data-act="sv-load" data-v="${slot}" ${ok ? '' : 'disabled'}>Laden</button>`
+        + (!inGame && ok ? `<button data-act="sv-export" data-v="${slot}" title="Als Datei speichern – zum Übertragen auf ein anderes Gerät">⬇ Datei</button><button data-act="sv-code" data-v="${slot}" title="Als Text-Code zum Kopieren">📋 Code</button>` : '')
         + (!inGame && meta ? `<button data-act="sv-del" data-v="${slot}">Löschen</button>` : '');
       const info = !meta ? '<small>leer</small>' : !ok ? '<small>Spielstand einer älteren Version – kann nicht geladen werden</small>'
         : `<b>${meta.raceName} · ${meta.hero}</b><small>${meta.mission ? 'Kampagne: ' + meta.mission : meta.mode} · ${meta.diff} · ${meta.map} · ${G.bname(meta.race, 'haupthaus')} St. ${meta.th} · Held St. ${meta.heroLvl}</small>
           <small>Spielzeit ${fmtTime(meta.time)}${meta.limit ? ' von ' + Math.round(meta.limit / 60) + ' min' : ''} · ${fmtDate(meta.date)}</small>`;
       return `<div class="saveslot ${meta ? '' : 'empty'}">${emblem(meta ? meta.race : 'zufall')}<div class="sv-info"><span class="sv-slot">${G.Saves.slotName(slot)}</span>${info}</div><div class="sv-btns">${btns}</div></div>`;
     }).join('') + '</div>';
+  }
+  // Übertragen zwischen Geräten: Export als Datei oder Text-Code, Import aus Datei oder Code
+  UI.io = { code: null, codeSlot: null, paste: false, pasteText: '', target: null };
+  const escHtml = (t) => String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const freeSlot = () => ['1', '2', '3'].find((k) => !G.Saves.meta(k)) || '3';
+  function ioPanel() {
+    const io = UI.io, target = io.target || freeSlot();
+    let h = `<div class="iobox"><h3>Auf ein anderes Gerät übertragen</h3>
+      <p class="note">Exportiere einen Spielstand als Datei (⬇) oder als Code (📋) und importiere ihn auf dem anderen Gerät hier – so spielst du z. B. am Handy weiter, was du am PC begonnen hast.</p>`;
+    if (io.code) h += `<div class="lbl">Code für ${G.Saves.slotName(io.codeSlot)} (${Math.ceil(io.code.length / 1024)} KB):</div><textarea readonly id="iocode">${escHtml(io.code)}</textarea>
+      <div class="iorow"><button data-act="sv-copy">In die Zwischenablage kopieren</button><button data-act="sv-io-close">Schließen</button></div>`;
+    h += `<div class="lbl">Importieren nach</div><div class="chips">${['1', '2', '3'].map((k) => `<button class="chip ${target === k ? 'sel' : ''}" data-act="sv-target" data-v="${k}">${G.Saves.slotName(k)}${G.Saves.meta(k) ? ' (belegt)' : ''}</button>`).join('')}</div>
+      <div class="iorow"><button data-act="sv-import-file">📂 Datei öffnen</button><button data-act="sv-paste">📋 Code einfügen</button></div>`;
+    if (io.paste) h += `<textarea id="iopaste" placeholder="Code oder Dateiinhalt hier einfügen …">${escHtml(io.pasteText)}</textarea>
+      <div class="iorow"><button data-act="sv-import-code">Importieren</button><button data-act="sv-io-close">Abbrechen</button></div>`;
+    return h + '<input type="file" id="iofile" accept=".json,application/json,text/plain" hidden></div>';
+  }
+  // Datei anbieten: in der Artifact-Ansicht über die Plattform (mit Bestätigung), sonst als normaler Download
+  async function offerFile(filename, text) {
+    let dl = null;
+    try { if (window.claude && window.claude.use) dl = await window.claude.use('downloads'); } catch (e) { dl = null; }
+    if (dl) {
+      try { await dl.save({ filename, data: text }); return 'ok'; }
+      catch (e) { if (e && (e.code === 'declined' || e.code === 'rate_limited')) return 'declined'; }
+    }
+    try {
+      const url = URL.createObjectURL(new Blob([text], { type: 'application/json' })), a = document.createElement('a');
+      a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+      return 'ok';
+    } catch (e) { return 'fail'; }
+  }
+  async function importNow(text) {
+    const slot = UI.io.target || freeSlot(), had = !!G.Saves.meta(slot);
+    const err = await G.Saves.importText(text, slot);
+    UI.menuNote = err ? { text: `Import fehlgeschlagen: ${err}.`, cls: 'bad' }
+      : { text: `Spielstand importiert nach ${G.Saves.slotName(slot)}${had ? ' (überschrieben)' : ''} – jetzt dort auf „Laden“ tippen.`, cls: 'good' };
+    if (!err) { UI.io.paste = false; UI.io.pasteText = ''; }
+    renderMenu();
+  }
+  async function copyCode() {
+    const t = $('#iocode');
+    if (!t) return;
+    let ok = false;
+    try { await navigator.clipboard.writeText(t.value); ok = true; } catch (e) { try { t.focus(); t.select(); ok = document.execCommand('copy'); } catch (e2) { ok = false; } }
+    UI.menuNote = ok ? { text: 'Code kopiert – auf dem anderen Gerät unter „Spielstände → Code einfügen“ importieren.', cls: 'good' } : { text: 'Kopieren war nicht möglich – bitte den Text im Feld markieren und selbst kopieren.', cls: 'bad' };
+    renderMenu();
   }
   const uiState = () => ({ cam: { x: G.R.cam.x, y: G.R.cam.y, z: G.R.cam.z }, tab: UI.tab });
   function renderSaveUI() {
@@ -398,7 +452,7 @@
     const styles = [['sammeln', 'Sammeln & Angreifen', 'Die Armee sammelt sich und greift geschlossen an, sobald sie groß genug ist.'],
       ['wellen', 'Wellen losschicken', 'In festen Abständen zieht alles los, was gerade bereitsteht.'],
       ['verteidigen', 'Nur verteidigen', 'Niemand verlässt die Basis – außer du drückst „Jetzt angreifen!“.']];
-    const stateName = { sammeln: 'sammelt sich', verteidigen: 'verteidigt die Basis', camps: 'jagt neutrale Monster' };
+    const stateName = { sammeln: 'sammelt sich', verteidigen: 'verteidigt die Basis', camps: 'jagt neutrale Monster', schrein: 'nimmt einen Schrein ein' };
     let h = `<div class="box"><div class="lbl">Armee-Stil</div><div class="chips">${styles.map(([m, n, d]) => `<button class="chip ${p.armyStyle === m ? 'sel' : ''}" data-act="armystyle" data-v="${m}" title="${esc(d)}">${n}</button>`).join('')}</div>
       <div class="hint">${styles.find((s) => s[0] === p.armyStyle)[2]} Losgeschickte Einheiten kämpfen, bis sie fallen.</div>
       <div class="stats"><span>Im Kampf: <b>${p.committedCount}</b> Einheiten</span><span>Bereit: <b>${p.poolSupply}</b> Versorgung (${stateName[p.armyState] || p.armyState}${p.campTarget ? ': ' + p.campTarget.name : ''})</span></div>
@@ -408,6 +462,8 @@
       ${toggle('campsAllowed', 'Zwischendurch neutrale Monster jagen', p.campsAllowed)}`;
     if (p.armyStyle === 'wellen') h += `<div class="lbl">Welle alle <b>${p.waveInterval}</b> s – nächste in ${Math.max(0, Math.ceil(p.waveT))} s</div>
       <input type="range" min="15" max="120" step="5" value="${p.waveInterval}" data-slider="waveInterval">`;
+    if (S.shrines && S.shrines.length) h += `${toggle('shrinesAllowed', 'Schreine einnehmen', p.shrinesAllowed !== false, 'Bereite Truppen erobern Schreine auf deiner Kartenhälfte (8 s allein am Schrein stehen).')}
+      <div class="shrines">${S.shrines.map((sh) => { const d = G.SHRINES[sh.type], mine = sh.owner === p.team; return `<span class="shr ${mine ? 'mine' : sh.owner >= 0 ? 'foe' : ''}" style="--sc:${d.color}" title="${esc(d.desc)}">◆ ${d.short}<small>${mine ? 'deiner' : sh.owner >= 0 ? 'Gegner' : 'frei'}</small></span>`; }).join('')}</div>`;
     const foes = S.players.filter((o) => o.alive && o.team !== p.team);
     h += `<div class="lbl">Angriffsziel</div><div class="chips"><button class="chip ${p.targetMode === 'auto' && !p.manualPoint ? 'sel' : ''}" data-act="target" data-v="auto">Automatisch</button>
       ${foes.map((o) => `<button class="chip ${p.targetMode === o.id && !p.manualPoint ? 'sel' : ''}" data-act="target" data-v="${o.id}" style="border-color:${o.color}">${o.name}</button>`).join('')}
@@ -435,17 +491,41 @@
     return h + `<div class="hint">Beschwörungen/Söldner: ${summons}. Rollen werden je Gebäudestufe freigeschaltet (Kaserne St. 2 = Tank, Sanktum St. 2 = Magier, St. 3 = Support).</div></div>`;
   }
 
+  const MOD_TXT = { hp: (v) => `+${Math.round(v * 100)}% LP`, dmg: (v) => `+${Math.round(v * 100)}% Schaden`, armor: (v) => `+${v} Rüstung`, regen: (v) => `+${v} LP/s`,
+    speed: (v) => `+${Math.round(v * 100)}% Tempo`, atkspd: (v) => `+${Math.round(v * 100)}% Angriffstempo`, lifesteal: (v) => `+${Math.round(v * 100)}% Lebensraub` };
+  const modsText = (m) => Object.keys(m).map((k) => (MOD_TXT[k] ? MOD_TXT[k](m[k]) : '')).filter(Boolean).join(', ');
   function abilityDesc(a) {
     switch (a.type) {
       case 'nuke': return `Einzelziel: ${a.dmg} Schaden${a.stun ? `, ${a.stun} s Betäubung` : ''}`;
       case 'drain': return `Entzieht ${a.dmg} LP und heilt den Helden`;
       case 'aoe': return `${a.dmg} Flächenschaden (Radius ${a.radius})${a.self ? ' um den Helden' : ''}`;
-      case 'stun': return `${a.dmg} Flächenschaden + ${a.stun} s Betäubung${a.self ? ' um den Helden' : ''}`;
+      case 'stun': return `${a.dmg} Flächenschaden + ${a.stun} s Betäubung${a.self ? ' um den Helden' : ''} (Radius ${a.radius})`;
       case 'heal': return `Heilt Verbündete um ${a.amount} LP`;
       case 'buff': return `Verbündete: ${a.stat === 'dmg' ? '+' + a.value * 100 + '% Schaden' : a.stat === 'armor' ? '+' + a.value + ' Rüstung' : a.stat === 'atkspd' ? '+' + a.value * 100 + '% Angriffstempo' : '+' + a.value * 100 + '% Tempo'} für ${a.duration} s`;
-      case 'summon': return `Beschwört ${a.count}× ${a.unit.name} (${a.duration} s)`;
+      case 'summon': return `Beschwört ${a.count}× ${a.unit.name} (${a.duration} s, ${a.unit.hp} LP)`;
+      case 'meteor': return `${a.shells > 1 ? a.shells + ' Einschläge mit je ' : ''}${a.dmg} Schaden am Zielort${a.stun ? `, ${a.stun} s Betäubung` : ''}${a.debuff ? `, ${modsText(a.debuff).replace(/\+-/g, '−')} für ${a.debuffDur} s` : ''}`;
+      case 'avatar': return `Verwandlung für ${a.duration} s: ${modsText(a.mods)}`;
+      case 'warcry': return `Die ganze Armee ${a.duration} s lang: ${modsText(a.mods)}`;
+      case 'massheal': return `Heilt alle Verbündeten im großen Umkreis um ${Math.round(a.pct * 100)}% ihrer LP${a.armor ? `, +${a.armor} Rüstung` : ''}${a.lifesteal ? `, +${Math.round(a.lifesteal * 100)}% Lebensraub` : ''}`;
+      case 'drainnova': return `Entzieht allen Gegnern im Umkreis ${a.dmg} LP – die Hälfte heilt den Helden`;
     }
     return '';
+  }
+  const SELF_CAST = { heal: 1, buff: 1, summon: 1, avatar: 1, warcry: 1, massheal: 1, drainnova: 1 };
+  const isSelfCast = (a) => !!(SELF_CAST[a.type] || a.self);
+  const keyOf = (a, i) => (a.ult ? 'R' : i ? 'E' : 'Q');
+  const rankStars = (a) => (a.rank ? ' ' + '★'.repeat(a.rank) : '');
+  // Offene Heldenwahl (Ultimative auf Stufe 6, Meisterung auf Stufe 3 und 8)
+  function heroChoiceHtml(p, detailed) {
+    const h = p.hero, next = h.pending && h.pending[0];
+    if (!next) return '';
+    if (next === 'ult') {
+      const opts = G.HERO_ULTS[h.def.id] || [];
+      return `<div class="hchoice"><div class="lbl">${detailed ? `★ Stufe ${G.HERO_ULT_LVL}: Wähle die ultimative Fähigkeit (Taste R)` : '★ Ultimative wählen:'}</div><div class="hopts">${opts.map((o, i) =>
+        `<button data-act="ultpick" data-v="${i}" title="${esc(abilityDesc(o) + ' · ' + o.cd + ' s')}"><b>${o.name}</b>${detailed ? `<small>${abilityDesc(o)} · Abklingzeit ${o.cd} s</small>` : ''}</button>`).join('')}</div></div>`;
+    }
+    return `<div class="hchoice"><div class="lbl">${detailed ? '★ Meisterung: Welche Fähigkeit soll stärker werden? <small>(+35% Wirkung, −15% Abklingzeit)</small>' : '★ Meistern (+35% Wirkung):'}</div><div class="hopts">${h.abilities.map((a, i) => (a.ult ? '' :
+      `<button data-act="masterpick" data-v="${i}" ${(a.rank || 0) >= 2 ? 'disabled title="Bereits Rang 2"' : `title="${esc(abilityDesc(a))}"`}><b>${keyOf(a, i)}: ${a.name}${rankStars(a)}</b>${detailed ? `<small>${abilityDesc(a)}</small>` : ''}</button>`)).join('')}</div></div>`;
   }
 
   function tabHeld(p) {
@@ -457,11 +537,13 @@
       <div class="xpbar"><div style="width:${h.level >= 10 ? 100 : Math.floor(100 * (h.xp - prev) / (need - prev))}%"></div></div>
       <div class="kv"><b>Commander-Bonus:</b> ${d.bonusDesc}</div>
       <div class="lbl">Verhalten</div><div class="chips">${G.HERO_MODES.map((m) => `<button class="chip ${(h.manual ? 'manuell' : (h.mode || 'armee')) === m.id ? 'sel' : ''}" data-act="heromode" data-v="${m.id}">${m.name}</button>`).join('')}</div>
-      <div class="hint">${G.HERO_MODES.find((m) => m.id === (h.manual ? 'manuell' : (h.mode || 'armee'))).desc} ${h.manual ? (G.R.touch ? 'Fähigkeit antippen, dann Ziel antippen.' : 'Q / E wirken auf den Mauszeiger, Rechtsklick bewegt immer.') : 'Wirkt Fähigkeiten selbst und kauft beim Händler ein.'}</div></div>`;
+      <div class="hint">${G.HERO_MODES.find((m) => m.id === (h.manual ? 'manuell' : (h.mode || 'armee'))).desc} ${h.manual ? (G.R.touch ? 'Fähigkeit antippen, dann Ziel antippen.' : 'Q / E / R wirken auf den Mauszeiger, Rechtsklick bewegt immer.') : 'Wirkt Fähigkeiten selbst und kauft beim Händler ein.'}</div></div>`;
+    if (h.pending && h.pending.length && !p.auto.talents) s += `<div class="box choicebox">${heroChoiceHtml(p, true)}</div>`;
     s += '<div class="box"><div class="lbl">Fähigkeiten</div>';
     h.abilities.forEach((a, i) => {
-      s += `<div class="abil"><button data-act="cast" data-idx="${i}" ${a.t > 0 || h.dead ? 'disabled' : ''}>${i === 0 ? 'Q' : 'E'}: ${a.name}${a.t > 0 ? ` (${Math.ceil(a.t)} s)` : ''}</button><small>${abilityDesc(a)} · ${a.cd} s</small></div>`;
+      s += `<div class="abil ${a.ult ? 'ult' : ''}"><button data-act="cast" data-idx="${i}" ${a.t > 0 || h.dead ? 'disabled' : ''}>${keyOf(a, i)}: ${a.name}${rankStars(a)}${a.t > 0 ? ` (${Math.ceil(a.t)} s)` : ''}</button><small>${a.ult ? 'Ultimativ · ' : ''}${abilityDesc(a)} · ${Math.round(a.cd * (1 - 0.15 * (a.rank || 0)))} s</small></div>`;
     });
+    if (!h.abilities.some((a) => a.ult)) s += `<div class="hint">Ab Heldenstufe ${G.HERO_ULT_LVL} wählst du eine von zwei ultimativen Fähigkeiten: ${(G.HERO_ULTS[h.def.id] || []).map((o) => `<b>${o.name}</b>`).join(' oder ')}. Auf Stufe 3 und 8 meisterst du eine Fähigkeit.</div>`;
     s += `</div><div class="box"><div class="lbl">Inventar (${h.items.length}/6)</div><div class="inv">`;
     for (let i = 0; i < 6; i++) {
       const id = h.items[i];
@@ -473,7 +555,7 @@
   function tabVolk(p) {
     const rd = p.rd;
     let s = `<div class="box"><div class="lbl">Talentbaum – <b>${p.talentPoints}</b> Punkt(e) frei <small>(1 pro Heldenstufe)</small></div>
-      ${toggle('auto.talents', 'Talente automatisch verteilen', p.auto.talents)}<div class="tree">`;
+      ${toggle('auto.talents', 'Talente und Heldenwahl automatisch', p.auto.talents, 'Verteilt Talentpunkte und wählt Meisterung und ultimative Fähigkeit des Helden selbst.')}<div class="tree">`;
     G.TALENTS.forEach((br, bi) => {
       s += `<div class="branch" style="--bc:${br.color}"><div class="bh">${br.name}</div>`;
       br.talents.forEach((t, ti) => {
@@ -483,7 +565,7 @@
       s += '</div>';
     });
     s += `</div></div><div class="box"><div class="lbl">Volk: ${rd.name}</div><div class="kv"><b>Passiv:</b> ${rd.passive.name} – ${rd.passive.desc}</div>
-      ${rd.abilities.map((a, i) => `<div class="kv"><b>${i + 1}${i === 0 ? '/R' : ''}: ${a.name}</b> (ab ${G.bname(p.race, 'haupthaus')} St. ${a.th}, ${a.cd} s) – ${a.desc}</div>`).join('')}
+      ${rd.abilities.map((a, i) => `<div class="kv"><b>${i + 1}: ${a.name}</b> (ab ${G.bname(p.race, 'haupthaus')} St. ${a.th}, ${a.cd} s) – ${a.desc}</div>`).join('')}
       ${toggle('auto.ability', 'Volksfähigkeiten automatisch einsetzen', p.auto.ability)}</div>`;
     return s;
   }
@@ -525,7 +607,7 @@
     setHTML($('#race-ab'), p.rd.abilities.map((ab, i) => {
       const why = G.raceAbilityCheck(p, i);
       const cdf = p.th.level >= ab.th && p.abCd[i] > 0 ? Math.min(1, p.abCd[i] / (ab.cd * (1 - (p.teco.abilityCdr || 0)))) : 0;
-      return `<button class="race-btn" style="${why ? '' : glowSync()}" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.desc)}"><span class="cdfill" style="width:${Math.round(cdf * 100)}%"></span><b>${i + 1}${i === 0 ? '/R' : ''}: ${ab.name}</b><small>${why || 'Bereit!'}</small></button>`;
+      return `<button class="race-btn" style="${why ? '' : glowSync()}" data-act="race" data-idx="${i}" ${why ? 'disabled' : ''} title="${esc(ab.desc)}"><span class="cdfill" style="width:${Math.round(cdf * 100)}%"></span><b>${i + 1}: ${ab.name}</b><small>${why || 'Bereit!'}</small></button>`;
     }).join(''));
     renderQuick(p);
     const tabs = [['bauen', 'Bauen'], ['armee', 'Armee'], ['held', 'Held'], ['volk', 'Volk' + (p.talentPoints ? ' ★' : '')], ['haendler', 'Händler'], ['wirtschaft', 'Wirtsch.']];
@@ -555,10 +637,12 @@
       <div class="hc-info"><div class="hc-name"><b>${d.name.split(' ').pop()}</b> St. ${h.level}${p.talentPoints ? ' <span class="tp">★</span>' : ''}</div>
       ${h.dead ? `<div class="hc-dead">Wiederbelebung in ${Math.ceil(p.heroRespawn)} s</div>` : `<div class="hc-bar hp"><div style="width:${Math.max(0, 100 * h.hp / h.maxHp)}%"></div></div>`}
       <div class="hc-bar xp"><div style="width:${xpPct}%"></div></div></div></div>
-      <div class="hc-btns">${h.abilities.map((a, i) => `<button class="cd" style="--cd:${a.t > 0 ? Math.min(1, a.t / (a.cd * (1 - h.cdr))).toFixed(3) : 0};${a.t > 0 ? '' : glowSync()}" data-act="cast" data-idx="${i}" ${a.t > 0 || h.dead ? 'disabled' : ''} title="${esc(a.name + ' – ' + abilityDesc(a))}">${G.R.touch ? '' : (i ? 'E ' : 'Q ')}${a.name.split(/[ -]/)[0].slice(0, 8)}<small>${a.t > 0 ? Math.ceil(a.t) + ' s' : 'bereit'}</small></button>`).join('')}
-        <button data-act="potion" ${potions && !h.dead ? '' : 'disabled'} title="Heiltrank trinken">🧪<small>${potions}×</small></button>
-        <button data-act="retreat" ${h.dead ? 'disabled' : ''} title="Rückzug zur Basis">↩<small>Rückzug</small></button>
-        <button data-act="follow" class="${UI.follow ? 'sel' : ''}" title="Kamera folgt dem Helden">🎥<small>${UI.follow ? 'folgt' : 'Kamera'}</small></button></div>
+      <div class="hc-btns">${h.abilities.map((a, i) => `<button class="cd ${a.ult ? 'ult' : ''}" style="--cd:${a.t > 0 ? Math.min(1, a.t / (a.cd * (1 - h.cdr) * (1 - 0.15 * (a.rank || 0)))).toFixed(3) : 0};${a.t > 0 ? '' : glowSync()}" data-act="cast" data-idx="${i}" ${a.t > 0 || h.dead ? 'disabled' : ''} title="${esc(a.name + ' – ' + abilityDesc(a))}">${G.R.touch ? '' : keyOf(a, i) + ' '}${a.name.split(/[ -]/)[0].slice(0, 8)}${a.rank ? '<i>' + '★'.repeat(a.rank) + '</i>' : ''}<small>${a.t > 0 ? Math.ceil(a.t) + ' s' : 'bereit'}</small></button>`).join('')}
+        ${h.abilities.some((a) => a.ult) ? '' : h.pending && h.pending.includes('ult') ? '<button class="choose" data-act="herochoice" title="Ultimative Fähigkeit wählen">★<small>wählen</small></button>' : `<button disabled title="Ultimative Fähigkeit ab Heldenstufe ${G.HERO_ULT_LVL}">${G.R.touch ? '' : 'R '}🔒<small>ab St. ${G.HERO_ULT_LVL}</small></button>`}
+        <button class="util" data-act="potion" ${potions && !h.dead ? '' : 'disabled'} title="Heiltrank trinken">🧪<small>${potions}×</small></button>
+        <button class="util" data-act="retreat" ${h.dead ? 'disabled' : ''} title="Rückzug zur Basis">↩<small>Rückzug</small></button>
+        <button class="util ${UI.follow ? 'sel' : ''}" data-act="follow" title="Kamera folgt dem Helden">🎥<small>${UI.follow ? 'folgt' : 'Kamera'}</small></button></div>
+      ${h.pending && h.pending.length && !p.auto.talents ? heroChoiceHtml(p, false) : ''}
       <div class="hc-modes">${G.HERO_MODES.map((m) => `<button class="chip ${mode === m.id ? 'sel' : ''}" data-act="heromode" data-v="${m.id}" title="${esc(m.desc)}">${MODE_SHORT[m.id]}</button>`).join('')}</div>
       ${mode === 'manuell' ? `<div class="hc-hint">${sel ? (G.R.touch ? 'Ziel antippen: laufen / angreifen' : 'Linksklick aufs Ziel: laufen / angreifen') : 'Held antippen, dann Ziel antippen'}</div>` : ''}`;
   }
@@ -652,6 +736,7 @@
       ${o.scores ? `<div class="stats">${o.scores.map((x) => `<span style="color:${x.color}">${x.name} <b>${x.score}</b></span>`).join('')}</div>` : ''}
       <div class="stats"><span>Spielzeit <b>${fmtTime(o.time)}</b></span><span>Besiegte Gegner <b>${p.stats.kills}</b></span><span>Verlorene Einheiten <b>${p.stats.lost}</b></span><span>Heldenstufe <b>${p.hero.level}</b></span></div>
       <div class="xpgain">+${a.xp} Volks-XP für ${G.RACES[a.race].name}${a.after > a.before ? ` – <b>Stufe ${a.after} erreicht!</b>` : ` (Stufe ${a.after})`}
+      ${a.repeat ? '<div class="note">Diese Partie wurde schon einmal gewertet – es zählt nur die Verbesserung.</div>' : ''}
       ${a.unlocked.map((rw) => `<div class="good">Freigeschaltet: ${rw.kind === 'hero' ? 'Held ' + G.RACES[a.race].heroes.find((h) => h.unlock).name : rw.text}</div>`).join('')}
       ${a.missionNew ? `<div class="good">Mission abgeschlossen!${hasNext ? ' Nächste Mission freigeschaltet.' : ` Kampagne „${G.CAMPAIGNS[fm.race].title}“ gemeistert!`}</div>` : ''}</div>
       <button class="big" data-act="menu">Zum Hauptmenü</button> <button class="big" data-act="again">${S.cfg.mission ? 'Mission wiederholen' : 'Revanche (neue Gegner)'}</button>
@@ -679,6 +764,7 @@
       case 'm-map': UI.cfg.map = v; renderMenu(); return;
       case 'm-dur': UI.cfg.duration = +v; renderMenu(); return;
       case 'm-fog': UI.cfg.fog = v === 'an'; renderMenu(); return;
+      case 'm-events': UI.cfg.events = v === 'an'; renderMenu(); return;
       case 'saveui': openSaveUI(); return;
       case 'sv-close': closeSaveUI(); return;
       case 'sv-save': {
@@ -690,6 +776,21 @@
       }
       case 'sv-load': if (S && !S.over && !$('#game').classList.contains('hidden') && !armed(el, 'Aktuelles Spiel verlassen?')) return; loadSlot(v); return;
       case 'sv-del': if (armed(el, 'Wirklich löschen?')) { G.Saves.remove(v); renderMenu(); } return;
+      case 'sv-export': {
+        const text = G.Saves.exportText(v);
+        if (text) offerFile(G.Saves.fileName(v), text).then((r) => {
+          UI.menuNote = r === 'ok' ? { text: `${G.Saves.slotName(v)} als Datei exportiert.`, cls: 'good' } : r === 'declined' ? { text: 'Export abgebrochen.', cls: '' } : { text: 'Die Datei konnte nicht gespeichert werden – nutze „📋 Code“.', cls: 'bad' };
+          renderMenu();
+        });
+        return;
+      }
+      case 'sv-code': G.Saves.exportCode(v).then((code) => { UI.io.code = code; UI.io.codeSlot = v; renderMenu(); }); return;
+      case 'sv-copy': copyCode(); return;
+      case 'sv-io-close': UI.io.code = null; UI.io.paste = false; renderMenu(); return;
+      case 'sv-target': UI.io.target = v; renderMenu(); return;
+      case 'sv-import-file': { const f = $('#iofile'); if (f) f.click(); return; }
+      case 'sv-paste': UI.io.paste = true; renderMenu(); { const t = $('#iopaste'); if (t) t.focus(); } return;
+      case 'sv-import-code': importNow(($('#iopaste') || {}).value || ''); return;
       case 'm-mission': UI.mission = +v; renderMenu(); return;
       case 'm-start': UI.startGame(); return;
       case 'm-campaign': startMission(UI.cfg.race, UI.mission); return;
@@ -740,6 +841,9 @@
         break;
       }
       case 'cast': castBtn(+el.dataset.idx); break;
+      case 'ultpick': G.heroChooseUlt(p, +v); break;
+      case 'masterpick': G.heroMaster(p, +v); break;
+      case 'herochoice': UI.tab = 'held'; if (isMobile()) document.body.classList.add('panel-open'); break;
       case 'potion': G.heroPotion(p); break;
       case 'retreat': G.heroRetreat(p); break;
       case 'follow': UI.follow = !UI.follow; if (UI.follow && !p.hero.dead) G.R.centerOn(p.hero.x, p.hero.y); break;
@@ -773,7 +877,7 @@
   function castBtn(i) {
     const p = me(), h = p.hero, ab = h.abilities[i];
     if (!ab || h.dead) return;
-    if (ab.type === 'heal' || ab.type === 'buff' || ab.type === 'summon' || ab.self) G.heroCastManual(p, i, h.x, h.y);
+    if (isSelfCast(ab)) G.heroCastManual(p, i, h.x, h.y);
     else { UI.casting = i; UI.placing = null; document.body.classList.remove('panel-open'); G.msg(`${ab.name}: Ziel antippen bzw. mit Linksklick wählen.`, ''); }
   }
 
@@ -787,9 +891,12 @@
   document.addEventListener('change', (ev) => {
     const el = ev.target;
     if (el.matches('input[type=checkbox][data-act]')) act(el);
+    if (el.id === 'iofile' && el.files && el.files[0]) { const f = el.files[0]; el.value = ''; f.text().then(importNow, () => { UI.menuNote = { text: 'Die Datei konnte nicht gelesen werden.', cls: 'bad' }; renderMenu(); }); }
   });
   document.addEventListener('input', (ev) => {
-    const el = ev.target; if (!el.dataset.slider) return;
+    const el = ev.target;
+    if (el.id === 'iopaste') { UI.io.pasteText = el.value; return; } // eingefügter Code übersteht Neuaufbau
+    if (!el.dataset.slider) return;
     const v = +el.value, k = el.dataset.slider;
     if (k === 'music' || k === 'sfxvol') {
       Prof().data.settings[k === 'music' ? 'music' : 'sfx'] = v / 100; Prof().save(); Prof().applySettings(); return;
@@ -917,8 +1024,12 @@
       keys[k] = true;
       const p = me();
       if (k === 'escape') { UI.placing = null; UI.casting = null; UI.pickTarget = false; UI.selected = null; renderPanel(true); }
-      if (k === 'q' || k === 'e') { const i = k === 'q' ? 0 : 1; const ab = p.hero.abilities[i]; if (ab && (ab.type === 'heal' || ab.type === 'buff' || ab.type === 'summon' || ab.self)) G.heroCastManual(p, i, p.hero.x, p.hero.y); else G.heroCastManual(p, i, G.R.mouse.wx, G.R.mouse.wy); }
-      if (k === 'r' || k === '1') G.castRaceAbility(p, 0);
+      if (k === 'q' || k === 'e' || k === 'r') { // Heldenfähigkeiten: Q, E und die Ultimative auf R
+        const i = k === 'q' ? 0 : k === 'e' ? 1 : p.hero.abilities.findIndex((a) => a.ult), ab = p.hero.abilities[i];
+        if (k === 'r' && i < 0) G.msg(p.hero.pending && p.hero.pending.includes('ult') ? 'Wähle zuerst die ultimative Fähigkeit im Heldenfenster.' : `Ultimative Fähigkeit ab Heldenstufe ${G.HERO_ULT_LVL}.`, 'bad');
+        else if (ab && isSelfCast(ab)) G.heroCastManual(p, i, p.hero.x, p.hero.y); else if (ab) G.heroCastManual(p, i, G.R.mouse.wx, G.R.mouse.wy);
+      }
+      if (k === '1') G.castRaceAbility(p, 0);
       if (k === '2') G.castRaceAbility(p, 1);
       if (k === '3') G.castRaceAbility(p, 2);
       if (k === 'h') { G.heroMode(p, p.hero.manual ? (p.hero.mode || 'armee') : 'manuell'); if (p.hero.manual) UI.selected = p.hero; G.msg(`Held: ${p.hero.manual ? 'manuelle Steuerung' : 'automatisch'}`, ''); renderPanel(true); }

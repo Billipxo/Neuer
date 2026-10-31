@@ -46,15 +46,25 @@
     let xp = 80 + Math.min(30, S.time / 60) * 6 + Math.min(120, p.stats.kills * 0.5) + p.hero.level * 8 + p.th.level * 10;
     if (o.win) xp += 200;
     xp = Math.round(xp * diffMul * (S.cfg.mission ? 1.25 : 1));
+    // Jede Partie zählt nur einmal: Wird ein Spielstand erneut zu Ende gespielt, gibt es höchstens die Verbesserung
+    const A = (P.data.awarded = P.data.awarded || {}), prev = (S.gid && A[S.gid]) || null;
+    const total = xp;
+    if (prev) xp = Math.max(0, xp - prev.xp);
+    if (S.gid) {
+      A[S.gid] = { xp: Math.max(total, prev ? prev.xp : 0), win: !!(o.win || (prev && prev.win)), t: Date.now() };
+      const keys = Object.keys(A);
+      if (keys.length > 40) keys.sort((a, b) => A[a].t - A[b].t).slice(0, keys.length - 40).forEach((k) => delete A[k]);
+    }
     const before = P.raceLevel(p.race);
     P.data.xp[p.race] = (P.data.xp[p.race] || 0) + xp;
-    P.data.games++; if (o.win) P.data.wins++;
+    if (!prev) P.data.games++;
+    if (o.win && !(prev && prev.win)) P.data.wins++;
     const after = P.raceLevel(p.race);
     const unlocked = G.REWARDS.filter((r) => r.lvl > before && r.lvl <= after);
     let missionNew = false;
     if (S.cfg.mission && o.win && !P.data.campaign.done[S.cfg.mission]) { P.data.campaign.done[S.cfg.mission] = true; missionNew = true; }
     P.save();
-    return { xp, race: p.race, before, after, unlocked, missionNew };
+    return { xp, race: p.race, before, after, unlocked, missionNew, repeat: !!prev };
   };
 
   // -------------------------------------------------------------------------

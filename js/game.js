@@ -24,6 +24,7 @@
         [0.38, 0.13, 'troll'], [0.62, 0.87, 'troll'], [0.62, 0.13, 'golem'], [0.38, 0.87, 'golem'],
         [0.5, 0.1, 'drache'], [0.5, 0.9, 'drache']],
       sites: [[0.24, 0.32], [0.76, 0.68], [0.24, 0.68], [0.76, 0.32], [0.42, 0.36], [0.58, 0.64]],
+      shrines: [[0.5, 0.3], [0.5, 0.7]],
     },
     '2v2': {
       name: '2 gegen 2', w: 3400, h: 3000, teams: [0, 1, 0, 1],
@@ -32,6 +33,7 @@
         [0.5, 0.12, 'troll'], [0.5, 0.88, 'troll'], [0.5, 0.33, 'golem'], [0.5, 0.67, 'golem'], [0.5, 0.5, 'drache'],
         [0.06, 0.5, 'wolf'], [0.94, 0.5, 'wolf']],
       sites: [[0.28, 0.4], [0.72, 0.6], [0.28, 0.6], [0.72, 0.4]],
+      shrines: [[0.5, 0.22], [0.5, 0.78]],
     },
     'ffa': {
       name: 'Jeder gegen jeden (4)', w: 3400, h: 3400, teams: [0, 1, 2, 3],
@@ -40,6 +42,7 @@
         [0.7, 0.06, 'banditen'], [0.3, 0.94, 'banditen'], [0.06, 0.3, 'banditen'], [0.94, 0.7, 'banditen'],
         [0.3, 0.5, 'troll'], [0.7, 0.5, 'troll'], [0.5, 0.3, 'golem'], [0.5, 0.7, 'golem'], [0.5, 0.5, 'drache']],
       sites: [[0.4, 0.17], [0.83, 0.4], [0.6, 0.83], [0.17, 0.6]],
+      shrines: [[0.5, 0.15], [0.85, 0.5], [0.5, 0.85], [0.15, 0.5]],
     },
   };
 
@@ -90,7 +93,7 @@
     const themeKey = cfg.map === 'heimat' ? G.RACES[race].map.theme : cfg.map === 'zufall' ? pick(Object.keys(G.THEMES)) : cfg.map;
     S = G.S = {
       time: 0, tick: 0, ents: [], proj: [], fx: [], timers: [], players: [], camps: [], shops: [], decor: [], sites: [],
-      critters: [], parts: [], decals: [], corpses: [], terrain: [], roads: [],
+      critters: [], parts: [], decals: [], corpses: [], terrain: [], roads: [], shrines: [],
       w: layout.w, h: layout.h, theme: themeKey, mode: cfg.mode, layout, over: null, msgs: [],
       speed: 1, paused: false, nextId: 1, grid: new Map(), bonusT: 0, victoryT: 0, cfg,
       limit: (cfg.duration === undefined ? 30 : cfg.duration) * 60, endphase: false, objective: cfg.objective || 'vernichten',
@@ -105,6 +108,11 @@
     layout.shops.forEach((s) => S.shops.push({ x: s[0] * layout.w, y: s[1] * layout.h, r: 40 }));
     layout.sites.forEach((s) => { const pos = G.snap('aussenposten', s[0] * layout.w, s[1] * layout.h); S.sites.push({ x: pos.x, y: pos.y, b: null }); });
     layout.camps.forEach((c) => makeCamp(c[2], c[0] * layout.w, c[1] * layout.h));
+    if (cfg.events !== false) { // Schreine und Ereignisse (wandernder Boss, Karawane)
+      const types = shuffle(Object.keys(G.SHRINES));
+      layout.shrines.forEach((s, i) => S.shrines.push({ x: s[0] * layout.w, y: s[1] * layout.h, type: types[i % types.length], owner: -1, cap: 0, capTeam: null }));
+      S.events = { bossT: G.EVENTS.bossFirst + rand(0, 120), caravanT: G.EVENTS.caravanFirst + rand(0, 90) };
+    }
     genRoads();
     genTerrain();
     genDecor();
@@ -143,7 +151,7 @@
       auto: { build: !isHuman, produce: true, hero: true, ability: !isHuman, talents: !isHuman },
       armyStyle: isHuman ? 'sammeln' : aiStyle, waveInterval: isHuman ? 40 : (diff.focus ? 35 : 45), waveT: 40,
       attackFrac: isHuman ? 0.7 : diff.attackFrac, minAttack: isHuman ? 0 : diff.minAttack,
-      targetMode: 'auto', targetPlayer: null, manualPoint: null, campTarget: null, campsAllowed: true, campStart: 0,
+      targetMode: 'auto', targetPlayer: null, manualPoint: null, campTarget: null, campsAllowed: true, shrinesAllowed: true, campStart: 0,
       armyState: 'sammeln', armyPoint: null, attackPoint: null, armyCentroid: null, poolSupply: 0, committedCount: 0,
       comp: { tank: 2, nahkampf: 3, fernkampf: 3, magier: 2, heiler: 1, support: 1, beschwoerer: 1 }, preset: 'ausgewogen',
       buffs: [], abCd: [25, 0, 0], alive: true, hero: null, heroRespawn: 0, reserve: { g: 0, w: 0 },
@@ -167,23 +175,164 @@
     S.camps.push(camp);
     spawnCamp(camp);
   }
+  function makeCreep(camp, u, x, y, scale) {
+    const cd = G.CREEPS[u], k = scale || 1;
+    const e = {
+      id: S.nextId++, kind: 'creep', def: cd, ctype: u, name: cd.name, owner: -1, team: -1, camp,
+      x, y, home: { x, y }, r: cd.r,
+      hp: cd.hp * k, maxHp: cd.hp * k, dmg: cd.dmg * k, range: cd.range, cd: cd.cd, speed: cd.speed, armor: cd.armor,
+      splash: cd.splash || 0, proj: cd.proj || null, level: 1, atkT: 0, retargetT: 0, target: null, buffs: [], m: zeroMods(), face: Math.random() * 6, regen: 0, walkT: 0,
+    };
+    if (cd.boss) e.boss = true;
+    if (cd.wagon) e.wagon = true;
+    if (camp.event) e.roam = true;
+    S.ents.push(e);
+    camp.creeps.push(e);
+    return e;
+  }
   function spawnCamp(camp) {
     camp.creeps = [];
     camp.def.units.forEach((u, i) => {
-      const cd = G.CREEPS[u];
       const a = (i / camp.def.units.length) * Math.PI * 2;
-      const e = {
-        id: S.nextId++, kind: 'creep', def: cd, ctype: u, name: cd.name, owner: -1, team: -1, camp,
-        x: camp.x + Math.cos(a) * 30, y: camp.y + Math.sin(a) * 30, home: null, r: cd.r,
-        hp: cd.hp, maxHp: cd.hp, dmg: cd.dmg, range: cd.range, cd: cd.cd, speed: cd.speed, armor: cd.armor,
-        splash: cd.splash || 0, proj: cd.proj || null, level: 1, atkT: 0, retargetT: 0, target: null, buffs: [], m: zeroMods(), face: Math.random() * 6, regen: 0, walkT: 0,
-      };
-      e.home = { x: e.x, y: e.y };
-      S.ents.push(e);
-      camp.creeps.push(e);
+      makeCreep(camp, u, camp.x + Math.cos(a) * 30, camp.y + Math.sin(a) * 30);
     });
     camp.left = camp.creeps.length;
     camp.active = false;
+  }
+
+  // -------------------------------------------------------------------------
+  // Karten-Ereignisse: ein wandernder Boss zieht über die Karte, Händlerkarawanen fahren von Händler zu Händler.
+  // Beide sind neutral; wer den Boss erschlägt oder den Händlerwagen plündert, erhält die Beute.
+  function edgePoint() { // Kartenrand weit weg von allen Basen
+    for (let i = 0; i < 40; i++) {
+      const side = Math.floor(rand(0, 4));
+      const x = side < 2 ? rand(250, S.w - 250) : side === 2 ? 90 : S.w - 90, y = side >= 2 ? rand(250, S.h - 250) : side === 0 ? 90 : S.h - 90;
+      if (S.players.every((p) => dist({ x, y }, p.base) > G.BASE_RADIUS + 550) && !inTerrain(x, y, 40, true)) return { x, y };
+    }
+    return null;
+  }
+  const where = (x, y) => (y < S.h * 0.33 ? 'im Norden' : y > S.h * 0.67 ? 'im Süden' : x < S.w / 2 ? 'im Westen' : 'im Osten');
+  function bossRoute(from) { // durch die Kartenmitte, dann zu Lagern und Schreinen
+    const pts = [{ x: S.w / 2 + rand(-200, 200), y: S.h / 2 + rand(-200, 200) }];
+    const spots = shuffle([...S.camps.filter((c) => !c.event), ...S.shrines]).slice(0, 4);
+    for (const s of spots) pts.push({ x: s.x + rand(-120, 120), y: s.y + rand(-120, 120) });
+    return pts.filter((q) => S.players.every((p) => dist(q, p.base) > G.BASE_RADIUS + 250));
+  }
+  function spawnBoss() {
+    if (S.camps.some((c) => c.event === 'boss' && !c.done)) return;
+    const at = edgePoint();
+    if (!at) return;
+    const type = pick(G.BOSS_TYPES), cd = G.CREEPS[type];
+    const camp = { type: 'boss', event: 'boss', def: { ...G.CAMPS.boss, name: cd.name }, name: cd.name, x: at.x, y: at.y, left: 1, respawnT: 0, active: true, activeT: 99, creeps: [], route: bossRoute(at), ri: 0, endT: S.time + G.EVENTS.bossLife };
+    S.camps.push(camp);
+    makeCreep(camp, type, at.x, at.y, 1 + Math.max(0, S.time - 540) / 1500);
+    G.msg(`Ein wandernder Boss erscheint ${where(at.x, at.y)}: ${cd.name}! Wer ihn erschlägt, erhält reiche Beute.`, 'gold');
+    G.sfx('horn', at.x, at.y, 1, true);
+  }
+  function spawnCaravan() {
+    if (!S.shops.length || S.camps.some((c) => c.event === 'karawane' && !c.done)) return;
+    let start, route;
+    if (S.shops.length >= 2) { // von Händler zu Händler über die Kartenmitte
+      const [a, b] = shuffle(S.shops);
+      start = { x: a.x, y: a.y + 50 };
+      route = [{ x: S.w / 2 + rand(-80, 80), y: S.h / 2 + rand(-80, 80) }, { x: b.x, y: b.y + 50 }];
+    } else { // nur ein Händler: vom Kartenrand über den Händler zum gegenüberliegenden Rand
+      const s = S.shops[0], north = Math.random() < 0.5, x = s.x + (Math.random() < 0.5 ? -1 : 1) * rand(260, 380);
+      start = { x, y: north ? 70 : S.h - 70 };
+      route = [{ x: s.x, y: s.y + 60 }, { x: s.x * 2 - x, y: north ? S.h - 70 : 70 }];
+    }
+    const camp = { type: 'karawane', event: 'karawane', def: G.CAMPS.karawane, name: G.CAMPS.karawane.name, x: start.x, y: start.y, left: 1, respawnT: 0, active: false, activeT: 0, creeps: [], route, ri: 0 };
+    S.camps.push(camp);
+    G.CAMPS.karawane.units.forEach((u, i) => makeCreep(camp, u, start.x + (i ? rand(-40, 40) : 0), start.y + (i ? rand(-30, 30) : 0)));
+    G.msg(`Eine Händlerkarawane bricht ${where(start.x, start.y)} auf – wer den Wagen plündert, macht reiche Beute.`, '');
+  }
+  function endEvent(c, text) { // Ereignis endet ohne Sieger: Monster ziehen ab
+    c.done = true; c.left = 0; c.active = false;
+    for (const o of c.creeps) if (!o.dead) { o.lastOwner = undefined; killEnt(o, null, true); }
+    if (text) G.msg(text, '');
+  }
+  function updateEvents(dt) {
+    const E = S.events;
+    if (!E) return;
+    E.bossT -= dt; E.caravanT -= dt;
+    if (E.bossT <= 0) { E.bossT = rand(G.EVENTS.bossEvery[0], G.EVENTS.bossEvery[1]); spawnBoss(); }
+    if (E.caravanT <= 0) { E.caravanT = rand(G.EVENTS.caravanEvery[0], G.EVENTS.caravanEvery[1]); spawnCaravan(); }
+    for (const c of S.camps) {
+      if (!c.event || c.done) continue;
+      const lead = c.creeps.find((o) => !o.dead && (o.boss || o.wagon));
+      if (!lead) continue;
+      if (c.event === 'boss' && S.time > c.endT && !lead.target) endEvent(c, `${c.name} zieht weiter und verlässt das Land.`);
+    }
+  }
+  // Bewegung wandernder Ereignis-Monster; true = Zug ist erledigt
+  function roamCreep(e, dt) {
+    const c = e.camp;
+    if (c.done) return false;
+    if (e.wagon) { // der Wagen fährt seine Route und kämpft nie
+      const pt = c.route[c.ri];
+      c.x = e.x; c.y = e.y;
+      if (!pt) { endEvent(c, 'Die Händlerkarawane hat ihr Ziel unbehelligt erreicht.'); return true; }
+      e.target = null;
+      if (navMove(e, pt.x, pt.y, dt, 24)) c.ri++;
+      return true;
+    }
+    if (e.boss) { c.x = e.x; c.y = e.y; e.home = { x: e.x, y: e.y }; c.active = true; c.activeT = 99; return false; }
+    const w = c.creeps.find((o) => o.wagon && !o.dead); // Wachen bleiben beim Wagen
+    if (w) e.home = { x: w.x + Math.cos(e.id * 2.4) * 30, y: w.y + Math.sin(e.id * 2.4) * 30 };
+    return false;
+  }
+  function bossGoal(e) {
+    const c = e.camp;
+    let pt = c.route[c.ri];
+    if (!pt) { c.route = bossRoute(e); c.ri = 0; pt = c.route[0] || { x: S.w / 2, y: S.h / 2 }; }
+    if (d2(e.x, e.y, pt.x, pt.y) < 70 * 70) c.ri++;
+    return pt;
+  }
+
+  // -------------------------------------------------------------------------
+  // Schreine: allein 8 s besetzen erobert; der Bonus gilt für das ganze Team
+  const teamName = (team) => { const ps = S.players.filter((p) => p.team === team); return ps.length ? ps.map((p) => p.name).join(' & ') : 'Jemand'; };
+  function updateShrines(dt) {
+    for (const sh of S.shrines) {
+      const near = {};
+      G.query(sh.x, sh.y, G.SHRINE_RADIUS, (o) => { if (!o.dead && o.owner >= 0 && o.kind !== 'building') near[o.team] = (near[o.team] || 0) + 1; });
+      const teams = Object.keys(near);
+      if (teams.length === 1) {
+        const t = +teams[0];
+        if (t === sh.owner) { sh.cap = 0; sh.capTeam = null; continue; }
+        if (sh.capTeam !== t) { sh.capTeam = t; sh.cap = 0; }
+        sh.cap += dt;
+        if (sh.cap >= G.SHRINE_CAPTURE) captureShrine(sh, t);
+      } else if (!teams.length && sh.cap > 0) { sh.cap = Math.max(0, sh.cap - dt * 0.5); if (!sh.cap) sh.capTeam = null; }
+    }
+  }
+  function captureShrine(sh, team) {
+    const prev = sh.owner, def = G.SHRINES[sh.type], me = human();
+    sh.owner = team; sh.cap = 0; sh.capTeam = null;
+    fx({ type: 'pillar', x: sh.x, y: sh.y, r: 40, color: def.color, dur: 1.4, big: true });
+    G.sfx('fertig', sh.x, sh.y, 0.8);
+    if (team === me.team) G.msg(`${def.name} erobert: ${def.desc}!`, 'good');
+    else if (prev === me.team) G.msg(`${def.name} wurde dir entrissen!`, 'bad');
+    else G.msg(`${teamName(team)} erobert den ${def.name}.`, 'enemy');
+  }
+  function shrineModsByTeam() {
+    const out = {};
+    for (const sh of S.shrines || []) { const d = G.SHRINES[sh.type]; if (sh.owner >= 0 && d.mods) addBonus(out[sh.owner] || (out[sh.owner] = zeroMods()), d.mods); }
+    return out;
+  }
+  function chooseShrine(p, pool) { // nächster fremder Schrein auf der eigenen Kartenhälfte, wenn die Armee stark genug ist
+    const foes = S.players.filter((o) => o.alive && o.team !== p.team), st = strength(pool);
+    let best = null, bd = Infinity;
+    for (const sh of S.shrines) {
+      if (sh.owner === p.team) continue;
+      const own = dist(sh, p.base), foe = foes.length ? Math.min(...foes.map((o) => dist(sh, o.base))) : Infinity;
+      if (own > foe * 1.15) continue;
+      const near = [];
+      G.queryFoes(sh.x, sh.y, 450, p.team, (o) => { if (!o.dead && o.kind !== 'building' && o.kind !== 'creep') near.push(o); });
+      if (strength(near) * 1.3 > st) continue;
+      if (own < bd) { bd = own; best = sh; }
+    }
+    return best;
   }
 
   function freeOfStuff(x, y, baseM, campM, shopM) {
@@ -191,6 +340,7 @@
     for (const c of S.camps) if (d2(x, y, c.x, c.y) < campM ** 2) return false;
     for (const s of S.shops) if (d2(x, y, s.x, s.y) < shopM ** 2) return false;
     for (const s of S.sites) if (d2(x, y, s.x, s.y) < shopM ** 2) return false;
+    for (const s of S.shrines || []) if (d2(x, y, s.x, s.y) < shopM ** 2) return false;
     return true;
   }
   // -------------------------------------------------------------------------
@@ -779,7 +929,7 @@
       id: S.nextId++, kind: 'hero', name: d.name, def: d, owner: p.id, team: p.team,
       x: p.base.x + p.dir.x * 110, y: p.base.y + p.dir.y * 110, r: hb.r, level: 1, xp: 0, items: [],
       range: d.ranged ? hb.rangedRange : hb.range, cd: hb.cd, proj: d.ranged ? 'kugel' : null, splash: 0, heal: 0,
-      abilities: d.abilities.map((a) => ({ ...a, t: 4 })), manual: false, mode: 'armee', huntCamp: null, order: null, goal: null, hold: null,
+      abilities: d.abilities.map((a) => ({ ...a, t: 4 })), pending: [], manual: false, mode: 'armee', huntCamp: null, order: null, goal: null, hold: null,
       atkT: 0, retargetT: 0, target: null, buffs: [], m: zeroMods(), face: 0, castT: 0, retreat: false, shopping: null, hitT: 0, walkT: 0,
     };
     recalcHero(h);
@@ -793,7 +943,7 @@
     for (const id of h.items) { const x = G.ITEMS[id]; if (!x || x.consumable) continue; for (const k in it) if (x[k]) it[k] += x[k]; }
     const ratio = h.maxHp ? h.hp / h.maxHp : 1;
     const hb = p && p.bonus.hero ? p.bonus.hero : zeroMods();
-    h.maxHp = (d.stats.hp * (1 + 0.1 * (L - 1)) + it.hp) * (1 + hb.hp);
+    h.maxHp = (d.stats.hp * (1 + 0.1 * (L - 1)) + it.hp) * (1 + hb.hp) + (h.avatarHp || 0);
     h.dmg = d.stats.dmg * (1 + 0.09 * (L - 1)) + it.dmg;
     h.armor = d.stats.armor + it.armor + Math.floor(L / 3);
     h.regen = 2 + it.regen + L * 0.3;
@@ -814,10 +964,48 @@
       h.hp = Math.min(h.maxHp, h.hp + h.maxHp * 0.3);
       S.fx.push({ type: 'text', x: h.x, y: h.y - 30, text: 'HELD STUFE ' + h.level, color: '#ffd23a', t: 0, dur: 1.8, big: true });
       fx({ type: 'pillar', x: h.x, y: h.y, r: 34, color: '#ffd23a', dur: 1.4, big: true });
-      if (p.human) { G.msg(`${h.name} erreicht Stufe ${h.level}! +1 Talentpunkt.`, 'gold'); G.sfx('level', h.x, h.y, 1, true); }
+      h.pending = h.pending || [];
+      if (G.HERO_MASTERY_LVLS.includes(h.level)) h.pending.push('meister');
+      if (h.level === G.HERO_ULT_LVL && G.HERO_ULTS[h.def.id] && !h.abilities.some((a) => a.ult)) h.pending.push('ult');
+      if (h.level === G.HERO_MAX) { const u = h.abilities.find((a) => a.ult); if (u) { u.rank = (u.rank || 0) + 1; if (p.human) G.msg(`${u.name} ist gemeistert: stärker und schneller wieder bereit.`, 'gold'); } }
+      if (p.human) {
+        const what = h.level === G.HERO_ULT_LVL ? ' Wähle jetzt die ultimative Fähigkeit!' : G.HERO_MASTERY_LVLS.includes(h.level) ? ' Wähle eine Fähigkeit zum Meistern!' : '';
+        G.msg(`${h.name} erreicht Stufe ${h.level}! +1 Talentpunkt.${p.auto.talents ? '' : what}`, 'gold'); G.sfx('level', h.x, h.y, 1, true);
+      }
     }
-    if (p.auto.talents) autoTalents(p);
+    if (p.auto.talents) { autoTalents(p); autoHeroChoices(p); }
   }
+  // Wahl der ultimativen Fähigkeit (Stufe 6) und Meisterung einer Fähigkeit (Stufe 3 und 8)
+  G.heroChooseUlt = function (p, i) {
+    const h = p.hero, k = h && h.pending ? h.pending.indexOf('ult') : -1, opt = h && (G.HERO_ULTS[h.def.id] || [])[i];
+    if (k < 0 || !opt) return false;
+    h.pending.splice(k, 1);
+    h.abilities.push({ ...opt, ult: true, t: 0 });
+    fx({ type: 'pillar', x: h.x, y: h.y, r: 46, color: '#ff9a3a', dur: 1.6, big: true });
+    if (p.human) { G.msg(`Ultimative Fähigkeit: ${opt.name} (Taste R)`, 'gold'); G.sfx('level', h.x, h.y, 1, true); }
+    return true;
+  };
+  G.heroMaster = function (p, idx) {
+    const h = p.hero, k = h && h.pending ? h.pending.indexOf('meister') : -1, ab = h && h.abilities[idx];
+    if (k < 0 || !ab || ab.ult || (ab.rank || 0) >= 2) return false;
+    h.pending.splice(k, 1);
+    ab.rank = (ab.rank || 0) + 1;
+    fx({ type: 'pillar', x: h.x, y: h.y, r: 36, color: '#7ac8ff', dur: 1.2 });
+    if (p.human) G.msg(`${ab.name} gemeistert (Rang ${ab.rank}): mehr Wirkung, kürzere Abklingzeit.`, 'gold');
+    return true;
+  };
+  function autoHeroChoices(p) {
+    const h = p.hero;
+    for (let guard = 4; h && h.pending && h.pending.length && guard--;) {
+      if (h.pending[0] === 'ult') G.heroChooseUlt(p, Math.random() < 0.5 ? 0 : 1);
+      else {
+        const cand = h.abilities.filter((a) => !a.ult && (a.rank || 0) < 2);
+        if (!cand.length) { h.pending.shift(); continue; }
+        G.heroMaster(p, h.abilities.indexOf(cand[Math.floor(Math.random() * cand.length)]));
+      }
+    }
+  }
+  G.autoHeroChoices = autoHeroChoices;
   G.buyCheck = function (p, id) {
     const h = p.hero, it = G.ITEMS[id];
     if (!h || h.dead) return 'Held ist tot';
@@ -881,9 +1069,63 @@
 
   function castAbility(h, ab, tx, ty, target) {
     const p = S.players[h.owner];
-    const sc = 1 + 0.1 * (h.level - 1);
+    const rk = ab.rank || 0, rkMul = 1 + 0.35 * rk; // Meisterung
+    const sc = (1 + 0.1 * (h.level - 1)) * rkMul;
     const CAST = 470;
+    const scaled = (mods) => { const o = {}; for (const k in mods) o[k] = mods[k] * rkMul; return o; };
     switch (ab.type) {
+      case 'meteor': { // verzögerte Einschläge am Zielort
+        if (d2(tx, ty, h.x, h.y) > (CAST + 60) ** 2) return false;
+        const spread = ab.shells > 1 ? Math.min(110, ab.radius * 1.2) : 0;
+        for (let k = 0; k < ab.shells; k++) {
+          const x = tx + rand(-spread, spread), y = ty + rand(-spread, spread), delay = ab.meteor ? 1.0 : 0.45 + k * 0.15;
+          S.fx.push({ type: 'mark', x, y, r: ab.radius, t: 0, dur: delay, color: ab.color });
+          if (ab.meteor) S.fx.push({ type: 'meteor', x, y, t: 0, dur: delay });
+          S.timers.push({ t: delay, kind: 'heroStrike', pid: p.id, ab: h.abilities.indexOf(ab), x, y, sc });
+        }
+        G.sfx('faehigkeit', tx, ty);
+        break;
+      }
+      case 'avatar': { // Verwandlung: mehr LP und Wucht für kurze Zeit
+        if (h.avatarT > 0) return false;
+        const dur = ab.duration * (1 + 0.15 * rk), mods = scaled(ab.mods), bonus = (mods.hp || 0) * h.maxHp;
+        delete mods.hp;
+        h.avatarHp = bonus; h.avatarT = dur; h.avatarCol = ab.color || '#ffe066';
+        h.maxHp += bonus; h.hp += bonus;
+        h.buffs.push({ t: dur, mods });
+        fx({ type: 'pillar', x: h.x, y: h.y, r: 44, color: h.avatarCol, dur: 1.2, big: true });
+        G.shake(h.x, h.y, 4);
+        G.sfx('beschwoerung', h.x, h.y);
+        break;
+      }
+      case 'warcry': { // die ganze Armee des Spielers
+        p.buffs.push({ t: ab.duration * (1 + 0.15 * rk), mods: scaled(ab.mods), name: ab.name });
+        for (const o of alliesNear(h.team, h.x, h.y, 700)) if (o.owner === p.id && Math.random() < 0.5) S.fx.push({ type: 'spark', x: o.x, y: o.y, t: 0, dur: 0.8, color: '#ffb040' });
+        fx({ type: 'rune', x: h.x, y: h.y, r: 150, color: '#ffb040', dur: 1.3 });
+        G.sfx('horn', h.x, h.y, 0.8);
+        break;
+      }
+      case 'massheal': {
+        for (const o of alliesNear(h.team, h.x, h.y, ab.radius)) {
+          o.hp = Math.min(o.maxHp, o.hp + o.maxHp * ab.pct * rkMul);
+          if (ab.armor || ab.lifesteal) o.buffs.push({ t: ab.duration || 10, mods: { armor: (ab.armor || 0) * rkMul, lifesteal: (ab.lifesteal || 0) * rkMul } });
+          if (Math.random() < 0.6) S.fx.push({ type: 'spark', x: o.x, y: o.y, t: 0, dur: 0.8, color: '#9aff9a' });
+        }
+        fx({ type: 'heal', x: h.x, y: h.y, r: Math.min(ab.radius, 260), color: '#8aff8a', dur: 1.4, seed: Math.random() });
+        fx({ type: 'pillar', x: h.x, y: h.y, r: 40, color: '#c8ffc8', dur: 1.2, big: true });
+        G.sfx('heilung', h.x, h.y);
+        break;
+      }
+      case 'drainnova': { // Lebenskraft aller Gegner im Umkreis an den Helden
+        const hits = enemiesNear(h, h.x, h.y, ab.radius, false);
+        G.query(h.x, h.y, ab.radius, (o) => { if (o.kind === 'creep' && !hits.includes(o)) hits.push(o); });
+        let total = 0;
+        for (const o of hits) { total += dealDamage(h, o, ab.dmg * sc); S.fx.push({ type: 'spark', x: o.x, y: o.y, t: 0, dur: 0.6, color: '#c060ff' }); }
+        h.hp = Math.min(h.maxHp, h.hp + total * 0.5);
+        S.fx.push({ type: 'blast', x: h.x, y: h.y, r: ab.radius, color: '#a040ff', t: 0, dur: 0.8 });
+        G.sfx('zauber', h.x, h.y);
+        break;
+      }
       case 'nuke': case 'drain': {
         if (!target || target.dead || dist(h, target) > CAST + target.r) return false;
         S.proj.push({ x: h.x, y: h.y, t: target, src: h, dmg: ab.dmg * sc, stun: ab.stun || 0, drain: ab.type === 'drain', kind: 'zauber', speed: 560, team: h.team, owner: h.owner, color: p.rd.palette.trim, tx: target.x, ty: target.y });
@@ -908,7 +1150,7 @@
         break;
       }
       case 'buff': {
-        const mods = { [ab.stat]: ab.value, ...(ab.extra || {}) };
+        const mods = { [ab.stat]: ab.value * rkMul, ...(ab.extra || {}) };
         for (const o of alliesNear(h.team, h.x, h.y, ab.radius)) o.buffs.push({ t: ab.duration, mods });
         fx({ type: 'rune', x: h.x, y: h.y, r: ab.radius * 0.55, color: '#ffe066', dur: 1.2 });
         G.sfx('faehigkeit', h.x, h.y);
@@ -916,7 +1158,7 @@
       }
       case 'summon': {
         const far = d2(h.x, h.y, p.base.x, p.base.y) > (G.BASE_RADIUS + 200) ** 2;
-        for (let i = 0; i < ab.count; i++) {
+        for (let i = 0; i < ab.count + rk; i++) {
           const a = Math.random() * Math.PI * 2;
           makeSummon(p, ab.unit, h.x + Math.cos(a) * 40, h.y + Math.sin(a) * 40, ab.duration, sc, null, far);
         }
@@ -926,7 +1168,7 @@
       }
       default: return false;
     }
-    ab.t = ab.cd * (1 - h.cdr);
+    ab.t = ab.cd * (1 - h.cdr) * (1 - 0.15 * rk);
     S.fx.push({ type: 'text', x: h.x, y: h.y - 34, text: ab.name, color: '#fff2b0', t: 0, dur: 1.2 });
     return true;
   }
@@ -940,12 +1182,26 @@
       if (ab.type === 'nuke' || ab.type === 'drain') {
         if (!foes.length) continue;
         let t = h.target && !h.target.dead && h.target.kind !== 'building' && dist(h, h.target) < 460 ? h.target : null;
-        if (!t) t = foes.reduce((a, b) => (b.kind === 'hero' || b.hp < a.hp ? b : a));
+        if (ab.ult) t = foes.reduce((a, b) => (b.kind === 'hero' || b.maxHp > a.maxHp ? b : a)); // Ultimative: auf das dickste Ziel
+        else if (!t) t = foes.reduce((a, b) => (b.kind === 'hero' || b.hp < a.hp ? b : a));
         castAbility(h, ab, t.x, t.y, t);
+      } else if (ab.type === 'meteor') {
+        const c = bestCluster(foes, ab.radius + 30);
+        if (c && (c.n >= 4 || (c.n >= 1 && foes.some((o) => o.kind === 'hero' || o.maxHp > 1500)))) castAbility(h, ab, c.x, c.y);
+      } else if (ab.type === 'avatar') {
+        if (foes.length >= 3 || foes.some((o) => o.kind === 'hero' && dist(o, h) < 320)) castAbility(h, ab);
+      } else if (ab.type === 'warcry') {
+        if (foes.length >= 4 && alliesNear(h.team, h.x, h.y, 500).length >= 6) castAbility(h, ab);
+      } else if (ab.type === 'massheal') {
+        let miss = 0;
+        for (const o of alliesNear(h.team, h.x, h.y, ab.radius)) miss += o.maxHp - o.hp;
+        if (miss > 1500) castAbility(h, ab);
+      } else if (ab.type === 'drainnova') {
+        if (foes.filter((o) => dist(o, h) < ab.radius).length >= 3) castAbility(h, ab);
       } else if (ab.type === 'aoe' || ab.type === 'stun') {
         if (ab.self) {
           const n = foes.filter((o) => dist(o, h) < ab.radius).length;
-          if (n >= 2 || (n >= 1 && foes.some((o) => o.maxHp > 1000 && dist(o, h) < ab.radius))) castAbility(h, ab, h.x, h.y);
+          if (n >= (ab.ult ? 4 : 2) || (n >= 1 && foes.some((o) => o.maxHp > 1000 && dist(o, h) < ab.radius))) castAbility(h, ab, h.x, h.y);
         } else {
           const c = bestCluster(foes, ab.radius);
           if (c && (c.n >= 3 || (c.n >= 1 && foes.some((o) => o.maxHp > 1000)))) castAbility(h, ab, c.x, c.y);
@@ -1203,6 +1459,7 @@
     const killer = src && src.owner >= 0 ? src.owner : (t.lastOwner !== undefined ? t.lastOwner : -1);
     if (t.kind === 'hero') {
       const p = S.players[t.owner];
+      if (t.avatarT > 0) endAvatar(t);
       p.heroRespawn = 12 + 3 * t.level;
       t.order = null; t.target = null; t.shopping = null; t.retreat = false;
       if (p.human) G.msg(`${t.name} ist gefallen! Wiederbelebung in ${Math.round(p.heroRespawn)} s.`, 'bad');
@@ -1231,10 +1488,17 @@
 
   function creepKilled(t, killer) {
     const camp = t.camp;
+    if (camp.done) return;
+    if (camp.event === 'karawane' && !t.wagon) return; // bei der Karawane zählt nur der Wagen
     camp.left--;
     if (camp.left > 0) return;
     camp.respawnT = G.CAMP_RESPAWN;
     camp.active = false;
+    if (camp.event) { // Ereignis entschieden: übrige Wachen fliehen
+      camp.done = true;
+      for (const o of camp.creeps) if (!o.dead) { o.lastOwner = undefined; killEnt(o, null, true); }
+      if (killer >= 0 && !S.players[killer].human) G.msg(`${S.players[killer].name} ${camp.event === 'boss' ? 'hat ' + camp.name + ' erschlagen' : 'hat die Händlerkarawane geplündert'}.`, 'enemy');
+    }
     if (killer < 0) return;
     const p = S.players[killer], def = camp.def;
     if (camp.type === 'drache' && S.dragonSlainBy === null) S.dragonSlainBy = p.team;
@@ -1252,7 +1516,9 @@
       for (let i = 0; i < 2; i++) makeSummon(p, { name: 'Söldner-Troll', hp: 650, dmg: 30, range: 28, cd: 1.3, speed: 60, armor: 3, r: 14, merc: true }, camp.x + i * 30, camp.y, undefined, 1, null, false);
     } else if (def.extra === 'segen') p.buffs.push({ t: 90, mods: { armor: 3 }, name: 'Steinhaut' });
     else if (def.extra === 'drachenblut') p.buffs.push({ t: 180, mods: { dmg: 0.15 }, name: 'Drachenblut' });
-    if (p.human) { G.msg(`${def.name} gesäubert! +${def.gold} Gold, +${def.wood} Holz.${lootTxt}${def.extraDesc ? ' ' + def.extraDesc + '!' : ''}`, 'gold'); G.sfx('kauf', camp.x, camp.y); }
+    else if (def.extra === 'siegesbanner') p.buffs.push({ t: 180, mods: { dmg: 0.15, armor: 3 }, name: 'Siegesbanner' });
+    const done = camp.event === 'boss' ? `${camp.name} erschlagen!` : camp.event === 'karawane' ? 'Händlerkarawane geplündert!' : `${def.name} gesäubert!`;
+    if (p.human) { G.msg(`${done} +${def.gold} Gold, +${def.wood} Holz.${lootTxt}${def.extraDesc ? ' ' + def.extraDesc + '!' : ''}`, 'gold'); G.sfx('kauf', camp.x, camp.y); }
   }
 
   function eliminate(p) {
@@ -1263,6 +1529,10 @@
     G.msg(`${p.human ? 'Dein Volk' : p.name} wurde vernichtet!`, p.human ? 'bad' : (S.players[0].team === p.team ? 'bad' : 'good'));
   }
 
+  function endAvatar(h) {
+    h.maxHp -= h.avatarHp || 0; h.hp = Math.min(h.hp, h.maxHp);
+    h.avatarHp = 0; h.avatarT = 0;
+  }
   function validTarget(e, t) {
     if (!t || t.dead) return false;
     if (e.kind === 'creep') return dist(t, e.home) < 420;
@@ -1464,7 +1734,7 @@
   }
 
   function unitGoal(e) {
-    if (e.kind === 'creep') return e.home;
+    if (e.kind === 'creep') return e.boss ? bossGoal(e) : e.home;
     const p = S.players[e.owner];
     if (e.kind === 'hero') return e.goal || p.armyPoint;
     const ap = (e.committed ? p.attackPoint : p.armyPoint) || p.rally;
@@ -1484,6 +1754,7 @@
   function updateMobile(e, dt) {
     if (e.life !== undefined && e.life !== null) { e.life -= dt; if (e.life <= 0) { killEnt(e, null, true); return; } }
     if (e.hitT > 0) e.hitT -= dt;
+    if (e.avatarT > 0) { e.avatarT -= dt; if (e.avatarT <= 0) endAvatar(e); } // Verwandlung endet
     if (e.swing > 0) e.swing -= dt;
     const regen = (e.regen || 0) + e.m.regen;
     if (regen > 0 && e.hp < e.maxHp) e.hp = Math.min(e.maxHp, e.hp + regen * dt);
@@ -1507,7 +1778,14 @@
       }
     }
 
+    if (e.scout) { // Späher: läuft seine Route ab und lässt sich auf keinen Kampf ein
+      const pt = e.scout.pts[e.scout.i];
+      if (!pt) e.scout = null;
+      else { e.target = null; if (navMove(e, pt.x, pt.y, dt, 30)) e.scout.i++; return; }
+    }
+
     if (e.kind === 'creep') {
+      if (e.roam && roamCreep(e, dt)) return;
       if (e.returning) {
         e.hp = Math.min(e.maxHp, e.hp + e.maxHp * 0.15 * dt);
         if (navMove(e, e.home.x, e.home.y, dt, 6)) e.returning = false;
@@ -1659,7 +1937,7 @@
   // -------------------------------------------------------------------------
   // Modifikatoren pro Tick
   function computeMods() {
-    const auraSrc = [];
+    const auraSrc = [], shrine = shrineModsByTeam();
     for (const e of S.ents) {
       if (e.dead || e.kind === 'building') continue;
       const m = e.m;
@@ -1670,6 +1948,7 @@
         addBonus(m, p.bonus[key]);
         m.hp = 0;
         for (const b of p.buffs) addBonus(m, b.mods);
+        if (shrine[e.team]) addBonus(m, shrine[e.team]);
         if (e.kind === 'hero') m.atkspd += e.itemAtkspd || 0;
       }
       for (const b of e.buffs) addBonus(m, b.mods);
@@ -1718,6 +1997,7 @@
     const gp = ((p.rd.passive.eco && p.rd.passive.eco.goldPct) || 0) + (p.teco.goldPct || 0);
     p.incomeG = (th * 1.5 + gw * 1.1 + mines * 1.8 + posts * 3) * (1 + gp) * p.ecoMul * G.PACE;
     p.incomeW = (ww * 1.0 + saws * 1.5 + posts * 1) * (1 + (p.teco.woodPct || 0)) * p.ecoMul * G.PACE;
+    for (const sh of S.shrines || []) if (sh.owner === p.team && G.SHRINES[sh.type].gold) p.incomeG += G.SHRINES[sh.type].gold;
     p.gold += p.incomeG * dt;
     p.wood += p.incomeW * dt;
 
@@ -1948,7 +2228,10 @@
     const ally = S.players.find((o) => o !== p && o.alive && o.team === p.team && o.targetPlayer && o.targetPlayer.alive);
     if (ally && !p.human) return ally.targetPlayer;
     if (!p.human && p.diff.focus) {
-      return foes.reduce((a, b) => (b.th.hp + b.armySupply * 40 + dist(b.base, p.base) * 0.3 < a.th.hp + a.armySupply * 40 + dist(a.base, p.base) * 0.3 ? b : a));
+      // im Nebel nur, was die Späher berichtet haben: zuletzt gesehene Armeestärke statt Haupthaus-LP
+      const fog = S.fog.on, I = fog ? intelOf(p.team) : null;
+      const score = (o) => (fog ? ((I.army[o.id] && I.army[o.id].s) || 0) * 40 : o.th.hp + o.armySupply * 40) + dist(o.base, p.base) * 0.3;
+      return foes.reduce((a, b) => (score(b) < score(a) ? b : a));
     }
     return foes.reduce((a, b) => (dist(b.base, p.base) < dist(a.base, p.base) ? b : a));
   }
@@ -1957,9 +2240,47 @@
     p.targetPlayer = chooseTarget(p);
     const tp = p.targetPlayer;
     if (!tp) return null;
+    const I = !p.human && S.fog.on ? intelOf(p.team) : null; // KI im Nebel: nur gesehene Gebäude, sonst die bekannte Startposition
     let best = null, bd = Infinity;
-    for (const b of tp.blds) { if (b.dead) continue; const dd = d2(b.x, b.y, from.x, from.y); if (dd < bd) { bd = dd; best = b; } }
+    for (const b of tp.blds) { if (b.dead || (I && !I.blds[b.id])) continue; const dd = d2(b.x, b.y, from.x, from.y); if (dd < bd) { bd = dd; best = b; } }
     return best ? { x: best.x, y: best.y } : { x: tp.base.x, y: tp.base.y };
+  }
+
+  // -------------------------------------------------------------------------
+  // Aufklärung: Mit Nebel des Krieges kennt die KI nur, was ihr Team gesehen hat (gegnerische Gebäude,
+  // zuletzt gesehene Armeestärke), und schickt dafür regelmäßig Späher los. Ohne Nebel sieht sie – wie du – alles.
+  const INTEL_R = 330;
+  function intelOf(team) { const I = S.intel || (S.intel = {}); return I[team] || (I[team] = { blds: {}, army: {} }); }
+  function teamSees(team, x, y) { let seen = false; G.queryTeam(x, y, INTEL_R, team, () => { seen = true; }); return seen; }
+  function updateIntel() {
+    const me = human(), teams = [...new Set(S.players.filter((p) => p.alive && !p.human).map((p) => p.team))];
+    const seen = {};
+    for (const e of S.ents) {
+      if (e.dead || e.owner < 0) continue;
+      if (e.scout && !e.scoutSeen && e.team !== me.team && G.canSee(e)) { e.scoutSeen = true; G.msg(`Ein Späher der ${S.players[e.owner].rd.name} erkundet die Gegend!`, 'enemy'); }
+      for (const t of teams) {
+        if (t === e.team) continue;
+        if (e.kind === 'building') { const I = intelOf(t); if (!I.blds[e.id] && teamSees(t, e.x, e.y)) I.blds[e.id] = 1; }
+        else if (e.kind === 'unit' && teamSees(t, e.x, e.y)) { const k = t + ':' + e.owner; seen[k] = (seen[k] || 0) + (e.supply || 1); }
+      }
+    }
+    for (const k in seen) {
+      const [t, o] = k.split(':'), I = intelOf(+t), old = I.army[o];
+      I.army[o] = { s: Math.max(seen[k], old && S.time - old.t < 60 ? old.s : 0), t: S.time };
+    }
+  }
+  function sendScout(p) {
+    const foes = S.players.filter((o) => o.alive && o.team !== p.team).sort((a, b) => dist(a.base, p.base) - dist(b.base, p.base));
+    const cand = S.ents.filter((e) => !e.dead && e.owner === p.id && e.kind === 'unit' && !e.committed && !e.scout && !e.summoned && e.speed > 0);
+    if (!foes.length || !cand.length) return;
+    const u = cand.reduce((a, b) => (b.speed > a.speed ? b : a)); // der Schnellste
+    const pts = [], R = G.BASE_RADIUS + 230;
+    for (const o of foes) { // vor der gegnerischen Mauer entlang, dann zurück
+      const a = Math.atan2(p.base.y - o.base.y, p.base.x - o.base.x);
+      for (const da of [-0.7, 0.7]) pts.push({ x: clamp(o.base.x + Math.cos(a + da) * R, 60, S.w - 60), y: clamp(o.base.y + Math.sin(a + da) * R, 60, S.h - 60) });
+    }
+    pts.push({ x: p.rally.x, y: p.rally.y });
+    u.scout = { pts, i: 0 };
   }
   function chooseCamp(p, units, ignorePower) {
     const mine = units.slice();
@@ -2032,6 +2353,10 @@
       } else { p.armyPoint = { x: p.campTarget.x, y: p.campTarget.y }; return; }
     }
     p.campTarget = null;
+    if (S.shrines.length && p.shrinesAllowed !== false && style !== 'verteidigen' && !S.endphase && pool.length >= 4) {
+      const sh = chooseShrine(p, pool);
+      if (sh) { p.armyState = 'schrein'; p.armyPoint = { x: sh.x, y: sh.y }; return; }
+    }
     if (style === 'sammeln' && p.campsAllowed && !S.endphase && pool.length >= 3) {
       const c = chooseCamp(p, pool);
       if (c) { p.armyState = 'camps'; p.campTarget = c; p.campStart = poolSup; p.armyPoint = { x: c.x, y: c.y }; return; }
@@ -2115,6 +2440,22 @@
     else S.fx.push({ type: 'text', x: at.x, y: at.y - 40, text: ab.name, color: '#ff8080', t: 0, dur: 1.6, big: true });
     return true;
   };
+  // Einschlag einer ultimativen Heldenfähigkeit (Meteor, Runensturm …)
+  function heroStrike(p, tm) {
+    const h = p.hero, ab = h && h.abilities[tm.ab];
+    if (!p.alive || !ab) return;
+    const x = tm.x, y = tm.y, src = h.dead ? p.th : h, big = !!ab.meteor || ab.radius > 150;
+    S.fx.push({ type: big ? 'boom' : 'blast', x, y, r: ab.radius, color: ab.color, t: 0, dur: 0.6 });
+    fx({ type: 'explo', x, y, r: ab.radius, color: ab.color, dur: 0.7, seed: Math.random(), big });
+    G.sfx('explosion', x, y, ab.shells > 1 ? 0.55 : 1);
+    G.shake(x, y, big ? 9 : 3);
+    G.query(x, y, ab.radius, (o) => {
+      if (o.dead || o.team === p.team) return;
+      dealDamage(src, o, ab.dmg * tm.sc);
+      if (ab.stun) o.stun = Math.max(o.stun || 0, ab.stun);
+      if (ab.debuff && o.kind !== 'building') o.buffs.push({ t: ab.debuffDur || 10, mods: ab.debuff });
+    });
+  }
   // Einschlag einer verzögerten Volksfähigkeit (Bombardement, Meteor …)
   function strikeHit(p, ab, x, y) {
     if (!p.alive || !ab) return;
@@ -2252,6 +2593,10 @@
     if (p.armyT <= 0) { p.armyT = 1; armyThink(p); }
     p.abilT -= dt;
     if (p.abilT <= 0) { p.abilT = 0.7; if (p.auto.ability) abilityThink(p); }
+    if (!p.human && S.fog.on) { // im Nebel regelmäßig einen Späher losschicken
+      p.scoutT = (p.scoutT === undefined ? 75 : p.scoutT) - dt;
+      if (p.scoutT <= 0) { p.scoutT = 240; sendScout(p); }
+    }
   }
 
   function step(dt) {
@@ -2262,6 +2607,7 @@
     if (S.navDirty) navRebuild();
     S.bonusT -= dt;
     if (S.bonusT <= 0) { S.bonusT = 1; updateBonusCaches(); }
+    if (S.fog.on) { S.intelT = (S.intelT || 0) - dt; if (S.intelT <= 0) { S.intelT = 1; updateIntel(); } }
     for (const p of S.players) updatePlayer(p, dt);
     computeMods();
     for (const e of S.ents) {
@@ -2276,12 +2622,19 @@
     updateGore(dt);
     for (const tm of S.timers) {
       tm.t -= dt;
-      if (tm.t <= 0 && !tm.done) { tm.done = true; if (tm.kind === 'strike') { const p = S.players[tm.pid]; strikeHit(p, p.rd.abilities[tm.ab], tm.x, tm.y); } }
+      if (tm.t <= 0 && !tm.done) {
+        tm.done = true;
+        const p = S.players[tm.pid];
+        if (tm.kind === 'strike') strikeHit(p, p.rd.abilities[tm.ab], tm.x, tm.y);
+        else if (tm.kind === 'heroStrike') heroStrike(p, tm);
+      }
     }
     S.timers = S.timers.filter((t) => !t.done);
+    if (S.shrines && S.shrines.length) updateShrines(dt);
+    updateEvents(dt);
     for (const c of S.camps) {
       if (c.activeT > 0) { c.activeT -= dt; if (c.activeT <= 0) c.active = false; }
-      if (c.left <= 0) {
+      if (c.left <= 0 && !c.event) {
         c.respawnT -= dt;
         if (c.respawnT <= 0) {
           let blocked = false;
@@ -2462,10 +2815,12 @@
     const DS = { ...D.S };
     for (const k of PACKED) if (DS[k] && DS[k].rows) DS[k] = unpack(DS[k]);
     const s = fill({}, DS);
-    Object.assign(s, { players, camps, sites, shops, ents: D.ents.map((id) => E.get(id)).filter(Boolean), fx: [], parts: [], grid: new Map(), layout: G.LAYOUTS[s.mode], acc: 0, paused: false, navDirty: true, terrain: s.terrain || [] });
+    Object.assign(s, { players, camps, sites, shops, ents: D.ents.map((id) => E.get(id)).filter(Boolean), fx: [], parts: [], grid: new Map(), layout: G.LAYOUTS[s.mode], acc: 0, paused: false, navDirty: true, terrain: s.terrain || [], shrines: s.shrines || [] });
     for (const p of players) {
       if (!G.RACES[p.race]) throw new Error('Unbekanntes Volk');
       p.rd = G.RACES[p.race]; p.diff = G.DIFFICULTY[s.cfg.difficulty] || G.DIFFICULTY.mittel; p.bonus = {}; p.teco = {};
+      const h = p.hero; // ältere Spielstände: Helden ab Stufe 6 dürfen ihre Ultimative nachträglich wählen
+      if (h) { h.pending = h.pending || []; if (h.level >= G.HERO_ULT_LVL && G.HERO_ULTS[h.def.id] && !h.abilities.some((a) => a.ult) && !h.pending.includes('ult')) h.pending.push('ult'); }
     }
     for (const e of E.values()) { e.m = zeroMods(); if (e.kind !== 'building') { e.px = e.x; e.py = e.y; } }
     for (const pr of s.proj) { pr.px = pr.x; pr.py = pr.y; }

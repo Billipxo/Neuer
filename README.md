@@ -11,28 +11,39 @@ Auch am **Handy und Tablet** spielbar (Touch-Steuerung: Wischen = Karte bewegen,
 Tippen = auswählen/bauen, Held antippen und dann Ziel antippen = Held steuern, ☰ = Menü).
 Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http://localhost:8000` öffnen.
 
-## Was schon drin ist (Prototyp v1.2)
+## Was schon drin ist (Prototyp v1.3)
 
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
-  Gegner-Völker werden jede Runde ausgelost. Spieldauer 20/30/45 Minuten oder unbegrenzt, Nebel des Krieges oder offene Karte.
+  Gegner-Völker werden jede Runde ausgelost. Spieldauer 20/30/45 Minuten oder unbegrenzt, Nebel des Krieges oder offene Karte,
+  Schreine & Ereignisse an oder aus.
 - **Spielstände:** 💾 im Spiel speichert auf drei Plätze und lädt jeden Stand (das Spiel pausiert dabei). Zusätzlich
   sichert das Spiel automatisch jede Spielminute, beim Beenden und beim Wechsel in eine andere App; „Weiterspielen“ im
   Hauptmenü setzt die letzte Partie fort, der Tab „Spielstände“ zeigt alle Plätze. Gespeichert wird der komplette
   Zustand (Armeen, Gebäude, Held, Talente, Kampagnen-Mission, erkundete Karte, Kamera), etwa 50–200 KB je Stand im Browser.
+  **Übertragen zwischen Geräten:** Im Tab „Spielstände“ lässt sich jeder Stand als Datei (⬇) oder als gepackter Text-Code (📋,
+  rund 25 KB) exportieren und auf einem anderen Gerät importieren – z. B. am Handy weiterspielen, was am PC begann.
 - **6 Volkskampagnen** mit eigener Geschichte (je 5 Missionen: vernichten, überleben, Drachen erschlagen,
   Bündnis-Schlacht, Finale auf „Schwer“), z. B. „Die Krone von Valenmark“ (Menschen) oder „Blut und Steppe“ (Orks).
 - **Einführung** im ersten Spiel (abschaltbar) und **Anleitung** im Hauptmenü.
 - **Volks-XP & Belohnungen:** Jede Partie gibt deinem Volk Erfahrung. Pro Volksstufe gibt es Skins (Veteran, Elite,
   Legendär), Banner (Schwalbenwimpel, Kriegsstandarte), Titel (Rekrut bis Legende) und ab Stufe 3 einen vierten Helden.
-  Fortschritt wird im Browser gespeichert.
+  Fortschritt wird im Browser gespeichert. Jede Partie zählt nur einmal: Wird ein Spielstand erneut zu Ende gespielt,
+  gibt es höchstens die Verbesserung als Erfahrung.
 
 **Völker**
 - 6 Völker + Zufall mit Passiv, **3 Volksfähigkeiten** (freigeschaltet über Haupthaus-Stufe 1/3/5), eigener **Heimatkarte**,
   **eigenen Gebäudenamen** (z. B. Orks: Großhalle, Kriegslager) und **eigener Bauweise** (Elfen-Blätterkronen, Ork-Fellzelte mit Hörnern,
   Zwergen-Steindächer mit Esse, gotische Untoten-Türme, Dämonen-Obsidianspitzen).
 - **Talentbaum** (Krieg, Bollwerk, Wohlstand – je 4 Stufen), 1 Punkt pro Heldenstufe, automatisch oder von Hand.
-- 7 Einheitenrollen je Volk, 3 Helden je Volk mit Commander-Boni und 2 Fähigkeiten, Helden bis Stufe 10.
+- 7 Einheitenrollen je Volk, 3 Helden je Volk (+1 freischaltbar) mit Commander-Boni und 2 Fähigkeiten, Helden bis Stufe 10.
+- **Helden-Ultimates:** Auf Heldenstufe 6 wählt man eine von zwei ultimativen Fähigkeiten (Taste R) – je Held eigene, z. B.
+  Meteorschauer, Verwandlung (der Held wächst und leuchtet), Schlachtruf für die ganze Armee, große Heilung, Lebensraub im
+  Umkreis oder ein beschworener Titan. Auf Stufe 3 und 8 wird eine Fähigkeit gemeistert (+35% Wirkung, −15% Abklingzeit),
+  auf Stufe 10 die ultimative. Auf Wunsch wählt der Autopilot („Talente und Heldenwahl automatisch“).
+- **Balance:** Völker und Helden wurden mit über 600 simulierten KI-gegen-KI-Partien abgestimmt. Helden ohne gezielten
+  Flächenzauber (Einzelziel-, Nahkampf- und Heilhelden) wurden deutlich gestärkt, gezielte Flächenzauber etwas gesenkt;
+  Nahkampfhelden sind zäher und geben der ganzen Armee Boni, Zwergen-Bombardements sind abgeschwächt.
 
 **Basis & Wirtschaft**
 - 12 Gebäudetypen bis Stufe 5, Maximalstufe in knapp 30 Minuten. Jede Stufe ist sichtbar: Fenster (2), Seitenturm (3),
@@ -56,10 +67,17 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - **Einfache Produktion:** Armee-Vorlagen (Ausgewogen, Schildwall, Sturmangriff, Fernkampf, Arkane Macht),
   Rekrutieren per Einheitenkarte ohne Gebäudeauswahl, Übersicht der laufenden Ausbildung; Regler unter „Feineinstellung“.
 - Neutrale Monster mit Beute und Extra-Belohnungen, Händler, Endphase mit Punktewertung.
+- **Schreine:** 2–4 eroberbare Schreine je Karte (Krieg +10% Schaden, Leben +3 LP/s, Wohlstand +4 Gold/s, Eile +10% Tempo).
+  Wer 8 Sekunden allein am Schrein steht, erobert ihn; der Bonus gilt für das ganze Team. Bereite Truppen und die KI nehmen
+  Schreine auf ihrer Kartenhälfte ein (abschaltbar im Armee-Tab).
+- **Ereignisse:** Ein wandernder Boss (Ogerkönig, Uralter Koloss oder Lindwurm) zieht ab etwa Minute 9 über die Karte und
+  greift an, was ihm begegnet – wer ihn erschlägt, erhält Gold, Holz, einen seltenen Gegenstand und das Siegesbanner.
+  Händlerkarawanen (Wagen mit Wachen) fahren alle paar Minuten von Händler zu Händler; wer den Wagen plündert, macht Beute.
 - **Nebel des Krieges:** Du siehst nur, was deine Einheiten, dein Held, deine Gebäude und Verbündete sehen (Held und
   Haupthaus weiter, Fernkämpfer weiter als Nahkämpfer). Erkundetes Gebiet bleibt abgedunkelt sichtbar, gegnerische Gebäude
   erscheinen dort so, wie du sie zuletzt gesehen hast; Gegner im Nebel sind weder zu sehen, zu hören noch anwählbar.
-  Auch die Minikarte zeigt nur Erkundetes. Die Computergegner spielen ohne Nebel. Bei Spielende wird die Karte aufgedeckt.
+  Auch die Minikarte zeigt nur Erkundetes. Die Computergegner spielen fair: Sie kennen nur, was ihr Team gesehen hat
+  (Gebäude, zuletzt gesehene Armeestärke), und schicken dafür regelmäßig Späher los. Bei Spielende wird die Karte aufgedeckt.
 
 **Oberfläche**
 - **Volks-Designs:** Die Oberfläche passt sich dem gespielten Volk an – Farben, Überschrift-Schrift und Wappen
@@ -106,7 +124,8 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 | Held auswählen + Linksklick | Held bewegen/angreifen (schaltet auf manuell) |
 | H | Held manuell / automatisch |
 | Q / E | Heldenfähigkeit 1 / 2 auf Mausposition |
-| 1 / 2 / 3 (R = 1) | Volksfähigkeiten |
+| R | Ultimative Heldenfähigkeit (ab Heldenstufe 6) |
+| 1 / 2 / 3 | Volksfähigkeiten |
 | + / − | Zoom |
 | Leertaste | Kamera auf Held |
 | P | Pause |
