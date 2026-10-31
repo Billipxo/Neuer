@@ -37,10 +37,10 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
   Zwergen-Steindächer mit Esse, gotische Untoten-Türme, Dämonen-Obsidianspitzen).
 - **Spielstile:** Jedes Volk spielt sich etwas anders – mit eigenen Boni, eigener Bauliste und eigener KI-Taktik:
   - Menschen – *Heerscharen* (Truppen): alle Gebäude bilden 20% schneller aus, Bauernhäuser +25% Versorgung
-  - Orks – *Ansturm* (Rush): Kriegslager bildet 30% schneller aus, Krieger daraus 10% billiger, alle +8% Tempo; KI greift früh an
+  - Orks – *Ansturm* (Rush): Kriegslager bildet 20% schneller aus, Krieger daraus 10% billiger, alle +5% Tempo; KI greift früh an
   - Zwerge – *Bollwerk* (Verteidigung): Wach- und Kanonentürme 30% billiger, je Haupthaus-Stufe einer mehr; KI greift spät an
   - Untote – *Endlose Horden* (Masse): gefallene Feinde erheben sich mit 20% Chance als Skelett
-  - Elfen – *Schattenkrieg* (Beweglichkeit): alle +10% Tempo, außerhalb des Kampfes dreifache Heilung
+  - Elfen – *Schattenkrieg* (Beweglichkeit): alle +10% Tempo, Fernkämpfer und Flieger +15% Schaden, außerhalb des Kampfes dreifache Heilung
   - Dämonen – *Höllenbrut* (Beschwörung): Beschwörungen halten 50% länger, Beschwörer rufen einen Diener mehr, Magier +10%
 
   Die Armee-Vorlage ★ im Armee-Tab entspricht dem Stil des Volkes.
