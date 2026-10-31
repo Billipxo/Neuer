@@ -81,11 +81,20 @@
         <div class="ch-body"><div class="ch-no">${label}${f.mode !== 'haendler' && f.race !== race ? ` · <span class="ch-foreign">Stimme der ${G.RACES[f.race].name}</span>` : ''}</div><h4>${c.title}</h4>
         <div class="ch-by">Aus Sicht von <b>${c.who}</b>, ${c.role}</div><p>${c.text}</p></div></article>`;
     };
+    const ms = G.CAMPAIGNS[race].missions, allDone = ms.every((m, i) => Prof().missionDone(race, i));
+    const nach = allDone || (UI.spoiler && UI.spoiler[race])
+      ? chap(V.nachspiel, 'Nachspiel' + (allDone ? ' · ✔ nach dem Sieg' : ''))
+      : `<article class="chap locked" style="--rc:${rd.color}"><div class="ch-lock">🔒</div><div class="ch-body"><div class="ch-no">Nachspiel</div><h4>${V.nachspiel.title}</h4>
+          <div class="ch-by">Wird enthüllt, wenn du die Kampagne „${G.CAMPAIGNS[race].title}“ gewinnst.</div><button class="mini" data-act="m-spoiler" data-v="${race}">Trotzdem jetzt lesen</button></div></article>`;
     return `<section class="chronik"><h2>${CH.title}</h2><p class="note">${CH.intro}</p>
       ${chap(CH.prolog, 'Prolog')}
       <nav class="chron-races">${G.RACE_KEYS.map((k) => `<button class="${k === race ? 'sel' : ''}" data-act="m-chron" data-v="${k}" style="--rc:${G.RACES[k].color}">${emblem(k)}<span>${G.RACES[k].name}</span></button>`).join('')}</nav>
       <div class="chron-head" style="--rc:${rd.color}"><h3 style="color:${rd.color};font-family:${RACE_FONT[race]}">${emblem(race)} ${V.title}</h3><p>${V.motto}</p></div>
+      <h3 class="chron-part">Teil I – Die Nacht des Reichsfeuers</h3>
       ${V.kapitel.map((c, i) => chap(c, 'Kapitel ' + (i + 1))).join('')}
+      <h3 class="chron-part">Teil II – Der Krieg <small>(wird auch vor jeder Mission erzählt)</small></h3>
+      ${V.krieg.map((c, i) => chap(c, `Mission ${i + 1}: ${ms[i].title}${Prof().missionDone(race, i) ? ' · ✔' : ''}`)).join('')}
+      ${nach}
       <div class="chron-play"><button class="big" data-act="m-chron-play" data-v="${race}">⚔ Weiter in der Kampagne „${G.CAMPAIGNS[race].title}“</button></div>
       ${chap(CH.epilog, 'Epilog')}</section>`;
   }
@@ -301,7 +310,7 @@
     UI.tut = Prof().data.tutorialDone ? null : { step: 0 };
     renderTutorial();
     if (G.R.touch) G.msg('Wischen: Karte bewegen · Zwei Finger: Zoom · Tippen: Auswählen · ☰: Menü · Held antippen, dann Ziel antippen: Held steuern', '');
-    if (cfg.mission) G.msg(`Mission: ${Prof().findMission(cfg.mission).m.goal}`, 'gold');
+    if (cfg.mission) { G.msg(`Mission: ${Prof().findMission(cfg.mission).m.goal}`, 'gold'); showMissionStory(cfg.mission); }
     renderPanel(true);
   };
 
@@ -813,6 +822,32 @@
     $('#msgs').innerHTML = S.msgs.slice(-7).filter((m) => S.time - m.t < 25).map((m) => `<div class="msg ${m.cls}">${m.text}</div>`).join('');
   }
 
+  // Chronik im Spiel: vor jeder Kampagnen-Mission das passende Kapitel, nach dem Sieg in der letzten Mission das Nachspiel
+  function storyCard(c, label) {
+    const f = c.fig;
+    return `<article class="chap story" style="--rc:${G.RACES[f.race].color}"><canvas class="preview chfig" data-race="${f.race}" data-mode="${f.mode}" data-hero="${f.id || ''}" data-skin="standard" aria-hidden="true"></canvas>
+      <div class="ch-body"><div class="ch-no">${label}</div><h4>${c.title}</h4><div class="ch-by">Aus Sicht von <b>${c.who}</b>, ${c.role}</div><p>${c.text}</p></div></article>`;
+  }
+  function showMissionStory(id) {
+    const fm = Prof().findMission(id), V = G.CHRONIK.voelker[fm.race], c = V && V.krieg && V.krieg[fm.index];
+    if (!c) return;
+    G.S.paused = true; UI.storyOpen = true;
+    $('#storyui-body').innerHTML = `<div class="sv-head">${emblem(fm.race)}<h2>${G.CAMPAIGNS[fm.race].title}</h2></div>
+      ${storyCard(c, `Chronik · Mission ${fm.index + 1}: ${fm.m.title}`)}
+      <p class="note"><b>Ziel:</b> ${fm.m.goal}</p>
+      <div class="story-btns"><button class="big" data-act="storygo">⚔ Zur Schlacht</button></div>`;
+    $('#storyui').classList.remove('hidden');
+    drawStoryFigures();
+  }
+  function hideStory() {
+    $('#storyui').classList.add('hidden'); UI.storyOpen = false;
+    if (G.S && !G.S.over) G.S.paused = false;
+    renderTop();
+  }
+  function drawStoryFigures() {
+    for (const cv of document.querySelectorAll('#storyui canvas.preview, #end canvas.preview')) if (cv.offsetParent) G.R.drawPreview(cv, cv.dataset.race, cv.dataset.mode, cv.dataset.hero, cv.dataset.skin);
+  }
+  UI.drawStoryFigures = drawStoryFigures;
   function showEnd() {
     const S = G.S, p = me(), o = S.over;
     if (!UI.awarded) UI.awarded = Prof().award(S);
@@ -828,8 +863,10 @@
       ${a.repeat ? '<div class="note">Diese Partie wurde schon einmal gewertet – es zählt nur die Verbesserung.</div>' : ''}
       ${a.unlocked.map((rw) => `<div class="good">Freigeschaltet: ${rw.kind === 'hero' ? 'Held ' + G.RACES[a.race].heroes.find((h) => h.unlock).name : rw.text}</div>`).join('')}
       ${a.missionNew ? `<div class="good">Mission abgeschlossen!${hasNext ? ' Nächste Mission freigeschaltet.' : ` Kampagne „${G.CAMPAIGNS[fm.race].title}“ gemeistert!`}</div>` : ''}</div>
+      ${o.win && fm && !hasNext && G.CHRONIK.voelker[fm.race] ? storyCard(G.CHRONIK.voelker[fm.race].nachspiel, 'Chronik · Nachspiel') : ''}
       <button class="big" data-act="menu">Zum Hauptmenü</button> <button class="big" data-act="again">${S.cfg.mission ? 'Mission wiederholen' : 'Revanche (neue Gegner)'}</button>
       ${o.win && hasNext ? '<button class="big" data-act="nextmission">Nächste Mission</button>' : ''}`;
+    drawStoryFigures();
   }
 
   // -------------------------------------------------------------------------
@@ -855,6 +892,8 @@
       case 'm-fog': UI.cfg.fog = v === 'an'; renderMenu(); return;
       case 'm-events': UI.cfg.events = v === 'an'; renderMenu(); return;
       case 'm-chron': UI.chronRace = v; renderMenu(); { const hd = $('.chron-head'); if (hd) hd.scrollIntoView({ block: 'start', behavior: 'smooth' }); } return;
+      case 'm-spoiler': UI.spoiler = { ...(UI.spoiler || {}), [v]: true }; renderMenu(); return;
+      case 'storygo': hideStory(); return;
       case 'm-chron-read': UI.chronRace = v; UI.menuTab = 'chronik'; renderMenu(); $('#menu').scrollTop = 0; return;
       case 'm-chron-play': UI.cfg.race = v; UI.cfg.hero = null; UI.mission = 0; UI.menuTab = 'kampagne'; renderMenu(); $('#menu').scrollTop = 0; return;
       case 'm-auto': UI.cfg.autopilot = v === 'auto'; Prof().data.autopilot = UI.cfg.autopilot; Prof().save(); renderMenu(); return;
@@ -1117,6 +1156,7 @@
       if (ev.target.tagName === 'INPUT' && ev.target.type !== 'range' && ev.target.type !== 'checkbox') return;
       const k = ev.key.toLowerCase();
       if (UI.saveOpen) { if (k === 'escape') closeSaveUI(); return; }
+      if (UI.storyOpen) { if (k === 'escape' || k === 'enter' || k === ' ') { ev.preventDefault(); hideStory(); } return; }
       keys[k] = true;
       const p = me();
       if (k === 'escape') { UI.placing = null; UI.casting = null; UI.pickTarget = false; UI.selected = null; renderPanel(true); }
@@ -1201,10 +1241,11 @@
     G.Audio.intensity += (target - G.Audio.intensity) * 0.1;
   }
 
-  let tTop = 0, tPanel = 0, tMini = 0, endShown = false;
+  let tTop = 0, tPanel = 0, tMini = 0, tStory = 0, endShown = false;
   UI.tick = function (dt) {
     const S = G.S; if (!S) return;
-    tTop -= dt; tPanel -= dt; tMini -= dt;
+    tTop -= dt; tPanel -= dt; tMini -= dt; tStory -= dt;
+    if (tStory <= 0) { tStory = 0.1; if (UI.storyOpen || S.over) drawStoryFigures(); } // Erzähler im Story-Fenster und auf dem Siegbildschirm
     if (tTop <= 0) { tTop = 0.2; renderTop(); renderMsgs(); renderHeroCard(); renderUnitCard(); if (G.Audio) updateIntensity(); }
     if (tPanel <= 0) { tPanel = 0.5; renderPanel(false); tutorialTick(); }
     if (tMini <= 0) { tMini = 0.15; G.R.drawMinimap($('#minimap')); }

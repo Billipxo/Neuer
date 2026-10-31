@@ -31,6 +31,11 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
   greifen ineinander: Die Priesterin sieht den Schatten des Königs verschwinden, den die Dämonenkönigin Lysara mitnimmt; der
   gefallene Paladin Kael erinnert sich an Aldric; die Müllerstochter Hanna und ihr untoter Großvater erzählen dieselbe Nacht.
   Jede Geschichte führt direkt in die Kampagne des Volkes.
+  **Teil II – Der Krieg:** Zu jeder Kampagnen-Mission gibt es ein eigenes Kapitel, das vor der Mission als Einleitung erscheint
+  (das Spiel wartet, bis du „Zur Schlacht“ wählst) – wieder aus wechselnden Sichten, etwa ein Bauer, der vor den Orks flieht,
+  ein Gargyl, der dreihundert Jahre als Wasserspeier auf einem Kirchturm saß, eine Zwergin im Dampfpanzer oder ein Wichtel,
+  der als Erster durch das Höllentor geworfen wird. Nach dem Sieg in der letzten Mission enthüllt ein **Nachspiel** das Ende
+  der Geschichte (in der Chronik vorher gesperrt, auf Wunsch trotzdem lesbar).
 - **6 Volkskampagnen** mit eigener Geschichte (je 5 Missionen: vernichten, überleben, Drachen erschlagen,
   Bündnis-Schlacht, Finale auf „Schwer“), z. B. „Die Krone von Valenmark“ (Menschen) oder „Blut und Steppe“ (Orks).
 - **Einführung** im ersten Spiel (abschaltbar) und **Anleitung** im Hauptmenü.

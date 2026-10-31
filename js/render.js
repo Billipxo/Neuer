@@ -1178,6 +1178,7 @@
       const s0 = h / 120;
       if (mode === 'hero') fig(hero, w / 2, h * 0.66, s0 * 1.9, 0.3);
       else if (mode === 'unit' && rd.units[heroId]) { const big = heroId === 'elite' || heroId === 'flieger'; fig(unit(heroId), w / 2, h * (heroId === 'flieger' ? 0.74 : 0.68), s0 * (big ? 1.55 : 1.9), 0.5); }
+      else if (mode === 'unit' && heroId && heroId.startsWith('summon:')) fig({ kind: 'unit', role: 'summon', summoned: true, name: heroId.slice(7), r: 11, face: 1.35, range: 30, speed: 60 }, w / 2, h * 0.7, s0 * 1.75, 0.5);
       else if (mode === 'haendler') { const sc = Math.min(s0 * 0.85, w / 110); c2.save(); c2.translate(w / 2, h * 0.62); c2.scale(sc, sc); drawShop({ x: 0, y: 0 }); c2.restore(); }
       else {
         fig(unit('tank'), w * 0.26, h * 0.52, s0 * 1.3, 0.9);
