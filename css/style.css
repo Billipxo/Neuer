@@ -349,6 +349,35 @@ input[type=range] { width: 100%; accent-color: var(--accent2); }
 #saveui .note { font-size: 12.5px; margin: 10px 0 0; }
 .top-ctrl button.flash { border-color: var(--good); box-shadow: 0 0 10px var(--good); }
 
+/* Werte-Kärtchen angeklickter Einheiten (rechts oben im Spielfeld) */
+#unitcard { position: absolute; right: 8px; top: 8px; width: 222px; z-index: 5; padding: 6px 9px 8px; font-size: 12px;
+  background: linear-gradient(170deg, color-mix(in srgb, var(--panel2) 94%, transparent), color-mix(in srgb, var(--panel) 94%, transparent));
+  border: 2px solid var(--ink); border-radius: 10px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--frame) 35%, transparent), 0 6px 16px rgba(0,0,0,.5); }
+#unitcard .x { position: absolute; right: 3px; top: 2px; min-height: 0; padding: 0 7px; font-size: 14px; line-height: 1.4; }
+.uc-head { margin-right: 24px; line-height: 1.2; }
+.uc-head b { font-family: var(--font-head); font-weight: 400; font-size: 15px; color: var(--head); }
+.uc-head .lv { color: #ffd23a; font-size: 11px; margin-left: 5px; white-space: nowrap; }
+.uc-sub { color: var(--muted); font-size: 11px; margin: 1px 0 4px; }
+.uc-hp { position: relative; height: 14px; background: #0a0806; border: 1px solid var(--ink); border-radius: 4px; overflow: hidden; }
+.uc-hp div { height: 100%; }
+.uc-hp span { position: absolute; inset: 0; text-align: center; font-size: 10px; line-height: 13px; color: #fff; text-shadow: 1px 1px 0 #000; font-variant-numeric: tabular-nums; }
+.uc-xp { height: 3px; background: #0a0806; border-radius: 2px; margin-top: 3px; overflow: hidden; }
+.uc-xp div { height: 100%; background: linear-gradient(90deg, #b080ff, #e0c0ff); }
+.uc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; margin-top: 5px; }
+.uc-grid span { display: flex; flex-direction: column; background: rgba(0,0,0,.24); border-radius: 5px; padding: 1px 5px; min-width: 0; }
+.uc-grid small { font-size: 9.5px; color: var(--muted); }
+.uc-grid b { font-size: 12.5px; font-variant-numeric: tabular-nums; }
+.uc-tags { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 5px; }
+.uc-tags:empty { display: none; }
+.uc-tags span { font-size: 10px; padding: 0 5px; border-radius: 6px; border: 1px solid var(--line); background: rgba(0,0,0,.25); }
+.uc-tags .air { border-color: #7ac8ff; color: #bfe6ff; }
+.uc-tags .no { border-color: #a86a5a; color: #f0c0b0; }
+.uc-tags .spec { border-color: #ffd23a; color: #ffe9a8; }
+.uc-note { font-size: 10.5px; color: var(--muted); margin-top: 4px; line-height: 1.3; }
+.kv.style .tag, .chip.volk { color: #ffe9a8; }
+.kv.style .tag { font-size: 11px; padding: 0 5px; border: 1px solid #ffd23a; border-radius: 6px; }
+.bdesc .elite { color: #ffe9a8; font-weight: 400; }
+
 /* ---------------- Handy & Tablet ---------------- */
 @media (max-width: 900px), (max-height: 560px) {
   body { font-size: 14px; }
@@ -386,11 +415,16 @@ input[type=range] { width: 100%; accent-color: var(--accent2); }
   #tutorial { top: 6px; left: 6px; right: 62px; transform: none; width: auto; font-size: 12.5px; padding: 7px 9px; }
   body.tut-on #msgs { display: none; }
   #herocard { left: 6px; width: 214px; padding: 4px 5px; font-size: 11.5px; }
+  #unitcard { top: 62px; width: 200px; padding: 5px 7px 6px; font-size: 11.5px; }
+  body.uc-open #msgs { max-width: calc(100% - 222px); }
+  .uc-head b { font-size: 13.5px; }
   .hc-crest { width: 34px; height: 34px; font-size: 16px; }
   .hc-btns button { min-height: 34px; }
 }
 @media (max-width: 560px) {
   #selection { left: 6px; bottom: auto; top: 50px; }
+  #unitcard { width: 180px; }
+  .uc-note { display: none; }
   #quick { max-width: calc(100% - 140px); }
   .saveslot, .continue { flex-wrap: wrap; }
   .sv-btns { width: 100%; justify-content: flex-end; }

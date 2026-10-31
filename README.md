@@ -11,7 +11,7 @@ Auch am **Handy und Tablet** spielbar (Touch-Steuerung: Wischen = Karte bewegen,
 Tippen = auswählen/bauen, Held antippen und dann Ziel antippen = Held steuern, ☰ = Menü).
 Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http://localhost:8000` öffnen.
 
-## Was schon drin ist (Prototyp v1.3)
+## Was schon drin ist (Prototyp v1.4)
 
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
@@ -35,8 +35,28 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - 6 Völker + Zufall mit Passiv, **3 Volksfähigkeiten** (freigeschaltet über Haupthaus-Stufe 1/3/5), eigener **Heimatkarte**,
   **eigenen Gebäudenamen** (z. B. Orks: Großhalle, Kriegslager) und **eigener Bauweise** (Elfen-Blätterkronen, Ork-Fellzelte mit Hörnern,
   Zwergen-Steindächer mit Esse, gotische Untoten-Türme, Dämonen-Obsidianspitzen).
+- **Spielstile:** Jedes Volk spielt sich etwas anders – mit eigenen Boni, eigener Bauliste und eigener KI-Taktik:
+  - Menschen – *Heerscharen* (Truppen): alle Gebäude bilden 20% schneller aus, Bauernhäuser +25% Versorgung
+  - Orks – *Ansturm* (Rush): Kriegslager bildet 30% schneller aus, Krieger daraus 10% billiger, alle +8% Tempo; KI greift früh an
+  - Zwerge – *Bollwerk* (Verteidigung): Wach- und Kanonentürme 30% billiger, je Haupthaus-Stufe einer mehr; KI greift spät an
+  - Untote – *Endlose Horden* (Masse): gefallene Feinde erheben sich mit 20% Chance als Skelett
+  - Elfen – *Schattenkrieg* (Beweglichkeit): alle +10% Tempo, außerhalb des Kampfes dreifache Heilung
+  - Dämonen – *Höllenbrut* (Beschwörung): Beschwörungen halten 50% länger, Beschwörer rufen einen Diener mehr, Magier +10%
+
+  Die Armee-Vorlage ★ im Armee-Tab entspricht dem Stil des Volkes.
+- **Spezialeinheit je Volk** mit eigener Fähigkeit: Ritter (Sturmangriff nach Anlauf), Sternenschützin (trifft bis zu drei Ziele,
+  riesige Reichweite), Fleischkoloss (Seuchenwolke), Berserker (Blutrausch), Dampfpanzer (doppelter Schaden an Gebäuden),
+  Schattenpirscher (springt hinter die feindlichen Linien).
+- **Flieger je Volk** aus dem neuen Gebäude **Horst** (ab Haupthaus-Stufe 3): Greifenreiter, Hippogreifreiterin, Gargyl,
+  Wyvernreiter, Gyrokopter (Flak gegen Flieger), Feuerschwinge. Flieger überfliegen Mauern und Gelände und werfen einen Schatten;
+  Nahkämpfer erreichen sie nicht – nur Schützen, Magier, Türme, Helden und andere Flieger. Sichtet die KI Flieger,
+  bildet sie mehr Fernkämpfer aus.
+- **Werte-Anzeige:** Ein Klick bzw. Tipp auf eine Einheit, einen gegnerischen Helden oder ein Monster zeigt rechts oben ein
+  kleines Kärtchen mit Lebenspunkten, Schaden, Schaden pro Sekunde, Rüstung, Reichweite, Tempo, Angriffstakt, Erfahrung,
+  Eigenschaften (fliegt, trifft Flieger, Spezialfähigkeit) und aktiven Boni.
 - **Talentbaum** (Krieg, Bollwerk, Wohlstand – je 4 Stufen), 1 Punkt pro Heldenstufe, automatisch oder von Hand.
-- 7 Einheitenrollen je Volk, 3 Helden je Volk (+1 freischaltbar) mit Commander-Boni und 2 Fähigkeiten, Helden bis Stufe 10.
+- 9 Einheitenrollen je Volk (inkl. Flieger und Spezialeinheit), 3 Helden je Volk (+1 freischaltbar) mit Commander-Boni und
+  2 Fähigkeiten, Helden bis Stufe 10.
 - **Helden-Ultimates:** Auf Heldenstufe 6 wählt man eine von zwei ultimativen Fähigkeiten (Taste R) – je Held eigene, z. B.
   Meteorschauer, Verwandlung (der Held wächst und leuchtet), Schlachtruf für die ganze Armee, große Heilung, Lebensraub im
   Umkreis oder ein beschworener Titan. Auf Stufe 3 und 8 wird eine Fähigkeit gemeistert (+35% Wirkung, −15% Abklingzeit),
@@ -46,7 +66,7 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
   Nahkampfhelden sind zäher und geben der ganzen Armee Boni, Zwergen-Bombardements sind abgeschwächt.
 
 **Basis & Wirtschaft**
-- 12 Gebäudetypen bis Stufe 5, Maximalstufe in knapp 30 Minuten. Jede Stufe ist sichtbar: Fenster (2), Seitenturm (3),
+- 13 Gebäudetypen bis Stufe 5, Maximalstufe in knapp 30 Minuten. Jede Stufe ist sichtbar: Fenster (2), Seitenturm (3),
   Zierleiste und Feuerschalen (4), zweiter Turm und leuchtende Turmspitze (5); Gebäude wachsen mit.
 - **Mauer-Upgrade** (Holzpalisade → Steinmauer → Festungsmauer): Ring um die ganze Basis, eigene Truppen gehen hindurch.
 - **Goldadern** auf der Karte: Außenposten dort bringen Bonus-Einkommen und sind umkämpft.
@@ -64,7 +84,7 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - **Heldenfenster** (immer sichtbar): Lebenspunkte, Erfahrung, Fähigkeiten mit Abklingzeit, Heiltrank, Rückzug,
   Kamera folgt dem Helden, Verhalten „Folgt Armee“ / „Verteidigt Basis“ / „Jagt Monster“ / „Manuell“.
   Steuern: Held auswählen, dann Ziel anklicken bzw. antippen. Beim Zielen zeigen Kreise Reichweite und Wirkungsbereich.
-- **Einfache Produktion:** Armee-Vorlagen (Ausgewogen, Schildwall, Sturmangriff, Fernkampf, Arkane Macht),
+- **Einfache Produktion:** Armee-Vorlagen (Volksstil ★, Ausgewogen, Schildwall, Sturmangriff, Fernkampf, Arkane Macht, Luftflotte),
   Rekrutieren per Einheitenkarte ohne Gebäudeauswahl, Übersicht der laufenden Ausbildung; Regler unter „Feineinstellung“.
 - Neutrale Monster mit Beute und Extra-Belohnungen, Händler, Endphase mit Punktewertung.
 - **Schreine:** 2–4 eroberbare Schreine je Karte (Krieg +10% Schaden, Leben +3 LP/s, Wohlstand +4 Gold/s, Eile +10% Tempo).
@@ -119,7 +139,7 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 | --- | --- |
 | WASD / Pfeiltasten / Mausrand / Ziehen | Kamera bewegen |
 | Mausrad | Zoom |
-| Linksklick | Auswählen, Gebäude platzieren, Fähigkeitsziel |
+| Linksklick | Auswählen (Einheiten zeigen ihre Werte rechts oben), Gebäude platzieren, Fähigkeitsziel |
 | Rechtsklick | Held bewegen/angreifen, Abbrechen |
 | Held auswählen + Linksklick | Held bewegen/angreifen (schaltet auf manuell) |
 | H | Held manuell / automatisch |

@@ -49,18 +49,43 @@
   // -------------------------------------------------------------------------
   // Kosten und Stufen
   const round5 = (v) => Math.round(v / 5) * 5;
-  G.costOf = (type, lvl) => { const c = G.BUILDINGS[type].cost, m = Math.pow(lvl, 1.5); return { g: round5(c.g * m), w: round5(c.w * m) }; };
+  const styleOf = (p) => (p && p.rd && p.rd.style) || {};
+  // Baukosten; mit Spieler gelten dessen Volks-Rabatte (z. B. Zwergen-Türme)
+  G.costOf = (type, lvl, p) => {
+    const c = G.BUILDINGS[type].cost, cm = styleOf(p).costMul, m = Math.pow(lvl, 1.5) * ((cm && cm[type]) || 1);
+    return { g: round5(c.g * m), w: round5(c.w * m) };
+  };
   G.timeOf = (type, lvl) => G.BUILDINGS[type].time * Math.pow(lvl, 1.2) / G.PACE;
   G.researchCost = (lvl) => ({ g: 150 * lvl, w: 100 * lvl });
   G.researchTime = (lvl) => 30 * lvl / G.PACE;
+  // Grundwerte einer Rolle für ein Volk: Flieger und Spezialeinheit bringen eigene Werte mit
+  G.unitBase = (p, role) => {
+    const u = p.rd.units[role];
+    if (!u || !u.stats) return G.UNIT_BASE[role];
+    return u._base || (u._base = { ...G.UNIT_BASE[role], ...u.stats });
+  };
+  // Welche Gebäude welche Rollen ausbilden – inklusive der Spezialeinheit des Volkes
+  G.prodOf = (p, type) => {
+    const rd = p.rd, el = rd.units.elite && rd.units.elite.at;
+    if (!el || el[0] !== type) return G.PRODUCTION[type] || null;
+    const cache = rd._prod || (rd._prod = {});
+    return cache[type] || (cache[type] = { ...(G.PRODUCTION[type] || {}), elite: el[1] });
+  };
+  G.producerType = (p, role) => {
+    if (role === 'elite') return p.rd.units.elite.at[0];
+    return Object.keys(G.PRODUCTION).find((t) => G.PRODUCTION[t][role] !== undefined);
+  };
   G.unitCost = (p, role) => {
-    const b = G.UNIT_BASE[role];
-    const disc = ((p.rd.passive.eco && p.rd.passive.eco.unitDiscount) || 0) + (p.teco.unitDiscount || 0);
+    const b = G.unitBase(p, role), ud = styleOf(p).unitDiscount;
+    const disc = ((p.rd.passive.eco && p.rd.passive.eco.unitDiscount) || 0) + (p.teco.unitDiscount || 0) + ((ud && ud[G.producerType(p, role)]) || 0);
     return { g: Math.round(b.gold * (1 - disc)), w: Math.round(b.wood * (1 - (p.teco.unitDiscount || 0))) };
   };
   G.builders = (p) => 2 + (p.th.level >= 3 ? 1 : 0) + (p.th.level >= 5 ? 1 : 0) + (p.teco.builder || 0);
   G.buildersBusy = (p) => p.blds.reduce((n, b) => n + (b.upgrading ? 1 : 0), 0) + (p.wallUp ? 1 : 0);
-  G.maxCount = (p, type) => G.LIMITS[type][p.th.level - 1];
+  G.maxCount = (p, type) => {
+    const n = G.LIMITS[type][p.th.level - 1], ex = styleOf(p).extraLimit;
+    return n > 0 && ex && ex[type] ? n + ex[type] : n;
+  };
   G.countOf = (p, type) => p.blds.filter((b) => b.type === type).length;
   G.canAfford = (p, c) => p.gold >= c.g && p.wood >= c.w;
   function canSpend(p, c, ignoreReserve) {
@@ -129,6 +154,25 @@
     return S;
   };
 
+  // Armee-Vorlagen: zuerst die des eigenen Volkes (passend zum Spielstil), dann die allgemeinen
+  G.presetsFor = function (p) {
+    const st = styleOf(p);
+    if (!st.comp) return G.ARMY_PRESETS;
+    return [{ id: 'volk', name: st.name, desc: `Vorlage des Volkes (${st.tag}): ${st.desc}`, comp: st.comp }, ...G.ARMY_PRESETS];
+  };
+  // Spielstil des Volkes: Armee-Vorlage für alle; für die KI auch Angriffszeitpunkt, Armeegröße und Wellentakt
+  function applyStyle(p, ai) {
+    const sai = styleOf(p).ai || {}, d = p.diff, pr = G.presetsFor(p)[0];
+    p.preset = pr.id;
+    p.comp = { ...pr.comp };
+    if (!ai) return;
+    if (sai.armyStyle && d !== G.DIFFICULTY.einfach) p.armyStyle = sai.armyStyle;
+    p.attackFrac = Math.min(0.95, d.attackFrac * (sai.attackFrac || 1));
+    p.minAttack = d.minAttack * (sai.minAttack || 1);
+    p.waveInterval = Math.round((d.focus ? 35 : 45) * (sai.wave || 1));
+  }
+  G.applyStyle = applyStyle;
+
   function makePlayer(i, race, heroDef, team, isHuman, cfg, bx, by) {
     const rd = G.RACES[race];
     const diff = G.DIFFICULTY[cfg.difficulty] || G.DIFFICULTY.mittel;
@@ -153,7 +197,7 @@
       attackFrac: isHuman ? 0.7 : diff.attackFrac, minAttack: isHuman ? 0 : diff.minAttack,
       targetMode: 'auto', targetPlayer: null, manualPoint: null, campTarget: null, campsAllowed: true, shrinesAllowed: true, campStart: 0,
       armyState: 'sammeln', armyPoint: null, attackPoint: null, armyCentroid: null, poolSupply: 0, committedCount: 0,
-      comp: { tank: 2, nahkampf: 3, fernkampf: 3, magier: 2, heiler: 1, support: 1, beschwoerer: 1 }, preset: 'ausgewogen',
+      comp: { tank: 2, nahkampf: 3, fernkampf: 3, magier: 2, heiler: 1, support: 1, beschwoerer: 1, flieger: 1, elite: 1 }, preset: 'ausgewogen',
       buffs: [], abCd: [25, 0, 0], alive: true, hero: null, heroRespawn: 0, reserve: { g: 0, w: 0 },
       thinkT: Math.random(), armyT: Math.random(), abilT: Math.random(), blds: [], th: null,
       walls: [], wallLevel: 0, wallUp: null, wallAlive: 0,
@@ -161,6 +205,7 @@
       supplyCap: 10, supplyUsed: 0, armySupply: 0, bonus: {}, stats: { kills: 0, lost: 0 }, wv: [],
     };
     p.armyPoint = { ...p.rally };
+    applyStyle(p, !isHuman);
     S.players.push(p);
     const th = makeBuilding(p, 'haupthaus', thPos.x, thPos.y, 1);
     p.th = th;
@@ -654,7 +699,7 @@
   G.buildingCheck = function (p, type) {
     if (G.countOf(p, type) >= G.maxCount(p, type)) return G.maxCount(p, type) ? 'Limit erreicht (Haupthaus aufwerten)' : 'Benötigt höhere Haupthaus-Stufe';
     if (G.buildersBusy(p) >= G.builders(p)) return 'Alle Baumeister beschäftigt';
-    if (!G.canAfford(p, G.costOf(type, 1))) return 'Nicht genug Rohstoffe';
+    if (!G.canAfford(p, G.costOf(type, 1, p))) return 'Nicht genug Rohstoffe';
     return null;
   };
   G.placeBuilding = function (p, type, x, y, gap = 0) {
@@ -663,7 +708,7 @@
     if (G.BUILDINGS[type].outpost) { site = G.freeSiteNear(x, y, 140); if (!site) return false; pos = { x: site.x, y: site.y }; }
     if (G.buildingCheck(p, type)) return false;
     if (!G.canPlace(p, type, pos.x, pos.y, gap)) return false;
-    pay(p, G.costOf(type, 1));
+    pay(p, G.costOf(type, 1, p));
     const b = makeBuilding(p, type, pos.x, pos.y, 0);
     b.upgrading = { to: 1, t: 0, total: G.timeOf(type, 1) };
     if (site) { site.b = b; b.site = site; }
@@ -676,12 +721,12 @@
     if (b.level >= G.MAX_LEVEL) return 'Maximale Stufe';
     if (b.type !== 'haupthaus' && b.level >= p.th.level) return 'Haupthaus-Stufe zu niedrig';
     if (G.buildersBusy(p) >= G.builders(p)) return 'Alle Baumeister beschäftigt';
-    if (!G.canAfford(p, G.costOf(b.type, b.level + 1))) return 'Nicht genug Rohstoffe';
+    if (!G.canAfford(p, G.costOf(b.type, b.level + 1, p))) return 'Nicht genug Rohstoffe';
     return null;
   };
   G.upgradeBuilding = function (p, b) {
     if (G.upgradeCheck(p, b)) return false;
-    pay(p, G.costOf(b.type, b.level + 1));
+    pay(p, G.costOf(b.type, b.level + 1, p));
     b.upgrading = { to: b.level + 1, t: 0, total: G.timeOf(b.type, b.level + 1) };
     if (b.prod) { const uc = G.unitCost(p, b.prod.role); p.gold += uc.g; p.wood += uc.w; b.prod = null; }
     G.sfx('bau', b.x, b.y);
@@ -782,7 +827,7 @@
           const def = (p.bonus.defense ? p.bonus.defense.dmg : 0);
           const dmg = atk.dmg * (1 + 0.2 * (b.level - 1)) * (1 + def);
           b.lastAng = Math.atan2(best.y - b.y, best.x - b.x);
-          S.proj.push({ x: b.x, y: b.y - b.size * 12, t: best, src: b, dmg, splash: atk.splash || 0, kind: atk.splash ? 'kanone' : 'pfeil', speed: 480, team: b.team, owner: b.owner, tx: best.x, ty: best.y });
+          S.proj.push({ x: b.x, y: b.y - b.size * 12, t: best, src: b, dmg, splash: atk.splash || 0, kind: atk.splash ? 'kanone' : 'pfeil', speed: 480, team: b.team, owner: b.owner, tx: best.x, ty: best.y, z1: best.fly ? G.FLY_ALT : 0 });
           G.sfx(atk.splash ? 'kanone' : 'pfeil', b.x, b.y, 0.6);
           b.atkT = atk.cd;
         } else b.atkT = 0.3;
@@ -807,6 +852,7 @@
     const entries = [];
     if (key !== 'hero') (p.heroDef.bonus || []).forEach((e) => entries.push(e));
     (p.rd.passive.bonus || []).forEach((e) => entries.push(e));
+    (styleOf(p).bonus || []).forEach((e) => entries.push(e));
     for (const t of talentList(p)) if (t.bonus) [].concat(t.bonus).forEach((e) => entries.push(e));
     for (const e of entries) {
       const isAll = e.roles.includes('all') && unitLike;
@@ -866,7 +912,7 @@
   // -------------------------------------------------------------------------
   // Einheiten
   function makeUnit(p, role, x, y, level) {
-    const base = G.UNIT_BASE[role], rdef = p.rd.units[role], m = rdef.mods || {};
+    const base = G.unitBase(p, role), rdef = p.rd.units[role], m = rdef.mods || {};
     const b = G.bonusOf(p, role);
     const e = {
       id: S.nextId++, kind: 'unit', role, name: rdef.name, owner: p.id, team: p.team, x, y, r: base.r,
@@ -877,6 +923,9 @@
       summon: rdef.summon || null, summonT: 3, summons: 0, buffs: [], m: zeroMods(), face: Math.atan2(p.dir.y, p.dir.x), regen: 0, hitT: 0,
       committed: false, walkT: Math.random() * 6,
     };
+    if (role === 'flieger') e.fly = true;
+    if (G.TRACK) (p.made || (p.made = {}))[role] = (p.made[role] || 0) + 1; // nur für Balance-Tests
+    if (rdef.spec) { e.spec = rdef.spec; e.runD = 0; if (e.spec === 'blink') e.blinkT = 2; }
     if (G.hasTalentSpecial(p, 'veteranen')) level = (level || 1) + 1;
     setUnitLevel(e, Math.min(5, level || 1));
     e.hp = e.maxHp;
@@ -885,6 +934,7 @@
     S.ents.push(e);
     return e;
   }
+  G._makeUnit = makeUnit; // für Tests und Vorschauen
   function setUnitLevel(e, lvl) {
     const ratio = e.maxHp ? e.hp / e.maxHp : 1;
     e.level = lvl;
@@ -912,7 +962,7 @@
       baseHp: def.hp * sc * (1 + b.hp), baseDmg: def.dmg * sc, range: def.range, cd: def.cd, speed: def.speed, armor: def.armor || 0,
       splash: def.splash || 0, heal: 0, proj: def.proj || (def.range > 60 ? 'kugel' : null), supply: 0, summoned: !def.merc,
       level: 1, xp: 0, atkT: 0.3, retargetT: 0, target: null, buffs: [], m: zeroMods(), face: 0, regen: 0, hitT: 0,
-      life: life, summoner: summoner || null, merc: !!def.merc, committed: committed === undefined ? !!(summoner && summoner.committed) : committed,
+      life: life && !def.merc ? life * (1 + (styleOf(p).summonLife || 0)) : life, summoner: summoner || null, merc: !!def.merc, committed: committed === undefined ? !!(summoner && summoner.committed) : committed,
       walkT: 0,
     };
     e.maxHp = e.baseHp; e.hp = e.maxHp; e.dmg = e.baseDmg;
@@ -1128,7 +1178,7 @@
       }
       case 'nuke': case 'drain': {
         if (!target || target.dead || dist(h, target) > CAST + target.r) return false;
-        S.proj.push({ x: h.x, y: h.y, t: target, src: h, dmg: ab.dmg * sc, stun: ab.stun || 0, drain: ab.type === 'drain', kind: 'zauber', speed: 560, team: h.team, owner: h.owner, color: p.rd.palette.trim, tx: target.x, ty: target.y });
+        S.proj.push({ x: h.x, y: h.y, t: target, src: h, dmg: ab.dmg * sc, stun: ab.stun || 0, drain: ab.type === 'drain', kind: 'zauber', speed: 560, team: h.team, owner: h.owner, color: p.rd.palette.trim, tx: target.x, ty: target.y, z1: target.fly ? G.FLY_ALT : 0 });
         G.sfx('zauber', h.x, h.y);
         break;
       }
@@ -1402,11 +1452,17 @@
 
   // -------------------------------------------------------------------------
   // Kampf
-  function dealDamage(src, t, amount) {
+  function dealDamage(src, t, amount, quiet) {
     if (!t || t.dead) return 0;
     const armor = (t.armor || 0) + (t.m ? t.m.armor : 0);
     const mul = armor >= 0 ? 1 - (armor * 0.06) / (1 + armor * 0.06) : 2 - Math.pow(0.94, -armor);
     let dmg = amount * mul;
+    if (src && src.spec) {
+      if (src.spec === 'siege' && t.kind === 'building') dmg *= 2;
+      else if (src.spec === 'flak' && t.fly) dmg *= 1.75;
+    }
+    if (t.kind !== 'building') t.fightT = S.time;
+    if (G.TRACK && src && src.owner >= 0) { const sp = S.players[src.owner], key = src.kind === 'unit' ? src.role : src.kind; (sp.dmgBy || (sp.dmgBy = {}))[key] = (sp.dmgBy[key] || 0) + Math.min(dmg, Math.max(0, t.hp)); } // nur für Balance-Tests
     if (t.kind === 'building') {
       if (S.endphase) dmg *= G.endphaseSiege();
       if (src && src.owner >= 0 && G.hasTalentSpecial(S.players[src.owner], 'siege')) dmg *= 1.3;
@@ -1414,14 +1470,14 @@
     t.hp -= dmg;
     t.hitT = 0.12;
     if (src && t.kind !== 'building') t.hitAng = Math.atan2(t.y - src.y, t.x - src.x);
-    if (t.kind !== 'building' && dmg > 2) bleed(t, src, dmg);
+    if (t.kind !== 'building' && dmg > 2 && !quiet) bleed(t, src, dmg);
     if (src && !src.dead && src.m) {
       const ls = (src.lifesteal || 0) + src.m.lifesteal;
       if (ls > 0) src.hp = Math.min(src.maxHp, src.hp + dmg * ls);
     }
     if (t.kind === 'creep') {
       t.camp.active = true; t.camp.activeT = 8;
-      if (src && !src.dead && src.kind !== 'building' && (!t.target || t.target.kind === 'building')) t.target = src;
+      if (src && !src.dead && src.kind !== 'building' && (!t.target || t.target.kind === 'building') && canHit(t, src)) t.target = src;
     }
     if (src && src.owner >= 0) t.lastOwner = src.owner;
     if (t.owner >= 0 && S.players[t.owner].human && t.kind === 'building' && S.time > S.alarmT) {
@@ -1480,6 +1536,11 @@
     if (src && !src.dead && src.kind === 'unit' && !src.summoned) gainUnitXp(src, xp);
     const h = kp.hero;
     if (h && !h.dead && dist(h, t) < 800) gainHeroXp(h, xp * (t.kind === 'creep' ? 1 : 0.7));
+    const rs = styleOf(kp).raise; // Endlose Horden: Gefallene erheben sich als Skelett
+    if (rs && ((t.kind === 'unit' && !t.summoned && !t.fly) || (t.kind === 'creep' && !t.boss && !t.wagon)) && Math.random() < rs.chance) {
+      makeSummon(kp, rs.unit, t.x, t.y, rs.life, 1, null, !!(src && src.committed));
+      fx({ type: 'pillar', x: t.x, y: t.y, r: 14, color: '#7aff9a', dur: 0.9 });
+    }
     if (t.kind === 'creep') {
       kp.gold += t.def.gold;
       S.fx.push({ type: 'text', x: t.x, y: t.y - 14, text: '+' + t.def.gold + ' G', color: '#ffd23a', t: 0, dur: 1 });
@@ -1533,8 +1594,13 @@
     h.maxHp -= h.avatarHp || 0; h.hp = Math.min(h.hp, h.maxHp);
     h.avatarHp = 0; h.avatarT = 0;
   }
+  // Flieger erreichen nur Fernkämpfer, Magier, Türme, Helden und andere Flieger – Nahkämpfer am Boden nicht
+  const hitsAir = (e) => e.kind === 'hero' || e.kind === 'building' || !!e.fly || e.range > 60 || !!e.proj;
+  const canHit = (e, t) => !t.fly || hitsAir(e);
+  G.canHit = canHit; G.hitsAir = hitsAir;
   function validTarget(e, t) {
     if (!t || t.dead) return false;
+    if (t.fly && !hitsAir(e)) return false;
     if (e.kind === 'creep') return dist(t, e.home) < 420;
     const leash = e.kind === 'hero' ? 520 : 460;
     return d2(t.x, t.y, e.x, e.y) < leash * leash;
@@ -1546,10 +1612,10 @@
     if (e.kind === 'creep') aggro = e.camp.active ? 320 : 170;
     else if (e.kind === 'hero' && p && p.human && e.manual) aggro = er + 80;
     else aggro = Math.max(er + 70, 250);
-    const focus = p && !p.human && p.diff.focus;
+    const focus = p && !p.human && p.diff.focus, air = hitsAir(e);
     let best = null, bs = Infinity;
     G.queryFoes(e.x, e.y, aggro, e.team, (o) => {
-      if (o.team === e.team || o.dead) return;
+      if (o.team === e.team || o.dead || (o.fly && !air)) return;
       if (e.kind === 'creep') {
         if (o.kind === 'building') return;
         if (dist(o, e.home) > 420) return;
@@ -1589,6 +1655,7 @@
     if (sp <= 0) return false;
     const k = Math.min(sp, d - (stop || 4)) / d;
     e.x += dx * k; e.y += dy * k;
+    if (e.spec) e.runD = (e.runD || 0) + k * d; // Anlauf (Sturmangriff)
     e.face = Math.atan2(dy, dx);
     e.moving = true;
     e.walkT = (e.walkT || 0) + sp * 0.18;
@@ -1700,6 +1767,7 @@
   G.navWaypoint = navWaypoint;
   function navMove(e, tx, ty, dt, stop, tgt) {
     if (e.speed <= 0) return false;
+    if (e.fly) return moveTo(e, tx, ty, dt, stop); // Flieger: über Gelände und Mauern hinweg
     if (!tgt && S.terrain.length) { // Zielpunkt im Teich, in Lava oder Fels: an den Rand legen
       const g = { x: tx, y: ty };
       for (const f of S.terrain) if (f.block) pushOutOf(g, f, e.r * 0.6 + 3);
@@ -1716,19 +1784,43 @@
     return false;
   }
 
+  const PROJ_SFX = { pfeil: 'pfeil', feuer: 'feuer', kanone: 'kanone', schuss: 'schuss' };
+  function shoot(e, t, dmg, p) {
+    S.proj.push({ x: e.x, y: e.y, t, src: e, dmg, splash: e.splash || 0, kind: e.proj || 'pfeil', speed: e.proj === 'feuer' ? 380 : e.proj === 'schuss' ? 700 : 440, team: e.team, owner: e.owner,
+      color: p ? p.rd.palette.trim : '#ff7a2a', tx: t.x, ty: t.y, z0: e.fly ? G.FLY_ALT : 0, z1: t.fly ? G.FLY_ALT : 0 });
+  }
   function attack(e, t) {
     if (e.atkT > 0) return;
     e.atkT = e.cd;
-    const dmg = e.dmg * Math.max(0.1, 1 + e.m.dmg);
+    let dmg = e.dmg * Math.max(0.1, 1 + e.m.dmg);
     e.face = Math.atan2(t.y - e.y, t.x - e.x);
     e.swing = 0.22;
+    e.fightT = S.time;
+    if (e.spec) {
+      if (e.spec === 'charge' && e.runD >= 110 && t.kind !== 'building') { // Sturmangriff nach Anlauf
+        dmg *= 2.5; t.stun = Math.max(t.stun || 0, 0.6);
+        fx({ type: 'blast', x: t.x, y: t.y, r: 34, color: '#ffe8a0', dur: 0.45 });
+        G.shake(t.x, t.y, 2); G.sfx('treffer', t.x, t.y, 0.9);
+      }
+      if (e.blinkHit) { dmg *= 2.5; e.blinkHit = false; } // Schattensprung: erster Hieb 2,5-fach
+      e.runD = 0;
+    }
     if (e.proj || e.range > 60) {
       const p = e.owner >= 0 ? S.players[e.owner] : null;
-      S.proj.push({ x: e.x, y: e.y, t, src: e, dmg, splash: e.splash || 0, kind: e.proj || 'pfeil', speed: e.proj === 'feuer' ? 380 : 440, team: e.team, owner: e.owner, color: p ? p.rd.palette.trim : '#ff7a2a', tx: t.x, ty: t.y });
-      G.sfx(!e.proj || e.proj === 'pfeil' ? 'pfeil' : e.proj === 'feuer' ? 'feuer' : 'zauber', e.x, e.y, 0.5);
+      shoot(e, t, dmg, p);
+      if (e.spec === 'multishot') { // Sternenregen: bis zu zwei weitere Ziele
+        const rr = e.range * (1 + e.m.range) + 20;
+        let n = 0;
+        G.queryFoes(t.x, t.y, 170, e.team, (o) => {
+          if (n >= 2 || o === t || o.dead || o.kind === 'building' || (o.kind === 'creep' && !o.camp.active) || d2(o.x, o.y, e.x, e.y) > rr * rr) return;
+          n++; shoot(e, o, dmg * 0.75, p);
+        });
+      }
+      G.sfx(PROJ_SFX[e.proj || 'pfeil'] || 'zauber', e.x, e.y, e.proj === 'schuss' ? 0.3 : 0.5);
     } else {
       dealDamage(e, t, dmg);
-      fx({ type: 'slash', x: e.x + Math.cos(e.face) * e.r * 0.9, y: e.y + Math.sin(e.face) * e.r * 0.9 - e.r * 0.3, ang: e.face, r: e.r * 1.5 + 6, color: t.kind === 'building' ? '#e8e0d0' : '#ffffff', dur: 0.16 });
+      const fy = e.fly ? G.FLY_ALT * 0.6 : 0;
+      fx({ type: 'slash', x: e.x + Math.cos(e.face) * e.r * 0.9, y: e.y + Math.sin(e.face) * e.r * 0.9 - e.r * 0.3 - (t.fly ? G.FLY_ALT : fy), ang: e.face, r: e.r * 1.5 + 6, color: t.kind === 'building' ? '#e8e0d0' : '#ffffff', dur: 0.16 });
       G.sfx(t.kind === 'building' ? 'treffer' : 'schwert', e.x, e.y, 0.55);
     }
   }
@@ -1737,7 +1829,11 @@
     if (e.kind === 'creep') return e.boss ? bossGoal(e) : e.home;
     const p = S.players[e.owner];
     if (e.kind === 'hero') return e.goal || p.armyPoint;
-    const ap = (e.committed ? p.attackPoint : p.armyPoint) || p.rally;
+    let ap = (e.committed ? p.attackPoint : p.armyPoint) || p.rally;
+    if (e.fly && e.committed && p.attackCentroid) { // Flieger eilen nicht voraus, sie kreisen kurz vor der Spitze des Heeres
+      const c = p.attackCentroid, d = Math.hypot(ap.x - c.x, ap.y - c.y);
+      if (d > 260) ap = { x: c.x + (ap.x - c.x) * 140 / d, y: c.y + (ap.y - c.y) * 140 / d };
+    }
     const slot = e.id % (e.committed ? p.attackSlots || 12 : p.poolSlots || 12);
     const a = slot * 2.399;
     const rr = 14 + 15 * Math.sqrt(slot);
@@ -1747,8 +1843,31 @@
       if (e.role === 'tank') { x += p.dir.x * 30; y += p.dir.y * 30; }
     }
     const g = { x, y };
-    for (const f of S.terrain) if (f.block) pushOutOf(g, f, 14); // Formation schmiegt sich um Teiche und Felsen
+    if (!e.fly) for (const f of S.terrain) if (f.block) pushOutOf(g, f, 14); // Formation schmiegt sich um Teiche und Felsen
     return g;
+  }
+
+  // Schattensprung: hinter die feindlichen Linien zu Heilern, Magiern und Schützen
+  const BACKLINE = { heiler: 1, magier: 1, fernkampf: 1, support: 1, beschwoerer: 1 };
+  function blinkStrike(e) {
+    e.blinkT = 1;
+    if (!e.target || e.target.dead || e.target.kind === 'building') return;
+    let best = null, bs = Infinity;
+    G.queryFoes(e.x, e.y, 380, e.team, (o) => {
+      if (o.dead || o.fly || o.kind === 'building' || (o.kind === 'creep' && !o.camp.active)) return;
+      if (!BACKLINE[o.role] && !(o.kind === 'hero' && o.range > 60)) return;
+      const sc = o.hp + Math.sqrt(d2(o.x, o.y, e.x, e.y)) * 0.5;
+      if (sc < bs) { bs = sc; best = o; }
+    });
+    if (!best || d2(best.x, best.y, e.x, e.y) < 90 * 90) return;
+    const a = Math.atan2(best.y - e.y, best.x - e.x), off = best.r + e.r + 4;
+    fx({ type: 'puff', x: e.x, y: e.y, r: 18, dur: 0.6, color: '#7a3aa8' });
+    fx({ type: 'blast', x: e.x, y: e.y, r: 26, color: '#9a4ad8', dur: 0.4 });
+    e.x = best.x + Math.cos(a) * off; e.y = best.y + Math.sin(a) * off; e.px = e.x; e.py = e.y;
+    e.face = a + Math.PI;
+    fx({ type: 'blast', x: e.x, y: e.y, r: 30, color: '#9a4ad8', dur: 0.5 });
+    e.target = best; e.retargetT = 1.5; e.blinkHit = true; e.blinkT = 8; e.order = null;
+    G.sfx('sprung', e.x, e.y, 0.8);
   }
 
   function updateMobile(e, dt) {
@@ -1756,13 +1875,22 @@
     if (e.hitT > 0) e.hitT -= dt;
     if (e.avatarT > 0) { e.avatarT -= dt; if (e.avatarT <= 0) endAvatar(e); } // Verwandlung endet
     if (e.swing > 0) e.swing -= dt;
-    const regen = (e.regen || 0) + e.m.regen;
-    if (regen > 0 && e.hp < e.maxHp) e.hp = Math.min(e.maxHp, e.hp + regen * dt);
+    let regen = (e.regen || 0) + e.m.regen;
     if (e.owner >= 0) {
-      const p = S.players[e.owner];
+      const p = S.players[e.owner], rest = styleOf(p).restRegen;
+      if (rest && S.time - (e.fightT || 0) > 3) regen += rest; // Elfen: außerhalb des Kampfes schneller heilen
       if (d2(e.x, e.y, p.base.x, p.base.y) < G.BASE_RADIUS * G.BASE_RADIUS) e.hp = Math.min(e.maxHp, e.hp + e.maxHp * 0.02 * dt);
     }
+    if (regen > 0 && e.hp < e.maxHp) e.hp = Math.min(e.maxHp, e.hp + regen * dt);
+    if (e.spec === 'plague') { // Seuchenwolke: 20 Schaden pro Sekunde an alle Gegner in der Nähe
+      e.plagueT = (e.plagueT || 0) - dt;
+      if (e.plagueT <= 0) {
+        e.plagueT = 0.5;
+        G.queryFoes(e.x, e.y, 110, e.team, (o) => { if (!o.dead && o.kind !== 'building' && (o.kind !== 'creep' || o.camp.active)) dealDamage(e, o, 10, true); });
+      }
+    }
     if (e.stun > 0) { e.stun -= dt; e.moving = false; return; }
+    if (e.spec === 'blink' && (e.blinkT -= dt) <= 0) blinkStrike(e);
     e.atkT -= dt * Math.max(0.2, 1 + e.m.atkspd);
     if (e.kind === 'hero') updateHeroLogic(e, dt);
 
@@ -1821,7 +1949,7 @@
         if (dd <= e.range) {
           if (e.atkT <= 0) {
             e.atkT = e.cd; e.swing = 0.22;
-            S.proj.push({ x: e.x, y: e.y, t: ht, src: e, heal: e.heal * (1 + 0.12 * (e.level - 1)) * (1 + e.m.heal), kind: 'heilung', speed: 420, team: e.team, owner: e.owner, color: '#7aff7a', tx: ht.x, ty: ht.y });
+            S.proj.push({ x: e.x, y: e.y, t: ht, src: e, heal: e.heal * (1 + 0.12 * (e.level - 1)) * (1 + e.m.heal), kind: 'heilung', speed: 420, team: e.team, owner: e.owner, color: '#7aff7a', tx: ht.x, ty: ht.y, z1: ht.fly ? G.FLY_ALT : 0 });
             gainUnitXp(e, 1.5);
           }
           e.moving = false;
@@ -1831,7 +1959,8 @@
     }
 
     const t = e.target;
-    if (t) {
+    if (t && t.fly && !hitsAir(e)) e.target = null; // Nahkämpfer erreichen keine Flieger
+    else if (t) {
       const range = e.range * (1 + e.m.range);
       const dd = Math.sqrt(d2(e.x, e.y, t.x, t.y)) - t.r - e.r;
       if (dd <= range) { attack(e, t); e.moving = false; }
@@ -1862,7 +1991,7 @@
         }
         if (tgt) {
           dealDamage(pr.src, tgt, pr.dmg);
-          fx({ type: 'hit', x: tgt.x, y: tgt.y - tgt.r * 0.4, ang: pr.ang, color: pr.kind === 'pfeil' ? '#fff0c0' : (pr.color || '#ffd080'), dur: 0.25, big: pr.kind === 'zauber' });
+          fx({ type: 'hit', x: tgt.x, y: tgt.y - tgt.r * 0.4 - (tgt.fly ? G.FLY_ALT : 0), ang: pr.ang, color: pr.kind === 'pfeil' || pr.kind === 'schuss' ? '#fff0c0' : (pr.color || '#ffd080'), dur: 0.25, big: pr.kind === 'zauber' });
           if (pr.stun) tgt.stun = Math.max(tgt.stun || 0, pr.stun);
           if (pr.drain && pr.src && !pr.src.dead) pr.src.hp = Math.min(pr.src.maxHp, pr.src.hp + pr.dmg * 0.6);
         }
@@ -1899,9 +2028,9 @@
     }
     for (const e of mobs) {
       if (e.dead) continue;
-      for (const f of terr) pushOutOf(e, f, e.r * 0.6); // Teiche, Lava und Felsen umgehen
-      // gegnerische Gebäude und Mauern: aus dem Grundriss schieben (eigene sind durchlässig)
-      G.queryFoes(e.x, e.y, e.r + 26, e.team, (o) => {
+      if (!e.fly) for (const f of terr) pushOutOf(e, f, e.r * 0.6); // Teiche, Lava und Felsen umgehen
+      // gegnerische Gebäude und Mauern: aus dem Grundriss schieben (eigene sind durchlässig; Flieger ziehen darüber)
+      if (!e.fly) G.queryFoes(e.x, e.y, e.r + 26, e.team, (o) => {
         if (o.kind !== 'building') return;
         const hs = o.size * T / 2;
         const dx = e.x - o.x, dy = e.y - o.y;
@@ -1916,7 +2045,7 @@
       for (let cy = Math.max(0, cy0 - span); cy <= Math.min(SH - 1, cy0 + span); cy++) for (let cx = Math.max(0, cx0 - span); cx <= Math.min(SW - 1, cx0 + span); cx++) {
         const a = sg[cx + cy * SW]; if (!a.length) continue;
         for (const o of a) {
-          if (o.id <= e.id || o.dead) continue;
+          if (o.id <= e.id || o.dead || !o.fly !== !e.fly) continue; // Boden und Luft stören sich nicht
           const dx = o.x - e.x, dy = o.y - e.y;
           const rr = e.r + o.r;
           const dd = dx * dx + dy * dy;
@@ -1950,6 +2079,7 @@
         for (const b of p.buffs) addBonus(m, b.mods);
         if (shrine[e.team]) addBonus(m, shrine[e.team]);
         if (e.kind === 'hero') m.atkspd += e.itemAtkspd || 0;
+        if (e.spec === 'frenzy') { m.atkspd += Math.max(0, 1 - e.hp / e.maxHp); m.lifesteal += 0.1; } // Blutrausch
       }
       for (const b of e.buffs) addBonus(m, b.mods);
       if (e.aura) auraSrc.push(e);
@@ -2015,12 +2145,14 @@
   }
 
   function unlockedRoles(b) {
-    const prod = G.PRODUCTION[b.type];
+    const prod = G.prodOf(S.players[b.owner], b.type);
     if (!prod) return [];
     return Object.keys(prod).filter((r) => b.level >= prod[r]);
   }
   G.unlockedRoles = unlockedRoles;
 
+  // KI: sichtet sie gegnerische Flieger, bildet sie mehr Schützen, Magier und eigene Flieger aus
+  const ANTI_AIR = { fernkampf: 1, magier: 0.6, flieger: 1 };
   function chooseRole(p, b, counts, total) {
     const roles = unlockedRoles(b);
     if (!roles.length) return null;
@@ -2028,12 +2160,14 @@
     if (!b.prodOn) return null;
     if (b.focus !== 'auto') return roles.includes(b.focus) ? b.focus : null;
     if (!p.auto.produce) return null;
+    const air = p.human ? 0 : Math.min(4, (p.airSeen || 0) / 2);
+    const wOf = (r) => (p.comp[r] || 0) + (air && ANTI_AIR[r] ? air * ANTI_AIR[r] : 0);
     let W = 0;
-    for (const r of G.ROLES) W += p.comp[r] || 0;
+    for (const r of G.ROLES) W += wOf(r);
     if (W <= 0) return null;
     let best = null, bd = -Infinity;
     for (const r of roles) {
-      const w = p.comp[r] || 0;
+      const w = wOf(r);
       if (w <= 0) continue;
       const def = w / W - (total ? counts[r] / total : 0);
       if (def > bd) { bd = def; best = r; }
@@ -2046,11 +2180,11 @@
     for (const r of G.ROLES) counts[r] = 0;
     for (const e of S.ents) if (!e.dead && e.owner === p.id && e.kind === 'unit' && counts[e.role] !== undefined) { counts[e.role]++; total++; }
     for (const b of p.blds) if (b.prod) { counts[b.prod.role]++; total++; }
-    const minArmy = 6 + 4 * p.th.level;
+    const minArmy = 6 + 4 * p.th.level, ps = styleOf(p).prodSpeed;
     for (const b of p.blds) {
-      if (!G.PRODUCTION[b.type] || b.level < 1 || b.upgrading) continue;
+      if (!G.prodOf(p, b.type) || b.level < 1 || b.upgrading) continue;
       if (b.prod) {
-        b.prod.t += dt * (1 + 0.15 * (b.level - 1));
+        b.prod.t += dt * (1 + 0.15 * (b.level - 1)) * (1 + (ps ? (ps.all || 0) + (ps[b.type] || 0) : 0));
         if (b.prod.t >= b.prod.total) {
           const ang = Math.atan2(p.rally.y - b.y, p.rally.x - b.x);
           makeUnit(p, b.prod.role, b.x + Math.cos(ang) * (b.r + 14), b.y + Math.sin(ang) * (b.r + 14), 1 + Math.floor((b.level - 1) / 2));
@@ -2060,24 +2194,23 @@
       if (!b.prod) {
         const role = chooseRole(p, b, counts, total);
         if (!role) continue;
-        const sup = G.UNIT_BASE[role].supply;
+        const ub = G.unitBase(p, role), sup = ub.supply;
         if (p.supplyUsed + sup > p.supplyCap) continue;
         const c = G.unitCost(p, role);
         if (!canSpend(p, c, p.armySupply < minArmy || b.queue.length > 0)) continue;
         pay(p, c);
         if (b.queue.length && b.queue[0] === role) b.queue.shift();
-        b.prod = { role, t: 0, total: G.UNIT_BASE[role].time };
+        b.prod = { role, t: 0, total: ub.time };
         p.supplyUsed += sup;
         counts[role]++; total++;
       }
     }
   }
   // Einheit rekrutieren: wählt automatisch das passende, am wenigsten beschäftigte Gebäude
-  G.producerType = (role) => Object.keys(G.PRODUCTION).find((t) => G.PRODUCTION[t][role] !== undefined);
   G.recruitCheck = function (p, role) {
-    const type = G.producerType(role), need = G.PRODUCTION[type][role];
+    const type = G.producerType(p, role), need = G.prodOf(p, type)[role];
     const list = p.blds.filter((b) => b.type === type);
-    if (!list.length) return `Benötigt ${G.bname(p.race, type)}`;
+    if (!list.length) return `Benötigt ${G.bname(p.race, type)}${need > 1 ? ' Stufe ' + need : ''}`;
     const ok = list.filter((b) => b.level >= need);
     if (!ok.length) return `Benötigt ${G.bname(p.race, type)} Stufe ${need}`;
     if (ok.every((b) => b.queue.length >= 5)) return 'Warteschlangen voll';
@@ -2086,7 +2219,7 @@
   G.recruit = function (p, role) {
     const why = G.recruitCheck(p, role);
     if (why) { G.msg(why, 'bad'); return false; }
-    const type = G.producerType(role), need = G.PRODUCTION[type][role];
+    const type = G.producerType(p, role), need = G.prodOf(p, type)[role];
     const b = p.blds.filter((x) => x.type === type && x.level >= need && x.queue.length < 5)
       .sort((a, c) => (a.queue.length + (a.prod || a.upgrading ? 1 : 0)) - (c.queue.length + (c.prod || c.upgrading ? 1 : 0)))[0];
     b.queue.push(role);
@@ -2100,30 +2233,39 @@
 
   function updateSupply(p) {
     let cap = p.th.level * G.SUPPLY.perTH;
-    for (const b of p.blds) if (b.type === 'unterkunft' && b.level >= 1) cap += b.level * G.SUPPLY.perHouseLevel;
+    const house = G.SUPPLY.perHouseLevel * (1 + (styleOf(p).houseSupply || 0));
+    for (const b of p.blds) if (b.type === 'unterkunft' && b.level >= 1) cap += Math.round(b.level * house);
     p.supplyCap = Math.min(G.SUPPLY.max, cap);
     let used = 0, army = 0;
     for (const e of S.ents) if (!e.dead && e.owner === p.id && e.kind === 'unit') { used += e.supply || 0; army += e.supply || (e.merc ? 2 : 0); }
-    for (const b of p.blds) if (b.prod) used += G.UNIT_BASE[b.prod.role].supply;
+    for (const b of p.blds) if (b.prod) used += G.unitBase(p, b.prod.role).supply;
     p.supplyUsed = used;
     p.armySupply = army;
   }
 
   // -------------------------------------------------------------------------
   // KI: Basisbau (auch Autopilot für den Spieler)
-  G.GOALS = (function () {
-    // Je Haupthaus-Stufe: erst Wirtschaft & Kaserne, dann Haupthaus, dann Rest und Mauer nachziehen.
+  // Bauliste je Volk (Spielstil): je Haupthaus-Stufe die Gebäude in der Reihenfolge des Volkes,
+  // 'TH' = Haupthaus ausbauen, 'MAUER' = fällige Mauerstufe
+  function buildGoals(order, extra) {
     const g = [];
     for (let t = 1; t <= 5; t++) {
-      G.BUILD_ORDER.forEach((type, i) => {
-        const lim = G.LIMITS[type][t - 1];
+      for (const type of order) {
+        if (type === 'TH') { if (t < 5) g.push({ type: 'haupthaus', n: 1, level: t + 1 }); continue; }
+        if (type === 'MAUER') { G.WALLS.forEach((w, k) => { if (w.th === t) g.push({ type: 'mauer', level: k + 1 }); }); continue; }
+        if (!G.LIMITS[type]) continue;
+        const base = G.LIMITS[type][t - 1], lim = base > 0 && extra && extra[type] ? base + extra[type] : base;
         for (let n = 1; n <= lim; n++) g.push({ type, n, level: t });
-        if (i === 3 && t < 5) g.push({ type: 'haupthaus', n: 1, level: t + 1 });
-        if (i === 4) G.WALLS.forEach((w, k) => { if (w.th === t) g.push({ type: 'mauer', level: k + 1 }); });
-      });
+      }
     }
     return g;
-  })();
+  }
+  G.GOALS = buildGoals(G.DEFAULT_ORDER);
+  const goalCache = {};
+  function goalsFor(p) {
+    const st = styleOf(p);
+    return goalCache[p.race] || (goalCache[p.race] = buildGoals(st.order || G.DEFAULT_ORDER, st.extraLimit));
+  }
 
   function findSpot(p, type) {
     if (G.BUILDINGS[type].outpost) {
@@ -2161,11 +2303,11 @@
     p.reserve = { g: 0, w: 0 };
     const th = p.th.level;
     if (G.buildersBusy(p) < G.builders(p)) {
-      for (const goal of G.GOALS) {
+      for (const goal of goalsFor(p)) {
         if (goal.type === 'haupthaus') {
           if (th >= goal.level) continue;
           if (p.th.upgrading) continue;
-          const c = G.costOf('haupthaus', th + 1);
+          const c = G.costOf('haupthaus', th + 1, p);
           if (G.canAfford(p, c)) { G.upgradeBuilding(p, p.th); return; }
           p.reserve = c; break;
         }
@@ -2184,13 +2326,13 @@
           if (list.length >= G.maxCount(p, goal.type)) continue;
           const pos = findSpot(p, goal.type);
           if (!pos) continue;
-          const c = G.costOf(goal.type, 1);
+          const c = G.costOf(goal.type, 1, p);
           if (G.canAfford(p, c)) { G.placeBuilding(p, goal.type, pos.x, pos.y, 0); return; }
           p.reserve = c; break;
         } else {
           const cand = list.filter((b) => !b.upgrading && b.level < goal.level && b.level < th && b.level >= 1).sort((a, b) => a.level - b.level)[0];
           if (!cand) continue;
-          const c = G.costOf(goal.type, cand.level + 1);
+          const c = G.costOf(goal.type, cand.level + 1, p);
           if (G.canAfford(p, c)) { G.upgradeBuilding(p, cand); return; }
           p.reserve = c; break;
         }
@@ -2316,6 +2458,11 @@
     return n;
   };
   function armyThink(p) {
+    if (!p.human) { // gegnerische Flieger in Sicht? Dann mehr Luftabwehr ausbilden
+      let n = 0;
+      for (const o of S.ents) if (o.fly && !o.dead && o.team !== p.team && (!S.fog.on || teamSees(p.team, o.x, o.y))) n++;
+      p.airSeen = Math.max(n, (p.airSeen || 0) * 0.97);
+    }
     const units = S.ents.filter((e) => !e.dead && e.kind === 'unit' && e.owner === p.id);
     const pool = units.filter((u) => !u.committed), com = units.filter((u) => u.committed);
     p.poolCentroid = centroid(pool);
@@ -2819,6 +2966,7 @@
     for (const p of players) {
       if (!G.RACES[p.race]) throw new Error('Unbekanntes Volk');
       p.rd = G.RACES[p.race]; p.diff = G.DIFFICULTY[s.cfg.difficulty] || G.DIFFICULTY.mittel; p.bonus = {}; p.teco = {};
+      for (const r of G.ROLES) if (p.comp[r] === undefined) p.comp[r] = 1; // ältere Spielstände: Flieger und Spezialeinheit
       const h = p.hero; // ältere Spielstände: Helden ab Stufe 6 dürfen ihre Ultimative nachträglich wählen
       if (h) { h.pending = h.pending || []; if (h.level >= G.HERO_ULT_LVL && G.HERO_ULTS[h.def.id] && !h.abilities.some((a) => a.ult) && !h.pending.includes('ult')) h.pending.push('ult'); }
     }

@@ -148,7 +148,7 @@ G.RACES = {
     units: {
       tank: { name: 'Knochenkoloss', mods: { hp: 1.15, speed: 0.85 } },
       nahkampf: { name: 'Ghul', mods: { cd: 0.8, dmg: 0.9, speed: 1.1 } },
-      fernkampf: { name: 'Knochenschütze' },
+      fernkampf: { name: 'Knochenschütze', mods: { dmg: 1.1 } },
       magier: { name: 'Nekromagier' },
       heiler: { name: 'Blutpriester' },
       support: { name: 'Banshee', aura: { side: 'enemy', stat: 'armor', value: -3, desc: 'Gegner in der Nähe −3 Rüstung' } },
@@ -273,7 +273,7 @@ G.RACES = {
         abilities: [
           { name: 'Wichtelschwarm', type: 'summon', count: 3, duration: 30, cd: 24,
             unit: { name: 'Wichtel', hp: 200, dmg: 18, range: 120, cd: 1.0, speed: 75, armor: 0, proj: 'kugel', r: 9 } },
-          { name: 'Höllenriss', type: 'aoe', dmg: 190, radius: 130, cd: 14 }] },
+          { name: 'Höllenriss', type: 'aoe', dmg: 185, radius: 130, cd: 14 }] },
     ],
   },
 };
@@ -631,3 +631,120 @@ G.HERO_MODES = [
   { id: 'jagen', name: 'Jagt Monster', desc: 'Säubert allein passende Monsterlager für Erfahrung und Beute.' },
   { id: 'manuell', name: 'Manuell', desc: 'Du steuerst: Held antippen, dann Ziel antippen.' },
 ];
+
+// ---------------------------------------------------------------------------
+// Flieger, Spezialeinheiten und Spielstile der Völker
+// Flieger überfliegen Gelände und Mauern. Nur Fernkämpfer, Magier, Türme, Helden und andere Flieger erreichen sie.
+G.FLY_ALT = 30; // Flughöhe (nur Darstellung)
+G.ROLES.push('flieger', 'elite');
+G.ROLE_NAMES.flieger = 'Flieger';
+G.ROLE_NAMES.elite = 'Spezialeinheit';
+G.UNIT_BASE.flieger = { hp: 420, dmg: 24, range: 150, cd: 1.2, speed: 95, armor: 2, gold: 140, wood: 70, time: 17, supply: 3, r: 14, proj: 'pfeil' };
+G.UNIT_BASE.elite = { hp: 900, dmg: 40, range: 28, cd: 1.2, speed: 70, armor: 5, gold: 190, wood: 80, time: 22, supply: 4, r: 16 };
+G.BUILDINGS.horst = { name: 'Horst', size: 2, hp: 1000, cost: { g: 200, w: 160 }, time: 26,
+  desc: 'Bildet Flieger aus. Flieger überfliegen Mauern und Gelände – Nahkämpfer erreichen sie nicht.' };
+G.LIMITS.horst = [0, 0, 1, 1, 2];
+G.PRODUCTION.horst = { flieger: 1 };
+G.BUILD_ORDER.splice(G.BUILD_ORDER.indexOf('beschwoerung') + 1, 0, 'horst');
+(function () {
+  const names = { menschen: 'Greifenhorst', elfen: 'Windhain', untote: 'Gargylenturm', orks: 'Wyvernhorst', zwerge: 'Flugwerft', daemonen: 'Höllenhorst' };
+  for (const r in names) G.RACES[r].bnames.horst = names[r];
+})();
+
+// Besondere Fähigkeiten von Einheiten (Texte für Anzeige und Hilfe)
+G.SPECS = {
+  charge:    { name: 'Sturmangriff', desc: 'Der erste Hieb nach einem Anritt trifft 2,5-fach und betäubt kurz.' },
+  frenzy:    { name: 'Blutrausch', desc: 'Je verwundeter, desto schneller schlägt er zu (bis +100% Angriffstempo); 10% Lebensraub.' },
+  siege:     { name: 'Belagerung', desc: 'Doppelter Schaden gegen Gebäude; Kanonenkugeln treffen eine Fläche.' },
+  plague:    { name: 'Seuchenwolke', desc: 'Gegner in der Nähe erleiden ständig 20 Schaden pro Sekunde.' },
+  multishot: { name: 'Sternenregen', desc: 'Jeder Schuss trifft zusätzlich bis zu 2 weitere Gegner.' },
+  blink:     { name: 'Schattensprung', desc: 'Springt alle 8 s hinter die feindlichen Linien zu Heilern und Schützen; der erste Hieb trifft 2,5-fach.' },
+  flak:      { name: 'Flak', desc: '+75% Schaden gegen Flieger.' },
+};
+
+// Je Volk: ein Flieger (aus dem Horst) und eine Spezialeinheit (Gebäude und Stufe in "at")
+(function () {
+  const U = {
+    menschen: {
+      flieger: { name: 'Greifenreiter', desc: 'Ritter auf Greifen, die mit der Lanze aus der Luft herabstoßen.',
+        stats: { hp: 480, dmg: 30, range: 38, cd: 1.1, speed: 96, armor: 4, gold: 150, wood: 70, time: 18, supply: 3, r: 15, proj: null } },
+      elite: { name: 'Ritter', at: ['kaserne', 3], spec: 'charge', desc: 'Schwere Reiterei in voller Rüstung.',
+        stats: { hp: 950, dmg: 38, range: 28, cd: 1.25, speed: 92, armor: 6, gold: 190, wood: 70, time: 22, supply: 4, r: 16 } },
+    },
+    elfen: {
+      flieger: { name: 'Hippogreifreiterin', desc: 'Bogenschützin auf einem Hippogreif – schnell und wendig.',
+        stats: { hp: 400, dmg: 27, range: 170, cd: 1.0, speed: 104, armor: 1, gold: 140, wood: 70, time: 17, supply: 3, r: 14, proj: 'pfeil' } },
+      elite: { name: 'Sternenschützin', at: ['schiessstand', 3], spec: 'multishot', desc: 'Meisterschützin mit Sternenbogen und gewaltiger Reichweite.',
+        stats: { hp: 320, dmg: 34, range: 235, cd: 1.5, speed: 72, armor: 1, gold: 150, wood: 90, time: 18, supply: 3, r: 11, proj: 'pfeil' } },
+    },
+    untote: {
+      flieger: { name: 'Gargyl', desc: 'Steinerne Flugbestie – billig, zäh und schnell.',
+        stats: { hp: 420, dmg: 26, range: 32, cd: 0.85, speed: 106, armor: 5, gold: 105, wood: 45, time: 14, supply: 2, r: 12, proj: null } },
+      elite: { name: 'Fleischkoloss', at: ['beschwoerung', 2], spec: 'plague', desc: 'Zusammengenähtes Ungetüm in einer Wolke aus Seuchengas.',
+        stats: { hp: 1550, dmg: 38, range: 28, cd: 1.4, speed: 50, armor: 3, gold: 200, wood: 90, time: 24, supply: 4, r: 18 } },
+    },
+    orks: {
+      flieger: { name: 'Wyvernreiter', desc: 'Orkkrieger auf einer Wyvern, die Speere schleudern.',
+        stats: { hp: 430, dmg: 27, range: 150, cd: 1.25, speed: 92, armor: 2, gold: 140, wood: 70, time: 18, supply: 3, r: 15, proj: 'pfeil' } },
+      elite: { name: 'Berserker', at: ['kaserne', 2], spec: 'frenzy', desc: 'Rasender Krieger mit zwei Äxten – je verwundeter, desto wilder.',
+        stats: { hp: 520, dmg: 31, range: 24, cd: 1.0, speed: 80, armor: 2, gold: 120, wood: 25, time: 13, supply: 3, r: 13 } },
+    },
+    zwerge: {
+      flieger: { name: 'Gyrokopter', spec: 'flak', desc: 'Fliegende Dampfmaschine mit Schnellfeuerbüchse.',
+        stats: { hp: 380, dmg: 13, range: 165, cd: 0.45, speed: 95, armor: 4, gold: 140, wood: 80, time: 18, supply: 3, r: 14, proj: 'schuss' } },
+      elite: { name: 'Dampfpanzer', at: ['schmiede', 3], spec: 'siege', desc: 'Gepanzertes Dampfgefährt mit schwerer Kanone.',
+        stats: { hp: 1500, dmg: 48, range: 210, cd: 2.6, speed: 40, armor: 8, gold: 260, wood: 160, time: 28, supply: 5, r: 19, proj: 'kanone', splash: 60 } },
+    },
+    daemonen: {
+      flieger: { name: 'Feuerschwinge', desc: 'Geflügelter Dämon, der Feuerbälle schleudert.',
+        stats: { hp: 400, dmg: 25, range: 140, cd: 1.4, speed: 90, armor: 2, gold: 150, wood: 75, time: 18, supply: 3, r: 14, proj: 'feuer', splash: 40 } },
+      elite: { name: 'Schattenpirscher', at: ['beschwoerung', 2], spec: 'blink', desc: 'Lautloser Mörder, der durch die Schatten springt.',
+        stats: { hp: 720, dmg: 46, range: 26, cd: 0.9, speed: 82, armor: 4, gold: 170, wood: 80, time: 18, supply: 3, r: 13 } },
+    },
+  };
+  for (const r in U) Object.assign(G.RACES[r].units, U[r]);
+})();
+
+// Spielstile: spürbare Eigenheiten je Volk und wie die KI damit spielt.
+// order: Bauliste der KI bzw. des Autopiloten ('TH' = Haupthaus ausbauen, 'MAUER' = Mauerstufe)
+G.DEFAULT_ORDER = ['goldmine', 'kaserne', 'saegewerk', 'unterkunft', 'TH', 'turm', 'MAUER', 'schiessstand', 'sanktum', 'schmiede', 'beschwoerung', 'horst', 'kanone', 'aussenposten'];
+G.RACES.menschen.style = { id: 'truppen', name: 'Heerscharen', tag: 'Truppen',
+  desc: 'Große Armeen: alle Gebäude bilden 20% schneller aus, Bauernhäuser geben 25% mehr Versorgung.',
+  prodSpeed: { all: 0.2 }, houseSupply: 0.25,
+  comp: { tank: 2, nahkampf: 3, fernkampf: 3, magier: 2, heiler: 1, support: 1, beschwoerer: 1, flieger: 1, elite: 2 },
+  ai: { armyStyle: 'sammeln', attackFrac: 1.05, minAttack: 1.0 },
+  order: ['goldmine', 'kaserne', 'unterkunft', 'saegewerk', 'TH', 'schiessstand', 'turm', 'MAUER', 'sanktum', 'schmiede', 'horst', 'beschwoerung', 'kanone', 'aussenposten'] };
+G.RACES.orks.style = { id: 'rush', name: 'Ansturm', tag: 'Rush',
+  desc: 'Früher Druck: das Kriegslager bildet 30% schneller aus und seine Krieger kosten 10% weniger Gold; alle Einheiten +8% Tempo.',
+  prodSpeed: { kaserne: 0.3 }, unitDiscount: { kaserne: 0.10 }, bonus: [{ roles: ['all', 'summon'], speed: 0.08 }],
+  comp: { tank: 1, nahkampf: 5, fernkampf: 1, magier: 1, heiler: 1, support: 2, beschwoerer: 0, flieger: 1, elite: 3 },
+  ai: { armyStyle: 'sammeln', attackFrac: 0.6, minAttack: 0.6, wave: 0.8 },
+  order: ['kaserne', 'goldmine', 'unterkunft', 'saegewerk', 'TH', 'schiessstand', 'turm', 'sanktum', 'MAUER', 'schmiede', 'horst', 'beschwoerung', 'kanone', 'aussenposten'] };
+G.RACES.zwerge.style = { id: 'verteidigung', name: 'Bollwerk', tag: 'Verteidigung',
+  desc: 'Uneinnehmbar: Wachtürme und Kanonentürme 30% billiger und je Haupthaus-Stufe einer mehr erlaubt; die KI greift erst mit großer Armee an.',
+  costMul: { turm: 0.7, kanone: 0.7 }, extraLimit: { turm: 1, kanone: 1 },
+  comp: { tank: 4, nahkampf: 2, fernkampf: 3, magier: 1, heiler: 2, support: 1, beschwoerer: 0, flieger: 1, elite: 2 },
+  ai: { armyStyle: 'sammeln', attackFrac: 1.2, minAttack: 1.5 },
+  order: ['goldmine', 'turm', 'kaserne', 'saegewerk', 'unterkunft', 'TH', 'MAUER', 'kanone', 'schiessstand', 'schmiede', 'sanktum', 'horst', 'beschwoerung', 'aussenposten'] };
+G.RACES.untote.style = { id: 'horden', name: 'Endlose Horden', tag: 'Masse',
+  desc: 'Gefallene Feinde erheben sich mit 25% Chance als Skelett an deiner Seite (30 s).',
+  raise: { chance: 0.25, life: 30, unit: { name: 'Skelett', hp: 240, dmg: 17, range: 24, cd: 1.0, speed: 65, armor: 1, r: 10 } },
+  comp: { tank: 2, nahkampf: 4, fernkampf: 2, magier: 2, heiler: 1, support: 1, beschwoerer: 2, flieger: 2, elite: 1 },
+  ai: { armyStyle: null, attackFrac: 0.9, minAttack: 0.85 } };
+G.RACES.elfen.style = { id: 'beweglich', name: 'Schattenkrieg', tag: 'Beweglichkeit',
+  desc: 'Schnell und ausdauernd: alle Einheiten +10% Tempo, Fernkämpfer und Flieger +10% Schaden; außerhalb des Kampfes heilen sie dreimal so schnell.',
+  bonus: [{ roles: ['all', 'summon'], speed: 0.10 }, { roles: ['fernkampf', 'flieger'], dmg: 0.10 }], restRegen: 6,
+  comp: { tank: 2, nahkampf: 2, fernkampf: 5, magier: 2, heiler: 1, support: 1, beschwoerer: 0, flieger: 2, elite: 2 },
+  ai: { armyStyle: null, attackFrac: 0.85, minAttack: 0.8, wave: 0.85 } };
+G.RACES.daemonen.style = { id: 'beschwoerung', name: 'Höllenbrut', tag: 'Beschwörung',
+  desc: 'Beschwörungen halten 50% länger, Beschwörer rufen einen Diener mehr; Magier +10% Schaden.',
+  summonLife: 0.5, bonus: [{ roles: ['beschwoerer'], summonExtra: 1 }, { roles: ['magier'], dmg: 0.10 }],
+  comp: { tank: 2, nahkampf: 2, fernkampf: 1, magier: 3, heiler: 1, support: 1, beschwoerer: 3, flieger: 1, elite: 2 },
+  ai: { armyStyle: null, attackFrac: 1.0, minAttack: 1.0 } };
+
+// Armee-Vorlagen um Flieger und Spezialeinheit ergänzen, dazu eine Luftflotte
+(function () {
+  const add = { ausgewogen: [1, 1], schildwall: [0, 2], sturm: [0, 3], fernkampf: [2, 1], magie: [1, 1] };
+  for (const pr of G.ARMY_PRESETS) { const a = add[pr.id] || [1, 1]; pr.comp.flieger = a[0]; pr.comp.elite = a[1]; }
+  G.ARMY_PRESETS.push({ id: 'luft', name: 'Luftflotte', desc: 'Viele Flieger, gedeckt von Schützen und Tanks.', comp: { tank: 2, nahkampf: 1, fernkampf: 2, magier: 1, heiler: 1, support: 0, beschwoerer: 0, flieger: 5, elite: 1 } });
+})();

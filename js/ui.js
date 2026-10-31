@@ -61,7 +61,9 @@
       return `<button class="card race ${c.race === k ? 'sel' : ''}" data-act="m-race" data-v="${k}" style="--rc:${r.color};--rd:${r.dark}">
         <canvas class="preview" data-race="${k}" data-mode="race" data-skin="${Prof().data.skin[k] || 'standard'}" aria-label="${r.name}"></canvas><span class="lvlbadge">Stufe ${lvl} · ${G.titleFor(lvl)}</span>
         <h3 style="color:${r.color};font-family:${RACE_FONT[k]}">${emblem(k)} ${r.name}</h3><p>${r.desc}</p>
+        <div class="kv style"><b>Spielstil: ${r.style.name}</b> <span class="tag">${r.style.tag}</span> – ${r.style.desc}</div>
         <div class="kv"><b>Passiv:</b> ${r.passive.name} – ${r.passive.desc}</div>
+        <div class="kv"><b>Besondere Einheiten:</b> ${r.units.elite.name} (Spezialeinheit), ${r.units.flieger.name} (Flieger)</div>
         <div class="kv"><b>Volksfähigkeiten:</b> ${r.abilities.map((a) => a.name).join(' · ')}</div>
         <div class="kv"><b>Heimat:</b> ${r.map.name}</div></button>`;
     }).join('') + `<button class="card race ${c.race === 'zufall' ? 'sel' : ''}" data-act="m-race" data-v="zufall" style="--rc:#888;--rd:#333">
@@ -157,6 +159,8 @@
         <div><h3>Armee</h3><p>Truppengebäude bilden automatisch Einheiten nach der gewählten Armee-Vorlage aus; über die Einheitenkarten im Armee-Tab rekrutierst du zusätzlich gezielt. Höhere Gebäudestufen schalten Rollen frei (Tank, Magier, Support …). Im Armee-Tab wählst du: Sammeln &amp; Angreifen, Wellen oder Nur verteidigen. Losgeschickte Einheiten kämpfen bis zum Tod.</p></div>
         <div><h3>Held</h3><p>Dein Held gibt der ganzen Armee einen Commander-Bonus, steigt bis Stufe 10 auf und bringt pro Stufe einen Talentpunkt. Im Heldenfenster wählst du sein Verhalten (Armee folgen, Basis verteidigen, Monster jagen oder manuell), nutzt Fähigkeiten, Tränke und den Rückzug.</p></div>
         <div><h3>Volk</h3><p>Jedes Volk hat ein Passiv und drei Volksfähigkeiten (ab Haupthaus-Stufe 1, 3 und 5). Im Tab „Volk“ verteilst du Talente in Krieg, Bollwerk und Wohlstand.</p></div>
+        <div><h3>Spielstile</h3><p>Jedes Volk spielt sich etwas anders: Menschen setzen auf große Heere, Orks auf frühen Ansturm, Zwerge auf Verteidigung mit vielen Türmen, Untote auf endlose Horden, Elfen auf Tempo und schnelle Erholung, Dämonen auf Beschwörungen. Die Armee-Vorlage ★ im Armee-Tab passt zum Stil deines Volkes.</p></div>
+        <div><h3>Flieger & Spezialeinheiten</h3><p>Im Horst (ab Haupthaus-Stufe 3) bildest du Flieger aus. Sie überfliegen Mauern und Gelände; Nahkämpfer erreichen sie nicht – nur Schützen, Magier, Türme, Helden und andere Flieger. Jedes Volk hat außerdem eine Spezialeinheit mit eigener Fähigkeit, etwa den Ritter mit Sturmangriff oder den Dampfpanzer gegen Gebäude. Tippe eine Einheit an, um ihre Werte zu sehen.</p></div>
         <div><h3>Neutrale Monster</h3><p>Lager auf der Karte geben Gold, Holz, Erfahrung und Beute. Trolle schließen sich dir als Söldner an, Golems und Drachen stärken die ganze Armee.</p></div>
         <div><h3>Nebel des Krieges</h3><p>Du siehst nur, was deine Einheiten, dein Held, deine Gebäude und Verbündete sehen. Erkundetes Gebiet bleibt abgedunkelt sichtbar, gegnerische Gebäude erscheinen dort so, wie du sie zuletzt gesehen hast. Im Freien Spiel unter „7. Sicht“ abschaltbar.</p></div>
         <div><h3>Schreine & Ereignisse</h3><p>Schreine geben dem ganzen Team einen Bonus (Schaden, Regeneration, Gold oder Tempo). Wer 8 Sekunden allein am Schrein steht, erobert ihn. Von Zeit zu Zeit zieht ein mächtiger Boss über die Karte oder eine Händlerkarawane fährt von Händler zu Händler – beides bringt reiche Beute.</p></div>
@@ -420,8 +424,14 @@
     return h + '<div class="hint">Die Mauer umschließt automatisch die ganze Basis. Eigene Truppen gehen hindurch, Gegner müssen sie einreißen. Ein Ausbau repariert alle Segmente.</div></div>';
   }
 
+  function prodNote(p, type) {
+    const el = p.rd.units.elite;
+    if (el.at[0] === type) return ` <b class="elite">Spezialeinheit: ${el.name} ab Stufe ${el.at[1]}.</b>`;
+    if (type === 'horst') return ` <b class="elite">Flieger: ${p.rd.units.flieger.name}.</b>`;
+    return '';
+  }
   function tabBauen(p) {
-    const types = Object.keys(G.BUILDINGS).filter((t) => t !== 'haupthaus');
+    const types = [...G.DEFAULT_ORDER, ...Object.keys(G.BUILDINGS)].filter((t, i, a) => G.BUILDINGS[t] && t !== 'haupthaus' && a.indexOf(t) === i);
     let h = `<div class="box">${toggle('auto.build', 'Bau-Autopilot', p.auto.build, 'Der Computer baut, erforscht und befestigt für dich nach einer optimierten Reihenfolge.')}
       <div class="hint">Baumeister: ${G.buildersBusy(p)}/${G.builders(p)} · ${G.bname(p.race, 'haupthaus')} Stufe ${p.th.level} bestimmt Limits und Höchststufen.</div></div>`;
     h += wallBox(p);
@@ -431,8 +441,8 @@
       const why = G.buildingCheck(p, t);
       h += `<div class="bitem ${UI.placing === t ? 'sel' : ''}">
         <div class="bname"><b>${G.bname(p.race, t)}</b> <span class="cnt">${n}/${max}</span></div>
-        <div class="bdesc">${d.desc}</div>
-        <div class="brow">${costHtml(G.costOf(t, 1))} · ${fmtTime(G.timeOf(t, 1))}
+        <div class="bdesc">${d.desc}${prodNote(p, t)}</div>
+        <div class="brow">${costHtml(G.costOf(t, 1, p))} · ${fmtTime(G.timeOf(t, 1))}
         ${btn('build', UI.placing === t ? 'Abbrechen' : 'Bauen', UI.placing === t ? null : why, `data-type="${t}"`)}</div></div>`;
     }
     h += '</div><h4>Deine Gebäude</h4><div class="mylist">';
@@ -440,7 +450,7 @@
     for (const b of p.blds.slice().sort((a, b) => order.indexOf(a.type) - order.indexOf(b.type))) {
       const why = G.upgradeCheck(p, b);
       const st = b.upgrading ? `${Math.floor(100 * b.upgrading.t / b.upgrading.total)}%` : '';
-      const c = G.costOf(b.type, Math.min(5, b.level + 1));
+      const c = G.costOf(b.type, Math.min(5, b.level + 1), p);
       h += `<div class="mrow"><a data-act="selbld" data-id="${b.id}">${b.name}</a> <span>St. ${b.level}${st ? ' ⚒ ' + st : ''}</span>
         ${b.level < 5 && !b.upgrading ? btn('upgradeid', '▲', why, `data-id="${b.id}" title="${esc(why || `Ausbau: ${c.g} Gold, ${c.w} Holz`)}"`) : ''}</div>`;
     }
@@ -474,8 +484,8 @@
     const training = p.blds.filter((b) => b.prod);
     const queued = p.blds.reduce((n, b) => n + b.queue.length, 0);
     h += `<div class="box"><div class="lbl">Produktion ${toggle('auto.produce', 'automatisch', p.auto.produce, 'Gebäude bilden laufend Einheiten nach der gewählten Vorlage aus.')}</div>
-      <div class="chips">${G.ARMY_PRESETS.map((pr) => `<button class="chip ${p.preset === pr.id ? 'sel' : ''}" data-act="preset" data-v="${pr.id}" title="${esc(pr.desc)}">${pr.name}</button>`).join('')}${p.preset === 'eigene' ? '<button class="chip sel" disabled>Eigene</button>' : ''}</div>
-      <div class="hint">${(G.ARMY_PRESETS.find((x) => x.id === p.preset) || { desc: 'Eigene Gewichtung aus der Feineinstellung.' }).desc}</div>
+      <div class="chips">${G.presetsFor(p).map((pr) => `<button class="chip ${p.preset === pr.id ? 'sel' : ''} ${pr.id === 'volk' ? 'volk' : ''}" data-act="preset" data-v="${pr.id}" title="${esc(pr.desc)}">${pr.id === 'volk' ? '★ ' : ''}${pr.name}</button>`).join('')}${p.preset === 'eigene' ? '<button class="chip sel" disabled>Eigene</button>' : ''}</div>
+      <div class="hint">${(G.presetsFor(p).find((x) => x.id === p.preset) || { desc: 'Eigene Gewichtung aus der Feineinstellung.' }).desc}</div>
       <div class="training">${training.length ? training.map((b) => `<div class="tr" title="${esc(b.name)}"><span>${p.rd.units[b.prod.role].name}</span><div class="hc-bar"><div style="width:${Math.floor(100 * b.prod.t / b.prod.total)}%"></div></div></div>`).join('') : '<div class="hint">Gerade wird niemand ausgebildet.</div>'}
       ${queued ? `<div class="hint">In der Warteschlange: ${queued}</div>` : ''}</div>
       <div class="lbl">Rekrutieren <small>(zusätzlich zur Automatik, kostet beim Start der Ausbildung)</small></div>
@@ -488,7 +498,8 @@
           <input type="range" min="0" max="6" step="1" value="${p.comp[r]}" data-slider="comp" data-role="${r}"><span class="cv">${p.comp[r]}</span><span class="cc">${counts[r]}×</span></div>`;
       }
     }
-    return h + `<div class="hint">Beschwörungen/Söldner: ${summons}. Rollen werden je Gebäudestufe freigeschaltet (Kaserne St. 2 = Tank, Sanktum St. 2 = Magier, St. 3 = Support).</div></div>`;
+    const el = p.rd.units.elite;
+    return h + `<div class="hint">Beschwörungen/Söldner: ${summons}. Rollen werden je Gebäudestufe freigeschaltet (Kaserne St. 2 = Tank, Sanktum St. 2 = Magier, St. 3 = Support). ${el.name}: ${G.bname(p.race, el.at[0])} St. ${el.at[1]} · ${p.rd.units.flieger.name}: ${G.bname(p.race, 'horst')} (ab Haupthaus St. 3).</div></div>`;
   }
 
   const MOD_TXT = { hp: (v) => `+${Math.round(v * 100)}% LP`, dmg: (v) => `+${Math.round(v * 100)}% Schaden`, armor: (v) => `+${v} Rüstung`, regen: (v) => `+${v} LP/s`,
@@ -564,7 +575,9 @@
       });
       s += '</div>';
     });
-    s += `</div></div><div class="box"><div class="lbl">Volk: ${rd.name}</div><div class="kv"><b>Passiv:</b> ${rd.passive.name} – ${rd.passive.desc}</div>
+    s += `</div></div><div class="box"><div class="lbl">Volk: ${rd.name}</div><div class="kv"><b>Spielstil: ${rd.style.name}</b> (${rd.style.tag}) – ${rd.style.desc}</div><div class="kv"><b>Passiv:</b> ${rd.passive.name} – ${rd.passive.desc}</div>
+      <div class="kv"><b>${rd.units.elite.name}</b> (Spezialeinheit, ${G.bname(p.race, rd.units.elite.at[0])} St. ${rd.units.elite.at[1]}) – ${G.SPECS[rd.units.elite.spec].name}: ${G.SPECS[rd.units.elite.spec].desc}</div>
+      <div class="kv"><b>${rd.units.flieger.name}</b> (Flieger, ${G.bname(p.race, 'horst')}) – ${rd.units.flieger.desc}${rd.units.flieger.spec ? ' ' + G.SPECS[rd.units.flieger.spec].name + ': ' + G.SPECS[rd.units.flieger.spec].desc : ''}</div>
       ${rd.abilities.map((a, i) => `<div class="kv"><b>${i + 1}: ${a.name}</b> (ab ${G.bname(p.race, 'haupthaus')} St. ${a.th}, ${a.cd} s) – ${a.desc}</div>`).join('')}
       ${toggle('auto.ability', 'Volksfähigkeiten automatisch einsetzen', p.auto.ability)}</div>`;
     return s;
@@ -618,6 +631,7 @@
     body.innerHTML = fn(p);
     body.scrollTop = st;
     renderSelection();
+    renderUnitCard();
   }
   UI.renderPanel = renderPanel;
 
@@ -666,7 +680,7 @@
     if (UI.selected && !UI.selected.dead && !G.canSee(UI.selected)) UI.selected = null; // in den Nebel verschwunden
     const e = UI.selected;
     if (!e || e.dead) { if (e && e.dead && e.kind !== 'hero') UI.selected = null; box.classList.add('hidden'); return; }
-    if (e.kind === 'hero' && e.owner === 0) { box.classList.add('hidden'); return; } // eigener Held: Heldenfenster genügt
+    if (e.kind !== 'building') { box.classList.add('hidden'); return; } // Einheiten: kleines Werte-Kärtchen am Rand
     box.classList.remove('hidden');
     const S = G.S, p = me();
     const owner = e.owner >= 0 ? S.players[e.owner] : null;
@@ -680,10 +694,10 @@
         if (e.upgrading) h += `<div class="prog">${e.level === 0 ? 'Bau' : 'Ausbau auf Stufe ' + e.upgrading.to}: ${Math.floor(100 * e.upgrading.t / e.upgrading.total)}%</div>`;
         else if (e.level < 5) {
           const why = G.upgradeCheck(p, e);
-          h += `<div class="row">${btn('upgrade', `Ausbau auf Stufe ${e.level + 1}: ${costHtml(G.costOf(e.type, e.level + 1))} · ${fmtTime(G.timeOf(e.type, e.level + 1))}`, why)}${why ? `<span class="why">${why}</span>` : ''}</div>`;
+          h += `<div class="row">${btn('upgrade', `Ausbau auf Stufe ${e.level + 1}: ${costHtml(G.costOf(e.type, e.level + 1, p))} · ${fmtTime(G.timeOf(e.type, e.level + 1))}`, why)}${why ? `<span class="why">${why}</span>` : ''}</div>`;
         } else h += '<div class="good">Maximale Stufe erreicht</div>';
         if (e.type === 'haupthaus') h += wallBox(p);
-        const prod = G.PRODUCTION[e.type];
+        const prod = G.prodOf(p, e.type);
         if (prod) {
           const unl = G.unlockedRoles(e);
           h += `<div class="prog">${e.prod ? `Bildet aus: ${p.rd.units[e.prod.role].name} ${Math.floor(100 * e.prod.t / e.prod.total)}%` : e.upgrading ? 'Produktion pausiert (Ausbau)' : 'Wartet…'} · Tempo +${(e.level - 1) * 15}% · Startstufe ${1 + Math.floor((e.level - 1) / 2)}</div>
@@ -699,18 +713,59 @@
           if (p.researching) h += `<div class="prog">Forschung: ${G.RESEARCH[p.researching.line].name} ${Math.floor(100 * p.researching.t / p.researching.total)}%</div>`;
         }
       }
-    } else {
-      const role = e.kind === 'hero' ? 'Held' : e.kind === 'creep' ? 'Neutrales Monster' : e.role === 'summon' ? (e.merc ? 'Söldner' : 'Beschwörung') : G.ROLE_NAMES[e.role];
-      h += `<div class="sel-head"><b>${e.name}</b> · ${role} · Stufe ${e.level} · ${ownerTxt}${e.committed ? ' · <span class="bad">im Angriff</span>' : ''}</div>
-        <div class="hp">LP ${fmt(e.hp)}/${fmt(e.maxHp)} · Schaden ${Math.round(e.dmg * (1 + e.m.dmg))} · Rüstung ${Math.round((e.armor || 0) + e.m.armor)} · Reichweite ${Math.round(e.range)}</div>`;
-      if (e.aura) h += `<div class="desc">Aura: ${e.aura.desc}</div>`;
-      if (e.summon) h += `<div class="desc">Beschwört im Kampf: ${e.summon.name}</div>`;
-      if (e.heal) h += `<div class="desc">Heilt Verbündete um ${Math.round(e.heal)} LP</div>`;
-      if (e.kind === 'unit' && e.level < 5 && !e.summoned) h += `<div class="desc">Erfahrung: ${Math.floor(e.xp)}/${G.UNIT_XP[e.level]}</div>`;
-      if (e.life) h += `<div class="desc">Verschwindet in ${Math.ceil(e.life)} s</div>`;
-      if (e.kind === 'creep') { const c = e.camp.def; h += `<div class="desc">${e.camp.name}: Belohnung ${c.gold} Gold, ${c.wood} Holz${c.item ? `, ${Math.round(c.item * 100)}% Beute-Chance` : ''}${c.extraDesc ? ', ' + c.extraDesc : ''}</div>`; }
     }
     box.innerHTML = h;
+  }
+
+  // Kleines Werte-Kärtchen am Bildschirmrand: angeklickte Einheiten, gegnerische Helden und Monster
+  const num = (v, d) => (d ? v.toFixed(d).replace('.', ',') : String(Math.round(v)));
+  function renderUnitCard() {
+    const box = $('#unitcard'); if (!box) return;
+    const e = UI.selected;
+    if (!e || e.dead || e.kind === 'building' || (e.kind === 'hero' && e.owner === 0) || !G.canSee(e)) {
+      if (UI.cardHtml) { box.classList.add('hidden'); UI.cardHtml = ''; document.body.classList.remove('uc-open'); }
+      return;
+    }
+    const S = G.S, owner = e.owner >= 0 ? S.players[e.owner] : null, m = e.m || {};
+    const dmg = e.dmg * Math.max(0.1, 1 + (m.dmg || 0)), cd = (e.cd || 1) / Math.max(0.2, 1 + (m.atkspd || 0));
+    const range = e.range * (1 + (m.range || 0)), speed = e.speed * Math.max(0.2, 1 + (m.speed || 0)), armor = (e.armor || 0) + (m.armor || 0);
+    const role = e.kind === 'hero' ? 'Held' : e.kind === 'creep' ? (e.boss ? 'Boss' : 'Neutrales Monster') : e.role === 'summon' ? (e.merc ? 'Söldner' : 'Beschwörung') : G.ROLE_NAMES[e.role];
+    const who = owner ? `<span style="color:${owner.color}">${owner.human ? 'Deine Einheit' : owner.name}</span>` : '<span class="neutral">Neutral</span>';
+    const tags = [];
+    if (e.fly) tags.push(['air', '✈ Fliegt']);
+    if (!G.hitsAir(e)) tags.push(['no', 'Nur Bodenziele']); else if (!e.fly && e.kind !== 'hero') tags.push(['', 'Trifft Flieger']);
+    if (e.spec) tags.push(['spec', '★ ' + G.SPECS[e.spec].name]);
+    if (e.splash) tags.push(['', 'Flächenschaden']);
+    if (e.stun > 0) tags.push(['no', 'Betäubt']);
+    if (e.committed) tags.push(['no', 'Im Angriff']);
+    const notes = [];
+    if (e.spec) notes.push(G.SPECS[e.spec].desc);
+    if (e.aura) notes.push('Aura: ' + e.aura.desc);
+    if (e.heal) notes.push(`Heilt Verbündete um ${Math.round(e.heal)} LP`);
+    if (e.summon) notes.push('Beschwört im Kampf: ' + e.summon.name);
+    if (e.kind === 'hero') notes.push('Fähigkeiten: ' + e.abilities.map((a) => a.name).join(', '));
+    if (e.kind === 'creep' && e.camp && !e.camp.event) { const c = e.camp.def; notes.push(`${e.camp.name}: ${c.gold} Gold, ${c.wood} Holz${c.item ? `, ${Math.round(c.item * 100)}% Beute` : ''}`); }
+    if (e.life) notes.push(`Verschwindet in ${Math.ceil(e.life)} s`);
+    const boni = [];
+    if (m.dmg) boni.push(`${m.dmg > 0 ? '+' : ''}${Math.round(m.dmg * 100)}% Schaden`);
+    if (m.atkspd) boni.push(`${m.atkspd > 0 ? '+' : ''}${Math.round(m.atkspd * 100)}% Angriffstempo`);
+    if (m.lifesteal) boni.push(`${Math.round(m.lifesteal * 100)}% Lebensraub`);
+    if (m.regen) boni.push(`+${num(m.regen, 0)} LP/s`);
+    if (boni.length) notes.push('Boni: ' + boni.join(', '));
+    const pct = Math.max(0, Math.min(100, (100 * e.hp) / e.maxHp));
+    const hpCol = !owner ? '#e0a030' : e.owner === 0 ? '#5fe05f' : owner.team === me().team ? '#5fb0ff' : '#ff5050';
+    const xp = e.kind === 'unit' && !e.summoned && e.level < 5 ? `<div class="uc-xp" title="Erfahrung bis Stufe ${e.level + 1}"><div style="width:${Math.floor(100 * (e.xp - G.UNIT_XP[e.level - 1]) / (G.UNIT_XP[e.level] - G.UNIT_XP[e.level - 1]))}%"></div></div>` : '';
+    const stat = (label, val, tip) => `<span title="${tip}"><small>${label}</small><b>${val}</b></span>`;
+    const h = `<div class="uc-head"><b>${e.name}</b><span class="lv">${e.kind === 'creep' ? '' : 'St. ' + e.level}</span></div>
+      <div class="uc-sub">${who} · ${role}</div>
+      <div class="uc-hp"><div style="width:${pct}%;background:${hpCol}"></div><span>${fmt(e.hp)} / ${fmt(e.maxHp)} LP</span></div>${xp}
+      <div class="uc-grid">${stat('Schaden', Math.round(dmg), 'Schaden je Treffer')}${stat('DPS', num(dmg / cd, dmg / cd < 10 ? 1 : 0), 'Schaden pro Sekunde')}${stat('Rüstung', Math.round(armor), 'Rüstung verringert erlittenen Schaden')}
+        ${stat('Reichweite', Math.round(range), 'Angriffsreichweite')}${stat('Tempo', Math.round(speed), 'Laufgeschwindigkeit')}${stat('Takt', num(cd, 1) + ' s', 'Zeit zwischen zwei Angriffen')}</div>
+      <div class="uc-tags">${tags.map(([c, t]) => `<span class="${c}">${t}</span>`).join('')}</div>
+      ${notes.length ? `<div class="uc-note">${notes.join('<br>')}</div>` : ''}`;
+    if (h === UI.cardHtml) return;
+    if (!box.querySelector('.uc-body')) box.innerHTML = '<button class="x" data-act="deselect" aria-label="Schließen">×</button><div class="uc-body"></div>';
+    box.querySelector('.uc-body').innerHTML = h; UI.cardHtml = h; box.classList.remove('hidden'); document.body.classList.add('uc-open');
   }
 
   // -------------------------------------------------------------------------
@@ -849,7 +904,7 @@
       case 'follow': UI.follow = !UI.follow; if (UI.follow && !p.hero.dead) G.R.centerOn(p.hero.x, p.hero.y); break;
       case 'heromode': G.heroMode(p, v); if (v === 'manuell') { UI.selected = p.hero; G.msg(G.R.touch ? 'Manuell: Ziel antippen, um den Helden zu bewegen oder angreifen zu lassen.' : 'Manuell: Linksklick aufs Ziel (Held ausgewählt) oder Rechtsklick.', ''); } break;
       case 'herosel': if (!p.hero.dead) { UI.selected = p.hero; G.R.centerOn(p.hero.x, p.hero.y); } break;
-      case 'preset': { const pr = G.ARMY_PRESETS.find((x) => x.id === v); p.comp = { ...pr.comp }; p.preset = v; G.msg(`Armee-Vorlage: ${pr.name}`, ''); break; }
+      case 'preset': { const pr = G.presetsFor(p).find((x) => x.id === v); if (!pr) break; p.comp = { ...pr.comp }; p.preset = v; G.msg(`Armee-Vorlage: ${pr.name}`, ''); break; }
       case 'recruit': G.recruit(p, v); break;
       case 'finetune': UI.fineOpen = !UI.fineOpen; break;
       case 'race': G.castRaceAbility(p, +el.dataset.idx || 0); break;
@@ -919,15 +974,16 @@
   const keys = {};
   let drag = null;
   function pickAt(wx, wy) {
+    const tol = (G.R.touch ? 14 : 6) / Math.max(0.5, G.R.cam.z);
     let best = null, bd = Infinity;
     for (const e of G.S.ents) {
       if (e.dead || !G.canSee(e)) continue; // im Nebel Verborgenes ist nicht anwählbar
       if (e.kind === 'building') {
         const hs = e.size * G.TILE / 2;
         if (Math.abs(e.x - wx) < hs && Math.abs(e.y - wy) < hs + 10) { const d = e.type === 'mauer' ? 40 : 30; if (d < bd) { bd = d; best = e; } }
-      } else {
-        const d = Math.hypot(e.x - wx, e.y - wy);
-        if (d < e.r + 6 && d < bd) { bd = d; best = e; }
+      } else { // Mitte der Figur (Flieger in Flughöhe); am Handy mit größerer Trefferfläche
+        const d = Math.hypot(e.x - wx, e.y - (e.fly ? G.FLY_ALT : 0) - e.r * 0.3 - wy);
+        if (d < e.r * (e.fly ? 1.5 : 1.1) + tol && d < bd) { bd = d; best = e; }
       }
     }
     return best;
@@ -1109,7 +1165,7 @@
   UI.tick = function (dt) {
     const S = G.S; if (!S) return;
     tTop -= dt; tPanel -= dt; tMini -= dt;
-    if (tTop <= 0) { tTop = 0.2; renderTop(); renderMsgs(); renderHeroCard(); if (G.Audio) updateIntensity(); }
+    if (tTop <= 0) { tTop = 0.2; renderTop(); renderMsgs(); renderHeroCard(); renderUnitCard(); if (G.Audio) updateIntensity(); }
     if (tPanel <= 0) { tPanel = 0.5; renderPanel(false); tutorialTick(); }
     if (tMini <= 0) { tMini = 0.15; G.R.drawMinimap($('#minimap')); }
     if (!S.over && S.time - UI.lastAutosave >= 60) { UI.lastAutosave = S.time; autosave(); }
