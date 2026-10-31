@@ -51,6 +51,10 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
   Wyvernreiter, Gyrokopter (Flak gegen Flieger), Feuerschwinge. Flieger überfliegen Mauern und Gelände und werfen einen Schatten;
   Nahkämpfer erreichen sie nicht – nur Schützen, Magier, Türme, Helden und andere Flieger. Sichtet die KI Flieger,
   bildet sie mehr Fernkämpfer aus.
+- **🤖 Autopilot:** Ein Schalter oben rechts (oder „9. Steuerung“ beim Start) lässt den Computer für dich spielen –
+  genauso gut wie die KI: Bau, Ausbildung nach Volksstil, Monsterjagd vor dem ersten Angriff, Schreine, Angriffe, Held
+  (inkl. Talente, Meisterung und Ultimate) und Volksfähigkeiten. Eingreifen ist jederzeit möglich. Auch ohne Autopilot greift
+  die eigene Armee wie die KI erst ab etwa Minute 6 an (im Armee-Tab einstellbar) und jagt bis dahin Monster.
 - **Werte-Anzeige:** Ein Klick bzw. Tipp auf eine Einheit, einen gegnerischen Helden oder ein Monster zeigt rechts oben ein
   kleines Kärtchen mit Lebenspunkten, Schaden, Schaden pro Sekunde, Rüstung, Reichweite, Tempo, Angriffstakt, Erfahrung,
   Eigenschaften (fliegt, trifft Flieger, Spezialfähigkeit) und aktiven Boni.

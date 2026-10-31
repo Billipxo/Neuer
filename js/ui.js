@@ -42,7 +42,7 @@
 
   // -------------------------------------------------------------------------
   // Hauptmenü
-  UI.cfg = { race: 'menschen', hero: null, mode: '1v1', difficulty: 'mittel', map: 'heimat', duration: 30, fog: true, events: true };
+  UI.cfg = { race: 'menschen', hero: null, mode: '1v1', difficulty: 'mittel', map: 'heimat', duration: 30, fog: true, events: true, autopilot: false };
 
   UI.showMenu = function () {
     $('#menu').classList.remove('hidden');
@@ -115,6 +115,7 @@
         <div><h2>6. Spieldauer</h2>${opt('m-dur', String(c.duration), G.DURATIONS.map(([v, n]) => [String(v), n, v ? 'Danach entscheidet die Punktzahl' : 'Bis ein Team besiegt ist']))}</div>
         <div><h2>7. Sicht</h2>${opt('m-fog', c.fog === false ? 'aus' : 'an', [['an', 'Nebel des Krieges', 'Du siehst nur, was deine Truppen und Gebäude sehen'], ['aus', 'Offene Karte', 'Die ganze Karte ist aufgedeckt']])}</div>
         <div><h2>8. Ereignisse</h2>${opt('m-events', c.events === false ? 'aus' : 'an', [['an', 'Schreine & Ereignisse', 'Eroberbare Schreine, wandernde Bosse und Händlerkarawanen'], ['aus', 'Klassisch', 'Nur Basen, Lager und Händler']])}</div>
+        <div><h2>9. Steuerung</h2>${opt('m-auto', c.autopilot ? 'auto' : 'selbst', [['selbst', 'Selbst steuern', 'Du baust und führst; Truppen und Held kämpfen selbstständig'], ['auto', '🤖 Autopilot', 'Der Computer spielt für dich wie die KI – du kannst jederzeit eingreifen']])}</div>
       </section>
       <div class="start-row"><button class="big" data-act="m-start">⚔ Schlacht beginnen</button></div>`;
     } else if (UI.menuTab === 'kampagne') {
@@ -166,6 +167,7 @@
         <div><h3>Schreine & Ereignisse</h3><p>Schreine geben dem ganzen Team einen Bonus (Schaden, Regeneration, Gold oder Tempo). Wer 8 Sekunden allein am Schrein steht, erobert ihn. Von Zeit zu Zeit zieht ein mächtiger Boss über die Karte oder eine Händlerkarawane fährt von Händler zu Händler – beides bringt reiche Beute.</p></div>
         <div><h3>Helden-Ultimates</h3><p>Auf Heldenstufe 6 wählst du eine von zwei ultimativen Fähigkeiten (Taste R), auf Stufe 3 und 8 meisterst du eine Fähigkeit (+35% Wirkung). Auf Stufe 10 wird die ultimative Fähigkeit gemeistert.</p></div>
         <div><h3>Speichern</h3><p>💾 oben rechts speichert auf drei Plätze oder lädt einen Stand. Zusätzlich wird jede Spielminute und beim Verlassen der Partie automatisch gesichert – „Weiterspielen“ im Hauptmenü setzt die letzte Partie fort.</p></div>
+        <div><h3>🤖 Autopilot</h3><p>Mit 🤖 oben rechts (oder „9. Steuerung“ beim Start) spielt der Computer für dich genauso wie die KI: Er baut, bildet passend zum Volk aus, jagt vor dem ersten Angriff Monster für Gold, Erfahrung und Beute, nimmt Schreine ein, führt den Helden, verteilt Talente und setzt Volksfähigkeiten ein. Du kannst jederzeit eingreifen. Auch ohne Autopilot greift deine Armee erst ab etwa Minute 6 an (im Armee-Tab einstellbar) und jagt bis dahin Monster.</p></div>
         <div><h3>Steuerung</h3><p><b>PC:</b> WASD/Ziehen = Kamera, Mausrad = Zoom, Linksklick = auswählen/bauen, Held auswählen und Linksklick aufs Ziel (oder Rechtsklick) = Held steuern, Q/E/R = Heldenfähigkeiten (R = ultimative ab Stufe 6), 1–3 = Volksfähigkeit, H = Held manuell/automatisch.<br><b>Handy:</b> Wischen = Kamera, zwei Finger = Zoom, Tippen = auswählen/bauen, Held (Wappen im Heldenfenster) antippen und dann Ziel antippen = Held steuern, ☰ = Menü, rote Knöpfe = Volksfähigkeiten.</p></div>
         </div></section>`;
     } else {
@@ -403,6 +405,7 @@
       <span class="res time ${S.endphase ? 'endphase' : ''}" title="${S.limit ? 'Verbleibende Spielzeit' : 'Spielzeit'}">${ico('time')}${S.limit ? fmtTime(G.timeLeft()) + (S.endphase ? ' · ENDPHASE' : '') : fmtTime(S.time)}</span>`);
     document.querySelectorAll('[data-act="speed"]').forEach((b) => b.classList.toggle('sel', !S.paused && +b.dataset.v === S.speed));
     $('[data-act="pause"]').classList.toggle('sel', S.paused);
+    $('[data-act="autopilot"]').classList.toggle('sel', !!me().autopilot);
     $('[data-act="mute"]').textContent = G.Audio && G.Audio.muted ? '🔇' : '🔊';
   }
 
@@ -463,10 +466,14 @@
       ['wellen', 'Wellen losschicken', 'In festen Abständen zieht alles los, was gerade bereitsteht.'],
       ['verteidigen', 'Nur verteidigen', 'Niemand verlässt die Basis – außer du drückst „Jetzt angreifen!“.']];
     const stateName = { sammeln: 'sammelt sich', verteidigen: 'verteidigt die Basis', camps: 'jagt neutrale Monster', schrein: 'nimmt einen Schrein ein' };
-    let h = `<div class="box"><div class="lbl">Armee-Stil</div><div class="chips">${styles.map(([m, n, d]) => `<button class="chip ${p.armyStyle === m ? 'sel' : ''}" data-act="armystyle" data-v="${m}" title="${esc(d)}">${n}</button>`).join('')}</div>
+    let h = `<div class="box autobox ${p.autopilot ? 'on' : ''}"><button class="big" data-act="autopilot">${p.autopilot ? '🤖 Autopilot läuft – ausschalten' : '🤖 Autopilot einschalten'}</button>
+      <div class="hint">${p.autopilot ? 'Der Computer spielt für dich wie die KI: Bauen, Ausbildung, Monsterjagd vor dem ersten Angriff, Schreine, Held, Talente und Volksfähigkeiten. Du kannst jederzeit eingreifen.' : 'Lass den Computer für dich spielen – so gut wie die KI. Einzelne Bereiche steuerst du weiter über die Schalter in den Tabs.'}</div></div>
+      <div class="box"><div class="lbl">Armee-Stil</div><div class="chips">${styles.map(([m, n, d]) => `<button class="chip ${p.armyStyle === m ? 'sel' : ''}" data-act="armystyle" data-v="${m}" title="${esc(d)}">${n}</button>`).join('')}</div>
       <div class="hint">${styles.find((s) => s[0] === p.armyStyle)[2]} Losgeschickte Einheiten kämpfen, bis sie fallen.</div>
       <div class="stats"><span>Im Kampf: <b>${p.committedCount}</b> Einheiten</span><span>Bereit: <b>${p.poolSupply}</b> Versorgung (${stateName[p.armyState] || p.armyState}${p.campTarget ? ': ' + p.campTarget.name : ''})</span></div>
       ${btn('launch', '⚔ Jetzt angreifen!', p.poolSupply ? null : 'Keine bereiten Truppen')}`;
+    if (p.armyStyle !== 'verteidigen') { const ma = Math.round(p.minAttack / 60); h += `<div class="lbl">Erster Angriff frühestens ab <b>${ma ? ma + ':00' : 'sofort'}</b> min${S.time < p.minAttack ? ` <small>(noch ${fmtTime(p.minAttack - S.time)} – bis dahin Monster und Schreine)</small>` : ''}</div>
+      <input type="range" min="0" max="15" step="1" value="${ma}" data-slider="minAttack">`; }
     if (p.armyStyle === 'sammeln') h += `<div class="lbl">Angriff ab <b>${Math.round(p.attackFrac * 100)}%</b> der Versorgung (${Math.round(Math.max(8, p.supplyCap * p.attackFrac))})</div>
       <input type="range" min="15" max="100" step="5" value="${Math.round(p.attackFrac * 100)}" data-slider="attackFrac">
       ${toggle('campsAllowed', 'Zwischendurch neutrale Monster jagen', p.campsAllowed)}`;
@@ -820,6 +827,7 @@
       case 'm-dur': UI.cfg.duration = +v; renderMenu(); return;
       case 'm-fog': UI.cfg.fog = v === 'an'; renderMenu(); return;
       case 'm-events': UI.cfg.events = v === 'an'; renderMenu(); return;
+      case 'm-auto': UI.cfg.autopilot = v === 'auto'; Prof().data.autopilot = UI.cfg.autopilot; Prof().save(); renderMenu(); return;
       case 'saveui': openSaveUI(); return;
       case 'sv-close': closeSaveUI(); return;
       case 'sv-save': {
@@ -867,11 +875,12 @@
         if (UI.placing && G.BUILDINGS[UI.placing].outpost) G.msg('Klicke auf eine freie Goldader (gelb markiert) außerhalb deiner Basis.', '');
         break;
       case 'wall': G.upgradeWall(p); break;
+      case 'autopilot': G.setAutopilot(p, !p.autopilot); G.msg(p.autopilot ? '🤖 Autopilot an: Der Computer baut, bildet aus, jagt Monster, führt Armee und Held und verteilt Talente – wie die KI. Du kannst jederzeit eingreifen.' : 'Autopilot aus: Bau, Talente und Volksfähigkeiten liegen wieder bei dir; Truppen und Held kämpfen weiter selbstständig.', p.autopilot ? 'gold' : ''); break;
       case 'toggle': {
         const k = el.dataset.key, on = el.checked;
         if (k === 'heroManual') { G.heroMode(p, on ? 'manuell' : (p.hero.mode || 'armee')); if (on) UI.selected = p.hero; }
         else if (k === 'prodOn') { if (UI.selected) UI.selected.prodOn = on; }
-        else if (k.startsWith('auto.')) p.auto[k.slice(5)] = on;
+        else if (k.startsWith('auto.')) { p.auto[k.slice(5)] = on; if (!on) p.autopilot = false; }
         else p[k] = on;
         break;
       }
@@ -959,11 +968,12 @@
     if (!G.S) return;
     const p = me();
     if (k === 'attackFrac') p.attackFrac = v / 100;
+    if (k === 'minAttack') p.minAttack = v * 60;
     if (k === 'waveInterval') { p.waveInterval = v; p.waveT = Math.min(p.waveT, v); }
     if (k === 'goldRatio') p.goldRatio = v / 100;
     if (k === 'comp') { p.comp[el.dataset.role] = v; p.preset = 'eigene'; }
     const lab = el.previousElementSibling && el.previousElementSibling.querySelector('b');
-    if (lab && (k === 'attackFrac' || k === 'waveInterval')) lab.textContent = k === 'attackFrac' ? v + '%' : v;
+    if (lab && (k === 'attackFrac' || k === 'waveInterval' || k === 'minAttack')) lab.textContent = k === 'attackFrac' ? v + '%' : k === 'minAttack' ? (v ? v + ':00' : 'sofort') : v;
     if (el.nextElementSibling && el.nextElementSibling.classList.contains('cv')) el.nextElementSibling.textContent = v;
   });
   document.addEventListener('pointerdown', (ev) => { if (ev.target.closest('#panel, #selection, #herocard, #quick')) UI.pointerDownPanel = true; });

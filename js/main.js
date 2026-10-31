@@ -16,6 +16,7 @@
   }
   window.addEventListener('DOMContentLoaded', () => {
     G.Profile.load();
+    G.UI.cfg.autopilot = !!G.Profile.data.autopilot; // zuletzt gewählte Steuerung
     G.UI.bindInput();
     G.UI.showMenu();
     requestAnimationFrame(frame);

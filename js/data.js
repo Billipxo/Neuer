@@ -197,8 +197,8 @@ G.RACES = {
       { id: 'mogra', name: 'Sturmseherin Mogra', title: 'Ruferin der Blitze', ranged: true, stats: { hp: 740, dmg: 38, armor: 2 },
         bonus: [{ roles: ['magier', 'heiler'], dmg: 0.16, heal: 0.16 }], bonusDesc: 'Magier & Heiler +16% Schaden/Heilung',
         abilities: [
-          { name: 'Kettenblitz', type: 'aoe', dmg: 170, radius: 130, cd: 12 },
-          { name: 'Geisterwölfe', type: 'summon', count: 3, duration: 30, cd: 26,
+          { name: 'Kettenblitz', type: 'aoe', dmg: 160, radius: 130, cd: 12 },
+          { name: 'Geisterwölfe', type: 'summon', count: 2, duration: 30, cd: 26,
             unit: { name: 'Geisterwolf', hp: 300, dmg: 22, range: 24, cd: 0.9, speed: 85, armor: 1, r: 10 } }] },
       { id: 'throk', name: 'Bestienmeister Throk', title: 'Herr der Wildnis', ranged: false, stats: { hp: 1000, dmg: 40, armor: 3 },
         bonus: [{ roles: ['summon'], hp: 0.30, dmg: 0.30 }, { roles: ['all'], speed: 0.10 }], bonusDesc: 'Beschwörungen +30% LP/Schaden, alle +10% Tempo',

@@ -349,6 +349,12 @@ input[type=range] { width: 100%; accent-color: var(--accent2); }
 #saveui .note { font-size: 12.5px; margin: 10px 0 0; }
 .top-ctrl button.flash { border-color: var(--good); box-shadow: 0 0 10px var(--good); }
 
+/* Autopilot */
+.autobox .big { width: 100%; font-size: 15px; padding: 8px 10px; }
+.autobox.on { border-color: #7aff7a; box-shadow: 0 0 12px rgba(122,255,122,.25); }
+.autobox.on .big { border-color: #7aff7a; color: #d8ffd8; }
+.top-ctrl button[data-act="autopilot"].sel { border-color: #7aff7a; box-shadow: 0 0 10px rgba(122,255,122,.6); }
+
 /* Werte-Kärtchen angeklickter Einheiten (rechts oben im Spielfeld) */
 #unitcard { position: absolute; right: 8px; top: 8px; width: 222px; z-index: 5; padding: 6px 9px 8px; font-size: 12px;
   background: linear-gradient(170deg, color-mix(in srgb, var(--panel2) 94%, transparent), color-mix(in srgb, var(--panel) 94%, transparent));

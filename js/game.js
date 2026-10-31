@@ -146,6 +146,7 @@
     updateBonusCaches();
     for (const pl of S.players) { pl.th.maxHp = bldMaxHp(pl, 'haupthaus', 1); pl.th.hp = pl.th.maxHp; }
     fogInit(cfg.fog !== false);
+    if (cfg.autopilot) G.setAutopilot(S.players[0], true);
     if (S.objective === 'drache') for (const c of S.camps) if (c.type === 'drache') fogReveal(c.x, c.y, 240); // Missionsziel ist bekannt
     updateFog();
     const p = human();
@@ -162,9 +163,13 @@
   };
   // Spielstil des Volkes: Armee-Vorlage für alle; für die KI auch Angriffszeitpunkt, Armeegröße und Wellentakt
   function applyStyle(p, ai) {
-    const sai = styleOf(p).ai || {}, d = p.diff, pr = G.presetsFor(p)[0];
+    const sai = styleOf(p).ai || {}, pr = G.presetsFor(p)[0];
     p.preset = pr.id;
     p.comp = { ...pr.comp };
+    // Menschliche Spieler: Zeitpunkt und Größe des ersten Angriffs wie die KI auf „Mittel“ – vorher jagt die Armee Monster
+    const d = ai ? p.diff : G.DIFFICULTY.mittel;
+    p.attackFrac = Math.min(0.95, d.attackFrac * (sai.attackFrac || 1));
+    p.minAttack = d.minAttack * (sai.minAttack || 1);
     if (!ai) return;
     if (sai.armyStyle && d !== G.DIFFICULTY.einfach) p.armyStyle = sai.armyStyle;
     p.attackFrac = Math.min(0.95, d.attackFrac * (sai.attackFrac || 1));
@@ -172,6 +177,24 @@
     p.waveInterval = Math.round((d.focus ? 35 : 45) * (sai.wave || 1));
   }
   G.applyStyle = applyStyle;
+  // Autopilot: der Computer spielt für dich wie die KI – Bau, Ausbildung, Armee, Held, Talente, Volksfähigkeiten.
+  // Ausschalten gibt Bau, Talente und Volksfähigkeiten an dich zurück; Truppen und Held handeln weiter selbstständig.
+  G.setAutopilot = function (p, on) {
+    p.autopilot = !!on;
+    if (!on) { p.auto.build = false; p.auto.ability = false; p.auto.talents = false; return; }
+    p.auto = { build: true, produce: true, hero: true, ability: true, talents: true };
+    p.campsAllowed = true; p.shrinesAllowed = true; p.manualPoint = null; p.targetMode = 'auto';
+    const sai = styleOf(p).ai || {};
+    if (sai.armyStyle) p.armyStyle = sai.armyStyle; else if (p.armyStyle === 'verteidigen') p.armyStyle = 'sammeln';
+    p.waveInterval = Math.round(45 * (sai.wave || 1));
+    const d = G.DIFFICULTY.mittel;
+    p.attackFrac = Math.min(0.95, d.attackFrac * (sai.attackFrac || 1));
+    p.minAttack = Math.min(p.minAttack, d.minAttack * (sai.minAttack || 1));
+    if (p.preset === 'eigene') { const pr = G.presetsFor(p)[0]; p.preset = pr.id; p.comp = { ...pr.comp }; }
+    const h = p.hero;
+    if (h && h.manual) { h.manual = false; h.mode = 'armee'; h.order = null; h.hold = null; }
+    if (S && S.players.includes(p)) { autoTalents(p); autoHeroChoices(p); }
+  };
 
   function makePlayer(i, race, heroDef, team, isHuman, cfg, bx, by) {
     const rd = G.RACES[race];
@@ -1562,6 +1585,7 @@
     }
     if (killer < 0) return;
     const p = S.players[killer], def = camp.def;
+    if (G.TRACK) p.campsCleared = (p.campsCleared || 0) + 1; // nur für Tests
     if (camp.type === 'drache' && S.dragonSlainBy === null) S.dragonSlainBy = p.team;
     p.gold += def.gold; p.wood += def.wood;
     S.fx.push({ type: 'text', x: camp.x, y: camp.y - 30, text: `+${def.gold} Gold  +${def.wood} Holz`, color: '#ffd23a', t: 0, dur: 2, big: true });
@@ -2160,7 +2184,7 @@
     if (!b.prodOn) return null;
     if (b.focus !== 'auto') return roles.includes(b.focus) ? b.focus : null;
     if (!p.auto.produce) return null;
-    const air = p.human ? 0 : Math.min(4, (p.airSeen || 0) / 2);
+    const air = p.human && !p.autopilot ? 0 : Math.min(4, (p.airSeen || 0) / 2);
     const wOf = (r) => (p.comp[r] || 0) + (air && ANTI_AIR[r] ? air * ANTI_AIR[r] : 0);
     let W = 0;
     for (const r of G.ROLES) W += wOf(r);
@@ -2458,7 +2482,7 @@
     return n;
   };
   function armyThink(p) {
-    if (!p.human) { // gegnerische Flieger in Sicht? Dann mehr Luftabwehr ausbilden
+    if (!p.human || p.autopilot) { // gegnerische Flieger in Sicht? Dann mehr Luftabwehr ausbilden
       let n = 0;
       for (const o of S.ents) if (o.fly && !o.dead && o.team !== p.team && (!S.fog.on || teamSees(p.team, o.x, o.y))) n++;
       p.airSeen = Math.max(n, (p.airSeen || 0) * 0.97);
@@ -2736,6 +2760,15 @@
       else p.reserve = { g: 0, w: 0 };
       if (p.auto.talents) autoTalents(p);
     }
+    // Offene Talentpunkte und Heldenwahl verfallen nicht: nach 60 s ohne eigene Wahl entscheidet der Computer
+    if (!p.auto.talents && (p.talentPoints > 0 || (h && h.pending && h.pending.length))) {
+      p.choiceT = (p.choiceT || 0) + dt;
+      if (p.choiceT > 60) {
+        p.choiceT = 0;
+        autoTalents(p); autoHeroChoices(p);
+        if (p.human) G.msg('Offene Talentpunkte und Heldenwahl wurden automatisch vergeben (selbst wählen im Volk- und Held-Tab).', '');
+      }
+    } else p.choiceT = 0;
     p.armyT -= dt;
     if (p.armyT <= 0) { p.armyT = 1; armyThink(p); }
     p.abilT -= dt;
