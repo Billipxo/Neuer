@@ -54,6 +54,29 @@ const BOSSES = {
   lavaworm:{ name:'Der Lavawurm', hp:1450, speed:150, dmg:22, r:38 },
 };
 
+const BEAST = {
+  slime:{ic:'🟢',ds:'Hüpft auf dich zu und teilt sich beim Tod in zwei kleine Schleime.'},
+  bat:{ic:'🦇',ds:'Schnell und flatterhaft. Einzeln harmlos, im Schwarm lästig.'},
+  skeleton:{ic:'💀',ds:'Ein treuer Diener der Verliese. Geht stur auf dich los.'},
+  archer:{ic:'🏹',ds:'Goblin-Schütze, der Abstand hält. Säulen sind deine beste Deckung.'},
+  orc:{ic:'🪓',ds:'Zäher Ork, der nach kurzem Anlauf quer durch die Arena stürmt.'},
+  shield:{ic:'🛡️',ds:'Blockt Angriffe von vorne. Weiche aus und triff ihn von hinten.'},
+  cultist:{ic:'🕯️',ds:'Kultist, der Fächer aus Seelenkugeln wirft.'},
+  healer:{ic:'✨',ds:'Heilt verletzte Verbündete in der Nähe. Schalte ihn zuerst aus.'},
+  worm:{ic:'🪱',ds:'Gräbt sich ein und bricht unter dir hervor. Achte auf den Warnkreis.'},
+  imp:{ic:'😈',ds:'Flinker Feuerteufel, der aus der Luft Feuerbälle spuckt.'},
+  whelp:{ic:'🐲',ds:'Junger Drache. Umkreist dich und speit kurze Flammenkegel.'},
+  magma:{ic:'🌋',ds:'Langsamer Koloss aus Lava. Stampft und hinterlässt glühende Pfützen.'},
+  kobold:{ic:'💣',ds:'Hält Abstand und wirft Bomben dorthin, wo du gleich sein wirst.'},
+  spiderling:{ic:'🕷️',ds:'Die Brut der Spinnenkönigin. Schnell, schwach und zahlreich.'},
+  mimic:{ic:'🧰',ds:'Eine Truhe mit Zähnen. Nicht jede Belohnung ist, was sie scheint.'},
+  golem:{ic:'🗿',ds:'Wächter der Verliese. Stampft Warnkreise in den Boden und schleudert Felsen.'},
+  spider:{ic:'🕸️',ds:'Herrin der Verliese. Springt, spinnt Netze und ruft ihre Brut.'},
+  lich:{ic:'☠️',ds:'Untoter König der Krypta. Teleportiert sich und füllt die Arena mit Seelenspiralen.'},
+  vampire:{ic:'🧛',ds:'Graf Morvath zerfällt zu Fledermausnebel und saugt seinen Gegnern das Leben aus.'},
+  dragon:{ic:'🐉',ds:'Ignaroth, Herr des Horts. Feueratem, Meteorschauer und Sturzflüge.'},
+  lavaworm:{ic:'🔥',ds:'Gräbt sich durch glühendes Gestein und spuckt Feuer aus dem Schlund.'},
+};
 const AFFIXES = {
   fast:  { ic:'💨', nm:'Flink',      ds:'bewegt sich deutlich schneller' },
   armor: { ic:'🛡️', nm:'Gepanzert',  ds:'erleidet 40 % weniger Schaden' },

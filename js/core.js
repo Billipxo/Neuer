@@ -6,14 +6,14 @@ const SAVE_KEY = 'arena_verdammten_v1';
 const SAVE_V=2, RUN_V=6;
 const reducedMotion = (()=>{ try{ return matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } })();
 function defSettings(){ return { shake:!reducedMotion, vibrate:true, music:true, fx:true, joyFixed:false, lefty:false, cb:false, musicVol:0.7, gfx:'auto', showFps:false, dmgNums:true }; }
-function defStats(){ return { kills:0, elites:0, cheers:0, events:[], syns:[], bosses:[], wins:{}, anyWin:false, noHitBoss:false, dailyWin:false, maxEndless:0, maxGold:0, maxCombo:0 }; }
+function defStats(){ return { beast:{}, kills:0, elites:0, cheers:0, events:[], syns:[], bosses:[], wins:{}, anyWin:false, noHitBoss:false, dailyWin:false, maxEndless:0, maxGold:0, maxCombo:0 }; }
 function defSave(){ return { v:SAVE_V, tutDone:false, ach:{}, skin:{}, stats:defStats(), souls:0, meta:{}, unlocked:{krieger:true}, scores:[], runs:0, lastChar:'krieger', sound:true, run:null, settings:defSettings(), name:'Spielstand 1', last:0, ngMax:0, ngSel:0 }; }
 function migrate(s){
   const d=defSave(); s=Object.assign(d, s);
   s.settings=Object.assign(defSettings(), s.settings||{}); if(s.settings.fx===false && !s.settings._gfxMig){ s.settings.gfx='low'; } s.settings._gfxMig=true;
   if(!s.meta||typeof s.meta!=='object') s.meta={};
   if(!Array.isArray(s.scores)) s.scores=[];
-  s.stats=Object.assign(defStats(), s.stats||{}); s.ach=s.ach||{}; s.skin=s.skin||{};
+  s.stats=Object.assign(defStats(), s.stats||{}); if(!Object.keys(s.stats.beast).length) for(const b of s.stats.bosses) s.stats.beast[b]=1; s.ach=s.ach||{}; s.skin=s.skin||{};
   if(s.runs>0 && s.tutDone===undefined) s.tutDone=true;
   if(s.run && s.run.v!==RUN_V) s.run=null;   // alter Laufstand passt nicht mehr zur Spielversion
   s.v=SAVE_V; return s;

@@ -64,6 +64,7 @@ const ACH=[
   { id:'rich', ic:'💰', nm:'Goldrausch', ds:'Sammle 600 Gold in einem Lauf', souls:50, prog:()=>[Math.min(600,ST().maxGold),600] },
   { id:'combo', ic:'🔥', nm:'Kettenreaktion', ds:'Erreiche eine 30er-Kombo', souls:50, prog:()=>[Math.min(30,ST().maxCombo),30] },
   { id:'ng3', ic:'⚔️', nm:'Unbezwingbar', ds:'Gewinne einen Lauf auf NG+3', souls:150, prog:()=>[Math.min(4,save.ngMax||0),4] },
+  { id:'bestiary', ic:'📖', nm:'Forscher', ds:'Vervollständige das Bestiarium', souls:120, prog:()=>[Object.keys(BEAST).filter(k=>save.stats.beast[k]).length,Object.keys(BEAST).length] },
   { id:'forge', ic:'⚒️', nm:'Meisterschmied', ds:'Bringe alle Schmiede-Upgrades auf die höchste Stufe', souls:0, prog:()=>[META.filter(m=>metaLvl(m.id)>=m.max).length,META.length] },
 ];
 function achDone(a){ if(a.ok) return !!a.ok(); const [v,m]=a.prog(); return v>=m; }
@@ -122,7 +123,7 @@ function showMenu(){
       <button class="btn ${hasRun?'':'primary'}" data-a="play">⚔️ Neues Abenteuer</button>
       <button class="btn" data-a="daily">📅 Tägliche Herausforderung</button>
       <button class="btn" data-a="forge">⚒️ Schmiede</button>
-      <div class="row"><button class="btn" data-a="scores">🏆 Ruhmeshalle</button><button class="btn" data-a="ach">🏅 Erfolge</button></div>
+      <div class="row"><button class="btn" data-a="scores">🏆 Ruhmeshalle</button><button class="btn" data-a="ach">🏅 Erfolge</button><button class="btn" data-a="beast">📖 Bestiarium</button></div>
     </div>
     <div class="foot">
       <button class="linkbtn" data-a="help">Anleitung</button>
@@ -130,7 +131,7 @@ function showMenu(){
       <button class="linkbtn" data-a="slots">💾 ${esc(save.name||'Spielstand')}</button>
       <span>Läufe: ${save.runs}</span>
     </div></div>`,
-  { play:showChars, daily:showDaily, forge:showForge, scores:showScores, ach:showAch, help:showHelp,
+  { play:showChars, daily:showDaily, forge:showForge, scores:showScores, ach:showAch, beast:showBeast, help:showHelp,
     cont:()=>{ run=save.run; showMap(); },
     settings:showSettings, slots:showSlots });
 }
@@ -210,6 +211,17 @@ function showImport(err){
   $('impForm').addEventListener('submit',e=>{ e.preventDefault();
     try{ const d=parseCode($('impCode').value); const keep=save.settings, snd=save.sound; save=d; save.settings=keep; save.sound=snd; persist(); sfx('pick'); toast('<span style="font-size:26px">📥</span><div><b>Spielstand geladen</b><div class="sub" style="font-size:13px">'+esc(save.name)+' · '+save.souls+' Seelen</div></div>'); showSlots(); }
     catch(ex){ showImport(ex.message); } });
+}
+function showBeast(){
+  const B=save.stats.beast, all=Object.keys(BEAST), found=all.filter(k=>B[k]).length;
+  const entry=k=>{ const isBoss=!!BOSSES[k], d=isBoss?BOSSES[k]:ENEMIES[k], n=B[k]||0;
+    const where=isBoss?ACTS.findIndex(a=>a.bosses.includes(k)):(d.minAct||1)-1;
+    return n?`<div class="card ${isBoss?'epic':''}"><div class="ic">${BEAST[k].ic}</div><div class="body"><div class="rar">${isBoss?'Boss · ':''}${ACTS[Math.max(0,where)].name}</div><div class="nm">${esc(d.name)}</div><div class="ds">${BEAST[k].ds}</div><div class="ds" style="font-size:12px;color:var(--gold)">Besiegt: ${n}×</div></div></div>`
+      :`<div class="card" style="opacity:.6"><div class="ic">❔</div><div class="body"><div class="rar">${isBoss?'Boss':'Gegner'}</div><div class="nm">???</div><div class="ds">Noch nicht besiegt.</div></div></div>`; };
+  render(`<div class="wrap"><div class="eyebrow">${found} von ${all.length} entdeckt</div><h2>Bestiarium</h2>
+    <div class="eyebrow">Gegner</div><div class="cards">${Object.keys(ENEMIES).filter(k=>BEAST[k]).map(entry).join('')}</div>
+    <div class="eyebrow">Bosse</div><div class="cards">${Object.keys(BOSSES).filter(k=>BEAST[k]).map(entry).join('')}</div>
+    <button class="btn" data-a="back">Zurück</button></div>`,{ back:showMenu });
 }
 function showSlots(){
   const rows=[...Array(SLOTS)].map((_,i)=>{ const s=i===slotIdx?save:readSlot(i), act=i===slotIdx;
