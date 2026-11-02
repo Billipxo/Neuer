@@ -171,6 +171,7 @@ function showSettings(){
       <label class="toggle" for="musicVol" style="cursor:default"><span><b>Musiklautstärke</b></span><input type="range" id="musicVol" min="0" max="1" step="0.05" value="${st.musicVol??0.7}" style="flex:1;max-width:180px;accent-color:#e6b450"></label>
       ${tg('shake','Bildschirmwackeln',st.shake,'Bei Treffern und Explosionen')}
       <button class="toggle on" data-a="gfx"><span><b>Grafik: ${{auto:'Automatisch',high:'Hoch',low:'Niedrig'}[st.gfx||'auto']}</b><br><span class="sub" style="font-size:13px">${{auto:'Volle Grafik, schaltet bei Ruckeln selbst herunter'+(AUTO_LOW?' (gerade reduziert)':''),high:'Licht, Nebel, Funken, Kleintiere und alle Zuschauer – immer',low:'Ohne Licht und Partikel, weniger Zuschauer, geringere Auflösung'}[st.gfx||'auto']}</span></span><span class="pill">Ändern</span></button>
+      <button class="toggle on" data-a="speed"><span><b>Spieltempo: ${{1:'Normal (1×)',1.2:'Schnell (1,2×)',1.5:'Turbo (1,5×)'}[st.gameSpeed||1]||'Normal'}</b><br><span class="sub" style="font-size:13px">Wie schnell Kämpfe ablaufen. Musik und Menüs bleiben gleich.</span></span><span class="pill">Ändern</span></button>
       ${tg('showFps','Bildrate anzeigen',st.showFps,'Zeigt die Bilder pro Sekunde im Kampf an')}
       ${tg('dmgNums','Schadenszahlen',st.dmgNums,'Zahlen über getroffenen Gegnern anzeigen')}
       ${tg('vibrate','Vibration',st.vibrate,'Kurzes Vibrieren bei Treffern (nur Android)')}
@@ -181,6 +182,7 @@ function showSettings(){
     <button class="btn" data-a="back">Zurück</button>
     <button class="btn danger" data-a="reset">Diesen Spielstand zurücksetzen</button></div>`,
   { back:showMenu,
+    speed:()=>{ st.gameSpeed={1:1.2,1.2:1.5,1.5:1}[st.gameSpeed||1]||1; persist(); showSettings(); },
     gfx:()=>{ st.gfx={auto:'high',high:'low',low:'auto'}[st.gfx||'auto']; AUTO_LOW=false; PERF.low=0; persist(); resize(); showSettings(); },
     tg:k=>{ if(k==='sound') save.sound=!save.sound; else st[k]=!st[k]; persist(); document.body.classList.toggle('lefty',!!st.lefty); if(typeof musicUpdate==='function') musicUpdate(); showSettings(); },
     reset:()=>render(`<div class="wrap" style="justify-content:center"><h2 class="center">Spielstand wirklich löschen?</h2>
@@ -476,7 +478,7 @@ function showSynergy(list, after){
 function statSheet(p){
   const c=CHARS[p.cid], s={ 'Schaden':Math.round(p.dmg), 'Angriffe/Sek':(p.atkSpd/p.rate).toFixed(2), 'Max. LP':Math.round(p.maxHp), 'Rüstung':p.armor,
     'Tempo':Math.round(p.speed*p.spdMul), 'Krit':Math.round(p.crit*100)+' %', 'Fläche':Math.round(p.area*100)+' %', 'Gold':Math.round(p.goldMul*100)+' %',
-    'Geschosse':p.count, 'Fähigkeit':(c.skill.cd*p.cdMul).toFixed(1)+' s', 'Ausweichen':(1.3*p.dashCdMul).toFixed(1)+' s' };
+    'Geschosse':p.count, 'Fähigkeit':(c.skill.cd*p.cdMul).toFixed(1)+' s', 'Ausweichen':(1.0*p.dashCdMul).toFixed(1)+' s' };
   if(p.minions){ s['Diener']=p.minions; s['Erweckung']=Math.round(p.raise*100)+' %'; }
   if(p.regen) s['Regeneration']=p.regen.toFixed(1)+'/s'; if(p.pierce) s['Durchschlag']=p.pierce; if(p.lifeOnKill) s['LP pro Kill']=p.lifeOnKill; if(p.thorns) s['Dornen']=p.thorns; if(p.dmgTaken&&p.dmgTaken!==1) s['Erlittener Schaden']='+'+Math.round((p.dmgTaken-1)*100)+' %'; if(p.drain) s['LP-Verlust']=p.drain+'/s';
   return s;
