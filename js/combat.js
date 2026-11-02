@@ -59,7 +59,7 @@ function blowBarrel(o){
   G.booms.push({x:o.x,y:o.y,r:80,dmg:Math.max(40*(1+0.5*(run.act-1)),P.dmg*2),barrel:true});
 }
 function startCombat(type, customWaves){
-  const p=run.p;
+  const p=run.p; if(!customWaves) run.room=type; run.pend=null;
   const tut = !save.tutDone && type==='fight' && !run.daily && run.rooms===0 && !customWaves;
   if(tut) customWaves=[[{kind:'slime'},{kind:'slime'}],[{kind:'skeleton'},{kind:'skeleton'},{kind:'archer'}]];
   P=Object.assign(p,{ x:AW/2, y:AH*0.7, r:14, vx:0, vy:0, face:-Math.PI/2, atkT:0.3, skillT:0, inv:0, shieldLeft:p.shield, spin:0, spinTick:0, regenAcc:0, moving:false, anim:0, swingT:0, dashT:0, dashCd:0, dashA:0, dashI:0, leap:null, vortex:null, ward:0, fury:0, furyT:0, stillT:0, holy:0, msT:0, trailT:0, nextCrit:false, kbx:0, kby:0, hurtT:0 });
@@ -82,7 +82,7 @@ function startCombat(type, customWaves){
   $('bossBar').classList.toggle('hidden', type!=='boss');
   $('hudRoom').innerHTML=`Akt ${run.act}<br>${NODE[type].nm} ${WEATHER[G.weather].ic}`;
   if(G.weather!=='clear' && type!=='boss' && !G.tut) setTimeout(()=>{ if(G) banner(WEATHER[G.weather].ic+' '+WEATHER[G.weather].nm); },60);
-  state='combat'; last=performance.now();
+  state='combat'; last=performance.now(); wakeLock(true);
 }
 
 function makeEnemy(kind,x,y,elite){
@@ -413,7 +413,7 @@ function dealDamage(e,amount,o={}){
   if(o.kb && !e.boss && o.from){ const a=Math.atan2(e.y-o.from.y,e.x-o.from.x), k=o.kb*(e.elite?0.4:1); e.kx+=Math.cos(a)*k; e.ky+=Math.sin(a)*k; }
   if(o.from && !o.noCrit && FX()){ const ha=Math.atan2(e.y-o.from.y,e.x-o.from.x);
     for(let i=0;i<(crit?6:3);i++){ const a2=ha+rand(-0.7,0.7), sp=rand(140,280); part(e.x-Math.cos(ha)*e.r*0.5,e.y-Math.sin(ha)*e.r*0.5,Math.cos(a2)*sp,Math.sin(a2)*sp,0.22,crit?2.6:2,crit?'#ffd34d':'#fff6e0',true); } }
-  if(!o.quiet && (save.settings.dmgNums||blocked||crit)) G.texts.push({x:e.x+rand(-6,6),y:e.y-e.r-4,s:blocked?'Block':String(Math.round(d)),c:blocked?'#9fb3d9':(o.color||(crit?'#ffd34d':'#ffffff')),big:crit&&!blocked,t:0});
+  if(!o.quiet && !(save.settings.dmgOff&&!blocked) && (save.settings.dmgNums||blocked||crit)) G.texts.push({x:e.x+rand(-6,6),y:e.y-e.r-4,s:blocked?'Block':String(Math.round(d)),c:blocked?'#9fb3d9':(o.color||(crit?'#ffd34d':'#ffffff')),big:crit&&!blocked,t:0});
   if(blocked){ burst(e.x+Math.cos(e.face)*e.r,e.y+Math.sin(e.face)*e.r,3,'#ffe08a',90); }
   if(crit && G.stopCd<=0){ hitstop(0.03); G.stopCd=0.25; }
   if(!o.noChain && P.chain>0 && Math.random()<0.12+0.06*P.chain) chainLightning(e, amount*0.7, 2+P.chain);
@@ -780,10 +780,12 @@ function updTraps(dt){
         for(const e of G.enemies){ if(!e.boss && !FLY[e.kind] && !e.dead && Math.hypot(e.x-t.x,e.y-t.y)<t.r) dealDamage(e,10*sc,{noChain:true,noCrit:true,color:'#ff8a3a'}); } } }
   }
 }
+// Hilfemodus (wie der Gottmodus in Hades): 20 % weniger Schaden, +2 % je Niederlage, höchstens 80 %
+const assistMul=()=>save.settings.assist?1-Math.min(0.8,0.2+0.02*(save.assistN||0)):1;
 function hurtPlayer(dmg,src,via){
   const p=P; if(p.inv>0||p.dashI>0||G.over||G.cleared) return;
   if(p.shieldLeft>0){ p.shieldLeft--; p.inv=0.7; G.fx.push({type:'ring',x:p.x,y:p.y,r:30,t:0,life:0.35,color:'#7fd4ff'}); G.texts.push({x:p.x,y:p.y-26,s:'Geblockt',c:'#7fd4ff',t:0}); sfx('pick'); return; }
-  const d=Math.max(1,Math.round((dmg*(p.dmgTaken||1)-p.armor-(p.boneArmor?G.allies.length:0))*(p.spin>0?0.5:1)*(p.ward>0?0.5:1)));
+  const d=Math.max(1,Math.round((dmg*(p.dmgTaken||1)-p.armor-(p.boneArmor?G.allies.length:0))*(p.spin>0?0.5:1)*(p.ward>0?0.5:1)*assistMul()));
   hype(-0.06); G.combo=0; if(G.type==='boss') G.bossHit=true; p.hurtT=0.25;
   if(src){ const ka=Math.atan2(p.y-src.y,p.x-src.x); p.kbx=Math.cos(ka)*260; p.kby=Math.sin(ka)*260; }
   { const at=src&&src.affix?src:(via&&via.affix?via:null);
@@ -795,7 +797,7 @@ function hurtPlayer(dmg,src,via){
   if(p.hp<=0 && p.undying && !G.undyUsed){ G.undyUsed=true; p.hp=1; p.inv=2; G.texts.push({x:p.x,y:p.y-40,s:'Unbeugsam!',c:'#ff5a4a',big:true,t:0}); burst(p.x,p.y,30,'#c8402a',220); }
   if(p.hp<=0){
     if(p.revive>0){ p.revive--; run.upg.phoenix=Math.max(0,(run.upg.phoenix||1)-1); if(!run.upg.phoenix) delete run.upg.phoenix; p.hp=Math.ceil(p.maxHp*0.5); p.inv=2.5; burst(p.x,p.y,50,'#ffb84a',260); banner('Phönixfeder!','Du erhebst dich erneut'); }
-    else { p.hp=0; G.over=true; G.deathT=0; banner('Gefallen'); musicSting('lose'); burst(p.x,p.y,40,'#c8423a',200); buzz(300); setTimeout(()=>{ if(G&&G.over) endRun(!!(run&&run.won)); },1600); }
+    else { p.hp=0; G.over=true; G.deathT=0; run.room=null; save.run=null; if(save.settings.assist) save.assistN=(save.assistN||0)+1; if(save.settings.assist) run.assist=true; wakeLock(false); banner('Gefallen'); musicSting('lose'); burst(p.x,p.y,40,'#c8423a',200); buzz(300); setTimeout(()=>{ if(G&&G.over) endRun(!!(run&&run.won)); },1600); }
   }
 }
 
@@ -810,11 +812,11 @@ function clearRoom(){
 function fadeIn(){ const f=$('fade'); if(!f) return; f.classList.add('on'); requestAnimationFrame(()=>requestAnimationFrame(()=>f.classList.remove('on'))); }
 function finishCombat(){
   if(state!=='combat') return; fadeIn();
-  run.rooms++; const t=G.type; G=null; $('hud').classList.add('hidden');
+  run.rooms++; const t=G.type; G=null; $('hud').classList.add('hidden'); run.room=null; wakeLock(false);
   if(t==='boss'){
-    if(run.act===3 && !run.endless){ run.won=true; save.run=run; persist(); showReward('boss',showVictory); return; }
-    showReward('boss',nextAct);
-  } else showReward(t==='elite'||(runMod()||{}).eliteEvery?'elite':'normal', showMap);
+    if(run.act===3 && !run.endless){ run.won=true; run.pend={mode:'boss',after:'victory'}; save.run=run; persist(); showReward('boss',showVictory); return; }
+    run.pend={mode:'boss',after:'next'}; save.run=run; persist(); showReward('boss',nextAct);
+  } else { const m=t==='elite'||(runMod()||{}).eliteEvery?'elite':'normal'; run.pend={mode:m,after:'map'}; save.run=run; persist(); showReward(m, showMap); }
 }
 
 function showVictory(){
@@ -830,13 +832,13 @@ function showVictory(){
     ngp:()=>{ run.ng=nn; run.act=0; run.won=false; run.seed+='|ng'+nn; run.p.goldMul+=0.2; nextAct(); run.p.hp=run.p.maxHp; save.run=run; persist(); } },true);
 }
 function endRun(won){
-  state='ui'; const r=run; G=null; $('hud').classList.add('hidden');
+  state='ui'; const r=run; r.ended=true; r.room=null; wakeLock(false); G=null; $('hud').classList.add('hidden');
   const bonus=won?100:0;
   let score=r.kills*10+r.rooms*60+r.bosses*800+(won?2500:0)+(r.endless?(r.act-3)*1500:0)+Math.floor(r.goldTotal/2);
   const ngf=1+0.5*(r.ng||0); score=Math.round(score*ngf);
   const souls=Math.round((r.souls+bonus)*ngf);
   save.souls+=souls; save.run=null;
-  const entry={score,cid:r.cid,act:r.act,won,ng:r.ng||0,endless:!!r.endless,daily:!!r.daily,date:new Date().toLocaleDateString('de-DE')};
+  const entry={score,cid:r.cid,act:r.act,won,ng:r.ng||0,endless:!!r.endless,daily:!!r.daily,assist:!!(r.assist||save.settings.assist),date:new Date().toLocaleDateString('de-DE')};
   let dailyBest=false;
   if(r.daily){ if(!save.daily||save.daily.key!==r.daily) save.daily={key:r.daily,best:0,tries:0}; save.daily.tries++; if(score>save.daily.best){ save.daily.best=score; dailyBest=true; } }
   const gainXp=Math.round((r.kills+r.rooms*5+r.bosses*60+(won?150:0))*(1+0.5*(r.ng||0))), lvl0=heroLvl(r.cid);
@@ -874,11 +876,11 @@ function pauseGame(){ if(state!=='combat') return; state='paused'; showPause(); 
 function showPause(){
   const p=P;
   ui.classList.remove('hidden'); ui.classList.add('dim');
-  actions={ resume:()=>{ ui.classList.add('hidden'); state='combat'; last=performance.now(); }, quit:confirmQuit };
+  actions={ resume:()=>{ ui.classList.add('hidden'); $('hud').classList.remove('hidden'); state='combat'; last=performance.now(); }, quit:confirmQuit, opts:showSettings };
   ui.innerHTML=`<div class="wrap" style="justify-content:center"><h2 class="center">Pause</h2>
     ${statsHtml(p)}${synHtml()}
     <div class="relics" style="justify-content:center">${relicsHtml()}</div>
-    <button class="btn primary" data-a="resume">Weiterkämpfen</button><button class="btn" data-a="quit">Lauf aufgeben</button></div>`;
+    <button class="btn primary" data-a="resume">Weiterkämpfen</button><button class="btn" data-a="opts">⚙️ Einstellungen</button><button class="btn" data-a="quit">Lauf aufgeben</button></div>`;
 }
 
 let bannerT=null;

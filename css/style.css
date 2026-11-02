@@ -186,3 +186,13 @@ body.lefty #dashBtn{right:auto;left:calc(max(16px, env(safe-area-inset-left,0px)
   #banner{top:22%}
 }
 @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+.tip{display:flex;gap:10px;align-items:flex-start;background:#1c2a3a;border:1px solid #3a6a9a;border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.4;color:#d8e8f4}
+.tip .linkbtn{display:inline;margin-left:4px}
+
+/* Große Schrift und Knöpfe */
+body.bigui .wrap{zoom:1.13}
+body.bigui #skillBtn{width:100px;height:100px;font-size:42px}
+body.bigui #dashBtn{width:78px;height:78px;font-size:32px;right:calc(max(16px, env(safe-area-inset-right,0px)) + 128px)}
+body.bigui.lefty #dashBtn{right:auto;left:calc(max(16px, env(safe-area-inset-left,0px)) + 128px)}
+body.bigui #hud .bar, body.bigui #hpbar{transform-origin:left top}

@@ -118,6 +118,8 @@ const CREST=`<svg class="crest" viewBox="0 0 120 120" aria-hidden="true">
  <circle cx="60" cy="62" r="9" fill="#c8423a" stroke="url(#cg)" stroke-width="3"/></svg>`;
 
 const badge=(on,txt)=>on?`<span class="badge">${txt}</span>`:'';
+const IOS=/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform==='MacIntel' && navigator.maxTouchPoints>1);
+const STANDALONE=(()=>{ try{ return matchMedia('(display-mode: standalone)').matches || navigator.standalone===true; }catch(e){ return false; } })();
 function showMenu(){
   state='menu'; run=null; G=null;
   const hasRun=!!save.run;
@@ -133,6 +135,7 @@ function showMenu(){
       <p class="sub">Kämpfe dich durch Verliese, Krypta und Drachenhort. Jeder Lauf ist anders.</p>
       <span class="pill s">👻 ${save.souls} Seelen</span>
     </div>
+    ${IOS && !STANDALONE && !save.settings.iosTip?`<div class="tip">📱 <div><b>Tipp fürs iPhone:</b> Tippe in Safari auf „Teilen“ und dann „Zum Home-Bildschirm“. Dann läuft das Spiel im Vollbild wie eine App, und deine Spielstände bleiben sicher gespeichert. <button class="linkbtn" data-a="tipok">Verstanden</button></div></div>`:''}
     <div class="menu-btns">
       ${hasRun?`<button class="btn primary stack" data-a="cont">▶ Lauf fortsetzen<span class="sub" style="font-size:13px;color:#f0dcb0">${CHARS[save.run.cid].icon} Akt ${save.run.act}</span></button>`:''}
       <button class="btn ${hasRun?'':'primary'}" data-a="play">⚔️ Neues Abenteuer${badge(heroBuyable,'Held')}</button>
@@ -151,8 +154,8 @@ function showMenu(){
       <span>Läufe: ${save.runs}</span>
     </div></div>`,
   { play:showChars, daily:showDaily, forge:showForge, scores:showScores, ach:showAch, beast:showBeast, help:showHelp,
-    cont:()=>{ run=save.run; showMap(); },
-    settings:showSettings, slots:showSlots });
+    cont:()=>{ run=save.run; resumeRun(); },
+    settings:showSettings, slots:showSlots, tipok:()=>{ save.settings.iosTip=true; persist(); showMenu(); } });
 }
 
 function showDaily(){
@@ -173,33 +176,59 @@ function showDaily(){
 function showSettings(){
   const st=save.settings;
   const tg=(key,label,on,desc)=>`<button class="toggle ${on?'on':''}" data-a="tg" data-v="${key}" aria-pressed="${on}"><span><b>${label}</b><br><span class="sub" style="font-size:13px">${desc}</span></span><span class="sw"></span></button>`;
+  const cy=(act,label,val,desc)=>`<button class="toggle on" data-a="${act}"><span><b>${label}: ${val}</b><br><span class="sub" style="font-size:13px">${desc}</span></span><span class="pill">Ändern</span></button>`;
+  const shakeTxt=!st.shake?'Aus':(st.shakeAmt??1)<1?'Schwach':'Normal';
+  const dmgTxt=st.dmgOff?'Aus':st.dmgNums?'Alle':'Nur kritische';
+  const asPct=Math.round((1-assistMul())*100);
   render(`<div class="wrap"><div class="eyebrow">Optionen</div><h2>Einstellungen</h2>
+    <div class="eyebrow" style="margin-top:4px">Ton</div>
     <div class="cards">
       ${tg('sound','Soundeffekte',save.sound,'Treffer, Münzen, Explosionen')}
       ${tg('music','Musik',st.music,'Titelthema, Kartenmusik und Kampfthemen je Akt, Bossmusik')}
       <label class="toggle" for="musicVol" style="cursor:default"><span><b>Musiklautstärke</b></span><input type="range" id="musicVol" min="0" max="1" step="0.05" value="${st.musicVol??0.7}" style="flex:1;max-width:180px;accent-color:#e6b450"></label>
-      ${tg('shake','Bildschirmwackeln',st.shake,'Bei Treffern und Explosionen')}
+    </div>
+    <div class="eyebrow" style="margin-top:8px">Spiel</div>
+    <div class="cards">
+      ${cy('speed','Spieltempo',{0.8:'Gemütlich (0,8×)',1:'Normal (1×)',1.2:'Schnell (1,2×)',1.5:'Turbo (1,5×)'}[st.gameSpeed||1]||'Normal','Wie schnell Kämpfe ablaufen. Musik und Menüs bleiben gleich.')}
+      ${tg('assist','Hilfemodus',st.assist,st.assist?`Du nimmst ${asPct} % weniger Schaden. Jede Niederlage gibt 2 % mehr (höchstens 80 %). Läufe werden in der Ruhmeshalle mit 🕊️ markiert.`:'Weniger Schaden für alle, die die Geschichte erleben wollen. Wird mit jeder Niederlage etwas stärker.')}
+      ${cy('dmg','Schadenszahlen',dmgTxt,'Zahlen über getroffenen Gegnern')}
+    </div>
+    <div class="eyebrow" style="margin-top:8px">Grafik und Akku</div>
+    <div class="cards">
       <button class="toggle on" data-a="gfx"><span><b>Grafik: ${{auto:'Automatisch',high:'Hoch',low:'Niedrig'}[st.gfx||'auto']}</b><br><span class="sub" style="font-size:13px">${{auto:'Volle Grafik, schaltet bei Ruckeln selbst herunter'+(AUTO_LOW?' (gerade reduziert)':''),high:'Licht, Nebel, Funken, Kleintiere und alle Zuschauer – immer',low:'Ohne Licht und Partikel, weniger Zuschauer, geringere Auflösung'}[st.gfx||'auto']}</span></span><span class="pill">Ändern</span></button>
-      <button class="toggle on" data-a="speed"><span><b>Spieltempo: ${{1:'Normal (1×)',1.2:'Schnell (1,2×)',1.5:'Turbo (1,5×)'}[st.gameSpeed||1]||'Normal'}</b><br><span class="sub" style="font-size:13px">Wie schnell Kämpfe ablaufen. Musik und Menüs bleiben gleich.</span></span><span class="pill">Ändern</span></button>
+      ${cy('fps','Bildrate',(st.fpsCap||60)===30?'30 (Akku sparen)':'60 (flüssig)','30 Bilder pro Sekunde schonen den Akku deutlich, 60 laufen flüssiger.')}
       ${tg('showFps','Bildrate anzeigen',st.showFps,'Zeigt die Bilder pro Sekunde im Kampf an')}
-      ${tg('dmgNums','Schadenszahlen',st.dmgNums,'Zahlen über getroffenen Gegnern anzeigen')}
-      ${tg('vibrate','Vibration',st.vibrate,'Kurzes Vibrieren bei Treffern (nur Android)')}
+    </div>
+    <div class="eyebrow" style="margin-top:8px">Steuerung</div>
+    <div class="cards">
       ${tg('joyFixed','Fester Joystick',st.joyFixed,'Joystick an fester Stelle unten statt überall auf dem Bildschirm')}
       ${tg('lefty','Linkshänder-Modus',st.lefty,'Fähigkeit und Ausweichen links, Joystick rechts')}
+      ${tg('vibrate','Vibration',st.vibrate,IOS?'Auf dem iPhone unterstützt der Browser leider keine Vibration':'Kurzes Vibrieren bei Treffern')}
+    </div>
+    <div class="eyebrow" style="margin-top:8px">Barrierefreiheit</div>
+    <div class="cards">
+      ${cy('shake','Bildschirmwackeln',shakeTxt,'Bei Treffern und Explosionen')}
+      ${tg('calm','Blitze abschwächen',st.calm,'Rote Treffer-Blitze, Gewitter und helle Effekte gedämpft')}
+      ${tg('bigUi','Große Schrift und Knöpfe',st.bigUi,'Menüs, Texte und die Knöpfe im Kampf werden größer')}
       ${tg('cb','Farbenblind-Modus',st.cb,'Warnkreise gelb-weiß gestrichelt, gegnerische Geschosse mit weißem Rand')}
     </div>
     <button class="btn" data-a="back">Zurück</button>
     <button class="btn danger" data-a="reset">Diesen Spielstand zurücksetzen</button></div>`,
-  { back:showMenu,
-    speed:()=>{ st.gameSpeed={1:1.2,1.2:1.5,1.5:1}[st.gameSpeed||1]||1; persist(); showSettings(); },
+  { back:()=>{ if(state==='paused'&&G){ showPause(); } else if(run && state==='ui' && settingsBack) { const f=settingsBack; settingsBack=null; f(); } else showMenu(); },
+    speed:()=>{ st.gameSpeed={0.8:1,1:1.2,1.2:1.5,1.5:0.8}[st.gameSpeed||1]||1; persist(); showSettings(); },
+    dmg:()=>{ if(st.dmgOff){ st.dmgOff=false; st.dmgNums=true; } else if(st.dmgNums){ st.dmgNums=false; } else { st.dmgOff=true; } persist(); showSettings(); },
+    shake:()=>{ if(!st.shake){ st.shake=true; st.shakeAmt=0.5; } else if((st.shakeAmt??1)<1){ st.shakeAmt=1; } else { st.shake=false; } persist(); showSettings(); },
+    fps:()=>{ st.fpsCap=(st.fpsCap||60)===60?30:60; PERF.low=0; persist(); showSettings(); },
     gfx:()=>{ st.gfx={auto:'high',high:'low',low:'auto'}[st.gfx||'auto']; AUTO_LOW=false; PERF.low=0; persist(); resize(); showSettings(); },
-    tg:k=>{ if(k==='sound') save.sound=!save.sound; else st[k]=!st[k]; persist(); document.body.classList.toggle('lefty',!!st.lefty); if(typeof musicUpdate==='function') musicUpdate(); showSettings(); },
+    tg:k=>{ if(k==='sound') save.sound=!save.sound; else st[k]=!st[k]; if(k==='assist'&&st.assist&&run) run.assist=true; persist(); applyBodyClasses(); if(typeof musicUpdate==='function') musicUpdate(); showSettings(); },
     reset:()=>render(`<div class="wrap" style="justify-content:center"><h2 class="center">Spielstand wirklich löschen?</h2>
       <p class="sub center">Seelen, Schmiede-Stufen, freigeschaltete Helden und die Ruhmeshalle werden gelöscht. Das lässt sich nicht rückgängig machen.</p>
       <button class="btn danger" data-a="yes">Endgültig löschen</button><button class="btn" data-a="no">Abbrechen</button></div>`,
       { yes:()=>{ const keep=save.settings, snd=save.sound, nm=save.name; save=defSave(); save.settings=keep; save.sound=snd; save.name=nm; persist(); showMenu(); }, no:showSettings }) });
   const mv=$('musicVol'); if(mv) mv.addEventListener('input',e=>{ st.musicVol=+e.target.value; persist(); musicUpdate(); });
 }
+let settingsBack=null;
+function applyBodyClasses(){ const st=save.settings; document.body.classList.toggle('lefty',!!st.lefty); document.body.classList.toggle('bigui',!!st.bigUi); }
 /* Sicherungscode: der komplette Spielstand als Text zum Kopieren und Wiedereinfügen */
 const SAVE_PREFIX='ARENA1:';
 function exportCode(){ const d=Object.assign({},save); delete d.settings; const json=JSON.stringify(d);
@@ -339,7 +368,7 @@ function showForge(){
 }
 
 function showScores(){
-  const rows=save.scores.length? save.scores.map((s,i)=>`<tr><td>${i+1}.</td><td>${CHARS[s.cid]?.icon||''} ${CHARS[s.cid]?.name||''}</td><td>${s.ng?'NG+'+s.ng+' ':''}${s.endless?'♾️ Akt '+s.act:s.won?'Sieg 👑':'Akt '+s.act}${s.daily?' 📅':''}</td><td>${esc(s.date)}</td><td class="n">${s.score}</td></tr>`).join('')
+  const rows=save.scores.length? save.scores.map((s,i)=>`<tr><td>${i+1}.</td><td>${CHARS[s.cid]?.icon||''} ${CHARS[s.cid]?.name||''}</td><td>${s.ng?'NG+'+s.ng+' ':''}${s.endless?'♾️ Akt '+s.act:s.won?'Sieg 👑':'Akt '+s.act}${s.daily?' 📅':''}${s.assist?' 🕊️':''}</td><td>${esc(s.date)}</td><td class="n">${s.score}</td></tr>`).join('')
     : `<tr><td colspan="5" class="center" style="color:var(--parch-dim);padding:24px">Noch keine Einträge. Dein erster Lauf landet hier.</td></tr>`;
   render(`<div class="wrap"><div class="eyebrow">Die besten Läufe</div><h2>Ruhmeshalle</h2>
     <div style="overflow-x:auto"><table class="scores"><thead><tr><th>#</th><th>Held</th><th>Weit</th><th>Datum</th><th style="text-align:right">Punkte</th></tr></thead><tbody>${rows}</tbody></table></div>
@@ -504,8 +533,15 @@ function upgCard(u,extra='',act='pick'){
   return `<button class="card reward-card ${u.r}" data-a="${act}" data-v="${u.id}">
     <div class="ic">${u.ic}</div><div class="body"><div class="rar">${RAR[u.r]}${u.only?' · '+CHARS[u.only[0]].name:''}${n?` · Stufe ${n+1}`:''}</div><div class="nm">${u.nm}</div><div class="ds">${u.ds}</div>${(()=>{const pv=previewUpg(u); return pv.length?`<div class="pv">${pv.join(' · ')}</div>`:'';})()}${synHint(u)}</div>${extra}</button>`;
 }
+// Laufstand fortsetzen: unterbrochenen Kampfraum neu starten bzw. offene Belohnung zeigen
+function resumeRun(){
+  if(run.won && !run.endless && !run.pend){ showVictory(); return; }
+  if(run.room && run.p.hp>0){ const t=run.room; toast('<b>Raum wird neu gestartet</b>'); startCombat(t); return; }
+  if(run.pend){ const a={map:showMap,next:nextAct,victory:showVictory}[run.pend.after]||showMap; showReward(run.pend.mode,a); return; }
+  showMap();
+}
 function showReward(mode, after, offer){
-  state='ui';
+  state='ui'; { const a0=after; after=()=>{ if(run) run.pend=null; a0(); }; }
   offer = offer || seeded(roomKey('reward')+'|'+run.rooms,()=>{ const o=rollUpgrades(3, mode); const cur=availUpgrades().filter(u=>u.r==='cursed');
     if(mode!=='normal' && cur.length && o.length===3 && RNG()<0.35) o[2]=pick(cur); return o; });
   const title={ normal:'Sieg!', elite:'Elite bezwungen!', treasure:'Ein Schatz!', boss:'Der Boss ist gefallen!' }[mode];

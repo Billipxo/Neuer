@@ -242,7 +242,7 @@ function noiseSound(dur,type,freq,vol,attack){
   const t=AC.currentTime, s=AC.createBufferSource(), f=AC.createBiquadFilter(), g=AC.createGain();
   s.buffer=MUS.noise; s.loop=true; f.type=type; f.frequency.value=freq; f.Q.value=0.7;
   g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(vol,t+attack); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
-  s.connect(f); f.connect(g); g.connect(AC.destination); s.start(t); s.stop(t+dur+0.05);
+  s.connect(f); f.connect(g); g.connect(sfxOut()); s.start(t); s.stop(t+dur+0.05);
 }
 const crowdSound=v=>{ noiseSound(1.4,'bandpass',900,0.18*v,0.25); noiseSound(1.1,'bandpass',2200,0.07*v,0.2); };
 const thunder=v=>noiseSound(2.2,'lowpass',180,0.7*v,0.05);
@@ -300,7 +300,7 @@ function drawWeather(cx,cy){
     for(const p of G.wp) if(p.glow) drawGlow(p.x,p.y,4*p.s,'#ff7a2a',0.8);
     ctx.globalCompositeOperation='source-over';
   }
-  if(G.flash>0){ ctx.fillStyle=`rgba(225,235,255,${G.flash*0.45})`; ctx.fillRect(0,0,W,H); }
+  if(G.flash>0){ ctx.fillStyle=`rgba(225,235,255,${G.flash*0.45*(save.settings.calm?0.3:1)})`; ctx.fillRect(0,0,W,H); }
 }
 function stormStrike(h){
   G.flash=0.6; thunder(1); G.shake+=6; hype(0.1);

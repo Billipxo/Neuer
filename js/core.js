@@ -5,9 +5,9 @@
 const SAVE_KEY = 'arena_verdammten_v1';
 const SAVE_V=2, RUN_V=6;
 const reducedMotion = (()=>{ try{ return matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } })();
-function defSettings(){ return { shake:!reducedMotion, vibrate:true, music:true, fx:true, joyFixed:false, lefty:false, cb:false, musicVol:0.7, gfx:'auto', showFps:false, dmgNums:true, gameSpeed:1.2 }; }
+function defSettings(){ return { shake:!reducedMotion, vibrate:true, music:true, fx:true, joyFixed:false, lefty:false, cb:false, musicVol:0.7, gfx:'auto', showFps:false, dmgNums:true, dmgOff:false, gameSpeed:1.2, shakeAmt:1, calm:reducedMotion, fpsCap:60, assist:false, bigUi:false, iosTip:false }; }
 function defStats(){ return { beast:{}, kills:0, elites:0, cheers:0, events:[], syns:[], bosses:[], wins:{}, anyWin:false, noHitBoss:false, dailyWin:false, maxEndless:0, maxGold:0, maxCombo:0 }; }
-function defSave(){ return { v:SAVE_V, tutDone:false, ach:{}, skin:{}, heroXp:{}, stats:defStats(), souls:0, meta:{}, unlocked:{krieger:true}, scores:[], runs:0, lastChar:'krieger', sound:true, run:null, settings:defSettings(), name:'Spielstand 1', last:0, ngMax:0, ngSel:0 }; }
+function defSave(){ return { v:SAVE_V, tutDone:false, ach:{}, skin:{}, heroXp:{}, stats:defStats(), souls:0, meta:{}, unlocked:{krieger:true}, scores:[], runs:0, lastChar:'krieger', sound:true, run:null, assistN:0, settings:defSettings(), name:'Spielstand 1', last:0, ngMax:0, ngSel:0 }; }
 function migrate(s){
   const d=defSave(); s=Object.assign(d, s);
   s.settings=Object.assign(defSettings(), s.settings||{}); if(s.settings.fx===false && !s.settings._gfxMig){ s.settings.gfx='low'; } s.settings._gfxMig=true;
@@ -35,7 +35,7 @@ function loadSave(){
 }
 let save = loadSave();
 function persist(){ save.last=Date.now(); lsSet(slotKey(slotIdx),save); lsSet(SET_KEY,{settings:save.settings,sound:save.sound}); lsSet(SLOT_IDX_KEY,{active:slotIdx}); }
-function switchSlot(i){ persist(); slotIdx=i; save=loadSave(); persist(); document.body.classList.toggle('lefty',!!save.settings.lefty); }
+function switchSlot(i){ persist(); slotIdx=i; save=loadSave(); persist(); applyBodyClasses(); }
 const metaLvl = id => save.meta[id] || 0;
 /* Heldenstufen: Erfahrung über alle Läufe, Stufe L braucht insgesamt 120·L·(L+1)/2 EP */
 const HERO_MAX=10, xpFor=L=>60*L*(L+1);
@@ -63,8 +63,22 @@ function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(RNG()*(i+1
 function wpick(list){ let t=0; for(const [,w] of list) t+=w; let r=RNG()*t; for(const [v,w] of list){ if((r-=w)<=0) return v; } return list[0][0]; }
 
 /* ---------------- AUDIO ---------------- */
-let AC=null, lastSfx={};
-function audio(){ if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)(); musicInit(); }catch(e){} } if(AC && AC.state==='suspended') AC.resume(); }
+let AC=null, lastSfx={}, SFXOUT=null, persistAsked=false;
+function audio(){
+  if(!AC){ try{ AC=new (window.AudioContext||window.webkitAudioContext)();
+    // Soundeffekte laufen über einen Kompressor, damit viele gleichzeitige Treffer nicht übersteuern
+    try{ const comp=AC.createDynamicsCompressor(); comp.threshold.value=-18; comp.knee.value=12; comp.ratio.value=4; comp.attack.value=0.003; comp.release.value=0.2;
+      SFXOUT=AC.createGain(); SFXOUT.gain.value=1; SFXOUT.connect(comp); comp.connect(AC.destination); }catch(e){ SFXOUT=AC.destination; }
+    musicInit(); }catch(e){} }
+  if(AC && AC.state!=='running' && AC.state!=='closed'){ try{ AC.resume(); }catch(e){} }
+  if(!persistAsked){ persistAsked=true; try{ navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(()=>{}); }catch(e){} }
+}
+const sfxOut=()=>SFXOUT||AC.destination;
+/* iOS kann den Ton nach dem Hintergrund stumm lassen: dann wird die Audio-Engine beim nächsten Tippen neu aufgebaut */
+function audioRevive(){
+  if(!AC || document.hidden) return; try{ AC.resume(); }catch(e){}
+  setTimeout(()=>{ if(AC && AC.state!=='running' && !document.hidden){ try{ AC.close(); }catch(e){} AC=null; SFXOUT=null; MUS.gain=null; MUS.song=null; if(MUS.timer){ clearInterval(MUS.timer); MUS.timer=0; } } },600);
+}
 /* ---------------- MUSIK ----------------
    Komponierte Stücke, live mit Web Audio gespielt: Titelthema, ruhige Kartenmusik und Kampfthema je Akt,
    Bossthema, dazu Fanfaren für Sieg und Niederlage. Melodien in Tonleiterstufen, je Achtel ein Zeichen:
@@ -108,7 +122,7 @@ function musicInit(){
     const conv=AC.createConvolver(); conv.buffer=ir; const wet=AC.createGain(); wet.gain.value=0.32; MUS.bus.connect(conv); conv.connect(wet); wet.connect(MUS.gain); }catch(e){}
   MUS.filt=AC.createBiquadFilter(); MUS.filt.type='lowpass'; MUS.filt.frequency.value=520; MUS.filt.connect(MUS.bus);
   const len=AC.sampleRate*0.2, buf=AC.createBuffer(1,len,AC.sampleRate), d=buf.getChannelData(0); for(let i=0;i<len;i++) d[i]=Math.random()*2-1; MUS.noise=buf;
-  MUS.next=AC.currentTime+0.1; setInterval(musicTick,60);
+  MUS.next=AC.currentTime+0.1; if(MUS.timer) clearInterval(MUS.timer); MUS.timer=setInterval(musicTick,60);
 }
 function env(g,t,vol,att,dur){ g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(vol,t+att); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); }
 function tone(type,f,t,dur,vol,dest,att=0.01){ const o=AC.createOscillator(), g=AC.createGain(); o.type=type; o.frequency.value=f;
@@ -182,7 +196,7 @@ const musicUpdate=()=>{ if(AC) musicTick(); };
 function sfx(type){
   if(!save.sound || !AC) return;
   const now=AC.currentTime; if(lastSfx[type] && now-lastSfx[type]<0.05) return; lastSfx[type]=now;
-  const o=AC.createOscillator(), g=AC.createGain(); o.connect(g); g.connect(AC.destination);
+  const o=AC.createOscillator(), g=AC.createGain(); o.connect(g); g.connect(sfxOut());
   const S={ zap:['sine',700,1500,.05,.09], twang:['triangle',820,330,.06,.07], skullthrow:['sawtooth',260,520,.035,.1], hit:['square',220,90,.05,.06], swing:['triangle',300,120,.06,.08], coin:['sine',900,1500,.05,.07], hurt:['sawtooth',160,50,.1,.22],
     kill:['triangle',180,60,.06,.12], shoot:['sine',600,300,.03,.07], skill:['sawtooth',120,600,.08,.35], boom:['sawtooth',90,30,.12,.3],
     pick:['sine',500,1000,.08,.18], dash:['sine',260,820,.06,.14], boss:['sawtooth',70,40,.12,.8] }[type];
@@ -194,7 +208,7 @@ function sfx(type){
 function blip(type,f0,f1,vol,dur,delay=0){
   if(!save.sound||!AC) return; const t=AC.currentTime+delay, o=AC.createOscillator(), g=AC.createGain();
   o.type=type; o.frequency.setValueAtTime(f0,t); o.frequency.exponentialRampToValueAtTime(Math.max(20,f1),t+dur);
-  g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t+dur+0.02);
+  g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(sfxOut()); o.start(t); o.stop(t+dur+0.02);
 }
 function deathSound(kind){
   if(!save.sound||!AC) return; const now=AC.currentTime, k='d_'+kind; if(lastSfx[k] && now-lastSfx[k]<0.07) return; lastSfx[k]=now;
@@ -219,7 +233,7 @@ function roar(kind){
   lfo.frequency.value=11; lg.gain.value=18*p; lfo.connect(lg); lg.connect(o.frequency);
   f.type='lowpass'; f.frequency.setValueAtTime(1400,t); f.frequency.exponentialRampToValueAtTime(300,t+1.5);
   g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.28,t+0.12); g.gain.exponentialRampToValueAtTime(0.0001,t+1.6);
-  o.connect(f); f.connect(g); g.connect(AC.destination); o.start(t); lfo.start(t); o.stop(t+1.7); lfo.stop(t+1.7);
+  o.connect(f); f.connect(g); g.connect(sfxOut()); o.start(t); lfo.start(t); o.stop(t+1.7); lfo.stop(t+1.7);
   noiseSound(1.3,'lowpass',500*p,0.25,0.1);
 }
 function buzz(ms){ if(!save.settings.vibrate) return; try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} }

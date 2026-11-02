@@ -78,6 +78,15 @@ const tests = {
       startRun('krieger',{ng:2}); run.posId=run.map.rows[0][0].id; startCombat('fight'); __bot(true,3); const e=G.enemies[0]||G.spawnQ[0];
       return {ok: fresh===0 && back===1234 && bad && d.souls===1234 && run.ng===2, slots:[fresh,back]}; });
   },
+  async resume(pg){ // Unterbrochene Läufe: Kampfraum startet neu, offene Belohnung bleibt erhalten
+    return pg.evaluate(()=>{ save.tutDone=true; startRun('jaegerin'); showMap(); const id=availNodes()[0]; enterNode(id); const hp=P.hp;
+      saveNow(); const s1=readSlot(slotIdx).run; run=null; G=null; state='menu';
+      run=s1; resumeRun(); const r1=state==='combat' && run.posId===id && G && G.type===run.room;
+      __bot(true,240); const pendMode=run&&run.pend&&run.pend.mode; saveNow(); const s2=readSlot(slotIdx).run; run=s2; resumeRun();
+      const r2=!!ui.querySelector('[data-a=pick]');
+      actions.skip(); const r3=!run.pend && !!ui.querySelector('.mapbox');
+      return {ok:r1&&!!pendMode&&r2&&r3, r1, pendMode, r2, r3}; });
+  },
   async music(pg){ // Musik-Engine spielt alle Stücke inklusive B-Teil fehlerfrei
     await pg.mouse.click(10,10);
     return pg.evaluate(()=>{ audio(); if(!AC) return {ok:true, skipped:'kein Audio'}; let n=0;

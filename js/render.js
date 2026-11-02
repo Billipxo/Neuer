@@ -9,7 +9,7 @@ function draw(){
   const vw=W/SCALE, vh=H/SCALE, m=WALL+STAND*0.75;
   let cx = vw>=AW+2*m ? AW/2-vw/2 : clamp(P.x-vw/2,-m,AW+m-vw);
   let cy = vh>=AH+2*m ? AH/2-vh/2 : clamp(P.y-vh/2,-m,AH+m-vh);
-  if(G.shake>0 && save.settings.shake){ cx+=rand(-G.shake,G.shake)*0.4; cy+=rand(-G.shake,G.shake)*0.4; }
+  if(G.shake>0 && save.settings.shake){ const k=0.4*(save.settings.shakeAmt??1); cx+=(Math.random()*2-1)*G.shake*k; cy+=(Math.random()*2-1)*G.shake*k; }
   ctx.save(); ctx.scale(SCALE,SCALE); ctx.translate(-cx,-cy);
   if(!floorCanvas) buildFloor();
   ctx.drawImage(floorCanvas,-BORDER,-BORDER,AW+BORDER*2,AH+BORDER*2);
@@ -64,9 +64,10 @@ function draw(){
   drawWeather(cx,cy);
   if(!G.over) drawIndicators(cx,cy);
   ctx.fillStyle=vignette; ctx.fillRect(0,0,W,H);
-  if(G.whiteFlash>0){ ctx.fillStyle=`rgba(255,248,220,${G.whiteFlash})`; ctx.fillRect(0,0,W,H); }
+  const FL=save.settings.calm?0.3:1;
+  if(G.whiteFlash>0){ ctx.fillStyle=`rgba(255,248,220,${G.whiteFlash*FL})`; ctx.fillRect(0,0,W,H); }
   if(G.over){ ctx.fillStyle=`rgba(10,0,0,${Math.min(0.55,G.deathT*0.5)})`; ctx.fillRect(0,0,W,H); }
-  if(G.hurtFlash>0){ ctx.fillStyle=`rgba(200,30,30,${G.hurtFlash*0.6})`; ctx.fillRect(0,0,W,H); }
+  if(G.hurtFlash>0){ ctx.fillStyle=`rgba(200,30,30,${G.hurtFlash*0.6*FL})`; ctx.fillRect(0,0,W,H); }
   if(P.hp<P.maxHp*0.25 && !G.over){ ctx.fillStyle=`rgba(160,0,0,${0.12+Math.sin(G.time*6)*0.06})`; ctx.fillRect(0,0,W,H); }
   // joystick
   if(input.id===null && save.settings.joyFixed){ const jb=joyBase(); ctx.globalAlpha=0.28; ctx.strokeStyle='#efe2c4'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(jb.x,jb.y,JR,0,TAU); ctx.stroke(); ctx.fillStyle='#e6b450'; ctx.beginPath(); ctx.arc(jb.x,jb.y,20,0,TAU); ctx.fill(); ctx.globalAlpha=1; }
@@ -731,10 +732,11 @@ function drawMenuBg(dt){
 let last=performance.now();
 function loop(now){
   requestAnimationFrame(loop);
+  const cap=save.settings.fpsCap||60; if(now-last < 1000/cap-2 && now>=last) return;   // Bildrate begrenzen (Akku, 120-Hz-Bildschirme)
   const raw=(now-last)/1000, dt=clamp(raw,0,0.05); last=now;
   if(state==='combat' && G && raw>0 && raw<0.5 && !document.hidden){ PERF.acc+=raw; PERF.n++;
     if(PERF.acc>=1){ PERF.fps=Math.round(PERF.n/PERF.acc); PERF.acc=0; PERF.n=0;
-      PERF.low = PERF.fps<42 ? PERF.low+1 : 0;
+      PERF.low = PERF.fps<cap*0.7 ? PERF.low+1 : 0;
       if(save.settings.gfx==='auto' && !AUTO_LOW && PERF.low>=4){ AUTO_LOW=true; resize(); buildFloor();
         toast('<span style="font-size:24px">⚙️</span><div><b>Grafik automatisch reduziert</b><div class="sub" style="font-size:13px">Damit das Spiel flüssig bleibt. Ändern unter Einstellungen → Grafik.</div></div>'); } } }
   if(state==='combat' && G){ if(G.stop>0){ G.stop-=dt; } else { const gdt=dt*(save.settings.gameSpeed||1), n=Math.max(1,Math.ceil(gdt/0.034));
@@ -742,6 +744,6 @@ function loop(now){
   else if(state==='paused' && G){ draw(); }
   else if(!G) drawMenuBg(dt);
 }
-document.body.classList.toggle('lefty',!!save.settings.lefty);
+applyBodyClasses();
 resize(); showMenu(); requestAnimationFrame(loop);
 if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }

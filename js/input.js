@@ -38,7 +38,18 @@ function readMove(){
 $('skillBtn').addEventListener('pointerdown',e=>{ e.preventDefault(); e.stopPropagation(); audio(); useSkill(); });
 $('dashBtn').addEventListener('pointerdown',e=>{ e.preventDefault(); e.stopPropagation(); audio(); useDash(); });
 $('pauseBtn').addEventListener('click',()=>pauseGame());
-document.addEventListener('visibilitychange',()=>{ if(document.hidden && state==='combat') pauseGame(); });
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){ if(state==='combat') pauseGame(); saveNow(); }
+  else { audioRevive(); if(state==='combat'||state==='paused') wakeLock(true); }
+});
+addEventListener('pagehide',saveNow);
+// Beim Verlassen sichern: laufender Raum wird beim Fortsetzen neu gestartet, offene Belohnungen bleiben erhalten
+function saveNow(){ try{ if(run && !run.ended && !(G&&G.over)) save.run=run; persist(); }catch(e){} }
+// Bildschirm im Kampf wach halten (wo der Browser es erlaubt)
+let WL=null;
+function wakeLock(on){ try{
+  if(on && !WL && navigator.wakeLock && !document.hidden) navigator.wakeLock.request('screen').then(l=>{ WL=l; l.addEventListener('release',()=>{ if(WL===l) WL=null; }); }).catch(()=>{});
+  if(!on && WL){ WL.release().catch(()=>{}); WL=null; } }catch(e){} }
 document.addEventListener('gesturestart',e=>e.preventDefault());
 document.addEventListener('pointerdown',()=>audio(),{passive:true});
 document.addEventListener('keydown',()=>audio());
