@@ -20,6 +20,7 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 | `js/input.js` | Joystick/Tastatur, Spielzustand, `newPlayer`, `startRun`, `nextAct`, `roomKey` |
 | `js/ui.js` | Alle Menüs (`render(html, actions)`), Karte (`genMap`, `showMap`), Erfolge (`ACH`, `checkAch`), Skins, Spielstände/Sicherungscode, Händler, Lagerfeuer, Ereignisse, Belohnungen |
 | `js/combat.js` | Raum-Aufbau (`startCombat`, `genArena`, `buildWaves`), `update`, Gegner-KI (`updEnemy`), Bosse (`updBoss`), Schaden (`dealDamage`, `hurtPlayer`, `killEnemy`), Raumende, `endRun` |
+| `js/sprites.js` | Vorgerenderte Gegner-Sprites (`SPR_BODY`, `getSprite`, `blitSprite`), Porträts für Menüs (`fillPortraits`, `<canvas data-port="hero:id">`) |
 | `js/render.js` | `draw`, `drawHero`, `drawEnemy`, `drawBoss`, Geschosse/Effekte, HUD, Spielschleife `loop` |
 
 ## Wichtige Konzepte
@@ -30,7 +31,7 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 - **Speicherstand:** Neue Felder in `defSave()`/`defStats()`/`defSettings()` ergänzen, `migrate()` füllt alte Stände auf. Ändert sich die Struktur von `run`/`run.p` inkompatibel, `RUN_V` erhöhen (alte Läufe werden verworfen). Einstellungen sind global für alle 3 Slots.
 - **Grafikstufe:** Teure Effekte nur bei `FX()` (Licht, Partikel, Kleintiere, Zuschauerdichte).
 - **Spieltempo:** `loop` ruft `update(gdt/n)` in Teilschritten ≤ 0,034 s auf; `update` immer mit kleinen Schritten testen.
-- **Gegner hinzufügen:** Eintrag in `ENEMIES` (+ `BEAST`), KI-Fall in `updEnemy`, Zeichnung in `drawEnemy`, Farbe in `enemyColor`, fliegend → `FLY`.
+- **Gegner hinzufügen:** Eintrag in `ENEMIES` (+ `BEAST`), KI-Fall in `updEnemy`, Zeichnung als Sprite in `SPR_BODY`/`SPR_KIND` (`js/sprites.js`) oder live in `drawEnemy`, Farbe in `enemyColor`, fliegend → `FLY`.
 - **Bosse:** `BOSSES` + `ACTS[i].bosses` + `BOSS_LINES` + `BEAST`, Logik in `updBoss`, Zeichnung in `drawBoss`, Tonhöhe in `ROAR`.
 
 ## Tests schreiben

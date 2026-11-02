@@ -96,7 +96,7 @@ ui.addEventListener('click',e=>{
   const fn=actions[b.dataset.a]; if(fn) fn(b.dataset.v);
 });
 function render(html, acts, dim=false){
-  actions=acts||{}; ui.innerHTML=html; ui.classList.remove('hidden'); ui.classList.toggle('dim',dim); ui.scrollTop=0;
+  actions=acts||{}; ui.innerHTML=html; if(html.includes('data-port')) fillPortraits(ui); ui.classList.remove('hidden'); ui.classList.toggle('dim',dim); ui.scrollTop=0;
   $('hud').classList.add('hidden');
 }
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -153,7 +153,7 @@ function showDaily(){
   render(`<div class="wrap"><div class="eyebrow">Tägliche Herausforderung · ${date}</div><h2>Die Prüfung des Tages</h2>
     <p class="sub">Heute spielen alle dieselben Karten, Räume und Belohnungen. Schmiede-Upgrades gelten hier nicht. Morgen gibt es eine neue Prüfung.</p>
     <div class="cards">
-      <div class="card" style="border-color:${c.color}"><div class="ic" style="background:${c.color}44">${c.icon}</div><div class="body"><div class="rar">Held des Tages</div><div class="nm">${c.name}</div><div class="ds">${c.desc}${save.unlocked[info.cid]?'':' Noch nicht freigeschaltet, heute aber spielbar!'}</div></div></div>
+      <div class="card" style="border-color:${c.color}"><div class="ic port" style="background:radial-gradient(circle at 50% 40%,${c.color}88,#0008 75%)"><canvas data-port="hero:${id}" data-size="46"></canvas></div><div class="body"><div class="rar">Held des Tages</div><div class="nm">${c.name}</div><div class="ds">${c.desc}${save.unlocked[info.cid]?'':' Noch nicht freigeschaltet, heute aber spielbar!'}</div></div></div>
       <div class="card epic"><div class="ic">${m.ic}</div><div class="body"><div class="rar">Modifikator</div><div class="nm">${m.nm}</div><div class="ds">${m.ds}</div></div></div>
     </div>
     <div class="row" style="gap:6px"><span class="pill g">🏆 Tagesbestwert: ${d.best}</span><span class="pill">Versuche heute: ${d.tries}</span></div>
@@ -229,7 +229,7 @@ function showBeast(){
   const B=save.stats.beast, all=Object.keys(BEAST), found=all.filter(k=>B[k]).length; save.beastSeen=Object.keys(B).length; persist();
   const entry=k=>{ const isBoss=!!BOSSES[k], d=isBoss?BOSSES[k]:ENEMIES[k], n=B[k]||0;
     const where=isBoss?ACTS.findIndex(a=>a.bosses.includes(k)):(d.minAct||1)-1;
-    return n?`<div class="card ${isBoss?'epic':''}"><div class="ic">${BEAST[k].ic}</div><div class="body"><div class="rar">${isBoss?'Boss · ':''}${ACTS[Math.max(0,where)].name}</div><div class="nm">${esc(d.name)}</div><div class="ds">${BEAST[k].ds}</div><div class="ds" style="font-size:12px;color:var(--gold)">Besiegt: ${n}×</div></div></div>`
+    return n?`<div class="card ${isBoss?'epic':''}"><div class="ic port">${isBoss?BEAST[k].ic:`<canvas data-port="foe:${k}" data-size="46"></canvas>`}</div><div class="body"><div class="rar">${isBoss?'Boss · ':''}${ACTS[Math.max(0,where)].name}</div><div class="nm">${esc(d.name)}</div><div class="ds">${BEAST[k].ds}</div><div class="ds" style="font-size:12px;color:var(--gold)">Besiegt: ${n}×</div></div></div>`
       :`<div class="card" style="opacity:.6"><div class="ic">❔</div><div class="body"><div class="rar">${isBoss?'Boss':'Gegner'}</div><div class="nm">???</div><div class="ds">Noch nicht besiegt.</div></div></div>`; };
   render(`<div class="wrap"><div class="eyebrow">${found} von ${all.length} entdeckt</div><h2>Bestiarium</h2>
     <div class="eyebrow">Gegner</div><div class="cards">${Object.keys(ENEMIES).filter(k=>BEAST[k]).map(entry).join('')}</div>
@@ -292,7 +292,7 @@ function showChars(){
   const list=Object.entries(CHARS).map(([id,c])=>{
     const un=save.unlocked[id], can=save.souls>=c.cost;
     return `<button class="card ${un&&save.lastChar===id?'sel':''}" data-a="${un?'go':'buy'}" data-v="${id}" ${!un&&!can?'disabled':''}>
-      <div class="ic" style="background:${c.color}44">${c.icon}</div>
+      <div class="ic port" style="background:radial-gradient(circle at 50% 40%,${c.color}88,#0008 75%)"><canvas data-port="hero:${id}" data-size="46"></canvas></div>
       <div class="body"><div class="nm">${c.name}</div><div class="ds">${c.desc}</div>
         <div class="ds" style="color:var(--parch)">${c.skill.icon} <b>${c.skill.name}:</b> ${c.skill.desc}</div>${c.passive?`<div class="ds" style="color:var(--gold)">${c.passive}</div>`:''}
         ${un?(()=>{ const L=heroLvl(id), xp=(save.heroXp||{})[id]||0, a=xpFor(L), b=xpFor(L+1);

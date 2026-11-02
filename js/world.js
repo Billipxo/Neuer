@@ -2,7 +2,7 @@
 /* Arena der Verdammten – Canvas, Arena-Boden, Tribünen, Zuschauer, Wetter, Licht und Ambiente */
 
 /* ---------------- CANVAS ---------------- */
-const cvs=$('game'), ctx=cvs.getContext('2d');
+const cvs=$('game'); let ctx=cvs.getContext('2d');
 let W=0,H=0,DPR=1,SCALE=1,vignette=null;
 const AW=760, AH=1000, WALL=44;
 function resize(){
@@ -23,7 +23,7 @@ function glow(color){
   g.fillStyle=gr; g.fillRect(0,0,64,64); return glowCache[color]=c;
 }
 let GA=1;
-function drawGlow(x,y,r,color,a=1){ ctx.globalAlpha=a*GA; ctx.drawImage(glow(color),x-r,y-r,r*2,r*2); ctx.globalAlpha=GA; }
+function drawGlow(x,y,r,color,a=1){ const sb=ctx.shadowBlur; if(sb) ctx.shadowBlur=0; ctx.globalAlpha=a*GA; ctx.drawImage(glow(color),x-r,y-r,r*2,r*2); ctx.globalAlpha=GA; if(sb) ctx.shadowBlur=sb; }
 
 let floorCanvas=null, floorAct=-1, DECOR={puddles:[],cracks:[],candles:[],runes:[]};
 function shade(hex,amt){ const n=parseInt(hex.slice(1),16), f=v=>clamp(Math.round(v+amt),0,255); return `rgb(${f(n>>16)},${f(n>>8&255)},${f(n&255)})`; }
