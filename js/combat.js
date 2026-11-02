@@ -9,7 +9,7 @@ function buildWaves(type){
   for(let w=0;w<nW;w++){
     let budget=(5+depth*1.25+w*1.5)*(type==='elite'?0.7:1)*((runMod()||{}).waveMul||1); const list=[];
     while(budget>0){ const k=pick(pool); list.push({kind:k}); budget-=ENEMIES[k].cost; }
-    if(type==='elite' || ((runMod()||{}).eliteEvery && w===nW-1)) list.push({kind:pick(pool.filter(k=>k!=='bat')), elite:true});
+    if(type==='elite' || ((runMod()||{}).eliteEvery && w===nW-1) || ((run.ng||0)>0 && w===nW-1 && RNG()<0.25*run.ng)) list.push({kind:pick(pool.filter(k=>k!=='bat')), elite:true});
     waves.push(list);
   }
   return waves;
@@ -88,22 +88,24 @@ function startCombat(type, customWaves){
 function makeEnemy(kind,x,y,elite){
   const d=ENEMIES[kind], act=run.act, row=nodeById(run.posId).row;
   const ex=act>3?Math.pow(1.25,act-3):1;
-  const hs=(1+0.6*(act-1)+0.07*row)*ex, ds=(1+0.3*(act-1)+0.03*row)*Math.sqrt(ex);
+  const ng=run.ng||0;
+  const hs=(1+0.6*(act-1)+0.07*row)*ex*(1+0.45*ng), ds=(1+0.3*(act-1)+0.03*row)*Math.sqrt(ex)*(1+0.25*ng);
   const e={ kind, x,y, r:d.r, hp:d.hp*hs, dmg:d.dmg*ds, speed:d.speed*rand(0.9,1.1), ai:d.ai, t:rand(0,3), seed:rand(0,TAU), flash:0, slow:0, freeze:0, kx:0, ky:0,
     elite:!!elite, gold:d.gold, soul:1, st:0, timer:rand(1,2.5), dir:Math.random()<0.5?1:-1, face:0, orbCd:0, squish:0, fire:d.fire||2 };
   if(elite){ e.hp*=3.2; e.r*=1.35; e.dmg*=1.3; e.gold*=4; e.soul=5; }
   if(kind==='mimic') e.soul=6;
   if(kind==='worm'){ e.under=true; e.timer=rand(1.5,2.5); }
   if(kind==='spiderling'){ e.soul=0; }
-  e.speed*=((runMod()||{}).enemySpeed||1); e.spawnT=0.45;
+  e.speed*=((runMod()||{}).enemySpeed||1)*(1+0.04*Math.min(5,run.ng||0)); e.spawnT=0.45;
   e.maxHp=e.hp; return e;
 }
 function makeBoss(kind,x,y){
-  const b=BOSSES[kind], s=(1+0.08*metaLvl('m_dmg'))*(run.act>3?1+0.8*(run.act-3):1);
+  const b=BOSSES[kind], s=(1+0.08*metaLvl('m_dmg'))*(run.act>3?1+0.8*(run.act-3):1)*(1+0.5*(run.ng||0));
   const e={ kind, boss:true, x,y, r:b.r, hp:b.hp*s, maxHp:b.hp*s, dmg:b.dmg, speed:b.speed, ai:kind, t:0, flash:0, slow:0, freeze:0, kx:0, ky:0, soul:0, gold:0,
     st:0, timer:2, cast:null, castT:0, face:Math.PI/2, alpha:1, seed:0, orbCd:0, phase2:false, spiral:0 };
   if(kind==='lavaworm'){ e.st=0; e.wt=1.5; e.under=true; }
-  G.boss=e; $('bossName').textContent=b.name; return e;
+  if(run.ng) e.dmg*=1+0.25*run.ng;
+  G.boss=e; $('bossName').textContent=(run.ng?'NG+'+run.ng+' · ':'')+b.name; return e;
 }
 
 function nextWave(){
@@ -349,7 +351,7 @@ function explosion(x,y,r,dmg,color,fromBoom){
 function killEnemy(e){
   e.dead=true; if(e.boss) sfx('kill'); else deathSound(e.kind); if(e.elite) hitstop(0.09); if(e.boss) hitstop(0.35);
   burst(e.x,e.y,e.boss?80:12,enemyColor(e),e.boss?300:160);
-  if(e.boss){ hype(1); crowdSound(1.4); if(!save.stats.bosses.includes(e.kind)) save.stats.bosses.push(e.kind); if(!G.bossHit) save.stats.noHitBoss=true; G.shake=20; buzz(200); G.slowT=1.4; G.whiteFlash=0.5; for(let i=0;i<60;i++){ const a=rand(0,TAU),s=rand(100,420); part(e.x,e.y,Math.cos(a)*s,Math.sin(a)*s,rand(0.8,1.6),rand(3,6),Math.random()<0.5?'#ffd34d':'#fff3b0',true,120); } for(let i=0;i<40;i++) dropCoin(e.x+rand(-40,40),e.y+rand(-40,40),2); run.souls+=25*run.act; run.bosses++;
+  if(e.boss){ hype(1); crowdSound(1.4); musicSting('win'); if(!save.stats.bosses.includes(e.kind)) save.stats.bosses.push(e.kind); if(!G.bossHit) save.stats.noHitBoss=true; G.shake=20; buzz(200); G.slowT=1.4; G.whiteFlash=0.5; for(let i=0;i<60;i++){ const a=rand(0,TAU),s=rand(100,420); part(e.x,e.y,Math.cos(a)*s,Math.sin(a)*s,rand(0.8,1.6),rand(3,6),Math.random()<0.5?'#ffd34d':'#fff3b0',true,120); } for(let i=0;i<40;i++) dropCoin(e.x+rand(-40,40),e.y+rand(-40,40),2); run.souls+=25*run.act; run.bosses++;
     for(const o of G.enemies) if(!o.dead&&!o.boss){ o.dead=true; burst(o.x,o.y,8,enemyColor(o),120); }
     G.eproj=[]; G.hazards=[]; clearRoom(); return; }
   run.kills++; run.souls+=e.soul; save.stats.kills++; if(e.elite) save.stats.elites++;
@@ -445,7 +447,7 @@ function updEnemy(e,dt){
 }
 
 function updBoss(e,dt,sm,d,a){
-  e.phase2 = e.hp<e.maxHp*0.5;
+  e.phase2 = e.hp<e.maxHp*(0.5+Math.min(0.2,0.05*(run.ng||0)));
   if(e.phase2 && !e.enraged){ e.enraged=true; hype(0.4); crowdSound(0.8); banner('Der Boss wird wütend!'); hitstop(0.2); G.shake+=10; sfx('boss'); }
   const rage=e.phase2?1.35:1;
   e.timer-=dt*sm*rage;
@@ -628,7 +630,7 @@ function hurtPlayer(dmg,src){
   if(src && p.thorns>0 && !src.dead){ dealDamage(src,p.thorns,{noChain:true}); if(hasSyn('vampthorn')) p.hp=Math.min(p.maxHp,p.hp+5); }
   if(p.hp<=0){
     if(p.revive>0){ p.revive--; run.upg.phoenix=Math.max(0,(run.upg.phoenix||1)-1); if(!run.upg.phoenix) delete run.upg.phoenix; p.hp=Math.ceil(p.maxHp*0.5); p.inv=2.5; burst(p.x,p.y,50,'#ffb84a',260); banner('Phönixfeder!','Du erhebst dich erneut'); }
-    else { p.hp=0; G.over=true; G.deathT=0; banner('Gefallen'); burst(p.x,p.y,40,'#c8423a',200); buzz(300); setTimeout(()=>{ if(G&&G.over) endRun(!!(run&&run.won)); },1600); }
+    else { p.hp=0; G.over=true; G.deathT=0; banner('Gefallen'); musicSting('lose'); burst(p.x,p.y,40,'#c8423a',200); buzz(300); setTimeout(()=>{ if(G&&G.over) endRun(!!(run&&run.won)); },1600); }
   }
 }
 
@@ -650,21 +652,25 @@ function finishCombat(){
 }
 
 function showVictory(){
-  render(`<div class="wrap" style="justify-content:center"><div class="center"><div class="eyebrow">Ignaroth ist gefallen</div><h1 style="margin-top:8px">Triumph!</h1>
+  const nn=(run.ng||0)+1; if(!run.daily){ save.ngMax=Math.max(save.ngMax||0,nn); persist(); checkAch(); }
+  render(`<div class="wrap" style="justify-content:center"><div class="center"><div class="eyebrow">${run.ng?'NG+'+run.ng+' · ':''}${esc(BOSSES[bossKind()].name)} ist gefallen</div><h1 style="margin-top:8px">Triumph!</h1>
     <p class="sub" style="margin-top:8px">Die Arena gehört dir. Doch aus der Tiefe steigen neue Schrecken empor …</p></div>
     <div class="cards">
       <button class="card epic reward-card" data-a="endless"><div class="ic">♾️</div><div class="body"><div class="nm">Endlosmodus</div><div class="ds">Kämpfe mit all deinen Upgrades weiter. Jeder Akt wird härter und bringt mehr Punkte.</div></div></button>
+      ${run.daily?'':`<button class="card epic reward-card" data-a="ngp"><div class="ic">⚔️</div><div class="body"><div class="nm">Neues Spiel+ (NG+${nn})</div><div class="ds">Beginne erneut in Akt 1 – mit all deinen Upgrades und Werten. Gegner +${45*nn} % LP und +${25*nn} % Schaden, mehr Elitegegner. Seelen und Punkte +${50*nn} %.</div></div></button>`}
       <button class="card rare reward-card" data-a="claim"><div class="ic">🏆</div><div class="body"><div class="nm">Ruhm einstreichen</div><div class="ds">Beende den Lauf als Sieger.</div></div></button>
     </div></div>`,
-  { endless:()=>{ run.endless=true; nextAct(); }, claim:()=>endRun(true) },true);
+  { endless:()=>{ run.endless=true; nextAct(); }, claim:()=>endRun(true),
+    ngp:()=>{ run.ng=nn; run.act=0; run.won=false; run.seed+='|ng'+nn; run.p.goldMul+=0.2; nextAct(); run.p.hp=run.p.maxHp; save.run=run; persist(); } },true);
 }
 function endRun(won){
   state='ui'; const r=run; G=null; $('hud').classList.add('hidden');
   const bonus=won?100:0;
-  const score=r.kills*10+r.rooms*60+r.bosses*800+(won?2500:0)+(r.endless?(r.act-3)*1500:0)+Math.floor(r.goldTotal/2);
-  const souls=r.souls+bonus;
+  let score=r.kills*10+r.rooms*60+r.bosses*800+(won?2500:0)+(r.endless?(r.act-3)*1500:0)+Math.floor(r.goldTotal/2);
+  const ngf=1+0.5*(r.ng||0); score=Math.round(score*ngf);
+  const souls=Math.round((r.souls+bonus)*ngf);
   save.souls+=souls; save.run=null;
-  const entry={score,cid:r.cid,act:r.act,won,endless:!!r.endless,daily:!!r.daily,date:new Date().toLocaleDateString('de-DE')};
+  const entry={score,cid:r.cid,act:r.act,won,ng:r.ng||0,endless:!!r.endless,daily:!!r.daily,date:new Date().toLocaleDateString('de-DE')};
   let dailyBest=false;
   if(r.daily){ if(!save.daily||save.daily.key!==r.daily) save.daily={key:r.daily,best:0,tries:0}; save.daily.tries++; if(score>save.daily.best){ save.daily.best=score; dailyBest=true; } }
   { const S=save.stats; S.maxGold=Math.max(S.maxGold,r.goldTotal); if(won){ S.anyWin=true; S.wins[r.cid]=1; if(r.daily) S.dailyWin=true; } if(r.endless) S.maxEndless=Math.max(S.maxEndless,r.act); }
@@ -673,7 +679,7 @@ function endRun(won){
   setTimeout(checkAch,500);
   const unlockable=Object.entries(CHARS).find(([id,c])=>!save.unlocked[id]&&save.souls>=c.cost);
   render(`<div class="wrap" style="justify-content:center">
-    <div class="center"><div class="eyebrow">${r.daily?'Tägliche Herausforderung · ':''}${r.endless?'Endlosmodus · Akt '+r.act+' erreicht':won?'Der Drache ist tot':'Akt '+r.act+' · '+actOf(r.act).name}</div>
+    <div class="center"><div class="eyebrow">${r.daily?'Tägliche Herausforderung · ':''}${r.ng?'NG+'+r.ng+' · ':''}${r.endless?'Endlosmodus · Akt '+r.act+' erreicht':won?'Der Drachenhort ist bezwungen':'Akt '+r.act+' · '+actOf(r.act).name}</div>
     <h1 style="margin-top:8px">${r.endless?'Legende!':won?'Triumph!':'Gefallen'}</h1>
     <p class="sub" style="margin-top:8px">${r.endless?'Dein Name wird in jede Säule dieser Arena geritzt.':won?'Die Arena gehört dir. Die Barden werden davon singen.':'Doch jede Niederlage macht die nächste Seele stärker.'}</p></div>
     <div class="center"><div class="eyebrow">Punkte</div><div class="bigscore">${score}</div>${rank===0?'<span class="pill g">🏆 Neuer Rekord!</span>':rank>0?`<span class="pill">Platz ${rank+1} der Ruhmeshalle</span>`:''}${dailyBest?' <span class="pill g">📅 Neuer Tagesbestwert!</span>':''}</div>

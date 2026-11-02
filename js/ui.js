@@ -63,6 +63,7 @@ const ACH=[
   { id:'events', ic:'❓', nm:'Neugierig', ds:'Erlebe alle 8 Ereignisse', souls:50, prog:()=>[ST().events.length,8] },
   { id:'rich', ic:'💰', nm:'Goldrausch', ds:'Sammle 600 Gold in einem Lauf', souls:50, prog:()=>[Math.min(600,ST().maxGold),600] },
   { id:'combo', ic:'🔥', nm:'Kettenreaktion', ds:'Erreiche eine 30er-Kombo', souls:50, prog:()=>[Math.min(30,ST().maxCombo),30] },
+  { id:'ng3', ic:'⚔️', nm:'Unbezwingbar', ds:'Gewinne einen Lauf auf NG+3', souls:150, prog:()=>[Math.min(4,save.ngMax||0),4] },
   { id:'forge', ic:'⚒️', nm:'Meisterschmied', ds:'Bringe alle Schmiede-Upgrades auf die höchste Stufe', souls:0, prog:()=>[META.filter(m=>metaLvl(m.id)>=m.max).length,META.length] },
 ];
 function achDone(a){ if(a.ok) return !!a.ok(); const [v,m]=a.prog(); return v>=m; }
@@ -126,11 +127,12 @@ function showMenu(){
     <div class="foot">
       <button class="linkbtn" data-a="help">Anleitung</button>
       <button class="linkbtn" data-a="settings">Einstellungen</button>
+      <button class="linkbtn" data-a="slots">💾 ${esc(save.name||'Spielstand')}</button>
       <span>Läufe: ${save.runs}</span>
     </div></div>`,
   { play:showChars, daily:showDaily, forge:showForge, scores:showScores, ach:showAch, help:showHelp,
     cont:()=>{ run=save.run; showMap(); },
-    settings:showSettings });
+    settings:showSettings, slots:showSlots });
 }
 
 function showDaily(){
@@ -154,7 +156,8 @@ function showSettings(){
   render(`<div class="wrap"><div class="eyebrow">Optionen</div><h2>Einstellungen</h2>
     <div class="cards">
       ${tg('sound','Soundeffekte',save.sound,'Treffer, Münzen, Explosionen')}
-      ${tg('music','Musik',st.music,'Stimmungsvolle Hintergrundmusik')}
+      ${tg('music','Musik',st.music,'Titelthema, Kartenmusik und Kampfthemen je Akt, Bossmusik')}
+      <label class="toggle" for="musicVol" style="cursor:default"><span><b>Musiklautstärke</b></span><input type="range" id="musicVol" min="0" max="1" step="0.05" value="${st.musicVol??0.7}" style="flex:1;max-width:180px;accent-color:#e6b450"></label>
       ${tg('shake','Bildschirmwackeln',st.shake,'Bei Treffern und Explosionen')}
       ${tg('fx','Atmosphäre und Licht',st.fx,'Licht und Schatten, Nebel, Funken und Kleintiere. Auf älteren Handys ausschalten.')}
       ${tg('vibrate','Vibration',st.vibrate,'Kurzes Vibrieren bei Treffern (nur Android)')}
@@ -163,13 +166,41 @@ function showSettings(){
       ${tg('cb','Farbenblind-Modus',st.cb,'Warnkreise gelb-weiß gestrichelt, gegnerische Geschosse mit weißem Rand')}
     </div>
     <button class="btn" data-a="back">Zurück</button>
-    <button class="btn danger" data-a="reset">Spielstand löschen</button></div>`,
+    <button class="btn danger" data-a="reset">Diesen Spielstand zurücksetzen</button></div>`,
   { back:showMenu,
     tg:k=>{ if(k==='sound') save.sound=!save.sound; else st[k]=!st[k]; persist(); document.body.classList.toggle('lefty',!!st.lefty); if(typeof musicUpdate==='function') musicUpdate(); showSettings(); },
     reset:()=>render(`<div class="wrap" style="justify-content:center"><h2 class="center">Spielstand wirklich löschen?</h2>
       <p class="sub center">Seelen, Schmiede-Stufen, freigeschaltete Helden und die Ruhmeshalle werden gelöscht. Das lässt sich nicht rückgängig machen.</p>
       <button class="btn danger" data-a="yes">Endgültig löschen</button><button class="btn" data-a="no">Abbrechen</button></div>`,
-      { yes:()=>{ const keep=save.settings, snd=save.sound; save=defSave(); save.settings=keep; save.sound=snd; persist(); showMenu(); }, no:showSettings }) });
+      { yes:()=>{ const keep=save.settings, snd=save.sound, nm=save.name; save=defSave(); save.settings=keep; save.sound=snd; save.name=nm; persist(); showMenu(); }, no:showSettings }) });
+  const mv=$('musicVol'); if(mv) mv.addEventListener('input',e=>{ st.musicVol=+e.target.value; persist(); musicUpdate(); });
+}
+function showSlots(){
+  const rows=[...Array(SLOTS)].map((_,i)=>{ const s=i===slotIdx?save:readSlot(i), act=i===slotIdx;
+    if(!s) return `<div class="card"><div class="ic">➕</div><div class="body"><div class="nm">Platz ${i+1} – leer</div><div class="ds">Starte ein frisches Abenteuer mit eigenem Fortschritt.</div>
+      <div class="row" style="margin-top:6px"><button class="btn small primary" data-a="new" data-v="${i}">Neuer Spielstand</button></div></div></div>`;
+    const wins=Object.keys(s.stats.wins).length, ach=Object.keys(s.ach).length, best=s.scores[0]?s.scores[0].score:0;
+    return `<div class="card ${act?'sel':''}"><div class="ic">${act?'💾':'📁'}</div><div class="body"><div class="nm">${esc(s.name||('Spielstand '+(i+1)))}${act?' <span class="pill g" style="font-size:11px;padding:2px 8px">Aktiv</span>':''}</div>
+      <div class="stats" style="grid-template-columns:repeat(4,1fr)"><span>Seelen<b>${s.souls}</b></span><span>Läufe<b>${s.runs}</b></span><span>Siege<b>${wins}</b></span><span>Erfolge<b>${ach}/${ACH.length}</b></span></div>
+      <div class="ds" style="font-size:13px">Bestwert ${best}${s.ngMax?' · NG+ '+s.ngMax+' frei':''}${s.run?' · laufendes Abenteuer':''}${s.last?' · zuletzt '+new Date(s.last).toLocaleDateString('de-DE'):''}</div>
+      <div class="row slotbtns" style="margin-top:6px;gap:6px">${act?'':`<button class="btn small primary" data-a="load" data-v="${i}">Laden</button>`}<button class="btn small" data-a="ren" data-v="${i}">Umbenennen</button><button class="btn small danger" data-a="del" data-v="${i}">Löschen</button></div></div></div>`; }).join('');
+  render(`<div class="wrap"><div class="eyebrow">Drei getrennte Profile</div><h2>Spielstände</h2>
+    <p class="sub">Jeder Spielstand hat eigene Seelen, Schmiede, Helden, Erfolge, Ruhmeshalle und ein eigenes laufendes Abenteuer. Einstellungen gelten für alle.</p>
+    <div class="cards" style="grid-template-columns:1fr">${rows}</div><button class="btn" data-a="back">Zurück</button></div>`,
+  { back:showMenu,
+    load:i=>{ switchSlot(+i); sfx('pick'); showSlots(); },
+    new:i=>{ persist(); slotIdx=+i; const keep=save.settings, snd=save.sound; save=defSave(); save.name='Spielstand '+(+i+1); save.settings=keep; save.sound=snd; persist(); sfx('pick'); showSlots(); },
+    ren:i=>{ const s=+i===slotIdx?save:readSlot(+i);
+      render(`<div class="wrap" style="justify-content:center"><h2 class="center">Spielstand umbenennen</h2>
+        <form id="renForm" class="cards"><input id="slotName" maxlength="20" value="${esc(s.name||'')}" style="font:inherit;font-size:18px;padding:12px;border-radius:8px;border:2px solid var(--gold);background:var(--stone);color:var(--parch)">
+        <button class="btn primary" type="submit">Speichern</button></form><button class="btn" data-a="no">Abbrechen</button></div>`,{ no:showSlots },true);
+      const inp=$('slotName'); inp.focus(); inp.select();
+      $('renForm').addEventListener('submit',e=>{ e.preventDefault(); const nm=inp.value.trim().slice(0,20)||('Spielstand '+(+i+1));
+        if(+i===slotIdx){ save.name=nm; persist(); } else { s.name=nm; lsSet(slotKey(+i),s); } showSlots(); }); },
+    del:i=>render(`<div class="wrap" style="justify-content:center"><h2 class="center">Spielstand wirklich löschen?</h2>
+      <p class="sub center">Alle Seelen, Helden, Erfolge und Rekorde dieses Spielstands gehen verloren. Das lässt sich nicht rückgängig machen.</p>
+      <button class="btn danger" data-a="yes">Endgültig löschen</button><button class="btn" data-a="no">Abbrechen</button></div>`,
+      { yes:()=>{ if(+i===slotIdx){ const keep=save.settings, snd=save.sound; save=defSave(); save.name='Spielstand '+(slotIdx+1); save.settings=keep; save.sound=snd; persist(); } else lsDel(slotKey(+i)); showSlots(); }, no:showSlots },true) });
 }
 
 function showHelp(){
@@ -198,12 +229,14 @@ function showChars(){
     </button>`;}).join('');
   render(`<div class="wrap"><div class="eyebrow">Neues Abenteuer</div><h2>Wähle deinen Helden</h2>
     <span class="pill s" style="align-self:flex-start">👻 ${save.souls} Seelen</span>
+    ${save.ngMax?`<div class="eyebrow" style="margin-top:4px">Schwierigkeit</div><div class="skinrow">${[...Array(save.ngMax+1)].map((_,n)=>`<button class="skin ${(save.ngSel||0)===n?'sel':''}" data-a="ng" data-v="${n}">${n?'⚔️ NG+'+n:'Normal'}</button>`).join('')}</div>
+      ${save.ngSel?`<p class="sub" style="font-size:13px">NG+${save.ngSel}: Gegner +${45*save.ngSel} % LP und +${25*save.ngSel} % Schaden, mehr Elitegegner, Bosse früher wütend. Seelen und Punkte +${50*save.ngSel} %.</p>`:''}`:''}
     <div class="cards">${list}</div>
     <div class="eyebrow" style="margin-top:6px">Aussehen</div>
     ${Object.keys(CHARS).filter(id=>save.unlocked[id]).map(id=>`<div class="skinrow"><b style="min-width:96px">${CHARS[id].icon} ${CHARS[id].name}</b>${Object.entries(SKINS[id]).map(([k,sk])=>{ const own=k==='base'||save.ach[sk.ach], sel=(save.skin[id]||'base')===k;
       return `<button class="skin ${sel?'sel':''}" data-a="skin" data-v="${id}:${k}" ${own?'':'disabled'} title="${own?'':'Erfolg: '+ACH.find(a=>a.id===sk.ach).nm}"><i style="background:linear-gradient(135deg,${sk.cape||SKINS[id].base.cape} 50%,${sk.body||SKINS[id].base.body} 50%)"></i>${own?'':'🔒 '}${sk.nm}</button>`; }).join('')}</div>`).join('')}
     <button class="btn" data-a="back">Zurück</button></div>`,
-  { back:showMenu, go:id=>startRun(id), skin:v=>{ const [id,k]=v.split(':'); save.skin[id]=k; persist(); showChars(); },
+  { back:showMenu, go:id=>startRun(id,{ng:Math.min(save.ngSel||0,save.ngMax||0)}), ng:n=>{ save.ngSel=+n; persist(); showChars(); }, skin:v=>{ const [id,k]=v.split(':'); save.skin[id]=k; persist(); showChars(); },
     buy:id=>{ const c=CHARS[id]; if(save.souls>=c.cost){ save.souls-=c.cost; save.unlocked[id]=true; persist(); sfx('pick'); showChars(); } } });
 }
 
@@ -223,7 +256,7 @@ function showForge(){
 }
 
 function showScores(){
-  const rows=save.scores.length? save.scores.map((s,i)=>`<tr><td>${i+1}.</td><td>${CHARS[s.cid]?.icon||''} ${CHARS[s.cid]?.name||''}</td><td>${s.endless?'♾️ Akt '+s.act:s.won?'Sieg 👑':'Akt '+s.act}${s.daily?' 📅':''}</td><td>${esc(s.date)}</td><td class="n">${s.score}</td></tr>`).join('')
+  const rows=save.scores.length? save.scores.map((s,i)=>`<tr><td>${i+1}.</td><td>${CHARS[s.cid]?.icon||''} ${CHARS[s.cid]?.name||''}</td><td>${s.ng?'NG+'+s.ng+' ':''}${s.endless?'♾️ Akt '+s.act:s.won?'Sieg 👑':'Akt '+s.act}${s.daily?' 📅':''}</td><td>${esc(s.date)}</td><td class="n">${s.score}</td></tr>`).join('')
     : `<tr><td colspan="5" class="center" style="color:var(--parch-dim);padding:24px">Noch keine Einträge. Dein erster Lauf landet hier.</td></tr>`;
   render(`<div class="wrap"><div class="eyebrow">Die besten Läufe</div><h2>Ruhmeshalle</h2>
     <div style="overflow-x:auto"><table class="scores"><thead><tr><th>#</th><th>Held</th><th>Weit</th><th>Datum</th><th style="text-align:right">Punkte</th></tr></thead><tbody>${rows}</tbody></table></div>
@@ -252,7 +285,7 @@ function showMap(){
   }).join('');
   const p=run.p;
   render(`<div class="mapscreen">
-    <div class="maphead"><div><div class="eyebrow">${run.act>3?'Endlos · Akt '+run.act:'Akt '+run.act+' von 3'}${run.daily?' · 📅 '+runMod().ic+' '+runMod().nm:''}</div><h2>${A.name}</h2><div class="sub" style="font-size:13px">👑 ${BOSSES[bossKind()].name} erwartet dich</div></div>
+    <div class="maphead"><div><div class="eyebrow">${run.ng?'⚔️ NG+'+run.ng+' · ':''}${run.act>3?'Endlos · Akt '+run.act:'Akt '+run.act+' von 3'}${run.daily?' · 📅 '+runMod().ic+' '+runMod().nm:''}</div><h2>${A.name}</h2><div class="sub" style="font-size:13px">👑 ${BOSSES[bossKind()].name} erwartet dich</div></div>
       <div class="row" style="gap:6px"><button class="btn small" data-a="stats">📜 Werte</button><button class="btn small" data-a="menu">☰ Menü</button></div></div>
     <div class="row" style="gap:6px"><span class="pill h">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span><span class="pill s">👻 ${run.souls}</span><span class="pill">${CHARS[run.cid].icon} ${CHARS[run.cid].name}</span></div>
     <div class="mapbox"><svg viewBox="0 0 100 100" preserveAspectRatio="none">${lines}</svg>${btns}</div>

@@ -101,6 +101,7 @@ h3{font-size:16px}
 .btn:disabled{opacity:.45}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row>.btn{flex:1;min-width:140px}
+.row.slotbtns>.btn{flex:1 1 0;min-width:0;padding:9px 8px}
 .pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:#0007;border:1px solid var(--iron);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
 .pill.g{color:var(--gold)} .pill.s{color:var(--soul)} .pill.h{color:#ff8a80}
 .title-block{text-align:center;padding-top:6vh;display:flex;flex-direction:column;gap:10px;align-items:center}

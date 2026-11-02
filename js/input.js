@@ -60,7 +60,8 @@ function startRun(cid, opts={}){
   const seed = daily ? 'daily-'+daily : Math.random().toString(36).slice(2);
   const mod = daily ? dailyInfo(daily).mod : null;
   run={ v:RUN_V, cid, p:newPlayer(cid,!!daily), act:1, map:null, posId:null, visited:[], gold:daily?10:25*metaLvl('m_gold')+10, goldTotal:0, souls:0, kills:0, rooms:0, bosses:0,
-    upg:{}, syn:[], rerolls:daily?1:metaLvl('m_reroll'), won:false, endless:false, seed, daily, mod:mod?mod.id:null };
+    upg:{}, syn:[], rerolls:daily?1:metaLvl('m_reroll'), won:false, endless:false, seed, daily, mod:mod?mod.id:null, ng:daily?0:(opts.ng||0) };
+  if(run.ng) run.p.goldMul+=0.2*run.ng;
   if(mod){ if(mod.start) mod.start(run.p); if(mod.gold) run.gold=mod.gold; }
   run.map=seeded(seed+'|map|1',()=>genMap(1));
   showMap();

@@ -29,7 +29,10 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **35 Upgrades** in drei Seltenheitsstufen, davon 12 heldenspezifische, dazu **5 Synergien**,
   die beim Kombinieren bestimmter Upgrades aktiv werden. Die Upgrade-Karten zeigen die genaue Werteänderung.
 - **8 Ereignisse** mit Entscheidungen zwischen Risiko und Belohnung
-- **Endlosmodus** nach dem Sieg über den Drachen
+- **Endlosmodus** nach dem Sieg im dritten Akt
+- **Neues Spiel+:** nach dem Sieg mit allen Upgrades schwerer weitermachen (NG+1, NG+2 …) oder neue Läufe
+  auf einer freigeschalteten NG+-Stufe starten; Gegner deutlich stärker, Seelen und Punkte +50 % je Stufe
+- **3 Spielstände** mit Namen, jeweils mit eigenem Fortschritt; Einstellungen gelten für alle
 - **Tägliche Herausforderung:** jeden Tag dieselbe Karte für alle, mit Held und Modifikator des Tages
 - **Meta-Fortschritt:** Seelen bleiben erhalten und gehen in die Schmiede (6 dauerhafte Upgrades) oder in neue Helden
 - **Ruhmeshalle** mit den 10 besten Läufen; laufende Abenteuer werden auf der Karte automatisch gespeichert
@@ -38,7 +41,9 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **Tribünen mit Zuschauern** (Menschen und Goblins, Skelette und Geister, Teufelchen und Kultisten),
   die auf deine Kämpfe reagieren, jubeln und dir Gold oder Heilung zuwerfen
 - **Wetter** je Raum: Regen, Gewitter mit Blitzeinschlägen, Nebel, Schnee, Ascheregen und Feuersturm
-- Prozedurale Musik und Soundeffekte (Web Audio), Hit-Stop, Zeitlupe bei Tod und Boss-Sieg
+- **Musik:** komponiertes Titelthema, Kartenmusik und Kampfthema je Akt, Bossthema mit Pauken und Chor,
+  Fanfaren bei Sieg und Niederlage, live per Web Audio gespielt; Lautstärke einstellbar
+- Soundeffekte, Hit-Stop, Zeitlupe bei Tod und Boss-Sieg
 - Einstellungen für Sound, Musik, Atmosphäre und Licht, Bildschirmwackeln und Vibration
 
 ## Dateien
