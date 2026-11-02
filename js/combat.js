@@ -72,7 +72,7 @@ function startCombat(type, customWaves){
   if(type==='boss'){
     const bk=bossKind(); G.waveIdx=0; G.waveT=99;
     G.spawnQ.push({x:AW/2,y:AH*0.3,t:1.6,kind:bk,boss:true});
-    setTimeout(()=>{ if(G) banner(BOSSES[bk].name, actOf(run.act).name); },50); sfx('boss');
+    setTimeout(()=>{ if(G) banner(BOSSES[bk].name, BOSS_LINES[bk]||actOf(run.act).name, 3200); },50); sfx('boss');
   }
   buildFloor(); initAmbient(); initWeather();
   DECOR.candles=DECOR.candles.filter(c=>!G.obs.some(o=>o.type==='pillar'&&Math.hypot(o.x-c.x,o.y-c.y)<o.r+10));
@@ -334,7 +334,7 @@ function dealDamage(e,amount,o={}){
   if(crit && hasSyn('bladestorm')) P.atkT-=P.rate/P.atkSpd*0.25;
   e.hp-=d; e.flash=e.boss?0.04:0.09; sfx('hit');
   if(o.kb && !e.boss && o.from){ const a=Math.atan2(e.y-o.from.y,e.x-o.from.x), k=o.kb*(e.elite?0.4:1); e.kx+=Math.cos(a)*k; e.ky+=Math.sin(a)*k; }
-  G.texts.push({x:e.x+rand(-6,6),y:e.y-e.r-4,s:blocked?'Block':String(Math.round(d)),c:blocked?'#9fb3d9':(o.color||(crit?'#ffd34d':'#ffffff')),big:crit&&!blocked,t:0});
+  if(save.settings.dmgNums||blocked||crit) G.texts.push({x:e.x+rand(-6,6),y:e.y-e.r-4,s:blocked?'Block':String(Math.round(d)),c:blocked?'#9fb3d9':(o.color||(crit?'#ffd34d':'#ffffff')),big:crit&&!blocked,t:0});
   if(blocked){ burst(e.x+Math.cos(e.face)*e.r,e.y+Math.sin(e.face)*e.r,3,'#ffe08a',90); }
   if(crit && G.stopCd<=0){ hitstop(0.03); G.stopCd=0.25; }
   if(!o.noChain && P.chain>0 && Math.random()<0.12+0.06*P.chain) chainLightning(e, amount*0.7, 2+P.chain);
@@ -727,6 +727,12 @@ function endRun(won){
     <button class="btn primary" data-a="again">Nochmal kämpfen</button>
     <div class="row"><button class="btn" data-a="forge">⚒️ Schmiede</button><button class="btn" data-a="menu">Hauptmenü</button></div></div>`,
   { again:showChars, forge:showForge, menu:showMenu });
+  if(won && !r.daily && !save.epilogSeen){ save.epilogSeen=true; persist(); const resHtml=ui.innerHTML, resActs=actions;
+    render(`<div class="wrap story" style="justify-content:center"><div class="eyebrow center">Epilog</div><h1 class="center" style="margin-top:6px">Frei?</h1>
+      <p>Für einen Herzschlag ist es still. Dann bricht ein Jubel los, der die Mauern von Varnhold erzittern lässt. Du hast geschafft, was niemandem vor dir gelang: Du hast alle drei Ränge der Arena überlebt.</p>
+      <p>Das große Tor öffnet sich knirschend. Doch dahinter liegt keine Freiheit, sondern eine Treppe, die noch tiefer hinabführt. Aus der Dunkelheit hörst du ein Lachen. Die Spiele sind noch lange nicht vorbei.</p>
+      <p class="sub center">Neues Spiel+ ist freigeschaltet. Wähle es im Heldenmenü oder direkt nach dem nächsten Sieg.</p>
+      <button class="btn primary" data-a="next">Weiter</button></div>`,{ next:()=>{ ui.innerHTML=resHtml; actions=resActs; } }); }
   run=null;
 }
 
@@ -742,7 +748,7 @@ function showPause(){
 }
 
 let bannerT=null;
-function banner(t,sub){ const b=$('banner'); b.innerHTML=esc(t)+(sub?`<small>${esc(sub)}</small>`:''); b.classList.add('show'); clearTimeout(bannerT); bannerT=setTimeout(()=>b.classList.remove('show'),1500); }
+function banner(t,sub,ms=1500){ const b=$('banner'); b.innerHTML=esc(t)+(sub?`<small>${esc(sub)}</small>`:''); b.classList.add('show'); clearTimeout(bannerT); bannerT=setTimeout(()=>b.classList.remove('show'),ms); }
 
 /* ---------------- PARTIKEL ---------------- */
 function part(x,y,vx,vy,life,size,color,glw=false,grav=0){ G.parts.push({x,y,vx,vy,life,max:life,size,color,glow:glw,grav,drag:2}); }

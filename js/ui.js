@@ -80,7 +80,7 @@ const toastQ=[]; let toastBusy=false;
 function toast(html){ toastQ.push(html); if(!toastBusy) nextToast(); }
 function nextToast(){ const t=$('toast'); if(!toastQ.length){ toastBusy=false; return; } toastBusy=true; t.innerHTML=toastQ.shift(); t.classList.add('show'); setTimeout(()=>{ t.classList.remove('show'); setTimeout(nextToast,400); },3200); }
 function showAch(){
-  const done=ACH.filter(a=>save.ach[a.id]).length;
+  const done=ACH.filter(a=>save.ach[a.id]).length; save.achSeen=Object.keys(save.ach).length; persist();
   render(`<div class="wrap"><div class="eyebrow">${done} von ${ACH.length} freigeschaltet</div><h2>Erfolge</h2>
     <div class="cards">${ACH.map(a=>{ const d=!!save.ach[a.id], sk=skinFor(a.id), pr=a.prog?a.prog():null;
       return `<div class="card ${d?'epic':''}" style="${d?'':'opacity:.75'}"><div class="ic">${d?a.ic:'🔒'}</div><div class="body"><div class="nm">${a.nm}</div><div class="ds">${a.ds}</div>
@@ -108,9 +108,15 @@ const CREST=`<svg class="crest" viewBox="0 0 120 120" aria-hidden="true">
  <g stroke="url(#cg)" stroke-width="6" stroke-linecap="round"><line x1="30" y1="44" x2="46" y2="28"/><line x1="90" y1="44" x2="74" y2="28"/></g>
  <circle cx="60" cy="62" r="9" fill="#c8423a" stroke="url(#cg)" stroke-width="3"/></svg>`;
 
+const badge=(on,txt)=>on?`<span class="badge">${txt}</span>`:'';
 function showMenu(){
   state='menu'; run=null; G=null;
   const hasRun=!!save.run;
+  const newAch=Math.max(0,Object.keys(save.ach).length-(save.achSeen||0));
+  const newBeast=Math.max(0,Object.keys(save.stats.beast).length-(save.beastSeen||0));
+  const forgeAff=META.some(m=>metaLvl(m.id)<m.max && save.souls>=m.cost(metaLvl(m.id)));
+  const heroBuyable=Object.entries(CHARS).some(([id,c])=>!save.unlocked[id]&&save.souls>=c.cost);
+  const dailyOpen=!(save.daily&&save.daily.key===todayKey()&&save.daily.tries>0);
   render(`<div class="wrap">
     <div class="title-block">${CREST}
       <div class="eyebrow">Ein Roguelike in drei Akten</div>
@@ -119,11 +125,15 @@ function showMenu(){
       <span class="pill s">👻 ${save.souls} Seelen</span>
     </div>
     <div class="menu-btns">
-      ${hasRun?`<button class="btn primary" data-a="cont">▶ Lauf fortsetzen</button>`:''}
-      <button class="btn ${hasRun?'':'primary'}" data-a="play">⚔️ Neues Abenteuer</button>
-      <button class="btn" data-a="daily">📅 Tägliche Herausforderung</button>
-      <button class="btn" data-a="forge">⚒️ Schmiede</button>
-      <div class="row"><button class="btn" data-a="scores">🏆 Ruhmeshalle</button><button class="btn" data-a="ach">🏅 Erfolge</button><button class="btn" data-a="beast">📖 Bestiarium</button></div>
+      ${hasRun?`<button class="btn primary stack" data-a="cont">▶ Lauf fortsetzen<span class="sub" style="font-size:13px;color:#f0dcb0">${CHARS[save.run.cid].icon} Akt ${save.run.act}</span></button>`:''}
+      <button class="btn ${hasRun?'':'primary'}" data-a="play">⚔️ Neues Abenteuer${badge(heroBuyable,'Held')}</button>
+      <button class="btn" data-a="daily">📅 Tägliche Herausforderung${badge(dailyOpen,'Heute')}</button>
+      <div class="tiles">
+        <button class="btn tile" data-a="forge"><span class="ti">⚒️</span>Schmiede${badge(forgeAff,'!')}</button>
+        <button class="btn tile" data-a="ach"><span class="ti">🏅</span>Erfolge${badge(newAch,newAch)}</button>
+        <button class="btn tile" data-a="beast"><span class="ti">📖</span>Bestiarium${badge(newBeast,newBeast)}</button>
+        <button class="btn tile" data-a="scores"><span class="ti">🏆</span>Ruhmeshalle</button>
+      </div>
     </div>
     <div class="foot">
       <button class="linkbtn" data-a="help">Anleitung</button>
@@ -162,6 +172,7 @@ function showSettings(){
       ${tg('shake','Bildschirmwackeln',st.shake,'Bei Treffern und Explosionen')}
       <button class="toggle on" data-a="gfx"><span><b>Grafik: ${{auto:'Automatisch',high:'Hoch',low:'Niedrig'}[st.gfx||'auto']}</b><br><span class="sub" style="font-size:13px">${{auto:'Volle Grafik, schaltet bei Ruckeln selbst herunter'+(AUTO_LOW?' (gerade reduziert)':''),high:'Licht, Nebel, Funken, Kleintiere und alle Zuschauer – immer',low:'Ohne Licht und Partikel, weniger Zuschauer, geringere Auflösung'}[st.gfx||'auto']}</span></span><span class="pill">Ändern</span></button>
       ${tg('showFps','Bildrate anzeigen',st.showFps,'Zeigt die Bilder pro Sekunde im Kampf an')}
+      ${tg('dmgNums','Schadenszahlen',st.dmgNums,'Zahlen über getroffenen Gegnern anzeigen')}
       ${tg('vibrate','Vibration',st.vibrate,'Kurzes Vibrieren bei Treffern (nur Android)')}
       ${tg('joyFixed','Fester Joystick',st.joyFixed,'Joystick an fester Stelle unten statt überall auf dem Bildschirm')}
       ${tg('lefty','Linkshänder-Modus',st.lefty,'Fähigkeit und Ausweichen links, Joystick rechts')}
@@ -213,7 +224,7 @@ function showImport(err){
     catch(ex){ showImport(ex.message); } });
 }
 function showBeast(){
-  const B=save.stats.beast, all=Object.keys(BEAST), found=all.filter(k=>B[k]).length;
+  const B=save.stats.beast, all=Object.keys(BEAST), found=all.filter(k=>B[k]).length; save.beastSeen=Object.keys(B).length; persist();
   const entry=k=>{ const isBoss=!!BOSSES[k], d=isBoss?BOSSES[k]:ENEMIES[k], n=B[k]||0;
     const where=isBoss?ACTS.findIndex(a=>a.bosses.includes(k)):(d.minAct||1)-1;
     return n?`<div class="card ${isBoss?'epic':''}"><div class="ic">${BEAST[k].ic}</div><div class="body"><div class="rar">${isBoss?'Boss · ':''}${ACTS[Math.max(0,where)].name}</div><div class="nm">${esc(d.name)}</div><div class="ds">${BEAST[k].ds}</div><div class="ds" style="font-size:12px;color:var(--gold)">Besiegt: ${n}×</div></div></div>`
@@ -267,6 +278,14 @@ function showHelp(){
   <button class="btn primary" data-a="back">Verstanden</button></div>`,{ back:showMenu });
 }
 
+function showIntro(next){
+  save.introSeen=true; persist();
+  render(`<div class="wrap story" style="justify-content:center"><div class="eyebrow center">Prolog</div><h1 class="center" style="margin-top:6px">Die Arena der Verdammten</h1>
+    <p>Tief unter der vergessenen Stadt Varnhold liegt eine Arena, die in keiner Chronik steht. Gefangene, Glücksritter und Verfluchte kämpfen dort vor einem Publikum aus Lebenden und Toten.</p>
+    <p>Die Regel ist einfach: Wer alle drei Ränge übersteht – die Verliese, die Krypta und den Drachenhort –, erhält seine Freiheit. Wer fällt, dessen Seele bleibt in den Mauern gefangen und nährt die nächste Generation von Kämpfern.</p>
+    <p>Bisher hat es niemand geschafft. Die Tore öffnen sich. Die Menge brüllt.</p>
+    <button class="btn primary" data-a="next">Betritt die Arena</button></div>`,{ next });
+}
 function showChars(){
   const list=Object.entries(CHARS).map(([id,c])=>{
     const un=save.unlocked[id], can=save.souls>=c.cost;
@@ -289,7 +308,7 @@ function showChars(){
     ${Object.keys(CHARS).filter(id=>save.unlocked[id]).map(id=>`<div class="skinrow"><b style="min-width:96px">${CHARS[id].icon} ${CHARS[id].name}</b>${Object.entries(SKINS[id]).map(([k,sk])=>{ const own=k==='base'||save.ach[sk.ach], sel=(save.skin[id]||'base')===k;
       return `<button class="skin ${sel?'sel':''}" data-a="skin" data-v="${id}:${k}" ${own?'':'disabled'} title="${own?'':'Erfolg: '+ACH.find(a=>a.id===sk.ach).nm}"><i style="background:linear-gradient(135deg,${sk.cape||SKINS[id].base.cape} 50%,${sk.body||SKINS[id].base.body} 50%)"></i>${own?'':'🔒 '}${sk.nm}</button>`; }).join('')}</div>`).join('')}
     <button class="btn" data-a="back">Zurück</button></div>`,
-  { back:showMenu, go:id=>startRun(id,{ng:Math.min(save.ngSel||0,save.ngMax||0)}), ng:n=>{ save.ngSel=+n; persist(); showChars(); }, skin:v=>{ const [id,k]=v.split(':'); save.skin[id]=k; persist(); showChars(); },
+  { back:showMenu, go:id=>{ const go=()=>startRun(id,{ng:Math.min(save.ngSel||0,save.ngMax||0)}); save.introSeen?go():showIntro(go); }, ng:n=>{ save.ngSel=+n; persist(); showChars(); }, skin:v=>{ const [id,k]=v.split(':'); save.skin[id]=k; persist(); showChars(); },
     buy:id=>{ const c=CHARS[id]; if(save.souls>=c.cost){ save.souls-=c.cost; save.unlocked[id]=true; persist(); sfx('pick'); showChars(); } } });
 }
 

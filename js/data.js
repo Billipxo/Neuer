@@ -54,6 +54,14 @@ const BOSSES = {
   lavaworm:{ name:'Der Lavawurm', hp:1450, speed:150, dmg:22, r:38 },
 };
 
+const BOSS_LINES = {
+  golem:'„Stein … zermalmt … Fleisch.“',
+  spider:'„Wie schön. Frisches Futter für meine Kinder.“',
+  lich:'„Dein Tod ist erst der Anfang deines Dienstes.“',
+  vampire:'„Welch edles Blut. Es wäre eine Schande, es zu verschwenden.“',
+  dragon:'„Ein Sterblicher wagt es, meinen Hort zu betreten?“',
+  lavaworm:'Der Boden bebt. Etwas Gewaltiges gräbt sich herauf …',
+};
 const BEAST = {
   slime:{ic:'🟢',ds:'Hüpft auf dich zu und teilt sich beim Tod in zwei kleine Schleime.'},
   bat:{ic:'🦇',ds:'Schnell und flatterhaft. Einzeln harmlos, im Schwarm lästig.'},

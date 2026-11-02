@@ -104,9 +104,15 @@ h3{font-size:16px}
 .row.slotbtns>.btn{flex:1 1 0;min-width:0;padding:9px 8px}
 .pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;background:#0007;border:1px solid var(--iron);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
 .pill.g{color:var(--gold)} .pill.s{color:var(--soul)} .pill.h{color:#ff8a80}
-.title-block{text-align:center;padding-top:6vh;display:flex;flex-direction:column;gap:10px;align-items:center}
-.crest{width:120px;height:120px}
+.title-block{text-align:center;padding-top:2vh;display:flex;flex-direction:column;gap:10px;align-items:center}
+.crest{width:84px;height:84px}
 .menu-btns{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+.btn{position:relative}
+.badge{position:absolute;top:-8px;right:-6px;min-width:20px;padding:2px 7px;border-radius:99px;background:var(--blood);color:#fff;font-size:11px;font-weight:700;letter-spacing:.02em;box-shadow:0 2px 6px #000a;pointer-events:none}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn.tile{flex-direction:column;gap:2px;padding:14px 8px;font-size:15px}
+.btn.tile .ti{font-size:26px;line-height:1}
+.btn.stack{flex-direction:column;gap:0}
 .foot{margin-top:auto;text-align:center;color:var(--parch-dim);font-size:13px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
 .linkbtn{background:none;border:none;color:var(--parch-dim);text-decoration:underline;font-size:13px;padding:6px}
 
@@ -162,13 +168,14 @@ h3{font-size:16px}
 .endstats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .endstats div{background:#0005;border:1px solid var(--iron);border-radius:6px;padding:10px;display:flex;justify-content:space-between;font-size:14px}
 .endstats b{font-variant-numeric:tabular-nums}
+.story p{margin:0;line-height:1.6;font-size:17px;color:var(--parch);max-width:60ch;align-self:center}
 .help p{margin:0 0 10px;line-height:1.5;color:var(--parch)}
 .help b{color:var(--gold)}
 body.lefty #skillBtn{right:auto;left:calc(max(16px, env(safe-area-inset-left,0px)) + 8px)}
 body.lefty #dashBtn{right:auto;left:calc(max(16px, env(safe-area-inset-left,0px)) + 108px)}
 @media (orientation:landscape) and (max-height:560px){
   .title-block{padding-top:0;gap:6px} .crest{width:64px;height:64px} h1{font-size:30px}
-  .wrap{max-width:760px;gap:10px} .menu-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px} .menu-btns .row{grid-column:1/-1}
+  .wrap{max-width:760px;gap:10px} .menu-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px} .menu-btns .row,.menu-btns .tiles{grid-column:1/-1} .tiles{grid-template-columns:repeat(4,1fr)}
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:8px} .mapscreen{height:auto} .mapbox{flex:none;height:500px} .btn{padding:10px 14px}
   #skillBtn{width:70px;height:70px;font-size:30px;bottom:calc(18px + env(safe-area-inset-bottom,0px))} #dashBtn{width:54px;height:54px;bottom:calc(14px + env(safe-area-inset-bottom,0px))}
   #banner{top:22%}
