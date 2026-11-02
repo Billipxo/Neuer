@@ -502,10 +502,11 @@ G.FEATURES = {
 };
 
 G.PLAYER_COLORS = ['#3d7bff', '#e0453a', '#3fbf5a', '#e8b030'];
+// eco: Einkommen der KI · think: Sekunden zwischen Bau-Entscheidungen · buildGap: Pause zwischen zwei Bauaufträgen (s)
 G.DIFFICULTY = {
-  einfach: { name: 'Einfach', eco: 0.8,  think: 2.5, attackFrac: 0.85, minAttack: 480, focus: false, abilityChance: 0.4 },
-  mittel:  { name: 'Mittel',  eco: 1.0,  think: 1.2, attackFrac: 0.75, minAttack: 360, focus: false, abilityChance: 0.8 },
-  schwer:  { name: 'Schwer',  eco: 1.25, think: 0.5, attackFrac: 0.65, minAttack: 270, focus: true,  abilityChance: 1.0 },
+  einfach: { name: 'Einfach', eco: 0.7,  think: 3.0, buildGap: 20, attackFrac: 0.85, minAttack: 480, focus: false, abilityChance: 0.4 },
+  mittel:  { name: 'Mittel',  eco: 0.92, think: 1.6, buildGap: 8,  attackFrac: 0.75, minAttack: 360, focus: false, abilityChance: 0.8 },
+  schwer:  { name: 'Schwer',  eco: 1.15, think: 0.8, buildGap: 3,  attackFrac: 0.65, minAttack: 270, focus: true,  abilityChance: 1.0 },
 };
 
 // Blutfarben (Treffer, Leichen, Flecken)

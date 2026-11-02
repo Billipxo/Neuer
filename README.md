@@ -16,7 +16,8 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
   Gegner-Völker werden jede Runde ausgelost. Spieldauer 20/30/45 Minuten oder unbegrenzt, Nebel des Krieges oder offene Karte,
-  Schreine & Ereignisse an oder aus.
+  Schreine & Ereignisse an oder aus. Die KI baut je nach Stufe gemächlich (Einfach), in ruhigem Tempo (Mittel) oder zügig
+  (Schwer): Zwischen zwei Bauaufträgen legt sie eine kurze Pause ein, dazu kommt ein anderes Einkommen (`G.DIFFICULTY` in `js/data.js`).
 - **Spielstände:** 💾 im Spiel speichert auf drei Plätze und lädt jeden Stand (das Spiel pausiert dabei). Zusätzlich
   sichert das Spiel automatisch jede Spielminute, beim Beenden und beim Wechsel in eine andere App; „Weiterspielen“ im
   Hauptmenü setzt die letzte Partie fort, der Tab „Spielstände“ zeigt alle Plätze. Gespeichert wird der komplette
@@ -38,6 +39,10 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
   der Geschichte (in der Chronik vorher gesperrt, auf Wunsch trotzdem lesbar).
 - **6 Volkskampagnen** mit eigener Geschichte (je 5 Missionen: vernichten, überleben, Drachen erschlagen,
   Bündnis-Schlacht, Finale auf „Schwer“), z. B. „Die Krone von Valenmark“ (Menschen) oder „Blut und Steppe“ (Orks).
+  **Missionsziele** stehen rechts oben im Spiel, mit Live-Fortschritt: großer Countdown bei „Überleben“ (wird in der letzten
+  Angriffswelle orange) und Zustand des eigenen Haupthauses, Lebenspunkte und Lage der Drachen bei der Drachenjagd, Haupthäuser
+  aller Gegner (besiegte werden abgehakt), Punkte und Platz bei „Jeder gegen jeden“ und die verbleibende Zeit. Die Anzeige lässt
+  sich einklappen; ein Tipp auf ein Ziel bewegt die Kamera dorthin.
 - **Einführung** im ersten Spiel (abschaltbar) und **Anleitung** im Hauptmenü.
 - **Volks-XP & Belohnungen:** Jede Partie gibt deinem Volk Erfahrung. Pro Volksstufe gibt es Skins (Veteran, Elite,
   Legendär), Banner (Schwalbenwimpel, Kriegsstandarte), Titel (Rekrut bis Legende) und ab Stufe 3 einen vierten Helden.

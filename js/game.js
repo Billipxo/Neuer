@@ -2326,20 +2326,24 @@
   function planBuild(p) {
     p.reserve = { g: 0, w: 0 };
     const th = p.th.level;
+    // Computergegner bauen gemächlicher: zwischen zwei Bauaufträgen eine kurze Pause je Schwierigkeit;
+    // in der Pause sparen sie für das nächste Gebäude weiter (der Autopilot des Spielers ist davon nicht betroffen)
+    const wait = !p.human && S.time < (p.nextBuildT || 0);
+    const pace = () => { if (!p.human) p.nextBuildT = S.time + (p.diff.buildGap || 0) * (0.8 + Math.random() * 0.4); };
     if (G.buildersBusy(p) < G.builders(p)) {
       for (const goal of goalsFor(p)) {
         if (goal.type === 'haupthaus') {
           if (th >= goal.level) continue;
           if (p.th.upgrading) continue;
           const c = G.costOf('haupthaus', th + 1, p);
-          if (G.canAfford(p, c)) { G.upgradeBuilding(p, p.th); return; }
+          if (G.canAfford(p, c) && !wait) { G.upgradeBuilding(p, p.th); pace(); return; }
           p.reserve = c; break;
         }
         if (goal.type === 'mauer') {
           if (p.wallLevel >= goal.level || p.wallUp) continue;
           const w = G.WALLS[goal.level - 1];
           if (th < w.th) break;
-          if (G.canAfford(p, w.cost)) { G.upgradeWall(p); return; }
+          if (G.canAfford(p, w.cost) && !wait) { G.upgradeWall(p); pace(); return; }
           p.reserve = w.cost; break;
         }
         if (goal.level > th) break;
@@ -2351,13 +2355,13 @@
           const pos = findSpot(p, goal.type);
           if (!pos) continue;
           const c = G.costOf(goal.type, 1, p);
-          if (G.canAfford(p, c)) { G.placeBuilding(p, goal.type, pos.x, pos.y, 0); return; }
+          if (G.canAfford(p, c) && !wait) { G.placeBuilding(p, goal.type, pos.x, pos.y, 0); pace(); return; }
           p.reserve = c; break;
         } else {
           const cand = list.filter((b) => !b.upgrading && b.level < goal.level && b.level < th && b.level >= 1).sort((a, b) => a.level - b.level)[0];
           if (!cand) continue;
           const c = G.costOf(goal.type, cand.level + 1, p);
-          if (G.canAfford(p, c)) { G.upgradeBuilding(p, cand); return; }
+          if (G.canAfford(p, c) && !wait) { G.upgradeBuilding(p, cand); pace(); return; }
           p.reserve = c; break;
         }
       }

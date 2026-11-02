@@ -402,7 +402,34 @@ input[type=range] { width: 100%; accent-color: var(--accent2); }
 .top-ctrl button[data-act="autopilot"].sel { border-color: #7aff7a; box-shadow: 0 0 10px rgba(122,255,122,.6); }
 
 /* Werte-Kärtchen angeklickter Einheiten (rechts oben im Spielfeld) */
-#unitcard { position: absolute; right: 8px; top: 8px; width: 222px; z-index: 5; padding: 6px 9px 8px; font-size: 12px;
+#hudright { position: absolute; right: 8px; top: 8px; z-index: 5; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; pointer-events: none; }
+#hudright > * { pointer-events: auto; }
+#objectives { width: 236px; padding: 6px 9px 7px; font-size: 12px;
+  background: linear-gradient(170deg, color-mix(in srgb, var(--panel2) 94%, transparent), color-mix(in srgb, var(--panel) 94%, transparent));
+  border: 2px solid var(--ink); border-radius: 10px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--frame) 45%, transparent), 0 6px 16px rgba(0,0,0,.5); }
+.ob-head { display: flex; align-items: center; gap: 6px; }
+.ob-title { flex: 1; min-width: 0; font-family: var(--font-head); color: var(--head); font-size: 13.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ob-short { font-variant-numeric: tabular-nums; font-weight: 700; color: #ffe9a8; white-space: nowrap; }
+.ob-min { min-height: 0; padding: 0 6px; font-size: 12px; line-height: 1.5; }
+.ob-goal { color: var(--muted); font-size: 11.5px; margin: 2px 0 4px; line-height: 1.3; }
+.ob-row { display: flex; gap: 6px; align-items: flex-start; padding: 2px 3px; border-radius: 5px; line-height: 1.25; }
+.ob-row.go { cursor: pointer; }
+.ob-row.go:hover { background: rgba(255,255,255,.06); }
+.ob-chk { color: #ffd23a; font-size: 11px; line-height: 1.4; }
+.ob-txt small { display: block; color: var(--muted); font-size: 10.5px; }
+.ob-row.done .ob-chk { color: #7aff7a; }
+.ob-row.done .ob-txt > span, .ob-row.done .ob-txt { text-decoration: line-through; text-decoration-color: rgba(122,255,122,.7); }
+.ob-row.done small { text-decoration: none; }
+.ob-timer { display: flex; align-items: baseline; gap: 6px; margin: 2px 0 3px; }
+.ob-timer b { font-size: 24px; font-variant-numeric: tabular-nums; color: #bfe6ff; letter-spacing: .02em; text-shadow: 0 0 10px rgba(95,176,255,.5); }
+.ob-timer small { color: var(--muted); font-size: 11px; }
+.ob-timer.final b { color: #ffb040; text-shadow: 0 0 12px rgba(255,160,40,.7); animation: pulse 0.9s infinite alternate; }
+.ob-bar { height: 6px; background: #0a0806; border: 1px solid var(--ink); border-radius: 4px; overflow: hidden; margin-bottom: 4px; }
+.ob-bar div { height: 100%; }
+.ob-time { font-size: 11.5px; color: var(--muted); margin-top: 3px; font-variant-numeric: tabular-nums; }
+.ob-time b { color: var(--text); }
+.ob-time.warn b { color: #ffb040; }
+#unitcard { position: relative; width: 222px; padding: 6px 9px 8px; font-size: 12px;
   background: linear-gradient(170deg, color-mix(in srgb, var(--panel2) 94%, transparent), color-mix(in srgb, var(--panel) 94%, transparent));
   border: 2px solid var(--ink); border-radius: 10px; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--frame) 35%, transparent), 0 6px 16px rgba(0,0,0,.5); }
 #unitcard .x { position: absolute; right: 3px; top: 2px; min-height: 0; padding: 0 7px; font-size: 14px; line-height: 1.4; }
@@ -467,15 +494,18 @@ input[type=range] { width: 100%; accent-color: var(--accent2); }
   #tutorial { top: 6px; left: 6px; right: 62px; transform: none; width: auto; font-size: 12.5px; padding: 7px 9px; }
   body.tut-on #msgs { display: none; }
   #herocard { left: 6px; width: 214px; padding: 4px 5px; font-size: 11.5px; }
-  #unitcard { top: 62px; width: 200px; padding: 5px 7px 6px; font-size: 11.5px; }
-  body.uc-open #msgs { max-width: calc(100% - 222px); }
+  #hudright { top: 62px; }
+  #unitcard { width: 200px; padding: 5px 7px 6px; font-size: 11.5px; }
+  #objectives { width: 200px; padding: 5px 7px 6px; font-size: 11.5px; }
+  .ob-timer b { font-size: 20px; }
+  body.uc-open #msgs, body.obj-on #msgs { max-width: calc(100% - 222px); }
   .uc-head b { font-size: 13.5px; }
   .hc-crest { width: 34px; height: 34px; font-size: 16px; }
   .hc-btns button { min-height: 34px; }
 }
 @media (max-width: 560px) {
   #selection { left: 6px; bottom: auto; top: 50px; }
-  #unitcard { width: 180px; }
+  #unitcard, #objectives { width: 180px; }
   .uc-note { display: none; }
   #quick { max-width: calc(100% - 140px); }
   .saveslot, .continue { flex-wrap: wrap; }

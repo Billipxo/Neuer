@@ -138,7 +138,7 @@
       <section><h2>2. Wähle deinen Helden</h2><div class="grid heroes">${heroCards(c)}</div></section>
       <section class="row3">
         <div><h2>3. Spielmodus</h2>${opt('m-mode', c.mode, [['1v1', '1 gegen 1', 'Du gegen einen Computer'], ['2v2', '2 gegen 2', 'Du + KI-Verbündeter gegen 2 KI'], ['ffa', '1 vs 1 vs 1 vs 1', 'Jeder gegen jeden']])}</div>
-        <div><h2>4. Schwierigkeit</h2>${opt('m-diff', c.difficulty, [['einfach', 'Einfach', 'Langsame KI, weniger Einkommen'], ['mittel', 'Mittel', 'Ausgeglichen'], ['schwer', 'Schwer', 'Schnelle KI, Bonus-Einkommen, fokussiert Heiler']])}</div>
+        <div><h2>4. Schwierigkeit</h2>${opt('m-diff', c.difficulty, [['einfach', 'Einfach', 'Gemächlicher Aufbau, deutlich weniger Einkommen'], ['mittel', 'Mittel', 'Ausgeglichen – die KI baut in ruhigem Tempo'], ['schwer', 'Schwer', 'Zügiger Aufbau, Bonus-Einkommen, fokussiert Heiler']])}</div>
         <div><h2>5. Karte</h2><div class="maps">${opt('m-map', c.map, maps)}</div></div>
         <div><h2>6. Spieldauer</h2>${opt('m-dur', String(c.duration), G.DURATIONS.map(([v, n]) => [String(v), n, v ? 'Danach entscheidet die Punktzahl' : 'Bis ein Team besiegt ist']))}</div>
         <div><h2>7. Sicht</h2>${opt('m-fog', c.fog === false ? 'aus' : 'an', [['an', 'Nebel des Krieges', 'Du siehst nur, was deine Truppen und Gebäude sehen'], ['aus', 'Offene Karte', 'Die ganze Karte ist aufgedeckt']])}</div>
@@ -760,6 +760,58 @@
     box.innerHTML = h;
   }
 
+  // Missionsziele rechts oben: Ziel, Fortschritt und ablaufende Zeit (nur in Kampagnen-Missionen)
+  const DATIV = { zwerge: 'Zwergen', untote: 'Untoten' };
+  const mmss = (t) => { t = Math.max(0, Math.ceil(t)); return Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); };
+  const compass = (x, y) => {
+    const S = G.S, ns = y < S.h * 0.34 ? 'Nord' : y > S.h * 0.66 ? 'Süd' : '', ew = x < S.w * 0.34 ? 'west' : x > S.w * 0.66 ? 'ost' : '';
+    return ns || ew ? 'im ' + (ns ? ns + (ew ? ew : 'en') : ew[0].toUpperCase() + ew.slice(1) + 'en') : 'in der Mitte';
+  };
+  function renderObjectives() {
+    const box = $('#objectives'); if (!box) return;
+    const S = G.S, fm = S && S.cfg.mission ? Prof().findMission(S.cfg.mission) : null;
+    if (!fm || S.over) {
+      if (UI.objHtml) { box.classList.add('hidden'); document.body.classList.remove('obj-on'); UI.objHtml = ''; }
+      return;
+    }
+    const me = S.players[0], left = G.timeLeft(), lim = S.limit;
+    const pct = (b) => Math.max(0, Math.round((100 * b.hp) / b.maxHp)) + '%';
+    const row = (done, text, sub, go) => `<div class="ob-row ${done ? 'done' : ''} ${go ? 'go' : ''}" ${go ? `data-act="objgo" data-x="${Math.round(go.x)}" data-y="${Math.round(go.y)}" title="Kamera dorthin"` : ''}><span class="ob-chk">${done ? '✔' : '◆'}</span><span class="ob-txt">${text}${sub ? `<small>${sub}</small>` : ''}</span></div>`;
+    const bar = (f, col) => `<div class="ob-bar"><div style="width:${Math.round(G.clamp(f, 0, 1) * 100)}%;background:${col}"></div></div>`;
+    let rows = '', short = '';
+    if (S.objective === 'ueberleben') {
+      const f = lim ? 1 - left / lim : 0;
+      short = `⏳ ${mmss(left)}`;
+      rows += `<div class="ob-goal">Überlebe ${Math.round(lim / 60)} Minuten</div>
+        <div class="ob-timer ${S.endphase ? 'final' : ''}"><span>⏳</span><b>${mmss(left)}</b><small>${S.endphase ? 'letzte Angriffswelle!' : 'bis zum Sieg'}</small></div>
+        ${bar(f, S.endphase ? '#ffb040' : 'linear-gradient(90deg,#5fb0ff,#7aff7a)')}`;
+      rows += row(false, `${G.bname(me.race, 'haupthaus')} halten`, `${pct(me.th)} Lebenspunkte`, me.th);
+    } else if (S.objective === 'drache') {
+      const foes = S.players.filter((o) => o.team !== me.team).map((o) => DATIV[o.race] || o.rd.name).join(' und ');
+      short = '🐉 ';
+      rows += `<div class="ob-goal">Erschlage einen Drachen vor ${foes ? 'den ' + foes : 'deinen Gegnern'}</div>`;
+      for (const c of S.camps.filter((c) => c.type === 'drache')) {
+        const d = c.creeps.find((e) => !e.dead);
+        rows += row(false, `Drache ${compass(c.x, c.y)}`, d ? `${pct(d)} Lebenspunkte${c.active ? ' · wird angegriffen!' : ''}` : 'fort', d || c);
+        if (d && short === '🐉 ') short += pct(d);
+      }
+      if (lim) rows += `<div class="ob-time ${left < 300 ? 'warn' : ''}">⌛ noch <b>${fmtTime(left)}</b></div>`;
+    } else {
+      const foes = S.players.filter((o) => o.team !== me.team), down = foes.filter((o) => !o.alive).length;
+      short = `⚔ ${down}/${foes.length} besiegt`;
+      rows += `<div class="ob-goal">${fm.m.goal}</div>`;
+      for (const o of foes) rows += row(!o.alive, `<span style="color:${o.color}">${o.name}</span>`, o.alive ? `${G.bname(o.race, 'haupthaus')}: ${pct(o.th)} LP` : 'besiegt', o.alive ? o.th : null);
+      if (S.mode === 'ffa') {
+        const rank = S.players.filter((o) => o.alive).map((o) => ({ o, s: G.score(o) })).sort((a, b) => b.s - a.s), mine = rank.findIndex((r) => r.o === me);
+        rows += `<div class="ob-time">Punkte: <b>${G.score(me)}</b> · Platz ${mine + 1} von ${rank.length}</div>`;
+      }
+      if (lim) rows += `<div class="ob-time ${left < 300 ? 'warn' : ''}">⌛ noch <b>${fmtTime(left)}</b>${S.objective === 'vernichten' ? ' – danach entscheiden die Punkte' : ''}</div>`;
+    }
+    const h = `<div class="ob-head"><span class="ob-title">⚑ ${fm.index + 1}. ${fm.m.title}</span>${UI.objMin ? `<span class="ob-short">${short}</span>` : ''}<button class="ob-min" data-act="objmin" title="${UI.objMin ? 'Ziele aufklappen' : 'Ziele einklappen'}">${UI.objMin ? '▸' : '▾'}</button></div>${UI.objMin ? '' : rows}`;
+    if (h === UI.objHtml) return;
+    box.innerHTML = h; UI.objHtml = h; box.classList.remove('hidden'); document.body.classList.add('obj-on');
+  }
+
   // Kleines Werte-Kärtchen am Bildschirmrand: angeklickte Einheiten, gegnerische Helden und Monster
   const num = (v, d) => (d ? v.toFixed(d).replace('.', ',') : String(Math.round(v)));
   function renderUnitCard() {
@@ -894,6 +946,8 @@
       case 'm-chron': UI.chronRace = v; renderMenu(); { const hd = $('.chron-head'); if (hd) hd.scrollIntoView({ block: 'start', behavior: 'smooth' }); } return;
       case 'm-spoiler': UI.spoiler = { ...(UI.spoiler || {}), [v]: true }; renderMenu(); return;
       case 'storygo': hideStory(); return;
+      case 'objmin': UI.objMin = !UI.objMin; UI.objHtml = ''; renderObjectives(); return;
+      case 'objgo': G.R.centerOn(+el.dataset.x, +el.dataset.y); return;
       case 'm-chron-read': UI.chronRace = v; UI.menuTab = 'chronik'; renderMenu(); $('#menu').scrollTop = 0; return;
       case 'm-chron-play': UI.cfg.race = v; UI.cfg.hero = null; UI.mission = 0; UI.menuTab = 'kampagne'; renderMenu(); $('#menu').scrollTop = 0; return;
       case 'm-auto': UI.cfg.autopilot = v === 'auto'; Prof().data.autopilot = UI.cfg.autopilot; Prof().save(); renderMenu(); return;
@@ -1246,7 +1300,7 @@
     const S = G.S; if (!S) return;
     tTop -= dt; tPanel -= dt; tMini -= dt; tStory -= dt;
     if (tStory <= 0) { tStory = 0.1; if (UI.storyOpen || S.over) drawStoryFigures(); } // Erzähler im Story-Fenster und auf dem Siegbildschirm
-    if (tTop <= 0) { tTop = 0.2; renderTop(); renderMsgs(); renderHeroCard(); renderUnitCard(); if (G.Audio) updateIntensity(); }
+    if (tTop <= 0) { tTop = 0.2; renderTop(); renderMsgs(); renderHeroCard(); renderUnitCard(); renderObjectives(); if (G.Audio) updateIntensity(); }
     if (tPanel <= 0) { tPanel = 0.5; renderPanel(false); tutorialTick(); }
     if (tMini <= 0) { tMini = 0.15; G.R.drawMinimap($('#minimap')); }
     if (!S.over && S.time - UI.lastAutosave >= 60) { UI.lastAutosave = S.time; autosave(); }
