@@ -37,7 +37,7 @@ function draw(){
   for(const e of ents){ if(e===P) drawHero(); else if(e.type==='pillar') drawPillar(e); else if(e.type==='barrel') drawBarrel(e); else if(e.max!==undefined && e.life!==undefined && !e.kind) drawAlly(e); else if(e.boss) drawBoss(e); else drawEnemy(e); }
   for(const f of G.fog) drawGlow(f.x,f.y,f.r,f.thick?'#9a98a8':'#8a7aa8',f.thick?0.2:0.12);
   ctx.restore();
-  if(save.settings.fx) renderLights(cx,cy);
+  if(FX()) renderLights(cx,cy);
   ctx.save(); ctx.scale(SCALE,SCALE); ctx.translate(-cx,-cy);
   drawFlames();
   // orbit
@@ -73,6 +73,7 @@ function draw(){
   if(input.id!==null){ ctx.globalAlpha=0.5; ctx.strokeStyle='#efe2c4'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(input.ox,input.oy,JR,0,TAU); ctx.stroke();
     ctx.fillStyle='rgba(239,226,196,0.12)'; ctx.fill(); ctx.globalAlpha=0.85; ctx.fillStyle='#e6b450'; ctx.beginPath(); ctx.arc(input.ox+input.jx*JR,input.oy+input.jy*JR,24,0,TAU); ctx.fill(); ctx.globalAlpha=1; }
   if(G.tut) drawTut();
+  if(save.settings.showFps){ ctx.font='700 12px sans-serif'; ctx.textAlign='left'; ctx.textBaseline='bottom'; ctx.fillStyle=PERF.fps<42?'#ff8a80':'#9fe6a0'; ctx.fillText(PERF.fps+' FPS'+(FX()?'':' · niedrig'),12,H-8); }
 }
 
 function drawAlly(a){
@@ -430,7 +431,7 @@ const MB={ embers:[], t:0 };
 function drawMenuBg(dt){
   MB.t+=dt; ctx.setTransform(DPR,0,0,DPR,0,0);
   ctx.fillStyle='#120e16'; ctx.fillRect(0,0,W,H);
-  const fx=save.settings.fx;
+  const fx=FX();
   if(fx && MB.embers.length<70 && Math.random()<dt*14) MB.embers.push({x:Math.random()*W,y:H+10,vy:-(20+Math.random()*45),ph:Math.random()*TAU,s:0.6+Math.random()*1.2,c:Math.random()<0.75?'#ff9a3a':'#e6b450'});
   ctx.globalCompositeOperation='lighter';
   drawGlow(W*0.5,H*1.05,Math.max(W,H)*0.6,'#ff5a1a',0.18+0.04*Math.sin(MB.t*1.3));
@@ -443,7 +444,12 @@ function drawMenuBg(dt){
 let last=performance.now();
 function loop(now){
   requestAnimationFrame(loop);
-  const dt=clamp((now-last)/1000,0,0.05); last=now;
+  const raw=(now-last)/1000, dt=clamp(raw,0,0.05); last=now;
+  if(state==='combat' && G && raw>0 && raw<0.5 && !document.hidden){ PERF.acc+=raw; PERF.n++;
+    if(PERF.acc>=1){ PERF.fps=Math.round(PERF.n/PERF.acc); PERF.acc=0; PERF.n=0;
+      PERF.low = PERF.fps<42 ? PERF.low+1 : 0;
+      if(save.settings.gfx==='auto' && !AUTO_LOW && PERF.low>=4){ AUTO_LOW=true; resize(); buildFloor();
+        toast('<span style="font-size:24px">⚙️</span><div><b>Grafik automatisch reduziert</b><div class="sub" style="font-size:13px">Damit das Spiel flüssig bleibt. Ändern unter Einstellungen → Grafik.</div></div>'); } } }
   if(state==='combat' && G){ if(G.stop>0){ G.stop-=dt; } else { if(G.stopCd>0) G.stopCd-=dt; update(dt); } if(G){ draw(); updHud(); } }
   else if(state==='paused' && G){ draw(); }
   else if(!G) drawMenuBg(dt);

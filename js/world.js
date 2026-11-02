@@ -6,7 +6,7 @@ const cvs=$('game'), ctx=cvs.getContext('2d');
 let W=0,H=0,DPR=1,SCALE=1,vignette=null;
 const AW=760, AH=1000, WALL=44;
 function resize(){
-  DPR=Math.min(window.devicePixelRatio||1,2); W=innerWidth; H=innerHeight;
+  DPR=Math.min(window.devicePixelRatio||1,FX()?2:1.25); W=innerWidth; H=innerHeight;
   cvs.width=Math.round(W*DPR); cvs.height=Math.round(H*DPR);
   SCALE = (W>H && H<560) ? Math.max(0.6,Math.min(H/360,W/720)) : Math.max(0.6, Math.min(W, H*0.78)/440);
   vignette=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.35,W/2,H/2,Math.max(W,H)*0.75);
@@ -220,7 +220,8 @@ function crowdSprites(va){
 }
 function drawCrowd(cx,cy,vw,vh){
   const spr=crowdSprites(visAct()), hype=G.hype||0, t=G.time;
-  for(const s of CROWD){
+  const thin=!FX();
+  for(let ci=0;ci<CROWD.length;ci++){ const s=CROWD[ci]; if(thin && ci%2) continue;
     if(s.x<cx-20||s.x>cx+vw+20||s.y<cy-10||s.y>cy+vh+30) continue;
     const jump=Math.abs(Math.sin(t*s.spd+s.ph))*(0.5+hype*6);
     const cheer=hype>0.3 && Math.sin(t*2.3+s.ph*2)>0.65-hype;
@@ -259,7 +260,7 @@ const WEATHER={
 const WEATHER_POOL={ 1:[['clear',35],['rain',30],['storm',20],['fog',15]], 2:[['clear',30],['snow',30],['fog',25],['storm',15]], 3:[['clear',30],['ash',40],['firestorm',30]] };
 function initWeather(){
   const w=WEATHER[G.weather]; G.wp=[]; G.splash=[]; G.flash=0; G.boltT=rand(4,7); G.skyT=rand(3,8); G.thunderT=0; G.cam=null;
-  const n=Math.round((w.n||0)*(save.settings.fx?1:0.4));
+  const n=Math.round((w.n||0)*(FX()?1:0.4));
   for(let i=0;i<n;i++) G.wp.push({x:rand(-20,W+20),y:rand(-20,H+20),s:rand(0.6,1.4),ph:rand(0,TAU),glow:Math.random()<0.2});
   if(w.fog) for(let i=0;i<w.fog;i++) G.fog.push({x:rand(0,AW),y:rand(0,AH),r:rand(150,260),vx:rand(8,18)*(Math.random()<0.5?-1:1),thick:true});
 }
@@ -316,7 +317,7 @@ function updCrowd(dt){
 /* ---- Leben in der Arena: Staub, Nebel, Funken, Kleintiere, Flammen und Licht ---- */
 function initAmbient(){
   G.amb=[]; G.critters=[]; G.critT=rand(2,4); G.fog=[];
-  if(!save.settings.fx) return;
+  if(!FX()) return;
   for(let i=0;i<40;i++) G.amb.push({x:rand(0,AW),y:rand(0,AH),ph:rand(0,TAU),s:rand(0.6,1.4)});
   if(visAct()===2) for(let i=0;i<6;i++) G.fog.push({x:rand(0,AW),y:rand(0,AH),r:rand(140,240),vx:rand(6,14)*(Math.random()<0.5?-1:1)});
 }
@@ -337,7 +338,7 @@ function updAmbient(dt){
     if(m.y<-10){ m.y=AH+5; m.x=rand(0,AW); } if(m.x<-10) m.x=AW+5; if(m.x>AW+10) m.x=-5; }
   for(const f of G.fog){ f.x+=f.vx*dt; if(f.x<-f.r) f.x=AW+f.r; if(f.x>AW+f.r) f.x=-f.r; }
   for(const p of DECOR.puddles){ p.t-=dt; if(p.t<=0){ p.t=rand(1.5,4); p.rip=0; p.rx0=p.x+rand(-0.5,0.5)*p.rx; p.ry0=p.y+rand(-0.4,0.4)*p.ry; } if(p.rip!==undefined) p.rip+=dt; }
-  if(!save.settings.fx) return;
+  if(!FX()) return;
   for(const [tx,ty] of TORCHES) if(Math.random()<dt*1.5) part(tx+rand(-2,2),ty-12,rand(-8,8),rand(-50,-25),rand(0.6,1),2,A.fire,true,-10);
   for(const [bx,by] of BRAZIERS) if(Math.random()<dt*4) part(bx+rand(-6,6),by-16,rand(-10,10),rand(-70,-35),rand(0.7,1.2),2.5,A.fire,true,-10);
   G.critT-=dt;

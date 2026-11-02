@@ -5,12 +5,12 @@
 const SAVE_KEY = 'arena_verdammten_v1';
 const SAVE_V=2, RUN_V=6;
 const reducedMotion = (()=>{ try{ return matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } })();
-function defSettings(){ return { shake:!reducedMotion, vibrate:true, music:true, fx:true, joyFixed:false, lefty:false, cb:false, musicVol:0.7 }; }
+function defSettings(){ return { shake:!reducedMotion, vibrate:true, music:true, fx:true, joyFixed:false, lefty:false, cb:false, musicVol:0.7, gfx:'auto', showFps:false, dmgNums:true }; }
 function defStats(){ return { kills:0, elites:0, cheers:0, events:[], syns:[], bosses:[], wins:{}, anyWin:false, noHitBoss:false, dailyWin:false, maxEndless:0, maxGold:0, maxCombo:0 }; }
 function defSave(){ return { v:SAVE_V, tutDone:false, ach:{}, skin:{}, stats:defStats(), souls:0, meta:{}, unlocked:{krieger:true}, scores:[], runs:0, lastChar:'krieger', sound:true, run:null, settings:defSettings(), name:'Spielstand 1', last:0, ngMax:0, ngSel:0 }; }
 function migrate(s){
   const d=defSave(); s=Object.assign(d, s);
-  s.settings=Object.assign(defSettings(), s.settings||{});
+  s.settings=Object.assign(defSettings(), s.settings||{}); if(s.settings.fx===false && !s.settings._gfxMig){ s.settings.gfx='low'; } s.settings._gfxMig=true;
   if(!s.meta||typeof s.meta!=='object') s.meta={};
   if(!Array.isArray(s.scores)) s.scores=[];
   s.stats=Object.assign(defStats(), s.stats||{}); s.ach=s.ach||{}; s.skin=s.skin||{};
@@ -37,6 +37,10 @@ let save = loadSave();
 function persist(){ save.last=Date.now(); lsSet(slotKey(slotIdx),save); lsSet(SET_KEY,{settings:save.settings,sound:save.sound}); lsSet(SLOT_IDX_KEY,{active:slotIdx}); }
 function switchSlot(i){ persist(); slotIdx=i; save=loadSave(); persist(); document.body.classList.toggle('lefty',!!save.settings.lefty); }
 const metaLvl = id => save.meta[id] || 0;
+/* Grafikstufe: "auto" misst die Bildrate und schaltet bei Ruckeln selbst herunter */
+let AUTO_LOW=false;
+const FX=()=>save.settings.gfx==='high' || (save.settings.gfx!=='low' && !AUTO_LOW);
+const PERF={acc:0,n:0,fps:60,low:0};
 
 /* ---------------- HILFEN ---------------- */
 let RNG=Math.random;

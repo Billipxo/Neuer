@@ -159,7 +159,8 @@ function showSettings(){
       ${tg('music','Musik',st.music,'Titelthema, Kartenmusik und Kampfthemen je Akt, Bossmusik')}
       <label class="toggle" for="musicVol" style="cursor:default"><span><b>Musiklautstärke</b></span><input type="range" id="musicVol" min="0" max="1" step="0.05" value="${st.musicVol??0.7}" style="flex:1;max-width:180px;accent-color:#e6b450"></label>
       ${tg('shake','Bildschirmwackeln',st.shake,'Bei Treffern und Explosionen')}
-      ${tg('fx','Atmosphäre und Licht',st.fx,'Licht und Schatten, Nebel, Funken und Kleintiere. Auf älteren Handys ausschalten.')}
+      <button class="toggle on" data-a="gfx"><span><b>Grafik: ${{auto:'Automatisch',high:'Hoch',low:'Niedrig'}[st.gfx||'auto']}</b><br><span class="sub" style="font-size:13px">${{auto:'Volle Grafik, schaltet bei Ruckeln selbst herunter'+(AUTO_LOW?' (gerade reduziert)':''),high:'Licht, Nebel, Funken, Kleintiere und alle Zuschauer – immer',low:'Ohne Licht und Partikel, weniger Zuschauer, geringere Auflösung'}[st.gfx||'auto']}</span></span><span class="pill">Ändern</span></button>
+      ${tg('showFps','Bildrate anzeigen',st.showFps,'Zeigt die Bilder pro Sekunde im Kampf an')}
       ${tg('vibrate','Vibration',st.vibrate,'Kurzes Vibrieren bei Treffern (nur Android)')}
       ${tg('joyFixed','Fester Joystick',st.joyFixed,'Joystick an fester Stelle unten statt überall auf dem Bildschirm')}
       ${tg('lefty','Linkshänder-Modus',st.lefty,'Fähigkeit und Ausweichen links, Joystick rechts')}
@@ -168,6 +169,7 @@ function showSettings(){
     <button class="btn" data-a="back">Zurück</button>
     <button class="btn danger" data-a="reset">Diesen Spielstand zurücksetzen</button></div>`,
   { back:showMenu,
+    gfx:()=>{ st.gfx={auto:'high',high:'low',low:'auto'}[st.gfx||'auto']; AUTO_LOW=false; PERF.low=0; persist(); resize(); showSettings(); },
     tg:k=>{ if(k==='sound') save.sound=!save.sound; else st[k]=!st[k]; persist(); document.body.classList.toggle('lefty',!!st.lefty); if(typeof musicUpdate==='function') musicUpdate(); showSettings(); },
     reset:()=>render(`<div class="wrap" style="justify-content:center"><h2 class="center">Spielstand wirklich löschen?</h2>
       <p class="sub center">Seelen, Schmiede-Stufen, freigeschaltete Helden und die Ruhmeshalle werden gelöscht. Das lässt sich nicht rückgängig machen.</p>
