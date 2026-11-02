@@ -1,0 +1,13 @@
+{
+  "name": "arena-der-verdammten",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fantasy-Roguelike-Arenaspiel für das Handy",
+  "scripts": {
+    "test": "node tests/run-all.js",
+    "build": "python3 tools/build_single.py"
+  },
+  "devDependencies": {
+    "playwright": "1.47.2"
+  }
+}

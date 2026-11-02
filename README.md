@@ -63,3 +63,16 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 | `tools/build_single.py` | baut alles zu einer einzelnen HTML-Datei in `dist/` |
 
 Die Skripte teilen sich einen gemeinsamen Gültigkeitsbereich und müssen in der Reihenfolge aus `index.html` geladen werden.
+
+## Tests
+
+```
+npm install --no-save playwright@1.47.2 && npx playwright install chromium
+npm test
+```
+
+`tests/run-all.js` startet das Spiel in einem Headless-Chromium und prüft per simuliertem Spiel:
+Laufstart, einen ganzen Akt mit jedem Helden, alle Upgrades und Synergien, jede Ereignis-Option,
+alle sechs Bosse, die Tagesherausforderung, Spielstände/Sicherungscode/Neues Spiel+ und die Musik.
+Der GitHub-Workflow `.github/workflows/test.yml` führt die Tests bei jedem Push aus.
+

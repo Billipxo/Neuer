@@ -1,0 +1,21 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Playwright installieren
+        run: |
+          npm install --no-save --no-package-lock playwright@1.47.2
+          npx playwright install --with-deps chromium
+      - name: Tests ausführen
+        run: npm test
