@@ -33,8 +33,10 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **Tägliche Herausforderung:** jeden Tag dieselbe Karte für alle, mit Held und Modifikator des Tages
 - **Meta-Fortschritt:** Seelen bleiben erhalten und gehen in die Schmiede (6 dauerhafte Upgrades) oder in neue Helden
 - **Ruhmeshalle** mit den 10 besten Läufen; laufende Abenteuer werden auf der Karte automatisch gespeichert
+- Atmosphärische Arenen: dynamisches Licht und Schatten, Fackeln und Feuerbecken, Nebel, Funken,
+  Kleintiere (Ratten, Spinnen, Feuersalamander) und je Akt eigene Bodendetails
 - Prozedurale Musik und Soundeffekte (Web Audio), Hit-Stop, Zeitlupe bei Tod und Boss-Sieg
-- Einstellungen für Sound, Musik, Bildschirmwackeln und Vibration
+- Einstellungen für Sound, Musik, Atmosphäre und Licht, Bildschirmwackeln und Vibration
 
 ## Dateien
 
