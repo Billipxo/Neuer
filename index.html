@@ -1367,7 +1367,7 @@ function startCombat(type, customWaves){
   P=Object.assign(p,{ x:AW/2, y:AH*0.7, r:14, vx:0, vy:0, face:-Math.PI/2, atkT:0.3, skillT:0, inv:0, shieldLeft:p.shield, spin:0, spinTick:0, regenAcc:0, moving:false, anim:0, swingT:0, dashT:0, dashCd:0, dashA:0, dashI:0, msT:0, trailT:0, nextCrit:false });
   P.shieldLeft = p.shield + (p.manaShield?1:0);
   G={ type, enemies:[], pproj:[], eproj:[], hazards:[], allies:[], pzones:[], pstrikes:[], parts:[], texts:[], coins:[], fx:[], spawnQ:[], booms:[],
-      stop:0, stopCd:0, waves: customWaves || (type==='boss'?[]:seeded(roomKey('waves'),()=>buildWaves(type))), obs:[], traps:[], waveIdx:-1, waveT:0.8, cleared:false, clearT:0, time:0, shake:0, hurtFlash:0, orbitA:0, boss:null, weather:tut?'clear':seeded(roomKey('weather'),()=>wpick(WEATHER_POOL[visAct()])), hype:0.15, cheerCd:8, flash:0,
+      stop:0, stopCd:0, waves: customWaves || (type==='boss'?[]:seeded(roomKey('waves'),()=>buildWaves(type))), obs:[], traps:[], waveIdx:-1, waveT:0.8, cleared:false, clearT:0, time:0, shake:0, hurtFlash:0, orbitA:0, boss:null, weather:tut?'clear':seeded(roomKey('weather'),()=>wpick(WEATHER_POOL[visAct()])), hype:0.15, cheerCd:8, flash:0, lastProg:0,
       over:false, deathT:0, slowT:0, whiteFlash:0, moved:0, tut:tut?{step:0,t:0}:null };
   Object.assign(G, seeded(roomKey('arena'),()=>genArena(type)));
   if(G.tut){ G.obs=[]; G.traps=[]; }
@@ -1444,6 +1444,7 @@ function update(dt){
   G.obs=G.obs.filter(o=>!o.dead);
   updTraps(dt);
   updAmbient(dt); updWeather(dt); updCrowd(dt);
+  unstick();
   G.enemies=G.enemies.filter(e=>!e.dead);
   updCoins(dt);
   for(const p of G.parts){ p.life-=dt; p.x+=p.vx*dt; p.y+=p.vy*dt; p.vx*=1-p.drag*dt; p.vy*=1-p.drag*dt; p.vy+=p.grav*dt; }
@@ -1571,6 +1572,31 @@ function drawTut(){
   ctx.beginPath(); if(ctx.roundRect) ctx.roundRect(W/2-maxW/2,y,maxW,h,10); else ctx.rect(W/2-maxW/2,y,maxW,h); ctx.fill(); ctx.stroke();
   ctx.fillStyle='#efe2c4'; ctx.textAlign='center'; ctx.textBaseline='middle'; lines.forEach((l,i)=>ctx.fillText(l,W/2,y+22+i*22)); ctx.globalAlpha=1;
 }
+/* Schutz gegen hängende Räume: Gegner, die lange unerreichbar sind, werden in die Nähe geholt */
+function unstick(){
+  for(const e of G.enemies) if(!isFinite(e.x)||!isFinite(e.y)){ e.x=AW/2; e.y=AH/2; e.kx=e.ky=0; }
+  if(G.cleared||!G.enemies.length||G.time-G.lastProg<12) return;
+  G.lastProg=G.time;
+  for(const e of G.enemies){ if(e.boss||e.dead) continue;
+    if(Math.hypot(e.x-P.x,e.y-P.y)>260 || !los(P,e)){
+      let x,y,k=0; do{ const a=rand(0,TAU),d=rand(180,240); x=clamp(P.x+Math.cos(a)*d,40,AW-40); y=clamp(P.y+Math.sin(a)*d,40,AH-40); k++; }while((solidHit(x,y,e.r+4)||!los(P,{x,y}))&&k<20);
+      burst(e.x,e.y,10,'#9a6aff',120); e.x=x; e.y=y; e.kx=e.ky=0; e.spawnT=0.45; if(e.kind==='worm'){ e.st=2; e.under=false; e.timer=3; } } }
+}
+function drawIndicators(cx,cy){
+  const list=G.enemies.filter(e=>!e.dead).map(e=>({e,sx:(e.x-cx)*SCALE,sy:(e.y-cy)*SCALE})).filter(o=>o.sx<-10||o.sx>W+10||o.sy<-10||o.sy>H+10);
+  if(!list.length) return;
+  const few=G.enemies.length<=4, top=110, bot=H-150, mx=W/2, my=(top+bot)/2;
+  list.sort((a,b)=>Math.hypot(a.sx-mx,a.sy-my)-Math.hypot(b.sx-mx,b.sy-my));
+  for(const o of list.slice(0,8)){
+    const a=Math.atan2(o.sy-my,o.sx-mx), dx=Math.cos(a), dy=Math.sin(a);
+    const tx=dx?((dx>0?W-22:22)-mx)/dx:1e9, ty=dy?((dy>0?bot:top)-my)/dy:1e9, t=Math.min(tx,ty);
+    const x=mx+dx*t, y=my+dy*t, col=o.e.boss||o.e.elite?'#e6b450':'#e0544a', pul=few?0.85+0.15*Math.sin(G.time*8):0.6;
+    ctx.save(); ctx.translate(x,y); ctx.rotate(a); ctx.globalAlpha=pul;
+    ctx.fillStyle='rgba(0,0,0,0.55)'; ctx.beginPath(); ctx.arc(0,0,13,0,TAU); ctx.fill();
+    ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(11,0); ctx.lineTo(-5,-7); ctx.lineTo(-2,0); ctx.lineTo(-5,7); ctx.closePath(); ctx.fill();
+    ctx.restore(); ctx.globalAlpha=1;
+  }
+}
 function hitstop(t){ if(!G) return; G.stop=Math.max(G.stop,t); }
 function useSkill(){
   if(state!=='combat'||!P||P.skillT>0||G.over) return;
@@ -1588,6 +1614,7 @@ function useSkill(){
 
 function dealDamage(e,amount,o={}){
   if(e.dead||e.under||(e.boss&&e.alpha<0.3)) return;
+  G.lastProg=G.time;
   let blocked=false;
   if(e.kind==='shield' && o.from){ const ba=Math.atan2(o.from.y-e.y,o.from.x-e.x); if(Math.abs(angDiff(ba,e.face))<1.1){ amount*=0.25; blocked=true; } }
   let crit=!o.noCrit && (P.nextCrit || Math.random()<P.crit); if(crit && P.nextCrit) P.nextCrit=false;
@@ -1983,6 +2010,7 @@ function draw(){
   ctx.restore();
   // screen space
   drawWeather(cx,cy);
+  if(!G.over) drawIndicators(cx,cy);
   ctx.fillStyle=vignette; ctx.fillRect(0,0,W,H);
   if(G.whiteFlash>0){ ctx.fillStyle=`rgba(255,248,220,${G.whiteFlash})`; ctx.fillRect(0,0,W,H); }
   if(G.over){ ctx.fillStyle=`rgba(10,0,0,${Math.min(0.55,G.deathT*0.5)})`; ctx.fillRect(0,0,W,H); }
