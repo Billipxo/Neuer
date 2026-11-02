@@ -26,12 +26,15 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 
 ## Inhalt
 
-- **4 Helden:** Krieger, Magierin, Jägerin und Nekromantin, jeweils mit eigener Angriffsart, Fähigkeit und eigenen Upgrades
+- **7 Helden:** Krieger, Magierin, Jägerin, Nekromantin, Paladin (Bumerang-Hammer, geweihter Boden, Geschosse zurückwerfen),
+  Alchemistin (Flaschen im Bogen, Säure- und Feuerpfützen, Strudel-Kessel) und Berserkerin (Blutung, Raserei, Blutsprung),
+  jeweils mit eigener Angriffsart, Passivfähigkeit, Fähigkeit und eigenen Upgrades
 - **3 Akte** (Verliese, Krypta, Drachenhort), jeder mit einer Karte voller Abzweigungen:
   Kampf, Elite, Händler, Lagerfeuer, Schatz, Ereignis und am Ende ein Boss mit Wutphase
   (Steingolem, Lichkönig, Drache Ignaroth)
 - **Arenen mit Hindernissen:** Säulen als Deckung, Sprengfässer, Stachelfallen und Lava
-- **10 Gegnertypen** (u. a. Schildträger, Heiler, Grabwurm, Mimic) plus Elite-Varianten
+- **Über 20 Gegnertypen** (u. a. Schildträger, Heiler, Grabwurm, Mimic, Giftpilz, Stachelkugel, Goblin-Schamane mit Kriegstotem,
+  Schattenhunde im Rudel, Gespenst, Wasserspeier) plus Elite-Varianten
 - **35 Upgrades** in drei Seltenheitsstufen, davon 12 heldenspezifische, dazu **5 Synergien**,
   die beim Kombinieren bestimmter Upgrades aktiv werden. Die Upgrade-Karten zeigen die genaue Werteänderung.
 - **8 Ereignisse** mit Entscheidungen zwischen Risiko und Belohnung
@@ -82,6 +85,6 @@ npm test
 
 `tests/run-all.js` startet das Spiel in einem Headless-Chromium und prüft per simuliertem Spiel:
 Laufstart, einen ganzen Akt mit jedem Helden, alle Upgrades und Synergien, jede Ereignis-Option,
-alle sechs Bosse, die Tagesherausforderung, Spielstände/Sicherungscode/Neues Spiel+ und die Musik.
+jede Gegnerart, alle sechs Bosse, die Tagesherausforderung, Spielstände/Sicherungscode/Neues Spiel+ und die Musik.
 Der GitHub-Workflow `.github/workflows/test.yml` führt die Tests bei jedem Push aus.
 

@@ -16,7 +16,7 @@ function resize(){
 addEventListener('resize',resize);
 
 const glowCache={};
-function glow(color){
+function glow(color){ if(color.length===4) color='#'+color[1]+color[1]+color[2]+color[2]+color[3]+color[3];
   if(glowCache[color]) return glowCache[color];
   const c=document.createElement('canvas'); c.width=c.height=64; const g=c.getContext('2d');
   const gr=g.createRadialGradient(32,32,0,32,32,32); gr.addColorStop(0,color); gr.addColorStop(0.35,color+'88'); gr.addColorStop(1,color+'00');

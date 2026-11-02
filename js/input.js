@@ -54,7 +54,7 @@ function newPlayer(cid, noMeta){
     count:1, crit:0.05, critMul:2, lifeOnKill:0, regen:0, thorns:0, cdMul:1, goldMul:1, area:1, pierce:c.attack==='arrow'?1:0,
     orbit:0, chain:0, explode:0, frost:0, shield:0, revive:0, atkSpd:1, spdMul:1, dashCdMul:1,
     minions:c.attack==='skull'?3:0, raise:c.attack==='skull'?0.25:0, minionDmg:1, boneArmor:0,
-    wave:0, dashDmg:0, rage:0, split:0, meteor:0, manaShield:0, bounce:0, poison:0, volley:0, shadow:0, atkCount:0 };
+    wave:0, dashDmg:0, rage:0, bleed:c.attack==='axe'?0.6:0, fury:0, furyT:0, expEvery:5, hamDmg:1, split:0, meteor:0, manaShield:0, bounce:0, poison:0, volley:0, shadow:0, atkCount:0 };
 }
 
 function startRun(cid, opts={}){

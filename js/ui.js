@@ -46,6 +46,15 @@ const SKINS={
   nekro:{ base:{nm:'Standard',cape:'#2a7d6c',body:'#1c2a28',trim:'#5affd0',hat:'#14201e',skin:'#d9dcd6',eye:'#5affd0'},
     lich:{nm:'Lichgestalt',ach:'endless',cape:'#3a2a5a',body:'#1a1428',trim:'#c49cf0',hat:'#2a1a40',skin:'#b8c8d0',eye:'#c49cf0'},
     bone:{nm:'Knochenkönigin',ach:'daily',cape:'#d8d0b8',body:'#3a3428',trim:'#ffe08a',hat:'#e8e2d0',skin:'#e8e2d0',eye:'#ff4a3a'} },
+  paladin:{ base:{nm:'Standard',cape:'#f0e8d8',body:'#d9a840',trim:'#fff0b0',hat:'#e6b450',hat2:'#b8862a',belt:'#6b4a2a',hair:'#e8c860'},
+    dark:{nm:'Dunkler Kreuzritter',ach:'no_hit',cape:'#2a1a22',body:'#5a4a5a',trim:'#c84a4a',hat:'#4a3a4a',hat2:'#2a1a22',hair:'#2a1a14'},
+    sun:{nm:'Sonnenwächter',ach:'first_win',cape:'#ff9a3a',body:'#f4f0e0',trim:'#ffd04a',hat:'#ffffff',hat2:'#ffd04a',hair:'#c8642a'} },
+  alchi:{ base:{nm:'Standard',cape:'#4a7a2a',body:'#6b8a3a',trim:'#e6c870',hat:'#8a5a2a',apron:'#c8b088',hair:'#9a4ac8'},
+    toxic:{nm:'Giftmischerin',ach:'kills',cape:'#2a2a3a',body:'#3a5a2a',trim:'#8dff6a',hat:'#1a1a22',apron:'#5a5a4a',hair:'#8dff6a'},
+    royal:{nm:'Hofalchemistin',ach:'all_syn',cape:'#7a1a3a',body:'#a03a5a',trim:'#ffd04a',hat:'#5a1a2a',apron:'#f0e0c0',hair:'#f4e0b0'} },
+  berserk:{ base:{nm:'Standard',cape:'#7a5a3a',body:'#8a2a22',trim:'#d8c8a8',hat:'#9aa0aa',hat2:'#e8e0c8',hair:'#c8402a',paint:'#3a6ac8'},
+    frost:{nm:'Frostbringerin',ach:'all_bosses',cape:'#e8f0f8',body:'#3a6a9a',trim:'#ffffff',hat:'#c8d8e8',hat2:'#ffffff',hair:'#f0f4f8',paint:'#2a4a8a'},
+    ash:{nm:'Aschekriegerin',ach:'elites',cape:'#2a2220',body:'#3a2a26',trim:'#ff7a2a',hat:'#4a4040',hat2:'#2a2020',hair:'#1a1414',paint:'#ff5a1a'} },
 };
 function skinOf(cid){ const S=SKINS[cid]; return Object.assign({skin:'#f1c9a0',eye:'#2a1a14'},S.base,S[(save.skin||{})[cid]]||{}); }
 const ST=()=>save.stats;

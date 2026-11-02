@@ -8,7 +8,7 @@ const URL = 'file://' + path.resolve(__dirname, '..', 'index.html');
 // Bot-Hilfen, die im Browser laufen
 const BOT = `
   window.__bot = function(god, maxSec){
-    let f=0; const melee=CHARS[P.cid].attack==='melee';
+    let f=0; const melee=CHARS[P.cid].range<100;
     while(state==='combat' && G && !G.over && f<30*maxSec){
       const n=nearestEnemy(P,9999);
       if(n){ const a=angTo(P,n), d=dist(P,n), s=d<(melee?50:200)?-1:1; input.jx=Math.cos(a+0.6)*s; input.jy=Math.sin(a+0.6)*s; } else { input.jx=input.jy=0; }
@@ -50,6 +50,12 @@ const tests = {
         for(let i=0;i<cnt;i++){ startRun('krieger'); run.gold=200; run.posId=run.map.rows[2][0].id; run.seen=EVENTS.filter(e=>e!==ev).map(e=>e.id);
           showEvent(); actions.opt(String(i)); if(state==='combat') __bot(true,90); n++; } }
       return {ok:n>=18, options:n}; });
+  },
+  async enemies(pg){ // Jede Gegnerart lässt sich besiegen, ohne dass etwas hängen bleibt
+    return pg.evaluate(()=>{ const out={};
+      for(const k of Object.keys(ENEMIES)){ save.tutDone=true; startRun('krieger'); run.act=3; run.map=genMap(3); run.posId=run.map.rows[3][0].id;
+        startCombat('fight',[[{kind:k},{kind:k},{kind:k}]]); const r=__bot(true,120); out[k]=state!=='combat'; if(state==='combat'){ endRun(false); } }
+      return {ok:Object.values(out).every(Boolean), out}; });
   },
   async bosses(pg){ // Alle sechs Bosse lassen sich besiegen
     return pg.evaluate(()=>{ const out={};
