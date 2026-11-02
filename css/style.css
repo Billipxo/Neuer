@@ -180,7 +180,7 @@ body.lefty #skillBtn{right:auto;left:calc(max(16px, env(safe-area-inset-left,0px
 body.lefty #dashBtn{right:auto;left:calc(max(16px, env(safe-area-inset-left,0px)) + 108px)}
 @media (orientation:landscape) and (max-height:560px){
   .title-block{padding-top:0;gap:6px} .crest{width:64px;height:64px} h1{font-size:30px}
-  .wrap{max-width:760px;gap:10px} .menu-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px} .menu-btns .row,.menu-btns .tiles{grid-column:1/-1} .tiles{grid-template-columns:repeat(4,1fr)}
+  .wrap{max-width:760px;gap:10px} .menu-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px} .menu-btns .row,.menu-btns .tiles{grid-column:1/-1} .tiles{grid-template-columns:repeat(5,1fr)}
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:8px} .mapscreen{height:auto} .mapbox{flex:none;height:500px} .btn{padding:10px 14px}
   #skillBtn{width:70px;height:70px;font-size:30px;bottom:calc(18px + env(safe-area-inset-bottom,0px))} #dashBtn{width:54px;height:54px;bottom:calc(14px + env(safe-area-inset-bottom,0px))}
   #banner{top:22%}
@@ -198,3 +198,8 @@ body.bigui.lefty #dashBtn{right:auto;left:calc(max(16px, env(safe-area-inset-lef
 body.bigui #hud .bar, body.bigui #hpbar{transform-origin:left top}
 /* Im Kampf erscheinen Hinweise unter der Lebensleiste statt darüber */
 #hud:not(.hidden) ~ #toast{top:calc(96px + env(safe-area-inset-top,0px))}
+
+#skillBtn .chg{position:absolute;top:-6px;left:-6px;min-width:24px;height:24px;border-radius:12px;background:var(--gold);color:#1a1320;font:800 14px/24px var(--f-display);text-align:center;box-shadow:0 0 0 2px #1a1320}
+
+.node .rw{position:absolute;right:-8px;top:-8px;font-size:13px;line-height:1;filter:drop-shadow(0 1px 2px #000)}
+.syn.part{opacity:.85;font-size:12px}

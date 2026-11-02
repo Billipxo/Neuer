@@ -32,6 +32,7 @@ function draw(){
     if(c.heart){ ctx.font='16px serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('❤️',c.x,c.y+bob); continue; }
     drawGlow(c.x,c.y,12,'#ffcc44',0.4); ctx.fillStyle='#e6b450'; ctx.beginPath(); ctx.ellipse(c.x,c.y+bob,4.5*Math.abs(Math.cos(G.time*4+c.x))+1.5,4.5,0,0,TAU); ctx.fill(); ctx.fillStyle='#fff3b0'; ctx.fillRect(c.x-1,c.y+bob-2,2,2); }
   // shadows + entities sorted
+  if(G.decoy){ const D=G.decoy; ctx.save(); ctx.globalAlpha=0.35+0.2*Math.sin(G.time*14); ctx.translate(D.x,D.y); ctx.scale(1.12,1.12); drawHeroFigure(P.cid,skinOf(P.cid),{face:D.face,moving:false,anim:0,swing:0,t:G.time}); ctx.restore(); ctx.globalAlpha=1; drawGlow(D.x,D.y,30,'#9fd8ff',0.4); }
   const ents=[...G.enemies, ...G.obs, ...G.allies, P];
   ents.sort((a,b)=>a.y-b.y);
   for(const e of ents){ if(e===P) drawHero(); else if(e.type==='pillar') drawPillar(e); else if(e.type==='barrel') drawBarrel(e); else if(e.max!==undefined && e.life!==undefined && !e.kind) drawAlly(e); else if(e.boss) drawBoss(e); else drawEnemy(e); }
@@ -570,6 +571,8 @@ function drawHazard(h){
 }
 
 function drawPProj(p){
+  if(p.type==='taxe'){ drawShadow(p.x,p.y+14,6); ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.spin); ctx.fillStyle='#5a3a1e'; ctx.fillRect(-1.5,-10,3,20);
+    ctx.fillStyle='#c8ccd4'; ctx.beginPath(); ctx.moveTo(1.5,-10); ctx.quadraticCurveTo(10,-8,9,0); ctx.lineTo(1.5,-3); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(-1.5,-10); ctx.quadraticCurveTo(-10,-8,-9,0); ctx.lineTo(-1.5,-3); ctx.closePath(); ctx.fill(); ctx.restore(); return; }
   if(p.type==='hammer'){ drawShadow(p.x,p.y+14,7); ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.spin);
     drawGlow(0,0,20,'#ffe08a',0.45); ctx.fillStyle='#6b4a2a'; ctx.fillRect(-1.6,-2,3.2,16); ctx.fillStyle='#e6b450'; ctx.fillRect(-2,12,4,3);
     ctx.fillStyle=hLin(-8,-8,8,0,['#ffffff','#c8ccd4','#6a6e78']); ctx.fillRect(-8,-8,16,8); ctx.fillStyle='#e6b450'; ctx.fillRect(-8,-5,16,2); ctx.restore(); return; }
@@ -712,7 +715,9 @@ function updHud(){
   const key=hp+'|'+mh+'|'+run.gold+'|'+run.souls;
   if(key!==hudCache){ hudCache=key; $('hpFill').style.width=(hp/mh*100)+'%'; $('hpText').textContent=hp+' / '+mh; $('hGold').textContent=run.gold; $('hSouls').textContent=run.souls; }
   const cd=CHARS[p.cid].skill.cd*p.cdMul, sb=$('skillBtn');
-  sb.style.setProperty('--p', p.skillT>0?(p.skillT/cd).toFixed(3):0); sb.classList.toggle('ready',p.skillT<=0);
+  const mc=p.maxCharges||1, ch=mc>1?(p.charges??mc):0;
+  sb.style.setProperty('--p', (mc>1?ch>0:p.skillT<=0)?0:(p.skillT>0?(p.skillT/cd).toFixed(3):0)); sb.classList.toggle('ready',mc>1?ch>0:p.skillT<=0);
+  if(mc>1){ let b=sb.querySelector('.chg'); if(!b){ b=document.createElement('span'); b.className='chg'; sb.appendChild(b); } if(b.textContent!==String(ch)) b.textContent=ch; } else { const b=sb.querySelector('.chg'); if(b) b.remove(); }
   const db=$('dashBtn'); db.style.setProperty('--p', p.dashCd>0?(p.dashCd/(1.0*p.dashCdMul)).toFixed(3):0);
   { const cb=$('combo'), left=2.5-(G.time-G.comboLast), on=G.combo>=3&&left>0; cb.classList.toggle('on',on);
     if(on){ if(cb.dataset.n!=String(G.combo)){ cb.dataset.n=G.combo; cb.innerHTML=`x${G.combo}<small>Kombo</small><div class="bar"></div>`; } cb.querySelector('.bar').style.transform=`scaleX(${Math.max(0,left/2.5)})`; } }

@@ -24,6 +24,7 @@ function genMap(act){
     });
     b.forEach((nb,j)=>{ if(!a.some(n=>n.next.includes(nb.id))){ let best=a[0]; for(const n of a) if(Math.abs(n.x-nb.x)<Math.abs(best.x-nb.x)) best=n; best.next.push(nb.id); } });
   }
+  for(const rw of rows) for(const nd of rw) if(nd.type==='fight' && nd.row>0) nd.rw=wpick([['up',58],['rare',16],['gold',14],['heal',12]]);
   const boss={ id:act+'_boss', row:R, x:0.5, type:'boss', next:[] };
   rows[R-1].forEach(n=>n.next.push(boss.id));
   return { rows, boss, R, bossKind:pick(actOf(act).bosses) };
@@ -145,6 +146,7 @@ function showMenu(){
         <button class="btn tile" data-a="ach"><span class="ti">🏅</span>Erfolge${badge(newAch,newAch)}</button>
         <button class="btn tile" data-a="beast"><span class="ti">📖</span>Bestiarium${badge(newBeast,newBeast)}</button>
         <button class="btn tile" data-a="scores"><span class="ti">🏆</span>Ruhmeshalle</button>
+        <button class="btn tile" data-a="codex"><span class="ti">📚</span>Kodex</button>
       </div>
     </div>
     <div class="foot">
@@ -153,7 +155,7 @@ function showMenu(){
       <button class="linkbtn" data-a="slots">💾 ${esc(save.name||'Spielstand')}</button>
       <span>Läufe: ${save.runs}</span>
     </div></div>`,
-  { play:showChars, daily:showDaily, forge:showForge, scores:showScores, ach:showAch, beast:showBeast, help:showHelp,
+  { play:showChars, daily:showDaily, forge:showForge, scores:showScores, ach:showAch, beast:showBeast, help:showHelp, codex:()=>showCodex(showMenu),
     cont:()=>{ run=save.run; resumeRun(); },
     settings:showSettings, slots:showSlots, tipok:()=>{ save.settings.iosTip=true; persist(); showMenu(); } });
 }
@@ -214,7 +216,7 @@ function showSettings(){
     </div>
     <button class="btn" data-a="back">Zurück</button>
     <button class="btn danger" data-a="reset">Diesen Spielstand zurücksetzen</button></div>`,
-  { back:()=>{ if(state==='paused'&&G){ showPause(); } else if(run && state==='ui' && settingsBack) { const f=settingsBack; settingsBack=null; f(); } else showMenu(); },
+  { back:()=>{ if(state==='paused'&&G){ showPause(); } else if(settingsBack) { const f=settingsBack; settingsBack=null; f(); } else showMenu(); },
     speed:()=>{ st.gameSpeed={0.8:1,1:1.2,1.2:1.5,1.5:0.8}[st.gameSpeed||1]||1; persist(); showSettings(); },
     dmg:()=>{ if(st.dmgOff){ st.dmgOff=false; st.dmgNums=true; } else if(st.dmgNums){ st.dmgNums=false; } else { st.dmgOff=true; } persist(); showSettings(); },
     shake:()=>{ if(!st.shake){ st.shake=true; st.shakeAmt=0.5; } else if((st.shakeAmt??1)<1){ st.shakeAmt=1; } else { st.shake=false; } persist(); showSettings(); },
@@ -393,7 +395,8 @@ function showMap(){
   }
   const btns=nodes.map(n=>{
     const cls=['node', n.type==='boss'?'boss':'', av.includes(n.id)?'avail':'', run.visited.includes(n.id)?'done':'', n.id===run.posId?'cur':''].join(' ');
-    return `<button class="${cls}" style="left:${n.x*100}%;top:${ys(n.row)}%" data-a="${av.includes(n.id)?'go':'x'}" data-v="${n.id}" aria-label="${NODE[n.type].nm}">${NODE[n.type].ic}</button>`;
+    const rb=n.type==='fight'&&n.rw&&n.rw!=='up'&&!run.visited.includes(n.id)?`<span class="rw">${{rare:'💎',gold:'💰',heal:'❤️'}[n.rw]}</span>`:'';
+    return `<button class="${cls}" style="left:${n.x*100}%;top:${ys(n.row)}%" data-a="${av.includes(n.id)?'go':'x'}" data-v="${n.id}" aria-label="${NODE[n.type].nm}">${NODE[n.type].ic}${rb}</button>`;
   }).join('');
   const p=run.p;
   render(`<div class="mapscreen">
@@ -401,7 +404,7 @@ function showMap(){
       <div class="row" style="gap:6px"><button class="btn small" data-a="stats">📜 Werte</button><button class="btn small" data-a="menu">☰ Menü</button></div></div>
     <div class="row" style="gap:6px"><span class="pill h">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span><span class="pill s">👻 ${run.souls}</span><span class="pill">${CHARS[run.cid].icon} ${CHARS[run.cid].name}</span></div>
     <div class="mapbox"><svg viewBox="0 0 100 100" preserveAspectRatio="none">${lines}</svg>${btns}</div>
-    <div class="legend">${Object.values(NODE).map(n=>`<span>${n.ic} ${n.nm}</span>`).join('')}</div>
+    <div class="legend">${Object.values(NODE).map(n=>`<span>${n.ic} ${n.nm}</span>`).join('')}<span>💎 Seltene Belohnung</span><span>💰 Gold statt Upgrade</span><span>❤️ Heilung statt Upgrade</span></div>
     <div class="relics">${relicsHtml()}</div>
   </div>`,
   { go:id=>enterNode(id), x:()=>{}, menu:showRunMenu, stats:showRunStats });
@@ -410,17 +413,32 @@ function showMap(){
 function showRunStats(){
   const c=CHARS[run.cid], ups=Object.entries(run.upg);
   render(`<div class="wrap"><div class="eyebrow">${c.icon} ${c.name}</div><h2>Werte und Upgrades</h2>
-    ${statsHtml(run.p)}${synHtml()}
+    ${statsHtml(run.p)}${evoHtml()}${synHtml()}
     <div class="cards">${ups.length?ups.map(([id,n])=>{ const u=UPG[id]; return `<div class="card ${u.r}"><div class="ic">${u.ic}</div><div class="body"><div class="rar">${RAR[u.r]}${n>1?' · Stufe '+n:''}</div><div class="nm">${u.nm}</div><div class="ds">${u.ds}</div></div></div>`; }).join(''):'<p class="sub">Noch keine Upgrades. Besiege Gegner, um welche zu verdienen.</p>'}</div>
     <button class="btn primary" data-a="back">Zurück zur Karte</button></div>`,{ back:showMap },true);
+}
+/* Kodex: alle Synergien mit Rezept und alle Waffen-Entwicklungen – damit man Builds gezielt planen kann */
+function showCodex(back, tab='syn'){
+  const found=save.stats.syns||[], evos=save.stats.evos||[];
+  const synCard=s=>{ const f=found.includes(s.id), act=hasSyn(s.id), only=s.req.map(r=>UPG[r].only).find(Boolean);
+    return `<div class="card ${act?'epic':f?'rare':''}" style="${f||act?'':'opacity:.8'}"><div class="ic">${f?s.ic:'❔'}</div><div class="body"><div class="rar">${act?'Aktiv in diesem Lauf':f?'Entdeckt':'Noch nicht entdeckt'}${only?' · '+CHARS[only[0]].name:''}</div>
+      <div class="nm">${f?s.nm:'???'}</div><div class="ds">${s.req.map(r=>`${UPG[r].ic} ${UPG[r].nm}`).join(' + ')}</div>${f?`<div class="ds" style="color:var(--parch)">${s.ds}</div>`:''}</div></div>`; };
+  const evoHtml=Object.entries(EVOS).map(([cid,list])=>`<div class="eyebrow" style="margin-top:6px">${CHARS[cid].icon} ${CHARS[cid].name}</div><div class="cards">${list.map(e=>{ const f=evos.includes(e.id), act=hasEvo(e.id);
+    return `<div class="card ${act?'epic':f?'rare':''}"><div class="ic">${f?e.ic:'❔'}</div><div class="body"><div class="rar">${act?'Aktiv in diesem Lauf':f?'Entdeckt':'Nach einem Bosskampf wählbar'}</div><div class="nm">${f?e.nm:'???'}</div>${f?`<div class="ds">${e.ds}</div>`:''}</div></div>`; }).join('')}</div>`).join('');
+  render(`<div class="wrap"><div class="eyebrow">${found.length} von ${SYN.length} Synergien · ${evos.length} von ${Object.values(EVOS).flat().length} Entwicklungen</div><h2>Kodex</h2>
+    <div class="skinrow"><button class="skin ${tab==='syn'?'sel':''}" data-a="tab" data-v="syn">🔗 Synergien</button><button class="skin ${tab==='evo'?'sel':''}" data-a="tab" data-v="evo">⚒️ Entwicklungen</button></div>
+    ${tab==='syn'?`<p class="sub" style="font-size:14px">Wähle beide Upgrades eines Rezepts in einem Lauf, um die Synergie auszulösen.</p><div class="cards">${SYN.map(synCard).join('')}</div>`:`<p class="sub" style="font-size:14px">Nach jedem Boss verwandelst du deinen Grundangriff: Du wählst eine von zwei Entwicklungen.</p>${evoHtml}`}
+    <button class="btn" data-a="back">Zurück</button></div>`,{ back, tab:t=>showCodex(back,t) });
 }
 function showRunMenu(){
   render(`<div class="wrap" style="justify-content:center"><h2 class="center">Pause</h2>
     <p class="sub center">Dein Lauf wird automatisch gespeichert, solange du auf der Karte bist.</p>
     <button class="btn primary" data-a="back">Zurück zur Karte</button>
+    <button class="btn" data-a="codex">📚 Kodex</button>
+    <button class="btn" data-a="opts">⚙️ Einstellungen</button>
     <button class="btn" data-a="main">Hauptmenü</button>
     <button class="btn" data-a="quit">Lauf aufgeben</button></div>`,
-  { back:showMap, main:()=>{ save.run=run; persist(); showMenu(); }, quit:confirmQuit },true);
+  { back:showMap, codex:()=>showCodex(showRunMenu), opts:()=>{ settingsBack=showRunMenu; showSettings(); }, main:()=>{ save.run=run; persist(); showMenu(); }, quit:confirmQuit },true);
 }
 function confirmQuit(){
   render(`<div class="wrap" style="justify-content:center"><h2 class="center">Lauf wirklich aufgeben?</h2>
@@ -493,10 +511,10 @@ function eventResult(ev,text){
 }
 
 /* ---- Upgrades ---- */
-function availUpgrades(){ return UPGRADES.filter(u=>(!u.only||u.only.includes(run.cid)) && (!u.max || (run.upg[u.id]||0)<u.max)); }
+function availUpgrades(){ return UPGRADES.filter(u=>(!u.only||u.only.includes(run.cid)) && (!u.max || (run.upg[u.id]||0)<u.max) && !(run.banned||[]).includes(u.id)); }
 function rollUpgrades(n, mode, exclude=[]){
   const L=(run&&run.daily?0:metaLvl('m_luck'))*4;
-  const w={ normal:[62-L,30,8+L], elite:[30-L,48,22+L], treasure:[10,52-L,38+L], boss:[0,45,55] }[mode]||[62,30,8];
+  const w={ normal:[62-L,30,8+L], elite:[30-L,48,22+L], rare:[25-L,50,25+L], treasure:[10,52-L,38+L], boss:[0,45,55] }[mode]||[62,30,8];
   const pool=availUpgrades().filter(u=>!exclude.includes(u.id)&&u.r!=='cursed'), out=[];
   for(let i=0;i<n && pool.length;i++){
     let r=wpick([['common',w[0]],['rare',w[1]],['epic',w[2]]]);
@@ -525,8 +543,15 @@ function previewUpg(u){
   const a=statSheet(run.p), q=JSON.parse(JSON.stringify(run.p)); u.ap(q); const b=statSheet(q);
   return Object.keys(b).filter(k=>a[k]!==b[k]).map(k=>`${k} ${a[k]??0} → ${b[k]}`);
 }
-function synHint(u){ const s=SYN.find(s=>!hasSyn(s.id) && s.req.includes(u.id) && s.req.every(r=>r===u.id||run.upg[r])); return s?`<div class="syn">${s.ic} Ergibt Synergie: ${s.nm}</div>`:''; }
+const synFor=s=>s.req.every(r=>!UPG[r].only||UPG[r].only.includes(run.cid));
+function synHint(u){
+  const done=SYN.find(s=>!hasSyn(s.id) && synFor(s) && s.req.includes(u.id) && s.req.every(r=>r===u.id||run.upg[r]));
+  if(done) return `<div class="syn">${done.ic} Ergibt Synergie: ${done.nm}</div>`;
+  const part=SYN.find(s=>!hasSyn(s.id) && synFor(s) && s.req.includes(u.id) && !run.upg[u.id]);
+  if(part){ const other=part.req.filter(r=>r!==u.id).map(r=>UPG[r]); return `<div class="syn part">🔗 Teil von ${part.ic} ${part.nm} · fehlt: ${other.map(o=>o.ic+' '+o.nm).join(', ')}</div>`; }
+  return ''; }
 function statsHtml(p){ return `<div class="stats" style="grid-template-columns:repeat(3,1fr);background:#0006;border:1px solid var(--iron);border-radius:8px;padding:12px">${Object.entries(statSheet(p)).map(([k,v])=>`<span>${k}<b>${v}</b></span>`).join('')}</div>`; }
+function evoHtml(){ if(!run||!run.evo||!run.evo.length) return ''; const all=Object.values(EVOS).flat(); return `<div class="cards">${run.evo.map(id=>{ const e=all.find(x=>x.id===id); return e?`<div class="card epic"><div class="ic">${e.ic}</div><div class="body"><div class="rar">Waffen-Entwicklung</div><div class="nm">${e.nm}</div><div class="ds">${e.ds}</div></div></div>`:''; }).join('')}</div>`; }
 function synHtml(){ if(!run||!run.syn||!run.syn.length) return ''; return `<div class="cards">${run.syn.map(id=>{ const s=SYN.find(x=>x.id===id); return `<div class="card epic"><div class="ic">${s.ic}</div><div class="body"><div class="rar">Synergie aktiv</div><div class="nm">${s.nm}</div><div class="ds">${s.ds}</div></div></div>`; }).join('')}</div>`; }
 function upgCard(u,extra='',act='pick'){
   const n=run.upg[u.id]||0;
@@ -537,24 +562,54 @@ function upgCard(u,extra='',act='pick'){
 function resumeRun(){
   if(run.won && !run.endless && !run.pend){ showVictory(); return; }
   if(run.room && run.p.hp>0){ const t=run.room; toast('<b>Raum wird neu gestartet</b>'); startCombat(t); return; }
-  if(run.pend){ const a={map:showMap,next:nextAct,victory:showVictory}[run.pend.after]||showMap; showReward(run.pend.mode,a); return; }
+  if(run.pend){ const a={map:showMap,next:()=>showEvo(nextAct),victory:showVictory}[run.pend.after]||showMap; if(run.pend.mode==='evo') showEvo(nextAct); else showReward(run.pend.mode,a); return; }
   showMap();
 }
-function showReward(mode, after, offer){
-  state='ui'; { const a0=after; after=()=>{ if(run) run.pend=null; a0(); }; }
+function showReward(mode, after, offer, banMode){
+  state='ui'; if(!after.wrapped){ const a0=after; after=()=>{ if(run) run.pend=null; a0(); }; after.wrapped=true; }
+  if(mode==='gold'||mode==='heal') return showBounty(mode, after);
   offer = offer || seeded(roomKey('reward')+'|'+run.rooms,()=>{ const o=rollUpgrades(3, mode); const cur=availUpgrades().filter(u=>u.r==='cursed');
     if(mode!=='normal' && cur.length && o.length===3 && RNG()<0.35) o[2]=pick(cur); return o; });
-  const title={ normal:'Sieg!', elite:'Elite bezwungen!', treasure:'Ein Schatz!', boss:'Der Boss ist gefallen!' }[mode];
+  const title={ normal:'Sieg!', rare:'Seltene Beute!', elite:'Elite bezwungen!', treasure:'Ein Schatz!', boss:'Der Boss ist gefallen!' }[mode];
   render(`<div class="wrap"><div class="eyebrow">Wähle eine Belohnung</div><h2>${title}</h2>
     <div class="row" style="gap:6px"><span class="pill h">❤️ ${Math.ceil(run.p.hp)}/${Math.round(run.p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span></div>
-    <div class="cards">${offer.map(u=>upgCard(u)).join('')}</div>
-    <div class="row">${run.rerolls>0?`<button class="btn" data-a="reroll">🎲 Neu würfeln (${run.rerolls})</button>`:''}
-      <button class="btn" data-a="skip">Überspringen (+15 💰)</button></div></div>`,
+    ${banMode?`<p class="sub" style="color:#ffb3ad">Tippe ein Upgrade an, um es für diesen Lauf zu verbannen. Es wird ersetzt und taucht nie wieder auf.</p>`:''}
+    <div class="cards">${offer.map(u=>upgCard(u,'',banMode?'ban':'pick')).join('')}</div>
+    <div class="row">${run.rerolls>0&&!banMode?`<button class="btn" data-a="reroll">🎲 Neu würfeln (${run.rerolls})</button>`:''}
+      ${(run.bans??1)>0?`<button class="btn ${banMode?'danger':''}" data-a="banm">${banMode?'Abbrechen':'🚫 Verbannen ('+(run.bans??1)+')'}</button>`:''}
+      ${banMode?'':`<button class="btn" data-a="skip">Überspringen (+15 💰)</button>`}</div></div>`,
   { pick:id=>{ const ns=applyUpgrade(UPG[id]); ns.length?showSynergy(ns,after):after(); },
     reroll:()=>{ run.rerolls--; showReward(mode, after, rollUpgrades(3,mode,offer.map(u=>u.id))); },
+    banm:()=>showReward(mode, after, offer, !banMode),
+    ban:id=>{ run.banned=run.banned||[]; run.banned.push(id); run.bans=(run.bans??1)-1; const rep=rollUpgrades(1,mode,offer.map(u=>u.id))[0];
+      const no=offer.map(u=>u.id===id?rep:u).filter(Boolean); sfx('boom'); showReward(mode, after, no, false); },
     skip:()=>{ run.gold+=15; after(); } },true);
 }
 
+// Belohnung statt Upgrade (auf der Karte angekündigt)
+function showBounty(mode, after){
+  const p=run.p; let txt;
+  if(mode==='gold'){ const g=Math.round((70+20*run.act)*(1+0.1*(run.ng||0))); run.gold+=g; run.goldTotal+=g; txt=`Du findest einen prall gefüllten Beutel: <b style="color:var(--gold)">+${g} Gold</b>.`; sfx('coin'); }
+  else { const h=Math.round(p.maxHp*0.4); p.maxHp+=5; p.hp=Math.min(p.maxHp,p.hp+h+5); txt=`Eine Heilquelle sprudelt in der Arena: <b style="color:#7dff8a">+${h} LP</b> und dauerhaft +5 max. LP.`; sfx('pick'); }
+  render(`<div class="wrap" style="justify-content:center"><div class="eyebrow center">Belohnung</div><h2 class="center">${mode==='gold'?'💰 Goldfund':'❤️ Heilquelle'}</h2>
+    <p class="sub center" style="font-size:17px;color:var(--parch)">${txt}</p>
+    <div class="row" style="gap:6px;justify-content:center"><span class="pill h">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span></div>
+    <button class="btn primary" data-a="next">Weiter</button></div>`,{ next:after },true);
+}
+// Waffen-Entwicklung nach einem Boss: eine von zwei Verwandlungen des Grundangriffs
+function showEvo(after){
+  const all=EVOS[run.cid]||[], left=all.filter(e=>!(run.evo||[]).includes(e.id));
+  if(!left.length){ after(); return; }
+  const offer=seeded(roomKey('evo')+'|'+run.act,()=>shuffle(left.slice()).slice(0,2));
+  run.pend={mode:'evo',after:'next'}; save.run=run; persist();
+  render(`<div class="wrap"><div class="eyebrow">Die Waffenschmiede der Arena</div><h2>Waffe entwickeln</h2>
+    <p class="sub">Dein Grundangriff verwandelt sich dauerhaft für diesen Lauf. Wähle weise – es gibt nur eine Wahl pro Boss.</p>
+    <div class="cards">${offer.map(e=>`<button class="card epic reward-card" data-a="evo" data-v="${e.id}"><div class="ic">${e.ic}</div><div class="body"><div class="rar">Entwicklung · ${CHARS[run.cid].name}</div><div class="nm">${e.nm}</div><div class="ds">${e.ds}</div></div></button>`).join('')}</div></div>`,
+  { evo:id=>{ run.evo=run.evo||[]; run.evo.push(id); const p=run.p;
+      if(id==='n_grave') p.raise+=0.25; if(id==='b_rage') p.furyMax=15;
+      if(!save.stats.evos) save.stats.evos=[]; if(!save.stats.evos.includes(id)) save.stats.evos.push(id);
+      run.pend=null; sfx('skill'); after(); } },true);
+}
 function showShop(stock){
   if(!stock){
     const priceOf=u=>Math.round(({common:45,rare:80,epic:130,cursed:60})[u.r]*(1+0.15*(run.act-1))*(run.p.shopMul||1));
@@ -585,8 +640,12 @@ function showRest(){
     <div class="cards">
       <button class="card common" data-a="heal" ${(runMod()||{}).noRestHeal||p.noRest?'disabled':''}><div class="ic">😴</div><div class="body"><div class="nm">Ausruhen</div><div class="ds">${(runMod()||{}).noRestHeal?'Der Blutmond verhindert jede Heilung.':p.noRest?'Der Blutpakt verweigert dir die Ruhe.':'Heilt '+heal+' LP'}</div></div></button>
       <button class="card rare" data-a="train"><div class="ic">🏋️</div><div class="body"><div class="nm">Trainieren</div><div class="ds">+10 max. LP und +8 % Schaden</div></div></button>
+      ${Object.keys(run.upg).some(id=>UPG[id]&&UPG[id].r==='cursed')?`<button class="card cursed" data-a="purge"><div class="ic">🕯️</div><div class="body"><div class="nm">Läutern</div><div class="ds">Entferne einen Fluch samt seinem Vorteil.</div></div></button>`:''}
     </div></div>`,
-  { heal:()=>{ p.hp=Math.min(p.maxHp,p.hp+heal); sfx('pick'); showMap(); },
+  { purge:()=>{ const list=Object.keys(run.upg).filter(id=>UPG[id]&&UPG[id].r==='cursed');
+      render(`<div class="wrap" style="justify-content:center"><h2>Welchen Fluch läutern?</h2><div class="cards">${list.map(id=>upgCard(UPG[id],'','rm')).join('')}</div><button class="btn" data-a="back">Zurück</button></div>`,
+      { rm:id=>{ const up=UPG[id]; if(up.un) up.un(run.p); delete run.upg[id]; run.p.hp=Math.min(run.p.hp,run.p.maxHp); sfx('skill'); toast(`<span style="font-size:24px">🕯️</span><div><b>${up.nm}</b> wurde geläutert.</div>`); showMap(); }, back:showRest },true); },
+    heal:()=>{ p.hp=Math.min(p.maxHp,p.hp+heal); sfx('pick'); showMap(); },
     train:()=>{ p.maxHp+=10; p.hp+=10; p.dmg*=1.08; sfx('pick'); showMap(); } },true);
 }
 

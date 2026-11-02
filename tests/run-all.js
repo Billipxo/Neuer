@@ -31,6 +31,7 @@ const tests = {
           const a=Object.keys(actions);
           if(a.includes('go') && ui.querySelector('.mapbox')) { enterNode(availNodes()[0]); rooms++; }
           else if(a.includes('pick')) actions.pick(ui.querySelector('[data-a=pick]').dataset.v);
+          else if(a.includes('evo')) actions.evo(ui.querySelector('[data-a=evo]').dataset.v);
           else if(a.includes('opt')) actions.opt(ui.querySelector('[data-a=opt]:not([disabled])').dataset.v);
           else if(a.includes('next')) actions.next(); else if(a.includes('leave')) actions.leave(); else if(a.includes('heal')) actions.heal();
           else return {ok:false, hero:ch, actions:a}; }
@@ -41,8 +42,9 @@ const tests = {
     return pg.evaluate(()=>{ const syn={};
       for(const ch of Object.keys(CHARS)){ save.tutDone=true; startRun(ch);
         for(const u of UPGRADES){ if(u.only&&!u.only.includes(ch)) continue; for(let i=0;i<(u.max||2);i++) applyUpgrade(u); }
-        syn[ch]=run.syn.length; run.posId=run.map.rows[3][0].id; startCombat('elite'); __bot(true,60); }
-      return {ok:Object.values(syn).every(n=>n===SYN.length), syn}; });
+        syn[ch]=[run.syn.length, SYN.filter(s=>s.req.every(r=>!UPG[r].only||UPG[r].only.includes(ch))).length];
+        run.evo=EVOS[ch].map(e=>e.id); run.p.furyMax=15; run.posId=run.map.rows[3][0].id; startCombat('elite'); __bot(true,60); useSkill(); __bot(true,30); }
+      return {ok:Object.values(syn).every(([a,b])=>a===b), syn}; });
   },
   async events(pg){ // Jede Ereignis-Option lässt sich wählen
     return pg.evaluate(()=>{ let n=0;
@@ -83,8 +85,8 @@ const tests = {
       saveNow(); const s1=readSlot(slotIdx).run; run=null; G=null; state='menu';
       run=s1; resumeRun(); const r1=state==='combat' && run.posId===id && G && G.type===run.room;
       __bot(true,240); const pendMode=run&&run.pend&&run.pend.mode; saveNow(); const s2=readSlot(slotIdx).run; run=s2; resumeRun();
-      const r2=!!ui.querySelector('[data-a=pick]');
-      actions.skip(); const r3=!run.pend && !!ui.querySelector('.mapbox');
+      const r2=!!ui.querySelector('[data-a=pick]')||!!ui.querySelector('[data-a=next]');
+      (actions.skip||actions.next)(); const r3=!run.pend && !!ui.querySelector('.mapbox');
       return {ok:r1&&!!pendMode&&r2&&r3, r1, pendMode, r2, r3}; });
   },
   async music(pg){ // Musik-Engine spielt alle Stücke inklusive B-Teil fehlerfrei
