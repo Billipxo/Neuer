@@ -187,7 +187,7 @@ function updPlayer(dt){
   const c=CHARS[p.cid];
   heroPassives(p,dt);
   const reach = (c.attack==='melee'||c.attack==='axe') ? p.range*p.area+26 : p.range*(c.attack==='bolt'?1:1)*Math.sqrt(p.area);
-  const tgt=nearestEnemy(p, reach, null, c.attack!=='melee'&&c.attack!=='axe'&&c.attack!=='flask');
+  const tgt=pickTarget(p, reach, c.attack!=='melee'&&c.attack!=='axe'&&c.attack!=='flask');
   if(tgt) p.face=angTo(p,tgt); else if(p.moving) p.face=Math.atan2(my,mx);
   p.atkT-=dt;
   if(p.atkT<=0 && tgt && p.spin<=0 && !p.leap){ attack(tgt); p.atkT=p.rate/p.atkSpd/(p.rage&&p.hp<p.maxHp*0.5?1.4:1)/(1+0.06*(p.fury||0)); }
@@ -237,6 +237,14 @@ function flaskLand(pr){
     if(k==='frost'){ for(const e of G.enemies) if(!e.dead && Math.hypot(e.x-x,e.y-y)<85*A+e.r) e.freeze=e.boss?0.5:1.6; G.fx.push({type:'ring',x,y,r:85*A,t:0,life:0.4,color:'#9fe6ff',fill:true}); }
     else if(k==='boom'){ explosion(x,y,85*A,pr.dmg*1.6,'#ffb03a'); G.shake+=4; }
     else { const h=Math.round(p.maxHp*0.08); p.hp=Math.min(p.maxHp,p.hp+h); G.texts.push({x:p.x,y:p.y-30,s:'+'+h,c:'#7dff8a',t:0}); G.fx.push({type:'ring',x,y,r:60,t:0,life:0.4,color:'#ff7ab0',fill:true}); } }
+}
+// Zielwahl: nächster Gegner, aber Heiler und Totems werden bevorzugt, Schildträger von vorne gemieden
+function pickTarget(p,maxD,needLos){
+  let best=null,bs=1e9;
+  for(const e of G.enemies){ if(e.dead||(e.alpha!==undefined&&e.alpha<0.3)||e.under) continue; const d=Math.hypot(e.x-p.x,e.y-p.y)-e.r; if(d>maxD) continue; if(needLos && !los(p,e)) continue;
+    let s=d; if(e.ai==='healer'||e.kind==='totem'||e.kind==='shaman') s-=90; if(e.kind==='shield' && Math.abs(angDiff(Math.atan2(p.y-e.y,p.x-e.x),e.face))<1.1) s+=140; if(e.stone) s+=160;
+    if(s<bs){ bs=s; best=e; } }
+  return best;
 }
 function nearestEnemy(from,maxD,exclude,needLos){
   let best=null,bd=maxD;
@@ -513,7 +521,7 @@ function updEnemy(e,dt){
       else { mx=Math.cos(a+Math.PI/2)*e.dir*0.6; my=Math.sin(a+Math.PI/2)*e.dir*0.6; if(Math.random()<dt*0.4) e.dir*=-1; }
       e.timer-=dt*sm; if(e.st>0) e.st-=dt;
       if(e.timer<=0){ e.timer=3.2; e.st=0.5;
-        for(const o of G.enemies){ if(o.dead||o.boss||o.hp>=o.maxHp||Math.hypot(o.x-e.x,o.y-e.y)>230) continue;
+        for(const o of G.enemies){ if(o.dead||o.boss||o.hp>=o.maxHp||Math.hypot(o.x-e.x,o.y-e.y)>230||(o.healCd||0)>G.time) continue; o.healCd=G.time+3;
           o.hp=Math.min(o.maxHp,o.hp+o.maxHp*0.2); G.fx.push({type:'beam',x:e.x,y:e.y-10,x2:o.x,y2:o.y,t:0,life:0.4}); G.texts.push({x:o.x,y:o.y-o.r-8,s:'+',c:'#7dff8a',big:true,t:0}); } }
       break; }
     case 'burrow':
@@ -715,7 +723,7 @@ function updProjectiles(dt){
       else if(pr.bounce>0){ pr.bounce--; if(pr.x<0||pr.x>AW) pr.vx=-pr.vx; if(pr.y<0||pr.y>AH) pr.vy=-pr.vy; pr.x=clamp(pr.x,0,AW); pr.y=clamp(pr.y,0,AH); pr.hit.clear(); pr.life=Math.max(pr.life,0.35); burst(pr.x,pr.y,4,'#ffe08a',80); }
       else pr.life=0; }
     if(pr.life<=0) continue;
-    { const o=solidHit(pr.x,pr.y,pr.r); if(o){ if(o.type==='barrel') blowBarrel(o);
+    { const o=solidHit(pr.x,pr.y,Math.min(pr.r,5)); if(o){ if(o.type==='barrel') blowBarrel(o);
         if(pr.type==='hammer'){ if(!pr.back){ pr.back=true; pr.hit.clear(); burst(pr.x,pr.y,4,'#ffe08a',80); } }
         else if(pr.type!=='wave'){ pr.life=0; burst(pr.x,pr.y,5,pr.type==='bolt'?'#c58cff':'#b8b0a0',90); continue; } } }
     for(const e of G.enemies){
