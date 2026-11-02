@@ -424,7 +424,7 @@ function availUpgrades(){ return UPGRADES.filter(u=>(!u.only||u.only.includes(ru
 function rollUpgrades(n, mode, exclude=[]){
   const L=(run&&run.daily?0:metaLvl('m_luck'))*4;
   const w={ normal:[62-L,30,8+L], elite:[30-L,48,22+L], treasure:[10,52-L,38+L], boss:[0,45,55] }[mode]||[62,30,8];
-  const pool=availUpgrades().filter(u=>!exclude.includes(u.id)), out=[];
+  const pool=availUpgrades().filter(u=>!exclude.includes(u.id)&&u.r!=='cursed'), out=[];
   for(let i=0;i<n && pool.length;i++){
     let r=wpick([['common',w[0]],['rare',w[1]],['epic',w[2]]]);
     let opts=pool.filter(u=>u.r===r && !out.includes(u)); if(!opts.length) opts=pool.filter(u=>!out.includes(u)); if(!opts.length) break;
@@ -445,7 +445,7 @@ function statSheet(p){
     'Tempo':Math.round(p.speed*p.spdMul), 'Krit':Math.round(p.crit*100)+' %', 'Fläche':Math.round(p.area*100)+' %', 'Gold':Math.round(p.goldMul*100)+' %',
     'Geschosse':p.count, 'Fähigkeit':(c.skill.cd*p.cdMul).toFixed(1)+' s', 'Ausweichen':(1.3*p.dashCdMul).toFixed(1)+' s' };
   if(p.minions){ s['Diener']=p.minions; s['Erweckung']=Math.round(p.raise*100)+' %'; }
-  if(p.regen) s['Regeneration']=p.regen.toFixed(1)+'/s'; if(p.pierce) s['Durchschlag']=p.pierce; if(p.lifeOnKill) s['LP pro Kill']=p.lifeOnKill; if(p.thorns) s['Dornen']=p.thorns;
+  if(p.regen) s['Regeneration']=p.regen.toFixed(1)+'/s'; if(p.pierce) s['Durchschlag']=p.pierce; if(p.lifeOnKill) s['LP pro Kill']=p.lifeOnKill; if(p.thorns) s['Dornen']=p.thorns; if(p.dmgTaken&&p.dmgTaken!==1) s['Erlittener Schaden']='+'+Math.round((p.dmgTaken-1)*100)+' %'; if(p.drain) s['LP-Verlust']=p.drain+'/s';
   return s;
 }
 function previewUpg(u){
@@ -462,7 +462,8 @@ function upgCard(u,extra='',act='pick'){
 }
 function showReward(mode, after, offer){
   state='ui';
-  offer = offer || seeded(roomKey('reward')+'|'+run.rooms,()=>rollUpgrades(3, mode));
+  offer = offer || seeded(roomKey('reward')+'|'+run.rooms,()=>{ const o=rollUpgrades(3, mode); const cur=availUpgrades().filter(u=>u.r==='cursed');
+    if(mode!=='normal' && cur.length && o.length===3 && RNG()<0.35) o[2]=pick(cur); return o; });
   const title={ normal:'Sieg!', elite:'Elite bezwungen!', treasure:'Ein Schatz!', boss:'Der Boss ist gefallen!' }[mode];
   render(`<div class="wrap"><div class="eyebrow">Wähle eine Belohnung</div><h2>${title}</h2>
     <div class="row" style="gap:6px"><span class="pill h">❤️ ${Math.ceil(run.p.hp)}/${Math.round(run.p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span></div>
@@ -476,8 +477,8 @@ function showReward(mode, after, offer){
 
 function showShop(stock){
   if(!stock){
-    const priceOf=u=>Math.round(({common:45,rare:80,epic:130})[u.r]*(1+0.15*(run.act-1)));
-    stock={ items:seeded(roomKey('shop'),()=>rollUpgrades(4,'elite')).map(u=>({id:u.id, price:priceOf(u), sold:false})), potion:{price:30+run.act*5, sold:false} };
+    const priceOf=u=>Math.round(({common:45,rare:80,epic:130,cursed:60})[u.r]*(1+0.15*(run.act-1))*(run.p.shopMul||1));
+    stock={ items:seeded(roomKey('shop'),()=>{ const o=rollUpgrades(4,'elite'); const cur=availUpgrades().filter(u=>u.r==='cursed'); if(cur.length && RNG()<0.3) o.push(pick(cur)); return o; }).map(u=>({id:u.id, price:priceOf(u), sold:false})), potion:{price:Math.round((30+run.act*5)*(run.p.shopMul||1)), sold:false} };
   }
   const p=run.p;
   const potionHeal=Math.round(p.maxHp*0.4);
@@ -502,7 +503,7 @@ function showRest(){
     <p class="sub">Die Flammen knistern. Du hast Zeit für genau eine Sache.</p>
     <span class="pill h" style="align-self:flex-start">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span>
     <div class="cards">
-      <button class="card common" data-a="heal" ${(runMod()||{}).noRestHeal?'disabled':''}><div class="ic">😴</div><div class="body"><div class="nm">Ausruhen</div><div class="ds">${(runMod()||{}).noRestHeal?'Der Blutmond verhindert jede Heilung.':'Heilt '+heal+' LP'}</div></div></button>
+      <button class="card common" data-a="heal" ${(runMod()||{}).noRestHeal||p.noRest?'disabled':''}><div class="ic">😴</div><div class="body"><div class="nm">Ausruhen</div><div class="ds">${(runMod()||{}).noRestHeal?'Der Blutmond verhindert jede Heilung.':p.noRest?'Der Blutpakt verweigert dir die Ruhe.':'Heilt '+heal+' LP'}</div></div></button>
       <button class="card rare" data-a="train"><div class="ic">🏋️</div><div class="body"><div class="nm">Trainieren</div><div class="ds">+10 max. LP und +8 % Schaden</div></div></button>
     </div></div>`,
   { heal:()=>{ p.hp=Math.min(p.maxHp,p.hp+heal); sfx('pick'); showMap(); },

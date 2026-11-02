@@ -175,6 +175,7 @@ function updPlayer(dt){
   if(p.kbx||p.kby){ p.x=clamp(p.x+p.kbx*dt,p.r,AW-p.r); p.y=clamp(p.y+p.kby*dt,p.r,AH-p.r); const kd=Math.min(1,dt*9); p.kbx-=p.kbx*kd; p.kby-=p.kby*kd; if(Math.abs(p.kbx)+Math.abs(p.kby)<3) p.kbx=p.kby=0; }
   if(p.inv>0)p.inv-=dt; if(p.swingT>0)p.swingT-=dt; if(p.skillT>0)p.skillT-=dt;
   if(p.regen>0 && p.hp<p.maxHp){ p.hp=Math.min(p.maxHp,p.hp+p.regen*dt); }
+  if(p.drain && !G.cleared && p.hp>1) p.hp=Math.max(1,p.hp-p.drain*dt);
   if(p.manaShield && p.shieldLeft<=0){ p.msT+=dt; if(p.msT>=10){ p.msT=0; p.shieldLeft=1; G.fx.push({type:'ring',x:p.x,y:p.y,r:34,t:0,life:0.4,color:'#7fb4ff'}); } }
   const c=CHARS[p.cid];
   const reach = c.attack==='melee' ? p.range*p.area+26 : p.range*(c.attack==='bolt'?1:1)*Math.sqrt(p.area);
@@ -630,7 +631,7 @@ function updTraps(dt){
 function hurtPlayer(dmg,src,via){
   const p=P; if(p.inv>0||p.dashI>0||G.over||G.cleared) return;
   if(p.shieldLeft>0){ p.shieldLeft--; p.inv=0.7; G.fx.push({type:'ring',x:p.x,y:p.y,r:30,t:0,life:0.35,color:'#7fd4ff'}); G.texts.push({x:p.x,y:p.y-26,s:'Geblockt',c:'#7fd4ff',t:0}); sfx('pick'); return; }
-  const d=Math.max(1,Math.round((dmg-p.armor-(p.boneArmor?G.allies.length:0))*(p.spin>0?0.5:1)));
+  const d=Math.max(1,Math.round((dmg*(p.dmgTaken||1)-p.armor-(p.boneArmor?G.allies.length:0))*(p.spin>0?0.5:1)));
   hype(-0.06); G.combo=0; if(G.type==='boss') G.bossHit=true; p.hurtT=0.25;
   if(src){ const ka=Math.atan2(p.y-src.y,p.x-src.x); p.kbx=Math.cos(ka)*260; p.kby=Math.sin(ka)*260; }
   { const at=src&&src.affix?src:(via&&via.affix?via:null);

@@ -121,6 +121,7 @@ h3{font-size:16px}
 .card.common{border-color:#6f675e} .card.common .rar{color:var(--c-common)}
 .card.rare{border-color:var(--c-rare);box-shadow:0 0 14px #5aa9ff33} .card.rare .rar{color:var(--c-rare)}
 .card.epic{border-color:var(--c-epic);box-shadow:0 0 18px #c77dff44} .card.epic .rar{color:var(--c-epic)}
+.card.cursed{border-color:#b0283c;box-shadow:0 0 18px #ff2a4a44;background:linear-gradient(170deg,#311a24,#1a0f14)} .card.cursed .rar{color:#ff6a7a}
 .card.sel{border-color:var(--gold)}
 .card .price{margin-left:auto;align-self:center;flex:none}
 .card:disabled{opacity:.5}

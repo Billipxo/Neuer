@@ -60,7 +60,7 @@ const AFFIXES = {
   frost: { ic:'❄️', nm:'Frostig',    ds:'seine Treffer verlangsamen dich' },
   summon:{ ic:'🦇', nm:'Beschwörer', ds:'ruft regelmäßig Fledermäuse' },
 };
-const RAR = { common:'Gewöhnlich', rare:'Selten', epic:'Episch' };
+const RAR = { common:'Gewöhnlich', rare:'Selten', epic:'Episch', cursed:'Verflucht' };
 const UPGRADES = [
   { id:'dmg',   r:'common', ic:'⚔️', nm:'Geschärfte Waffe', ds:'+15 % Schaden',               ap:p=>p.dmg*=1.15 },
   { id:'rate',  r:'common', ic:'🗡️', nm:'Flinke Hände',     ds:'+12 % Angriffstempo',         ap:p=>p.atkSpd*=1.12 },
@@ -99,6 +99,13 @@ const UPGRADES = [
   { id:'legion',r:'rare',   ic:'💀', nm:'Legion',           ds:'+2 max. Diener und +15 % Dienerschaden', ap:p=>{p.minions+=2;p.minionDmg*=1.15;}, max:3, only:['nekro'] },
   { id:'reap',  r:'rare',   ic:'🌾', nm:'Seelenernte',      ds:'+20 % Chance, Gegner als Diener zu erwecken', ap:p=>p.raise+=0.2, max:2, only:['nekro'] },
   { id:'bones', r:'epic',   ic:'🦴', nm:'Knochenpanzer',    ds:'Jeder aktive Diener verringert erlittenen Schaden um 1', ap:p=>p.boneArmor=1, max:1, only:['nekro'] },
+  // Verfluchte Relikte: stark, aber mit Nachteil
+  { id:'c_glass', r:'cursed', ic:'💔', nm:'Gläsernes Herz', ds:'+60 % Schaden, aber −35 % max. LP', ap:p=>{p.dmg*=1.6; p.maxHp=Math.max(30,Math.round(p.maxHp*0.65)); p.hp=Math.min(p.hp,p.maxHp);}, max:1 },
+  { id:'c_greed', r:'cursed', ic:'🪙', nm:'Fluch der Gier', ds:'Doppeltes Gold von Gegnern, aber Händler verlangen 50 % mehr', ap:p=>{p.goldMul*=2; p.shopMul=(p.shopMul||1)*1.5;}, max:1 },
+  { id:'c_blood', r:'cursed', ic:'🍷', nm:'Blutpakt', ds:'+35 % Angriffstempo, aber Lagerfeuer heilen dich nicht mehr', ap:p=>{p.atkSpd*=1.35; p.noRest=1;}, max:1 },
+  { id:'c_frenzy',r:'cursed', ic:'😵', nm:'Raserei', ds:'+25 % Tempo und Schaden, aber im Kampf verlierst du 1 LP pro Sekunde', ap:p=>{p.spdMul*=1.25; p.dmg*=1.25; p.drain=(p.drain||0)+1;}, max:1 },
+  { id:'c_hex',   r:'cursed', ic:'🕯️', nm:'Hexenmal', ds:'Fähigkeit lädt doppelt so schnell, aber Gegner verursachen 20 % mehr Schaden', ap:p=>{p.cdMul*=0.5; p.dmgTaken=(p.dmgTaken||1)*1.2;}, max:1 },
+  { id:'c_bones', r:'cursed', ic:'☠️', nm:'Knochenkrone', ds:'+2 Geschosse bzw. Schwerthiebe, aber Ausweichen lädt doppelt so lang', ap:p=>{p.count+=2; p.dashCdMul*=2;}, max:1 },
   { id:'volley',r:'epic',   ic:'🎐', nm:'Pfeilsalve',       ds:'Jeder 4. Angriff feuert zusätzlich einen Fächer aus 5 Pfeilen', ap:p=>p.volley=1, max:1, only:['jaegerin'] },
 ];
 const SYN = [
