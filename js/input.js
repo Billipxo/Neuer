@@ -49,8 +49,8 @@ let run=null, G=null, P=null;
 
 function newPlayer(cid, noMeta){
   const ml=id=>noMeta?0:metaLvl(id);
-  const c=CHARS[cid], hp=c.hp+ml('m_hp')*8;
-  return { cid, maxHp:hp, hp, speed:c.speed, dmg:c.dmg*(1+0.06*ml('m_dmg')), rate:c.rate, range:c.range, armor:c.armor,
+  const hl=noMeta?0:heroLvl(cid), c=CHARS[cid], hp=c.hp+ml('m_hp')*8+hl*3;
+  return { cid, maxHp:hp, hp, speed:c.speed, dmg:c.dmg*(1+0.06*ml('m_dmg'))*(1+0.02*hl), rate:c.rate, range:c.range, armor:c.armor,
     count:1, crit:0.05, critMul:2, lifeOnKill:0, regen:0, thorns:0, cdMul:1, goldMul:1, area:1, pierce:c.attack==='arrow'?1:0,
     orbit:0, chain:0, explode:0, frost:0, shield:0, revive:0, atkSpd:1, spdMul:1, dashCdMul:1,
     minions:c.attack==='skull'?3:0, raise:c.attack==='skull'?0.25:0, minionDmg:1, boneArmor:0,

@@ -274,6 +274,8 @@ function showChars(){
       <div class="ic" style="background:${c.color}44">${c.icon}</div>
       <div class="body"><div class="nm">${c.name}</div><div class="ds">${c.desc}</div>
         <div class="ds" style="color:var(--parch)">${c.skill.icon} <b>${c.skill.name}:</b> ${c.skill.desc}</div>${c.passive?`<div class="ds" style="color:var(--gold)">${c.passive}</div>`:''}
+        ${un?(()=>{ const L=heroLvl(id), xp=(save.heroXp||{})[id]||0, a=xpFor(L), b=xpFor(L+1);
+          return `<div class="ds" style="font-size:13px;color:var(--parch)">⭐ Stufe ${L}${L?` · +${L*3} LP, +${L*2} % Schaden`:''}</div>${L<HERO_MAX?`<div style="height:5px;background:#0008;border:1px solid var(--iron);border-radius:3px;overflow:hidden;margin:2px 0 4px"><div style="height:100%;width:${Math.min(100,(xp-a)/(b-a)*100)}%;background:var(--gold)"></div></div>`:''}`; })():''}
         <div class="stats"><span>LP<b>${c.hp}</b></span><span>Schaden<b>${c.dmg}</b></span><span>Tempo<b>${c.speed}</b></span><span>Reichw.<b>${c.range}</b></span></div>
       </div>
       ${un?'':`<span class="pill s price">🔒 ${c.cost} 👻</span>`}

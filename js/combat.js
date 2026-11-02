@@ -705,6 +705,9 @@ function endRun(won){
   const entry={score,cid:r.cid,act:r.act,won,ng:r.ng||0,endless:!!r.endless,daily:!!r.daily,date:new Date().toLocaleDateString('de-DE')};
   let dailyBest=false;
   if(r.daily){ if(!save.daily||save.daily.key!==r.daily) save.daily={key:r.daily,best:0,tries:0}; save.daily.tries++; if(score>save.daily.best){ save.daily.best=score; dailyBest=true; } }
+  const gainXp=Math.round((r.kills+r.rooms*5+r.bosses*60+(won?150:0))*(1+0.5*(r.ng||0))), lvl0=heroLvl(r.cid);
+  save.heroXp=save.heroXp||{}; save.heroXp[r.cid]=(save.heroXp[r.cid]||0)+gainXp; const lvl1=heroLvl(r.cid);
+  if(lvl1>lvl0) setTimeout(()=>toast(`<span style="font-size:26px">⭐</span><div><div class="eyebrow" style="color:var(--gold)">Stufenaufstieg</div><b>${CHARS[r.cid].name} erreicht Stufe ${lvl1}</b><div class="sub" style="font-size:13px">Jetzt +${lvl1*3} LP und +${lvl1*2} % Schaden zu Beginn jedes Laufs</div></div>`),300);
   { const S=save.stats; S.maxGold=Math.max(S.maxGold,r.goldTotal); if(won){ S.anyWin=true; S.wins[r.cid]=1; if(r.daily) S.dailyWin=true; } if(r.endless) S.maxEndless=Math.max(S.maxEndless,r.act); }
   save.scores.push(entry); save.scores.sort((a,b)=>b.score-a.score); save.scores=save.scores.slice(0,10);
   const rank=save.scores.indexOf(entry); persist();
@@ -715,6 +718,7 @@ function endRun(won){
     <h1 style="margin-top:8px">${r.endless?'Legende!':won?'Triumph!':'Gefallen'}</h1>
     <p class="sub" style="margin-top:8px">${r.endless?'Dein Name wird in jede Säule dieser Arena geritzt.':won?'Die Arena gehört dir. Die Barden werden davon singen.':'Doch jede Niederlage macht die nächste Seele stärker.'}</p></div>
     <div class="center"><div class="eyebrow">Punkte</div><div class="bigscore">${score}</div>${rank===0?'<span class="pill g">🏆 Neuer Rekord!</span>':rank>0?`<span class="pill">Platz ${rank+1} der Ruhmeshalle</span>`:''}${dailyBest?' <span class="pill g">📅 Neuer Tagesbestwert!</span>':''}</div>
+    <div class="center"><span class="pill g">⭐ +${gainXp} EP für ${CHARS[r.cid].name} · Stufe ${lvl1}${lvl1>lvl0?' – Aufstieg!':''}</span></div>
     <div class="endstats"><div><span>Besiegte Gegner</span><b>${r.kills}</b></div><div><span>Räume</span><b>${r.rooms}</b></div>
       <div><span>Bosse</span><b>${r.bosses}</b></div><div><span>Gold gesammelt</span><b>${r.goldTotal}</b></div>
       <div style="grid-column:1/-1;color:var(--soul)"><span>Seelen erhalten${bonus?' (inkl. Siegbonus)':''}</span><b>+${souls} 👻</b></div></div>
