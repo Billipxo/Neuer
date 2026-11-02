@@ -264,6 +264,7 @@ function drawEnemy(e,corpse){
       ctx.fillStyle='#2a0a08'; ctx.beginPath(); ctx.moveTo(-6,-6); ctx.lineTo(-9,-15); ctx.lineTo(-3,-8); ctx.moveTo(6,-6); ctx.lineTo(9,-15); ctx.lineTo(3,-8); ctx.fill();
       ctx.fillStyle='#ffe04a'; ctx.fillRect(-4+fx*2,-3,2.5,2.5); ctx.fillRect(1.5+fx*2,-3,2.5,2.5); break; }
   }
+  if(e.affix && !corpse){ ctx.font='11px sans-serif'; ctx.textAlign='center'; ctx.textBaseline='bottom'; ctx.fillText(e.affix.map(a=>AFFIXES[a].ic).join(''),0,-r-(e.kind==='orc'?r*0.2:6)-9); }
   if(e.elite){ ctx.fillStyle='#e6b450'; const y=-r-(e.kind==='orc'?r*0.2:6); ctx.beginPath(); ctx.moveTo(-7,y); ctx.lineTo(-7,y-6); ctx.lineTo(-3.5,y-3); ctx.lineTo(0,y-8); ctx.lineTo(3.5,y-3); ctx.lineTo(7,y-6); ctx.lineTo(7,y); ctx.closePath(); ctx.fill(); }
   ctx.restore();
   if(e.freeze>0){ ctx.fillStyle='rgba(160,225,255,0.45)'; ctx.beginPath(); ctx.arc(e.x,e.y,r+3,0,TAU); ctx.fill(); }

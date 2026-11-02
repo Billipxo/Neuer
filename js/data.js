@@ -51,6 +51,15 @@ const BOSSES = {
   lavaworm:{ name:'Der Lavawurm', hp:1450, speed:150, dmg:22, r:38 },
 };
 
+const AFFIXES = {
+  fast:  { ic:'💨', nm:'Flink',      ds:'bewegt sich deutlich schneller' },
+  armor: { ic:'🛡️', nm:'Gepanzert',  ds:'erleidet 40 % weniger Schaden' },
+  boom:  { ic:'💥', nm:'Explosiv',   ds:'explodiert kurz nach dem Tod' },
+  split: { ic:'🧬', nm:'Teilend',    ds:'zerfällt beim Tod in zwei kleinere Gegner' },
+  vamp:  { ic:'🩸', nm:'Vampirisch', ds:'heilt sich, wenn er dich trifft' },
+  frost: { ic:'❄️', nm:'Frostig',    ds:'seine Treffer verlangsamen dich' },
+  summon:{ ic:'🦇', nm:'Beschwörer', ds:'ruft regelmäßig Fledermäuse' },
+};
 const RAR = { common:'Gewöhnlich', rare:'Selten', epic:'Episch' };
 const UPGRADES = [
   { id:'dmg',   r:'common', ic:'⚔️', nm:'Geschärfte Waffe', ds:'+15 % Schaden',               ap:p=>p.dmg*=1.15 },

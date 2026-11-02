@@ -247,6 +247,7 @@ function showHelp(){
   <p><b>Fähigkeit:</b> Der große runde Knopf unten rechts löst die Spezialfähigkeit deines Helden aus. Danach lädt sie sich wieder auf.</p>
   <p><b>Ausweichen:</b> Der kleine blaue Knopf 💨 lässt dich in Laufrichtung hechten. Währenddessen bist du kurz unverwundbar. Perfekt gegen Boss-Angriffe.</p>
   <p><b>Karte:</b> Jeder Akt ist eine Karte mit Abzweigungen. Wähle deinen Weg: ⚔️ Kampf, 💀 Elite (schwer, bessere Beute), ⚖️ Händler, 🔥 Lagerfeuer, 🎁 Schatz, ❓ Ereignis. Am Ende wartet der 👑 Boss.</p>
+  <p><b>Elitegegner</b> 👑 tragen Eigenschaften: 💨 Flink, 🛡️ Gepanzert, 💥 Explosiv, 🧬 Teilend, 🩸 Vampirisch, ❄️ Frostig, 🦇 Beschwörer.</p>
   <p><b>Arena:</b> Säulen blockieren Geschosse, also nutze sie als Deckung. Sprengfässer ✸ explodieren bei Treffern. Locke Gegner in Stachelfallen und Lava.</p>
   <p><b>Upgrades:</b> Nach jedem Kampf wählst du eine von drei Verbesserungen. Sie gelten bis zum Ende des Laufs.</p>
   <p><b>Seelen:</b> Besiegte Gegner hinterlassen Seelen 👻. Die behältst du auch nach dem Tod. Gib sie in der Schmiede aus oder schalte neue Helden frei.</p>
