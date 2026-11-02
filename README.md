@@ -35,6 +35,9 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **Ruhmeshalle** mit den 10 besten Läufen; laufende Abenteuer werden auf der Karte automatisch gespeichert
 - Atmosphärische Arenen: dynamisches Licht und Schatten, Fackeln und Feuerbecken, Nebel, Funken,
   Kleintiere (Ratten, Spinnen, Feuersalamander) und je Akt eigene Bodendetails
+- **Tribünen mit Zuschauern** (Menschen und Goblins, Skelette und Geister, Teufelchen und Kultisten),
+  die auf deine Kämpfe reagieren, jubeln und dir Gold oder Heilung zuwerfen
+- **Wetter** je Raum: Regen, Gewitter mit Blitzeinschlägen, Nebel, Schnee, Ascheregen und Feuersturm
 - Prozedurale Musik und Soundeffekte (Web Audio), Hit-Stop, Zeitlupe bei Tod und Boss-Sieg
 - Einstellungen für Sound, Musik, Atmosphäre und Licht, Bildschirmwackeln und Vibration
 
