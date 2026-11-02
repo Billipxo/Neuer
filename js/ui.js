@@ -175,6 +175,40 @@ function showSettings(){
       { yes:()=>{ const keep=save.settings, snd=save.sound, nm=save.name; save=defSave(); save.settings=keep; save.sound=snd; save.name=nm; persist(); showMenu(); }, no:showSettings }) });
   const mv=$('musicVol'); if(mv) mv.addEventListener('input',e=>{ st.musicVol=+e.target.value; persist(); musicUpdate(); });
 }
+/* Sicherungscode: der komplette Spielstand als Text zum Kopieren und Wiedereinfügen */
+const SAVE_PREFIX='ARENA1:';
+function exportCode(){ const d=Object.assign({},save); delete d.settings; const json=JSON.stringify(d);
+  const b=btoa(unescape(encodeURIComponent(json))); return SAVE_PREFIX+b+':'+(hashStr(json)%100000); }
+function parseCode(txt){
+  const t=(txt||'').replace(/\s+/g,''); if(!t.startsWith(SAVE_PREFIX)) throw new Error('Das ist kein Sicherungscode von Arena der Verdammten.');
+  const [b,chk]=t.slice(SAVE_PREFIX.length).split(':'); let json;
+  try{ json=decodeURIComponent(escape(atob(b))); }catch(e){ throw new Error('Der Code ist unvollständig oder beschädigt. Kopiere ihn bitte noch einmal komplett.'); }
+  if(String(hashStr(json)%100000)!==chk) throw new Error('Die Prüfsumme stimmt nicht. Der Code wurde beim Kopieren vermutlich abgeschnitten.');
+  const d=JSON.parse(json); if(!d||typeof d!=='object'||typeof d.souls!=='number') throw new Error('Der Code enthält keinen gültigen Spielstand.');
+  return migrate(d);
+}
+function showExport(){
+  const code=exportCode();
+  render(`<div class="wrap"><div class="eyebrow">Sicherung · ${esc(save.name)}</div><h2>Spielstand sichern</h2>
+    <p class="sub">Kopiere diesen Code und bewahre ihn auf, zum Beispiel in einer Notiz oder Nachricht an dich selbst. Damit kannst du den Spielstand wiederherstellen oder auf ein anderes Gerät übertragen.</p>
+    <textarea id="saveCode" readonly rows="7" style="width:100%;font:12px/1.4 ui-monospace,monospace;padding:10px;border-radius:8px;border:2px solid var(--iron);background:#0008;color:var(--parch);word-break:break-all">${code}</textarea>
+    <div class="sub" style="font-size:13px" id="copyMsg">${(code.length/1024).toFixed(1)} KB · enthält Seelen, Helden, Erfolge, Rekorde und das laufende Abenteuer</div>
+    <button class="btn primary" data-a="copy">📋 Code kopieren</button><button class="btn" data-a="back">Zurück</button></div>`,
+  { back:showSlots, copy:()=>{ const ta=$('saveCode'), msg=$('copyMsg');
+      const ok=()=>{ msg.textContent='Kopiert! Bewahre den Code gut auf.'; msg.style.color='var(--gold)'; };
+      const fb=()=>{ ta.focus(); ta.select(); try{ document.execCommand('copy'); ok(); }catch(e){ msg.textContent='Kopieren nicht möglich. Der Code ist markiert, bitte manuell kopieren.'; } };
+      try{ navigator.clipboard.writeText(ta.value).then(ok,fb); }catch(e){ fb(); } } },true);
+}
+function showImport(err){
+  render(`<div class="wrap"><div class="eyebrow">Wiederherstellen</div><h2>Sicherung laden</h2>
+    <p class="sub">Füge deinen Sicherungscode ein. Er ersetzt den aktiven Spielstand „${esc(save.name)}“. Wechsle vorher den Platz, wenn du diesen behalten willst.</p>
+    <form id="impForm" class="cards" style="grid-template-columns:1fr"><textarea id="impCode" rows="7" placeholder="ARENA1:…" style="width:100%;font:12px/1.4 ui-monospace,monospace;padding:10px;border-radius:8px;border:2px solid var(--gold);background:#0008;color:var(--parch);word-break:break-all"></textarea>
+    ${err?`<div class="sub" style="color:#ff8a80">${esc(err)}</div>`:''}
+    <button class="btn primary" type="submit">Spielstand laden</button></form><button class="btn" data-a="back">Abbrechen</button></div>`,{ back:showSlots },true);
+  $('impForm').addEventListener('submit',e=>{ e.preventDefault();
+    try{ const d=parseCode($('impCode').value); const keep=save.settings, snd=save.sound; save=d; save.settings=keep; save.sound=snd; persist(); sfx('pick'); toast('<span style="font-size:26px">📥</span><div><b>Spielstand geladen</b><div class="sub" style="font-size:13px">'+esc(save.name)+' · '+save.souls+' Seelen</div></div>'); showSlots(); }
+    catch(ex){ showImport(ex.message); } });
+}
 function showSlots(){
   const rows=[...Array(SLOTS)].map((_,i)=>{ const s=i===slotIdx?save:readSlot(i), act=i===slotIdx;
     if(!s) return `<div class="card"><div class="ic">➕</div><div class="body"><div class="nm">Platz ${i+1} – leer</div><div class="ds">Starte ein frisches Abenteuer mit eigenem Fortschritt.</div>
@@ -186,9 +220,11 @@ function showSlots(){
       <div class="row slotbtns" style="margin-top:6px;gap:6px">${act?'':`<button class="btn small primary" data-a="load" data-v="${i}">Laden</button>`}<button class="btn small" data-a="ren" data-v="${i}">Umbenennen</button><button class="btn small danger" data-a="del" data-v="${i}">Löschen</button></div></div></div>`; }).join('');
   render(`<div class="wrap"><div class="eyebrow">Drei getrennte Profile</div><h2>Spielstände</h2>
     <p class="sub">Jeder Spielstand hat eigene Seelen, Schmiede, Helden, Erfolge, Ruhmeshalle und ein eigenes laufendes Abenteuer. Einstellungen gelten für alle.</p>
-    <div class="cards" style="grid-template-columns:1fr">${rows}</div><button class="btn" data-a="back">Zurück</button></div>`,
+    <div class="cards" style="grid-template-columns:1fr">${rows}</div>
+    <div class="row"><button class="btn" data-a="exp">📤 Aktiven Spielstand sichern</button><button class="btn" data-a="imp">📥 Sicherung laden</button></div>
+    <button class="btn" data-a="back">Zurück</button></div>`,
   { back:showMenu,
-    load:i=>{ switchSlot(+i); sfx('pick'); showSlots(); },
+    load:i=>{ switchSlot(+i); sfx('pick'); showSlots(); }, exp:showExport, imp:showImport,
     new:i=>{ persist(); slotIdx=+i; const keep=save.settings, snd=save.sound; save=defSave(); save.name='Spielstand '+(+i+1); save.settings=keep; save.sound=snd; persist(); sfx('pick'); showSlots(); },
     ren:i=>{ const s=+i===slotIdx?save:readSlot(+i);
       render(`<div class="wrap" style="justify-content:center"><h2 class="center">Spielstand umbenennen</h2>
