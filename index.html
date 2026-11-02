@@ -222,6 +222,7 @@ const ENEMIES = {
   orc:     { name:'Ork',       hp:95, speed:48,  dmg:16, r:20, cost:3.5, ai:'charger', gold:3, minRow:2 },
   cultist: { name:'Kultist',   hp:42, speed:55,  dmg:9,  r:14, cost:2.5, ai:'caster',  gold:2, fire:2.6, minAct:2 },
   imp:     { name:'Feuerteufel',hp:34,speed:100, dmg:10, r:12, cost:2.2, ai:'imp',     gold:2, fire:1.8, minAct:3 },
+  mimic:   { name:'Mimic',     hp:170,speed:80,  dmg:18, r:20, cost:99,  ai:'charger', gold:25, noPool:true },
 };
 
 const BOSSES = {
@@ -293,6 +294,7 @@ const NODE = {
   shop:    { ic:'⚖️', nm:'Händler' },
   rest:    { ic:'🔥', nm:'Lagerfeuer' },
   treasure:{ ic:'🎁', nm:'Schatz' },
+  event:   { ic:'❓', nm:'Ereignis' },
   boss:    { ic:'👑', nm:'Boss' },
 };
 
@@ -476,7 +478,7 @@ function genMap(act){
   }
   for(let r=1;r<R;r++) for(const nd of rows[r]){
     nd.type = r===R-1 ? wpick([['rest',55],['shop',45]]) :
-      wpick([['fight',46],['elite',r>=2?18:0],['shop',r>=2?11:5],['rest',r>=2?9:0],['treasure',r>=1?9:0]]);
+      wpick([['fight',38],['elite',r>=2?17:0],['shop',r>=2?10:5],['rest',r>=2?9:0],['treasure',r>=1?7:0],['event',r>=1?14:0]]);
   }
   if(!rows.slice(1,R-1).some(rw=>rw.some(n=>n.type==='shop'))) pick(rows[3]).type='shop';
   if(!rows.slice(2,R-1).some(rw=>rw.some(n=>n.type==='elite'))) pick(rows[2]).type='elite';
@@ -567,7 +569,8 @@ function showHelp(){
   <p><b>Bewegen:</b> Lege den Daumen irgendwo auf den Bildschirm und ziehe. Dein Held greift den nächsten Gegner automatisch an.</p>
   <p><b>Fähigkeit:</b> Der große runde Knopf unten rechts löst die Spezialfähigkeit deines Helden aus. Danach lädt sie sich wieder auf.</p>
   <p><b>Ausweichen:</b> Der kleine blaue Knopf 💨 lässt dich in Laufrichtung hechten. Währenddessen bist du kurz unverwundbar. Perfekt gegen Boss-Angriffe.</p>
-  <p><b>Karte:</b> Jeder Akt ist eine Karte mit Abzweigungen. Wähle deinen Weg: ⚔️ Kampf, 💀 Elite (schwer, bessere Beute), ⚖️ Händler, 🔥 Lagerfeuer, 🎁 Schatz. Am Ende wartet der 👑 Boss.</p>
+  <p><b>Karte:</b> Jeder Akt ist eine Karte mit Abzweigungen. Wähle deinen Weg: ⚔️ Kampf, 💀 Elite (schwer, bessere Beute), ⚖️ Händler, 🔥 Lagerfeuer, 🎁 Schatz, ❓ Ereignis. Am Ende wartet der 👑 Boss.</p>
+  <p><b>Arena:</b> Säulen blockieren Geschosse, also nutze sie als Deckung. Sprengfässer ✸ explodieren bei Treffern. Locke Gegner in Stachelfallen und Lava.</p>
   <p><b>Upgrades:</b> Nach jedem Kampf wählst du eine von drei Verbesserungen. Sie gelten bis zum Ende des Laufs.</p>
   <p><b>Seelen:</b> Besiegte Gegner hinterlassen Seelen 👻. Die behältst du auch nach dem Tod. Gib sie in der Schmiede aus oder schalte neue Helden frei.</p>
   <p><b>Tastatur:</b> WASD bewegen, Leertaste Fähigkeit, Umschalt Ausweichen, Esc Pause.</p>
@@ -667,7 +670,63 @@ function enterNode(id){
   const n=nodeById(id); run.posId=id; run.visited.push(id);
   if(n.type==='fight'||n.type==='elite'||n.type==='boss') startCombat(n.type);
   else { run.rooms++; save.run=run; persist();
-    if(n.type==='shop') showShop(); else if(n.type==='rest') showRest(); else showReward('treasure', showMap); }
+    if(n.type==='shop') showShop(); else if(n.type==='rest') showRest(); else if(n.type==='event') showEvent(); else showReward('treasure', showMap); }
+}
+
+/* ---- Ereignisse ---- */
+const healPct=f=>{ run.p.hp=Math.min(run.p.maxHp, run.p.hp+run.p.maxHp*f); };
+function giftUpgrade(mode, rarity){
+  let u = rarity ? pick(availUpgrades().filter(x=>x.r===rarity)) : rollUpgrades(1,mode)[0];
+  if(!u) u=rollUpgrades(1,mode)[0]; if(!u){ run.gold+=40; return 'Leider nichts Brauchbares. Du erhältst stattdessen 40 Gold.'; }
+  const ns=applyUpgrade(u);
+  return `Du erhältst ${u.ic} <b>${u.nm}</b>: ${u.ds}.`+(ns.length?`<br><br>Synergie entdeckt: ${ns.map(s=>s.ic+' <b>'+s.nm+'</b>').join(', ')}!`:'');
+}
+const EVENTS = [
+  { id:'well', ic:'🪣', nm:'Der verfluchte Brunnen', tx:'Schwarzes Wasser kräuselt sich, obwohl kein Wind weht. Es flüstert deinen Namen.', opts:r=>[
+    { l:'Trinken', d:'+25 % Schaden, aber −15 max. LP', r:'epic', f:()=>{ const p=r.p; p.dmg*=1.25; p.maxHp=Math.max(30,p.maxHp-15); p.hp=Math.min(p.hp,p.maxHp); return 'Das Wasser brennt in deiner Kehle. Deine Hände zittern vor Kraft.'; } },
+    { l:'Eine Münze hineinwerfen', d:'10 Gold: heilt 30 % LP', ok:r.gold>=10, f:()=>{ r.gold-=10; healPct(0.3); return 'Ein warmer Schimmer steigt aus der Tiefe und schließt deine Wunden.'; } },
+    { l:'Weitergehen', d:'Manche Dinge lässt man besser in Ruhe.', f:()=>'Du gehst weiter. Das Flüstern verstummt hinter dir.' } ] },
+  { id:'gamble', ic:'🎲', nm:'Der Goblin-Spieltisch', tx:'Ein Goblin mischt schmierige Karten. „Doppelt oder nichts, Fremder?“', opts:r=>[
+    { l:'30 Gold setzen', d:'50 % Chance auf 60 Gold', ok:r.gold>=30, f:()=>{ if(Math.random()<0.5){ r.gold+=30; return 'Der Goblin flucht und schiebt dir 60 Gold hin. Du gewinnst 30 Gold.'; } r.gold-=30; return 'Der Goblin grinst mit spitzen Zähnen. Deine 30 Gold sind weg.'; } },
+    { l:`Die Hälfte setzen (${Math.floor(r.gold/2)} Gold)`, d:'45 % Chance, den Einsatz zu verdoppeln', r:'rare', ok:r.gold>=10, f:()=>{ const a=Math.floor(r.gold/2); if(Math.random()<0.45){ r.gold+=a; return `Unglaublich! Du gewinnst ${a} Gold.`; } r.gold-=a; return `Der Goblin lacht, bis er Schluckauf bekommt. ${a} Gold verloren.`; } },
+    { l:'Ablehnen', d:'Spiel nie gegen einen Goblin.', f:()=>'„Feigling!“, ruft er dir nach.' } ] },
+  { id:'prisoner', ic:'⛓️', nm:'Der gefangene Ritter', tx:'In einer Zelle hängt ein Ritter in rot glühenden Ketten. „Befreie mich, und ich lehre dich mein Geheimnis.“', opts:r=>[
+    { l:'Die Ketten sprengen', d:'Kostet 20 % deiner max. LP, dafür ein seltenes oder episches Upgrade', r:'rare', ok:r.p.hp>r.p.maxHp*0.25, f:()=>{ r.p.hp-=r.p.maxHp*0.2; return 'Die Ketten verbrennen dir die Hände, doch sie zerbersten. '+giftUpgrade('treasure'); } },
+    { l:'Ihn hängen lassen', d:'Wer weiß, warum er dort hängt.', f:()=>'Seine Rufe hallen dir noch lange nach.' } ] },
+  { id:'altar', ic:'🕯️', nm:'Der Seelenaltar', tx:'Kerzen aus Knochen brennen mit blauer Flamme. Auf dem Altar liegt eine Opferschale.', opts:r=>[
+    { l:'Blut opfern', d:'−15 LP, dafür +20 Seelen', r:'rare', ok:r.p.hp>20, f:()=>{ r.p.hp-=15; r.souls+=20; return 'Die Flammen lodern auf. 20 Seelen schweben zu dir.'; } },
+    { l:'Beten', d:'Heilt 25 % LP', f:()=>{ healPct(0.25); return 'Ein kalter Frieden erfüllt dich. Deine Wunden schließen sich.'; } } ] },
+  { id:'smith', ic:'⚒️', nm:'Der Zwergenschmied', tx:'Ein Zwerg hämmert auf einem tragbaren Amboss. „Für ein paar Münzen mach ich dich gefährlicher.“', opts:r=>[
+    { l:'Waffe schärfen', d:'40 Gold: +12 % Schaden', ok:r.gold>=40, f:()=>{ r.gold-=40; r.p.dmg*=1.12; return 'Funken fliegen. Deine Waffe glänzt wie neu.'; } },
+    { l:'Rüstung flicken', d:'35 Gold: erlittener Schaden −2', ok:r.gold>=35, f:()=>{ r.gold-=35; r.p.armor+=2; return 'Der Zwerg nietet neue Platten an. Sitzt wie angegossen.'; } },
+    { l:'Weiterziehen', d:'Du hast es eilig.', f:()=>'„Dann eben nicht!“, brummt der Zwerg.' } ] },
+  { id:'chest', ic:'🧰', nm:'Die verdächtige Truhe', tx:'Eine prächtige Truhe mit Goldbeschlägen. Hat sie sich gerade bewegt?', opts:r=>[
+    { l:'Öffnen', d:'Wer wagt, gewinnt … meistens.', r:'epic', f:()=>{ if(Math.random()<0.55) return ()=>showReward('treasure',showMap);
+        return ()=>{ startCombat('elite',[[{kind:'mimic'},{kind:'bat'},{kind:'bat'}]]); setTimeout(()=>{ if(G) banner('Ein Mimic!','Die Truhe hat Zähne'); },60); }; } },
+    { l:'Liegen lassen', d:'Truhen bewegen sich nicht. Normalerweise.', f:()=>'Als du dich umdrehst, hörst du ein enttäuschtes Knurren.' } ] },
+  { id:'ghost', ic:'👻', nm:'Der Geisterhändler', tx:'Eine durchscheinende Gestalt hält dir ein leuchtendes Artefakt hin. „Nur ein kleines Stück deines Lebens …“', opts:r=>[
+    { l:'Handel annehmen', d:'−20 max. LP für ein episches Upgrade', r:'epic', ok:r.p.maxHp>60, f:()=>{ r.p.maxHp-=20; r.p.hp=Math.min(r.p.hp,r.p.maxHp); return 'Kälte kriecht dir in die Knochen. '+giftUpgrade('boss','epic'); } },
+    { l:'Ablehnen', d:'Dein Leben gehört dir.', f:()=>'Der Geist löst sich seufzend in Nebel auf.' } ] },
+  { id:'fairy', ic:'🧚', nm:'Die Feenquelle', tx:'Eine Quelle, umschwirrt von winzigen Lichtern. Das Wasser leuchtet sanft.', opts:r=>[
+    { l:'Baden', d:'Heilt dich vollständig', f:()=>{ r.p.hp=r.p.maxHp; return 'Du fühlst dich wie neugeboren.'; } },
+    { l:'Wasser abfüllen', d:'+2 Neuwürfe für Upgrade-Auswahlen', r:'rare', f:()=>{ r.rerolls+=2; return 'Das Feenwasser lässt das Schicksal tanzen. +2 Neuwürfe.'; } } ] },
+];
+function showEvent(){
+  run.seen=run.seen||[];
+  let pool=EVENTS.filter(e=>!run.seen.includes(e.id)); if(!pool.length) pool=EVENTS;
+  const ev=pick(pool); run.seen.push(ev.id);
+  const opts=ev.opts(run);
+  render(`<div class="wrap" style="justify-content:center"><div class="eyebrow center">Ereignis</div>
+    <div style="font-size:64px;text-align:center;line-height:1">${ev.ic}</div><h2 class="center">${ev.nm}</h2><p class="sub center">${ev.tx}</p>
+    <div class="row" style="gap:6px;justify-content:center"><span class="pill h">❤️ ${Math.ceil(run.p.hp)}/${Math.round(run.p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span><span class="pill s">👻 ${run.souls}</span></div>
+    <div class="cards">${opts.map((o,i)=>`<button class="card ${o.r||'common'} reward-card" data-a="opt" data-v="${i}" ${o.ok===false?'disabled':''}><div class="body"><div class="nm">${o.l}</div><div class="ds">${o.d}</div></div></button>`).join('')}</div></div>`,
+  { opt:i=>{ const res=opts[+i].f(); if(typeof res==='function') res(); else eventResult(ev,res); } },true);
+}
+function eventResult(ev,text){
+  render(`<div class="wrap" style="justify-content:center"><div style="font-size:48px;text-align:center;line-height:1">${ev.ic}</div><h2 class="center">${ev.nm}</h2>
+    <p class="sub center" style="color:var(--parch);font-size:17px">${text}</p>
+    <div class="row" style="gap:6px;justify-content:center"><span class="pill h">❤️ ${Math.ceil(run.p.hp)}/${Math.round(run.p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span><span class="pill s">👻 ${run.souls}</span></div>
+    <button class="btn primary" data-a="next">Weiter</button></div>`,{ next:showMap },true);
 }
 
 /* ---- Upgrades ---- */
@@ -689,7 +748,7 @@ function showSynergy(list, after){
   sfx('skill');
   render(`<div class="wrap" style="justify-content:center"><div class="eyebrow center">Zwei Kräfte verbinden sich</div><h2 class="center">Synergie entdeckt!</h2>
     <div class="cards">${list.map(s=>`<div class="card epic reward-card"><div class="ic">${s.ic}</div><div class="body"><div class="rar">Synergie · ${s.req.map(r=>UPG[r].ic).join(' + ')}</div><div class="nm">${s.nm}</div><div class="ds">${s.ds}</div></div></div>`).join('')}</div>
-    <button class="btn primary" data-a="go">Weiter</button></div>`,{ go:after },true);
+    <button class="btn primary" data-a="next">Weiter</button></div>`,{ next:after },true);
 }
 function statSheet(p){
   const c=CHARS[p.cid], s={ 'Schaden':Math.round(p.dmg), 'Angriffe/Sek':(p.atkSpd/p.rate).toFixed(2), 'Max. LP':Math.round(p.maxHp), 'Rüstung':p.armor,
@@ -760,7 +819,7 @@ function showRest(){
 }
 
 /* ---------------- KAMPF ---------------- */
-function enemyPool(act,row){ return Object.keys(ENEMIES).filter(k=>{ const d=ENEMIES[k]; return (!d.minAct||act>=d.minAct) && (!d.minRow||row>=d.minRow||act>1); }); }
+function enemyPool(act,row){ return Object.keys(ENEMIES).filter(k=>{ const d=ENEMIES[k]; return !d.noPool && (!d.minAct||act>=d.minAct) && (!d.minRow||row>=d.minRow||act>1); }); }
 function buildWaves(type){
   const act=run.act, row=nodeById(run.posId).row, depth=(act-1)*6+row;
   const pool=enemyPool(act,row), nW = type==='elite'?2:(row<2?2:3), waves=[];
@@ -816,12 +875,12 @@ function blowBarrel(o){
   if(o.dead) return; o.dead=true;
   G.booms.push({x:o.x,y:o.y,r:80,dmg:Math.max(40*(1+0.5*(run.act-1)),P.dmg*2),barrel:true});
 }
-function startCombat(type){
+function startCombat(type, customWaves){
   const p=run.p;
   P=Object.assign(p,{ x:AW/2, y:AH*0.7, r:14, vx:0, vy:0, face:-Math.PI/2, atkT:0.3, skillT:0, inv:0, shieldLeft:p.shield, spin:0, spinTick:0, regenAcc:0, moving:false, anim:0, swingT:0, dashT:0, dashCd:0, dashA:0, dashI:0, msT:0, trailT:0, nextCrit:false });
   P.shieldLeft = p.shield + (p.manaShield?1:0);
   G={ type, enemies:[], pproj:[], eproj:[], hazards:[], pzones:[], pstrikes:[], parts:[], texts:[], coins:[], fx:[], spawnQ:[], booms:[],
-      stop:0, stopCd:0, waves: type==='boss'?[]:buildWaves(type), obs:[], traps:[], waveIdx:-1, waveT:0.8, cleared:false, clearT:0, time:0, shake:0, hurtFlash:0, orbitA:0, boss:null, over:false, hint:run.rooms===0?5:0 };
+      stop:0, stopCd:0, waves: customWaves || (type==='boss'?[]:buildWaves(type)), obs:[], traps:[], waveIdx:-1, waveT:0.8, cleared:false, clearT:0, time:0, shake:0, hurtFlash:0, orbitA:0, boss:null, over:false, hint:run.rooms===0?5:0 };
   Object.assign(G, genArena(type));
   if(type==='boss'){
     const bk=ACTS[run.act-1].boss; G.waveIdx=0; G.waveT=99;
@@ -843,6 +902,7 @@ function makeEnemy(kind,x,y,elite){
   const e={ kind, x,y, r:d.r, hp:d.hp*hs, dmg:d.dmg*ds, speed:d.speed*rand(0.9,1.1), ai:d.ai, t:rand(0,3), seed:rand(0,TAU), flash:0, slow:0, freeze:0, kx:0, ky:0,
     elite:!!elite, gold:d.gold, soul:1, st:0, timer:rand(1,2.5), dir:Math.random()<0.5?1:-1, face:0, orbCd:0, squish:0, fire:d.fire||2 };
   if(elite){ e.hp*=3.2; e.r*=1.35; e.dmg*=1.3; e.gold*=4; e.soul=5; }
+  if(kind==='mimic') e.soul=6;
   e.maxHp=e.hp; return e;
 }
 function makeBoss(kind,x,y){
@@ -1284,7 +1344,7 @@ function banner(t,sub){ const b=$('banner'); b.innerHTML=esc(t)+(sub?`<small>${e
 /* ---------------- PARTIKEL ---------------- */
 function part(x,y,vx,vy,life,size,color,glw=false,grav=0){ G.parts.push({x,y,vx,vy,life,max:life,size,color,glow:glw,grav,drag:2}); }
 function burst(x,y,n,color,sp){ for(let i=0;i<n;i++){ const a=rand(0,TAU), s=rand(sp*0.3,sp); part(x,y,Math.cos(a)*s,Math.sin(a)*s,rand(0.3,0.7),rand(2,5),color,Math.random()<0.4); } }
-function enemyColor(e){ return {slime:'#6fd35a',bat:'#8a5ab0',skeleton:'#e8e2d0',archer:'#6aa84f',orc:'#6f8a4a',cultist:'#9a5ad0',imp:'#ff6a2a',golem:'#9aa0aa',lich:'#7dffb0',dragon:'#d0402a'}[e.kind]||'#fff'; }
+function enemyColor(e){ return {mimic:'#8a5a2a',slime:'#6fd35a',bat:'#8a5ab0',skeleton:'#e8e2d0',archer:'#6aa84f',orc:'#6f8a4a',cultist:'#9a5ad0',imp:'#ff6a2a',golem:'#9aa0aa',lich:'#7dffb0',dragon:'#d0402a'}[e.kind]||'#fff'; }
 
 /* ---------------- ZEICHNEN ---------------- */
 function draw(){
@@ -1461,6 +1521,14 @@ function drawEnemy(e){
       ctx.fillStyle='#120818'; ctx.beginPath(); ctx.ellipse(fx*2,-r*0.35,r*0.45,r*0.4,0,0,TAU); ctx.fill();
       ctx.fillStyle='#d07aff'; ctx.fillRect(-4+fx*2,-r*0.45,2.5,2); ctx.fillRect(1.5+fx*2,-r*0.45,2.5,2);
       if(e.st>0) drawGlow(0,-2,26,'#b06aff',e.st*2); break; }
+    case 'mimic': { const open=e.st===2?1:(Math.sin(e.t*6)*0.5+0.5)*(e.st===1?1:0.4), w=r*1.1;
+      ctx.fillStyle=col('#6b3f1c'); ctx.fillRect(-w,-r*0.2,w*2,r*0.95);
+      ctx.fillStyle='#e6b450'; ctx.fillRect(-w,-r*0.2,w*2,3); ctx.fillRect(-w,r*0.55,w*2,3); ctx.fillRect(-3,-r*0.2,6,r*0.9);
+      ctx.fillStyle='#7a1020'; ctx.fillRect(-w*0.9,-r*0.2-open*r*0.5,w*1.8,open*r*0.5);
+      ctx.fillStyle='#f4eedc'; for(let i=0;i<6;i++){ const x=-w*0.85+i*w*0.34; ctx.beginPath(); ctx.moveTo(x,-r*0.2); ctx.lineTo(x+w*0.17,-r*0.2-6); ctx.lineTo(x+w*0.34,-r*0.2); ctx.fill(); ctx.beginPath(); ctx.moveTo(x,-r*0.2-open*r*0.5); ctx.lineTo(x+w*0.17,-r*0.2-open*r*0.5+6); ctx.lineTo(x+w*0.34,-r*0.2-open*r*0.5); ctx.fill(); }
+      ctx.fillStyle=col('#7d4a22'); ctx.fillRect(-w,-r*0.2-open*r*0.5-r*0.45,w*2,r*0.45);
+      ctx.fillStyle='#e6b450'; ctx.fillRect(-w,-r*0.2-open*r*0.5-r*0.45,w*2,3);
+      ctx.fillStyle='#ffe04a'; ctx.fillRect(-w*0.5,-r*0.2-open*r*0.5-r*0.3,4,4); ctx.fillRect(w*0.4,-r*0.2-open*r*0.5-r*0.3,4,4); break; }
     case 'imp': { const fl3=Math.sin(e.t*18)*0.5; ctx.fillStyle=col('#7a1a10');
       for(const s of [-1,1]){ ctx.beginPath(); ctx.moveTo(0,-2); ctx.lineTo(s*r*1.7,-r*(0.9+fl3)); ctx.lineTo(s*r*1.1,r*0.3); ctx.closePath(); ctx.fill(); }
       drawGlow(0,0,r*2,'#ff6a2a',0.4); ctx.fillStyle=col('#d0402a'); ctx.beginPath(); ctx.arc(0,0,r*0.8,0,TAU); ctx.fill();
