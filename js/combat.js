@@ -164,9 +164,9 @@ function updPlayer(dt){
   if(p.chill>0){ p.chill-=dt; if(Math.random()<dt*10) part(p.x+rand(-10,10),p.y-8,0,-20,0.5,2.5,'#bfe6ff',true); }
   const sp=p.speed*p.spdMul*(p.spin>0?1.25:1)*(p.chill>0?0.6:1)*(G.webs.some(w=>Math.hypot(p.x-w.x,p.y-w.y)<w.r)?0.45:1);
   if(p.dashCd>0) p.dashCd-=dt; if(p.dashI>0) p.dashI-=dt;
-  if(p.dashT>0){ p.dashT-=dt; const ds=680;
+  if(p.dashT>0){ p.dashT-=dt; const ds=720;
     p.x=clamp(p.x+Math.cos(p.dashA)*ds*dt,p.r,AW-p.r); p.y=clamp(p.y+Math.sin(p.dashA)*ds*dt,p.r,AH-p.r);
-    G.fx.push({type:'ghost',x:p.x,y:p.y,t:0,life:0.28,color:CHARS[p.cid].color}); onDashMove(dt); }
+    G.fx.push({type:'ghost',x:p.x,y:p.y,t:0,life:0.22,color:CHARS[p.cid].color}); onDashMove(dt); }
   else { p.x=clamp(p.x+mx*sp*dt,p.r,AW-p.r); p.y=clamp(p.y+my*sp*dt,p.r,AH-p.r); }
   p.vx=p.dashT>0?0:mx*sp; p.vy=p.dashT>0?0:my*sp;
   pushOut(p);
@@ -236,9 +236,9 @@ function useDash(){
   if(state!=='combat'||!P||!G||P.dashCd>0||P.dashT>0||G.over) return;
   const [mx,my]=readMove();
   P.dashA = Math.hypot(mx,my)>0.2 ? Math.atan2(my,mx) : P.face;
-  G.tutDash=true; P.dashT=0.2; P.dashI=0.32; P.dashCd=1.0*P.dashCdMul; P.dashHit=[];
+  G.tutDash=true; P.dashT=0.13; P.dashI=0.24; P.dashCd=1.0*P.dashCdMul; P.dashHit=[];
   if(hasSyn('phantom')) P.nextCrit=true;
-  sfx('dash'); burst(P.x,P.y+8,8,'#cfe3ff',90);
+  sfx('dash'); burst(P.x,P.y+8,8,'#cfe3ff',90); G.fx.push({type:'dashline',x:P.x,y:P.y,a:P.dashA,t:0,life:0.3,color:CHARS[P.cid].color});
 }
 function onDashMove(dt){
   const p=P;
@@ -246,7 +246,7 @@ function onDashMove(dt){
   if(p.shadow>0){ p.trailT-=dt; if(p.trailT<=0){ p.trailT=0.05; G.pzones.push({x:p.x,y:p.y,r:24,life:1.4+0.5*p.shadow,max:1.4+0.5*p.shadow,dps:p.dmg*(0.5+0.3*p.shadow),tick:0}); } }
 }
 function raiseAlly(x,y,life){
-  G.allies.push({x,y,r:11,life,max:life,atkT:0.4,face:0,seed:rand(0,TAU),t:0});
+  G.allies.push({x,y,r:11,life,max:life,atkT:0.4,face:0,seed:rand(0,TAU),t:0}); G.fx.push({type:'rise',x,y,t:0,life:0.6});
   burst(x,y,14,'#5affd0',140);
 }
 function updAllies(dt){
@@ -310,14 +310,14 @@ function hitstop(t){ if(!G) return; G.stop=Math.max(G.stop,t); }
 function useSkill(){
   if(state!=='combat'||!P||P.skillT>0||G.over) return;
   const p=P, c=CHARS[p.cid]; p.skillT=c.skill.cd*p.cdMul; sfx('skill'); buzz(20); G.tutSkill=true;
-  if(p.cid==='krieger'){ p.spin=1.5; p.spinTick=0; }
-  else if(p.cid==='nekro'){ for(let i=0;i<4;i++){ const a=i/4*TAU; raiseAlly(p.x+Math.cos(a)*34,p.y+Math.sin(a)*34,10); } G.fx.push({type:'ring',x:p.x,y:p.y,r:70,t:0,life:0.4,color:'#5affd0',fill:true}); }
+  if(p.cid==='krieger'){ p.spin=1.5; p.spinTick=0; G.fx.push({type:'shock',x:p.x,y:p.y,r:90,t:0,life:0.35,color:'#dbe8ff'}); burst(p.x,p.y+6,16,'#e8f0ff',220); }
+  else if(p.cid==='nekro'){ for(let i=0;i<4;i++){ const a=i/4*TAU; raiseAlly(p.x+Math.cos(a)*34,p.y+Math.sin(a)*34,10); } G.fx.push({type:'summon',x:p.x,y:p.y,r:62,t:0,life:1.0}); G.fx.push({type:'ring',x:p.x,y:p.y,r:70,t:0,life:0.4,color:'#5affd0',fill:true}); }
   else if(p.cid==='magier'){ const R=170*p.area;
     for(const e of G.enemies){ if(Math.hypot(e.x-p.x,e.y-p.y)<R+e.r){ dealDamage(e,p.dmg*2.2,{from:p,kb:120}); e.freeze=e.boss?0.7:2.4; } }
-    G.fx.push({type:'ring',x:p.x,y:p.y,r:R,t:0,life:0.45,color:'#9fe6ff',fill:true}); burst(p.x,p.y,40,'#bdf2ff',320); G.shake+=5;
+    G.fx.push({type:'nova',x:p.x,y:p.y,r:R,t:0,life:1.1,seed:Math.random()*TAU}); G.fx.push({type:'ring',x:p.x,y:p.y,r:R,t:0,life:0.45,color:'#9fe6ff',fill:true}); burst(p.x,p.y,40,'#bdf2ff',320); G.shake+=5;
   } else { const n=24;
     for(let i=0;i<n;i++){ const a=i/n*TAU; G.pproj.push({type:'arrow',x:p.x,y:p.y,vx:Math.cos(a)*620,vy:Math.sin(a)*620,r:5,dmg:p.dmg*1.6,life:0.9,pierce:3,bounce:p.bounce,poison:p.poison,hit:new Set(),gold:true}); }
-    G.fx.push({type:'ring',x:p.x,y:p.y,r:60,t:0,life:0.25,color:'#e6ffb0'});
+    G.fx.push({type:'volley',x:p.x,y:p.y,r:90,t:0,life:0.45}); G.fx.push({type:'ring',x:p.x,y:p.y,r:60,t:0,life:0.25,color:'#e6ffb0'});
   }
 }
 
