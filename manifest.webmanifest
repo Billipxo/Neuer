@@ -1,0 +1,10 @@
+{
+  "name": "Arena der Verdammten",
+  "short_name": "Arena",
+  "start_url": "./index.html",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#120e16",
+  "theme_color": "#120e16",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
