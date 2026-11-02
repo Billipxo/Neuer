@@ -4,9 +4,15 @@ Ein Fantasy-Roguelike-Arenaspiel für das Handy. Es läuft komplett im Browser, 
 
 ## Spielen
 
-`index.html` im Browser öffnen. Am Handy geht das am besten über GitHub Pages:
-**Settings → Pages → Branch auswählen → Save**. Danach die Seite im Handy-Browser öffnen und über
-„Zum Home-Bildschirm hinzufügen“ wie eine App starten. Nach dem ersten Laden funktioniert das Spiel auch offline.
+`index.html` im Browser öffnen. Am Handy geht das am besten über GitHub Pages mit dem
+Workflow `.github/workflows/pages.yml`:
+
+1. **Settings → Pages → Build and deployment → Source: „GitHub Actions“** einstellen.
+2. Den Workflow starten: entweder diesen Branch nach `main` mergen (dann läuft er automatisch)
+   oder unter **Actions → GitHub Pages → Run workflow** von Hand. Für einen anderen Branch als
+   `main` muss dieser vorher unter **Settings → Environments → github-pages** erlaubt werden.
+3. Die Seite im Handy-Browser öffnen und über „Zum Home-Bildschirm hinzufügen“ wie eine App starten.
+   Nach dem ersten Laden funktioniert das Spiel auch offline.
 
 ## Steuerung
 
