@@ -43,10 +43,10 @@ const ENEMIES = {
 };
 
 const BOSSES = {
-  golem: { name:'Der Steingolem', hp:700,  speed:42, dmg:16, r:40 },
+  golem: { name:'Der Steingolem', hp:620,  speed:42, dmg:15, r:40 },
   lich:  { name:'Der Lichkönig',  hp:1150, speed:60, dmg:18, r:28 },
   dragon:{ name:'Ignaroth, der Drache', hp:1750, speed:58, dmg:24, r:44 },
-  spider:{ name:'Die Spinnenkönigin', hp:720, speed:72, dmg:16, r:34 },
+  spider:{ name:'Die Spinnenkönigin', hp:630, speed:70, dmg:14, r:34 },
   vampire:{ name:'Graf Morvath, der Vampirfürst', hp:1100, speed:80, dmg:18, r:26 },
   lavaworm:{ name:'Der Lavawurm', hp:1450, speed:150, dmg:22, r:38 },
 };

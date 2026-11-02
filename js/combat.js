@@ -453,7 +453,7 @@ function updBoss(e,dt,sm,d,a){
   if(e.ai==='golem'){
     if(!e.cast){ mx=Math.cos(a); my=Math.sin(a); e.face=a;
       if(e.timer<=0){ e.cast=pick(e.phase2?['slam','rocks','slam','summon','quake']:['slam','rocks','slam']); e.castT=0;
-        if(e.cast==='slam'){ const n=e.phase2?3:1; for(let i=0;i<n;i++) G.hazards.push({type:'circle',x:P.x+(i?rand(-90,90):0),y:P.y+(i?rand(-90,90):0),r:90,delay:1.0+i*0.25,t:0,dmg:e.dmg*1.1,color:'#ffb35a'}); }
+        if(e.cast==='slam'){ const n=e.phase2?3:1; for(let i=0;i<n;i++) G.hazards.push({type:'circle',x:P.x+(i?rand(-90,90):0),y:P.y+(i?rand(-90,90):0),r:90,delay:1.1+i*0.25,t:0,dmg:e.dmg,color:'#ffb35a'}); }
         if(e.cast==='quake'){ for(let i=0;i<10;i++) G.hazards.push({type:'circle',x:rand(60,AW-60),y:rand(60,AH-60),r:70,delay:1.2+rand(0,0.6),t:0,dmg:e.dmg,color:'#ffb35a'}); }
         if(e.cast==='summon'){ for(let i=0;i<3;i++) G.spawnQ.push({x:clamp(e.x+rand(-120,120),30,AW-30),y:clamp(e.y+rand(-120,120),30,AH-30),t:0.8,kind:'skeleton'}); }
       } }
@@ -498,7 +498,7 @@ function updBoss(e,dt,sm,d,a){
     else if(!e.cast){ mx=Math.cos(a)*0.8; my=Math.sin(a)*0.8; e.face=a;
       if(e.timer<=0){ e.cast=pick(e.phase2?['leap','web','brood','leap','web']:['leap','web','brood']); e.castT=0; e.fired=0;
         if(e.cast==='leap'){ e.lx1=clamp(P.x,60,AW-60); e.ly1=clamp(P.y,60,AH-60); G.hazards.push({type:'circle',x:e.lx1,y:e.ly1,r:75,delay:0.9,t:0,dmg:0,color:'#c8a0ff',visual:true}); }
-        if(e.cast==='brood') for(let i=0;i<(e.phase2?6:4);i++) G.spawnQ.push({x:clamp(e.x+rand(-90,90),30,AW-30),y:clamp(e.y+rand(-90,90),30,AH-30),t:0.5,kind:'spiderling'}); } }
+        if(e.cast==='brood') for(let i=0;i<(e.phase2?5:3);i++) G.spawnQ.push({x:clamp(e.x+rand(-90,90),30,AW-30),y:clamp(e.y+rand(-90,90),30,AH-30),t:0.5,kind:'spiderling'}); } }
     else { e.castT+=dt*sm;
       if(e.cast==='leap' && e.castT>0.9){ e.leap=true; e.leapT=0; e.lx0=e.x; e.ly0=e.y; }
       else if(e.cast==='web'){ if(e.castT>0.4 && e.fired<3){ e.fired++; const ang=a+(e.fired-2)*0.35; G.eproj.push({x:e.x,y:e.y,vx:Math.cos(ang)*210,vy:Math.sin(ang)*210,dmg:e.dmg*0.5,kind:'web',r:9,life:2.2}); e.castT=0.25; } if(e.fired>=3&&e.castT>0.6) endCast(e); }
