@@ -77,16 +77,23 @@ const MEL={
   f2:    '7 . 6 . 5 . 4 . 3 - 4 - 1 - - . 7 . 8 . 7 . 5 . 6 - 5 - 4 - - .',
   f3:    '0 0 3 0 4 0 5 4 6 - 5 - 4 3 4 . 0 0 3 0 4 0 7 6 5 - 4 - 6 - 7 -',
   boss:  '7 - 6 - 4 - 3 4 5 - 4 - 3 - 1 - 7 - 8 - 9 - 7 - 6 - 5 - 6 - 7 -',
+  menuB: '7 - 6 5 4 - 3 - 4 - 5 - 6 - - . 7 - 8 7 6 - 4 - 5 - 3 - 0 - - .',
+  calmB: '4 - 5 - 7 - 5 - 4 - 2 - 1 - - - 2 - 4 - 5 - 4 - 2 - 1 - 0 - - -',
+  calm2B: '4 - - 5 6 - - . 7 - 6 - 4 - - . 3 - - 4 5 - 4 . 1 - 0 - - - - .',
+  f1B: '4 . 4 5 6 . 5 4 3 . 3 4 5 . 4 3 2 . 2 3 4 . 3 2 1 - 0 - 1 - 2 -',
+  f2B: '4 . 3 . 1 . 0 . 1 - 3 - 4 - - . 5 . 6 . 7 . 8 . 7 - 6 - 5 - - .',
+  f3B: '7 7 6 7 8 7 6 4 5 - 4 - 3 4 5 . 7 7 6 7 8 7 9 8 7 - 6 - 4 - 6 -',
+  bossB: '0 0 3 0 4 0 6 5 4 - 3 - 1 - 0 - 0 0 3 0 4 0 7 6 8 - 7 - 6 - 4 -',
 };
 const SONGS2={
-  menu:  { bpm:72,  root:50, sc:'min',  prog:[0,6,5,4], mel:'menu',  lead:'flute', arp:'pluck', pad:true, vol:1 },
-  calm1: { bpm:78,  root:50, sc:'min',  prog:[0,5,3,4], mel:'calm',  lead:'pluck', arp:null,    pad:true, vol:0.9 },
-  calm2: { bpm:66,  root:45, sc:'phry', prog:[0,1,5,0], mel:'calm2', lead:'bell',  arp:null,    pad:true, vol:0.9 },
-  calm3: { bpm:78,  root:52, sc:'hmin', prog:[0,5,3,4], mel:'calm',  lead:'pluck', arp:null,    pad:true, vol:0.9 },
-  fight1:{ bpm:106, root:50, sc:'min',  prog:[0,6,5,4], mel:'f1',    lead:'lead',  arp:'pluck', drums:'k...s...k.k.s...', hats:'h.h.h.h.h.h.h.h.', vol:1 },
-  fight2:{ bpm:94,  root:45, sc:'phry', prog:[0,1,5,4], mel:'f2',    lead:'bell',  arp:'pluck', pad:true, drums:'k.......s.....k.', hats:'....h.......h...', vol:1 },
-  fight3:{ bpm:116, root:52, sc:'hmin', prog:[0,5,3,4], mel:'f3',    lead:'lead',  arp:'pluck', drums:'k.k.s.k.k.k.s.kk', hats:'h.h.h.h.h.h.h.hh', vol:1 },
-  boss:  { bpm:132, root:50, sc:'hmin', prog:[0,5,6,4], mel:'boss',  lead:'lead',  arp:'pluck', choir:true, drums:'k..ks..kk.k.s.kk', hats:'hhhhhhhhhhhhhhhh', timp:true, vol:1.05 },
+  menu:  { progB:[5,3,6,4], bpm:72,  root:50, sc:'min',  prog:[0,6,5,4], mel:'menu',  lead:'flute', arp:'pluck', pad:true, vol:1 },
+  calm1: { progB:[3,4,0,5], bpm:78,  root:50, sc:'min',  prog:[0,5,3,4], mel:'calm',  lead:'pluck', arp:null,    pad:true, vol:0.9 },
+  calm2: { progB:[5,1,0,1], bpm:66,  root:45, sc:'phry', prog:[0,1,5,0], mel:'calm2', lead:'bell',  arp:null,    pad:true, vol:0.9 },
+  calm3: { progB:[3,4,0,4], bpm:78,  root:52, sc:'hmin', prog:[0,5,3,4], mel:'calm',  lead:'pluck', arp:null,    pad:true, vol:0.9 },
+  fight1:{ progB:[3,4,5,6], bpm:106, root:50, sc:'min',  prog:[0,6,5,4], mel:'f1',    lead:'lead',  arp:'pluck', drums:'k...s...k.k.s...', hats:'h.h.h.h.h.h.h.h.', vol:1 },
+  fight2:{ progB:[5,4,1,0], bpm:94,  root:45, sc:'phry', prog:[0,1,5,4], mel:'f2',    lead:'bell',  arp:'pluck', pad:true, drums:'k.......s.....k.', hats:'....h.......h...', vol:1 },
+  fight3:{ progB:[3,4,5,4], bpm:116, root:52, sc:'hmin', prog:[0,5,3,4], mel:'f3',    lead:'lead',  arp:'pluck', drums:'k.k.s.k.k.k.s.kk', hats:'h.h.h.h.h.h.h.hh', vol:1 },
+  boss:  { progB:[3,6,5,4], bpm:132, root:50, sc:'hmin', prog:[0,5,6,4], mel:'boss',  lead:'lead',  arp:'pluck', choir:true, drums:'k..ks..kk.k.s.kk', hats:'hhhhhhhhhhhhhhhh', timp:true, vol:1.05 },
 };
 const MELP={}; for(const k in MEL) MELP[k]=MEL[k].trim().split(/\s+/);
 function musicInit(){
@@ -128,15 +135,15 @@ function drum(t,kind){
 }
 function degSemi(sc,deg){ const n=sc.length, o=Math.floor(deg/n), i=((deg%n)+n)%n; return sc[i]+12*o; }
 function playStep(step,t,S,sd){
-  const sc=SC[S.sc], bar=Math.floor(step/16)%4, s=step%16, cd=S.prog[bar];
+  const sec=Math.floor(step/64)%4, useB=sec===2 && MELP[S.mel+'B'], sc=SC[S.sc], bar=Math.floor(step/16)%4, s=step%16, cd=(useB&&S.progB?S.progB:S.prog)[bar];
   const chord=[0,2,4].map(k=>S.root+degSemi(sc,cd+k));
   if(s===0){ tone('sawtooth',mtof(chord[0]-12),t,sd*16*0.95,0.45,MUS.filt,0.04);
     if(S.pad) padChord(chord.map(m=>mtof(m+12)),t,sd*16,0.035,false);
     if(S.choir) padChord(chord.map(m=>mtof(m+12)).concat([mtof(chord[0]+24)]),t,sd*16,0.04,true);
     if(S.timp) drum(t,'timp'); }
   if(S.timp && s===8 && bar%2===1) drum(t,'timp');
-  if(S.arp==='pluck'){ const ev=S.drums?2:4; if(s%ev===0){ const pat=[0,1,2,1,0,2,1,2]; inst('pluck',mtof(chord[pat[(s/ev)%8]]+(S.drums?12:12)),t,sd*3,S.drums?0.07:0.06); } }
-  if(s%2===0){ const P=MELP[S.mel], i=(Math.floor(step/2))%P.length, tk=P[i];
+  if(S.arp==='pluck'){ const ev=(S.drums?2:4)/(sec===3?2:1); if(s%ev===0){ const pat=[0,1,2,1,0,2,1,2]; inst('pluck',mtof(chord[pat[(s/ev)%8]]+(S.drums?12:12)),t,sd*3,S.drums?0.07:0.06); } }
+  if(s%2===0){ const P=MELP[useB?S.mel+'B':S.mel], i=(Math.floor(step/2))%P.length, tk=P[i];
     if(tk!=='-'&&tk!=='.'){ let h=1; while(P[(i+h)%P.length]==='-'&&h<8) h++;
       const f=mtof(S.root+12+degSemi(sc,+tk)), dur=h*2*sd, v={lead:0.055,flute:0.09,pluck:0.1,bell:0.07}[S.lead];
       inst(S.lead,f,t,dur,v); } }
@@ -154,7 +161,7 @@ function musicTick(){
   MUS.gain.gain.setTargetAtTime(!on?0:(duck?0.15:(state==='paused'?0.35:1))*0.1*vol*((SONGS2[MUS.song]||{}).vol||1), AC.currentTime, 0.35);
   if(!on){ MUS.next=AC.currentTime+0.1; return; }
   const key=songKey();
-  if(key!==MUS.song && MUS.step%16===0){ MUS.song=key; MUS.step=0; }
+  if(key!==MUS.song && MUS.step%16===0 && MUS.song){ MUS.song=key; MUS.step=0; }
   const S=SONGS2[MUS.song||key]; if(!MUS.song) MUS.song=key;
   const sd=60/S.bpm/4;
   if(MUS.next<AC.currentTime) MUS.next=AC.currentTime+0.05;

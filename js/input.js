@@ -40,6 +40,8 @@ $('dashBtn').addEventListener('pointerdown',e=>{ e.preventDefault(); e.stopPropa
 $('pauseBtn').addEventListener('click',()=>pauseGame());
 document.addEventListener('visibilitychange',()=>{ if(document.hidden && state==='combat') pauseGame(); });
 document.addEventListener('gesturestart',e=>e.preventDefault());
+document.addEventListener('pointerdown',()=>audio(),{passive:true});
+document.addEventListener('keydown',()=>audio());
 
 /* ---------------- ZUSTAND ---------------- */
 let state='menu'; // menu | combat | ui | paused
