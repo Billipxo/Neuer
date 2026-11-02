@@ -126,7 +126,7 @@ function update(dt){
   if(G.whiteFlash>0) G.whiteFlash-=dt;
   G.time+=dt; if(G.tut) updTut(dt);
   // spawns
-  for(const s of G.spawnQ){ s.t-=dt; if(s.t<=0){ G.enemies.push(s.boss?makeBoss(s.kind,s.x,s.y):makeEnemy(s.kind,s.x,s.y,s.elite)); if(s.boss){ roar(s.kind); G.shake+=10; } burst(s.x,s.y,s.boss?40:10,'#b69cff',s.boss?220:120); } }
+  for(const s of G.spawnQ){ s.t-=dt; if(s.t<=0){ if(!s.boss) newFoeHint(s.kind); G.enemies.push(s.boss?makeBoss(s.kind,s.x,s.y):makeEnemy(s.kind,s.x,s.y,s.elite)); if(s.boss){ roar(s.kind); G.shake+=10; } burst(s.x,s.y,s.boss?40:10,'#b69cff',s.boss?220:120); } }
   G.spawnQ=G.spawnQ.filter(s=>s.t>0);
   if(!G.cleared && G.type!=='boss' && G.enemies.length===0 && G.spawnQ.length===0){
     if(G.waveIdx < G.waves.length-1){ if(!G.tut || G.tut.step>=(G.waveIdx<0?1:4)) G.waveT-=dt; if(G.waveT<=0){ nextWave(); G.waveT=0.45; if(G.waveIdx>0) banner('Welle '+(G.waveIdx+1)); } }
@@ -170,6 +170,7 @@ function updPlayer(dt){
   if(p.chill>0){ p.chill-=dt; if(Math.random()<dt*10) part(p.x+rand(-10,10),p.y-8,0,-20,0.5,2.5,'#bfe6ff',true); }
   const sp=p.speed*p.spdMul*(1+0.03*(p.fury||0))*(p.spin>0?1.25:1)*(p.chill>0?0.6:1)*(G.webs.some(w=>Math.hypot(p.x-w.x,p.y-w.y)<w.r)?0.45:1);
   if(p.dashCd>0) p.dashCd-=dt; if(p.dashI>0) p.dashI-=dt;
+  if(p.dashBuf>0){ p.dashBuf-=dt; if(p.dashCd<=0 && p.dashT<=0){ p.dashBuf=0; useDash(); } }
   if(p.dashT>0){ p.dashT-=dt; const ds=720;
     p.x=clamp(p.x+Math.cos(p.dashA)*ds*dt,p.r,AW-p.r); p.y=clamp(p.y+Math.sin(p.dashA)*ds*dt,p.r,AH-p.r);
     G.fx.push({type:'ghost',x:p.x,y:p.y,t:0,life:0.22,color:CHARS[p.cid].color}); onDashMove(dt); }
@@ -186,6 +187,7 @@ function updPlayer(dt){
   if(p.manaShield && p.shieldLeft<=0){ p.msT+=dt; if(p.msT>=10){ p.msT=0; p.shieldLeft=1; G.fx.push({type:'ring',x:p.x,y:p.y,r:34,t:0,life:0.4,color:'#7fb4ff'}); } }
   const c=CHARS[p.cid];
   heroPassives(p,dt);
+  if(p.hp<p.maxHp*0.25 && !G.cleared){ p.hbT=(p.hbT||0)-dt; if(p.hbT<=0){ p.hbT=0.9; heartbeat(); } }
   const reach = (c.attack==='melee'||c.attack==='axe') ? p.range*p.area+26 : p.range*(c.attack==='bolt'?1:1)*Math.sqrt(p.area);
   const tgt=pickTarget(p, reach, c.attack!=='melee'&&c.attack!=='axe'&&c.attack!=='flask');
   if(tgt) p.face=angTo(p,tgt); else if(p.moving) p.face=Math.atan2(my,mx);
@@ -300,11 +302,15 @@ function attack(tgt){
   }
 }
 
+// Perfektes Ausweichen: wer im letzten Moment durch einen Angriff hechtet, wird belohnt (Zeitlupe, Ausweichen sofort wieder bereit)
+function perfectDodge(){ const p=P; p.dashCd=0; G.slowT=Math.max(G.slowT,0.22); p.perfT=0.6; G.stats_perf=(G.stats_perf||0)+1; save.stats.perfect=(save.stats.perfect||0)+1;
+  G.texts.push({x:p.x,y:p.y-34,s:'Perfekt!',c:'#9fe6ff',big:true,t:0}); G.fx.push({type:'shock',x:p.x,y:p.y,r:70,t:0,life:0.35,color:'#9fe6ff'}); sfx('pick'); buzz(15); hype(0.05); }
 function useDash(){
-  if(state!=='combat'||!P||!G||P.dashCd>0||P.dashT>0||G.over) return;
+  if(state==='combat'&&P&&G&&!G.over&&(P.dashCd>0||P.dashT>0)){ if(P.dashCd<0.25) P.dashBuf=0.25; return; }   // kurz vor Ablauf gedrückt: wird nachgeholt
+  if(state!=='combat'||!P||!G||P.dashCd>0||P.dashT>0||G.over) return; P.dashBuf=0;
   const [mx,my]=readMove();
   P.dashA = Math.hypot(mx,my)>0.2 ? Math.atan2(my,mx) : P.face;
-  G.tutDash=true; P.dashT=0.13; P.dashI=0.24; P.dashCd=1.0*P.dashCdMul; P.dashHit=[];
+  G.tutDash=true; P.dashT=0.13; P.dashI=0.24; P.dashCd=1.0*P.dashCdMul; P.dashHit=[]; P.perfUsed=false;
   if(hasSyn('phantom')) P.nextCrit=true;
   sfx('dash'); burst(P.x,P.y+8,8,'#cfe3ff',90); G.fx.push({type:'dashline',x:P.x,y:P.y,a:P.dashA,t:0,life:0.3,color:CHARS[P.cid].color});
 }
@@ -433,8 +439,11 @@ function explosion(x,y,r,dmg,color,fromBoom){
   for(const e of G.enemies){ if(!e.dead && Math.hypot(e.x-x,e.y-y)<r+e.r) dealDamage(e,dmg,{noChain:true,kb:120,from:{x,y}}); }
   for(const o of G.obs){ if(o.type==='barrel' && !o.dead && Math.hypot(o.x-x,o.y-y)<r+o.r) blowBarrel(o); }
 }
+// Hinweis beim ersten Auftauchen einer Gegnerart (Einstieg: Mechaniken erklären, wenn sie gebraucht werden)
+function newFoeHint(k){ if(G.tut || !BEAST[k] || (save.seenFoes||{})[k]) return; save.seenFoes=save.seenFoes||{}; save.seenFoes[k]=1;
+  toast(`<span style="font-size:26px">${BEAST[k].ic}</span><div><div class="eyebrow" style="color:var(--gold)">Neuer Gegner</div><b>${esc(ENEMIES[k].name)}</b><div class="sub" style="font-size:13px">${BEAST[k].ds}</div></div>`); }
 function killEnemy(e){
-  e.dead=true; if(e.boss) sfx('kill'); else deathSound(e.kind); if(e.elite) hitstop(0.09); if(e.boss) hitstop(0.35);
+  e.dead=true; if(!e.boss && !e.elite && G.stopCd<=0){ hitstop(0.018); G.stopCd=0.12; } if(e.boss) sfx('kill'); else deathSound(e.kind); if(e.elite) hitstop(0.09); if(e.boss) hitstop(0.35);
   burst(e.x,e.y,e.boss?80:12,enemyColor(e),e.boss?300:160);
   save.stats.beast[e.kind]=(save.stats.beast[e.kind]||0)+1;
   if(P && P.cid==='berserk' && !G.over){ P.hp=Math.min(P.maxHp,P.hp+P.maxHp*0.03); }
@@ -601,7 +610,7 @@ function updEnemy(e,dt){
 
 function updBoss(e,dt,sm,d,a){
   e.phase2 = e.hp<e.maxHp*(0.5+Math.min(0.2,0.05*(run.ng||0)));
-  if(e.phase2 && !e.enraged){ e.enraged=true; hype(0.4); crowdSound(0.8); banner('Der Boss wird wütend!'); hitstop(0.2); G.shake+=10; sfx('boss'); }
+  if(e.phase2 && !e.enraged){ e.enraged=true; hype(0.4); crowdSound(0.8); banner('Der Boss wird wütend!','Neue Angriffe – schneller und gefährlicher',1800); hitstop(0.2); G.shake+=10; sfx('boss'); roar(e.kind); G.whiteFlash=0.35; G.fx.push({type:'shock',x:e.x,y:e.y,r:e.r*4,t:0,life:0.6,color:'#ff5a3a'}); }
   const rage=e.phase2?1.35:1;
   e.timer-=dt*sm*rage;
   let mx=0,my=0;
@@ -746,7 +755,7 @@ function updProjectiles(dt){
     if(pr.kind==='soul' && Math.random()<0.3) part(pr.x,pr.y,0,0,0.3,3,'#7dffb0',true);
     if(pr.x<-10||pr.y<-10||pr.x>AW+10||pr.y>AH+10) pr.life=0;
     { const o=solidHit(pr.x,pr.y,pr.r*0.6); if(o){ if(o.type==='barrel') blowBarrel(o); pr.life=0; burst(pr.x,pr.y,4,'#b8b0a0',70); continue; } }
-    if(Math.hypot(P.x-pr.x,P.y-pr.y)<P.r+pr.r-2 && !G.over){ pr.life=0; hurtPlayer(pr.dmg,null,pr.src); burst(pr.x,pr.y,6,'#ffffff',90); }
+    if(Math.hypot(P.x-pr.x,P.y-pr.y)<P.r*0.7+pr.r*0.85 && !G.over){ pr.life=0; hurtPlayer(pr.dmg,null,pr.src); burst(pr.x,pr.y,6,'#ffffff',90); }
   }
   for(const p of G.eproj) if(p.life<=0&&p.kind==='web') G.webs.push({x:p.x,y:p.y,r:48,life:7});
   G.eproj=G.eproj.filter(p=>p.life>0);
@@ -755,6 +764,7 @@ function updProjectiles(dt){
 
 function updHazards(dt){
   for(const h of G.hazards){
+    if(!h.cued){ h.cued=true; if(h.delay>=0.5 && !h.visual && G.type==='boss') warnSound(); }
     h.t+=dt; if(h.owner && h.type==='cone'){ h.x=h.owner.x; h.y=h.owner.y; }
     if(h.t>=h.delay){ h.done=true; if(h.visual) continue;
       if(h.type==='circle'){ if(Math.hypot(P.x-h.x,P.y-h.y)<h.r+P.r*0.6) hurtPlayer(h.dmg,null);
@@ -783,7 +793,8 @@ function updTraps(dt){
 // Hilfemodus (wie der Gottmodus in Hades): 20 % weniger Schaden, +2 % je Niederlage, höchstens 80 %
 const assistMul=()=>save.settings.assist?1-Math.min(0.8,0.2+0.02*(save.assistN||0)):1;
 function hurtPlayer(dmg,src,via){
-  const p=P; if(p.inv>0||p.dashI>0||G.over||G.cleared) return;
+  const p=P; if(p.dashI>0 && !G.over && !G.cleared && !p.perfUsed){ p.perfUsed=true; perfectDodge(); return; }
+  if(p.inv>0||p.dashI>0||G.over||G.cleared) return;
   if(p.shieldLeft>0){ p.shieldLeft--; p.inv=0.7; G.fx.push({type:'ring',x:p.x,y:p.y,r:30,t:0,life:0.35,color:'#7fd4ff'}); G.texts.push({x:p.x,y:p.y-26,s:'Geblockt',c:'#7fd4ff',t:0}); sfx('pick'); return; }
   const d=Math.max(1,Math.round((dmg*(p.dmgTaken||1)-p.armor-(p.boneArmor?G.allies.length:0))*(p.spin>0?0.5:1)*(p.ward>0?0.5:1)*assistMul()));
   hype(-0.06); G.combo=0; if(G.type==='boss') G.bossHit=true; p.hurtT=0.25;

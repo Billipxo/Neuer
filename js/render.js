@@ -44,7 +44,6 @@ function draw(){
   if(P.orbit>0 && !G.over){ const R=62*Math.sqrt(P.area); for(let i=0;i<P.orbit;i++){ const a=G.orbitA+i*TAU/P.orbit, ox=P.x+Math.cos(a)*R, oy=P.y+Math.sin(a)*R; drawGlow(ox,oy,22,'#ff8a2a',0.8); ctx.fillStyle='#ffe0a0'; ctx.beginPath(); ctx.arc(ox,oy,5,0,TAU); ctx.fill(); } }
   // projectiles
   for(const p of G.pproj) drawPProj(p);
-  for(const p of G.eproj) drawEProj(p);
   // fx
   for(const f of G.fx) drawFx(f);
   // particles
@@ -54,6 +53,8 @@ function draw(){
   ctx.globalCompositeOperation='source-over';
   for(const p of G.parts) if(!p.glow){ ctx.globalAlpha=Math.min(1,p.life/p.max*1.5); ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,p.size*(0.4+0.6*p.life/p.max),0,TAU); ctx.fill(); }
   ctx.globalAlpha=1;
+  // gegnerische Geschosse ganz oben, damit sie im Getümmel nie verdeckt werden
+  for(const p of G.eproj) drawEProj(p);
   // texts
   ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.lineJoin='round'; ctx.miterLimit=2;
   for(const t of G.texts){ const s=(t.big?17:13)*(t.t<0.1?1+(0.1-t.t)*4:1); ctx.font=`800 ${s}px "Alegreya Sans", sans-serif`;
@@ -67,6 +68,7 @@ function draw(){
   const FL=save.settings.calm?0.3:1;
   if(G.whiteFlash>0){ ctx.fillStyle=`rgba(255,248,220,${G.whiteFlash*FL})`; ctx.fillRect(0,0,W,H); }
   if(G.over){ ctx.fillStyle=`rgba(10,0,0,${Math.min(0.55,G.deathT*0.5)})`; ctx.fillRect(0,0,W,H); }
+  if(P && !G.over && P.hp<P.maxHp*0.25){ const pu=0.5+0.5*Math.sin(G.time*7); const g=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.3,W/2,H/2,Math.max(W,H)*0.7); g.addColorStop(0,'rgba(120,0,0,0)'); g.addColorStop(1,`rgba(150,10,10,${(0.25+0.2*pu)*(save.settings.calm?0.5:1)})`); ctx.fillStyle=g; ctx.fillRect(0,0,W,H); }
   if(G.hurtFlash>0){ ctx.fillStyle=`rgba(200,30,30,${G.hurtFlash*0.6*FL})`; ctx.fillRect(0,0,W,H); }
   if(P.hp<P.maxHp*0.25 && !G.over){ ctx.fillStyle=`rgba(160,0,0,${0.12+Math.sin(G.time*6)*0.06})`; ctx.fillRect(0,0,W,H); }
   // joystick
@@ -555,9 +557,11 @@ function drawHazard(h){
     ctx.strokeStyle=cb?'#ffffff':'rgba(255,120,80,0.7)'; ctx.lineWidth=cb?3:2; ctx.stroke();
     ctx.fillStyle=cb?'rgba(255,212,0,0.38)':'rgba(255,90,50,0.3)'; ctx.beginPath(); ctx.arc(h.x,h.y,h.r*k,0,TAU); ctx.fill();
     if(h.meteor){ const y=h.y-(1-k)*300; drawGlow(h.x,y,26,'#ff7a2a',k); }
+    if(k>0.78){ ctx.setLineDash([]); ctx.strokeStyle=`rgba(255,245,210,${Math.min(1,(k-0.78)*4.5)})`; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(h.x,h.y,h.r,0,TAU); ctx.stroke(); }
   } else if(h.type==='cone'){
     ctx.fillStyle=cb?'rgba(255,212,0,'+(0.14+0.2*k)+')':'rgba(255,110,40,'+(0.12+0.2*k)+')'; ctx.beginPath(); ctx.moveTo(h.x,h.y); ctx.arc(h.x,h.y,h.len,h.a-h.spread,h.a+h.spread); ctx.closePath(); ctx.fill();
     ctx.strokeStyle=cb?'#ffffff':'rgba(255,140,60,0.7)'; ctx.lineWidth=cb?3:2; ctx.stroke();
+    if(k>0.78){ ctx.setLineDash([]); ctx.strokeStyle=`rgba(255,245,210,${Math.min(1,(k-0.78)*4.5)})`; ctx.lineWidth=3; ctx.stroke(); }
   } else if(h.type==='line'){
     ctx.translate(h.x,h.y); ctx.rotate(h.a); ctx.fillStyle='rgba(255,120,60,'+(0.1+0.2*k)+')'; ctx.fillRect(0,-h.w/2,h.len,h.w);
     ctx.strokeStyle='rgba(255,150,80,0.6)'; ctx.setLineDash([10,8]); ctx.lineWidth=2; ctx.strokeRect(0,-h.w/2,h.len,h.w);
@@ -589,6 +593,7 @@ function drawPProj(p){
   ctx.fillStyle='#c8423a'; ctx.fillRect(-15,-3,4,2); ctx.fillRect(-15,1,4,2); ctx.restore();
 }
 function drawEProj(p){
+  if(p.kind!=='arrow'&&p.kind!=='spike'&&p.kind!=='web'){ ctx.fillStyle='rgba(20,4,8,0.85)'; ctx.beginPath(); ctx.arc(p.x,p.y,(p.r||6)*0.9+2,0,TAU); ctx.fill(); }
   if(save.settings.cb){ ctx.strokeStyle='#ffffff'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(p.x,p.y,(p.r||6)+3,0,TAU); ctx.stroke(); }
   if(p.kind==='arrow'){ const a=Math.atan2(p.vy,p.vx); ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(a); ctx.strokeStyle='#8a5a30'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.moveTo(-10,0); ctx.lineTo(6,0); ctx.stroke(); ctx.fillStyle='#ff6a4a'; ctx.beginPath(); ctx.moveTo(9,0); ctx.lineTo(3,-4); ctx.lineTo(3,4); ctx.fill(); ctx.restore(); return; }
   if(p.kind==='spike'){ const a=Math.atan2(p.vy,p.vx); ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(a); ctx.fillStyle='#3a2414'; ctx.beginPath(); ctx.moveTo(8,0); ctx.lineTo(-6,-2.5); ctx.lineTo(-6,2.5); ctx.fill(); ctx.fillStyle='#e8d8b0'; ctx.fillRect(4,-0.8,4,1.6); ctx.restore(); return; }
