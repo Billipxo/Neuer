@@ -101,7 +101,7 @@ function showAch(){
 /* ---------------- UI ---------------- */
 const ui=$('ui'); let actions={};
 ui.addEventListener('click',e=>{
-  const b=e.target.closest('[data-a]'); if(!b||b.disabled) return; audio();
+  const b=e.target.closest('[data-a]'); if(!b||b.disabled) return; audio(); uiClick();
   const fn=actions[b.dataset.a]; if(fn) fn(b.dataset.v);
 });
 function render(html, acts, dim=false){

@@ -279,7 +279,7 @@ function attack(tgt){
       G.pproj.push({type:'skull',x:p.x+Math.cos(ang)*12,y:p.y-6,vx:Math.cos(ang)*300,vy:Math.sin(ang)*300,sp:300,r:8,dmg:p.dmg,life:1.5,target:tgt,pierce:0,hit:new Set()}); }
   } else if(c.attack==='hammer'){
     sfx('swing');
-    for(let i=0;i<p.count;i++){ const ang=a+(i-(p.count-1)/2)*0.35, sp=440;
+    for(let i=0;i<p.count;i++){ const ang=a+(i?(i%2?1:-1)*Math.ceil(i/2)*0.32:0), sp=440;   // erster Hammer immer genau aufs Ziel
       G.pproj.push({type:'hammer',x:p.x,y:p.y-4,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp,sp,r:11,dmg:p.dmg*(p.hamDmg||1),life:3,pierce:999,hit:new Set(),out:p.range*Math.sqrt(p.area)/sp,back:false,spin:0}); }
   } else if(c.attack==='flask'){
     sfx('skullthrow');
@@ -296,7 +296,7 @@ function attack(tgt){
       G.fx.push({type:'slash',x:p.x,y:p.y,a:ang,r:R,t:0,life:0.24,arc,red:true}); }
   } else {
     sfx('twang');
-    for(let i=0;i<p.count;i++){ const ang=a+(i-(p.count-1)/2)*0.14;
+    for(let i=0;i<p.count;i++){ const ang=a+(i?(i%2?1:-1)*Math.ceil(i/2)*0.12:0);
       G.pproj.push({type:'arrow',x:p.x,y:p.y-4,vx:Math.cos(ang)*640,vy:Math.sin(ang)*640,r:5,dmg:p.dmg,life:0.75*Math.sqrt(p.area)+0.25*p.bounce,pierce:p.pierce,bounce:p.bounce,poison:p.poison,hit:new Set()}); }
     if(p.volley && p.atkCount%4===0) for(let i=-2;i<=2;i++){ const ang=a+i*0.22; G.pproj.push({type:'arrow',x:p.x,y:p.y-4,vx:Math.cos(ang)*600,vy:Math.sin(ang)*600,r:5,dmg:p.dmg*0.8,life:0.7,pierce:p.pierce,bounce:p.bounce,poison:p.poison,hit:new Set(),gold:true}); }
   }
@@ -421,7 +421,7 @@ function dealDamage(e,amount,o={}){
     for(let i=0;i<(crit?6:3);i++){ const a2=ha+rand(-0.7,0.7), sp=rand(140,280); part(e.x-Math.cos(ha)*e.r*0.5,e.y-Math.sin(ha)*e.r*0.5,Math.cos(a2)*sp,Math.sin(a2)*sp,0.22,crit?2.6:2,crit?'#ffd34d':'#fff6e0',true); } }
   if(!o.quiet && !(save.settings.dmgOff&&!blocked) && (save.settings.dmgNums||blocked||crit)) G.texts.push({x:e.x+rand(-6,6),y:e.y-e.r-4,s:blocked?'Block':String(Math.round(d)),c:blocked?'#9fb3d9':(o.color||(crit?'#ffd34d':'#ffffff')),big:crit&&!blocked,t:0});
   if(blocked){ burst(e.x+Math.cos(e.face)*e.r,e.y+Math.sin(e.face)*e.r,3,'#ffe08a',90); }
-  if(crit && G.stopCd<=0){ hitstop(0.03); G.stopCd=0.25; }
+  if(crit){ critSound(); if(G.stopCd<=0){ hitstop(0.03); G.stopCd=0.25; } }
   if(!o.noChain && P.chain>0 && Math.random()<0.12+0.06*P.chain) chainLightning(e, amount*0.7, 2+P.chain);
   if(e.hp<=0) killEnemy(e);
 }
@@ -453,7 +453,7 @@ function killEnemy(e){
     G.eproj=[]; G.hazards=[]; clearRoom(); return; }
   run.kills++; run.souls+=e.soul; save.stats.kills++; if(e.elite) save.stats.elites++;
   if(G.time-G.comboLast<2.5) G.combo++; else G.combo=1; G.comboLast=G.time; save.stats.maxCombo=Math.max(save.stats.maxCombo,G.combo);
-  if(G.combo>=10 && G.combo%10===0){ const bonus=G.combo; run.gold+=bonus; run.goldTotal+=bonus; hype(0.2); sfx('pick'); G.texts.push({x:P.x,y:P.y-44,s:G.combo+'er Kombo! +'+bonus+' Gold',c:'#ffd34d',big:true,t:0}); }
+  if(G.combo>=10 && G.combo%10===0){ const bonus=G.combo; run.gold+=bonus; run.goldTotal+=bonus; hype(0.2); comboSound(G.combo); G.texts.push({x:P.x,y:P.y-44,s:G.combo+'er Kombo! +'+bonus+' Gold',c:'#ffd34d',big:true,t:0}); }
   hype(e.elite?0.35:0.035); if(e.elite){ crowdSound(0.6); crowdThrow(3,false); }
   G.fx.push({type:'corpse',e:Object.assign({},e,{flash:0,hp:e.maxHp,spawnT:0,freeze:0,poisonT:0}),t:0,life:0.42});
   part(e.x,e.y-e.r,rand(-10,10),-55,1,4,'#cfe6ff',true,-15);

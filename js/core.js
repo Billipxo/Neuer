@@ -84,7 +84,7 @@ function audioRevive(){
    Komponierte Stücke, live mit Web Audio gespielt: Titelthema, ruhige Kartenmusik und Kampfthema je Akt,
    Bossthema, dazu Fanfaren für Sieg und Niederlage. Melodien in Tonleiterstufen, je Achtel ein Zeichen:
    Zahl = Stufe (7 = Oktave höher), "-" = Ton halten, "." = Pause. */
-const MUS={ next:0, step:0, gain:null, bus:null, filt:null, noise:null, song:null, duck:0 };
+const MUS={ next:0, step:0, gain:null, bus:null, filt:null, noise:null, song:null, duck:0, soft:0, int:0.5, lp:null };
 const mtof=m=>440*Math.pow(2,(m-69)/12);
 const SC={ min:[0,2,3,5,7,8,10], hmin:[0,2,3,5,7,8,11], phry:[0,1,3,5,7,8,10], maj:[0,2,4,5,7,9,11] };
 const MEL={
@@ -111,11 +111,12 @@ const SONGS2={
   fight1:{ progB:[3,4,5,6], bpm:106, root:50, sc:'min',  prog:[0,6,5,4], mel:'f1',    lead:'lead',  arp:'pluck', drums:'k...s...k.k.s...', hats:'h.h.h.h.h.h.h.h.', vol:1 },
   fight2:{ progB:[5,4,1,0], bpm:94,  root:45, sc:'phry', prog:[0,1,5,4], mel:'f2',    lead:'bell',  arp:'pluck', pad:true, drums:'k.......s.....k.', hats:'....h.......h...', vol:1 },
   fight3:{ progB:[3,4,5,4], bpm:116, root:52, sc:'hmin', prog:[0,5,3,4], mel:'f3',    lead:'lead',  arp:'pluck', drums:'k.k.s.k.k.k.s.kk', hats:'h.h.h.h.h.h.h.hh', vol:1 },
-  boss:  { progB:[3,6,5,4], bpm:132, root:50, sc:'hmin', prog:[0,5,6,4], mel:'boss',  lead:'lead',  arp:'pluck', choir:true, drums:'k..ks..kk.k.s.kk', hats:'hhhhhhhhhhhhhhhh', timp:true, vol:1.05 },
+  boss:  { bossMix:true, progB:[3,6,5,4], bpm:132, root:50, sc:'hmin', prog:[0,5,6,4], mel:'boss',  lead:'lead',  arp:'pluck', choir:true, drums:'k..ks..kk.k.s.kk', hats:'hhhhhhhhhhhhhhhh', timp:true, vol:1.05 },
 };
 const MELP={}; for(const k in MEL) MELP[k]=MEL[k].trim().split(/\s+/);
 function musicInit(){
-  MUS.gain=AC.createGain(); MUS.gain.gain.value=0; MUS.gain.connect(AC.destination);
+  MUS.gain=AC.createGain(); MUS.gain.gain.value=0;
+  MUS.lp=AC.createBiquadFilter(); MUS.lp.type='lowpass'; MUS.lp.frequency.value=18000; MUS.gain.connect(MUS.lp); MUS.lp.connect(AC.destination);
   MUS.bus=AC.createGain(); MUS.bus.connect(MUS.gain);
   // Hall: Impulsantwort aus abklingendem Rauschen
   try{ const len=Math.floor(AC.sampleRate*2.2), ir=AC.createBuffer(2,len,AC.sampleRate);
@@ -153,7 +154,9 @@ function drum(t,kind){
 }
 function degSemi(sc,deg){ const n=sc.length, o=Math.floor(deg/n), i=((deg%n)+n)%n; return sc[i]+12*o; }
 function playStep(step,t,S,sd){
-  const sec=Math.floor(step/64)%4, useB=sec===2 && MELP[S.mel+'B'], sc=SC[S.sc], bar=Math.floor(step/16)%4, s=step%16, cd=(useB&&S.progB?S.progB:S.prog)[bar];
+  const I=S.drums?MUS.int:1;   // Kampfintensität 0..1 steuert, wie viele Ebenen spielen
+  const bMel=S.bossMix&&typeof visAct==='function'&&run?'f'+visAct():S.mel+'B';
+  const sec=Math.floor(step/64)%4, useB=sec===2 && MELP[bMel], sc=SC[S.sc], bar=Math.floor(step/16)%4, s=step%16, cd=(useB&&S.progB?S.progB:S.prog)[bar];
   const chord=[0,2,4].map(k=>S.root+degSemi(sc,cd+k));
   if(s===0){ tone('sawtooth',mtof(chord[0]-12),t,sd*16*0.95,0.45,MUS.filt,0.04);
     if(S.pad) padChord(chord.map(m=>mtof(m+12)),t,sd*16,0.035,false);
@@ -161,11 +164,12 @@ function playStep(step,t,S,sd){
     if(S.timp) drum(t,'timp'); }
   if(S.timp && s===8 && bar%2===1) drum(t,'timp');
   if(S.arp==='pluck'){ const ev=(S.drums?2:4)/(sec===3?2:1); if(s%ev===0){ const pat=[0,1,2,1,0,2,1,2]; inst('pluck',mtof(chord[pat[(s/ev)%8]]+(S.drums?12:12)),t,sd*3,S.drums?0.07:0.06); } }
-  if(s%2===0){ const P=MELP[useB?S.mel+'B':S.mel], i=(Math.floor(step/2))%P.length, tk=P[i];
+  if(I>0.8 && S.drums && s%4===2) inst('pluck',mtof(chord[2]+24),t,sd*2,0.035);   // Höhepunkt: zusätzliche hohe Figur
+  if(s%2===0 && (I>0.15||!S.drums)){ const P=MELP[useB?bMel:S.mel], i=(Math.floor(step/2))%P.length, tk=P[i];
     if(tk!=='-'&&tk!=='.'){ let h=1; while(P[(i+h)%P.length]==='-'&&h<8) h++;
       const f=mtof(S.root+12+degSemi(sc,+tk)), dur=h*2*sd, v={lead:0.055,flute:0.09,pluck:0.1,bell:0.07}[S.lead];
       inst(S.lead,f,t,dur,v); } }
-  if(S.drums){ const c=S.drums[s]; if(c==='k') drum(t,'kick'); else if(c==='s') drum(t,'snare'); if(S.hats&&S.hats[s]==='h') drum(t,'hat'); }
+  if(S.drums){ const c=S.drums[s]; if(c==='k') drum(t,'kick'); else if(c==='s' && I>0.25) drum(t,'snare'); if(S.hats&&S.hats[s]==='h'&&I>0.45) drum(t,'hat'); if(I>0.92 && s%4===3) drum(t,'hat'); }
 }
 function songKey(){
   if((state==='combat'||state==='paused')&&G) return G.type==='boss'?'boss':'fight'+visAct();
@@ -175,8 +179,13 @@ function songKey(){
 function musicTick(){
   if(!AC||!MUS.gain) return;
   const on=save.settings.music && !document.hidden, vol=(save.settings.musicVol??0.7);
-  const duck=AC.currentTime<MUS.duck;
-  MUS.gain.gain.setTargetAtTime(!on?0:(duck?0.15:(state==='paused'?0.35:1))*0.1*vol*((SONGS2[MUS.song]||{}).vol||1), AC.currentTime, 0.35);
+  const duck=AC.currentTime<MUS.duck, soft=AC.currentTime<MUS.soft;
+  // Intensität: Zahl der Gegner, Boss-Wutphase, Wellenpausen
+  let want=0.5; if(typeof G!=='undefined' && G && (state==='combat'||state==='paused')){ const n=G.enemies.length+G.spawnQ.length; want=G.type==='boss'?(G.boss&&G.boss.phase2?1:0.85):Math.min(1,0.2+n*0.09); if(G.cleared) want=0.1; }
+  MUS.int+=(want-MUS.int)*0.08;
+  const lowHp=typeof P!=='undefined' && P && typeof G!=='undefined' && G && !G.over && state==='combat' && P.hp<P.maxHp*0.25;
+  if(MUS.lp) MUS.lp.frequency.setTargetAtTime(lowHp?850:18000, AC.currentTime, 0.4);
+  MUS.gain.gain.setTargetAtTime(!on?0:(duck?0.15:(state==='paused'?0.35:soft?0.45:1))*0.1*vol*((SONGS2[MUS.song]||{}).vol||1), AC.currentTime, soft?0.08:0.35);
   if(!on){ MUS.next=AC.currentTime+0.1; return; }
   const key=songKey();
   if(key!==MUS.song && MUS.step%16===0 && MUS.song){ MUS.song=key; MUS.step=0; }
@@ -228,7 +237,7 @@ function coinSound(){
 }
 const ROAR={golem:0.75,spider:1.6,lich:1.2,vampire:1.35,dragon:0.65,lavaworm:0.55};
 function roar(kind){
-  if(!save.sound||!AC) return; const p=ROAR[kind]||1, t=AC.currentTime;
+  if(!save.sound||!AC) return; const p=ROAR[kind]||1, t=AC.currentTime; MUS.soft=t+1.5;
   const o=AC.createOscillator(), lfo=AC.createOscillator(), lg=AC.createGain(), f=AC.createBiquadFilter(), g=AC.createGain();
   o.type='sawtooth'; o.frequency.setValueAtTime(95*p,t); o.frequency.exponentialRampToValueAtTime(55*p,t+1.5);
   lfo.frequency.value=11; lg.gain.value=18*p; lfo.connect(lg); lg.connect(o.frequency);
@@ -237,6 +246,9 @@ function roar(kind){
   o.connect(f); f.connect(g); g.connect(sfxOut()); o.start(t); lfo.start(t); o.stop(t+1.7); lfo.stop(t+1.7);
   noiseSound(1.3,'lowpass',500*p,0.25,0.1);
 }
+function critSound(){ if(!save.sound||!AC) return; const now=AC.currentTime; if(lastSfx.crit && now-lastSfx.crit<0.06) return; lastSfx.crit=now; const v=0.95+Math.random()*0.1; blip('triangle',1500*v,2300*v,0.045,0.07); blip('sine',2900*v,2400*v,0.025,0.09,0.02); }
+function comboSound(n){ if(!save.sound||!AC) return; const base=n>=50?72:n>=30?67:n>=20?64:60; [0,4,7,12].forEach((s,i)=>blip('triangle',mtof(base+s),mtof(base+s)*1.01,0.05,0.12,i*0.06)); }
+function uiClick(){ if(!save.sound||!AC) return; const now=AC.currentTime; if(lastSfx.ui && now-lastSfx.ui<0.04) return; lastSfx.ui=now; blip('triangle',520,380,0.035,0.05); }
 function warnSound(){ if(!save.sound||!AC) return; const now=AC.currentTime; if(lastSfx.warn && now-lastSfx.warn<0.3) return; lastSfx.warn=now; blip('triangle',990,740,0.05,0.1); blip('triangle',990,740,0.04,0.1,0.12); }
 function heartbeat(){ if(!save.sound||!AC) return; blip('sine',78,42,0.28,0.13); blip('sine',66,38,0.2,0.11,0.16); }
 function buzz(ms){ if(!save.settings.vibrate) return; try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} }
