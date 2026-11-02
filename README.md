@@ -43,6 +43,18 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 
 ## Dateien
 
-- `index.html`: das komplette Spiel (Canvas-Grafik, Logik, Oberfläche)
-- `sw.js`: Service Worker für den Offline-Modus
-- `manifest.webmanifest`, `icon.svg`: für die Installation als App
+| Datei | Inhalt |
+|---|---|
+| `index.html` | Seitengerüst, HUD und Einbindung der Skripte |
+| `css/style.css` | Gestaltung von Menüs und HUD |
+| `js/data.js` | Akte, Helden, Gegner, Bosse, Upgrades, Tagesmodifikatoren |
+| `js/core.js` | Speicherstand, Hilfsfunktionen, Soundeffekte und Musik |
+| `js/world.js` | Arena-Boden, Tribünen und Zuschauer, Wetter, Licht und Ambiente |
+| `js/input.js` | Touch- und Tastatursteuerung, Spielzustand |
+| `js/ui.js` | Karte, Erfolge, Menüs, Händler, Ereignisse, Upgrades |
+| `js/combat.js` | Kampf: Räume, Gegner-KI, Bosse, Geschosse, Schaden |
+| `js/render.js` | Zeichnen aller Spielobjekte und Spielschleife |
+| `sw.js` | Service Worker für den Offline-Modus |
+| `tools/build_single.py` | baut alles zu einer einzelnen HTML-Datei in `dist/` |
+
+Die Skripte teilen sich einen gemeinsamen Gültigkeitsbereich und müssen in der Reihenfolge aus `index.html` geladen werden.
