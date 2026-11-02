@@ -202,6 +202,8 @@ const ACTS = [
   { name:'Der Drachenhort', floorA:'#46302d', floorB:'#3d2a27', grout:'#201211', wall:'#140a09', moss:'#d2551f', accent:'#ff9a4a', boss:'dragon', pillar:'#5b3b35', pillarTop:'#77504a' },
 ];
 
+const actOf = n => ACTS[(n-1)%3];
+const visAct = () => ((run.act-1)%3)+1;
 const CHARS = {
   krieger:{ name:'Krieger',  icon:'🛡️', cost:0,   color:'#3f6fc4', hp:135, speed:150, dmg:22, rate:0.7, range:66,  attack:'melee', armor:2,
     desc:'Robuster Nahkämpfer mit Rüstung. Schwingt sein Schwert in weitem Bogen.',
@@ -307,9 +309,21 @@ const NODE = {
   boss:    { ic:'👑', nm:'Boss' },
 };
 
+const DAILY_MODS = [
+  { id:'glass', ic:'🔪', nm:'Glaskanone', ds:'+60 % Schaden, aber −40 % max. LP', start:p=>{ p.dmg*=1.6; p.maxHp=Math.round(p.maxHp*0.6); p.hp=p.maxHp; } },
+  { id:'horde', ic:'🐀', nm:'Die Horde',  ds:'50 % mehr Gegner, aber auch 50 % mehr Gold', start:p=>{ p.goldMul+=0.5; }, waveMul:1.5 },
+  { id:'haste', ic:'⚡', nm:'Hast',       ds:'Du und alle Gegner seid 30 % schneller', start:p=>{ p.spdMul*=1.3; p.atkSpd*=1.15; }, enemySpeed:1.3 },
+  { id:'elite', ic:'👑', nm:'Elitekrieg', ds:'In jedem Kampf lauert ein Elitegegner, dafür bessere Belohnungen', eliteEvery:true },
+  { id:'blood', ic:'🩸', nm:'Blutmond',   ds:'Jeder Kill heilt 3 LP, aber Lagerfeuer heilen nicht', start:p=>{ p.lifeOnKill+=3; }, noRestHeal:true },
+  { id:'rich',  ic:'💎', nm:'Goldrausch', ds:'Start mit 150 Gold, aber Gegner lassen kein Gold fallen', gold:150, noGold:true },
+];
+const runMod = () => run && run.mod ? DAILY_MODS.find(m=>m.id===run.mod) : null;
+function todayKey(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function dailyInfo(key){ const ids=Object.keys(CHARS); return { cid:ids[hashStr(key+'|hero')%ids.length], mod:DAILY_MODS[hashStr(key+'|mod')%DAILY_MODS.length] }; }
+
 /* ---------------- SPEICHER ---------------- */
 const SAVE_KEY = 'arena_verdammten_v1';
-const SAVE_V=2, RUN_V=4;
+const SAVE_V=2, RUN_V=5;
 const reducedMotion = (()=>{ try{ return matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } })();
 function defSettings(){ return { shake:!reducedMotion, vibrate:true, music:true }; }
 function defSave(){ return { v:SAVE_V, souls:0, meta:{}, unlocked:{krieger:true}, scores:[], runs:0, lastChar:'krieger', sound:true, run:null, settings:defSettings() }; }
@@ -327,17 +341,21 @@ function persist(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(save)); }
 const metaLvl = id => save.meta[id] || 0;
 
 /* ---------------- HILFEN ---------------- */
-const rand=(a,b)=>a+Math.random()*(b-a);
+let RNG=Math.random;
+function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function hashStr(s){ let h=1779033703^s.length; for(let i=0;i<s.length;i++){ h=Math.imul(h^s.charCodeAt(i),3432918353); h=h<<13|h>>>19; } h=Math.imul(h^h>>>16,2246822507); h=Math.imul(h^h>>>13,3266489909); return (h^h>>>16)>>>0; }
+function seeded(key,fn){ const old=RNG; RNG=mulberry32(hashStr(key)); try{ return fn(); } finally{ RNG=old; } }
+const rand=(a,b)=>a+RNG()*(b-a);
 const randi=(a,b)=>Math.floor(rand(a,b+1));
-const pick=a=>a[Math.floor(Math.random()*a.length)];
+const pick=a=>a[Math.floor(RNG()*a.length)];
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
 const TAU=Math.PI*2;
 const angTo=(a,b)=>Math.atan2(b.y-a.y,b.x-a.x);
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const angDiff=(a,b)=>{let d=(a-b)%TAU; if(d>Math.PI)d-=TAU; if(d<-Math.PI)d+=TAU; return d;};
 const $=id=>document.getElementById(id);
-function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
-function wpick(list){ let t=0; for(const [,w] of list) t+=w; let r=Math.random()*t; for(const [v,w] of list){ if((r-=w)<=0) return v; } return list[0][0]; }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(RNG()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function wpick(list){ let t=0; for(const [,w] of list) t+=w; let r=RNG()*t; for(const [v,w] of list){ if((r-=w)<=0) return v; } return list[0][0]; }
 
 /* ---------------- AUDIO ---------------- */
 let AC=null, lastSfx={};
@@ -381,7 +399,7 @@ function drawGlow(x,y,r,color,a=1){ ctx.globalAlpha=a; ctx.drawImage(glow(color)
 
 let floorCanvas=null, floorAct=-1;
 function buildFloor(){
-  const A=ACTS[run.act-1]; const k=Math.min(2,SCALE*DPR);
+  const A=actOf(run.act); const k=Math.min(2,SCALE*DPR);
   const c=document.createElement('canvas'); c.width=Math.ceil((AW+WALL*2)*k); c.height=Math.ceil((AH+WALL*2)*k);
   const g=c.getContext('2d'); g.scale(k,k); g.translate(WALL,WALL);
   g.fillStyle=A.wall; g.fillRect(-WALL,-WALL,AW+WALL*2,AH+WALL*2);
@@ -401,10 +419,10 @@ function buildFloor(){
   // moss / runes / lava
   for(let i=0;i<26;i++){
     const x=rand(0,AW),y=rand(0,AH),r=rand(8,26);
-    g.globalAlpha=run.act===3?0.22:0.18; g.fillStyle=A.moss; g.beginPath(); g.ellipse(x,y,r,r*0.6,rand(0,3),0,TAU); g.fill();
+    g.globalAlpha=visAct()===3?0.22:0.18; g.fillStyle=A.moss; g.beginPath(); g.ellipse(x,y,r,r*0.6,rand(0,3),0,TAU); g.fill();
   }
   g.globalAlpha=1;
-  if(run.act===3){ g.strokeStyle='rgba(255,110,40,0.35)'; g.lineWidth=2;
+  if(visAct()===3){ g.strokeStyle='rgba(255,110,40,0.35)'; g.lineWidth=2;
     for(let i=0;i<14;i++){ let x=rand(0,AW),y=rand(0,AH); g.beginPath(); g.moveTo(x,y); for(let j=0;j<6;j++){x+=rand(-26,26);y+=rand(-26,26);g.lineTo(x,y);} g.stroke(); } }
   // center emblem
   g.strokeStyle=A.accent; g.globalAlpha=0.13; g.lineWidth=3;
@@ -461,22 +479,31 @@ document.addEventListener('gesturestart',e=>e.preventDefault());
 let state='menu'; // menu | combat | ui | paused
 let run=null, G=null, P=null;
 
-function newPlayer(cid){
-  const c=CHARS[cid], hp=c.hp+metaLvl('m_hp')*8;
-  return { cid, maxHp:hp, hp, speed:c.speed, dmg:c.dmg*(1+0.06*metaLvl('m_dmg')), rate:c.rate, range:c.range, armor:c.armor,
+function newPlayer(cid, noMeta){
+  const ml=id=>noMeta?0:metaLvl(id);
+  const c=CHARS[cid], hp=c.hp+ml('m_hp')*8;
+  return { cid, maxHp:hp, hp, speed:c.speed, dmg:c.dmg*(1+0.06*ml('m_dmg')), rate:c.rate, range:c.range, armor:c.armor,
     count:1, crit:0.05, critMul:2, lifeOnKill:0, regen:0, thorns:0, cdMul:1, goldMul:1, area:1, pierce:c.attack==='arrow'?1:0,
     orbit:0, chain:0, explode:0, frost:0, shield:0, revive:0, atkSpd:1, spdMul:1, dashCdMul:1,
     minions:c.attack==='skull'?3:0, raise:c.attack==='skull'?0.3:0, minionDmg:1, boneArmor:0,
     wave:0, dashDmg:0, rage:0, split:0, meteor:0, manaShield:0, bounce:0, poison:0, volley:0, shadow:0, atkCount:0 };
 }
 
-function startRun(cid){
-  save.lastChar=cid; save.runs++;
-  run={ v:RUN_V, cid, p:newPlayer(cid), act:1, map:null, posId:null, visited:[], gold:25*metaLvl('m_gold')+10, goldTotal:0, souls:0, kills:0, rooms:0, bosses:0,
-    upg:{}, syn:[], rerolls:metaLvl('m_reroll'), won:false };
-  run.map=genMap(1);
+function startRun(cid, opts={}){
+  const daily=opts.daily||null; if(!daily) save.lastChar=cid; save.runs++;
+  const seed = daily ? 'daily-'+daily : Math.random().toString(36).slice(2);
+  const mod = daily ? dailyInfo(daily).mod : null;
+  run={ v:RUN_V, cid, p:newPlayer(cid,!!daily), act:1, map:null, posId:null, visited:[], gold:daily?10:25*metaLvl('m_gold')+10, goldTotal:0, souls:0, kills:0, rooms:0, bosses:0,
+    upg:{}, syn:[], rerolls:daily?1:metaLvl('m_reroll'), won:false, endless:false, seed, daily, mod:mod?mod.id:null };
+  if(mod){ if(mod.start) mod.start(run.p); if(mod.gold) run.gold=mod.gold; }
+  run.map=seeded(seed+'|map|1',()=>genMap(1));
   showMap();
 }
+function nextAct(){
+  run.act++; run.map=seeded(run.seed+'|map|'+run.act,()=>genMap(run.act)); run.posId=null; run.visited=[];
+  run.p.hp=Math.min(run.p.maxHp,run.p.hp+run.p.maxHp*0.35); showMap();
+}
+const roomKey = k => run.seed+'|'+k+'|'+run.posId;
 
 /* ---------------- KARTE ---------------- */
 function genMap(act){
@@ -497,7 +524,7 @@ function genMap(act){
     a.forEach((nd,i)=>{
       const j = a.length===1 ? 0 : Math.round(i*(b.length-1)/(a.length-1));
       nd.next.push(b[j].id);
-      if(Math.random()<0.45){ const j2=clamp(j+(Math.random()<0.5?-1:1),0,b.length-1); if(!nd.next.includes(b[j2].id)) nd.next.push(b[j2].id); }
+      if(RNG()<0.45){ const j2=clamp(j+(RNG()<0.5?-1:1),0,b.length-1); if(!nd.next.includes(b[j2].id)) nd.next.push(b[j2].id); }
     });
     b.forEach((nb,j)=>{ if(!a.some(n=>n.next.includes(nb.id))){ let best=a[0]; for(const n of a) if(Math.abs(n.x-nb.x)<Math.abs(best.x-nb.x)) best=n; best.next.push(nb.id); } });
   }
@@ -541,6 +568,7 @@ function showMenu(){
     <div class="menu-btns">
       ${hasRun?`<button class="btn primary" data-a="cont">▶ Lauf fortsetzen</button>`:''}
       <button class="btn ${hasRun?'':'primary'}" data-a="play">⚔️ Neues Abenteuer</button>
+      <button class="btn" data-a="daily">📅 Tägliche Herausforderung</button>
       <button class="btn" data-a="forge">⚒️ Schmiede</button>
       <button class="btn" data-a="scores">🏆 Ruhmeshalle</button>
     </div>
@@ -549,11 +577,26 @@ function showMenu(){
       <button class="linkbtn" data-a="settings">Einstellungen</button>
       <span>Läufe: ${save.runs}</span>
     </div></div>`,
-  { play:showChars, forge:showForge, scores:showScores, help:showHelp,
+  { play:showChars, daily:showDaily, forge:showForge, scores:showScores, help:showHelp,
     cont:()=>{ run=save.run; showMap(); },
     settings:showSettings });
 }
 
+function showDaily(){
+  const key=todayKey(), info=dailyInfo(key), c=CHARS[info.cid], m=info.mod;
+  const d=save.daily&&save.daily.key===key?save.daily:{best:0,tries:0};
+  const date=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
+  render(`<div class="wrap"><div class="eyebrow">Tägliche Herausforderung · ${date}</div><h2>Die Prüfung des Tages</h2>
+    <p class="sub">Heute spielen alle dieselben Karten, Räume und Belohnungen. Schmiede-Upgrades gelten hier nicht. Morgen gibt es eine neue Prüfung.</p>
+    <div class="cards">
+      <div class="card" style="border-color:${c.color}"><div class="ic" style="background:${c.color}44">${c.icon}</div><div class="body"><div class="rar">Held des Tages</div><div class="nm">${c.name}</div><div class="ds">${c.desc}${save.unlocked[info.cid]?'':' Noch nicht freigeschaltet, heute aber spielbar!'}</div></div></div>
+      <div class="card epic"><div class="ic">${m.ic}</div><div class="body"><div class="rar">Modifikator</div><div class="nm">${m.nm}</div><div class="ds">${m.ds}</div></div></div>
+    </div>
+    <div class="row" style="gap:6px"><span class="pill g">🏆 Tagesbestwert: ${d.best}</span><span class="pill">Versuche heute: ${d.tries}</span></div>
+    <button class="btn primary" data-a="go">Herausforderung starten</button>
+    <button class="btn" data-a="back">Zurück</button></div>`,
+  { go:()=>startRun(info.cid,{daily:key}), back:showMenu });
+}
 function showSettings(){
   const st=save.settings;
   const tg=(key,label,on,desc)=>`<button class="toggle ${on?'on':''}" data-a="tg" data-v="${key}" aria-pressed="${on}"><span><b>${label}</b><br><span class="sub" style="font-size:13px">${desc}</span></span><span class="sw"></span></button>`;
@@ -622,7 +665,7 @@ function showForge(){
 }
 
 function showScores(){
-  const rows=save.scores.length? save.scores.map((s,i)=>`<tr><td>${i+1}.</td><td>${CHARS[s.cid]?.icon||''} ${CHARS[s.cid]?.name||''}</td><td>${s.won?'Sieg 👑':'Akt '+s.act}</td><td>${esc(s.date)}</td><td class="n">${s.score}</td></tr>`).join('')
+  const rows=save.scores.length? save.scores.map((s,i)=>`<tr><td>${i+1}.</td><td>${CHARS[s.cid]?.icon||''} ${CHARS[s.cid]?.name||''}</td><td>${s.endless?'♾️ Akt '+s.act:s.won?'Sieg 👑':'Akt '+s.act}${s.daily?' 📅':''}</td><td>${esc(s.date)}</td><td class="n">${s.score}</td></tr>`).join('')
     : `<tr><td colspan="5" class="center" style="color:var(--parch-dim);padding:24px">Noch keine Einträge. Dein erster Lauf landet hier.</td></tr>`;
   render(`<div class="wrap"><div class="eyebrow">Die besten Läufe</div><h2>Ruhmeshalle</h2>
     <div style="overflow-x:auto"><table class="scores"><thead><tr><th>#</th><th>Held</th><th>Weit</th><th>Datum</th><th style="text-align:right">Punkte</th></tr></thead><tbody>${rows}</tbody></table></div>
@@ -636,7 +679,7 @@ function relicsHtml(){
 
 function showMap(){
   state='ui'; save.run=run; persist();
-  const av=availNodes(), A=ACTS[run.act-1], R=run.map.R;
+  const av=availNodes(), A=actOf(run.act), R=run.map.R;
   const ys=r=> r===R ? 10 : 91 - r*(68/(R-1));
   const nodes=allNodes();
   let lines='';
@@ -651,7 +694,7 @@ function showMap(){
   }).join('');
   const p=run.p;
   render(`<div class="mapscreen">
-    <div class="maphead"><div><div class="eyebrow">Akt ${run.act} von 3</div><h2>${A.name}</h2></div>
+    <div class="maphead"><div><div class="eyebrow">${run.act>3?'Endlos · Akt '+run.act:'Akt '+run.act+' von 3'}${run.daily?' · 📅 '+runMod().ic+' '+runMod().nm:''}</div><h2>${A.name}</h2></div>
       <button class="btn small" data-a="menu">☰ Menü</button></div>
     <div class="row" style="gap:6px"><span class="pill h">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span><span class="pill s">👻 ${run.souls}</span><span class="pill">${CHARS[run.cid].icon} ${CHARS[run.cid].name}</span></div>
     <div class="mapbox"><svg viewBox="0 0 100 100" preserveAspectRatio="none">${lines}</svg>${btns}</div>
@@ -724,7 +767,7 @@ const EVENTS = [
 function showEvent(){
   run.seen=run.seen||[];
   let pool=EVENTS.filter(e=>!run.seen.includes(e.id)); if(!pool.length) pool=EVENTS;
-  const ev=pick(pool); run.seen.push(ev.id);
+  const ev=seeded(roomKey('event'),()=>pick(pool)); run.seen.push(ev.id);
   const opts=ev.opts(run);
   render(`<div class="wrap" style="justify-content:center"><div class="eyebrow center">Ereignis</div>
     <div style="font-size:64px;text-align:center;line-height:1">${ev.ic}</div><h2 class="center">${ev.nm}</h2><p class="sub center">${ev.tx}</p>
@@ -742,7 +785,7 @@ function eventResult(ev,text){
 /* ---- Upgrades ---- */
 function availUpgrades(){ return UPGRADES.filter(u=>(!u.only||u.only.includes(run.cid)) && (!u.max || (run.upg[u.id]||0)<u.max)); }
 function rollUpgrades(n, mode, exclude=[]){
-  const L=metaLvl('m_luck')*4;
+  const L=(run&&run.daily?0:metaLvl('m_luck'))*4;
   const w={ normal:[62-L,30,8+L], elite:[30-L,48,22+L], treasure:[10,52-L,38+L], boss:[0,45,55] }[mode]||[62,30,8];
   const pool=availUpgrades().filter(u=>!exclude.includes(u.id)), out=[];
   for(let i=0;i<n && pool.length;i++){
@@ -782,7 +825,7 @@ function upgCard(u,extra='',act='pick'){
 }
 function showReward(mode, after, offer){
   state='ui';
-  offer = offer || rollUpgrades(3, mode);
+  offer = offer || seeded(roomKey('reward')+'|'+run.rooms,()=>rollUpgrades(3, mode));
   const title={ normal:'Sieg!', elite:'Elite bezwungen!', treasure:'Ein Schatz!', boss:'Der Boss ist gefallen!' }[mode];
   render(`<div class="wrap"><div class="eyebrow">Wähle eine Belohnung</div><h2>${title}</h2>
     <div class="row" style="gap:6px"><span class="pill h">❤️ ${Math.ceil(run.p.hp)}/${Math.round(run.p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span></div>
@@ -797,7 +840,7 @@ function showReward(mode, after, offer){
 function showShop(stock){
   if(!stock){
     const priceOf=u=>Math.round(({common:45,rare:80,epic:130})[u.r]*(1+0.15*(run.act-1)));
-    stock={ items:rollUpgrades(4,'elite').map(u=>({id:u.id, price:priceOf(u), sold:false})), potion:{price:30+run.act*5, sold:false} };
+    stock={ items:seeded(roomKey('shop'),()=>rollUpgrades(4,'elite')).map(u=>({id:u.id, price:priceOf(u), sold:false})), potion:{price:30+run.act*5, sold:false} };
   }
   const p=run.p;
   const potionHeal=Math.round(p.maxHp*0.4);
@@ -822,7 +865,7 @@ function showRest(){
     <p class="sub">Die Flammen knistern. Du hast Zeit für genau eine Sache.</p>
     <span class="pill h" style="align-self:flex-start">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span>
     <div class="cards">
-      <button class="card common" data-a="heal"><div class="ic">😴</div><div class="body"><div class="nm">Ausruhen</div><div class="ds">Heilt ${heal} LP</div></div></button>
+      <button class="card common" data-a="heal" ${(runMod()||{}).noRestHeal?'disabled':''}><div class="ic">😴</div><div class="body"><div class="nm">Ausruhen</div><div class="ds">${(runMod()||{}).noRestHeal?'Der Blutmond verhindert jede Heilung.':'Heilt '+heal+' LP'}</div></div></button>
       <button class="card rare" data-a="train"><div class="ic">🏋️</div><div class="body"><div class="nm">Trainieren</div><div class="ds">+10 max. LP und +8 % Schaden</div></div></button>
     </div></div>`,
   { heal:()=>{ p.hp=Math.min(p.maxHp,p.hp+heal); sfx('pick'); showMap(); },
@@ -835,9 +878,9 @@ function buildWaves(type){
   const act=run.act, row=nodeById(run.posId).row, depth=(act-1)*6+row;
   const pool=enemyPool(act,row), nW = type==='elite'?2:(row<2?2:3), waves=[];
   for(let w=0;w<nW;w++){
-    let budget=(5+depth*1.25+w*1.5)*(type==='elite'?0.7:1); const list=[];
+    let budget=(5+depth*1.25+w*1.5)*(type==='elite'?0.7:1)*((runMod()||{}).waveMul||1); const list=[];
     while(budget>0){ const k=pick(pool); list.push({kind:k}); budget-=ENEMIES[k].cost; }
-    if(type==='elite') list.push({kind:pick(pool.filter(k=>k!=='bat')), elite:true});
+    if(type==='elite' || ((runMod()||{}).eliteEvery && w===nW-1)) list.push({kind:pick(pool.filter(k=>k!=='bat')), elite:true});
     waves.push(list);
   }
   return waves;
@@ -845,7 +888,7 @@ function buildWaves(type){
 
 const FLY={bat:1,imp:1,lich:1,dragon:1};
 function genArena(type){
-  const obs=[], traps=[], start={x:AW/2,y:AH*0.7}, act=run.act;
+  const obs=[], traps=[], start={x:AW/2,y:AH*0.7}, act=visAct();
   const free=(x,y,r)=> Math.hypot(x-start.x,y-start.y)>r+80 && x>r+24 && x<AW-r-24 && y>r+24 && y<AH-r-24
     && obs.every(o=>Math.hypot(o.x-x,o.y-y)>o.r+r+34) && traps.every(t=>Math.hypot(t.x-x,t.y-y)>t.r+r+24);
   let pts=[];
@@ -891,12 +934,12 @@ function startCombat(type, customWaves){
   P=Object.assign(p,{ x:AW/2, y:AH*0.7, r:14, vx:0, vy:0, face:-Math.PI/2, atkT:0.3, skillT:0, inv:0, shieldLeft:p.shield, spin:0, spinTick:0, regenAcc:0, moving:false, anim:0, swingT:0, dashT:0, dashCd:0, dashA:0, dashI:0, msT:0, trailT:0, nextCrit:false });
   P.shieldLeft = p.shield + (p.manaShield?1:0);
   G={ type, enemies:[], pproj:[], eproj:[], hazards:[], allies:[], pzones:[], pstrikes:[], parts:[], texts:[], coins:[], fx:[], spawnQ:[], booms:[],
-      stop:0, stopCd:0, waves: customWaves || (type==='boss'?[]:buildWaves(type)), obs:[], traps:[], waveIdx:-1, waveT:0.8, cleared:false, clearT:0, time:0, shake:0, hurtFlash:0, orbitA:0, boss:null, over:false, hint:run.rooms===0?5:0 };
-  Object.assign(G, genArena(type));
+      stop:0, stopCd:0, waves: customWaves || (type==='boss'?[]:seeded(roomKey('waves'),()=>buildWaves(type))), obs:[], traps:[], waveIdx:-1, waveT:0.8, cleared:false, clearT:0, time:0, shake:0, hurtFlash:0, orbitA:0, boss:null, over:false, hint:run.rooms===0?5:0 };
+  Object.assign(G, seeded(roomKey('arena'),()=>genArena(type)));
   if(type==='boss'){
-    const bk=ACTS[run.act-1].boss; G.waveIdx=0; G.waveT=99;
+    const bk=actOf(run.act).boss; G.waveIdx=0; G.waveT=99;
     G.spawnQ.push({x:AW/2,y:AH*0.3,t:1.6,kind:bk,boss:true});
-    setTimeout(()=>{ if(G) banner(BOSSES[bk].name, ACTS[run.act-1].name); },50); sfx('boss');
+    setTimeout(()=>{ if(G) banner(BOSSES[bk].name, actOf(run.act).name); },50); sfx('boss');
   }
   if(!floorCanvas||floorAct!==run.act) buildFloor();
   input.id=null; input.jx=input.jy=0; $('banner').classList.remove('show');
@@ -909,16 +952,18 @@ function startCombat(type, customWaves){
 
 function makeEnemy(kind,x,y,elite){
   const d=ENEMIES[kind], act=run.act, row=nodeById(run.posId).row;
-  const hs=1+0.6*(act-1)+0.07*row, ds=1+0.3*(act-1)+0.03*row;
+  const ex=act>3?Math.pow(1.25,act-3):1;
+  const hs=(1+0.6*(act-1)+0.07*row)*ex, ds=(1+0.3*(act-1)+0.03*row)*Math.sqrt(ex);
   const e={ kind, x,y, r:d.r, hp:d.hp*hs, dmg:d.dmg*ds, speed:d.speed*rand(0.9,1.1), ai:d.ai, t:rand(0,3), seed:rand(0,TAU), flash:0, slow:0, freeze:0, kx:0, ky:0,
     elite:!!elite, gold:d.gold, soul:1, st:0, timer:rand(1,2.5), dir:Math.random()<0.5?1:-1, face:0, orbCd:0, squish:0, fire:d.fire||2 };
   if(elite){ e.hp*=3.2; e.r*=1.35; e.dmg*=1.3; e.gold*=4; e.soul=5; }
   if(kind==='mimic') e.soul=6;
   if(kind==='worm'){ e.under=true; e.timer=rand(1.5,2.5); }
+  e.speed*=((runMod()||{}).enemySpeed||1);
   e.maxHp=e.hp; return e;
 }
 function makeBoss(kind,x,y){
-  const b=BOSSES[kind], s=1+0.08*metaLvl('m_dmg');
+  const b=BOSSES[kind], s=(1+0.08*metaLvl('m_dmg'))*(run.act>3?1+0.8*(run.act-3):1);
   const e={ kind, boss:true, x,y, r:b.r, hp:b.hp*s, maxHp:b.hp*s, dmg:b.dmg, speed:b.speed, ai:kind, t:0, flash:0, slow:0, freeze:0, kx:0, ky:0, soul:0, gold:0,
     st:0, timer:2, cast:null, castT:0, face:Math.PI/2, alpha:1, seed:0, orbCd:0, phase2:false, spiral:0 };
   G.boss=e; $('bossName').textContent=b.name; return e;
@@ -1117,7 +1162,7 @@ function killEnemy(e){
     G.eproj=[]; G.hazards=[]; clearRoom(); return; }
   run.kills++; run.souls+=e.soul;
   const g=Math.max(1,Math.round(e.gold*rand(0.8,1.3)));
-  for(let i=0;i<Math.min(6,g);i++) dropCoin(e.x,e.y,Math.ceil(g/Math.min(6,g)));
+  if(!(runMod()||{}).noGold) for(let i=0;i<Math.min(6,g);i++) dropCoin(e.x,e.y,Math.ceil(g/Math.min(6,g)));
   if(Math.random()<0.035) G.coins.push({x:e.x,y:e.y,vx:rand(-40,40),vy:rand(-60,-20),v:0,heart:true,t:0});
   if(P.lifeOnKill) P.hp=Math.min(P.maxHp,P.hp+P.lifeOnKill);
   if(P.minions && !e.small && e.kind!=='mimic' && G.allies.length<P.minions && Math.random()<P.raise) raiseAlly(e.x,e.y,14);
@@ -1337,41 +1382,52 @@ function hurtPlayer(dmg,src){
   if(src && p.thorns>0 && !src.dead){ dealDamage(src,p.thorns,{noChain:true}); if(hasSyn('vampthorn')) p.hp=Math.min(p.maxHp,p.hp+5); }
   if(p.hp<=0){
     if(p.revive>0){ p.revive--; run.upg.phoenix=Math.max(0,(run.upg.phoenix||1)-1); if(!run.upg.phoenix) delete run.upg.phoenix; p.hp=Math.ceil(p.maxHp*0.5); p.inv=2.5; burst(p.x,p.y,50,'#ffb84a',260); banner('Phönixfeder!','Du erhebst dich erneut'); }
-    else { p.hp=0; G.over=true; banner('Gefallen'); burst(p.x,p.y,40,'#c8423a',200); setTimeout(()=>{ if(G&&G.over) endRun(false); },1600); }
+    else { p.hp=0; G.over=true; banner('Gefallen'); burst(p.x,p.y,40,'#c8423a',200); setTimeout(()=>{ if(G&&G.over) endRun(!!(run&&run.won)); },1600); }
   }
 }
 
 function clearRoom(){
   if(G.cleared) return; G.cleared=true; G.clearT=0; G.eproj=[]; G.hazards=[];
   for(const a of G.allies) a.life=Math.min(a.life,0.8);
-  const h=metaLvl('m_heal')*0.04*P.maxHp; if(h>0) P.hp=Math.min(P.maxHp,P.hp+h);
+  const h=(run.daily?0:metaLvl('m_heal'))*0.04*P.maxHp; if(h>0) P.hp=Math.min(P.maxHp,P.hp+h);
   if(G.type!=='boss') banner('Raum gesäubert!');
-  else banner('Sieg!', BOSSES[ACTS[run.act-1].boss].name+' ist besiegt');
+  else banner('Sieg!', BOSSES[actOf(run.act).boss].name+' ist besiegt');
 }
 function finishCombat(){
   if(state!=='combat') return;
   run.rooms++; const t=G.type; G=null; $('hud').classList.add('hidden');
   if(t==='boss'){
-    if(run.act>=3){ run.won=true; endRun(true); return; }
-    showReward('boss',()=>{ run.act++; run.map=genMap(run.act); run.posId=null; run.visited=[]; run.p.hp=Math.min(run.p.maxHp,run.p.hp+run.p.maxHp*0.35); showMap(); });
-  } else showReward(t==='elite'?'elite':'normal', showMap);
+    if(run.act===3 && !run.endless){ run.won=true; save.run=run; persist(); showReward('boss',showVictory); return; }
+    showReward('boss',nextAct);
+  } else showReward(t==='elite'||(runMod()||{}).eliteEvery?'elite':'normal', showMap);
 }
 
+function showVictory(){
+  render(`<div class="wrap" style="justify-content:center"><div class="center"><div class="eyebrow">Ignaroth ist gefallen</div><h1 style="margin-top:8px">Triumph!</h1>
+    <p class="sub" style="margin-top:8px">Die Arena gehört dir. Doch aus der Tiefe steigen neue Schrecken empor …</p></div>
+    <div class="cards">
+      <button class="card epic reward-card" data-a="endless"><div class="ic">♾️</div><div class="body"><div class="nm">Endlosmodus</div><div class="ds">Kämpfe mit all deinen Upgrades weiter. Jeder Akt wird härter und bringt mehr Punkte.</div></div></button>
+      <button class="card rare reward-card" data-a="claim"><div class="ic">🏆</div><div class="body"><div class="nm">Ruhm einstreichen</div><div class="ds">Beende den Lauf als Sieger.</div></div></button>
+    </div></div>`,
+  { endless:()=>{ run.endless=true; nextAct(); }, claim:()=>endRun(true) },true);
+}
 function endRun(won){
   state='ui'; const r=run; G=null; $('hud').classList.add('hidden');
   const bonus=won?100:0;
-  const score=r.kills*10+r.rooms*60+r.bosses*800+(won?2500:0)+Math.floor(r.goldTotal/2);
+  const score=r.kills*10+r.rooms*60+r.bosses*800+(won?2500:0)+(r.endless?(r.act-3)*1500:0)+Math.floor(r.goldTotal/2);
   const souls=r.souls+bonus;
   save.souls+=souls; save.run=null;
-  const entry={score,cid:r.cid,act:r.act,won,date:new Date().toLocaleDateString('de-DE')};
+  const entry={score,cid:r.cid,act:r.act,won,endless:!!r.endless,daily:!!r.daily,date:new Date().toLocaleDateString('de-DE')};
+  let dailyBest=false;
+  if(r.daily){ if(!save.daily||save.daily.key!==r.daily) save.daily={key:r.daily,best:0,tries:0}; save.daily.tries++; if(score>save.daily.best){ save.daily.best=score; dailyBest=true; } }
   save.scores.push(entry); save.scores.sort((a,b)=>b.score-a.score); save.scores=save.scores.slice(0,10);
   const rank=save.scores.indexOf(entry); persist();
   const unlockable=Object.entries(CHARS).find(([id,c])=>!save.unlocked[id]&&save.souls>=c.cost);
   render(`<div class="wrap" style="justify-content:center">
-    <div class="center"><div class="eyebrow">${won?'Der Drache ist tot':'Akt '+r.act+' · '+ACTS[r.act-1].name}</div>
-    <h1 style="margin-top:8px">${won?'Triumph!':'Gefallen'}</h1>
-    <p class="sub" style="margin-top:8px">${won?'Die Arena gehört dir. Die Barden werden davon singen.':'Doch jede Niederlage macht die nächste Seele stärker.'}</p></div>
-    <div class="center"><div class="eyebrow">Punkte</div><div class="bigscore">${score}</div>${rank===0?'<span class="pill g">🏆 Neuer Rekord!</span>':rank>0?`<span class="pill">Platz ${rank+1} der Ruhmeshalle</span>`:''}</div>
+    <div class="center"><div class="eyebrow">${r.daily?'Tägliche Herausforderung · ':''}${r.endless?'Endlosmodus · Akt '+r.act+' erreicht':won?'Der Drache ist tot':'Akt '+r.act+' · '+actOf(r.act).name}</div>
+    <h1 style="margin-top:8px">${r.endless?'Legende!':won?'Triumph!':'Gefallen'}</h1>
+    <p class="sub" style="margin-top:8px">${r.endless?'Dein Name wird in jede Säule dieser Arena geritzt.':won?'Die Arena gehört dir. Die Barden werden davon singen.':'Doch jede Niederlage macht die nächste Seele stärker.'}</p></div>
+    <div class="center"><div class="eyebrow">Punkte</div><div class="bigscore">${score}</div>${rank===0?'<span class="pill g">🏆 Neuer Rekord!</span>':rank>0?`<span class="pill">Platz ${rank+1} der Ruhmeshalle</span>`:''}${dailyBest?' <span class="pill g">📅 Neuer Tagesbestwert!</span>':''}</div>
     <div class="endstats"><div><span>Besiegte Gegner</span><b>${r.kills}</b></div><div><span>Räume</span><b>${r.rooms}</b></div>
       <div><span>Bosse</span><b>${r.bosses}</b></div><div><span>Gold gesammelt</span><b>${r.goldTotal}</b></div>
       <div style="grid-column:1/-1;color:var(--soul)"><span>Seelen erhalten${bonus?' (inkl. Siegbonus)':''}</span><b>+${souls} 👻</b></div></div>
@@ -1405,7 +1461,7 @@ function enemyColor(e){ return {shield:'#8a90a0',healer:'#d8d0b8',worm:'#b25a7e'
 /* ---------------- ZEICHNEN ---------------- */
 function draw(){
   ctx.setTransform(DPR,0,0,DPR,0,0);
-  const A=ACTS[run.act-1];
+  const A=actOf(run.act);
   ctx.fillStyle=A.wall; ctx.fillRect(0,0,W,H);
   const vw=W/SCALE, vh=H/SCALE, m=WALL+10;
   let cx = vw>=AW+2*m ? AW/2-vw/2 : clamp(P.x-vw/2,-m,AW+m-vw);
@@ -1474,7 +1530,7 @@ function drawAlly(a){
   ctx.restore(); ctx.globalAlpha=1;
 }
 function drawPillar(o){
-  const A=ACTS[run.act-1], h=50, w=o.r*0.82;
+  const A=actOf(run.act), h=50, w=o.r*0.82;
   drawShadow(o.x+6,o.y+4,o.r*1.15);
   ctx.fillStyle=A.pillar; ctx.beginPath(); ctx.ellipse(o.x,o.y,o.r,o.r*0.5,0,0,TAU); ctx.fill();
   ctx.fillRect(o.x-w,o.y-h,w*2,h);
