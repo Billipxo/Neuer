@@ -237,3 +237,9 @@ body.bigui #hud .bar, body.bigui #hpbar{transform-origin:left top}
 .dbar i{height:9px;background:#0008;border-radius:5px;overflow:hidden;display:block}
 .dbar i u{display:block;height:100%;background:linear-gradient(90deg,#b8862a,#ffd04a);border-radius:5px;text-decoration:none}
 .dbar b{text-align:right;color:var(--gold)}
+
+/* Boss-Auftritt und Boss-Tod: HUD weicht kurz den Kinobalken */
+#hud .hudtop,#hud #bossBar,#hud #dashBtn,#hud #skillBtn{transition:opacity .35s ease}
+#hud.cine .hudtop,#hud.cine #bossBar,#hud.cine #dashBtn,#hud.cine #skillBtn,#hud.cine #combo{opacity:0}
+#banner.low{top:60%}
+@media (orientation:landscape) and (max-height:560px){#banner.low{top:58%}}

@@ -1,8 +1,8 @@
 // Offline-Cache für „Arena der Verdammten“.
 // Die Spielseite wird zuerst aus dem Netz geladen (damit Updates ankommen) und fällt offline auf den Cache zurück.
-const CACHE = 'arena-v18';
+const CACHE = 'arena-v19';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg', './css/style.css',
-  './js/data.js', './js/core.js', './js/world.js', './js/input.js', './js/ui.js', './js/meta.js', './js/combat.js', './js/sprites.js', './js/render.js'];
+  './js/data.js', './js/core.js', './js/world.js', './js/input.js', './js/ui.js', './js/meta.js', './js/combat.js', './js/sprites.js', './js/fx.js', './js/render.js'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));

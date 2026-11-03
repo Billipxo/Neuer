@@ -21,7 +21,7 @@ const CHARS = {
   magier: { name:'Magierin', icon:'🔮', cost:120, color:'#7d48c9', hp:100,  speed:142, dmg:15, rate:0.62, range:300, attack:'bolt',  armor:0,
     desc:'Zielsuchende Arkangeschosse, die beim Aufprall explodieren.',
     skill:{ name:'Frostnova', icon:'❄️', cd:9, desc:'Eisexplosion, die nahe Gegner einfriert.' } },
-  jaegerin:{ name:'Jägerin', icon:'🏹', cost:250, color:'#3b8f55', hp:110, speed:172, dmg:14, rate:0.36, range:340, attack:'arrow', armor:0,
+  jaegerin:{ name:'Jägerin', icon:'🏹', cost:250, color:'#3b8f55', hp:120, speed:172, dmg:15, rate:0.36, range:340, attack:'arrow', armor:0,
     desc:'Schnell und präzise. Ihre Pfeile durchbohren Gegner.',
     skill:{ name:'Pfeilhagel', icon:'🎯', cd:7, desc:'Ein Ring aus Pfeilen in alle Richtungen.' } },
   nekro:  { name:'Nekromantin', icon:'🦴', cost:400, color:'#2a7d6c', hp:100, speed:145, dmg:13, rate:0.72, range:290, attack:'skull', armor:0,
@@ -68,13 +68,13 @@ const ENEMIES = {
 };
 
 const BOSSES = {
-  golem: { name:'Der Steingolem', hp:620,  speed:42, dmg:15, r:40 },
-  lich:  { name:'Der Lichkönig',  hp:1150, speed:60, dmg:18, r:28 },
-  dragon:{ name:'Ignaroth, der Drache', hp:1750, speed:58, dmg:24, r:44 },
-  spider:{ name:'Die Spinnenkönigin', hp:630, speed:70, dmg:14, r:34 },
-  vampire:{ name:'Graf Morvath, der Vampirfürst', hp:1100, speed:80, dmg:18, r:26 },
-  lavaworm:{ name:'Der Lavawurm', hp:1450, speed:150, dmg:22, r:38 },
-  fallen:{ name:'Vaeloth, der Gefallene Stern', hp:2300, speed:64, dmg:26, r:40 },
+  golem: { name:'Der Steingolem', hp:1000,  speed:42, dmg:15, r:40 },
+  lich:  { name:'Der Lichkönig',  hp:2050, speed:60, dmg:18, r:28 },
+  dragon:{ name:'Ignaroth, der Drache', hp:2700, speed:58, dmg:24, r:44 },
+  spider:{ name:'Die Spinnenkönigin', hp:1010, speed:70, dmg:14, r:34 },
+  vampire:{ name:'Graf Morvath, der Vampirfürst', hp:1950, speed:80, dmg:18, r:26 },
+  lavaworm:{ name:'Der Lavawurm', hp:2400, speed:150, dmg:22, r:38 },
+  fallen:{ name:'Vaeloth, der Gefallene Stern', hp:4600, speed:64, dmg:26, r:40 },
 };
 
 const BOSS_AGAIN = {

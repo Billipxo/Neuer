@@ -24,6 +24,7 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 | `js/meta.js` | Langzeitmotivation: Verdammnis-Stufen (`tierWon`, `showTiers`), Herausforderungen (`showChallenges`), Kopfgelder (`bountyList`, `checkBounties`), Tages-/Wochenprüfung mit Serie und Teilen (`showDaily`, `dailyRecord`, `shareText`), Arenameister (`arenaMasterLine`), Meisterschaft im Bestiarium (`masteryMul`) |
 | `js/combat.js` | Raum-Aufbau (`startCombat`, `genArena`, `buildWaves`), `update`, Gegner-KI (`updEnemy`), Bosse (`updBoss`), Schaden (`dealDamage`, `hurtPlayer`, `killEnemy`), Raumende, `endRun` |
 | `js/sprites.js` | Vorgerenderte Gegner-Sprites (`SPR_BODY`, `getSprite`, `blitSprite`), Porträts für Menüs (`fillPortraits`, `<canvas data-port="hero:id">`) |
+| `js/fx.js` | Kampfeffekte: Bodenspuren (`decal`, direkt ins Bodenbild gemalt), Trümmer (`debris`, `G.debris`), Todeseffekte je Gegnerart (`DEATH_FX`, `BOSS_DEATH`, `deathFx`), Trefferstern (`impactFx`), Lichtblitze (`flashLight`), Hiebe (`drawSlash`), Portale (`drawSpawn`), Kamera (`CAM`, `VIEW_S`), Boss-Auftritt (`G.cine`) und Boss-Tod (`G.bossDie`) |
 | `js/render.js` | `draw`, `drawHero`, `drawEnemy`, `drawBoss`, Geschosse/Effekte, HUD, Spielschleife `loop` |
 
 ## Wichtige Konzepte
@@ -34,8 +35,11 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 - **Speicherstand:** Neue Felder in `defSave()`/`defStats()`/`defSettings()` ergänzen, `migrate()` füllt alte Stände auf. Ändert sich die Struktur von `run`/`run.p` inkompatibel, `RUN_V` erhöhen (alte Läufe werden verworfen). Einstellungen sind global für alle 3 Slots.
 - **Grafikstufe:** Teure Effekte nur bei `FX()` (Licht, Partikel, Kleintiere, Zuschauerdichte, Helden-Umriss per `shadowBlur`). Zuschauer werden in Gruppen vorgerendert (`buildCrowdChunks`). Bildrate wählbar (`settings.fpsCap`).
 - **Spieltempo:** `loop` ruft `update(gdt/n)` in Teilschritten ≤ 0,034 s auf; `update` immer mit kleinen Schritten testen.
-- **Gegner hinzufügen:** Eintrag in `ENEMIES` (+ `BEAST`), KI-Fall in `updEnemy`, Zeichnung als Sprite in `SPR_BODY`/`SPR_KIND` (`js/sprites.js`) oder live in `drawEnemy`, Farbe in `enemyColor`, fliegend → `FLY`.
+- **Gegner hinzufügen:** Eintrag in `ENEMIES` (+ `BEAST`), KI-Fall in `updEnemy`, Zeichnung als Sprite in `SPR_BODY`/`SPR_KIND` (`js/sprites.js`) oder live in `drawEnemy`, Farbe in `enemyColor`, Todeseffekt in `DEATH_FX`, fliegend → `FLY`.
 - **Bosse:** `BOSSES` + `ACTS[i].bosses` + `BOSS_LINES`/`BOSS_AGAIN` + `BEAST`, Logik in `updBoss`, Zeichnung in `drawBoss`, Tonhöhe in `ROAR`.
+  Bosse nehmen von Fähigkeiten nur 60 % Schaden, sind beim Wechsel in die Wutphase kurz immun (`shieldT`) und stoßen den Helden aus ihrem Körper.
+  Auftritt: `bossIntro()` (Kamera, Kinobalken, Boss und Held warten, Tippen kürzt ab); Tod: `bossDeathStart` → `updBossDie` → `bossBlast` → `clearRoom`. Neue Bosse brauchen einen Eintrag in `BOSS_DEATH`.
+- **Effekte:** Neue Gegner bekommen einen Eintrag in `DEATH_FX` (Trümmerart, Fleckfarbe, Brandfleck/Riss). Rein optische Zufälle mit `Math.random`/`mr`, nicht mit `RNG`.
 - **Sonderregeln:** `run.mod` (Tagesprüfung) oder `run.mods` (Wochenprüfung, Herausforderungen) – `runMod()` führt mehrere Regeln zusammen (Zahlen multiplizieren, `start` verketten, `mapSwap` tauscht Kartenknoten).
 - **Verdammnis-Stufen:** `run.tier` 0–10, Abfrage mit `tierHas(n)`; Freischaltung je Held in `save.tierWon` (bei Sieg in `showVictory`).
 - **Build-System:** Synergien in `SYN` (Rezept `req`, heldenspezifisch über `UPG[...].only`), Waffen-Entwicklungen in `EVOS` (nach jedem Boss, Abfrage `hasEvo(id)`), regelverändernde Upgrades setzen Felder auf `run.p`.

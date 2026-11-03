@@ -11,7 +11,7 @@ const BOT = `
     let f=0; const melee=CHARS[P.cid].range<100;
     while(state==='combat' && G && !G.over && f<30*maxSec){
       const n=nearestEnemy(P,9999);
-      if(n){ const a=angTo(P,n), d=dist(P,n), s=d<(melee?50:200)?-1:1; input.jx=Math.cos(a+0.6)*s; input.jy=Math.sin(a+0.6)*s; } else { input.jx=input.jy=0; }
+      if(n){ const a=angTo(P,n), d=dist(P,n)-(n.boss?n.r:0), s=d<(melee?(n.boss?24:50):200)?-1:1; input.jx=Math.cos(a+0.6)*s; input.jy=Math.sin(a+0.6)*s; } else { input.jx=input.jy=0; }
       if(P.skillT<=0) useSkill();
       if(G.eproj.some(p=>Math.hypot(p.x-P.x,p.y-P.y)<45) || G.hazards.some(h=>h.t>h.delay*0.7 && Math.hypot(h.x-P.x,h.y-P.y)<(h.r||200))) useDash();
       if(god){ P.hp=P.maxHp; P.inv=Math.max(P.inv,0.2); } G.stop=0; update(1/30); f++;
@@ -135,7 +135,8 @@ const tests = {
   async pets(pg){ // Jeder Begleiter folgt, hilft und verursacht keine Fehler
     return pg.evaluate(()=>{ const out={}; save.tutDone=true; save.pets={raven:1,cat:1,wisp:1,wolf:1};
       for(const id of ['raven','cat','wisp','wolf']){ save.pet=id; startRun('jaegerin'); run.posId=run.map.rows[2][0].id; startCombat('fight',[[{kind:'slime'}]]);
-        for(let i=0;i<40;i++) update(1/30); const e=G.enemies[0]; e.x=P.x+90; e.y=P.y; e.hp=e.maxHp=1e6; P.atkSpd=0.0001; P.atkT=999;
+        G.traps=[]; G.obs=[]; P.atkSpd=0.0001; P.atkT=999; for(let i=0;i<120 && !(G.enemies[0] && G.enemies[0].spawnT<=0);i++) update(1/30);   // keine Fallen/Fässer, Held greift nicht an
+        const e=G.enemies[0]; e.x=P.x+90; e.y=P.y; e.hp=e.maxHp=1e6;
         P.hp=P.maxHp*0.5; const hp0=P.hp;
         for(let i=0;i<30*8 && state==='combat';i++){ e.freeze=9; e.x=P.x+90; e.y=P.y; update(1/30); }
         out[id]=id==='raven'||id==='wolf'?(run.dmgBy||{}).pet>0:id==='wisp'?P.hp>hp0:run.p.crit>0.09; if(state==='combat') endRun(false); }
@@ -154,12 +155,12 @@ const tests = {
       out.pool=enemyPool(4,3).includes('seraph') && !enemyPool(3,3).includes('seraph');
       run.posId=run.map.rows[2][0].id; startCombat('fight',[[{kind:'seraph'},{kind:'seraph'}]]); let beam=false; for(let i=0;i<30*12 && state==='combat';i++){ __bot(true,0.1); if(G&&G.hazards.some(h=>h.type==='line')) beam=true; } out.beam=beam;
       out.song=!!SONGS2.fight4 && !!SONGS2.calm4 && !!WEATHER_POOL[4];
-      startRun('paladin'); run.act=3; run.map=genMap(3); run.posId=run.map.boss.id; startCombat('boss'); __bot(true,240);
+      startRun('paladin'); for(const u of UPGRADES) if(!u.only||u.only.includes('paladin')) applyUpgrade(u); run.act=3; run.map=genMap(3); run.posId=run.map.boss.id; startCombat('boss'); __bot(true,240);
       for(let g=0; g<5 && state!=='combat' && !ui.querySelector('.mapbox'); g++){ const a=Object.keys(actions); if(a.includes('pick')) actions.pick(ui.querySelector('[data-a=pick]').dataset.v); else if(a.includes('evo')) actions.evo(ui.querySelector('[data-a=evo]').dataset.v); else break; }
       out.notWonAfter3=!run.won && run.act===4;
       return {ok:Object.values(out).every(Boolean), out}; });
   },
-  async render(pg){ // Zeichnen: jeder Akt, jeder Boss, jedes Wetter, Begleiter, Relikte, Champions, Zielvorschau – ohne Fehler
+  async render(pg){ // Zeichnen: jeder Akt, jeder Boss (Auftritt, Wutphase, Tod), jedes Wetter, Begleiter, Relikte, Champions, Zielvorschau – ohne Fehler
     return pg.evaluate(()=>{ const out={}; save.tutDone=true; save.settings.gfx='high'; resize(); save.pets={raven:1,cat:1,wisp:1,wolf:1};
       const frames=(n,god=true)=>{ for(let i=0;i<n;i++){ if(G&&P&&god) P.hp=P.maxHp; if(state==='combat') update(1/30); if(G) draw(); } };
       try{
@@ -167,7 +168,8 @@ const tests = {
           for(const r of RELICS.slice(0,6)) gainRelic(r.id); startCombat('elite'); frames(25); G.spawnQ.push({x:AW/2,y:AH/3,t:0.1,kind:'orc',elite:true,champ:true}); frames(12);
           for(const w of Object.keys(WEATHER)){ G.weather=w; initWeather(); frames(2); }
           P.aim={a:-1,k:0.6}; frames(2); P.aim=null; useSkill(); frames(15); useDash(); frames(6); pauseGame(); draw(); state='combat';
-          for(const k of ACTS[act-1].bosses){ run.map.bossKind=k; run.posId=run.map.boss.id; startCombat('boss'); frames(45); G.boss.hp=G.boss.maxHp*0.4; frames(40); } }
+          for(const k of ACTS[act-1].bosses){ run.map.bossKind=k; run.posId=run.map.boss.id; startCombat('boss'); frames(45); G.cine=null; G.boss.hp=G.boss.maxHp*0.4; frames(40);
+            Object.assign(G.boss,{shieldT:0,under:false,alpha:1}); dealDamage(G.boss,1e9,{from:P}); for(let i=0;i<100 && state==='combat';i++){ update(1/30); if(i%4===0&&G) draw(); } if(state==='combat'&&G&&!G.cleared) throw new Error('Boss-Tod endet nicht: '+k); } }
         startRun('nekro'); run.posId=run.map.rows[2][0].id; startCombat('fight',[Object.keys(ENEMIES).filter(k=>k!=='mimic').map(kind=>({kind}))]); frames(60); P.hp=0; hurtPlayer(999,null); frames(40);
         out.ok=true; }catch(e){ out.err=e.message+' @ '+(e.stack||'').split('\n')[1]; }
       return {ok:!!out.ok, ...out}; });

@@ -463,6 +463,8 @@ function collectLights(){
   for(const p of G.eproj) L.push({x:p.x,y:p.y,r:p.kind==='arrow'?40:70,a:0.7});
   for(const f of G.fx){ if(f.type==='ring'&&f.fill) L.push({x:f.x,y:f.y,r:f.r*2,a:1-f.t/f.life}); else if(f.type==='nova'||f.type==='summon'||f.type==='volley') L.push({x:f.x,y:f.y,r:f.r*1.6,a:0.8*(1-f.t/f.life)}); }
   if(P&&P.spin>0) L.push({x:P.x,y:P.y,r:150,a:0.6});
+  if(G.flashL) for(const l of G.flashL) L.push({x:l.x,y:l.y,r:l.r*(0.8+0.2*l.t/l.life),a:l.a*(1-l.t/l.life)});
+  if(G.bossDie && !G.bossDie.blown){ const d=G.bossDie; L.push({x:d.e.x,y:d.e.y,r:d.e.r*(4+5*Math.min(1,d.t/d.tb)),a:1}); }
   if(G.pet && G.pet.kind==='wisp') L.push({x:G.pet.x,y:G.pet.y-20,r:170,a:0.75});
   for(const z of G.pzones) L.push({x:z.x,y:z.y,r:50,a:0.4});
   for(const s of G.pstrikes) L.push({x:s.x,y:s.y,r:s.r*1.5,a:0.6});
@@ -479,7 +481,7 @@ function renderLights(cx,cy){
   const LS=0.5, w=Math.max(1,Math.ceil(W*LS)), h=Math.max(1,Math.ceil(H*LS));
   if(!lightCv){ lightCv=document.createElement('canvas'); lightCtx=lightCv.getContext('2d'); }
   if(lightCv.width!==w||lightCv.height!==h){ lightCv.width=w; lightCv.height=h; }
-  const L=lightCtx, s=SCALE*LS, A=actOf(run.act);
+  const L=lightCtx, s=VIEW_S*LS, A=actOf(run.act);
   L.globalCompositeOperation='source-over'; L.globalAlpha=1; L.clearRect(0,0,w,h); L.fillStyle=A.dark; L.fillRect(0,0,w,h);
   const wd=(WEATHER[G.weather]||{}).dark||0; if(wd){ L.fillStyle=`rgba(0,0,0,${wd})`; L.fillRect(0,0,w,h); }
   if(G.flash>0){ L.globalCompositeOperation='destination-out'; L.globalAlpha=Math.min(0.85,G.flash*1.6); L.fillRect(0,0,w,h); L.globalAlpha=1; }

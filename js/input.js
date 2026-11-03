@@ -6,7 +6,7 @@ const input={ id:null, ox:0, oy:0, cx:0, cy:0, jx:0, jy:0, keys:{} };
 const JR=56;
 function joyBase(){ return { x: save.settings.lefty ? W-110 : 110, y: H-150 }; }
 cvs.addEventListener('pointerdown',e=>{
-  audio(); if(state!=='combat') return;
+  audio(); if(state!=='combat') return; skipCine();
   if(input.id===null){
     if(save.settings.joyFixed){ const b=joyBase(); if(Math.hypot(e.clientX-b.x,e.clientY-b.y)>150) return; input.ox=b.x; input.oy=b.y; }
     else { input.ox=e.clientX; input.oy=e.clientY; }
@@ -27,7 +27,7 @@ function endPointer(e){ if(e.pointerId===input.id){ input.id=null; input.jx=inpu
 cvs.addEventListener('pointerup',endPointer); cvs.addEventListener('pointercancel',endPointer);
 addEventListener('keydown',e=>{
   input.keys[e.key.toLowerCase()]=true; audio();
-  if(state==='combat'){ if(e.key===' ') { useSkill(); e.preventDefault(); } if(e.key==='Shift'||e.key==='k') useDash(); if(e.key==='Escape'||e.key==='p') pauseGame(); }
+  if(state==='combat'){ skipCine(); if(e.key===' ') { useSkill(); e.preventDefault(); } if(e.key==='Shift'||e.key==='k') useDash(); if(e.key==='Escape'||e.key==='p') pauseGame(); }
 });
 addEventListener('keyup',e=>{ input.keys[e.key.toLowerCase()]=false; });
 function readMove(){

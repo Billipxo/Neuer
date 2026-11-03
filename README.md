@@ -66,6 +66,9 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - Detailliert gezeichnete Helden (mit Gesicht, Rüstung, Umhang, Rückansicht) und Gegner mit Umriss und Schattierung,
   Porträts im Heldenmenü und im Bestiarium
 - Soundeffekte, Hit-Stop, Zeitlupe bei Tod und Boss-Sieg
+- **Effekte:** Trefferblitze, eigene Todeseffekte je Gegnerart (Knochen, Schleim, Glut, Federn, Steinsplitter),
+  Blut-, Brand- und Rissspuren, die bis zum Raumende auf dem Boden bleiben, Beschwörungsportale, Nachbilder beim Ausweichen
+- **Boss-Inszenierung:** Kamerafahrt mit Kinobalken beim Auftritt, Todessequenz mit Lichtrissen und großer Detonation
 - Einstellungen für Sound, Musik, Atmosphäre und Licht, Bildschirmwackeln und Vibration
 
 ## Dateien
@@ -82,6 +85,7 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 | `js/meta.js` | Verdammnis-Stufen, Herausforderungen, Kopfgelder, Tages- und Wochenprüfung, Arenameister |
 | `js/combat.js` | Kampf: Räume, Gegner-KI, Bosse, Geschosse, Schaden |
 | `js/sprites.js` | Detaillierte Gegner-Sprites mit Umriss und Schattierung, Porträts |
+| `js/fx.js` | Kampfeffekte: Bodenspuren, Trümmer, Trefferblitze, Boss-Auftritt und Boss-Tod |
 | `js/render.js` | Zeichnen aller Spielobjekte und Spielschleife |
 | `sw.js` | Service Worker für den Offline-Modus |
 | `tools/build_single.py` | baut alles zu einer einzelnen HTML-Datei in `dist/` |
