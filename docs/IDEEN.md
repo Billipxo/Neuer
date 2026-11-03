@@ -1,5 +1,43 @@
 # Ideenliste – Arena der Verdammten
 
+## Stand 3. November 2026
+
+Die ausführliche Recherche dazu steht in [`RECHERCHE-Spielqualitaet.md`](RECHERCHE-Spielqualitaet.md).
+
+**Umgesetzt** (aus dieser Liste und aus der Rangliste der Recherche):
+- Balance-Runde mit Bot-Simulation (`npm run balance`)
+- Waffen-Entwicklungen nach jedem Boss
+- Verdammnis-Stufen 1–10 je Held statt reiner NG+-Auswahl
+- 20 Synergien mit Fortschrittsanzeige und Kodex
+- regelverändernde Upgrades
+- Verbannen
+- Belohnungsvorschau auf der Karte
+- Läutern am Lagerfeuer
+- Herausforderungen, Kopfgelder, Tages-Serie mit Teilen-Funktion und Wochenprüfung
+- Arenameister
+- Meisterschaft im Bestiarium
+- Zuschauer vorgerendert
+- Bildratenbegrenzung und Akkusparmodus
+- Barrierefreiheit: Hilfemodus, Wackeln in Stufen, Blitze dämpfen, große Schrift
+- Eingabepuffer
+- perfektes Ausweichen
+- Zielmarkierung
+- Warnblitz vor Einschlägen
+- dynamische Musik
+- Speichern beim Verlassen der App
+
+**Noch offen** (beste Kandidaten):
+- Relikte als eigene Gegenstände
+- Themenwellen und Mini-Bosse in Elite-Räumen
+- Raum-Herausforderungen
+- Laufzusammenfassung mit Schaden je Upgrade
+- Codex/Lore-Texte und Helden-Dialoge
+- vierter Akt
+- Begleiter-Tier
+- Fähigkeit per Wischgeste zielen
+
+---
+
 Stand: 2. November 2026. Grundlage sind
 - Simulationen mit dem Test-Bot: 56 komplette Läufe, 7 Helden mit je 8 Läufen,
 - Leistungsmessungen beim Zeichnen,

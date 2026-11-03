@@ -5,7 +5,8 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 
 ## Befehle
 
-- `npm test` – 9 Headless-Tests (`tests/run-all.js`), einzeln: `node tests/run-all.js bosses saves`, Details mit `VERBOSE=1`.
+- `npm test` – 12 Headless-Tests (`tests/run-all.js`), einzeln: `node tests/run-all.js bosses saves`, Details mit `VERBOSE=1`.
+- `npm run balance` (`node tools/balance.js [Läufe] [Held …]`) – der Bot spielt komplette Läufe ohne Gottmodus: Siegquote, Todesursachen, Hänger je Held.
   Playwright ist in der Cloud-Umgebung vorinstalliert, in CI per Workflow.
 - `python3 tools/build_single.py` – eine einzelne HTML-Datei in `dist/` (`--fragment` ohne `<html>/<head>`-Gerüst).
 - Vor jedem Commit `npm test` laufen lassen.
@@ -14,11 +15,12 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 
 | Datei | Inhalt |
 |---|---|
-| `js/data.js` | `ACTS`, `CHARS`, `ENEMIES`, `BOSSES`, `BOSS_LINES`, `BEAST`, `AFFIXES`, `UPGRADES`/`UPG`, `SYN`, `META`, `NODE`, `DAILY_MODS` |
+| `js/data.js` | `ACTS`, `CHARS`, `ENEMIES`, `BOSSES`, `BOSS_LINES`/`BOSS_AGAIN`, `BEAST`, `AFFIXES`, `UPGRADES`/`UPG`, `SYN`, `EVOS`, `META`, `NODE`, `DAILY_MODS`/`EXTRA_MODS`/`runMod()`, `TIERS`, `CHALLENGES`, `weeklyInfo` |
 | `js/core.js` | Speicherstand (Slots, `migrate`, `persist`), Heldenstufen, Grafikstufe `FX()`, RNG (`rand`, `pick`, `seeded`), Soundeffekte, Musik (`SONGS2`, `MEL`, `playStep`) |
 | `js/world.js` | Canvas/`resize`, Boden (`buildFloor`, `DECOR`), Tribünen und Zuschauer, Wetter, Ambiente, Licht (`renderLights`) |
 | `js/input.js` | Joystick/Tastatur, Spielzustand, `newPlayer`, `startRun`, `nextAct`, `roomKey` |
-| `js/ui.js` | Alle Menüs (`render(html, actions)`), Karte (`genMap`, `showMap`), Erfolge (`ACH`, `checkAch`), Skins, Spielstände/Sicherungscode, Händler, Lagerfeuer, Ereignisse, Belohnungen |
+| `js/ui.js` | Alle Menüs (`render(html, actions)`), Karte (`genMap`, `showMap`, Belohnungsvorschau `rw`), Erfolge (`ACH`, `checkAch`), Skins, Einstellungen, Kodex, Spielstände/Sicherungscode, Händler, Lagerfeuer, Ereignisse, Belohnungen (`showReward`, Verbannen, `showEvo`), Fortsetzen (`resumeRun`) |
+| `js/meta.js` | Langzeitmotivation: Verdammnis-Stufen (`tierWon`, `showTiers`), Herausforderungen (`showChallenges`), Kopfgelder (`bountyList`, `checkBounties`), Tages-/Wochenprüfung mit Serie und Teilen (`showDaily`, `dailyRecord`, `shareText`), Arenameister (`arenaMasterLine`), Meisterschaft im Bestiarium (`masteryMul`) |
 | `js/combat.js` | Raum-Aufbau (`startCombat`, `genArena`, `buildWaves`), `update`, Gegner-KI (`updEnemy`), Bosse (`updBoss`), Schaden (`dealDamage`, `hurtPlayer`, `killEnemy`), Raumende, `endRun` |
 | `js/sprites.js` | Vorgerenderte Gegner-Sprites (`SPR_BODY`, `getSprite`, `blitSprite`), Porträts für Menüs (`fillPortraits`, `<canvas data-port="hero:id">`) |
 | `js/render.js` | `draw`, `drawHero`, `drawEnemy`, `drawBoss`, Geschosse/Effekte, HUD, Spielschleife `loop` |
@@ -29,10 +31,14 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 - **Menüs:** `render(html, {aktion:fn})`; Knöpfe tragen `data-a="aktion" data-v="wert"`.
 - **Zufall:** immer `rand`/`pick`/`wpick` (nutzen `RNG`). Karten, Wellen, Arenen, Belohnungen und Wetter laufen über `seeded(roomKey(...))`, damit die Tagesherausforderung deterministisch bleibt.
 - **Speicherstand:** Neue Felder in `defSave()`/`defStats()`/`defSettings()` ergänzen, `migrate()` füllt alte Stände auf. Ändert sich die Struktur von `run`/`run.p` inkompatibel, `RUN_V` erhöhen (alte Läufe werden verworfen). Einstellungen sind global für alle 3 Slots.
-- **Grafikstufe:** Teure Effekte nur bei `FX()` (Licht, Partikel, Kleintiere, Zuschauerdichte).
+- **Grafikstufe:** Teure Effekte nur bei `FX()` (Licht, Partikel, Kleintiere, Zuschauerdichte, Helden-Umriss per `shadowBlur`). Zuschauer werden in Gruppen vorgerendert (`buildCrowdChunks`). Bildrate wählbar (`settings.fpsCap`).
 - **Spieltempo:** `loop` ruft `update(gdt/n)` in Teilschritten ≤ 0,034 s auf; `update` immer mit kleinen Schritten testen.
 - **Gegner hinzufügen:** Eintrag in `ENEMIES` (+ `BEAST`), KI-Fall in `updEnemy`, Zeichnung als Sprite in `SPR_BODY`/`SPR_KIND` (`js/sprites.js`) oder live in `drawEnemy`, Farbe in `enemyColor`, fliegend → `FLY`.
-- **Bosse:** `BOSSES` + `ACTS[i].bosses` + `BOSS_LINES` + `BEAST`, Logik in `updBoss`, Zeichnung in `drawBoss`, Tonhöhe in `ROAR`.
+- **Bosse:** `BOSSES` + `ACTS[i].bosses` + `BOSS_LINES`/`BOSS_AGAIN` + `BEAST`, Logik in `updBoss`, Zeichnung in `drawBoss`, Tonhöhe in `ROAR`.
+- **Sonderregeln:** `run.mod` (Tagesprüfung) oder `run.mods` (Wochenprüfung, Herausforderungen) – `runMod()` führt mehrere Regeln zusammen (Zahlen multiplizieren, `start` verketten, `mapSwap` tauscht Kartenknoten).
+- **Verdammnis-Stufen:** `run.tier` 0–10, Abfrage mit `tierHas(n)`; Freischaltung je Held in `save.tierWon` (bei Sieg in `showVictory`).
+- **Build-System:** Synergien in `SYN` (Rezept `req`, heldenspezifisch über `UPG[...].only`), Waffen-Entwicklungen in `EVOS` (nach jedem Boss, Abfrage `hasEvo(id)`), regelverändernde Upgrades setzen Felder auf `run.p`.
+- **Fortsetzen:** `run.room` (laufender Kampfraum) und `run.pend` (offene Belohnung) werden beim Verlassen gespeichert (`saveNow`) und von `resumeRun` wiederhergestellt.
 
 ## Tests schreiben
 
@@ -48,4 +54,5 @@ neu veröffentlichen (Titel „Arena der Verdammten“, gleiche URL behalten). `
 
 - Commit-Nachrichten auf Deutsch: kurze Titelzeile, darunter Stichpunkte, was sich für Spielende ändert.
 - Keine externen Bibliotheken; nur Google Fonts (mit Fallback).
-- Neue Optionen in `showSettings()` aufnehmen; Texte kurz und verständlich, ohne Fachjargon.
+- Neue Optionen in `showSettings()` aufnehmen (nach Bereichen: Ton, Spiel, Grafik und Akku, Steuerung, Barrierefreiheit); Texte kurz und verständlich, ohne Fachjargon.
+- Neue Bildschirme im Test `menus` ergänzen, damit Laufzeitfehler auffallen.

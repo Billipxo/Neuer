@@ -52,6 +52,14 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **Wetter** je Raum: Regen, Gewitter mit Blitzeinschlägen, Nebel, Schnee, Ascheregen und Feuersturm
 - **Musik:** komponiertes Titelthema, Kartenmusik und Kampfthema je Akt, Bossthema mit Pauken und Chor,
   Fanfaren bei Sieg und Niederlage, live per Web Audio gespielt; Lautstärke einstellbar
+- **Build-Vielfalt:** 20 Synergien (Rezepte im Kodex, Fortschritt auf den Upgrade-Karten), regelverändernde Upgrades
+  (z. B. Echo, Zweite Luft, Spiegelbild), Waffen-Entwicklungen nach jedem Boss, Verbannen, Belohnungsvorschau auf der Karte
+- **Verdammnis-Stufen 1–10** je Held, **11 Herausforderungen**, **Kopfgelder**, **Tages- und Wochenprüfung** mit Serie,
+  Kalender und Teilen-Funktion, ein **Arenameister**, der deine Läufe kommentiert, Meisterschaft im Bestiarium
+- **Spielgefühl:** perfektes Ausweichen, Eingabepuffer, Zielmarkierung, Warnblitz vor Einschlägen, Musik, die mit dem Kampf anschwillt
+- **Barrierefreiheit:** Hilfemodus, Tempo 0,8×, Bildschirmwackeln in Stufen, Blitze dämpfen, große Schrift und Knöpfe,
+  Farbenblind-Modus, Linkshänder-Modus, Akkusparmodus mit 30 Bildern pro Sekunde
+- Läufe überstehen das Schließen der App: der laufende Raum startet beim Fortsetzen neu
 - Detailliert gezeichnete Helden (mit Gesicht, Rüstung, Umhang, Rückansicht) und Gegner mit Umriss und Schattierung,
   Porträts im Heldenmenü und im Bestiarium
 - Soundeffekte, Hit-Stop, Zeitlupe bei Tod und Boss-Sieg
@@ -67,12 +75,14 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 | `js/core.js` | Speicherstand, Hilfsfunktionen, Soundeffekte und Musik |
 | `js/world.js` | Arena-Boden, Tribünen und Zuschauer, Wetter, Licht und Ambiente |
 | `js/input.js` | Touch- und Tastatursteuerung, Spielzustand |
-| `js/ui.js` | Karte, Erfolge, Menüs, Händler, Ereignisse, Upgrades |
+| `js/ui.js` | Karte, Erfolge, Menüs, Händler, Ereignisse, Upgrades, Kodex |
+| `js/meta.js` | Verdammnis-Stufen, Herausforderungen, Kopfgelder, Tages- und Wochenprüfung, Arenameister |
 | `js/combat.js` | Kampf: Räume, Gegner-KI, Bosse, Geschosse, Schaden |
 | `js/sprites.js` | Detaillierte Gegner-Sprites mit Umriss und Schattierung, Porträts |
 | `js/render.js` | Zeichnen aller Spielobjekte und Spielschleife |
 | `sw.js` | Service Worker für den Offline-Modus |
 | `tools/build_single.py` | baut alles zu einer einzelnen HTML-Datei in `dist/` |
+| `tools/balance.js` | Balance-Simulation mit dem Test-Bot (`npm run balance`) |
 
 Die Skripte teilen sich einen gemeinsamen Gültigkeitsbereich und müssen in der Reihenfolge aus `index.html` geladen werden.
 

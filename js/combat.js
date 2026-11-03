@@ -174,6 +174,7 @@ function updPlayer(dt){
   const sp=p.speed*p.spdMul*(1+0.03*(p.fury||0))*(p.spin>0?1.25:1)*(p.chill>0?0.6:1)*(G.webs.some(w=>Math.hypot(p.x-w.x,p.y-w.y)<w.r)?0.45:1);
   if(p.dashCd>0) p.dashCd-=dt; if(p.dashI>0) p.dashI-=dt;
   if(p.dashBuf>0){ p.dashBuf-=dt; if(p.dashCd<=0 && p.dashT<=0){ p.dashBuf=0; useDash(); } }
+  if(p.skillBuf>0){ p.skillBuf-=dt; if(p.skillT<=0 || ((p.maxCharges||1)>1 && p.charges>0)){ p.skillBuf=0; useSkill(); } }
   if(p.dashT>0){ p.dashT-=dt; const ds=720;
     p.x=clamp(p.x+Math.cos(p.dashA)*ds*dt,p.r,AW-p.r); p.y=clamp(p.y+Math.sin(p.dashA)*ds*dt,p.r,AH-p.r);
     G.fx.push({type:'ghost',x:p.x,y:p.y,t:0,life:0.22,color:CHARS[p.cid].color}); onDashMove(dt); }
@@ -198,6 +199,7 @@ function updPlayer(dt){
   if(p.hp<p.maxHp*0.25 && !G.cleared){ p.hbT=(p.hbT||0)-dt; if(p.hbT<=0){ p.hbT=0.9; heartbeat(); } }
   const reach = (c.attack==='melee'||c.attack==='axe') ? p.range*p.area+26 : p.range*(c.attack==='bolt'?1:1)*Math.sqrt(p.area);
   const tgt=pickTarget(p, reach, c.attack!=='melee'&&c.attack!=='axe'&&c.attack!=='flask');
+  p.tgtRef=tgt||null;
   if(tgt) p.face=angTo(p,tgt); else if(p.moving) p.face=Math.atan2(my,mx);
   p.atkT-=dt;
   if(p.atkT<=0 && tgt && p.spin<=0 && !p.leap){ attack(tgt);
@@ -414,8 +416,9 @@ function hitstop(t){ if(!G) return; G.stop=Math.max(G.stop,t); }
 function useSkill(){
   if(state!=='combat'||!P||G.over||(runMod()||{}).noSkill) return;
   const p=P, c=CHARS[p.cid], mc=p.maxCharges||1;
-  if(mc>1){ if(p.charges===undefined) p.charges=mc; if(p.charges<=0) return; p.charges--; if(p.skillT<=0) p.skillT=c.skill.cd*p.cdMul; }
-  else { if(p.skillT>0) return; p.skillT=c.skill.cd*p.cdMul; }
+  if(mc>1){ if(p.charges===undefined) p.charges=mc; if(p.charges<=0){ if(p.skillT<0.25) p.skillBuf=0.25; return; } p.charges--; if(p.skillT<=0) p.skillT=c.skill.cd*p.cdMul; }
+  else { if(p.skillT>0){ if(p.skillT<0.25) p.skillBuf=0.25; return; } p.skillT=c.skill.cd*p.cdMul; }
+  p.skillBuf=0;
   sfx('skill'); buzz(20); G.tutSkill=true;
   if(p.cid==='krieger'){ p.spin=1.5; p.spinTick=0; G.fx.push({type:'shock',x:p.x,y:p.y,r:90,t:0,life:0.35,color:'#dbe8ff'}); burst(p.x,p.y+6,16,'#e8f0ff',220); }
   else if(p.cid==='nekro'){ for(let i=0;i<4;i++){ const a=i/4*TAU; raiseAlly(p.x+Math.cos(a)*34,p.y+Math.sin(a)*34,10); } G.fx.push({type:'summon',x:p.x,y:p.y,r:62,t:0,life:1.0}); G.fx.push({type:'ring',x:p.x,y:p.y,r:70,t:0,life:0.4,color:'#5affd0',fill:true}); }
@@ -653,7 +656,7 @@ function updEnemy(e,dt){
 
 function updBoss(e,dt,sm,d,a){
   e.phase2 = e.hp<e.maxHp*(0.5+Math.min(0.2,0.05*(run.ng||0))+(tierHas(3)?0.1:0));
-  if(e.phase2 && !e.enraged){ e.enraged=true; hype(0.4); crowdSound(0.8); banner('Der Boss wird wütend!','Neue Angriffe – schneller und gefährlicher',1800); hitstop(0.2); G.shake+=10; sfx('boss'); roar(e.kind); G.whiteFlash=0.35; G.fx.push({type:'shock',x:e.x,y:e.y,r:e.r*4,t:0,life:0.6,color:'#ff5a3a'}); }
+  if(e.phase2 && !e.enraged){ e.enraged=true; hype(0.4); crowdSound(0.8); banner('Der Boss wird wütend!','Neue Angriffe – schneller und gefährlicher',1800); hitstop(0.2); G.shake+=10; sfx('boss'); roar(e.kind); G.whiteFlash=0.35; for(const pr of G.eproj) burst(pr.x,pr.y,3,'#ffd0a0',60); G.eproj=[]; G.fx.push({type:'shock',x:e.x,y:e.y,r:e.r*4,t:0,life:0.6,color:'#ff5a3a'}); }
   const rage=e.phase2?1.35:1;
   e.timer-=dt*sm*rage;
   let mx=0,my=0;

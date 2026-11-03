@@ -5,7 +5,8 @@
   "description": "Fantasy-Roguelike-Arenaspiel für das Handy",
   "scripts": {
     "test": "node tests/run-all.js",
-    "build": "python3 tools/build_single.py"
+    "build": "python3 tools/build_single.py",
+    "balance": "node tools/balance.js"
   },
   "devDependencies": {
     "playwright": "1.47.2"

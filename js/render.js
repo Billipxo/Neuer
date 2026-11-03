@@ -32,6 +32,9 @@ function draw(){
     if(c.heart){ ctx.font='16px serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('❤️',c.x,c.y+bob); continue; }
     drawGlow(c.x,c.y,12,'#ffcc44',0.4); ctx.fillStyle='#e6b450'; ctx.beginPath(); ctx.ellipse(c.x,c.y+bob,4.5*Math.abs(Math.cos(G.time*4+c.x))+1.5,4.5,0,0,TAU); ctx.fill(); ctx.fillStyle='#fff3b0'; ctx.fillRect(c.x-1,c.y+bob-2,2,2); }
   // shadows + entities sorted
+  // Zielmarkierung unter dem Gegner, den der Held gerade automatisch angreift
+  { const T=P.tgtRef; if(T && !T.dead && !G.over && !T.under){ const rr=T.r*1.25, a=G.time*2.5; ctx.save(); ctx.strokeStyle='rgba(255,224,138,0.75)'; ctx.lineWidth=2; ctx.setLineDash([6,5]); ctx.lineDashOffset=-G.time*20;
+      ctx.beginPath(); ctx.ellipse(T.x,T.y+T.r*0.75,rr,rr*0.42,0,0,TAU); ctx.stroke(); ctx.restore(); } }
   if(G.decoy){ const D=G.decoy; ctx.save(); ctx.globalAlpha=0.35+0.2*Math.sin(G.time*14); ctx.translate(D.x,D.y); ctx.scale(1.12,1.12); drawHeroFigure(P.cid,skinOf(P.cid),{face:D.face,moving:false,anim:0,swing:0,t:G.time}); ctx.restore(); ctx.globalAlpha=1; drawGlow(D.x,D.y,30,'#9fd8ff',0.4); }
   const ents=[...G.enemies, ...G.obs, ...G.allies, P];
   ents.sort((a,b)=>a.y-b.y);
