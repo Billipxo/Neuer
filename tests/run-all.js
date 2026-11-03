@@ -83,7 +83,8 @@ const tests = {
   },
   async resume(pg){ // Unterbrochene Läufe: Kampfraum startet neu, offene Belohnung bleibt erhalten
     return pg.evaluate(()=>{ save.tutDone=true; startRun('jaegerin'); showMap(); const id=availNodes()[0]; enterNode(id); const hp=P.hp;
-      saveNow(); const s1=readSlot(slotIdx).run; run=null; G=null; state='menu';
+      for(let i=0;i<40;i++) update(1/30); const en=G.enemies[0]||{}; P.tgtRef=en; P.weird={self:null}; P.weird.self=P.weird; en.owner=en;
+      saveNow(); const s1=readSlot(slotIdx).run; delete P.weird; run=null; G=null; state='menu'; if(!s1) return {ok:false, why:'Kreisverweis verhindert Speichern'};
       run=s1; resumeRun(); const r1=state==='combat' && run.posId===id && G && G.type===run.room;
       __bot(true,240); const pendMode=run&&run.pend&&run.pend.mode; saveNow(); const s2=readSlot(slotIdx).run; run=s2; resumeRun();
       const r2=!!ui.querySelector('[data-a=pick]')||!!ui.querySelector('[data-a=next]');
@@ -157,6 +158,19 @@ const tests = {
       for(let g=0; g<5 && state!=='combat' && !ui.querySelector('.mapbox'); g++){ const a=Object.keys(actions); if(a.includes('pick')) actions.pick(ui.querySelector('[data-a=pick]').dataset.v); else if(a.includes('evo')) actions.evo(ui.querySelector('[data-a=evo]').dataset.v); else break; }
       out.notWonAfter3=!run.won && run.act===4;
       return {ok:Object.values(out).every(Boolean), out}; });
+  },
+  async render(pg){ // Zeichnen: jeder Akt, jeder Boss, jedes Wetter, Begleiter, Relikte, Champions, Zielvorschau – ohne Fehler
+    return pg.evaluate(()=>{ const out={}; save.tutDone=true; save.settings.gfx='high'; resize(); save.pets={raven:1,cat:1,wisp:1,wolf:1};
+      const frames=(n,god=true)=>{ for(let i=0;i<n;i++){ if(G&&P&&god) P.hp=P.maxHp; if(state==='combat') update(1/30); if(G) draw(); } };
+      try{
+        for(let act=1;act<=ACT_N;act++){ save.pet=PETS[act%PETS.length].id; startRun(Object.keys(CHARS)[act%7]); run.act=act; run.map=genMap(act); run.posId=run.map.rows[3][0].id;
+          for(const r of RELICS.slice(0,6)) gainRelic(r.id); startCombat('elite'); frames(25); G.spawnQ.push({x:AW/2,y:AH/3,t:0.1,kind:'orc',elite:true,champ:true}); frames(12);
+          for(const w of Object.keys(WEATHER)){ G.weather=w; initWeather(); frames(2); }
+          P.aim={a:-1,k:0.6}; frames(2); P.aim=null; useSkill(); frames(15); useDash(); frames(6); pauseGame(); draw(); state='combat';
+          for(const k of ACTS[act-1].bosses){ run.map.bossKind=k; run.posId=run.map.boss.id; startCombat('boss'); frames(45); G.boss.hp=G.boss.maxHp*0.4; frames(40); } }
+        startRun('nekro'); run.posId=run.map.rows[2][0].id; startCombat('fight',[Object.keys(ENEMIES).filter(k=>k!=='mimic').map(kind=>({kind}))]); frames(60); P.hp=0; hurtPlayer(999,null); frames(40);
+        out.ok=true; }catch(e){ out.err=e.message+' @ '+(e.stack||'').split('\n')[1]; }
+      return {ok:!!out.ok, ...out}; });
   },
   async music(pg){ // Musik-Engine spielt alle Stücke inklusive B-Teil fehlerfrei
     await pg.mouse.click(10,10);

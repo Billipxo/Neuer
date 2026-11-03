@@ -94,6 +94,8 @@ function checkAch(){
   if(any){ persist(); sfx('pick'); }
 }
 const toastQ=[]; let toastBusy=false;
+// Gegner-Hinweise, die nach dem Raum noch in der Schlange stehen, sind nicht mehr wichtig
+function dropFoeToasts(){ for(let i=toastQ.length-1;i>=0;i--) if(toastQ[i].includes('data-foe')) toastQ.splice(i,1); }
 function toast(html){ toastQ.push(html); if(!toastBusy) nextToast(); }
 function nextToast(){ const t=$('toast'); if(!toastQ.length){ toastBusy=false; return; } toastBusy=true; t.innerHTML=toastQ.shift(); t.classList.add('show'); setTimeout(()=>{ t.classList.remove('show'); setTimeout(nextToast,400); },3200); }
 function showAch(){

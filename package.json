@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node tests/run-all.js",
     "build": "python3 tools/build_single.py",
-    "balance": "node tools/balance.js"
+    "balance": "node tools/balance.js",
+    "chaos": "node tools/chaos.js 8 900"
   },
   "devDependencies": {
     "playwright": "1.47.2"

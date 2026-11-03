@@ -525,8 +525,12 @@ function explosion(x,y,r,dmg,color,fromBoom,src){
   for(const o of G.obs){ if(o.type==='barrel' && !o.dead && Math.hypot(o.x-x,o.y-y)<r+o.r) blowBarrel(o); }
 }
 // Hinweis beim ersten Auftauchen einer Gegnerart (Einstieg: Mechaniken erklären, wenn sie gebraucht werden)
+// mehrere neue Gegnerarten einer Welle werden zu einem Hinweis zusammengefasst
 function newFoeHint(k){ if(G.tut || !BEAST[k] || (save.seenFoes||{})[k]) return; save.seenFoes=save.seenFoes||{}; save.seenFoes[k]=1;
-  toast(`<span style="font-size:26px">${BEAST[k].ic}</span><div><div class="eyebrow" style="color:var(--gold)">Neuer Gegner</div><b>${esc(ENEMIES[k].name)}</b><div class="sub" style="font-size:13px">${BEAST[k].ds}</div></div>`); }
+  G.newFoes=G.newFoes||[]; G.newFoes.push(k); if(G.newFoes.length>1) return;
+  setTimeout(()=>{ if(!G||!G.newFoes) return; const ks=G.newFoes; G.newFoes=null; if(G.cleared||G.over) return;
+    if(ks.length===1){ const k1=ks[0]; toast(`<span style="font-size:26px">${BEAST[k1].ic}</span><div data-foe="1"><div class="eyebrow" style="color:var(--gold)">Neuer Gegner</div><b>${esc(ENEMIES[k1].name)}</b><div class="sub" style="font-size:13px">${BEAST[k1].ds}</div></div>`); }
+    else toast(`<span style="font-size:26px">${ks.slice(0,3).map(x=>BEAST[x].ic).join('')}</span><div data-foe="1"><div class="eyebrow" style="color:var(--gold)">${ks.length} neue Gegner</div>${ks.slice(0,3).map(x=>`<div class="sub" style="font-size:13px"><b>${esc(ENEMIES[x].name)}:</b> ${BEAST[x].ds}</div>`).join('')}</div>`); },350); }
 function killEnemy(e){
   e.dead=true; if(!e.boss && !e.elite && G.stopCd<=0){ hitstop(0.018); G.stopCd=0.12; } if(e.boss) sfx('kill'); else deathSound(e.kind); if(e.elite) hitstop(0.09); if(e.boss) hitstop(0.35);
   burst(e.x,e.y,e.boss?80:12,enemyColor(e),e.boss?300:160);
@@ -974,7 +978,7 @@ function clearRoom(){
 function fadeIn(){ const f=$('fade'); if(!f) return; f.classList.add('on'); requestAnimationFrame(()=>requestAnimationFrame(()=>f.classList.remove('on'))); }
 function finishCombat(){
   if(state!=='combat') return; fadeIn();
-  run.rooms++; const t=G.type, champ=!!G.champKilled, rc=G.rc; G=null; $('hud').classList.add('hidden'); run.room=null; wakeLock(false);
+  run.rooms++; const t=G.type, champ=!!G.champKilled, rc=G.rc; G=null; dropFoeToasts(); $('hud').classList.add('hidden'); run.room=null; wakeLock(false);
   if(t==='boss' && hasRelic('r_chalice')){ run.p.hp=Math.min(run.p.maxHp,run.p.hp+run.p.maxHp*0.3); }
   if(t==='boss'){
     if(run.act===ACT_N && !run.endless){ run.won=true; run.pend={mode:'boss',after:'victory'}; save.run=run; persist(); showReward('boss',showVictory); return; }
@@ -988,8 +992,8 @@ function finishCombat(){
 function showVictory(){
   const nn=(run.ng||0)+1; if(!run.daily){ save.ngMax=Math.max(save.ngMax||0,nn); persist(); checkAch(); }
   if(!run.victoryDone){ run.victoryDone=true; save.stats.wins[run.cid]=1; unlockLore('h_'+run.cid);
-    if(!run.daily && !run.challenge){ const t=run.tier||0; save.tierWon=save.tierWon||{}; if(tierWon(run.cid)<t || tierWon(run.cid)<0){ save.tierWon[run.cid]=Math.max(tierWon(run.cid),t);
-      if(t<TIER_MAX) setTimeout(()=>toast(`<span style="font-size:26px">🔥</span><div><div class="eyebrow" style="color:var(--gold)">Verdammnis-Stufe ${t+1} freigeschaltet</div><b>${CHARS[run.cid].name}</b><div class="sub" style="font-size:13px">${TIERS[t+1].ic} ${TIERS[t+1].nm}: ${TIERS[t+1].ds}</div></div>`),300); } }
+    if(!run.daily && !run.challenge){ const t=run.tier||0, vcid=run.cid; save.tierWon=save.tierWon||{}; if(tierWon(run.cid)<t || tierWon(run.cid)<0){ save.tierWon[run.cid]=Math.max(tierWon(run.cid),t);
+      if(t<TIER_MAX) setTimeout(()=>toast(`<span style="font-size:26px">🔥</span><div><div class="eyebrow" style="color:var(--gold)">Verdammnis-Stufe ${t+1} freigeschaltet</div><b>${CHARS[vcid].name}</b><div class="sub" style="font-size:13px">${TIERS[t+1].ic} ${TIERS[t+1].nm}: ${TIERS[t+1].ds}</div></div>`),300); } }
     if(run.challenge && !chalDone(run.challenge)){ const ch=CHALLENGES.find(x=>x.id===run.challenge); save.chal=save.chal||{}; save.chal[ch.id]=true; save.souls+=ch.souls;
       setTimeout(()=>toast(`<span style="font-size:26px">${ch.ic}</span><div><div class="eyebrow" style="color:var(--gold)">Herausforderung bestanden</div><b>${ch.nm}</b><div class="sub" style="font-size:13px">+${ch.souls} Seelen</div></div>`),600); }
     persist(); checkAch(); }

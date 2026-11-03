@@ -26,7 +26,12 @@ function migrate(s){
 const SLOTS=3, SLOT_IDX_KEY='arena_slots', SET_KEY='arena_settings';
 const slotKey=i=>'arena_slot_'+i;
 function lsGet(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } }
-function lsSet(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+// Speichern: flüchtige Kampfverweise (Ziel, Echo-Ziel …) nie mitschreiben; falls doch einmal ein Kreisverweis entsteht,
+// wird er übersprungen statt dass der ganze Spielstand still verloren geht
+const TRANSIENT=new Set(['tgtRef','echoTgt','dashHit','aim','owner','target']);
+function saveJson(v){ try{ return JSON.stringify(v,(k,x)=>TRANSIENT.has(k)?undefined:x); }
+  catch(e){ const seen=new WeakSet(); return JSON.stringify(v,(k,x)=>{ if(TRANSIENT.has(k)) return undefined; if(x&&typeof x==='object'){ if(seen.has(x)) return undefined; seen.add(x); } return x; }); } }
+function lsSet(k,v){ try{ localStorage.setItem(k,saveJson(v)); }catch(e){ try{ console.warn('Speichern fehlgeschlagen',e); }catch(_){} } }
 function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
 function readSlot(i){ const s=lsGet(slotKey(i)); return s&&typeof s==='object'?migrate(s):null; }
 let slotIdx=(lsGet(SLOT_IDX_KEY)||{}).active||0;

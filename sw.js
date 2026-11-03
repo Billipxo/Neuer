@@ -1,6 +1,6 @@
 // Offline-Cache für „Arena der Verdammten“.
 // Die Spielseite wird zuerst aus dem Netz geladen (damit Updates ankommen) und fällt offline auf den Cache zurück.
-const CACHE = 'arena-v15';
+const CACHE = 'arena-v16';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg', './css/style.css',
   './js/data.js', './js/core.js', './js/world.js', './js/input.js', './js/ui.js', './js/meta.js', './js/combat.js', './js/sprites.js', './js/render.js'];
 
