@@ -418,7 +418,7 @@ function updTut(dt){
 function wrapLines(text,maxW){ const words=text.split(' '), lines=[]; let cur=''; for(const w of words){ const t=cur?cur+' '+w:w; if(ctx.measureText(t).width>maxW && cur){ lines.push(cur); cur=w; } else cur=t; } if(cur) lines.push(cur); return lines; }
 function drawTut(){
   const T=G.tut; if(!T||(T.step===4&&T.t>3.5)) return;
-  ctx.font='700 16px "Alegreya Sans", sans-serif'; const maxW=Math.min(W-48,380), lines=wrapLines(TUT_MSG[T.step],maxW-28);
+  ctx.font='700 16px "Alegreya Sans", sans-serif'; const maxW=Math.min(W-48,380), lines=wrapLines(TUT_MSG[T.step]+(T.step===3&&AIM_SKILLS[P.cid]?' Oder ziehe vom Knopf weg, um zu zielen.':''),maxW-28);
   const h=lines.length*22+22, y=96, a=Math.min(1,T.t*3);
   ctx.globalAlpha=a; ctx.fillStyle='rgba(18,14,22,0.88)'; ctx.strokeStyle='#e6b450'; ctx.lineWidth=2;
   ctx.beginPath(); if(ctx.roundRect) ctx.roundRect(W/2-maxW/2,y,maxW,h,10); else ctx.rect(W/2-maxW/2,y,maxW,h); ctx.fill(); ctx.stroke();
