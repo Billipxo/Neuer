@@ -35,7 +35,16 @@ function readMove(){
   if(k['a']||k['arrowleft'])x-=1; if(k['d']||k['arrowright'])x+=1; if(k['w']||k['arrowup'])y-=1; if(k['s']||k['arrowdown'])y+=1;
   const l=Math.hypot(x,y); if(l>1){x/=l;y/=l;} return [x,y];
 }
-$('skillBtn').addEventListener('pointerdown',e=>{ e.preventDefault(); e.stopPropagation(); audio(); useSkill(); });
+// Fähigkeit: Tippen = automatisch, vom Knopf wegziehen = zielen (Richtung und Weite), Loslassen löst aus
+let skillPtr=null;
+$('skillBtn').addEventListener('pointerdown',e=>{ e.preventDefault(); e.stopPropagation(); audio();
+  if(!P || !AIM_SKILLS[P.cid] || state!=='combat'){ useSkill(); return; }
+  skillPtr={id:e.pointerId,x:e.clientX,y:e.clientY,aim:false}; try{ $('skillBtn').setPointerCapture(e.pointerId); }catch(_){} });
+$('skillBtn').addEventListener('pointermove',e=>{ if(!skillPtr||e.pointerId!==skillPtr.id||!P) return;
+  const dx=e.clientX-skillPtr.x, dy=e.clientY-skillPtr.y, l=Math.hypot(dx,dy);
+  if(l>16){ skillPtr.aim=true; P.aim={a:Math.atan2(dy,dx),k:Math.min(1,(l-16)/90)}; } else { skillPtr.aim=false; P.aim=null; } });
+$('skillBtn').addEventListener('pointerup',e=>{ if(!skillPtr||e.pointerId!==skillPtr.id) return; const aim=skillPtr.aim&&P?P.aim:null; skillPtr=null; if(P) P.aim=null; useSkill(aim||undefined); });
+$('skillBtn').addEventListener('pointercancel',()=>{ skillPtr=null; if(P) P.aim=null; });
 $('dashBtn').addEventListener('pointerdown',e=>{ e.preventDefault(); e.stopPropagation(); audio(); useDash(); });
 $('pauseBtn').addEventListener('click',()=>pauseGame());
 document.addEventListener('visibilitychange',()=>{

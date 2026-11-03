@@ -306,7 +306,7 @@ function showSlots(){
 function showHelp(){
   render(`<div class="wrap help"><h2>Anleitung</h2>
   <p><b>Bewegen:</b> Lege den Daumen irgendwo auf den Bildschirm und ziehe. Dein Held greift den nächsten Gegner automatisch an.</p>
-  <p><b>Fähigkeit:</b> Der große runde Knopf unten rechts löst die Spezialfähigkeit deines Helden aus. Danach lädt sie sich wieder auf.</p>
+  <p><b>Fähigkeit:</b> Der große runde Knopf unten rechts löst die Spezialfähigkeit deines Helden aus. Danach lädt sie sich wieder auf. <b>Zielen:</b> Ziehe den Daumen vom Knopf weg, um Richtung und Weite zu wählen, und lass los (Magierin, Jägerin, Nekromantin, Alchemistin, Berserkerin). Kurz tippen zielt automatisch.</p>
   <p><b>Ausweichen:</b> Der kleine blaue Knopf 💨 lässt dich in Laufrichtung hechten. Währenddessen bist du kurz unverwundbar. Perfekt gegen Boss-Angriffe.</p>
   <p><b>Karte:</b> Jeder Akt ist eine Karte mit Abzweigungen. Wähle deinen Weg: ⚔️ Kampf, 💀 Elite (schwer, bessere Beute), ⚖️ Händler, 🔥 Lagerfeuer, 🎁 Schatz, ❓ Ereignis. Am Ende wartet der 👑 Boss.</p>
   <p><b>Elitegegner</b> 👑 tragen Eigenschaften: 💨 Flink, 🛡️ Gepanzert, 💥 Explosiv, 🧬 Teilend, 🩸 Vampirisch, ❄️ Frostig, 🦇 Beschwörer.</p>

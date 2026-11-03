@@ -32,6 +32,15 @@ function draw(){
     if(c.heart){ ctx.font='16px serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('❤️',c.x,c.y+bob); continue; }
     drawGlow(c.x,c.y,12,'#ffcc44',0.4); ctx.fillStyle='#e6b450'; ctx.beginPath(); ctx.ellipse(c.x,c.y+bob,4.5*Math.abs(Math.cos(G.time*4+c.x))+1.5,4.5,0,0,TAU); ctx.fill(); ctx.fillStyle='#fff3b0'; ctx.fillRect(c.x-1,c.y+bob-2,2,2); }
   // shadows + entities sorted
+  // Zielvorschau beim Wischen vom Fähigkeitsknopf
+  if(P.aim && !G.over){ const A=P.aim, ready=(P.maxCharges||1)>1?P.charges>0:P.skillT<=0, col=ready?'rgba(140,220,255,':'rgba(255,140,120,';
+    const rng={alchi:[90,340],berserk:[80,360],magier:[60,260],nekro:[40,240]}[P.cid];
+    ctx.save(); ctx.lineWidth=2.5; ctx.setLineDash([8,6]);
+    if(rng){ const T=aimPoint(P,A,rng[0],rng[1]), R={alchi:140*Math.sqrt(P.area),berserk:95*Math.sqrt(P.area),magier:136*P.area,nekro:60}[P.cid];
+      ctx.strokeStyle=col+'0.75)'; ctx.beginPath(); ctx.moveTo(P.x,P.y); ctx.lineTo(T.x,T.y); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle=col+'0.15)'; ctx.beginPath(); ctx.ellipse(T.x,T.y,R,R*0.62,0,0,TAU); ctx.fill(); ctx.strokeStyle=col+'0.9)'; ctx.stroke(); }
+    else { ctx.setLineDash([]); ctx.fillStyle=col+'0.15)'; ctx.beginPath(); ctx.moveTo(P.x,P.y); ctx.arc(P.x,P.y,300,A.a-0.55,A.a+0.55); ctx.closePath(); ctx.fill(); ctx.strokeStyle=col+'0.8)'; ctx.stroke(); }
+    ctx.restore(); }
   // Zielmarkierung unter dem Gegner, den der Held gerade automatisch angreift
   { const T=P.tgtRef; if(T && !T.dead && !G.over && !T.under){ const rr=T.r*1.25, a=G.time*2.5; ctx.save(); ctx.strokeStyle='rgba(255,224,138,0.75)'; ctx.lineWidth=2; ctx.setLineDash([6,5]); ctx.lineDashOffset=-G.time*20;
       ctx.beginPath(); ctx.ellipse(T.x,T.y+T.r*0.75,rr,rr*0.42,0,0,TAU); ctx.stroke(); ctx.restore(); } }

@@ -141,6 +141,13 @@ const tests = {
       save.pet=null; startRun('krieger',{daily:todayKey()}); out.noDaily=!run.pet;
       return {ok:Object.values(out).every(Boolean), out}; });
   },
+  async aim(pg){ // Fähigkeit per Wischgeste zielen: Ziehen nach links setzt den Kessel links vom Helden ab
+    await pg.evaluate(()=>{ save.tutDone=true; startRun('alchi'); run.posId=run.map.rows[1][0].id; startCombat('fight',[[{kind:'slime'}]]); P.skillT=0; for(let i=0;i<5;i++) update(1/30); });
+    const b=await pg.locator('#skillBtn').boundingBox(); const cx=b.x+b.width/2, cy=b.y+b.height/2;
+    await pg.mouse.move(cx,cy); await pg.mouse.down(); await pg.mouse.move(cx-60,cy,{steps:4}); await pg.mouse.move(cx-110,cy,{steps:4});
+    const mid=await pg.evaluate(()=>!!P.aim); await pg.mouse.up();
+    return pg.evaluate(mid=>{ const v=P.vortex; return {ok: mid && !!v && v.x<P.x-60 && Math.abs(v.y-P.y)<40 && !P.aim, mid, v:v&&[Math.round(v.x),Math.round(P.x)]}; },mid);
+  },
   async music(pg){ // Musik-Engine spielt alle Stücke inklusive B-Teil fehlerfrei
     await pg.mouse.click(10,10);
     return pg.evaluate(()=>{ audio(); if(!AC) return {ok:true, skipped:'kein Audio'}; let n=0;
