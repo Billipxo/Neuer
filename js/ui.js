@@ -65,10 +65,10 @@ const ACH=[
   { id:'first_win', ic:'🐉', nm:'Bezwinger', ds:'Gewinne einen Lauf', souls:100, ok:()=>ST().anyWin },
   { id:'no_hit', ic:'🛡️', nm:'Unberührbar', ds:'Besiege einen Boss, ohne getroffen zu werden', souls:80, ok:()=>ST().noHitBoss },
   { id:'all_syn', ic:'💠', nm:'Alchemist', ds:'Entdecke 5 Synergien', souls:80, prog:()=>[ST().syns.length,5] },
-  { id:'all_bosses', ic:'👑', nm:'Bossjäger', ds:'Besiege alle 6 Bosse', souls:120, prog:()=>[ST().bosses.length,6] },
+  { id:'all_bosses', ic:'👑', nm:'Bossjäger', ds:'Besiege alle 7 Bosse', souls:120, prog:()=>[ST().bosses.length,Object.keys(BOSSES).length] },
   { id:'kills', ic:'⚔️', nm:'Schlächter', ds:'Besiege insgesamt 1.000 Gegner', souls:60, prog:()=>[ST().kills,1000] },
   { id:'elites', ic:'💀', nm:'Elitejäger', ds:'Besiege insgesamt 40 Elitegegner', souls:60, prog:()=>[ST().elites,40] },
-  { id:'endless', ic:'♾️', nm:'Unendlich', ds:'Erreiche Akt 5 im Endlosmodus', souls:150, prog:()=>[Math.min(5,ST().maxEndless),5] },
+  { id:'endless', ic:'♾️', nm:'Unendlich', ds:'Erreiche Akt 6 im Endlosmodus', souls:150, prog:()=>[Math.min(6,ST().maxEndless),6] },
   { id:'daily', ic:'📅', nm:'Tagwerk', ds:'Gewinne eine Tägliche Herausforderung', souls:100, ok:()=>ST().dailyWin },
   { id:'all_heroes', ic:'🎖️', nm:'Meister aller Klassen', ds:'Gewinne mit jedem Helden', souls:200, prog:()=>[Object.keys(ST().wins).length,Object.keys(CHARS).length] },
   { id:'crowd', ic:'📣', nm:'Liebling der Massen', ds:'Bring die Menge 10-mal zum Toben', souls:50, prog:()=>[ST().cheers,10] },
@@ -139,9 +139,9 @@ function showMenu(){
   const veteran=save.runs>0, chalNew=CHALLENGES.some((c,i)=>chalOpen(i)&&!chalDone(c.id))&&!save.chalSeen;
   render(`<div class="wrap">
     <div class="title-block">${CREST}
-      <div class="eyebrow">Ein Roguelike in drei Akten</div>
+      <div class="eyebrow">Ein Roguelike in vier Akten</div>
       <h1>Arena der<br>Verdammten</h1>
-      <p class="sub">Kämpfe dich durch Verliese, Krypta und Drachenhort. Jeder Lauf ist anders.</p>
+      <p class="sub">Kämpfe dich durch Verliese, Krypta, Drachenhort und Himmelsturm. Jeder Lauf ist anders.</p>
       <span class="pill s">👻 ${save.souls} Seelen</span>
     </div>
     ${IOS && !STANDALONE && !save.settings.iosTip?`<div class="tip">📱 <div><b>Tipp fürs iPhone:</b> Tippe in Safari auf „Teilen“ und dann „Zum Home-Bildschirm“. Dann läuft das Spiel im Vollbild wie eine App, und deine Spielstände bleiben sicher gespeichert. <button class="linkbtn" data-a="tipok">Verstanden</button></div></div>`:''}
@@ -321,7 +321,7 @@ function showIntro(next){
   save.introSeen=true; persist();
   render(`<div class="wrap story" style="justify-content:center"><div class="eyebrow center">Prolog</div><h1 class="center" style="margin-top:6px">Die Arena der Verdammten</h1>
     <p>Tief unter der vergessenen Stadt Varnhold liegt eine Arena, die in keiner Chronik steht. Gefangene, Glücksritter und Verfluchte kämpfen dort vor einem Publikum aus Lebenden und Toten.</p>
-    <p>Die Regel ist einfach: Wer alle drei Ränge übersteht – die Verliese, die Krypta und den Drachenhort –, erhält seine Freiheit. Wer fällt, dessen Seele bleibt in den Mauern gefangen und nährt die nächste Generation von Kämpfern.</p>
+    <p>Die Regel ist einfach: Wer alle vier Ränge übersteht – die Verliese, die Krypta, den Drachenhort und den Himmelsturm –, erhält seine Freiheit. Wer fällt, dessen Seele bleibt in den Mauern gefangen und nährt die nächste Generation von Kämpfern.</p>
     <p>Bisher hat es niemand geschafft. Die Tore öffnen sich. Die Menge brüllt.</p>
     <button class="btn primary" data-a="next">Betritt die Arena</button></div>`,{ next });
 }
@@ -430,7 +430,7 @@ function showMap(){
   }).join('');
   const p=run.p;
   render(`<div class="mapscreen">
-    <div class="maphead"><div><div class="eyebrow">${run.tier?'🔥 Verdammnis '+run.tier+' · ':''}${run.challenge?'🏁 ':''}${run.ng?'⚔️ NG+'+run.ng+' · ':''}${run.act>3?'Endlos · Akt '+run.act:'Akt '+run.act+' von 3'}${(run.daily||run.challenge)&&runMod()?' · '+(run.daily?'📅 ':'')+runMod().ic+' '+runMod().nm:''}</div><h2>${A.name}</h2><div class="sub" style="font-size:13px">👑 ${BOSSES[bossKind()].name} erwartet dich</div></div>
+    <div class="maphead"><div><div class="eyebrow">${run.tier?'🔥 Verdammnis '+run.tier+' · ':''}${run.challenge?'🏁 ':''}${run.ng?'⚔️ NG+'+run.ng+' · ':''}${run.act>ACT_N?'Endlos · Akt '+run.act:'Akt '+run.act+' von '+ACT_N}${(run.daily||run.challenge)&&runMod()?' · '+(run.daily?'📅 ':'')+runMod().ic+' '+runMod().nm:''}</div><h2>${A.name}</h2><div class="sub" style="font-size:13px">👑 ${BOSSES[bossKind()].name} erwartet dich</div></div>
       <div class="row" style="gap:6px"><button class="btn small" data-a="stats">📜 Werte</button><button class="btn small" data-a="menu">☰ Menü</button></div></div>
     <div class="row" style="gap:6px"><span class="pill h">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span><span class="pill s">👻 ${run.souls}</span><span class="pill">${CHARS[run.cid].icon} ${CHARS[run.cid].name}</span></div>
     <div class="mapbox"><svg viewBox="0 0 100 100" preserveAspectRatio="none">${lines}</svg>${btns}</div>

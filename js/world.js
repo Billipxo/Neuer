@@ -67,7 +67,7 @@ function buildFloor(){
   g.globalAlpha=1;
   // Blutflecken
   for(let i=0;i<5;i++){ const x=rand(60,AW-60),y=rand(60,AH-60); g.fillStyle='rgba(90,10,12,0.3)'; for(let j=0;j<7;j++){ g.beginPath(); g.arc(x+rand(-14,14),y+rand(-10,10),rand(3,10),0,TAU); g.fill(); } }
-  if(va===1) decorDungeon(g); else if(va===2) decorCrypt(g); else decorLair(g);
+  if(va===1) decorDungeon(g); else if(va===2) decorCrypt(g); else if(va===3) decorLair(g); else decorTower(g);
   // Schatten entlang der Wände
   const ao=(x0,y0,x1,y1)=>{ const gr=g.createLinearGradient(x0,y0,x1,y1); gr.addColorStop(0,'rgba(0,0,0,0.6)'); gr.addColorStop(1,'rgba(0,0,0,0)'); return gr; };
   g.fillStyle=ao(0,0,0,80); g.fillRect(0,0,AW,80);
@@ -132,6 +132,20 @@ function decorCrypt(g){
   edgeTufts(g,'rgba(110,70,150,0.35)',30);
   web(g,0,0,1,1,70); web(g,AW,0,-1,1,60); web(g,0,AH,1,-1,50); web(g,AW,AH,-1,-1,56);
 }
+// Himmelsturm: Sternbilder im Boden, leuchtende Risse, Runenkreise
+function decorTower(g){
+  for(let i=0;i<5;i++){ const x=rand(70,AW-70),y=rand(70,AH-70),n=randi(4,6); let px=x,py=y; const pts=[[px,py]];
+    for(let j=0;j<n;j++){ px=clamp(px+rand(-50,50),20,AW-20); py=clamp(py+rand(-50,50),20,AH-20); pts.push([px,py]); }
+    g.strokeStyle='rgba(168,192,255,0.28)'; g.lineWidth=1.2; g.beginPath(); pts.forEach(([a,b],j)=>j?g.lineTo(a,b):g.moveTo(a,b)); g.stroke();
+    for(const [a,b] of pts){ const gr=g.createRadialGradient(a,b,0,a,b,7); gr.addColorStop(0,'rgba(232,244,255,0.9)'); gr.addColorStop(1,'rgba(168,192,255,0)'); g.fillStyle=gr; g.beginPath(); g.arc(a,b,7,0,TAU); g.fill(); } }
+  for(let i=0;i<70;i++){ g.fillStyle=`rgba(220,230,255,${rand(0.15,0.5)})`; g.fillRect(rand(10,AW-10),rand(10,AH-10),1.4,1.4); }
+  for(let i=0;i<7;i++){ let x=rand(40,AW-40),y=rand(40,AH-40); const pts=[[x,y]]; for(let j=0;j<6;j++){ x+=rand(-22,22); y+=rand(-22,22); pts.push([x,y]); }
+    g.strokeStyle='rgba(10,12,30,0.85)'; g.lineWidth=3.5; g.beginPath(); pts.forEach(([px,py],j)=>j?g.lineTo(px,py):g.moveTo(px,py)); g.stroke();
+    g.strokeStyle='rgba(122,184,255,0.55)'; g.lineWidth=1.2; g.stroke(); DECOR.cracks.push({pts,ph:rand(0,TAU)}); }
+  for(let i=0;i<2;i++){ const x=rand(120,AW-120),y=rand(120,AH-120),r=rand(40,56); g.strokeStyle='rgba(168,192,255,0.35)'; g.lineWidth=2; g.beginPath(); g.arc(x,y,r,0,TAU); g.stroke(); g.beginPath(); g.arc(x,y,r*0.78,0,TAU); g.stroke();
+    for(let k=0;k<8;k++){ const a=k/8*TAU; g.fillStyle='rgba(200,216,255,0.45)'; g.fillRect(x+Math.cos(a)*r*0.89-2,y+Math.sin(a)*r*0.89-2,4,4); } }
+  edgeTufts(g,'rgba(90,106,216,0.35)',30);
+}
 function decorLair(g){
   for(let i=0;i<6;i++){ const x=rand(60,AW-60),y=rand(60,AH-60),r=rand(26,50), gr=g.createRadialGradient(x,y,0,x,y,r);
     gr.addColorStop(0,'rgba(0,0,0,0.55)'); gr.addColorStop(1,'rgba(0,0,0,0)'); g.fillStyle=gr; g.beginPath(); g.arc(x,y,r,0,TAU); g.fill(); }
@@ -194,6 +208,7 @@ function crowdLook(va,v){
   const pv=a=>a[v%a.length];
   if(va===1){ const gob=v%4===3; return {body:pv(['#6a3a2a','#3a4a6a','#5a5a3a','#6a2a3a','#4a3a5a','#2e4a3a','#7a5a2a']),head:gob?'#7ab04f':pv(['#e8c4a0','#c89a70','#9a7050']),ears:gob,hood:v%3===1?pv(['#4a3a2a','#2a3a4a']):null,eye:'#1a1010'}; }
   if(va===2){ const k=v%3; return k===0?{body:'#b8b0a0',head:'#e8e2d0',skull:true,eye:'#0a0a10'}:k===1?{ghost:true,body:'#a8d8ff',head:'#c8ecff',eye:'#2a4a6a'}:{body:'#3a2050',head:'#3a2050',hood:'#2a1640',eye:'#d07aff'}; }
+  if(va===4){ const k=v%3; return k===0?{body:'#e8e4f4',head:'#f4e8d0',halo:true,eye:'#3a4a8a'}:k===1?{body:'#3a4a8a',head:'#c8d8ff',hood:'#2a3a7a',eye:'#a8c0ff'}:{ghost:true,body:'#c8d8ff',head:'#e8f0ff',eye:'#4a5a9a',halo:true}; }
   const k=v%3; return k===0?{body:'#8a2a1a',head:'#c0402a',horns:true,eye:'#ffe04a'}:k===1?{body:'#6a4a2a',head:'#d0782a',snout:true,eye:'#1a0a00'}:{body:'#3a1010',head:'#3a1010',hood:'#2a0808',eye:'#ff7a2a'};
 }
 function renderSpectator(L,front,cheer){
@@ -207,6 +222,7 @@ function renderSpectator(L,front,cheer){
   if(L.horns){ g.fillStyle='#2a0a08'; g.beginPath(); g.moveTo(5,6); g.lineTo(4,1.8); g.lineTo(6.6,5); g.moveTo(11,6); g.lineTo(12,1.8); g.lineTo(9.4,5); g.fill(); }
   if(L.hood){ g.fillStyle=L.hood; g.beginPath(); g.arc(8,8,4.9,Math.PI*0.95,Math.PI*0.05); g.lineTo(12.6,12.5); g.lineTo(3.4,12.5); g.closePath(); g.fill();
     if(front){ g.fillStyle='#0a0608'; g.beginPath(); g.ellipse(8,9.4,2.8,2.6,0,0,TAU); g.fill(); } }
+  if(L.halo){ g.strokeStyle='#ffe08a'; g.lineWidth=1.2; g.beginPath(); g.ellipse(8,3,4.6,1.4,0,0,TAU); g.stroke(); }
   if(L.snout && front){ g.fillStyle=L.head; g.beginPath(); g.ellipse(8,10.8,2.6,1.8,0,0,TAU); g.fill(); }
   if(front){ g.fillStyle=L.eye; if(L.skull){ g.beginPath(); g.arc(6.4,8.4,1.2,0,TAU); g.arc(9.6,8.4,1.2,0,TAU); g.fill(); } else { g.fillRect(6,8.2,1.3,1.3); g.fillRect(8.8,8.2,1.3,1.3); } }
   else { g.fillStyle='rgba(0,0,0,0.28)'; g.beginPath(); g.arc(8,8.5,4.2,0,TAU); g.fill(); }
@@ -272,8 +288,9 @@ const WEATHER={
   snow:{ ic:'❄️', nm:'Schneefall', kind:'snow', n:150 },
   ash:{ ic:'🌋', nm:'Ascheregen', kind:'ash', n:140, dark:0.05 },
   firestorm:{ ic:'🔥', nm:'Feuersturm', kind:'ash', n:180, dark:0.1, bolts:true, bolt:'#ffb07a' },
+  starfall:{ ic:'🌠', nm:'Sternschnuppen', kind:'stars', n:60 },
 };
-const WEATHER_POOL={ 1:[['clear',35],['rain',30],['storm',20],['fog',15]], 2:[['clear',30],['snow',30],['fog',25],['storm',15]], 3:[['clear',30],['ash',40],['firestorm',30]] };
+const WEATHER_POOL={ 1:[['clear',35],['rain',30],['storm',20],['fog',15]], 2:[['clear',30],['snow',30],['fog',25],['storm',15]], 3:[['clear',30],['ash',40],['firestorm',30]] , 4:[['clear',30],['starfall',35],['snow',15],['fog',20]] };
 function initWeather(){
   const w=WEATHER[G.weather]; G.wp=[]; G.splash=[]; G.flash=0; G.boltT=rand(4,7); G.skyT=rand(3,8); G.thunderT=0; G.cam=null;
   const n=Math.round((w.n||0)*(FX()?1:0.4));
@@ -284,6 +301,7 @@ function updWeather(dt){
   const w=WEATHER[G.weather];
   for(const p of G.wp){
     if(w.kind==='rain'){ p.y+=900*p.s*dt; p.x+=150*p.s*dt; if(p.y>H+20){ if(G.splash.length<30) G.splash.push({x:rand(0,W),y:rand(0,H),t:0}); p.y=rand(-60,-10); p.x=rand(-150,W); } }
+    else if(w.kind==='stars'){ p.y+=170*p.s*dt; p.x+=70*p.s*dt; if(p.y>H+10||p.x>W+10){ p.y=rand(-60,-10); p.x=rand(-60,W); } }
     else if(w.kind==='snow'){ p.ph+=dt; p.y+=45*p.s*dt; p.x+=Math.sin(p.ph*1.3)*28*dt; if(p.y>H+10){ p.y=-10; p.x=rand(-10,W+10); } }
     else if(w.kind==='ash'){ p.ph+=dt; p.y+=(p.glow?55:75)*p.s*dt; p.x+=(Math.sin(p.ph)*22+18)*dt; if(p.y>H+10){ p.y=-10; p.x=rand(-40,W); } }
     if(p.x>W+40) p.x-=W+60; if(p.x<-40) p.x+=W+60;
@@ -306,6 +324,10 @@ function drawWeather(cx,cy){
     ctx.strokeStyle='rgba(185,205,235,0.38)'; ctx.lineWidth=1.1; ctx.beginPath();
     for(const p of G.wp){ ctx.moveTo(p.x,p.y); ctx.lineTo(p.x-3.5*p.s,p.y-20*p.s); } ctx.stroke();
     ctx.strokeStyle='rgba(185,205,235,0.45)'; for(const s of G.splash){ const k=s.t/0.35; ctx.globalAlpha=1-k; ctx.beginPath(); ctx.ellipse(s.x,s.y,2+k*7,(2+k*7)*0.4,0,0,TAU); ctx.stroke(); } ctx.globalAlpha=1;
+  } else if(w.kind==='stars'){
+    ctx.globalCompositeOperation='lighter'; ctx.lineCap='round';
+    for(const p of G.wp){ const g=ctx.createLinearGradient(p.x,p.y,p.x-12*p.s,p.y-28*p.s); g.addColorStop(0,'rgba(240,248,255,0.9)'); g.addColorStop(1,'rgba(168,192,255,0)'); ctx.strokeStyle=g; ctx.lineWidth=1.6*p.s; ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p.x-12*p.s,p.y-28*p.s); ctx.stroke(); }
+    ctx.globalCompositeOperation='source-over'; ctx.lineCap='butt';
   } else if(w.kind==='snow'){
     ctx.fillStyle='rgba(235,242,255,0.85)'; ctx.beginPath();
     for(const p of G.wp){ ctx.moveTo(p.x+1.6*p.s,p.y); ctx.arc(p.x,p.y,1.6*p.s,0,TAU); } ctx.fill();
@@ -343,7 +365,7 @@ function spawnCritter(){
   else if(side===1){ x=rand(40,AW-40); y=AH-8; tx=rand(40,AW-40); ty=8; }
   else if(side===2){ x=8; y=rand(40,AH-40); tx=AW-8; ty=rand(40,AH-40); }
   else { x=AW-8; y=rand(40,AH-40); tx=8; ty=rand(40,AH-40); }
-  G.critters.push({x,y,tx,ty,t:0,a:0,r:5,sp:rand(60,95),kind:['rat','spider','lizard'][visAct()-1]});
+  G.critters.push({x,y,tx,ty,t:0,a:0,r:5,sp:rand(60,95),kind:['rat','spider','lizard','moth'][visAct()-1]});
 }
 function updAmbient(dt){
   const va=visAct(), A=actOf(run.act);
@@ -374,6 +396,7 @@ function drawCritter(c){
     ctx.fillStyle='#5a5560'; ctx.beginPath(); ctx.ellipse(0,0,7,4,0,0,TAU); ctx.fill(); ctx.beginPath(); ctx.ellipse(6,0,3.5,2.6,0,0,TAU); ctx.fill();
     ctx.fillStyle='#d8a0a8'; ctx.beginPath(); ctx.arc(4.5,-2.6,1.5,0,TAU); ctx.arc(4.5,2.6,1.5,0,TAU); ctx.fill();
     ctx.fillStyle='#000'; ctx.fillRect(7,-1.5,1,1); ctx.fillRect(7,0.8,1,1); }
+  else if(c.kind==='moth'){ const f=Math.sin(c.t*30); ctx.fillStyle='rgba(200,216,255,0.85)'; for(const s of [-1,1]){ ctx.beginPath(); ctx.ellipse(-1,s*3.5*Math.abs(f)+s,4,2.6*Math.abs(f)+0.6,s*0.4,0,TAU); ctx.fill(); } ctx.fillStyle='#e8f0ff'; ctx.beginPath(); ctx.ellipse(1,0,3,1.4,0,0,TAU); ctx.fill(); }
   else if(c.kind==='spider'){
     ctx.strokeStyle='#1a1418'; ctx.lineWidth=1.2;
     for(let i=0;i<4;i++) for(const s of [-1,1]){ const o=(i-1.5)*3, k=w*(i%2?1:-1); ctx.beginPath(); ctx.moveTo(o,0); ctx.lineTo(o+k*1.5,s*5); ctx.lineTo(o+k*2.5+(i-1.5)*1.5,s*9); ctx.stroke(); }
@@ -448,7 +471,7 @@ function collectLights(){
   for(const a of G.allies) L.push({x:a.x,y:a.y,r:45,a:0.5});
   if(P.orbit>0) L.push({x:P.x,y:P.y,r:120,a:0.5});
   for(const c of G.coins) L.push({x:c.x,y:c.y,r:24,a:0.5});
-  for(const c of G.critters) if(c.kind==='lizard') L.push({x:c.x,y:c.y,r:36,a:0.5});
+  for(const c of G.critters) if(c.kind==='lizard'||c.kind==='moth') L.push({x:c.x,y:c.y,r:36,a:0.5});
   return L;
 }
 let lightCv=null, lightCtx=null;

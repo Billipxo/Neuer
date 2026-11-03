@@ -3,7 +3,7 @@
    Bewegliche Teile (Waffen, Schilde, Leuchten) zeichnet drawEnemy weiterhin live darüber. */
 const SPR={}, SPR_FR=6;
 // Kopfbewegung je Gegnerart: Animationsgeschwindigkeit, ob gespiegelt wird
-const SPR_KIND={ shroom:{sp:6,flip:1}, urchin:{sp:0,flip:0}, shaman:{sp:9,flip:1}, totem:{sp:0,flip:0}, hound:{sp:16,flip:1}, wraith:{sp:5,flip:1}, gargoyle:{sp:0,flip:1}, gargstone:{sp:0,flip:1,base:'gargoyle'},
+const SPR_KIND={ seraph:{sp:6,flip:1}, shroom:{sp:6,flip:1}, urchin:{sp:0,flip:0}, shaman:{sp:9,flip:1}, totem:{sp:0,flip:0}, hound:{sp:16,flip:1}, wraith:{sp:5,flip:1}, gargoyle:{sp:0,flip:1}, gargstone:{sp:0,flip:1,base:'gargoyle'},
   slime:{sp:0,flip:0}, bat:{sp:22,flip:0}, skeleton:{sp:10,flip:1}, archer:{sp:11,flip:1}, orc:{sp:9,flip:1},
   cultist:{sp:0,flip:1}, shield:{sp:9,flip:1}, healer:{sp:0,flip:1}, spiderling:{sp:24,flip:0}, imp:{sp:18,flip:1}, kobold:{sp:12,flip:1}, ally:{sp:10,flip:1} };
 
@@ -225,6 +225,17 @@ Object.assign(SPR_BODY,{
     if(stone){ sLine(c,'rgba(40,40,46,0.8)',1,[-r*0.2,-r*0.1,0,r*0.3,-r*0.1,r*0.6]); sLine(c,'rgba(40,40,46,0.8)',1,[r*0.2,-r*0.6,r*0.3,-r*0.3]); c.fillStyle='#3a3a40'; c.fillRect(r*0.0,-r*0.52,3,1.6); c.fillRect(r*0.3,-r*0.52,3,1.6); }
     else { sEye(c,r*0.02,-r*0.5,1.6,'#ff9a2a'); sEye(c,r*0.32,-r*0.5,1.5,'#ff9a2a'); c.fillStyle='#f0f0f0'; c.beginPath(); c.moveTo(r*0.45,-r*0.22); c.lineTo(r*0.5,-r*0.08); c.lineTo(r*0.56,-r*0.22); c.fill(); } },
   gargstone(c,r,ph){ SPR_BODY.gargoyle(c,r,ph,false,true); },
+  seraph(c,r,ph){ const f=Math.sin(ph)*0.25;
+    for(const s of [-1,1]){ c.fillStyle=sGrad(c,0,-r*0.6,s*r*1.6,0,['#f4f8ff','rgba(168,192,255,0.35)']); c.beginPath(); c.moveTo(s*r*0.25,-r*0.5);
+      c.quadraticCurveTo(s*r*1.1,-r*(1.4+f),s*r*1.7,-r*(0.7+f)); c.quadraticCurveTo(s*r*1.1,-r*0.4,s*r*1.4,r*0.1); c.quadraticCurveTo(s*r*0.8,-r*0.1,s*r*0.25,r*0.1); c.fill(); }
+    c.fillStyle=sGrad(c,0,-r*0.8,0,r*1.1,['#ffffff','#c8d4f4','#6a7ab8']); c.beginPath(); c.moveTo(0,-r*0.8); c.quadraticCurveTo(r*0.7,-r*0.2,r*0.55,r*1.0); c.lineTo(-r*0.55,r*1.0); c.quadraticCurveTo(-r*0.7,-r*0.2,0,-r*0.8); c.fill();
+    c.strokeStyle='#ffe08a'; c.lineWidth=1.2; c.beginPath(); c.moveTo(-r*0.55,r*0.95); c.lineTo(r*0.55,r*0.95); c.stroke();
+    c.fillStyle='#e8d0b0'; c.beginPath(); c.arc(r*0.08,-r*0.75,r*0.3,0,TAU); c.fill();
+    c.fillStyle='#c8a050'; c.beginPath(); c.arc(r*0.08,-r*0.82,r*0.32,Math.PI,0); c.fill();
+    c.strokeStyle='#ffe08a'; c.lineWidth=1.6; c.beginPath(); c.ellipse(r*0.05,-r*1.2,r*0.38,r*0.12,0,0,TAU); c.stroke();
+    sEye(c,r*0.12,-r*0.72,1.3,'#4a6ad8'); sEye(c,r*0.32,-r*0.72,1.2,'#4a6ad8');
+    c.strokeStyle='#c8ccd4'; c.lineWidth=2; c.beginPath(); c.moveTo(r*0.75,r*0.9); c.lineTo(r*0.75,-r*1.1); c.stroke();
+    c.fillStyle='#e8f4ff'; c.beginPath(); c.moveTo(r*0.75,-r*1.5); c.lineTo(r*0.9,-r*1.1); c.lineTo(r*0.6,-r*1.1); c.fill(); },
 });
 
 function sprScale(){ return FX()?2.4:1.6; }

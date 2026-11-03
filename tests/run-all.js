@@ -60,9 +60,9 @@ const tests = {
         startCombat('fight',[[{kind:k},{kind:k},{kind:k}]]); const r=__bot(true,120); out[k]=state!=='combat'; if(state==='combat'){ endRun(false); } }
       return {ok:Object.values(out).every(Boolean), out}; });
   },
-  async bosses(pg){ // Alle sechs Bosse lassen sich besiegen
+  async bosses(pg){ // Alle Bosse aller vier Akte lassen sich besiegen
     return pg.evaluate(()=>{ const out={};
-      for(const [act,kinds] of [[1,['golem','spider']],[2,['lich','vampire']],[3,['dragon','lavaworm']]]) for(const k of kinds){
+      for(const [act,kinds] of ACTS.map((A,i)=>[i+1,A.bosses])) for(const k of kinds){
         startRun('magier'); for(const u of UPGRADES) if(!u.only||u.only.includes('magier')) applyUpgrade(u);
         run.act=act; run.map=genMap(act); run.map.bossKind=k; run.posId=run.map.boss.id; startCombat('boss'); const r=__bot(true,240);
         out[k]=state!=='combat'; }
@@ -147,6 +147,16 @@ const tests = {
     await pg.mouse.move(cx,cy); await pg.mouse.down(); await pg.mouse.move(cx-60,cy,{steps:4}); await pg.mouse.move(cx-110,cy,{steps:4});
     const mid=await pg.evaluate(()=>!!P.aim); await pg.mouse.up();
     return pg.evaluate(mid=>{ const v=P.vortex; return {ok: mid && !!v && v.x<P.x-60 && Math.abs(v.y-P.y)<40 && !P.aim, mid, v:v&&[Math.round(v.x),Math.round(P.x)]}; },mid);
+  },
+  async act4(pg){ // Vierter Akt: Karte, Himmelswächter, Sieg erst nach Akt 4
+    return pg.evaluate(()=>{ const out={}; save.tutDone=true; startRun('krieger'); run.act=3; nextAct(); out.act=run.act===4 && visAct()===4 && actOf(4).name==='Der Himmelsturm';
+      out.pool=enemyPool(4,3).includes('seraph') && !enemyPool(3,3).includes('seraph');
+      run.posId=run.map.rows[2][0].id; startCombat('fight',[[{kind:'seraph'},{kind:'seraph'}]]); let beam=false; for(let i=0;i<30*12 && state==='combat';i++){ __bot(true,0.1); if(G&&G.hazards.some(h=>h.type==='line')) beam=true; } out.beam=beam;
+      out.song=!!SONGS2.fight4 && !!SONGS2.calm4 && !!WEATHER_POOL[4];
+      startRun('paladin'); run.act=3; run.map=genMap(3); run.posId=run.map.boss.id; startCombat('boss'); __bot(true,240);
+      for(let g=0; g<5 && state!=='combat' && !ui.querySelector('.mapbox'); g++){ const a=Object.keys(actions); if(a.includes('pick')) actions.pick(ui.querySelector('[data-a=pick]').dataset.v); else if(a.includes('evo')) actions.evo(ui.querySelector('[data-a=evo]').dataset.v); else break; }
+      out.notWonAfter3=!run.won && run.act===4;
+      return {ok:Object.values(out).every(Boolean), out}; });
   },
   async music(pg){ // Musik-Engine spielt alle Stücke inklusive B-Teil fehlerfrei
     await pg.mouse.click(10,10);

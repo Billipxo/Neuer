@@ -122,7 +122,7 @@ function showDaily(){
 // Ein Ansager, der auf vergangene Läufe reagiert (wiederkehrende Erzählung über viele Läufe)
 const AM_LINES = {
   first:['Frisches Blut! Das Publikum liebt Neulinge – meistens nur ziemlich kurz.','Willkommen in meiner Arena. Kämpfe gut, stirb spektakulär.'],
-  win:['{held} hat den Drachenhort bezwungen! Die Barden schreiben schon. Aber hast du Mut für die nächste Verdammnis-Stufe?','Ein Sieg! Die Menge tobt noch immer. Ich kann das Gold förmlich klingeln hören.'],
+  win:['{held} hat den Himmelsturm bezwungen! Die Barden schreiben schon. Aber hast du Mut für die nächste Verdammnis-Stufe?','Ein Sieg! Die Menge tobt noch immer. Ich kann das Gold förmlich klingeln hören.'],
   boss:{ golem:['Der Golem hat dich zerquetscht wie eine Weintraube. Tipp: Seine Steinkreise sieht man kommen.','Stein schlägt Fleisch – so war es zuletzt. Weiche den Kreisen aus und schlag zu, wenn er Felsen wirft.'],
     spider:['Die Spinnenkönigin hat dich eingewickelt. Ihre Netze verlangsamen – bleib aus ihnen heraus!','Spinnweben im Haar, Gift im Blut. Die Königin war zuletzt schneller.'],
     lich:['Der Lichkönig hat deine Seele beinahe behalten. Seine Spiralen haben Lücken – such sie!','Untot und unbeeindruckt. Der Lich lacht noch über deinen letzten Versuch.'],

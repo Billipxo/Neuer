@@ -6,11 +6,13 @@ const ACTS = [
   { name:'Die Verliese',    floorA:'#3b3e4a', floorB:'#343744', grout:'#22242c', wall:'#17181e', moss:'#4f6b3a', accent:'#9fb3d9', boss:'golem', bosses:['golem','spider'], pillar:'#5d6170', pillarTop:'#767b8b', dark:'rgba(4,6,14,0.7)', fire:'#ff8a2a', fireCore:'#ffe09a', dust:'#8a8f9a', mote:'#d8d0b8' },
   { name:'Die Krypta',      floorA:'#3c3346', floorB:'#352d3f', grout:'#211b28', wall:'#140f19', moss:'#6a3f8a', accent:'#c49cf0', boss:'lich', bosses:['lich','vampire'], pillar:'#4f4559', pillarTop:'#685b75', dark:'rgba(8,4,18,0.76)', fire:'#5affb0', fireCore:'#e0fff4', dust:'#7a6a8a', mote:'#b89aff' },
   { name:'Der Drachenhort', floorA:'#46302d', floorB:'#3d2a27', grout:'#201211', wall:'#140a09', moss:'#d2551f', accent:'#ff9a4a', boss:'dragon', bosses:['dragon','lavaworm'], pillar:'#5b3b35', pillarTop:'#77504a', dark:'rgba(16,4,2,0.62)', fire:'#ff5a1a', fireCore:'#ffe09a', dust:'#6a4a40', mote:'#ff9a3a' },
+  { name:'Der Himmelsturm', floorA:'#2c3150', floorB:'#262a46', grout:'#141628', wall:'#0c0d1c', moss:'#5a6ad8', accent:'#a8c0ff', boss:'fallen', bosses:['fallen'], pillar:'#4a5276', pillarTop:'#6a74a0', dark:'rgba(4,6,22,0.68)', fire:'#7ab8ff', fireCore:'#e8f4ff', dust:'#8a92c0', mote:'#c8d8ff' },
 ];
 
-const actOf = n => ACTS[(n-1)%3];
+const ACT_N = ACTS.length;   // 4 Akte, danach Endlosmodus
+const actOf = n => ACTS[(n-1)%ACT_N];
 const bossKind = () => (run.map&&run.map.bossKind)||actOf(run.act).boss;
-const visAct = () => ((run.act-1)%3)+1;
+const visAct = () => ((run.act-1)%ACT_N)+1;
 const CHARS = {
   krieger:{ name:'Krieger',  icon:'🛡️', cost:0,   color:'#3f6fc4', hp:155, speed:152, dmg:25, rate:0.7, range:72,  attack:'melee', armor:2,
     desc:'Robuster Nahkämpfer mit Rüstung. Schwingt sein Schwert in weitem Bogen.',
@@ -61,6 +63,7 @@ const ENEMIES = {
   hound:   { name:'Schattenhund', hp:26, speed:150, dmg:9, r:12, cost:1.2, ai:'pack',   gold:1, minAct:2 },
   wraith:  { name:'Gespenst',  hp:48, speed:70,  dmg:13, r:13, cost:2.5, ai:'wraith',  gold:2, minAct:2 },
   gargoyle:{ name:'Wasserspeier', hp:70, speed:70, dmg:16, r:16, cost:3, ai:'garg',   gold:3, minAct:3 },
+  seraph:  { name:'Himmelswächter', hp:60, speed:80, dmg:15, r:14, cost:3, ai:'seraph', gold:3, minAct:4 },
   mimic:   { name:'Mimic',     hp:170,speed:80,  dmg:18, r:20, cost:99,  ai:'charger', gold:25, noPool:true },
 };
 
@@ -71,6 +74,7 @@ const BOSSES = {
   spider:{ name:'Die Spinnenkönigin', hp:630, speed:70, dmg:14, r:34 },
   vampire:{ name:'Graf Morvath, der Vampirfürst', hp:1100, speed:80, dmg:18, r:26 },
   lavaworm:{ name:'Der Lavawurm', hp:1450, speed:150, dmg:22, r:38 },
+  fallen:{ name:'Vaeloth, der Gefallene Stern', hp:2300, speed:64, dmg:26, r:40 },
 };
 
 const BOSS_AGAIN = {
@@ -80,6 +84,7 @@ const BOSS_AGAIN = {
   vampire:'„Wie rührend. Du bringst mir dein Blut ein zweites Mal.“',
   dragon:'„Asche kehrt also zurück. Diesmal verbrenne ich auch deinen Namen.“',
   lavaworm:'Die Erde grollt – sie erinnert sich an dich.',
+  fallen:'„Deine Seele leuchtet noch in meinem Turm. Ich hole mir den Rest.“',
 };
 const BOSS_LINES = {
   golem:'„Stein … zermalmt … Fleisch.“',
@@ -88,6 +93,7 @@ const BOSS_LINES = {
   vampire:'„Welch edles Blut. Es wäre eine Schande, es zu verschwenden.“',
   dragon:'„Ein Sterblicher wagt es, meinen Hort zu betreten?“',
   lavaworm:'Der Boden bebt. Etwas Gewaltiges gräbt sich herauf …',
+  fallen:'„Ihr habt mir so viele Seelen geschenkt. Nun gebt mir eure eigene.“',
 };
 const BEAST = {
   slime:{ic:'🟢',ds:'Hüpft auf dich zu und teilt sich beim Tod in zwei kleine Schleime.'},
@@ -118,6 +124,8 @@ const BEAST = {
   vampire:{ic:'🧛',ds:'Graf Morvath zerfällt zu Fledermausnebel und saugt seinen Gegnern das Leben aus.'},
   dragon:{ic:'🐉',ds:'Ignaroth, Herr des Horts. Feueratem, Meteorschauer und Sturzflüge.'},
   lavaworm:{ic:'🔥',ds:'Gräbt sich durch glühendes Gestein und spuckt Feuer aus dem Schlund.'},
+  seraph:{ic:'🪽',ds:'Wächter des Himmelsturms. Hält Abstand und brennt einen Lichtstrahl über den Boden – geh aus der Linie!'},
+  fallen:{ic:'🌠',ds:'Vaeloth, der gefallene Stern. Kreuzende Lichtstrahlen, Sternenregen und Ringe aus Sternenfeuer.'},
 };
 const AFFIXES = {
   fast:  { ic:'💨', nm:'Flink',      ds:'bewegt sich deutlich schneller' },
@@ -296,8 +304,9 @@ const THEMES = [
   { id:'spikes',   ic:'🦔', nm:'Stachelnest',   kinds:['urchin','spiderling','spiderling'],       acts:[1,2] },
   { id:'pack',     ic:'🐺', nm:'Rudelnacht',    kinds:['hound','shaman'],                         acts:[2,3] },
   { id:'haunt',    ic:'👻', nm:'Spukhalle',     kinds:['wraith','bat','cultist'],                 acts:[2] },
-  { id:'fire',     ic:'🔥', nm:'Feuersturm',    kinds:['imp','magma','whelp'],                    acts:[3] },
-  { id:'stone',    ic:'🗿', nm:'Steinwache',    kinds:['gargoyle','shield','orc'],                acts:[3] },
+  { id:'fire',     ic:'🔥', nm:'Feuersturm',    kinds:['imp','magma','whelp'],                    acts:[3,4] },
+  { id:'heaven',   ic:'🪽', nm:'Himmlische Wacht', kinds:['seraph','wraith','gargoyle'],         acts:[4] },
+  { id:'stone',    ic:'🗿', nm:'Steinwache',    kinds:['gargoyle','shield','orc'],                acts:[3,4] },
 ];
 /* Champions: benannte Mini-Bosse in Elite-Räumen, sie lassen ein Relikt fallen */
 const CHAMP_NAMES = { slime:'Glibber, der Ewighungrige', bat:'Nachtschwinge', skeleton:'Knochenbrecher Garm', archer:'Scharfauge Rikk', orc:'Brakk der Schlächter',

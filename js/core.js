@@ -89,7 +89,7 @@ function audioRevive(){
    Zahl = Stufe (7 = Oktave höher), "-" = Ton halten, "." = Pause. */
 const MUS={ next:0, step:0, gain:null, bus:null, filt:null, noise:null, song:null, duck:0, soft:0, int:0.5, lp:null };
 const mtof=m=>440*Math.pow(2,(m-69)/12);
-const SC={ min:[0,2,3,5,7,8,10], hmin:[0,2,3,5,7,8,11], phry:[0,1,3,5,7,8,10], maj:[0,2,4,5,7,9,11] };
+const SC={ min:[0,2,3,5,7,8,10], hmin:[0,2,3,5,7,8,11], phry:[0,1,3,5,7,8,10], maj:[0,2,4,5,7,9,11], lyd:[0,2,4,6,7,9,11], dor:[0,2,3,5,7,9,10] };
 const MEL={
   menu:  '4 - 3 2 3 - 0 - 2 - 1 0 1 - - . 4 - 5 6 7 - 6 4 5 - 4 3 4 - - .',
   calm:  '0 - 2 - 4 - 2 - 1 - 3 - 5 - - - 4 - 2 - 4 - 7 - 6 - 5 - 4 - - -',
@@ -105,6 +105,10 @@ const MEL={
   f2B: '4 . 3 . 1 . 0 . 1 - 3 - 4 - - . 5 . 6 . 7 . 8 . 7 - 6 - 5 - - .',
   f3B: '7 7 6 7 8 7 6 4 5 - 4 - 3 4 5 . 7 7 6 7 8 7 9 8 7 - 6 - 4 - 6 -',
   bossB: '0 0 3 0 4 0 6 5 4 - 3 - 1 - 0 - 0 0 3 0 4 0 7 6 8 - 7 - 6 - 4 -',
+  calm4: '7 - - 9 8 - 7 - 4 - - 6 4 - 2 - 0 - - 2 4 - 6 - 7 - - - 8 - - .',
+  calm4B:'4 - 6 - 7 - 9 - 11 - - - 9 - 7 - 6 - - 4 6 - 7 - 4 - - - - - - .',
+  f4:    '0 . 4 . 7 . 6 7 9 - 7 - 6 4 2 . 0 . 4 . 7 . 9 11 9 - 7 - 6 - 7 -',
+  f4B:   '7 . 6 . 4 . 2 4 6 - 4 - 2 . 0 - 4 . 6 . 7 . 9 . 11 - 9 - 7 - 6 -',
 };
 const SONGS2={
   menu:  { progB:[5,3,6,4], bpm:72,  root:50, sc:'min',  prog:[0,6,5,4], mel:'menu',  lead:'flute', arp:'pluck', pad:true, vol:1 },
@@ -114,6 +118,8 @@ const SONGS2={
   fight1:{ progB:[3,4,5,6], bpm:106, root:50, sc:'min',  prog:[0,6,5,4], mel:'f1',    lead:'lead',  arp:'pluck', drums:'k...s...k.k.s...', hats:'h.h.h.h.h.h.h.h.', vol:1 },
   fight2:{ progB:[5,4,1,0], bpm:94,  root:45, sc:'phry', prog:[0,1,5,4], mel:'f2',    lead:'bell',  arp:'pluck', pad:true, drums:'k.......s.....k.', hats:'....h.......h...', vol:1 },
   fight3:{ progB:[3,4,5,4], bpm:116, root:52, sc:'hmin', prog:[0,5,3,4], mel:'f3',    lead:'lead',  arp:'pluck', drums:'k.k.s.k.k.k.s.kk', hats:'h.h.h.h.h.h.h.hh', vol:1 },
+  calm4: { progB:[1,4,5,0], bpm:70,  root:52, sc:'lyd',  prog:[0,1,4,0], mel:'calm4', lead:'bell',  arp:'pluck', pad:true, vol:0.9 },
+  fight4:{ progB:[5,4,1,0], bpm:120, root:50, sc:'dor',  prog:[0,3,6,4], mel:'f4',    lead:'flute', arp:'pluck', pad:true, choir:true, drums:'k...s.k.k.k.s...', hats:'h.hhh.h.h.hhh.h.', vol:1 },
   boss:  { bossMix:true, progB:[3,6,5,4], bpm:132, root:50, sc:'hmin', prog:[0,5,6,4], mel:'boss',  lead:'lead',  arp:'pluck', choir:true, drums:'k..ks..kk.k.s.kk', hats:'hhhhhhhhhhhhhhhh', timp:true, vol:1.05 },
 };
 const MELP={}; for(const k in MEL) MELP[k]=MEL[k].trim().split(/\s+/);
@@ -238,7 +244,7 @@ function coinSound(){
   if(!G) return; G.coinN=(G.time-(G.coinLast||-9)<0.35)?Math.min(12,(G.coinN||0)+1):0; G.coinLast=G.time;
   const f=880*Math.pow(2,G.coinN/12); blip('sine',f,f*1.5,0.045,0.08);
 }
-const ROAR={golem:0.75,spider:1.6,lich:1.2,vampire:1.35,dragon:0.65,lavaworm:0.55};
+const ROAR={golem:0.75,spider:1.6,lich:1.2,vampire:1.35,dragon:0.65,lavaworm:0.55,fallen:1.8};
 function roar(kind){
   if(!save.sound||!AC) return; const p=ROAR[kind]||1, t=AC.currentTime; MUS.soft=t+1.5;
   const o=AC.createOscillator(), lfo=AC.createOscillator(), lg=AC.createGain(), f=AC.createBiquadFilter(), g=AC.createGain();
