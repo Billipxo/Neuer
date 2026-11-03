@@ -26,15 +26,22 @@ Die ausführliche Recherche dazu steht in [`RECHERCHE-Spielqualitaet.md`](RECHER
 - dynamische Musik
 - Speichern beim Verlassen der App
 
-**Noch offen** (beste Kandidaten):
-- Relikte als eigene Gegenstände
-- Themenwellen und Mini-Bosse in Elite-Räumen
+**Ebenfalls umgesetzt** (am 3. November, zweite Runde):
+- Relikte
+- Themenwellen und Champions
 - Raum-Herausforderungen
-- Laufzusammenfassung mit Schaden je Upgrade
-- Codex/Lore-Texte und Helden-Dialoge
-- vierter Akt
-- Begleiter-Tier
-- Fähigkeit per Wischgeste zielen
+- Laufzusammenfassung
+- Chronik und Helden-Dialoge
+- Begleiter
+- Zielen per Wischgeste
+- vierter Akt „Der Himmelsturm“
+
+**Weitere Ideen für später:**
+- Online-Bestenliste für die Tagesprüfung (bräuchte einen Server)
+- weitere Akte und Bosse
+- Skins für Begleiter
+- Bestenliste für die Wochenprüfung
+- Gegner-Varianten je Akt
 
 ---
 

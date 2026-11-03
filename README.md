@@ -29,7 +29,7 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **7 Helden:** Krieger, Magierin, Jägerin, Nekromantin, Paladin (Bumerang-Hammer, geweihter Boden, Geschosse zurückwerfen),
   Alchemistin (Flaschen im Bogen, Säure- und Feuerpfützen, Strudel-Kessel) und Berserkerin (Blutung, Raserei, Blutsprung),
   jeweils mit eigener Angriffsart, Passivfähigkeit, Fähigkeit und eigenen Upgrades
-- **3 Akte** (Verliese, Krypta, Drachenhort), jeder mit einer Karte voller Abzweigungen:
+- **4 Akte** (Verliese, Krypta, Drachenhort, Himmelsturm), jeder mit einer Karte voller Abzweigungen:
   Kampf, Elite, Händler, Lagerfeuer, Schatz, Ereignis und am Ende ein Boss mit Wutphase
   (Steingolem, Lichkönig, Drache Ignaroth)
 - **Arenen mit Hindernissen:** Säulen als Deckung, Sprengfässer, Stachelfallen und Lava
@@ -38,7 +38,7 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **35 Upgrades** in drei Seltenheitsstufen, davon 12 heldenspezifische, dazu **5 Synergien**,
   die beim Kombinieren bestimmter Upgrades aktiv werden. Die Upgrade-Karten zeigen die genaue Werteänderung.
 - **8 Ereignisse** mit Entscheidungen zwischen Risiko und Belohnung
-- **Endlosmodus** nach dem Sieg im dritten Akt
+- **Endlosmodus** nach dem Sieg im vierten Akt
 - **Neues Spiel+:** nach dem Sieg mit allen Upgrades schwerer weitermachen (NG+1, NG+2 …) oder neue Läufe
   auf einer freigeschalteten NG+-Stufe starten; Gegner deutlich stärker, Seelen und Punkte +50 % je Stufe
 - **3 Spielstände** mit Namen, jeweils mit eigenem Fortschritt; Einstellungen gelten für alle
@@ -54,6 +54,9 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
   Fanfaren bei Sieg und Niederlage, live per Web Audio gespielt; Lautstärke einstellbar
 - **Build-Vielfalt:** 20 Synergien (Rezepte im Kodex, Fortschritt auf den Upgrade-Karten), regelverändernde Upgrades
   (z. B. Echo, Zweite Luft, Spiegelbild), Waffen-Entwicklungen nach jedem Boss, Verbannen, Belohnungsvorschau auf der Karte
+- **Relikte** (12 einzigartige Gegenstände), **Champions** in Elite-Räumen, **Themenwellen**, **Raum-Herausforderungen**,
+  **Begleiter** (Rabe, Katze, Irrlicht, Wolfswelpe), **Chronik** mit Hintergrundgeschichten und Helden-Dialogen,
+  Laufzusammenfassung mit Schaden je Quelle, Fähigkeiten per Wischgeste zielen
 - **Verdammnis-Stufen 1–10** je Held, **11 Herausforderungen**, **Kopfgelder**, **Tages- und Wochenprüfung** mit Serie,
   Kalender und Teilen-Funktion, ein **Arenameister**, der deine Läufe kommentiert, Meisterschaft im Bestiarium
 - **Spielgefühl:** perfektes Ausweichen, Eingabepuffer, Zielmarkierung, Warnblitz vor Einschlägen, Musik, die mit dem Kampf anschwillt
@@ -95,6 +98,6 @@ npm test
 
 `tests/run-all.js` startet das Spiel in einem Headless-Chromium und prüft per simuliertem Spiel:
 Laufstart, einen ganzen Akt mit jedem Helden, alle Upgrades und Synergien, jede Ereignis-Option,
-jede Gegnerart, alle sechs Bosse, die Tagesherausforderung, Spielstände/Sicherungscode/Neues Spiel+ und die Musik.
+jede Gegnerart, alle sieben Bosse, Relikte, Champions, Raum-Herausforderungen, Begleiter, Zielen per Wischgeste, den vierten Akt, die Tagesherausforderung, Spielstände/Sicherungscode/Neues Spiel+ und die Musik.
 Der GitHub-Workflow `.github/workflows/test.yml` führt die Tests bei jedem Push aus.
 

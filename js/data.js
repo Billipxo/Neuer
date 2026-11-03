@@ -21,7 +21,7 @@ const CHARS = {
   magier: { name:'Magierin', icon:'🔮', cost:120, color:'#7d48c9', hp:100,  speed:142, dmg:15, rate:0.62, range:300, attack:'bolt',  armor:0,
     desc:'Zielsuchende Arkangeschosse, die beim Aufprall explodieren.',
     skill:{ name:'Frostnova', icon:'❄️', cd:9, desc:'Eisexplosion, die nahe Gegner einfriert.' } },
-  jaegerin:{ name:'Jägerin', icon:'🏹', cost:250, color:'#3b8f55', hp:110, speed:172, dmg:13, rate:0.36, range:340, attack:'arrow', armor:0,
+  jaegerin:{ name:'Jägerin', icon:'🏹', cost:250, color:'#3b8f55', hp:110, speed:172, dmg:14, rate:0.36, range:340, attack:'arrow', armor:0,
     desc:'Schnell und präzise. Ihre Pfeile durchbohren Gegner.',
     skill:{ name:'Pfeilhagel', icon:'🎯', cd:7, desc:'Ein Ring aus Pfeilen in alle Richtungen.' } },
   nekro:  { name:'Nekromantin', icon:'🦴', cost:400, color:'#2a7d6c', hp:100, speed:145, dmg:13, rate:0.72, range:290, attack:'skull', armor:0,

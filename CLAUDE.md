@@ -5,7 +5,7 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 
 ## Befehle
 
-- `npm test` – 12 Headless-Tests (`tests/run-all.js`), einzeln: `node tests/run-all.js bosses saves`, Details mit `VERBOSE=1`.
+- `npm test` – 17 Headless-Tests (`tests/run-all.js`), einzeln: `node tests/run-all.js bosses saves`, Details mit `VERBOSE=1`.
 - `npm run balance` (`node tools/balance.js [Läufe] [Held …]`) – der Bot spielt komplette Läufe ohne Gottmodus: Siegquote, Todesursachen, Hänger je Held.
   Playwright ist in der Cloud-Umgebung vorinstalliert, in CI per Workflow.
 - `python3 tools/build_single.py` – eine einzelne HTML-Datei in `dist/` (`--fragment` ohne `<html>/<head>`-Gerüst).
@@ -15,7 +15,7 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 
 | Datei | Inhalt |
 |---|---|
-| `js/data.js` | `ACTS`, `CHARS`, `ENEMIES`, `BOSSES`, `BOSS_LINES`/`BOSS_AGAIN`, `BEAST`, `AFFIXES`, `UPGRADES`/`UPG`, `SYN`, `EVOS`, `META`, `NODE`, `DAILY_MODS`/`EXTRA_MODS`/`runMod()`, `TIERS`, `CHALLENGES`, `weeklyInfo` |
+| `js/data.js` | `ACTS` (4 Akte, `ACT_N`), `CHARS`, `ENEMIES`, `BOSSES`, `BOSS_LINES`/`BOSS_AGAIN`, `BEAST`, `AFFIXES`, `UPGRADES`/`UPG`, `SYN`, `EVOS`, `RELICS`/`REL`, `THEMES`, `CHAMP_NAMES`, `ROOM_CHAL`, `PETS`, `LORE`, `HERO_LINES`, `META`, `NODE`, `DAILY_MODS`/`EXTRA_MODS`/`runMod()`, `TIERS`, `CHALLENGES`, `weeklyInfo` |
 | `js/core.js` | Speicherstand (Slots, `migrate`, `persist`), Heldenstufen, Grafikstufe `FX()`, RNG (`rand`, `pick`, `seeded`), Soundeffekte, Musik (`SONGS2`, `MEL`, `playStep`) |
 | `js/world.js` | Canvas/`resize`, Boden (`buildFloor`, `DECOR`), Tribünen und Zuschauer, Wetter, Ambiente, Licht (`renderLights`) |
 | `js/input.js` | Joystick/Tastatur, Spielzustand, `newPlayer`, `startRun`, `nextAct`, `roomKey` |
@@ -38,6 +38,13 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 - **Sonderregeln:** `run.mod` (Tagesprüfung) oder `run.mods` (Wochenprüfung, Herausforderungen) – `runMod()` führt mehrere Regeln zusammen (Zahlen multiplizieren, `start` verketten, `mapSwap` tauscht Kartenknoten).
 - **Verdammnis-Stufen:** `run.tier` 0–10, Abfrage mit `tierHas(n)`; Freischaltung je Held in `save.tierWon` (bei Sieg in `showVictory`).
 - **Build-System:** Synergien in `SYN` (Rezept `req`, heldenspezifisch über `UPG[...].only`), Waffen-Entwicklungen in `EVOS` (nach jedem Boss, Abfrage `hasEvo(id)`), regelverändernde Upgrades setzen Felder auf `run.p`.
+- **Relikte:** `run.relics`, Abfrage `hasRelic(id)`, Vergabe `gainRelic(id)` (Schatz `showTreasure`, Champion `showRelicPick`, Händler).
+- **Champions und Themen:** `buildWaves` markiert in Elite-Räumen den letzten Elitegegner als `champ` (→ `champify`), Themenwellen hängen als `waves.theme` an.
+- **Raum-Herausforderungen:** `G.rc` (`ROOM_CHAL`), Fehlschlag in `hurtPlayer`/`useDash`/`useSkill`, Belohnung in `rcReward` beim Raumende.
+- **Schadensstatistik:** `dealDamage(..., {src:'…'})` zählt in `run.dmgBy`; neue Schadensquellen bekommen ein `src` und einen Eintrag in `DMG_SRC`.
+- **Begleiter:** `run.pet` (nicht in Tages-/Wochenprüfung), Logik `updPet`, Zeichnung `drawPet`.
+- **Zielen:** Fähigkeiten in `AIM_SKILLS` bekommen bei Wischgeste `useSkill(aim)` mit `{a,k}`; Vorschau in `draw`.
+- **Akt hinzufügen:** `ACTS`-Eintrag, Deko (`decorTower` als Vorbild), `WEATHER_POOL`, `crowdLook`, Kleintier in `spawnCritter`, Musik `calmN`/`fightN`, `LORE`.
 - **Fortsetzen:** `run.room` (laufender Kampfraum) und `run.pend` (offene Belohnung) werden beim Verlassen gespeichert (`saveNow`) und von `resumeRun` wiederhergestellt.
 
 ## Tests schreiben
