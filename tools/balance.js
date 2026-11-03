@@ -19,6 +19,7 @@ const {chromium}=require('playwright'); const fs=require('fs'); const path=requi
           if(a.includes('go') && ui.querySelector('.mapbox')){ const av=availNodes(); enterNode(av[Math.floor(Math.random()*av.length)]); }
           else if(a.includes('pick')){ const bs=q('pick'); actions.pick(bs[Math.floor(Math.random()*bs.length)].dataset.v); }
           else if(a.includes('evo')) actions.evo(q('evo')[0].dataset.v);
+          else if(a.includes('relic')) actions.relic(q('relic')[0].dataset.v);
           else if(a.includes('opt')) actions.opt(q('opt')[0].dataset.v);
           else if(a.includes('heal')) actions.heal(); else if(a.includes('next')) actions.next(); else if(a.includes('leave')) actions.leave();
           else if(a.includes('claim')){ o.wins++; break; } else break; } } }

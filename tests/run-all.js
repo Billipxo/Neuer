@@ -32,6 +32,7 @@ const tests = {
           if(a.includes('go') && ui.querySelector('.mapbox')) { enterNode(availNodes()[0]); rooms++; }
           else if(a.includes('pick')) actions.pick(ui.querySelector('[data-a=pick]').dataset.v);
           else if(a.includes('evo')) actions.evo(ui.querySelector('[data-a=evo]').dataset.v);
+          else if(a.includes('relic')) actions.relic(ui.querySelector('[data-a=relic]').dataset.v);
           else if(a.includes('opt')) actions.opt(ui.querySelector('[data-a=opt]:not([disabled])').dataset.v);
           else if(a.includes('next')) actions.next(); else if(a.includes('leave')) actions.leave(); else if(a.includes('heal')) actions.heal();
           else return {ok:false, hero:ch, actions:a}; }
