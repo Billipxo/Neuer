@@ -241,6 +241,23 @@ const EVOS = {
             { id:'b_throw',  ic:'🪓', nm:'Axtwurf', ds:'Jeder 3. Angriff wirft zusätzlich eine Axt auf den nächsten Gegner in Reichweite 260.' },
             { id:'b_rage',   ic:'😡', nm:'Ungebremst', ds:'Raserei bis zu 15 Stufen statt 10.' } ],
 };
+/* Relikte: einzigartige Gegenstände, die Regeln ändern (Schatzräume, Champions, Händler) */
+const RELICS = [
+  { id:'r_hourglass', ic:'⏳', nm:'Sanduhr der Zeit',   ds:'In den ersten 3 Sek. jedes Kampfes bewegen sich Gegner in Zeitlupe.' },
+  { id:'r_crown',     ic:'👑', nm:'Krone der Gier',     ds:'Elitegegner lassen dreimal so viel Gold fallen. Händler sind 15 % günstiger.' },
+  { id:'r_skull',     ic:'💀', nm:'Sammlerschädel',     ds:'Jeder besiegte Elitegegner gibt dir dauerhaft +3 max. LP.' },
+  { id:'r_lantern',   ic:'🏮', nm:'Seelenlaterne',      ds:'Am Ende dieses Laufs erhältst du 50 % mehr Seelen.' },
+  { id:'r_feather',   ic:'🪶', nm:'Federstiefel',       ds:'Du kannst zweimal hintereinander ausweichen.' },
+  { id:'r_mirror',    ic:'🪞', nm:'Splitterspiegel',    ds:'25 % Chance, dass dich treffende Geschosse zurückgeworfen werden, statt dich zu verletzen.' },
+  { id:'r_stone',     ic:'🪨', nm:'Steinherz',          ds:'+50 max. LP, aber du bist 10 % langsamer.', on:p=>{ p.maxHp+=50; p.hp+=50; p.spdMul*=0.9; } },
+  { id:'r_horn',      ic:'📯', nm:'Kriegshorn',         ds:'Zu Beginn jedes Kampfes 6 Sek. lang +30 % Schaden und Angriffstempo.' },
+  { id:'r_coin',      ic:'🪙', nm:'Glücksmünze',        ds:'Jede Upgrade-Auswahl bietet 4 statt 3 Karten.' },
+  { id:'r_bell',      ic:'🔔', nm:'Totenglocke',        ds:'Gegner erscheinen mit 15 % weniger Leben.' },
+  { id:'r_chalice',   ic:'⚱️', nm:'Blutkelch',          ds:'Nach jedem Boss heilst du 30 % LP, Lagerfeuer heilen 15 % mehr.' },
+  { id:'r_idol',      ic:'🗿', nm:'Verfluchtes Götzenbild', ds:'Jede Upgrade-Auswahl kann einmal kostenlos neu gewürfelt werden – aber Gegner verursachen 15 % mehr Schaden.', cursed:true },
+];
+const REL = Object.fromEntries(RELICS.map(r=>[r.id,r]));
+const hasRelic = id => !!(run && run.relics && run.relics.includes(id));
 const hasSyn = id => !!(run && run.syn && run.syn.includes(id));
 const UPG = Object.fromEntries(UPGRADES.map(u=>[u.id,u]));
 

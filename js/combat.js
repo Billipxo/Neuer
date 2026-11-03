@@ -63,7 +63,7 @@ function startCombat(type, customWaves){
   const p=run.p; if(!customWaves) run.room=type; run.pend=null;
   const tut = !save.tutDone && type==='fight' && !run.daily && run.rooms===0 && !customWaves;
   if(tut) customWaves=[[{kind:'slime'},{kind:'slime'}],[{kind:'skeleton'},{kind:'skeleton'},{kind:'archer'}]];
-  P=Object.assign(p,{ x:AW/2, y:AH*0.7, r:14, vx:0, vy:0, face:-Math.PI/2, atkT:0.3, skillT:0, inv:0, shieldLeft:p.shield, spin:0, spinTick:0, regenAcc:0, moving:false, anim:0, swingT:0, dashT:0, dashCd:0, dashA:0, dashI:0, charges:p.maxCharges||1, echoT:0, echoTgt:null, leap:null, vortex:null, ward:0, fury:0, furyT:0, stillT:0, holy:0, msT:0, trailT:0, nextCrit:false, kbx:0, kby:0, hurtT:0 });
+  P=Object.assign(p,{ x:AW/2, y:AH*0.7, r:14, vx:0, vy:0, face:-Math.PI/2, atkT:0.3, skillT:0, inv:0, shieldLeft:p.shield, spin:0, spinTick:0, regenAcc:0, moving:false, anim:0, swingT:0, dashT:0, dashCd:0, dashA:0, dashI:0, dashChg:hasRelic('r_feather')?2:1, hornT:hasRelic('r_horn')?6:0, charges:p.maxCharges||1, echoT:0, echoTgt:null, leap:null, vortex:null, ward:0, fury:0, furyT:0, stillT:0, holy:0, msT:0, trailT:0, nextCrit:false, kbx:0, kby:0, hurtT:0 });
   P.shieldLeft = p.shield + (p.manaShield?1:0);
   G={ type, enemies:[], pproj:[], eproj:[], hazards:[], webs:[], allies:[], pzones:[], ezones:[], pstrikes:[], parts:[], texts:[], coins:[], fx:[], spawnQ:[], booms:[],
       stop:0, stopCd:0, waves: customWaves || (type==='boss'?[]:seeded(roomKey('waves'),()=>buildWaves(type))), obs:[], traps:[], waveIdx:-1, waveT:0.35, cleared:false, clearT:0, time:0, shake:0, hurtFlash:0, orbitA:0, boss:null, weather:tut?'clear':seeded(roomKey('weather'),()=>wpick(WEATHER_POOL[visAct()])), hype:0.15, cheerCd:8, flash:0, lastProg:0, combo:0, comboLast:-9, bossHit:false,
@@ -104,6 +104,7 @@ function makeEnemy(kind,x,y,elite){
   if(kind==='wraith'||kind==='gargoyle') e.alpha=1;
   if(kind==='totem'){ e.soul=0; e.spawnT=0.3; }
   e.speed*=((runMod()||{}).enemySpeed||1)*(1+0.04*Math.min(5,run.ng||0))*(tierHas(5)?1.1:1); e.spawnT=0.45;
+  if(hasRelic('r_bell')) e.hp*=0.85; if(hasRelic('r_idol')) e.dmg*=1.15;
   e.maxHp=e.hp; return e;
 }
 function makeBoss(kind,x,y){
@@ -111,7 +112,7 @@ function makeBoss(kind,x,y){
   const e={ kind, boss:true, x,y, r:b.r, hp:b.hp*s, maxHp:b.hp*s, dmg:b.dmg, speed:b.speed, ai:kind, t:0, flash:0, slow:0, freeze:0, kx:0, ky:0, soul:0, gold:0,
     st:0, timer:2, cast:null, castT:0, face:Math.PI/2, alpha:1, seed:0, orbCd:0, phase2:false, spiral:0 };
   if(kind==='lavaworm'){ e.st=0; e.wt=1.5; e.under=true; }
-  if(run.ng) e.dmg*=1+0.25*run.ng;
+  if(run.ng) e.dmg*=1+0.25*run.ng; if(hasRelic('r_idol')) e.dmg*=1.15;
   G.boss=e; $('bossName').textContent=(run.ng?'NG+'+run.ng+' · ':'')+b.name; return e;
 }
 
@@ -172,8 +173,10 @@ function updPlayer(dt){
   const p=P; const [mx,my]=readMove();
   if(p.chill>0){ p.chill-=dt; if(Math.random()<dt*10) part(p.x+rand(-10,10),p.y-8,0,-20,0.5,2.5,'#bfe6ff',true); }
   const sp=p.speed*p.spdMul*(1+0.03*(p.fury||0))*(p.spin>0?1.25:1)*(p.chill>0?0.6:1)*(G.webs.some(w=>Math.hypot(p.x-w.x,p.y-w.y)<w.r)?0.45:1);
-  if(p.dashCd>0) p.dashCd-=dt; if(p.dashI>0) p.dashI-=dt;
-  if(p.dashBuf>0){ p.dashBuf-=dt; if(p.dashCd<=0 && p.dashT<=0){ p.dashBuf=0; useDash(); } }
+  if(p.hornT>0) p.hornT-=dt;
+  if(p.dashCd>0){ p.dashCd-=dt; if(p.dashCd<=0 && hasRelic('r_feather')){ p.dashChg=Math.min(2,(p.dashChg||0)+1); if(p.dashChg<2) p.dashCd=1.0*p.dashCdMul; } }
+  if(p.dashI>0) p.dashI-=dt;
+  if(p.dashBuf>0){ p.dashBuf-=dt; if(p.dashT<=0 && (hasRelic('r_feather')?(p.dashChg||0)>0:p.dashCd<=0)){ p.dashBuf=0; useDash(); } }
   if(p.skillBuf>0){ p.skillBuf-=dt; if(p.skillT<=0 || ((p.maxCharges||1)>1 && p.charges>0)){ p.skillBuf=0; useSkill(); } }
   if(p.dashT>0){ p.dashT-=dt; const ds=720;
     p.x=clamp(p.x+Math.cos(p.dashA)*ds*dt,p.r,AW-p.r); p.y=clamp(p.y+Math.sin(p.dashA)*ds*dt,p.r,AH-p.r);
@@ -204,7 +207,7 @@ function updPlayer(dt){
   p.atkT-=dt;
   if(p.atkT<=0 && tgt && p.spin<=0 && !p.leap){ attack(tgt);
     let sp=p.atkSpd*(p.rage&&p.hp<p.maxHp*0.5?1.4:1)*(1+0.06*(p.fury||0))*(hasSyn('gale')&&p.moving?1.2:1);
-    if(hasEvo('j_snipe')) sp*=0.65; if(hasEvo('j_rapid')) sp*=1.6; if(hasEvo('a_big')) sp*=0.8;
+    if(p.hornT>0) sp*=1.3; if(hasEvo('j_snipe')) sp*=0.65; if(hasEvo('j_rapid')) sp*=1.6; if(hasEvo('a_big')) sp*=0.8;
     p.atkT=p.rate/sp; }
   // Wirbelwind
   if(p.spin>0){ p.spin-=dt; p.spinTick-=dt; p.face+=dt*18;
@@ -333,15 +336,17 @@ function attack(tgt){
 }
 
 // Perfektes Ausweichen: wer im letzten Moment durch einen Angriff hechtet, wird belohnt (Zeitlupe, Ausweichen sofort wieder bereit)
-function perfectDodge(){ const p=P; p.dashCd=0; if(hasSyn('blooddance')){ p.hp=Math.min(p.maxHp,p.hp+8); G.texts.push({x:p.x,y:p.y-50,s:'+8',c:'#7dff8a',t:0}); } G.slowT=Math.max(G.slowT,0.22); p.perfT=0.6; G.stats_perf=(G.stats_perf||0)+1; save.stats.perfect=(save.stats.perfect||0)+1;
+function perfectDodge(){ const p=P; p.dashCd=0; if(hasRelic('r_feather')) p.dashChg=2; if(hasSyn('blooddance')){ p.hp=Math.min(p.maxHp,p.hp+8); G.texts.push({x:p.x,y:p.y-50,s:'+8',c:'#7dff8a',t:0}); } G.slowT=Math.max(G.slowT,0.22); p.perfT=0.6; G.stats_perf=(G.stats_perf||0)+1; save.stats.perfect=(save.stats.perfect||0)+1;
   G.texts.push({x:p.x,y:p.y-34,s:'Perfekt!',c:'#9fe6ff',big:true,t:0}); G.fx.push({type:'shock',x:p.x,y:p.y,r:70,t:0,life:0.35,color:'#9fe6ff'}); sfx('pick'); buzz(15); hype(0.05); }
 function useDash(){
   if((runMod()||{}).noDash) return;
-  if(state==='combat'&&P&&G&&!G.over&&(P.dashCd>0||P.dashT>0)){ if(P.dashCd<0.25) P.dashBuf=0.25; return; }   // kurz vor Ablauf gedrückt: wird nachgeholt
-  if(state!=='combat'||!P||!G||P.dashCd>0||P.dashT>0||G.over) return; P.dashBuf=0;
+  if(state!=='combat'||!P||!G||G.over) return;
+  const fe=hasRelic('r_feather');
+  if(P.dashT>0 || (fe ? (P.dashChg||0)<=0 : P.dashCd>0)){ if(P.dashCd<0.25||P.dashT>0) P.dashBuf=0.25; return; }   // kurz vor Ablauf gedrückt: wird nachgeholt
+  P.dashBuf=0; if(fe){ P.dashChg--; }
   const [mx,my]=readMove();
   P.dashA = Math.hypot(mx,my)>0.2 ? Math.atan2(my,mx) : P.face;
-  G.tutDash=true; if(P.mirror) G.decoy={x:P.x,y:P.y,t:2,face:P.face}; P.dashT=0.13; P.dashI=0.24; P.dashCd=1.0*P.dashCdMul; P.dashHit=[]; P.perfUsed=false;
+  G.tutDash=true; if(P.mirror) G.decoy={x:P.x,y:P.y,t:2,face:P.face}; P.dashT=0.13; P.dashI=0.24; if(!fe || P.dashCd<=0) P.dashCd=1.0*P.dashCdMul; P.dashHit=[]; P.perfUsed=false;
   if(hasSyn('phantom')) P.nextCrit=true;
   sfx('dash'); burst(P.x,P.y+8,8,'#cfe3ff',90); G.fx.push({type:'dashline',x:P.x,y:P.y,a:P.dashA,t:0,life:0.3,color:CHARS[P.cid].color});
 }
@@ -449,6 +454,7 @@ function dealDamage(e,amount,o={}){
   if(P.rage && P.hp<P.maxHp*0.5) amount*=1.25;
   if(P.momentum) amount*=1+Math.min(0.4,0.02*(G.combo||0));
   if(P.focus && !P.moving) amount*=1+P.focus;
+  if(P.hornT>0) amount*=1.3;
   amount*=masteryMul(e.kind);
   let d=amount*(crit?P.critMul:1)*rand(0.9,1.1);
   if(crit && hasSyn('execute') && !e.boss && !e.elite && e.hp-d<e.maxHp*0.25 && e.hp-d>0){ d=e.hp+1; G.texts.push({x:e.x,y:e.y-e.r-16,s:'Hingerichtet!',c:'#ff6a5a',t:0}); }
@@ -495,13 +501,14 @@ function killEnemy(e){
     G.eproj=[]; G.hazards=[]; clearRoom(); return; }
   run.kills++; run.souls+=e.soul; save.stats.kills++; if(e.elite){ save.stats.elites++; run.elites=(run.elites||0)+1; }
   if(e.boss){ run.bossKills=(run.bossKills||[]); run.bossKills.push(e.kind); }
+  if(e.elite && hasRelic('r_skull')){ P.maxHp+=3; P.hp+=3; G.texts.push({x:P.x,y:P.y-40,s:'+3 max. LP',c:'#e8e2d0',t:0}); }
   if(tierHas(10) && !e.boss && Math.random()<0.25) G.hazards.push({type:'circle',x:e.x,y:e.y,r:46,delay:0.9,t:0,dmg:e.dmg*0.8,color:'#b06aff'});
   if(G.time-G.comboLast<2.5) G.combo++; else G.combo=1; G.comboLast=G.time; save.stats.maxCombo=Math.max(save.stats.maxCombo,G.combo);
   if(G.combo>=10 && G.combo%10===0){ const bonus=G.combo; run.gold+=bonus; run.goldTotal+=bonus; hype(0.2); comboSound(G.combo); G.texts.push({x:P.x,y:P.y-44,s:G.combo+'er Kombo! +'+bonus+' Gold',c:'#ffd34d',big:true,t:0}); }
   hype(e.elite?0.35:0.035); if(e.elite){ crowdSound(0.6); crowdThrow(3,false); }
   G.fx.push({type:'corpse',e:Object.assign({},e,{flash:0,hp:e.maxHp,spawnT:0,freeze:0,poisonT:0}),t:0,life:0.42});
   part(e.x,e.y-e.r,rand(-10,10),-55,1,4,'#cfe6ff',true,-15);
-  const g=Math.max(1,Math.round(e.gold*rand(0.8,1.3)));
+  const g=Math.max(1,Math.round(e.gold*rand(0.8,1.3)*(e.elite&&hasRelic('r_crown')?3:1)));
   if(!(runMod()||{}).noGold) for(let i=0;i<Math.min(6,g);i++) dropCoin(e.x,e.y,Math.ceil(g/Math.min(6,g)));
   if(Math.random()<0.035) G.coins.push({x:e.x,y:e.y,vx:rand(-40,40),vy:rand(-60,-20),v:0,heart:true,t:0});
   if(P.lifeOnKill) P.hp=Math.min(P.maxHp,P.hp+P.lifeOnKill);
@@ -546,6 +553,7 @@ function updEnemy(e,dt){
   let sm=1; if(e.freeze>0){ e.freeze-=dt; sm=0; } else if(e.slow>0){ e.slow-=dt; sm=0.5; }
   if(e.stun>0){ e.stun-=dt; sm=0; }
   if(e.buffT>0){ e.buffT-=dt; sm*=1.35; }
+  if(G.time<3 && !e.boss && hasRelic('r_hourglass')) sm*=0.4;
   const dp=Math.hypot(P.x-e.x,P.y-e.y), T=(G.decoy && !e.boss && Math.hypot(G.decoy.x-e.x,G.decoy.y-e.y)<420)?G.decoy:P;
   const d=T===P?dp:Math.hypot(T.x-e.x,T.y-e.y), a=Math.atan2(T.y-e.y,T.x-e.x);
   if(P.frost>0 && d<110+30*P.frost) sm*=1-Math.min(0.55,0.3*P.frost);
@@ -808,6 +816,8 @@ function updProjectiles(dt){
     if(pr.kind==='soul' && Math.random()<0.3) part(pr.x,pr.y,0,0,0.3,3,'#7dffb0',true);
     if(pr.x<-10||pr.y<-10||pr.x>AW+10||pr.y>AH+10) pr.life=0;
     { const o=solidHit(pr.x,pr.y,pr.r*0.6); if(o){ if(o.type==='barrel') blowBarrel(o); pr.life=0; burst(pr.x,pr.y,4,'#b8b0a0',70); continue; } }
+    if(Math.hypot(P.x-pr.x,P.y-pr.y)<P.r*0.7+pr.r*0.85 && !G.over && hasRelic('r_mirror') && P.dashI<=0 && Math.random()<0.25){ pr.life=0; const a=Math.atan2(-pr.vy,-pr.vx);
+      G.pproj.push({type:'holy',x:pr.x,y:pr.y,vx:Math.cos(a)*480,vy:Math.sin(a)*480,r:7,dmg:P.dmg*1.2,life:0.9,pierce:1,hit:new Set(),src:'r_mirror'}); G.texts.push({x:P.x,y:P.y-30,s:'Gespiegelt!',c:'#bfe6ff',t:0}); burst(pr.x,pr.y,6,'#bfe6ff',120); continue; }
     if(Math.hypot(P.x-pr.x,P.y-pr.y)<P.r*0.7+pr.r*0.85 && !G.over){ pr.life=0; hurtPlayer(pr.dmg,null,pr.src); burst(pr.x,pr.y,6,'#ffffff',90); }
   }
   for(const p of G.eproj) if(p.life<=0&&p.kind==='web') G.webs.push({x:p.x,y:p.y,r:48,life:7});
@@ -879,6 +889,7 @@ function fadeIn(){ const f=$('fade'); if(!f) return; f.classList.add('on'); requ
 function finishCombat(){
   if(state!=='combat') return; fadeIn();
   run.rooms++; const t=G.type; G=null; $('hud').classList.add('hidden'); run.room=null; wakeLock(false);
+  if(t==='boss' && hasRelic('r_chalice')){ run.p.hp=Math.min(run.p.maxHp,run.p.hp+run.p.maxHp*0.3); }
   if(t==='boss'){
     if(run.act===3 && !run.endless){ run.won=true; run.pend={mode:'boss',after:'victory'}; save.run=run; persist(); showReward('boss',showVictory); return; }
     run.pend={mode:'boss',after:'next'}; save.run=run; persist(); showReward('boss',()=>showEvo(nextAct));
@@ -910,7 +921,7 @@ function endRun(won){
   const bonus=won?100:0;
   let score=r.kills*10+r.rooms*60+r.bosses*800+(won?2500:0)+(r.endless?(r.act-3)*1500:0)+Math.floor(r.goldTotal/2);
   const ngf=(1+0.5*(r.ng||0))*(1+0.15*(r.tier||0)); score=Math.round(score*ngf);
-  const souls=Math.round((r.souls+bonus)*ngf);
+  const souls=Math.round((r.souls+bonus)*ngf*((r.relics||[]).includes('r_lantern')?1.5:1));
   save.souls+=souls; save.run=null;
   const entry={score,cid:r.cid,act:r.act,won,ng:r.ng||0,tier:r.tier||0,chal:r.challenge||null,endless:!!r.endless,daily:!!r.daily,assist:!!(r.assist||save.settings.assist),date:new Date().toLocaleDateString('de-DE')};
   let dailyBest=false;
@@ -958,7 +969,7 @@ function showPause(){
   actions={ resume:()=>{ ui.classList.add('hidden'); $('hud').classList.remove('hidden'); state='combat'; last=performance.now(); }, quit:confirmQuit, opts:showSettings };
   ui.innerHTML=`<div class="wrap" style="justify-content:center"><h2 class="center">Pause</h2>
     ${statsHtml(p)}${evoHtml()}${synHtml()}
-    <div class="relics" style="justify-content:center">${relicsHtml()}</div>
+    ${relicBar()}<div class="relics" style="justify-content:center">${relicsHtml()}</div>
     <button class="btn primary" data-a="resume">Weiterkämpfen</button><button class="btn" data-a="opts">⚙️ Einstellungen</button><button class="btn" data-a="quit">Lauf aufgeben</button></div>`;
 }
 

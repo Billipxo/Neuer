@@ -222,3 +222,7 @@ body.bigui #hud .bar, body.bigui #hpbar{transform-origin:left top}
 .cal.played{background:#5a3a1c;color:#fff}
 .cal.won{background:#2f6b40;color:#fff}
 .cal.today{border-color:var(--gold)}
+
+#dashBtn .chg{position:absolute;top:-6px;left:-6px;min-width:22px;height:22px;border-radius:11px;background:var(--soul);color:#121822;font:800 13px/22px var(--f-display);text-align:center;box-shadow:0 0 0 2px #121822}
+.relbar{display:flex;gap:6px;flex-wrap:wrap}
+.relic.big{font-size:22px;width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--gold);border-radius:8px;background:#2a1d10aa}

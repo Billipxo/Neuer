@@ -378,6 +378,29 @@ function showScores(){
     <button class="btn" data-a="back">Zurück</button></div>`,{ back:showMenu });
 }
 
+function relicBar(){ const rl=(run&&run.relics)||[]; return rl.length?`<div class="relbar">${rl.map(id=>`<span class="relic big" title="${esc(REL[id].nm)}: ${esc(REL[id].ds)}">${REL[id].ic}</span>`).join('')}</div>`:''; }
+function relicCard(r,act='relic'){ return `<button class="card ${r.cursed?'cursed':'epic'} reward-card" data-a="${act}" data-v="${r.id}"><div class="ic">${r.ic}</div><div class="body"><div class="rar">${r.cursed?'Verfluchtes Relikt':'Relikt'}</div><div class="nm">${r.nm}</div><div class="ds">${r.ds}</div></div></button>`; }
+function relicsLeft(){ return RELICS.filter(r=>!hasRelic(r.id)); }
+function gainRelic(id){ const r=REL[id]; run.relics=run.relics||[]; if(run.relics.includes(id)) return; run.relics.push(id); if(r.on) r.on(run.p);
+  save.stats.relics=save.stats.relics||[]; if(!save.stats.relics.includes(id)) save.stats.relics.push(id); sfx('skill'); }
+// Relikt-Auswahl: eins von zwei (Schatz, Champion)
+function showRelicPick(after, title='Ein Relikt!', sub='Wähle eines – Relikte wirken für den Rest des Laufs.'){
+  const left=relicsLeft(); if(!left.length){ after(); return; }
+  const offer=seeded(roomKey('relic')+'|'+(run.relics||[]).length,()=>shuffle(left.slice()).slice(0,2));
+  render(`<div class="wrap"><div class="eyebrow">Relikt</div><h2>${title}</h2><p class="sub">${sub}</p>
+    <div class="cards">${offer.map(r=>relicCard(r)).join('')}</div></div>`,
+  { relic:id=>{ gainRelic(id); toast(`<span style="font-size:26px">${REL[id].ic}</span><div><div class="eyebrow" style="color:var(--gold)">Relikt erhalten</div><b>${REL[id].nm}</b></div>`); after(); } },true);
+}
+// Schatzraum: Relikt-Auswahl, alternativ eine Upgrade-Auswahl
+function showTreasure(){
+  if(!relicsLeft().length){ showReward('treasure', showMap); return; }
+  run.pend={mode:'treasure',after:'map'}; save.run=run; persist();
+  const left=relicsLeft(), offer=seeded(roomKey('relic')+'|'+(run.relics||[]).length,()=>shuffle(left.slice()).slice(0,2));
+  render(`<div class="wrap"><div class="eyebrow">Wähle eine Belohnung</div><h2>Ein Schatz!</h2><p class="sub">Eine alte Truhe birgt Relikte – mächtige Gegenstände, die für den Rest des Laufs wirken.</p>
+    <div class="cards">${offer.map(r=>relicCard(r)).join('')}</div>
+    <button class="btn" data-a="upg">Lieber ein Upgrade wählen</button></div>`,
+  { relic:id=>{ run.pend=null; gainRelic(id); showMap(); }, upg:()=>showReward('treasure', showMap) },true);
+}
 function relicsHtml(){
   const e=Object.entries(run.upg); if(!e.length) return '<span class="sub" style="font-size:13px">Noch keine Upgrades</span>';
   return e.map(([id,n])=>`<span class="relic" title="${UPG[id].nm}">${UPG[id].ic}${n>1?`<sup>${n}</sup>`:''}</span>`).join('');
@@ -406,7 +429,7 @@ function showMap(){
     <div class="row" style="gap:6px"><span class="pill h">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span><span class="pill s">👻 ${run.souls}</span><span class="pill">${CHARS[run.cid].icon} ${CHARS[run.cid].name}</span></div>
     <div class="mapbox"><svg viewBox="0 0 100 100" preserveAspectRatio="none">${lines}</svg>${btns}</div>
     <div class="legend">${Object.values(NODE).map(n=>`<span>${n.ic} ${n.nm}</span>`).join('')}<span>💎 Seltene Belohnung</span><span>💰 Gold statt Upgrade</span><span>❤️ Heilung statt Upgrade</span></div>
-    <div class="relics">${relicsHtml()}</div>
+    ${relicBar()}<div class="relics">${relicsHtml()}</div>
   </div>`,
   { go:id=>enterNode(id), x:()=>{}, menu:showRunMenu, stats:showRunStats });
 }
@@ -414,7 +437,7 @@ function showMap(){
 function showRunStats(){
   const c=CHARS[run.cid], ups=Object.entries(run.upg);
   render(`<div class="wrap"><div class="eyebrow">${c.icon} ${c.name}</div><h2>Werte und Upgrades</h2>
-    ${statsHtml(run.p)}${evoHtml()}${synHtml()}
+    ${statsHtml(run.p)}${relicBar()}${evoHtml()}${synHtml()}
     <div class="cards">${ups.length?ups.map(([id,n])=>{ const u=UPG[id]; return `<div class="card ${u.r}"><div class="ic">${u.ic}</div><div class="body"><div class="rar">${RAR[u.r]}${n>1?' · Stufe '+n:''}</div><div class="nm">${u.nm}</div><div class="ds">${u.ds}</div></div></div>`; }).join(''):'<p class="sub">Noch keine Upgrades. Besiege Gegner, um welche zu verdienen.</p>'}</div>
     <button class="btn primary" data-a="back">Zurück zur Karte</button></div>`,{ back:showMap },true);
 }
@@ -427,8 +450,9 @@ function showCodex(back, tab='syn'){
   const evoHtml=Object.entries(EVOS).map(([cid,list])=>`<div class="eyebrow" style="margin-top:6px">${CHARS[cid].icon} ${CHARS[cid].name}</div><div class="cards">${list.map(e=>{ const f=evos.includes(e.id), act=hasEvo(e.id);
     return `<div class="card ${act?'epic':f?'rare':''}"><div class="ic">${f?e.ic:'❔'}</div><div class="body"><div class="rar">${act?'Aktiv in diesem Lauf':f?'Entdeckt':'Nach einem Bosskampf wählbar'}</div><div class="nm">${f?e.nm:'???'}</div>${f?`<div class="ds">${e.ds}</div>`:''}</div></div>`; }).join('')}</div>`).join('');
   render(`<div class="wrap"><div class="eyebrow">${found.length} von ${SYN.length} Synergien · ${evos.length} von ${Object.values(EVOS).flat().length} Entwicklungen</div><h2>Kodex</h2>
-    <div class="skinrow"><button class="skin ${tab==='syn'?'sel':''}" data-a="tab" data-v="syn">🔗 Synergien</button><button class="skin ${tab==='evo'?'sel':''}" data-a="tab" data-v="evo">⚒️ Entwicklungen</button></div>
-    ${tab==='syn'?`<p class="sub" style="font-size:14px">Wähle beide Upgrades eines Rezepts in einem Lauf, um die Synergie auszulösen.</p><div class="cards">${SYN.map(synCard).join('')}</div>`:`<p class="sub" style="font-size:14px">Nach jedem Boss verwandelst du deinen Grundangriff: Du wählst eine von zwei Entwicklungen.</p>${evoHtml}`}
+    <div class="skinrow"><button class="skin ${tab==='syn'?'sel':''}" data-a="tab" data-v="syn">🔗 Synergien</button><button class="skin ${tab==='evo'?'sel':''}" data-a="tab" data-v="evo">⚒️ Entwicklungen</button><button class="skin ${tab==='rel'?'sel':''}" data-a="tab" data-v="rel">🏺 Relikte</button></div>
+    ${tab==='rel'?`<p class="sub" style="font-size:14px">Relikte findest du in Schatzräumen, bei Champions in Elite-Räumen und manchmal beim Händler.</p><div class="cards">${RELICS.map(r=>{ const f=(save.stats.relics||[]).includes(r.id), act=hasRelic(r.id); return `<div class="card ${act?'epic':f?(r.cursed?'cursed':'rare'):''}"><div class="ic">${f?r.ic:'❔'}</div><div class="body"><div class="rar">${act?'Im Besitz':f?'Gefunden':'Noch nicht gefunden'}</div><div class="nm">${f?r.nm:'???'}</div>${f?`<div class="ds">${r.ds}</div>`:''}</div></div>`; }).join('')}</div>`:
+    tab==='syn'?`<p class="sub" style="font-size:14px">Wähle beide Upgrades eines Rezepts in einem Lauf, um die Synergie auszulösen.</p><div class="cards">${SYN.map(synCard).join('')}</div>`:`<p class="sub" style="font-size:14px">Nach jedem Boss verwandelst du deinen Grundangriff: Du wählst eine von zwei Entwicklungen.</p>${evoHtml}`}
     <button class="btn" data-a="back">Zurück</button></div>`,{ back, tab:t=>showCodex(back,t) });
 }
 function showRunMenu(){
@@ -452,7 +476,7 @@ function enterNode(id){
   const n=nodeById(id); run.posId=id; run.visited.push(id);
   if(n.type==='fight'||n.type==='elite'||n.type==='boss') startCombat(n.type);
   else { run.rooms++; save.run=run; persist();
-    if(n.type==='shop') showShop(); else if(n.type==='rest') showRest(); else if(n.type==='event') showEvent(); else showReward('treasure', showMap); }
+    if(n.type==='shop') showShop(); else if(n.type==='rest') showRest(); else if(n.type==='event') showEvent(); else showTreasure(); }
 }
 
 /* ---- Ereignisse ---- */
@@ -563,24 +587,25 @@ function upgCard(u,extra='',act='pick'){
 function resumeRun(){
   if(run.won && !run.endless && !run.pend){ showVictory(); return; }
   if(run.room && run.p.hp>0){ const t=run.room; toast('<b>Raum wird neu gestartet</b>'); startCombat(t); return; }
-  if(run.pend){ const a={map:showMap,next:()=>showEvo(nextAct),victory:showVictory}[run.pend.after]||showMap; if(run.pend.mode==='evo') showEvo(nextAct); else showReward(run.pend.mode,a); return; }
+  if(run.pend){ const a={map:showMap,next:()=>showEvo(nextAct),victory:showVictory}[run.pend.after]||showMap; if(run.pend.mode==='evo') showEvo(nextAct); else if(run.pend.mode==='treasure') showTreasure(); else showReward(run.pend.mode,a); return; }
   showMap();
 }
 function showReward(mode, after, offer, banMode){
-  state='ui'; if(!after.wrapped){ const a0=after; after=()=>{ if(run) run.pend=null; a0(); }; after.wrapped=true; }
+  state='ui'; if(!offer) run.idolUsed=false; if(!after.wrapped){ const a0=after; after=()=>{ if(run) run.pend=null; a0(); }; after.wrapped=true; }
   if(mode==='gold'||mode==='heal') return showBounty(mode, after);
-  offer = offer || seeded(roomKey('reward')+'|'+run.rooms,()=>{ const o=rollUpgrades(3, mode); const cur=availUpgrades().filter(u=>u.r==='cursed');
-    if(mode!=='normal' && cur.length && o.length===3 && RNG()<0.35) o[2]=pick(cur); return o; });
+  offer = offer || seeded(roomKey('reward')+'|'+run.rooms,()=>{ const o=rollUpgrades(hasRelic('r_coin')?4:3, mode); const cur=availUpgrades().filter(u=>u.r==='cursed');
+    if(mode!=='normal' && cur.length && o.length>=3 && RNG()<0.35) o[o.length-1]=pick(cur); return o; });
   const title={ normal:'Sieg!', rare:'Seltene Beute!', elite:'Elite bezwungen!', treasure:'Ein Schatz!', boss:'Der Boss ist gefallen!' }[mode];
   render(`<div class="wrap"><div class="eyebrow">Wähle eine Belohnung</div><h2>${title}</h2>
     <div class="row" style="gap:6px"><span class="pill h">❤️ ${Math.ceil(run.p.hp)}/${Math.round(run.p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span></div>
     ${banMode?`<p class="sub" style="color:#ffb3ad">Tippe ein Upgrade an, um es für diesen Lauf zu verbannen. Es wird ersetzt und taucht nie wieder auf.</p>`:''}
     <div class="cards">${offer.map(u=>upgCard(u,'',banMode?'ban':'pick')).join('')}</div>
-    <div class="row">${run.rerolls>0&&!banMode?`<button class="btn" data-a="reroll">🎲 Neu würfeln (${run.rerolls})</button>`:''}
+    <div class="row">${hasRelic('r_idol')&&!run.idolUsed&&!banMode?`<button class="btn" data-a="idol">🗿 Gratis neu würfeln</button>`:''}${run.rerolls>0&&!banMode?`<button class="btn" data-a="reroll">🎲 Neu würfeln (${run.rerolls})</button>`:''}
       ${(run.bans??1)>0?`<button class="btn ${banMode?'danger':''}" data-a="banm">${banMode?'Abbrechen':'🚫 Verbannen ('+(run.bans??1)+')'}</button>`:''}
       ${banMode?'':`<button class="btn" data-a="skip">Überspringen (+15 💰)</button>`}</div></div>`,
   { pick:id=>{ const ns=applyUpgrade(UPG[id]); ns.length?showSynergy(ns,after):after(); },
-    reroll:()=>{ run.rerolls--; showReward(mode, after, rollUpgrades(3,mode,offer.map(u=>u.id))); },
+    reroll:()=>{ run.rerolls--; showReward(mode, after, rollUpgrades(offer.length,mode,offer.map(u=>u.id))); },
+    idol:()=>{ run.idolUsed=true; showReward(mode, after, rollUpgrades(offer.length,mode,offer.map(u=>u.id))); },
     banm:()=>showReward(mode, after, offer, !banMode),
     ban:id=>{ run.banned=run.banned||[]; run.banned.push(id); run.bans=(run.bans??1)-1; const rep=rollUpgrades(1,mode,offer.map(u=>u.id))[0];
       const no=offer.map(u=>u.id===id?rep:u).filter(Boolean); sfx('boom'); showReward(mode, after, no, false); },
@@ -613,8 +638,9 @@ function showEvo(after){
 }
 function showShop(stock){
   if(!stock){
-    const tm=tierHas(7)?1.3:1, priceOf=u=>Math.round(({common:45,rare:80,epic:130,cursed:60})[u.r]*(1+0.15*(run.act-1))*(run.p.shopMul||1)*tm);
+    const tm=(tierHas(7)?1.3:1)*(hasRelic('r_crown')?0.85:1), priceOf=u=>Math.round(({common:45,rare:80,epic:130,cursed:60})[u.r]*(1+0.15*(run.act-1))*(run.p.shopMul||1)*tm);
     stock={ items:seeded(roomKey('shop'),()=>{ const o=rollUpgrades(4,'elite'); const cur=availUpgrades().filter(u=>u.r==='cursed'); if(cur.length && RNG()<0.3) o.push(pick(cur)); return o; }).map(u=>({id:u.id, price:priceOf(u), sold:false})), potion:{price:Math.round((30+run.act*5)*(run.p.shopMul||1)*tm), sold:false} };
+    const rl=relicsLeft(); if(rl.length) stock.relic={id:seeded(roomKey('shoprelic'),()=>pick(rl)).id, price:Math.round((140+25*run.act)*(run.p.shopMul||1)*tm), sold:false};
   }
   const p=run.p;
   const potionHeal=Math.round(p.maxHp*(tierHas(9)?0.2:0.4));
@@ -625,16 +651,18 @@ function showShop(stock){
       <button class="card common" data-a="potion" ${stock.potion.sold||run.gold<stock.potion.price||p.hp>=p.maxHp?'disabled':''}>
         <div class="ic">🧪</div><div class="body"><div class="rar">Verbrauchsgut</div><div class="nm">Heiltrank</div><div class="ds">Heilt ${potionHeal} LP</div></div>
         <span class="pill g price">${stock.potion.sold?'Verkauft':stock.potion.price+' 💰'}</span></button>
+      ${stock.relic?(()=>{ const r=REL[stock.relic.id]; return relicCard(r,'brel').replace('reward-card','')+''; })().replace('</button>',`<span class="pill g price">${stock.relic.sold?'Verkauft':stock.relic.price+' 💰'}</span></button>`).replace('data-a="brel"','data-a="brel"'+(stock.relic.sold||run.gold<stock.relic.price?' disabled':'')):''}
       ${stock.items.map((it,i)=>{ const u=UPG[it.id]; const html=upgCard(u,`<span class="pill g price">${it.sold?'Verkauft':it.price+' 💰'}</span>`,'buy').replace('data-v="'+u.id+'"','data-v="'+i+'"'+(it.sold||run.gold<it.price?' disabled':'')); return html; }).join('')}
     </div>
     <button class="btn primary" data-a="leave">Weiterziehen</button></div>`,
   { potion:()=>{ run.gold-=stock.potion.price; stock.potion.sold=true; p.hp=Math.min(p.maxHp,p.hp+potionHeal); sfx('coin'); showShop(stock); },
+    brel:()=>{ const s=stock.relic; if(s.sold||run.gold<s.price) return; run.gold-=s.price; s.sold=true; gainRelic(s.id); showShop(stock); },
     buy:i=>{ const it=stock.items[+i]; if(it.sold||run.gold<it.price) return; run.gold-=it.price; it.sold=true; const ns=applyUpgrade(UPG[it.id]); ns.length?showSynergy(ns,()=>showShop(stock)):showShop(stock); },
     leave:showMap },true);
 }
 
 function showRest(){
-  const p=run.p, heal=Math.round(p.maxHp*(tierHas(4)?0.25:0.4));
+  const p=run.p, heal=Math.round(p.maxHp*((tierHas(4)?0.25:0.4)+(hasRelic('r_chalice')?0.15:0)));
   render(`<div class="wrap" style="justify-content:center"><div class="eyebrow">Ein ruhiger Ort</div><h2>Das Lagerfeuer</h2>
     <p class="sub">Die Flammen knistern. Du hast Zeit für genau eine Sache.</p>
     <span class="pill h" style="align-self:flex-start">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span>

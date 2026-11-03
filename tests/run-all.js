@@ -94,7 +94,7 @@ const tests = {
       const keep=save; save=defSave(); tryS('menu-neu',showMenu); save=keep; save.runs=Math.max(1,save.runs);
       for(const [n,f] of Object.entries({showMenu,showChars,showDaily,showForge,showAch,showBeast,showScores,showSettings,showSlots,showHelp,showChallenges})) tryS(n,f);
       tryS('codex',()=>showCodex(showMenu)); tryS('codex-evo',()=>showCodex(showMenu,'evo')); tryS('tiers',()=>showTiers(showMenu));
-      save.tutDone=true; startRun('alchi'); tryS('map',showMap); tryS('runmenu',showRunMenu); tryS('runstats',showRunStats); tryS('rest',showRest); tryS('shop',()=>showShop()); tryS('evo',()=>showEvo(showMap)); tryS('bounty',()=>showBounty('gold',showMap)); tryS('event',showEvent);
+      save.tutDone=true; startRun('alchi'); tryS('map',showMap); tryS('runmenu',showRunMenu); tryS('runstats',showRunStats); tryS('rest',showRest); tryS('shop',()=>showShop()); tryS('evo',()=>showEvo(showMap)); tryS('bounty',()=>showBounty('gold',showMap)); tryS('event',showEvent); tryS('treasure',showTreasure); tryS('relicpick',()=>showRelicPick(showMap)); tryS('codex-rel',()=>showCodex(showMenu,'rel'));
       return {ok:!bad.length, bad}; });
   },
   async meta(pg){ // Verdammnis-Stufen, Herausforderungen, Wochenprüfung, Kopfgelder und Teilen
@@ -108,6 +108,14 @@ const tests = {
       out.share=shareText(wk,save.dailyHist[wk],'Test').includes('Arena der Verdammten');
       out.bounty=bountyList(todayKey()).length===3; out.am=arenaMasterLine().length>10;
       startRun('krieger',{challenge:'ch_nodash'}); run.posId=run.map.rows[1][0].id; startCombat('fight'); useDash(); out.nodash=P.dashT<=0 && $('dashBtn').style.display==='none'; endRun(false);
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
+  async relics(pg){ // Alle Relikte gleichzeitig, Schatzraum, Händler, doppeltes Ausweichen
+    return pg.evaluate(()=>{ const out={}; save.tutDone=true; startRun('krieger'); for(const r of RELICS) gainRelic(r.id); out.all=run.relics.length===RELICS.length;
+      run.posId=run.map.rows[2][0].id; startCombat('elite'); for(let i=0;i<20;i++) update(1/30); useDash(); const c1=P.dashChg; for(let i=0;i<6;i++) update(1/30); useDash(); out.feather=c1===1 && P.dashT>0;
+      __bot(true,90); out.combat=state!=='combat';
+      startRun('magier'); run.posId=run.map.rows[2][0].id; showTreasure(); out.treasure=!!ui.querySelector('[data-a=relic]'); actions.relic(ui.querySelector('[data-a=relic]').dataset.v); out.got=run.relics.length===1;
+      run.gold=999; showShop(); out.shop=!!ui.querySelector('[data-a=brel]'); actions.brel(); out.bought=run.relics.length===2;
       return {ok:Object.values(out).every(Boolean), out}; });
   },
   async music(pg){ // Musik-Engine spielt alle Stücke inklusive B-Teil fehlerfrei

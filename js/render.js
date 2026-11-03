@@ -133,6 +133,7 @@ function drawHero(){
   { const tw=tierWon(p.cid); if(tw>=1 && !G.over){ const col=tierColor(tw), pu=0.5+0.5*Math.sin(G.time*3); ctx.strokeStyle=col; ctx.globalAlpha=(ctx.globalAlpha||1)*(0.35+0.25*pu); ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(p.x,p.y+13,17,6.5,0,0,TAU); ctx.stroke(); ctx.globalAlpha=1; if(tw>=10 && FX() && Math.random()<0.3) part(p.x+rand(-12,12),p.y+12,0,-50,0.6,2.5,'#ff7a2a',true); } }
   if(p.shieldLeft>0){ ctx.strokeStyle='rgba(127,212,255,0.5)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(p.x,p.y-2,24+Math.sin(G.time*4),0,TAU); ctx.stroke(); }
   const lift=p.leap?Math.sin(Math.min(1,p.leap.t/p.leap.T)*Math.PI)*38:0;
+  if(p.hornT>0){ drawGlow(p.x,p.y,30,'#ff5a3a',0.25+0.15*Math.sin(G.time*10)); }
   if(p.fury>0){ drawGlow(p.x,p.y-lift,24+p.fury*2.2,'#ff3a2a',0.12+p.fury*0.045); if(p.fury>=10 && Math.random()<0.4) part(p.x+rand(-10,10),p.y-lift+rand(-10,8),0,-60,0.5,3,'#ff5a2a',true); }
   ctx.save(); ctx.translate(p.x,p.y+bob-lift); ctx.scale(1.12,1.12);
   if(!G.over){ ctx.rotate(clamp((p.vx||0)/420,-0.16,0.16));
@@ -722,7 +723,8 @@ function updHud(){
   const mc=p.maxCharges||1, ch=mc>1?(p.charges??mc):0;
   sb.style.setProperty('--p', (mc>1?ch>0:p.skillT<=0)?0:(p.skillT>0?(p.skillT/cd).toFixed(3):0)); sb.classList.toggle('ready',mc>1?ch>0:p.skillT<=0);
   if(mc>1){ let b=sb.querySelector('.chg'); if(!b){ b=document.createElement('span'); b.className='chg'; sb.appendChild(b); } if(b.textContent!==String(ch)) b.textContent=ch; } else { const b=sb.querySelector('.chg'); if(b) b.remove(); }
-  const db=$('dashBtn'); db.style.setProperty('--p', p.dashCd>0?(p.dashCd/(1.0*p.dashCdMul)).toFixed(3):0);
+  const db=$('dashBtn'), fe=hasRelic('r_feather'); db.style.setProperty('--p', (fe?(p.dashChg||0)>0:p.dashCd<=0)?0:(p.dashCd/(1.0*p.dashCdMul)).toFixed(3));
+  { let b=db.querySelector('.chg'); if(fe){ if(!b){ b=document.createElement('span'); b.className='chg'; db.appendChild(b); } const n=String(p.dashChg||0); if(b.textContent!==n) b.textContent=n; } else if(b) b.remove(); }
   { const cb=$('combo'), left=2.5-(G.time-G.comboLast), on=G.combo>=3&&left>0; cb.classList.toggle('on',on);
     if(on){ if(cb.dataset.n!=String(G.combo)){ cb.dataset.n=G.combo; cb.innerHTML=`x${G.combo}<small>Kombo</small><div class="bar"></div>`; } cb.querySelector('.bar').style.transform=`scaleX(${Math.max(0,left/2.5)})`; } }
   if(G.boss) $('bossFill').style.width=Math.max(0,G.boss.hp/G.boss.maxHp*100)+'%';
