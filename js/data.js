@@ -241,6 +241,15 @@ const EVOS = {
             { id:'b_throw',  ic:'🪓', nm:'Axtwurf', ds:'Jeder 3. Angriff wirft zusätzlich eine Axt auf den nächsten Gegner in Reichweite 260.' },
             { id:'b_rage',   ic:'😡', nm:'Ungebremst', ds:'Raserei bis zu 15 Stufen statt 10.' } ],
 };
+/* Raum-Herausforderungen: freiwillige Ziele mit Belohnung */
+const ROOM_CHAL = [
+  { id:'nohit',   ic:'🛡️', nm:'Unberührt',      ds:'Schließe den Raum ab, ohne Schaden zu nehmen.', rew:'gold' },
+  { id:'speed',   ic:'⏱️', nm:'Blitzsieg',      ds:'Besiege alle Gegner, bevor die Zeit abläuft.',  rew:'rare' },
+  { id:'combo',   ic:'🔥', nm:'Kombo-Meister',  ds:'Erreiche eine 15er-Kombo.',                     rew:'gold' },
+  { id:'nodash',  ic:'🦶', nm:'Standhaft',      ds:'Schließe den Raum ohne Ausweichen ab.',          rew:'heal' },
+  { id:'noskill', ic:'🤐', nm:'Ohne Hilfsmittel', ds:'Schließe den Raum ohne deine Fähigkeit ab.',   rew:'soul' },
+];
+const RC_REW = { gold:'+Gold', rare:'seltenere Belohnung', heal:'Heilung', soul:'+5 Seelen' };
 /* Themenwellen: manche Kämpfe haben eine feste Gegnergruppe */
 const THEMES = [
   { id:'slimepit', ic:'🟢', nm:'Schleimgrube',  kinds:['slime','shroom','slime'],                 acts:[1] },

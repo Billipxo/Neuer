@@ -75,6 +75,10 @@ function startCombat(type, customWaves){
       over:false, deathT:0, slowT:0, whiteFlash:0, moved:0, tut:tut?{step:0,t:0}:null };
   Object.assign(G, seeded(roomKey('arena'),()=>genArena(type)));
   if(G.tut){ G.obs=[]; G.traps=[]; }
+  G.rc=null;
+  if(type==='fight' && !G.tut && !customWaves && nodeById(run.posId) && nodeById(run.posId).row>=1){ const pickC=seeded(roomKey('rchal'),()=>RNG()<0.35?pick(ROOM_CHAL):null);
+    if(pickC){ G.rc={...pickC, failed:false, done:pickC.id!=='combo', limit:pickC.id==='speed'?Math.round(22+G.waves.length*9+G.waves.flat().length*1.2):0};
+      const rc=G.rc; setTimeout(()=>{ if(G) banner(rc.ic+' '+rc.nm, rc.ds+' Belohnung: '+RC_REW[rc.rew], 2600); },G.weather!=='clear'?1700:300); } }
   G.theme=(G.waves&&G.waves.theme)||null; if(G.theme){ const th=G.theme; setTimeout(()=>{ if(G) banner(th.ic+' '+th.nm,'Eine besondere Gegnergruppe',1800); },1500); }
   if(type==='boss'){
     const bk=bossKind(); G.waveIdx=0; G.waveT=99;
@@ -356,6 +360,7 @@ function useDash(){
   const fe=hasRelic('r_feather');
   if(P.dashT>0 || (fe ? (P.dashChg||0)<=0 : P.dashCd>0)){ if(P.dashCd<0.25||P.dashT>0) P.dashBuf=0.25; return; }   // kurz vor Ablauf gedrückt: wird nachgeholt
   P.dashBuf=0; if(fe){ P.dashChg--; }
+  if(G.rc && G.rc.id==='nodash' && !G.rc.failed){ G.rc.failed=true; rcFail(); }
   const [mx,my]=readMove();
   P.dashA = Math.hypot(mx,my)>0.2 ? Math.atan2(my,mx) : P.face;
   G.tutDash=true; if(P.mirror) G.decoy={x:P.x,y:P.y,t:2,face:P.face}; P.dashT=0.13; P.dashI=0.24; if(!fe || P.dashCd<=0) P.dashCd=1.0*P.dashCdMul; P.dashHit=[]; P.perfUsed=false;
@@ -437,6 +442,7 @@ function useSkill(){
   else { if(p.skillT>0){ if(p.skillT<0.25) p.skillBuf=0.25; return; } p.skillT=c.skill.cd*p.cdMul; }
   p.skillBuf=0;
   sfx('skill'); buzz(20); G.tutSkill=true;
+  if(G.rc && G.rc.id==='noskill' && !G.rc.failed){ G.rc.failed=true; rcFail(); }
   if(p.cid==='krieger'){ p.spin=1.5; p.spinTick=0; G.fx.push({type:'shock',x:p.x,y:p.y,r:90,t:0,life:0.35,color:'#dbe8ff'}); burst(p.x,p.y+6,16,'#e8f0ff',220); }
   else if(p.cid==='nekro'){ for(let i=0;i<4;i++){ const a=i/4*TAU; raiseAlly(p.x+Math.cos(a)*34,p.y+Math.sin(a)*34,10); } G.fx.push({type:'summon',x:p.x,y:p.y,r:62,t:0,life:1.0}); G.fx.push({type:'ring',x:p.x,y:p.y,r:70,t:0,life:0.4,color:'#5affd0',fill:true}); }
   else if(p.cid==='paladin'){ p.ward=3; const h=Math.round(p.maxHp*0.10); p.hp=Math.min(p.maxHp,p.hp+h); G.texts.push({x:p.x,y:p.y-30,s:'+'+h,c:'#ffe08a',big:true,t:0});
@@ -516,7 +522,8 @@ function killEnemy(e){
   if(e.champ){ G.champ=null; G.champKilled=true; if(!G.boss) $('bossBar').classList.add('hidden'); banner('Champion besiegt!',e.name,1600); hype(0.6); crowdSound(1); save.stats.champs=(save.stats.champs||0)+1; }
   if(e.elite && hasRelic('r_skull')){ P.maxHp+=3; P.hp+=3; G.texts.push({x:P.x,y:P.y-40,s:'+3 max. LP',c:'#e8e2d0',t:0}); }
   if(tierHas(10) && !e.boss && Math.random()<0.25) G.hazards.push({type:'circle',x:e.x,y:e.y,r:46,delay:0.9,t:0,dmg:e.dmg*0.8,color:'#b06aff'});
-  if(G.time-G.comboLast<2.5) G.combo++; else G.combo=1; G.comboLast=G.time; save.stats.maxCombo=Math.max(save.stats.maxCombo,G.combo);
+  if(G.time-G.comboLast<2.5) G.combo++; else G.combo=1;
+  if(G.rc && G.rc.id==='combo' && !G.rc.done && G.combo>=15){ G.rc.done=true; G.texts.push({x:P.x,y:P.y-60,s:'Herausforderung geschafft!',c:'#9fe6a0',big:true,t:0}); sfx('pick'); } G.comboLast=G.time; save.stats.maxCombo=Math.max(save.stats.maxCombo,G.combo);
   if(G.combo>=10 && G.combo%10===0){ const bonus=G.combo; run.gold+=bonus; run.goldTotal+=bonus; hype(0.2); comboSound(G.combo); G.texts.push({x:P.x,y:P.y-44,s:G.combo+'er Kombo! +'+bonus+' Gold',c:'#ffd34d',big:true,t:0}); }
   hype(e.elite?0.35:0.035); if(e.elite){ crowdSound(0.6); crowdThrow(3,false); }
   G.fx.push({type:'corpse',e:Object.assign({},e,{flash:0,hp:e.maxHp,spawnT:0,freeze:0,poisonT:0}),t:0,life:0.42});
@@ -879,6 +886,7 @@ function hurtPlayer(dmg,src,via){
   { const at=src&&src.affix?src:(via&&via.affix?via:null);
     if(at){ if(at.affix.includes('vamp')&&!at.dead){ at.hp=Math.min(at.maxHp,at.hp+at.maxHp*0.15); G.texts.push({x:at.x,y:at.y-at.r-10,s:'+Blut',c:'#ff4a5a',t:0}); }
       if(at.affix.includes('frost')){ p.chill=2; G.texts.push({x:p.x,y:p.y-40,s:'Verlangsamt',c:'#bfe6ff',t:0}); } } }
+  if(G.rc && G.rc.id==='nohit' && !G.rc.failed){ G.rc.failed=true; rcFail(); }
   if(p.vengeance){ explosion(p.x,p.y,95*Math.sqrt(p.area),p.dmg*p.vengeance,'#ff7a5a'); }
   p.hp-=d; p.inv=0.75; G.shake=Math.min(14,G.shake+7); G.hurtFlash=0.3; sfx('hurt'); buzz(40); hitstop(0.06);
   G.texts.push({x:p.x,y:p.y-26,s:'-'+d,c:'#ff5a4a',big:true,t:0});
@@ -890,10 +898,23 @@ function hurtPlayer(dmg,src,via){
   }
 }
 
+function rcFail(){ G.texts.push({x:P.x,y:P.y-60,s:'Herausforderung verfehlt',c:'#ff8a80',t:0}); }
+// Belohnung einer bestandenen Raum-Herausforderung (gibt den Belohnungsmodus zurück)
+function rcReward(rc,mode){
+  if(!rc || rc.failed || !rc.done) return mode;
+  let txt=''; save.stats.roomChal=(save.stats.roomChal||0)+1;
+  if(rc.rew==='gold'){ const g=40+12*run.act; run.gold+=g; run.goldTotal+=g; txt='+'+g+' Gold'; }
+  else if(rc.rew==='heal'){ const h=Math.round(run.p.maxHp*0.2); run.p.hp=Math.min(run.p.maxHp,run.p.hp+h); txt='+'+h+' LP'; }
+  else if(rc.rew==='soul'){ run.souls+=5; txt='+5 Seelen'; }
+  else { txt='Seltenere Belohnung'; if(mode==='normal') mode='rare'; else if(mode==='rare') mode='elite'; }
+  toast(`<span style="font-size:26px">${rc.ic}</span><div><div class="eyebrow" style="color:var(--gold)">Herausforderung geschafft</div><b>${rc.nm}</b><div class="sub" style="font-size:13px">${txt}</div></div>`);
+  return mode;
+}
 function clearRoom(){
   if(G.cleared) return; save.stats.maxGold=Math.max(save.stats.maxGold,run.goldTotal); setTimeout(checkAch,600); G.cleared=true; G.clearT=0; G.eproj=[]; G.hazards=[];
   if(G.tut){ save.tutDone=true; persist(); $('dashBtn').classList.remove('hint'); $('skillBtn').classList.remove('hint'); }
   for(const a of G.allies) a.life=Math.min(a.life,0.8);
+  if(G.rc && G.rc.id==='speed' && G.time>G.rc.limit) G.rc.failed=true;
   const h=(run.daily?0:metaLvl('m_heal'))*0.04*P.maxHp; if(h>0) P.hp=Math.min(P.maxHp,P.hp+h);
   if(G.type!=='boss') banner('Raum gesäubert!');
   else banner('Sieg!', BOSSES[bossKind()].name+' ist besiegt');
@@ -901,13 +922,13 @@ function clearRoom(){
 function fadeIn(){ const f=$('fade'); if(!f) return; f.classList.add('on'); requestAnimationFrame(()=>requestAnimationFrame(()=>f.classList.remove('on'))); }
 function finishCombat(){
   if(state!=='combat') return; fadeIn();
-  run.rooms++; const t=G.type, champ=!!G.champKilled; G=null; $('hud').classList.add('hidden'); run.room=null; wakeLock(false);
+  run.rooms++; const t=G.type, champ=!!G.champKilled, rc=G.rc; G=null; $('hud').classList.add('hidden'); run.room=null; wakeLock(false);
   if(t==='boss' && hasRelic('r_chalice')){ run.p.hp=Math.min(run.p.maxHp,run.p.hp+run.p.maxHp*0.3); }
   if(t==='boss'){
     if(run.act===3 && !run.endless){ run.won=true; run.pend={mode:'boss',after:'victory'}; save.run=run; persist(); showReward('boss',showVictory); return; }
     run.pend={mode:'boss',after:'next'}; save.run=run; persist(); showReward('boss',()=>showEvo(nextAct));
   } else { const nd=nodeById(run.posId), rw=nd&&nd.rw;
-    const m=t==='elite'||(runMod()||{}).eliteEvery?'elite':rw==='rare'?'rare':rw==='gold'?'gold':rw==='heal'?'heal':'normal';
+    let m=t==='elite'||(runMod()||{}).eliteEvery?'elite':rw==='rare'?'rare':rw==='gold'?'gold':rw==='heal'?'heal':'normal'; m=rcReward(rc,m);
     const rel=champ && relicsLeft().length; run.pend={mode:m,after:rel?'relic':'map'}; save.run=run; persist();
     showReward(m, rel?()=>showRelicPick(showMap,'Beute des Champions','Der Champion hinterlässt ein Relikt. Wähle eines davon.'):showMap); }
 }

@@ -729,6 +729,11 @@ function updHud(){
   { const cb=$('combo'), left=2.5-(G.time-G.comboLast), on=G.combo>=3&&left>0; cb.classList.toggle('on',on);
     if(on){ if(cb.dataset.n!=String(G.combo)){ cb.dataset.n=G.combo; cb.innerHTML=`x${G.combo}<small>Kombo</small><div class="bar"></div>`; } cb.querySelector('.bar').style.transform=`scaleX(${Math.max(0,left/2.5)})`; } }
   { const B=G.boss||G.champ; if(B) $('bossFill').style.width=Math.max(0,B.hp/B.maxHp*100)+'%'; }
+  { const el=$('rcPill'), rc=G.rc; if(!rc){ if(!el.classList.contains('hidden')) el.classList.add('hidden'); }
+    else { el.classList.remove('hidden'); let st=rc.failed?'✗':rc.done?'✓':'…';
+      if(rc.id==='speed' && !rc.failed){ const left=Math.max(0,Math.ceil(rc.limit-G.time)); if(!G.cleared && left<=0){ rc.failed=true; } st=G.cleared?'✓':left+' s'; }
+      if(rc.id==='combo' && !rc.done && !rc.failed) st=Math.min(15,G.combo||0)+'/15';
+      const txt=rc.ic+' '+rc.nm+' '+st; if(el.textContent!==txt){ el.textContent=txt; el.className=rc.failed?'fail':rc.done&&rc.id!=='speed'||G.cleared?'ok':''; } } }
 }
 
 /* ---------------- MENÜ-HINTERGRUND ---------------- */

@@ -122,6 +122,15 @@ const tests = {
       const th=seeded('x',()=>{ let n=0; for(let i=0;i<40;i++){ run.act=2; run.posId=run.map.rows[3][0].id; run.seed='t'+i; const w=buildWaves('fight'); if(w.theme) n++; } return n; }); out.themes=th>0;
       return {ok:Object.values(out).every(Boolean), out}; });
   },
+  async roomchal(pg){ // Raum-Herausforderungen: Scheitern, Erfolg, Belohnung
+    return pg.evaluate(()=>{ const out={}; save.tutDone=true; startRun('krieger'); run.posId=run.map.rows[2][0].id;
+      startCombat('fight'); G.rc={...ROOM_CHAL[0],failed:false,done:true}; P.inv=0; hurtPlayer(10,null); out.nohitFail=G.rc.failed;
+      G.rc={...ROOM_CHAL.find(r=>r.id==='combo'),failed:false,done:false}; for(let i=0;i<16;i++){ const e=makeEnemy('slime',100,100); G.enemies.push(e); killEnemy(e); } out.combo=G.rc.done;
+      const g0=run.gold; G.rc={...ROOM_CHAL[0],failed:false,done:true}; const m=rcReward(G.rc,'normal'); out.gold=run.gold>g0 && m==='normal';
+      const m2=rcReward({...ROOM_CHAL.find(r=>r.id==='speed'),failed:false,done:true},'normal'); out.rare=m2==='rare';
+      let seen=0; for(let i=0;i<30;i++){ run.seed='rc'+i; run.posId=run.map.rows[2][0].id; startCombat('fight'); if(G.rc) seen++; } out.offered=seen>0;
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
   async music(pg){ // Musik-Engine spielt alle Stücke inklusive B-Teil fehlerfrei
     await pg.mouse.click(10,10);
     return pg.evaluate(()=>{ audio(); if(!AC) return {ok:true, skipped:'kein Audio'}; let n=0;
