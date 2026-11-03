@@ -75,6 +75,7 @@ function startCombat(type, customWaves){
       over:false, deathT:0, slowT:0, whiteFlash:0, moved:0, tut:tut?{step:0,t:0}:null };
   Object.assign(G, seeded(roomKey('arena'),()=>genArena(type)));
   if(G.tut){ G.obs=[]; G.traps=[]; }
+  G.pet=run.pet?{kind:run.pet,x:P.x-26,y:P.y+14,t:0,atkT:1.2,healT:5,face:0,lunge:0,tx:0,ty:0}:null;
   G.rc=null;
   if(type==='fight' && !G.tut && !customWaves && nodeById(run.posId) && nodeById(run.posId).row>=1){ const pickC=seeded(roomKey('rchal'),()=>RNG()<0.35?pick(ROOM_CHAL):null);
     if(pickC){ G.rc={...pickC, failed:false, done:pickC.id!=='combo', limit:pickC.id==='speed'?Math.round(22+G.waves.length*9+G.waves.flat().length*1.2):0};
@@ -157,7 +158,7 @@ function update(dt){
   if(!G.over) updPlayer(dt);
   for(const e of G.enemies) updEnemy(e,dt);
   separate();
-  updAllies(dt);
+  updAllies(dt); if(G.pet) updPet(dt);
   updProjectiles(dt);
   updHazards(dt);
   for(const z of G.pzones){ z.life-=dt; z.tick-=dt; const zc=ZONE_COL[z.kind]||'#9a5aff';
@@ -379,6 +380,18 @@ function raiseAlly(x,y,life){
   G.allies.push({x,y,r:11,life,max:life,atkT:0.4,face:0,seed:rand(0,TAU),t:0}); G.fx.push({type:'rise',x,y,t:0,life:0.6});
   burst(x,y,14,'#5affd0',140);
 }
+// Begleiter: folgen dem Helden und helfen je nach Art
+function updPet(dt){
+  const pt=G.pet, p=P; pt.t+=dt;
+  if(pt.lunge>0){ pt.lunge-=dt; const k=Math.min(1,dt*14); pt.x+=(pt.tx-pt.x)*k; pt.y+=(pt.ty-pt.y)*k; }
+  else { const back=p.face+Math.PI, fx=p.x+Math.cos(back)*30+(pt.kind==='wolf'?18:0), fy=p.y+Math.sin(back)*18+12, k=Math.min(1,dt*(pt.kind==='raven'||pt.kind==='wisp'?3.5:5));
+    const ox=pt.x; pt.x+=(fx-pt.x)*k; pt.y+=(fy-pt.y)*k; if(Math.abs(pt.x-ox)>0.05) pt.face=pt.x>ox?0:Math.PI; pt.mv=Math.hypot(fx-pt.x,fy-pt.y)>6; }
+  pt.atkT-=dt;
+  if(G.cleared||G.over) return;
+  if(pt.kind==='raven' && pt.atkT<=0){ const e=nearestEnemy(p,170); pt.atkT=2.5; if(e){ pt.lunge=0.28; pt.tx=e.x; pt.ty=e.y-8; dealDamage(e,p.dmg*0.35,{src:'pet',noChain:true,kb:40,from:pt}); burst(e.x,e.y-6,4,'#2a2a30',90); } }
+  if(pt.kind==='wolf' && pt.atkT<=0){ const e=nearestEnemy(pt,130); pt.atkT=1; if(e){ pt.lunge=0.22; pt.tx=e.x-Math.cos(angTo(pt,e))*e.r; pt.ty=e.y-Math.sin(angTo(pt,e))*e.r; pt.face=e.x>pt.x?0:Math.PI; dealDamage(e,p.dmg*0.4,{src:'pet',noChain:true,kb:60,from:pt}); } }
+  if(pt.kind==='wisp'){ pt.healT-=dt; if(pt.healT<=0){ pt.healT=5; if(p.hp<p.maxHp){ p.hp=Math.min(p.maxHp,p.hp+2); G.texts.push({x:p.x,y:p.y-26,s:'+2',c:'#bfe6ff',t:0}); } } }
+}
 function updAllies(dt){
   for(const a of G.allies){
     a.life-=dt; a.t+=dt; a.atkT-=dt;
@@ -533,6 +546,7 @@ function killEnemy(e){
   part(e.x,e.y-e.r,rand(-10,10),-55,1,4,'#cfe6ff',true,-15);
   const g=Math.max(1,Math.round(e.gold*rand(0.8,1.3)*(e.elite&&hasRelic('r_crown')?3:1)));
   if(!(runMod()||{}).noGold) for(let i=0;i<Math.min(6,g);i++) dropCoin(e.x,e.y,Math.ceil(g/Math.min(6,g)));
+  if(run.pet==='cat' && !e.boss && Math.random()<0.15) dropCoin(e.x,e.y,Math.max(1,Math.round(e.gold)));
   if(Math.random()<0.035) G.coins.push({x:e.x,y:e.y,vx:rand(-40,40),vy:rand(-60,-20),v:0,heart:true,t:0});
   if(P.lifeOnKill) P.hp=Math.min(P.maxHp,P.hp+P.lifeOnKill);
   if(P.minions && !e.small && e.kind!=='mimic' && G.allies.length<P.minions && Math.random()<P.raise) raiseAlly(e.x,e.y,14);
@@ -550,7 +564,7 @@ function dropCoin(x,y,v){ G.coins.push({x,y,vx:rand(-120,120),vy:rand(-120,120),
 function updCoins(dt){
   for(const c of G.coins){
     c.t+=dt; const d=Math.hypot(P.x-c.x,P.y-c.y);
-    if((d<(P.magnet?280:90) || G.cleared) && c.t>0.35){ const a=Math.atan2(P.y-c.y,P.x-c.x), s=G.cleared?950:420; c.vx+=(Math.cos(a)*s-c.vx)*dt*8; c.vy+=(Math.sin(a)*s-c.vy)*dt*8; }
+    if((d<(P.magnet||run.pet==='raven'?280:90) || G.cleared) && c.t>0.35){ const a=Math.atan2(P.y-c.y,P.x-c.x), s=G.cleared?950:420; c.vx+=(Math.cos(a)*s-c.vx)*dt*8; c.vy+=(Math.sin(a)*s-c.vy)*dt*8; }
     else { c.vx*=1-dt*4; c.vy*=1-dt*4; }
     if(c.vz){ c.z+=c.vz*dt; c.vz-=800*dt; if(c.z<=0){ c.z=0; c.vz=Math.abs(c.vz)>60?-c.vz*0.45:0; } }
     c.x+=c.vx*dt; c.y+=c.vy*dt; c.x=clamp(c.x,6,AW-6); c.y=clamp(c.y,6,AH-6);

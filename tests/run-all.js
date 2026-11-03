@@ -131,6 +131,16 @@ const tests = {
       let seen=0; for(let i=0;i<30;i++){ run.seed='rc'+i; run.posId=run.map.rows[2][0].id; startCombat('fight'); if(G.rc) seen++; } out.offered=seen>0;
       return {ok:Object.values(out).every(Boolean), out}; });
   },
+  async pets(pg){ // Jeder Begleiter folgt, hilft und verursacht keine Fehler
+    return pg.evaluate(()=>{ const out={}; save.tutDone=true; save.pets={raven:1,cat:1,wisp:1,wolf:1};
+      for(const id of ['raven','cat','wisp','wolf']){ save.pet=id; startRun('jaegerin'); run.posId=run.map.rows[2][0].id; startCombat('fight',[[{kind:'slime'}]]);
+        for(let i=0;i<40;i++) update(1/30); const e=G.enemies[0]; e.x=P.x+90; e.y=P.y; e.hp=e.maxHp=1e6; P.atkSpd=0.0001; P.atkT=999;
+        P.hp=P.maxHp*0.5; const hp0=P.hp;
+        for(let i=0;i<30*8 && state==='combat';i++){ e.freeze=9; e.x=P.x+90; e.y=P.y; update(1/30); }
+        out[id]=id==='raven'||id==='wolf'?(run.dmgBy||{}).pet>0:id==='wisp'?P.hp>hp0:run.p.crit>0.09; if(state==='combat') endRun(false); }
+      save.pet=null; startRun('krieger',{daily:todayKey()}); out.noDaily=!run.pet;
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
   async music(pg){ // Musik-Engine spielt alle Stücke inklusive B-Teil fehlerfrei
     await pg.mouse.click(10,10);
     return pg.evaluate(()=>{ audio(); if(!AC) return {ok:true, skipped:'kein Audio'}; let n=0;

@@ -349,8 +349,14 @@ function showChars(){
     ${Object.keys(CHARS).filter(id=>save.unlocked[id]).map(id=>`<div class="skinrow"><b style="min-width:96px">${CHARS[id].icon} ${CHARS[id].name}</b>${Object.entries(SKINS[id]).map(([k,sk])=>{ const own=skinOwned(id,k), sel=(save.skin[id]||'base')===k;
       return `<button class="skin ${sel?'sel':''}" data-a="${own?'skin':'skinbuy'}" data-v="${id}:${k}" ${own||save.souls>=SKIN_PRICE?'':'disabled'} title="${own?'':'Erfolg: '+ACH.find(a=>a.id===sk.ach).nm+' oder '+SKIN_PRICE+' Seelen'}"><i style="background:linear-gradient(135deg,${sk.cape||SKINS[id].base.cape} 50%,${sk.body||SKINS[id].base.body} 50%)"></i>${own?'':'🔒 '}${sk.nm}${own?'':' · '+SKIN_PRICE+' 👻'}</button>`; }).join('')}</div>`).join('')}
     <p class="sub" style="font-size:13px">Gesperrte Aussehen gibt es über Erfolge – oder für ${SKIN_PRICE} Seelen.</p>
+    <div class="eyebrow" style="margin-top:6px">Begleiter</div>
+    <div class="cards">${PETS.map(pt=>{ const own=(save.pets||{})[pt.id], sel=save.pet===pt.id;
+      return `<button class="card ${sel?'sel':''}" data-a="${own?'pet':'petbuy'}" data-v="${pt.id}" ${own||save.souls>=pt.cost?'':'disabled'}><div class="ic">${pt.ic}</div><div class="body"><div class="rar">${sel?'Begleitet dich':own?'Tippen zum Mitnehmen':'Für '+pt.cost+' Seelen'}</div><div class="nm">${pt.nm}</div><div class="ds">${pt.ds}</div></div>${own?'':`<span class="pill s price">🔒 ${pt.cost} 👻</span>`}</button>`; }).join('')}</div>
+    <p class="sub" style="font-size:13px">Begleiter helfen in normalen Läufen und Herausforderungen, nicht in der Tages- und Wochenprüfung.</p>
     <button class="btn" data-a="back">Zurück</button></div>`,
   { back:showMenu, x:()=>{}, tiers:()=>showTiers(showChars), go:id=>{ const go=()=>startRun(id,{tier:Math.min(tsel,tierOpen(id))}); save.introSeen?go():showIntro(go); }, tier:n=>{ save.tierSel=+n; persist(); showChars(); }, skin:v=>{ const [id,k]=v.split(':'); save.skin[id]=k; persist(); showChars(); },
+    pet:id=>{ save.pet=save.pet===id?null:id; persist(); showChars(); },
+    petbuy:id=>{ const pt=PETS.find(x=>x.id===id); if(save.souls<pt.cost) return; save.souls-=pt.cost; save.pets=save.pets||{}; save.pets[id]=true; save.pet=id; persist(); sfx('pick'); showChars(); },
     skinbuy:v=>{ const [id,k]=v.split(':'); if(save.souls<SKIN_PRICE) return; save.souls-=SKIN_PRICE; save.skinBought=save.skinBought||{}; save.skinBought[v]=true; save.skin[id]=k; persist(); sfx('pick'); showChars(); },
     buy:id=>{ const c=CHARS[id]; if(save.souls>=c.cost){ save.souls-=c.cost; save.unlocked[id]=true; persist(); sfx('pick'); showChars(); } } });
 }

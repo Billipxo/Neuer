@@ -241,6 +241,13 @@ const EVOS = {
             { id:'b_throw',  ic:'🪓', nm:'Axtwurf', ds:'Jeder 3. Angriff wirft zusätzlich eine Axt auf den nächsten Gegner in Reichweite 260.' },
             { id:'b_rage',   ic:'😡', nm:'Ungebremst', ds:'Raserei bis zu 15 Stufen statt 10.' } ],
 };
+/* Begleiter: kleine Gefährten, die dem Helden folgen (mit Seelen freischaltbar, nicht in Tages-/Wochenprüfung) */
+const PETS = [
+  { id:'raven', ic:'🐦', nm:'Rabe Krah',       ds:'Sammelt Münzen und Herzen aus großer Entfernung ein und hackt alle 2,5 Sek. nach einem nahen Gegner.', cost:150 },
+  { id:'cat',   ic:'🐈', nm:'Katze Mira',      ds:'Bringt Glück: +5 % kritische Trefferchance, besiegte Gegner lassen manchmal eine Extra-Münze fallen.', cost:200 },
+  { id:'wisp',  ic:'✨', nm:'Irrlicht',        ds:'Heilt dich alle 5 Sek. um 2 LP und erhellt die Arena um dich herum.', cost:250 },
+  { id:'wolf',  ic:'🐺', nm:'Wolfswelpe Fang', ds:'Springt nahe Gegner an und beißt jede Sekunde zu (40 % deines Schadens).', cost:350 },
+];
 /* Chronik: Lore-Einträge, die sich durch Fortschritt freischalten */
 const LORE = [
   { id:'act1', ic:'🏚️', nm:'Die Verliese', hint:'Betritt Akt 1', tx:'Unter der alten Königsstadt liegen die Verliese, in denen einst Schuldner und Ketzer verrotteten. Heute sind sie die erste Bühne der Arena. Wer hier fällt, wird von den Zuschauern rasch vergessen.' },

@@ -79,6 +79,7 @@ function startRun(cid, opts={}){
     upg:{}, syn:[], rerolls:daily?1:metaLvl('m_reroll'), won:false, endless:false, seed, daily, mod:mod?mod.id:null, mods, challenge:ch?ch.id:null,
     tier:(daily||ch)?0:Math.max(0,Math.min(opts.tier||0, typeof tierOpen==='function'?tierOpen(cid):0)), ng:daily?0:(opts.ng||0), elites:0, bossKills:[] };
   if(run.ng) run.p.goldMul+=0.2*run.ng;
+  run.pet=(!daily && save.pet && (save.pets||{})[save.pet])?save.pet:null; if(run.pet==='cat') run.p.crit+=0.05;
   const M=runMod(); if(M){ if(M.start) M.start(run.p); if(M.gold) run.gold=M.gold; if(M.curses) for(const id of M.curses) if(UPG[id]) applyUpgrade(UPG[id]); }
   run.map=seeded(seed+'|map|1',()=>genMap(1)); applyMapMods(run.map); unlockLore('act1');
   showMap();

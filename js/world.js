@@ -440,6 +440,7 @@ function collectLights(){
   for(const p of G.eproj) L.push({x:p.x,y:p.y,r:p.kind==='arrow'?40:70,a:0.7});
   for(const f of G.fx){ if(f.type==='ring'&&f.fill) L.push({x:f.x,y:f.y,r:f.r*2,a:1-f.t/f.life}); else if(f.type==='nova'||f.type==='summon'||f.type==='volley') L.push({x:f.x,y:f.y,r:f.r*1.6,a:0.8*(1-f.t/f.life)}); }
   if(P&&P.spin>0) L.push({x:P.x,y:P.y,r:150,a:0.6});
+  if(G.pet && G.pet.kind==='wisp') L.push({x:G.pet.x,y:G.pet.y-20,r:170,a:0.75});
   for(const z of G.pzones) L.push({x:z.x,y:z.y,r:50,a:0.4});
   for(const s of G.pstrikes) L.push({x:s.x,y:s.y,r:s.r*1.5,a:0.6});
   for(const s of G.spawnQ) L.push({x:s.x,y:s.y,r:s.boss?120:50,a:0.6});
