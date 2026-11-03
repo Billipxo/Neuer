@@ -166,7 +166,7 @@ const TORCHES=[[0,150],[0,500],[0,850],[AW,150],[AW,500],[AW,850],[190,0],[570,0
 const BRAZIERS=[[-12,-10],[AW+12,-10],[-12,AH+12],[AW+12,AH+12]];
 /* ---- Tribünen und Zuschauer ---- */
 const STAND=150, BORDER=WALL+STAND;
-let CROWD=[];
+let CROWD=[], CROWD_CH=null;
 const STAND_LIGHTS=[];
 for(const x of [100,380,660]){ STAND_LIGHTS.push([x,-(BORDER-14)]); STAND_LIGHTS.push([x,AH+BORDER-14]); }
 for(const y of [180,500,820]){ STAND_LIGHTS.push([-(BORDER-14),y]); STAND_LIGHTS.push([AW+BORDER-14,y]); }
@@ -187,7 +187,7 @@ function drawStands(g,A){
       CROWD.push({x:x+rand(-2,2),y:y+rand(-2,2),back,v:randi(0,7),ph:rand(0,TAU),spd:rand(2,4)}); };
     for(let x=-d+8;x<AW+d-8;x+=rand(14,19)){ add(x,-d+rd*0.35,false); add(x,AH+d+rd*0.35,true); }
     for(let y=-d+20;y<AH+d;y+=rand(15,20)){ add(-d,y,false); add(AW+d,y,false); } }
-  CROWD.sort((a,b)=>a.y-b.y);
+  CROWD.sort((a,b)=>a.y-b.y); CROWD_CH=null;
 }
 const CROWD_SPR={};
 function crowdLook(va,v){
@@ -218,14 +218,30 @@ function crowdSprites(va){
   for(let v=0;v<8;v++){ const L=crowdLook(va,v); out.front.push([renderSpectator(L,true,false),renderSpectator(L,true,true)]); out.back.push([renderSpectator(L,false,false),renderSpectator(L,false,true)]); }
   return CROWD_SPR[va]=out;
 }
+/* Zuschauer werden in kleine Gruppen von je 6 Nachbarn vorgerendert: statt ~850 Einzelbildern pro Bild
+   nur noch ~140 Gruppenbilder. Jede Gruppe hüpft für sich – bei Jubel entsteht so eine La-Ola-Welle. */
+function buildCrowdChunks(spr,thin){
+  const list=CROWD.filter((s,i)=>!(thin&&i%2)), groups={};
+  const keyOf=s=> s.y<0?'t'+Math.round(s.y/6) : s.y>AH?'b'+Math.round(s.y/6) : s.x<0?'l'+Math.round(s.x/6) : 'r'+Math.round(s.x/6);
+  for(const s of list){ const k=keyOf(s); (groups[k]=groups[k]||[]).push(s); }
+  const out=[], K=2;
+  for(const k in groups){ const g=groups[k], horiz=k[0]==='t'||k[0]==='b'; g.sort((a,b)=>horiz?a.x-b.x:a.y-b.y);
+    for(let i=0;i<g.length;i+=6){ const m=g.slice(i,i+6).sort((a,b)=>a.y-b.y); let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+      for(const s of m){ x0=Math.min(x0,s.x-8); x1=Math.max(x1,s.x+8); y0=Math.min(y0,s.y-20); y1=Math.max(y1,s.y); }
+      const w=Math.ceil((x1-x0)*K), h=Math.ceil((y1-y0)*K);
+      const cv=[0,1].map(ch=>{ const c=document.createElement('canvas'); c.width=w; c.height=h; const g2=c.getContext('2d'); g2.scale(K,K);
+        for(const s of m) g2.drawImage(spr[s.back?'back':'front'][s.v][ch], s.x-8-x0, s.y-20-y0, 16, 20); return c; });
+      out.push({x:x0,y:y0,w:w/K,h:h/K,cv,ph:m[0].ph,spd:m[0].spd,ymax:y1}); } }
+  out.sort((a,b)=>a.ymax-b.ymax); return out;
+}
 function drawCrowd(cx,cy,vw,vh){
-  const spr=crowdSprites(visAct()), hype=G.hype||0, t=G.time;
-  const thin=!FX();
-  for(let ci=0;ci<CROWD.length;ci++){ const s=CROWD[ci]; if(thin && ci%2) continue;
-    if(s.x<cx-20||s.x>cx+vw+20||s.y<cy-10||s.y>cy+vh+30) continue;
-    const jump=Math.abs(Math.sin(t*s.spd+s.ph))*(0.5+hype*6);
-    const cheer=hype>0.3 && Math.sin(t*2.3+s.ph*2)>0.65-hype;
-    ctx.drawImage(spr[s.back?'back':'front'][s.v][cheer?1:0],s.x-8,s.y-20-jump,16,20);
+  const spr=crowdSprites(visAct()), hype=G.hype||0, t=G.time, thin=!FX(), key=visAct()+'|'+thin;
+  if(!CROWD_CH||CROWD_CH.key!==key) CROWD_CH={key,list:buildCrowdChunks(spr,thin)};
+  for(const c of CROWD_CH.list){
+    if(c.x+c.w<cx-20||c.x>cx+vw+20||c.y+c.h<cy-30||c.y>cy+vh+30) continue;
+    const jump=Math.abs(Math.sin(t*c.spd+c.ph))*(0.5+hype*6);
+    const cheer=hype>0.3 && Math.sin(t*2.3+c.ph*2)>0.65-hype;
+    ctx.drawImage(c.cv[cheer?1:0],c.x,c.y-jump,c.w,c.h);
   }
 }
 function crowdThrow(n,heart){

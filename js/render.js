@@ -156,7 +156,7 @@ function hShade(c,a){ return shade(c,a); }
 function drawHeroFigure(cid,K,o){
   const c=CHARS[cid], fx=Math.cos(o.face), fy=Math.sin(o.face), up=fy<-0.35, side=fx;
   const st=o.moving?Math.sin(o.anim):0, sway=o.moving?Math.sin(o.anim*0.5)*1.6:Math.sin(o.t*1.5)*0.5;
-  const OL=()=>{ ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=4; }, NO=()=>{ ctx.shadowBlur=0; };
+  const OL=FX()?()=>{ ctx.shadowColor='rgba(0,0,0,0.8)'; ctx.shadowBlur=4; }:()=>{}, NO=()=>{ ctx.shadowBlur=0; };   // Umriss per Unschärfe nur bei hoher Grafik
   ctx.lineJoin='round'; ctx.lineCap='round';
 
   // ---------- Waffe ----------
