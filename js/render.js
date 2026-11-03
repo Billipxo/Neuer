@@ -11,6 +11,7 @@ function draw(){
   let cx = vw>=AW+2*m ? AW/2-vw/2 : clamp(P.x-vw/2,-m,AW+m-vw);
   let cy = vh>=AH+2*m ? AH/2-vh/2 : clamp(P.y-vh/2,-m,AH+m-vh);
   if(CAM.k>0){ cx+=(CAM.x-vw/2-cx)*CAM.k; cy+=(CAM.y-vh/2-cy)*CAM.k; }
+  CAM.cx=cx; CAM.cy=cy;
   if(G.shake>0 && save.settings.shake){ const k=0.4*(save.settings.shakeAmt??1); cx+=(Math.random()*2-1)*G.shake*k; cy+=(Math.random()*2-1)*G.shake*k; }
   ctx.save(); ctx.scale(VS,VS); ctx.translate(-cx,-cy);
   if(!floorCanvas) buildFloor();
@@ -35,11 +36,12 @@ function draw(){
     drawGlow(c.x,c.y,12,'#ffcc44',0.4); ctx.fillStyle='#e6b450'; ctx.beginPath(); ctx.ellipse(c.x,c.y+bob,4.5*Math.abs(Math.cos(G.time*4+c.x))+1.5,4.5,0,0,TAU); ctx.fill(); ctx.fillStyle='#fff3b0'; ctx.fillRect(c.x-1,c.y+bob-2,2,2); }
   // shadows + entities sorted
   // Zielvorschau beim Wischen vom Fähigkeitsknopf
-  if(P.aim && !G.over){ const A=P.aim, ready=(P.maxCharges||1)>1?P.charges>0:P.skillT<=0, col=ready?'rgba(140,220,255,':'rgba(255,140,120,';
-    const rng={alchi:[90,340],berserk:[80,360],magier:[60,260],nekro:[40,240]}[P.cid];
-    ctx.save(); ctx.lineWidth=2.5; ctx.setLineDash([8,6]);
+  const hov=!P.aim && INPUT_MODE==='pc' && input.mOn && !G.over && !G.cine && AIM_SKILLS[P.cid] && skillReady() ? mouseAim() : null;
+  if((P.aim||hov) && !G.over){ const A=P.aim||hov, ready=skillReady(), col=ready?'rgba(140,220,255,':'rgba(255,140,120,';
+    const rng=AIM_RANGE[P.cid];
+    ctx.save(); ctx.lineWidth=2.5; ctx.setLineDash([8,6]); if(hov) ctx.globalAlpha=0.5;
     if(rng){ const T=aimPoint(P,A,rng[0],rng[1]), R={alchi:140*Math.sqrt(P.area),berserk:95*Math.sqrt(P.area),magier:136*P.area,nekro:60}[P.cid];
-      ctx.strokeStyle=col+'0.75)'; ctx.beginPath(); ctx.moveTo(P.x,P.y); ctx.lineTo(T.x,T.y); ctx.stroke(); ctx.setLineDash([]);
+      if(!hov){ ctx.strokeStyle=col+'0.75)'; ctx.beginPath(); ctx.moveTo(P.x,P.y); ctx.lineTo(T.x,T.y); ctx.stroke(); } ctx.setLineDash([]);
       ctx.fillStyle=col+'0.15)'; ctx.beginPath(); ctx.ellipse(T.x,T.y,R,R*0.62,0,0,TAU); ctx.fill(); ctx.strokeStyle=col+'0.9)'; ctx.stroke(); }
     else { ctx.setLineDash([]); ctx.fillStyle=col+'0.15)'; ctx.beginPath(); ctx.moveTo(P.x,P.y); ctx.arc(P.x,P.y,300,A.a-0.55,A.a+0.55); ctx.closePath(); ctx.fill(); ctx.strokeStyle=col+'0.8)'; ctx.stroke(); }
     ctx.restore(); }
@@ -89,7 +91,7 @@ function draw(){
   if(P.hp<P.maxHp*0.25 && !G.over){ ctx.fillStyle=`rgba(160,0,0,${0.12+Math.sin(G.time*6)*0.06})`; ctx.fillRect(0,0,W,H); }
   drawCine();
   // joystick
-  if(input.id===null && save.settings.joyFixed){ const jb=joyBase(); ctx.globalAlpha=0.28; ctx.strokeStyle='#efe2c4'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(jb.x,jb.y,JR,0,TAU); ctx.stroke(); ctx.fillStyle='#e6b450'; ctx.beginPath(); ctx.arc(jb.x,jb.y,20,0,TAU); ctx.fill(); ctx.globalAlpha=1; }
+  if(input.id===null && save.settings.joyFixed && INPUT_MODE==='touch'){ const jb=joyBase(); ctx.globalAlpha=0.28; ctx.strokeStyle='#efe2c4'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(jb.x,jb.y,JR,0,TAU); ctx.stroke(); ctx.fillStyle='#e6b450'; ctx.beginPath(); ctx.arc(jb.x,jb.y,20,0,TAU); ctx.fill(); ctx.globalAlpha=1; }
   if(input.id!==null){ ctx.globalAlpha=0.5; ctx.strokeStyle='#efe2c4'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(input.ox,input.oy,JR,0,TAU); ctx.stroke();
     ctx.fillStyle='rgba(239,226,196,0.12)'; ctx.fill(); ctx.globalAlpha=0.85; ctx.fillStyle='#e6b450'; ctx.beginPath(); ctx.arc(input.ox+input.jx*JR,input.oy+input.jy*JR,24,0,TAU); ctx.fill(); ctx.globalAlpha=1; }
   if(G.tut) drawTut();
@@ -817,6 +819,7 @@ function loop(now){
   requestAnimationFrame(loop);
   const cap=save.settings.fpsCap||60; if(now-last < 1000/cap-2 && now>=last) return;   // Bildrate begrenzen (Akku, 120-Hz-Bildschirme)
   const raw=(now-last)/1000, dt=clamp(raw,0,0.05); last=now;
+  pollPad(dt);
   if(state==='combat' && G && raw>0 && raw<0.5 && !document.hidden){ PERF.acc+=raw; PERF.n++;
     if(PERF.acc>=1){ PERF.fps=Math.round(PERF.n/PERF.acc); PERF.acc=0; PERF.n=0;
       PERF.low = PERF.fps<cap*0.7 ? PERF.low+1 : 0;
@@ -827,7 +830,7 @@ function loop(now){
   else if(state==='paused' && G){ draw(); }
   else if(!G) drawMenuBg(dt);
 }
-applyBodyClasses();
+applyBodyClasses(); applyInputMode();
 resize(); showMenu(); requestAnimationFrame(loop);
 try{ if(new URLSearchParams(location.search).get('tag')) setTimeout(showDaily,0); }catch(e){}
 if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }

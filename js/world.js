@@ -8,10 +8,11 @@ const AW=760, AH=1000, WALL=44;
 function resize(){
   DPR=Math.min(window.devicePixelRatio||1,FX()?2:1.25); W=innerWidth; H=innerHeight;
   cvs.width=Math.round(W*DPR); cvs.height=Math.round(H*DPR);
-  SCALE = (W>H && H<560) ? Math.max(0.6,Math.min(H/360,W/720)) : Math.max(0.6, Math.min(W, H*0.78)/440);
+  // Hochformat (Handy): ~440 Einheiten quer; Querformat klein (Handy quer): eng; Querformat groß (PC, Tablet): ~820 Einheiten hoch für mehr Überblick
+  SCALE = W>H ? (H<560 ? Math.max(0.6,Math.min(H/360,W/720)) : Math.max(0.6,Math.min(H/820,W/1100))) : Math.max(0.6, Math.min(W, H*0.78)/440);
   vignette=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.35,W/2,H/2,Math.max(W,H)*0.75);
   vignette.addColorStop(0,'rgba(0,0,0,0)'); vignette.addColorStop(1,'rgba(0,0,0,0.6)');
-  floorCanvas=null;
+  if(!G) floorCanvas=null;   // im Kampf (Fenstergröße, Vollbild) bleibt der Boden samt Spuren erhalten; der nächste Raum baut ihn neu
 }
 addEventListener('resize',resize);
 

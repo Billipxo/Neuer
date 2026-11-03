@@ -5,7 +5,7 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 
 ## Befehle
 
-- `npm test` – 18 Headless-Tests (inkl. `render`, der wirklich zeichnet) (`tests/run-all.js`), einzeln: `node tests/run-all.js bosses saves`, Details mit `VERBOSE=1`.
+- `npm test` – 19 Headless-Tests (inkl. `render`, der wirklich zeichnet, und `pc` mit Maus, Tastatur und Controller-Attrappe im Querformat) (`tests/run-all.js`), einzeln: `node tests/run-all.js bosses saves`, Details mit `VERBOSE=1`.
 - `npm run balance` (`node tools/balance.js [Läufe] [Held …]`) – der Bot spielt komplette Läufe ohne Gottmodus: Siegquote, Todesursachen, Hänger je Held.
 - `node tools/chaos.js [Läufe] [Sekunden]` – Chaos-Bot: komplette Läufe mit Zeichnen, zufälligen Menüknöpfen, Pausen und Einstellungen; meldet jeden Laufzeitfehler mit Stelle. Nach größeren Änderungen laufen lassen.
   Playwright ist in der Cloud-Umgebung vorinstalliert, in CI per Workflow.
@@ -19,7 +19,7 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 | `js/data.js` | `ACTS` (4 Akte, `ACT_N`), `CHARS`, `ENEMIES`, `BOSSES`, `BOSS_LINES`/`BOSS_AGAIN`, `BEAST`, `AFFIXES`, `UPGRADES`/`UPG`, `SYN`, `EVOS`, `RELICS`/`REL`, `THEMES`, `CHAMP_NAMES`, `ROOM_CHAL`, `PETS`, `LORE`, `HERO_LINES`, `META`, `NODE`, `DAILY_MODS`/`EXTRA_MODS`/`runMod()`, `TIERS`, `CHALLENGES`, `weeklyInfo` |
 | `js/core.js` | Speicherstand (Slots, `migrate`, `persist`), Heldenstufen, Grafikstufe `FX()`, RNG (`rand`, `pick`, `seeded`), Soundeffekte, Musik (`SONGS2`, `MEL`, `playStep`) |
 | `js/world.js` | Canvas/`resize`, Boden (`buildFloor`, `DECOR`), Tribünen und Zuschauer, Wetter, Ambiente, Licht (`renderLights`) |
-| `js/input.js` | Joystick/Tastatur, Spielzustand, `newPlayer`, `startRun`, `nextAct`, `roomKey` |
+| `js/input.js` | Steuerung: Touch-Joystick, Maus und Tastatur, Controller (`pollPad`), Menüs per Tasten (`menuKey`, `navMove`), Vollbild; Spielzustand, `newPlayer`, `startRun`, `nextAct`, `roomKey` |
 | `js/ui.js` | Alle Menüs (`render(html, actions)`), Karte (`genMap`, `showMap`, Belohnungsvorschau `rw`), Erfolge (`ACH`, `checkAch`), Skins, Einstellungen, Kodex, Spielstände/Sicherungscode, Händler, Lagerfeuer, Ereignisse, Belohnungen (`showReward`, Verbannen, `showEvo`), Fortsetzen (`resumeRun`) |
 | `js/meta.js` | Langzeitmotivation: Verdammnis-Stufen (`tierWon`, `showTiers`), Herausforderungen (`showChallenges`), Kopfgelder (`bountyList`, `checkBounties`), Tages-/Wochenprüfung mit Serie und Teilen (`showDaily`, `dailyRecord`, `shareText`), Arenameister (`arenaMasterLine`), Meisterschaft im Bestiarium (`masteryMul`) |
 | `js/combat.js` | Raum-Aufbau (`startCombat`, `genArena`, `buildWaves`), `update`, Gegner-KI (`updEnemy`), Bosse (`updBoss`), Schaden (`dealDamage`, `hurtPlayer`, `killEnemy`), Raumende, `endRun` |
@@ -48,7 +48,10 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 - **Raum-Herausforderungen:** `G.rc` (`ROOM_CHAL`), Fehlschlag in `hurtPlayer`/`useDash`/`useSkill`, Belohnung in `rcReward` beim Raumende.
 - **Schadensstatistik:** `dealDamage(..., {src:'…'})` zählt in `run.dmgBy`; neue Schadensquellen bekommen ein `src` und einen Eintrag in `DMG_SRC`.
 - **Begleiter:** `run.pet` (nicht in Tages-/Wochenprüfung), Logik `updPet`, Zeichnung `drawPet`.
-- **Zielen:** Fähigkeiten in `AIM_SKILLS` bekommen bei Wischgeste `useSkill(aim)` mit `{a,k}`; Vorschau in `draw`.
+- **Zielen:** Fähigkeiten in `AIM_SKILLS` bekommen bei Wischgeste, Mausklick (`mouseAim`) oder rechtem Stick `useSkill(aim)` mit `{a,k}`; Weiten in `AIM_RANGE`; Vorschau in `draw`.
+- **Eingabearten:** `INPUT_MODE` ist `touch`, `pc` oder `pad` und folgt der zuletzt benutzten Eingabe (`setInputMode`); `body.pc`/`body.pad` blenden Tastenhinweise ein.
+  PC: WASD/Pfeile, Linksklick/Q Fähigkeit auf den Mauszeiger, Leertaste/Umschalt/Rechtsklick Ausweichen, Esc Pause, F Vollbild. Menüs: Pfeile/Enter, Ziffern wählen Karten (`NAV_GROUPS`), Esc zurück.
+  Controller (Standardbelegung): linker Stick, A ausweichen, X Fähigkeit, rechter Stick zielt, Start Pause; Menüs mit Stick, A, B. Querformat ab 560 px Höhe zeigt mehr Arena (`resize`).
 - **Akt hinzufügen:** `ACTS`-Eintrag, Deko (`decorTower` als Vorbild), `WEATHER_POOL`, `crowdLook`, Kleintier in `spawnCritter`, Musik `calmN`/`fightN`, `LORE`.
 - **Fortsetzen:** `run.room` (laufender Kampfraum) und `run.pend` (offene Belohnung) werden beim Verlassen gespeichert (`saveNow`) und von `resumeRun` wiederhergestellt.
 

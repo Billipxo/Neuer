@@ -94,7 +94,7 @@ const tests = {
   async menus(pg){ // Jeder Bildschirm lässt sich fehlerfrei öffnen (auch für ganz neue Spielstände)
     return pg.evaluate(()=>{ const bad=[]; const tryS=(n,f)=>{ try{ f(); if(!ui.innerHTML.length) bad.push(n+': leer'); }catch(e){ bad.push(n+': '+e.message); } };
       const keep=save; save=defSave(); tryS('menu-neu',showMenu); tryS('chars-neu',showChars); save=keep; save.runs=Math.max(1,save.runs);
-      for(const [n,f] of Object.entries({showMenu,showChars,showDaily,showForge,showAch,showBeast,showScores,showSettings,showSlots,showHelp,showChallenges})) tryS(n,f);
+      for(const [n,f] of Object.entries({showMenu,showChars,showDaily,showForge,showAch,showBeast,showScores,showSettings,showSlots,showHelp,showChallenges,showControls})) tryS(n,f);
       tryS('codex',()=>showCodex(showMenu)); tryS('codex-evo',()=>showCodex(showMenu,'evo')); tryS('tiers',()=>showTiers(showMenu));
       save.tutDone=true; startRun('alchi'); tryS('map',showMap); tryS('runmenu',showRunMenu); tryS('runstats',showRunStats); tryS('rest',showRest); tryS('shop',()=>showShop()); tryS('evo',()=>showEvo(showMap)); tryS('bounty',()=>showBounty('gold',showMap)); tryS('event',showEvent); tryS('treasure',showTreasure); tryS('relicpick',()=>showRelicPick(showMap)); tryS('codex-rel',()=>showCodex(showMenu,'rel')); tryS('codex-lore',()=>showCodex(showMenu,'lore'));
       return {ok:!bad.length, bad}; });
@@ -159,6 +159,30 @@ const tests = {
       for(let g=0; g<5 && state!=='combat' && !ui.querySelector('.mapbox'); g++){ const a=Object.keys(actions); if(a.includes('pick')) actions.pick(ui.querySelector('[data-a=pick]').dataset.v); else if(a.includes('evo')) actions.evo(ui.querySelector('[data-a=evo]').dataset.v); else break; }
       out.notWonAfter3=!run.won && run.act===4;
       return {ok:Object.values(out).every(Boolean), out}; });
+  },
+  async pc(pg){ // PC: Kamera im Querformat, Maus zielt, Rechtsklick/Leertaste weichen aus, Q wirkt, Esc pausiert, Zahlentasten wählen, Controller
+    const ctx=await pg.context().browser().newContext({viewport:{width:1600,height:900}}), p=await ctx.newPage(), errs=[]; p.on('pageerror',e=>errs.push(e.message));
+    await p.goto(URL); await p.waitForTimeout(300); const out={};
+    out.scale=await p.evaluate(()=>Math.abs(SCALE-Math.min(900/820,1600/1100))<0.01);
+    await p.evaluate(()=>{ save.tutDone=true; startRun('magier'); run.posId=run.map.rows[1][0].id; startCombat('fight',[[{kind:'slime'}]]); for(let i=0;i<5;i++) update(1/30); draw(); });
+    await p.mouse.move(1000,390); await p.mouse.down(); await p.mouse.up();
+    out.click=await p.evaluate(()=>{ draw(); const n=G.fx.find(f=>f.type==='nova'), w=mouseWorld(); return INPUT_MODE==='pc' && P.skillT>0 && !!n && Math.hypot(n.x-w.x,n.y-w.y)<2; });
+    await p.evaluate(()=>{ P.dashCd=0; P.dashT=0; }); await p.mouse.click(500,450,{button:'right'});
+    out.rclick=await p.evaluate(()=>P.dashT>0 && Math.cos(P.dashA)<0);
+    await p.evaluate(()=>{ P.dashCd=0; P.dashT=0; P.skillT=0; for(let i=0;i<10;i++) update(1/30); });
+    await p.keyboard.press(' '); out.space=await p.evaluate(()=>P.dashT>0||P.dashCd>0);
+    await p.keyboard.press('q'); out.q=await p.evaluate(()=>P.skillT>0);
+    await p.keyboard.press('Escape'); out.pause=await p.evaluate(()=>state==='paused'); await p.keyboard.press('Escape'); out.resume=await p.evaluate(()=>state==='combat');
+    await p.evaluate(()=>{ for(let i=0;i<400 && state==='combat';i++){ for(const e of G.enemies) e.hp=0.1; if(G.enemies[0]) dealDamage(G.enemies[0],99,{}); update(1/30); } });
+    out.keys=await p.evaluate(()=>[...ui.querySelectorAll('[data-a=pick]')].map(b=>b.dataset.key).join(',')==='1,2,3');
+    await p.keyboard.press('2'); out.picked=await p.evaluate(()=>!!ui.querySelector('.mapbox'));
+    await p.keyboard.press('ArrowDown'); out.nav=await p.evaluate(()=>!!ui.querySelector('.navf[data-a=go]'));
+    await p.evaluate(()=>{ window.__pad={axes:[0,0,0,0],buttons:Array.from({length:17},()=>({pressed:false})),connected:true}; navigator.getGamepads=()=>[__pad]; startCombat('fight',[[{kind:'slime'}]]); for(let i=0;i<5;i++) update(1/30); });
+    out.pad=await p.evaluate(()=>{ const x0=P.x; __pad.axes[0]=1; for(let i=0;i<10;i++){ pollPad(1/30); update(1/30); } __pad.axes[0]=0; pollPad(1/30); const moved=P.x-x0>20;
+      P.dashCd=0; P.dashT=0; __pad.buttons[0].pressed=true; pollPad(1/30); __pad.buttons[0].pressed=false; pollPad(1/30); const dash=P.dashT>0;
+      P.skillT=0; __pad.axes[2]=-1; pollPad(1/30); __pad.buttons[2].pressed=true; pollPad(1/30); __pad.buttons[2].pressed=false; __pad.axes[2]=0; pollPad(1/30); const n=G.fx.filter(f=>f.type==='nova').pop();
+      return INPUT_MODE==='pad' && moved && dash && P.skillT>0 && !!n && n.x<P.x; });
+    await ctx.close(); return {ok:Object.values(out).every(Boolean)&&!errs.length, out, errs};
   },
   async render(pg){ // Zeichnen: jeder Akt, jeder Boss (Auftritt, Wutphase, Tod), jedes Wetter, Begleiter, Relikte, Champions, Zielvorschau – ohne Fehler
     return pg.evaluate(()=>{ const out={}; save.tutDone=true; save.settings.gfx='high'; resize(); save.pets={raven:1,cat:1,wisp:1,wolf:1};

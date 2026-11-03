@@ -365,8 +365,8 @@ function useDash(){
   if(P.dashT>0 || (fe ? (P.dashChg||0)<=0 : P.dashCd>0)){ if(P.dashCd<0.25||P.dashT>0) P.dashBuf=0.25; return; }   // kurz vor Ablauf gedrückt: wird nachgeholt
   P.dashBuf=0; if(fe){ P.dashChg--; }
   if(G.rc && G.rc.id==='nodash' && !G.rc.failed){ G.rc.failed=true; rcFail(); }
-  const [mx,my]=readMove();
-  P.dashA = Math.hypot(mx,my)>0.2 ? Math.atan2(my,mx) : P.face;
+  const [mx,my]=readMove(), mw=INPUT_MODE==='pc'&&input.mOn?mouseWorld():null;
+  P.dashA = Math.hypot(mx,my)>0.2 ? Math.atan2(my,mx) : mw ? Math.atan2(mw.y-P.y,mw.x-P.x) : P.face;
   G.tutDash=true; if(P.mirror) G.decoy={x:P.x,y:P.y,t:2,face:P.face}; P.dashT=0.13; P.dashI=0.24; if(!fe || P.dashCd<=0) P.dashCd=1.0*P.dashCdMul; P.dashHit=[]; P.perfUsed=false;
   if(hasSyn('phantom')) P.nextCrit=true;
   sfx('dash'); burst(P.x,P.y+8,8,'#cfe3ff',90); G.fx.push({type:'dashline',x:P.x,y:P.y,a:P.dashA,t:0,life:0.3,color:CHARS[P.cid].color});
@@ -406,8 +406,14 @@ function updAllies(dt){
   for(const a of G.allies) if(a.life<=0) burst(a.x,a.y,10,'#e8e2d0',100);
   G.allies=G.allies.filter(a=>a.life>0);
 }
-const TUT_MSG=['Ziehe irgendwo auf dem Bildschirm, um dich zu bewegen.','Dein Held greift automatisch an. Besiege die Schleime!',
-  'Tippe 💨 Ausweichen: ein schneller Hechtsprung, bei dem du kurz unverwundbar bist.','Tippe jetzt deine Fähigkeit unten rechts für einen Spezialangriff.','Sehr gut! Besiege die restlichen Gegner.'];
+const TUT_MSG={
+  touch:['Ziehe irgendwo auf dem Bildschirm, um dich zu bewegen.','Dein Held greift automatisch an. Besiege die Schleime!',
+    'Tippe 💨 Ausweichen: ein schneller Hechtsprung, bei dem du kurz unverwundbar bist.','Tippe jetzt deine Fähigkeit unten rechts für einen Spezialangriff.','Sehr gut! Besiege die restlichen Gegner.'],
+  pc:['Bewege dich mit W A S D oder den Pfeiltasten.','Dein Held greift automatisch an. Besiege die Schleime!',
+    'Drücke die Leertaste zum Ausweichen: ein schneller Hechtsprung, bei dem du kurz unverwundbar bist.','Klicke jetzt mit der linken Maustaste (oder drücke Q) für deinen Spezialangriff.','Sehr gut! Besiege die restlichen Gegner.'],
+  pad:['Bewege dich mit dem linken Stick.','Dein Held greift automatisch an. Besiege die Schleime!',
+    'Drücke A zum Ausweichen: ein schneller Hechtsprung, bei dem du kurz unverwundbar bist.','Drücke X für deinen Spezialangriff.','Sehr gut! Besiege die restlichen Gegner.'] };
+const TUT_AIM={touch:' Oder ziehe vom Knopf weg, um zu zielen.',pc:' Sie zielt auf den Mauszeiger.',pad:' Mit dem rechten Stick zielst du.'};
 function updTut(dt){
   const T=G.tut; T.t+=dt;
   if(T.step===0 && G.moved>140){ T.step=1; T.t=0; }
@@ -419,7 +425,7 @@ function updTut(dt){
 function wrapLines(text,maxW){ const words=text.split(' '), lines=[]; let cur=''; for(const w of words){ const t=cur?cur+' '+w:w; if(ctx.measureText(t).width>maxW && cur){ lines.push(cur); cur=w; } else cur=t; } if(cur) lines.push(cur); return lines; }
 function drawTut(){
   const T=G.tut; if(!T||(T.step===4&&T.t>3.5)) return;
-  ctx.font='700 16px "Alegreya Sans", sans-serif'; const maxW=Math.min(W-48,380), lines=wrapLines(TUT_MSG[T.step]+(T.step===3&&AIM_SKILLS[P.cid]?' Oder ziehe vom Knopf weg, um zu zielen.':''),maxW-28);
+  ctx.font='700 16px "Alegreya Sans", sans-serif'; const maxW=Math.min(W-48,380), lines=wrapLines(TUT_MSG[INPUT_MODE][T.step]+(T.step===3&&AIM_SKILLS[P.cid]?TUT_AIM[INPUT_MODE]:''),maxW-28);
   const h=lines.length*22+22, y=96, a=Math.min(1,T.t*3);
   ctx.globalAlpha=a; ctx.fillStyle='rgba(18,14,22,0.88)'; ctx.strokeStyle='#e6b450'; ctx.lineWidth=2;
   ctx.beginPath(); if(ctx.roundRect) ctx.roundRect(W/2-maxW/2,y,maxW,h,10); else ctx.rect(W/2-maxW/2,y,maxW,h); ctx.fill(); ctx.stroke();
@@ -453,6 +459,7 @@ function drawIndicators(cx,cy){
 function hitstop(t){ if(!G) return; G.stop=Math.max(G.stop,t); }
 // Fähigkeit auslösen; aim = {a: Winkel, k: 0..1 Weite} beim Zielen per Wischgeste
 const AIM_SKILLS={alchi:1,berserk:1,jaegerin:1,magier:1,nekro:1};
+const AIM_RANGE={alchi:[90,340],berserk:[80,360],magier:[60,260],nekro:[40,240]};   // Mindest- und Höchstweite gezielter Fähigkeiten (Jägerin: nur Richtung)
 const aimPoint=(p,aim,min,max)=>({x:clamp(p.x+Math.cos(aim.a)*(min+(max-min)*aim.k),30,AW-30),y:clamp(p.y+Math.sin(aim.a)*(min+(max-min)*aim.k),30,AH-30)});
 function useSkill(aim){
   if(state!=='combat'||!P||G.over||G.cine||(runMod()||{}).noSkill) return;
@@ -463,16 +470,16 @@ function useSkill(aim){
   sfx('skill'); buzz(20); G.tutSkill=true;
   if(G.rc && G.rc.id==='noskill' && !G.rc.failed){ G.rc.failed=true; rcFail(); }
   if(p.cid==='krieger'){ p.spin=1.5; p.spinTick=0; G.fx.push({type:'shock',x:p.x,y:p.y,r:90,t:0,life:0.35,color:'#dbe8ff'}); burst(p.x,p.y+6,16,'#e8f0ff',220); }
-  else if(p.cid==='nekro'){ const C=aim?aimPoint(p,aim,40,240):p; for(let i=0;i<4;i++){ const a=i/4*TAU; raiseAlly(C.x+Math.cos(a)*34,C.y+Math.sin(a)*34,10); } G.fx.push({type:'summon',x:C.x,y:C.y,r:62,t:0,life:1.0}); G.fx.push({type:'ring',x:C.x,y:C.y,r:70,t:0,life:0.4,color:'#5affd0',fill:true}); }
+  else if(p.cid==='nekro'){ const C=aim?aimPoint(p,aim,...AIM_RANGE.nekro):p; for(let i=0;i<4;i++){ const a=i/4*TAU; raiseAlly(C.x+Math.cos(a)*34,C.y+Math.sin(a)*34,10); } G.fx.push({type:'summon',x:C.x,y:C.y,r:62,t:0,life:1.0}); G.fx.push({type:'ring',x:C.x,y:C.y,r:70,t:0,life:0.4,color:'#5affd0',fill:true}); }
   else if(p.cid==='paladin'){ p.ward=3; const h=Math.round(p.maxHp*0.10); p.hp=Math.min(p.maxHp,p.hp+h); G.texts.push({x:p.x,y:p.y-30,s:'+'+h,c:'#ffe08a',big:true,t:0});
     G.fx.push({type:'shock',x:p.x,y:p.y,r:110,t:0,life:0.4,color:'#ffe08a'}); burst(p.x,p.y,24,'#ffe08a',240); }
-  else if(p.cid==='alchi'){ const t=aim?null:nearestEnemy(p,420), A=aim?aimPoint(p,aim,90,340):null, tx=A?A.x:t?t.x:clamp(p.x+Math.cos(p.face)*160,40,AW-40), ty=A?A.y:t?t.y:clamp(p.y+Math.sin(p.face)*160,40,AH-40);
+  else if(p.cid==='alchi'){ const t=aim?null:nearestEnemy(p,420), A=aim?aimPoint(p,aim,...AIM_RANGE.alchi):null, tx=A?A.x:t?t.x:clamp(p.x+Math.cos(p.face)*160,40,AW-40), ty=A?A.y:t?t.y:clamp(p.y+Math.sin(p.face)*160,40,AH-40);
     p.vortex={x:tx,y:ty,x0:p.x,y0:p.y,t:-0.45,T:2.4,R:140*Math.sqrt(p.area),tick:0}; }
   else if(p.cid==='berserk'){ if(!p.frenzyLong) p.hp=Math.max(1,p.hp-p.maxHp*0.05);
-    let t=aim?null:nearestEnemy(p,380), tx, ty; if(aim){ const A=aimPoint(p,aim,80,360); tx=A.x; ty=A.y; t=nearestEnemy(A,60); if(t){ tx=t.x; ty=t.y; } } else { tx=t?t.x:p.x+Math.cos(p.face)*150; ty=t?t.y:p.y+Math.sin(p.face)*150; }
+    let t=aim?null:nearestEnemy(p,380), tx, ty; if(aim){ const A=aimPoint(p,aim,...AIM_RANGE.berserk); tx=A.x; ty=A.y; t=nearestEnemy(A,60); if(t){ tx=t.x; ty=t.y; } } else { tx=t?t.x:p.x+Math.cos(p.face)*150; ty=t?t.y:p.y+Math.sin(p.face)*150; }
     if(t && t.r>18){ const la=Math.atan2(ty-p.y,tx-p.x), off=t.r+p.r*0.9; tx-=Math.cos(la)*off; ty-=Math.sin(la)*off; }   // vor großen Gegnern landen, nicht in ihnen
     p.leap={x0:p.x,y0:p.y,x1:clamp(tx,p.r,AW-p.r),y1:clamp(ty,p.r,AH-p.r),t:0,T:0.38}; burst(p.x,p.y+10,10,'#8a7a6a',140); }
-  else if(p.cid==='magier'){ const R=170*p.area*(aim?0.8:1), C=aim?aimPoint(p,aim,60,260):p;
+  else if(p.cid==='magier'){ const R=170*p.area*(aim?0.8:1), C=aim?aimPoint(p,aim,...AIM_RANGE.magier):p;
     for(const e of G.enemies){ if(Math.hypot(e.x-C.x,e.y-C.y)<R+e.r){ dealDamage(e,p.dmg*2.2,{src:'skill',from:C,kb:120}); e.freeze=e.boss?0.7:2.4; } }
     G.fx.push({type:'nova',x:C.x,y:C.y,r:R,t:0,life:1.1,seed:Math.random()*TAU}); G.fx.push({type:'ring',x:C.x,y:C.y,r:R,t:0,life:0.45,color:'#9fe6ff',fill:true}); burst(C.x,C.y,40,'#bdf2ff',320); G.shake+=5;
   } else { const n=24;
@@ -1090,6 +1097,7 @@ function showPause(){
     ${statsHtml(p)}${evoHtml()}${synHtml()}
     ${relicBar()}<div class="relics" style="justify-content:center">${relicsHtml()}</div>
     <button class="btn primary" data-a="resume">Weiterkämpfen</button><button class="btn" data-a="opts">⚙️ Einstellungen</button><button class="btn" data-a="quit">Lauf aufgeben</button></div>`;
+  navAfterRender();
 }
 
 let bannerT=null;

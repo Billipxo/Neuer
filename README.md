@@ -60,6 +60,9 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **Verdammnis-Stufen 1–10** je Held, **11 Herausforderungen**, **Kopfgelder**, **Tages- und Wochenprüfung** mit Serie,
   Kalender und Teilen-Funktion, ein **Arenameister**, der deine Läufe kommentiert, Meisterschaft im Bestiarium
 - **Spielgefühl:** perfektes Ausweichen, Eingabepuffer, Zielmarkierung, Warnblitz vor Einschlägen, Musik, die mit dem Kampf anschwillt
+- **Am PC spielbar:** W A S D bewegen, Linksklick oder Q für die Fähigkeit (zielt auf den Mauszeiger), Leertaste oder Rechtsklick zum Ausweichen,
+  Esc Pause, F Vollbild, Zifferntasten wählen Belohnungen und Wege; Controller (Xbox/PlayStation) werden automatisch erkannt;
+  auf großen Querformat-Bildschirmen zeigt die Kamera fast die ganze Arena
 - **Barrierefreiheit:** Hilfemodus, Tempo 0,8×, Bildschirmwackeln in Stufen, Blitze dämpfen, große Schrift und Knöpfe,
   Farbenblind-Modus, Linkshänder-Modus, Akkusparmodus mit 30 Bildern pro Sekunde
 - Läufe überstehen das Schließen der App: der laufende Raum startet beim Fortsetzen neu

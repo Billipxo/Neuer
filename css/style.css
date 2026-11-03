@@ -243,3 +243,12 @@ body.bigui #hud .bar, body.bigui #hpbar{transform-origin:left top}
 #hud.cine .hudtop,#hud.cine #bossBar,#hud.cine #dashBtn,#hud.cine #skillBtn,#hud.cine #combo{opacity:0}
 #banner.low{top:60%}
 @media (orientation:landscape) and (max-height:560px){#banner.low{top:58%}}
+/* PC (Maus und Tastatur) und Controller: Tastenhinweise, Fadenkreuz, Auswahlrahmen in Menüs */
+#hud .key{display:none;position:absolute;top:-12px;left:50%;transform:translateX(-50%);padding:1px 7px;border-radius:6px;background:#1a1320ee;border:1px solid var(--gold);color:var(--gold);font:800 11px/16px var(--f-display);white-space:nowrap;pointer-events:none}
+body.pc #hud .key,body.pad #hud .key{display:block}
+body.pc #game{cursor:crosshair}
+.navf{outline:3px solid var(--gold)!important;outline-offset:3px;box-shadow:0 0 18px #e6b45088!important}
+body.pc [data-key]::after,body.pad [data-key]::after{content:attr(data-key);position:absolute;top:-8px;left:-8px;min-width:20px;height:20px;padding:0 4px;box-sizing:border-box;border-radius:10px;background:var(--gold);color:#1a1320;font:800 12px/20px var(--f-display);text-align:center;box-shadow:0 1px 4px #000a;pointer-events:none;z-index:2}
+body.pc .card[data-key],body.pad .card[data-key],body.pc .btn[data-key],body.pad .btn[data-key]{position:relative}
+.keys{display:grid;grid-template-columns:minmax(0,40%) 1fr;gap:6px 12px;align-items:center;font-size:15px}
+.keys kbd{display:inline-block;min-width:22px;padding:2px 7px;border-radius:5px;border:1px solid var(--iron);border-bottom-width:3px;background:#1a1320;color:var(--parch);font:700 13px/18px var(--f-body,sans-serif);text-align:center;margin:1px 2px}

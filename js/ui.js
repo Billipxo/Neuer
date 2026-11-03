@@ -116,7 +116,7 @@ ui.addEventListener('click',e=>{
 });
 function render(html, acts, dim=false){
   actions=acts||{}; ui.innerHTML=html; if(html.includes('data-port')) fillPortraits(ui); ui.classList.remove('hidden'); ui.classList.toggle('dim',dim); ui.scrollTop=0;
-  $('hud').classList.add('hidden');
+  $('hud').classList.add('hidden'); navDecorate(); navAfterRender();
 }
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
@@ -199,12 +199,14 @@ function showSettings(){
       <button class="toggle on" data-a="gfx"><span><b>Grafik: ${{auto:'Automatisch',high:'Hoch',low:'Niedrig'}[st.gfx||'auto']}</b><br><span class="sub" style="font-size:13px">${{auto:'Volle Grafik, schaltet bei Ruckeln selbst herunter'+(AUTO_LOW?' (gerade reduziert)':''),high:'Licht, Nebel, Funken, Kleintiere und alle Zuschauer – immer',low:'Ohne Licht und Partikel, weniger Zuschauer, geringere Auflösung'}[st.gfx||'auto']}</span></span><span class="pill">Ändern</span></button>
       ${cy('fps','Bildrate',(st.fpsCap||60)===30?'30 (Akku sparen)':'60 (flüssig)','30 Bilder pro Sekunde schonen den Akku deutlich, 60 laufen flüssiger.')}
       ${tg('showFps','Bildrate anzeigen',st.showFps,'Zeigt die Bilder pro Sekunde im Kampf an')}
+      ${cy('fs','Vollbild',isFullscreen()?'An':'Aus','Das Spiel füllt den ganzen Bildschirm. Am PC auch mit der Taste F.')}
     </div>
     <div class="eyebrow" style="margin-top:8px">Steuerung</div>
     <div class="cards">
       ${tg('joyFixed','Fester Joystick',st.joyFixed,'Joystick an fester Stelle unten statt überall auf dem Bildschirm')}
       ${tg('lefty','Linkshänder-Modus',st.lefty,'Fähigkeit und Ausweichen links, Joystick rechts')}
       ${tg('vibrate','Vibration',st.vibrate,IOS?'Auf dem iPhone unterstützt der Browser leider keine Vibration':'Kurzes Vibrieren bei Treffern')}
+      <button class="toggle on" data-a="keys"><span><b>🎮 Tasten und Controller</b><br><span class="sub" style="font-size:13px">Steuerung mit Maus und Tastatur, Controller oder Touch</span></span><span class="pill">Ansehen</span></button>
     </div>
     <div class="eyebrow" style="margin-top:8px">Barrierefreiheit</div>
     <div class="cards">
@@ -220,6 +222,8 @@ function showSettings(){
     dmg:()=>{ if(st.dmgOff){ st.dmgOff=false; st.dmgNums=true; } else if(st.dmgNums){ st.dmgNums=false; } else { st.dmgOff=true; } persist(); showSettings(); },
     shake:()=>{ if(!st.shake){ st.shake=true; st.shakeAmt=0.5; } else if((st.shakeAmt??1)<1){ st.shakeAmt=1; } else { st.shake=false; } persist(); showSettings(); },
     fps:()=>{ st.fpsCap=(st.fpsCap||60)===60?30:60; PERF.low=0; persist(); showSettings(); },
+    fs:()=>{ toggleFullscreen(); setTimeout(()=>{ if(!ui.classList.contains('hidden') && ui.querySelector('[data-a=fs]')) showSettings(); },400); },
+    keys:()=>showControls(showSettings),
     gfx:()=>{ st.gfx={auto:'high',high:'low',low:'auto'}[st.gfx||'auto']; AUTO_LOW=false; PERF.low=0; persist(); resize(); showSettings(); },
     tg:k=>{ if(k==='sound') save.sound=!save.sound; else st[k]=!st[k]; if(k==='assist'&&st.assist&&run) run.assist=true; persist(); applyBodyClasses(); if(typeof musicUpdate==='function') musicUpdate(); showSettings(); },
     reset:()=>render(`<div class="wrap" style="justify-content:center"><h2 class="center">Spielstand wirklich löschen?</h2>
@@ -307,7 +311,7 @@ function showSlots(){
 
 function showHelp(){
   render(`<div class="wrap help"><h2>Anleitung</h2>
-  <p><b>Bewegen:</b> Lege den Daumen irgendwo auf den Bildschirm und ziehe. Dein Held greift den nächsten Gegner automatisch an.</p>
+  <p><b>Bewegen:</b> Lege den Daumen irgendwo auf den Bildschirm und ziehe (am PC: W A S D oder Pfeiltasten, am Controller: linker Stick). Dein Held greift den nächsten Gegner automatisch an.</p>
   <p><b>Fähigkeit:</b> Der große runde Knopf unten rechts löst die Spezialfähigkeit deines Helden aus. Danach lädt sie sich wieder auf. <b>Zielen:</b> Ziehe den Daumen vom Knopf weg, um Richtung und Weite zu wählen, und lass los (Magierin, Jägerin, Nekromantin, Alchemistin, Berserkerin). Kurz tippen zielt automatisch.</p>
   <p><b>Ausweichen:</b> Der kleine blaue Knopf 💨 lässt dich in Laufrichtung hechten. Währenddessen bist du kurz unverwundbar. Perfekt gegen Boss-Angriffe.</p>
   <p><b>Karte:</b> Jeder Akt ist eine Karte mit Abzweigungen. Wähle deinen Weg: ⚔️ Kampf, 💀 Elite (schwer, bessere Beute), ⚖️ Händler, 🔥 Lagerfeuer, 🎁 Schatz, ❓ Ereignis. Am Ende wartet der 👑 Boss.</p>
@@ -315,8 +319,42 @@ function showHelp(){
   <p><b>Arena:</b> Säulen blockieren Geschosse, also nutze sie als Deckung. Sprengfässer ✸ explodieren bei Treffern. Locke Gegner in Stachelfallen und Lava.</p>
   <p><b>Upgrades:</b> Nach jedem Kampf wählst du eine von drei Verbesserungen. Sie gelten bis zum Ende des Laufs.</p>
   <p><b>Seelen:</b> Besiegte Gegner hinterlassen Seelen 👻. Die behältst du auch nach dem Tod. Gib sie in der Schmiede aus oder schalte neue Helden frei.</p>
-  <p><b>Tastatur:</b> WASD bewegen, Leertaste Fähigkeit, Umschalt Ausweichen, Esc Pause.</p>
-  <button class="btn primary" data-a="back">Verstanden</button></div>`,{ back:showMenu });
+  <p><b>Am PC:</b> W A S D bewegen, Linksklick oder Q für die Fähigkeit (zielt auf den Mauszeiger), Leertaste oder Rechtsklick zum Ausweichen, Esc für Pause, F für Vollbild. Controller werden automatisch erkannt.</p>
+  <button class="btn" data-a="keys">🎮 Alle Tasten und Controller</button>
+  <button class="btn primary" data-a="back">Verstanden</button></div>`,{ back:showMenu, keys:()=>showControls(showHelp) });
+}
+
+/* Übersicht aller Steuerungsarten */
+function showControls(back){
+  const on=m=>INPUT_MODE===m?' <span class="pill" style="font-size:11px">gerade aktiv</span>':'';
+  render(`<div class="wrap help"><div class="eyebrow">Steuerung</div><h2>Tasten und Controller</h2>
+  <p class="sub">Das Spiel erkennt selbst, ob du mit dem Finger, mit Maus und Tastatur oder mit einem Controller spielst, und zeigt passende Hinweise.</p>
+  <div class="eyebrow" style="margin-top:6px">🖱️ Maus und Tastatur${on('pc')}</div>
+  <div class="keys">
+    <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> <kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd></span><span>Bewegen – dein Held greift von selbst an</span>
+    <span><kbd>Linksklick</kbd> <kbd>Q</kbd> <kbd>E</kbd></span><span>Fähigkeit – zielt auf den Mauszeiger</span>
+    <span><kbd>Leertaste</kbd> <kbd>Umschalt</kbd> <kbd>Rechtsklick</kbd></span><span>Ausweichen – in Laufrichtung, im Stand zum Mauszeiger</span>
+    <span><kbd>Esc</kbd> <kbd>P</kbd></span><span>Pause</span>
+    <span><kbd>F</kbd></span><span>Vollbild an oder aus</span>
+    <span><kbd>1</kbd> … <kbd>9</kbd></span><span>In Menüs: Belohnung, Ereignis oder Weg auf der Karte wählen</span>
+    <span><kbd>↑</kbd><kbd>↓</kbd> <kbd>Enter</kbd></span><span>In Menüs: auswählen und bestätigen, <kbd>Esc</kbd> zurück</span>
+  </div>
+  <div class="eyebrow" style="margin-top:10px">🎮 Controller${on('pad')}</div>
+  <div class="keys">
+    <span>Linker Stick, Steuerkreuz</span><span>Bewegen</span>
+    <span><kbd>A</kbd> <kbd>LB</kbd> <kbd>LT</kbd></span><span>Ausweichen</span>
+    <span><kbd>X</kbd> <kbd>Y</kbd> <kbd>RB</kbd> <kbd>RT</kbd></span><span>Fähigkeit</span>
+    <span>Rechter Stick</span><span>Fähigkeit zielen (Magierin, Jägerin, Nekromantin, Alchemistin, Berserkerin)</span>
+    <span><kbd>Start</kbd></span><span>Pause</span>
+    <span>In Menüs</span><span>Stick wählt aus, <kbd>A</kbd> bestätigt, <kbd>B</kbd> zurück</span>
+  </div>
+  <div class="eyebrow" style="margin-top:10px">📱 Touch${on('touch')}</div>
+  <div class="keys">
+    <span>Ziehen</span><span>Bewegen, irgendwo auf dem Bildschirm</span>
+    <span>Großer Knopf</span><span>Fähigkeit – vom Knopf wegziehen zum Zielen</span>
+    <span>💨</span><span>Ausweichen</span>
+  </div>
+  <button class="btn primary" data-a="back">Zurück</button></div>`,{ back:back||showMenu });
 }
 
 function showIntro(next){

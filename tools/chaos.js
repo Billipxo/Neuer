@@ -21,7 +21,7 @@ const {chromium,devices}=require('playwright'); const fs=require('fs'); const pa
       while(steps++<400 && run && !run.ended){
         if(state==='combat'||state==='paused'){ if(state==='paused'){ actions.resume&&actions.resume(); }
           let f=0; while(state==='combat' && G && !G.over && f<30*200){ const nn=nearestEnemy(P,9999);
-            if(nn){ const a=angTo(P,nn), d=dist(P,nn), s=d<120?-1:1; input.jx=Math.cos(a+0.6)*s; input.jy=Math.sin(a+0.6)*s; } else { input.jx=input.jy=0; }
+            if(nn){ const a=angTo(P,nn), d=dist(P,nn)-nn.r, s=d<(CHARS[P.cid].range<100?30:110)?-1:1; input.jx=Math.cos(a+0.6)*s; input.jy=Math.sin(a+0.6)*s; } else { input.jx=input.jy=0; }   // Nahkämpfer gehen ran
             if(Math.random()<0.02) useSkill(Math.random()<0.5?{a:Math.random()*6.28,k:Math.random()}:undefined);
             if(Math.random()<0.03) useDash();
             if(Math.random()<0.002){ pauseGame(); draw(); actions.resume(); }
