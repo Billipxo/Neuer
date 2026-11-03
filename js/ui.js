@@ -587,7 +587,7 @@ function upgCard(u,extra='',act='pick'){
 function resumeRun(){
   if(run.won && !run.endless && !run.pend){ showVictory(); return; }
   if(run.room && run.p.hp>0){ const t=run.room; toast('<b>Raum wird neu gestartet</b>'); startCombat(t); return; }
-  if(run.pend){ const a={map:showMap,next:()=>showEvo(nextAct),victory:showVictory}[run.pend.after]||showMap; if(run.pend.mode==='evo') showEvo(nextAct); else if(run.pend.mode==='treasure') showTreasure(); else showReward(run.pend.mode,a); return; }
+  if(run.pend){ const a={map:showMap,relic:()=>showRelicPick(showMap,'Beute des Champions','Der Champion hinterlässt ein Relikt.'),next:()=>showEvo(nextAct),victory:showVictory}[run.pend.after]||showMap; if(run.pend.mode==='evo') showEvo(nextAct); else if(run.pend.mode==='treasure') showTreasure(); else showReward(run.pend.mode,a); return; }
   showMap();
 }
 function showReward(mode, after, offer, banMode){

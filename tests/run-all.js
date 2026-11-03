@@ -117,6 +117,9 @@ const tests = {
       __bot(true,90); out.combat=state!=='combat';
       startRun('magier'); run.posId=run.map.rows[2][0].id; showTreasure(); out.treasure=!!ui.querySelector('[data-a=relic]'); actions.relic(ui.querySelector('[data-a=relic]').dataset.v); out.got=run.relics.length===1;
       run.gold=999; showShop(); out.shop=!!ui.querySelector('[data-a=brel]'); actions.brel(); out.bought=run.relics.length===2;
+      startRun('paladin'); run.posId=run.map.rows[3][0].id; startCombat('elite'); let champ=false; for(let i=0;i<30*90 && state==='combat';i++){ __bot(true,0.2); if(G&&G.champ) champ=true; }
+      out.champ=champ; if(ui.querySelector('[data-a=pick]')) actions.pick(ui.querySelector('[data-a=pick]').dataset.v); out.champRelic=!!ui.querySelector('[data-a=relic]');
+      const th=seeded('x',()=>{ let n=0; for(let i=0;i<40;i++){ run.act=2; run.posId=run.map.rows[3][0].id; run.seed='t'+i; const w=buildWaves('fight'); if(w.theme) n++; } return n; }); out.themes=th>0;
       return {ok:Object.values(out).every(Boolean), out}; });
   },
   async music(pg){ // Musik-Engine spielt alle Stücke inklusive B-Teil fehlerfrei

@@ -5,14 +5,19 @@
 function enemyPool(act,row){ return Object.keys(ENEMIES).filter(k=>{ const d=ENEMIES[k]; return !d.noPool && (!d.minAct||act>=d.minAct) && (!d.minRow||row>=d.minRow||act>1); }); }
 function buildWaves(type){
   const act=run.act, row=nodeById(run.posId).row, depth=(act-1)*6+row;
-  const pool=enemyPool(act,row), nW = type==='elite'?2:(row<2?2:3), waves=[];
+  let pool=enemyPool(act,row); const nW = type==='elite'?2:(row<2?2:3), waves=[];
+  let theme=null;
+  if(type==='fight' && row>=1 && !run.daily && RNG()<0.3){ const va=visAct(), opts=THEMES.filter(t=>t.acts.includes(va) && t.kinds.every(k=>!ENEMIES[k].minAct||act>=ENEMIES[k].minAct));
+    if(opts.length){ theme=pick(opts); pool=theme.kinds; } }
   for(let w=0;w<nW;w++){
     let budget=(5+depth*1.25+w*1.5)*(type==='elite'?0.7:1)*((runMod()||{}).waveMul||1); const list=[];
     while(budget>0){ const k=pick(pool); list.push({kind:k}); budget-=ENEMIES[k].cost; if(k==='hound'){ list.push({kind:k},{kind:k}); budget-=2*ENEMIES[k].cost; } }
     if(type==='elite' || ((runMod()||{}).eliteEvery && w===nW-1) || ((run.ng||0)>0 && w===nW-1 && RNG()<0.25*run.ng)) list.push({kind:pick(pool.filter(k=>k!=='bat')), elite:true});
     if(tierHas(2) && type!=='elite' && w===nW-1 && RNG()<0.5) list.push({kind:pick(pool.filter(k=>k!=='bat')), elite:true});
+    if(type==='elite' && w===nW-1){ const el=list.find(s=>s.elite); if(el) el.champ=true; }
     waves.push(list);
   }
+  waves.theme=theme;
   return waves;
 }
 
@@ -70,6 +75,7 @@ function startCombat(type, customWaves){
       over:false, deathT:0, slowT:0, whiteFlash:0, moved:0, tut:tut?{step:0,t:0}:null };
   Object.assign(G, seeded(roomKey('arena'),()=>genArena(type)));
   if(G.tut){ G.obs=[]; G.traps=[]; }
+  G.theme=(G.waves&&G.waves.theme)||null; if(G.theme){ const th=G.theme; setTimeout(()=>{ if(G) banner(th.ic+' '+th.nm,'Eine besondere Gegnergruppe',1800); },1500); }
   if(type==='boss'){
     const bk=bossKind(); G.waveIdx=0; G.waveT=99;
     G.spawnQ.push({x:AW/2,y:AH*0.3,t:1.1,kind:bk,boss:true});
@@ -107,6 +113,12 @@ function makeEnemy(kind,x,y,elite){
   if(hasRelic('r_bell')) e.hp*=0.85; if(hasRelic('r_idol')) e.dmg*=1.15;
   e.maxHp=e.hp; return e;
 }
+function champify(e){
+  e.champ=true; e.name=CHAMP_NAMES[e.kind]||'Der Champion'; e.hp*=1.8; e.r*=1.15; e.dmg*=1.15; e.gold*=2; e.soul*=3;
+  const extra=Object.keys(AFFIXES).filter(k=>!(e.affix||[]).includes(k)&&!(k==='split'&&e.kind==='slime')); if(extra.length){ e.affix=(e.affix||[]).concat([pick(extra)]); if(e.affix.includes('fast')&&e.speed) e.speed*=1; if(e.affix.includes('summon')&&e.sumT===undefined) e.sumT=4; }
+  e.maxHp=e.hp; G.champ=e; $('bossName').textContent='⭐ '+e.name; $('bossBar').classList.remove('hidden');
+  setTimeout(()=>{ if(G) banner(e.name,'Ein Champion betritt die Arena!',2200); },200); sfx('boss'); G.shake+=6; hype(0.3);
+}
 function makeBoss(kind,x,y){
   const b=BOSSES[kind], s=(1+0.08*metaLvl('m_dmg'))*(run.act>3?1+0.8*(run.act-3):1)*(1+0.5*(run.ng||0))*(tierHas(3)?1.25:1);
   const e={ kind, boss:true, x,y, r:b.r, hp:b.hp*s, maxHp:b.hp*s, dmg:b.dmg, speed:b.speed, ai:kind, t:0, flash:0, slow:0, freeze:0, kx:0, ky:0, soul:0, gold:0,
@@ -120,7 +132,7 @@ function nextWave(){
   G.waveIdx++; const list=G.waves[G.waveIdx];
   list.forEach((s,i)=>{
     let x,y,tries=0; do{ x=rand(40,AW-40); y=rand(40,AH-40); tries++; }while((Math.hypot(x-P.x,y-P.y)<220 || solidHit(x,y,24) || G.traps.some(t=>t.type==='lava'&&Math.hypot(t.x-x,t.y-y)<t.r+20)) && tries<40);
-    G.spawnQ.push({x,y,t:0.6+i*0.06,kind:s.kind,elite:s.elite});
+    G.spawnQ.push({x,y,t:0.6+i*0.06,kind:s.kind,elite:s.elite,champ:s.champ});
   });
 }
 
@@ -130,7 +142,7 @@ function update(dt){
   if(G.whiteFlash>0) G.whiteFlash-=dt;
   G.time+=dt; if(G.tut) updTut(dt);
   // spawns
-  for(const s of G.spawnQ){ s.t-=dt; if(s.t<=0){ if(!s.boss) newFoeHint(s.kind); G.enemies.push(s.boss?makeBoss(s.kind,s.x,s.y):makeEnemy(s.kind,s.x,s.y,s.elite)); if(s.boss){ roar(s.kind); G.shake+=10; } burst(s.x,s.y,s.boss?40:10,'#b69cff',s.boss?220:120); } }
+  for(const s of G.spawnQ){ s.t-=dt; if(s.t<=0){ if(!s.boss) newFoeHint(s.kind); { const en=s.boss?makeBoss(s.kind,s.x,s.y):makeEnemy(s.kind,s.x,s.y,s.elite); if(s.champ) champify(en); G.enemies.push(en); } if(s.boss){ roar(s.kind); G.shake+=10; } burst(s.x,s.y,s.boss?40:10,'#b69cff',s.boss?220:120); } }
   G.spawnQ=G.spawnQ.filter(s=>s.t>0);
   if(!G.cleared && G.type!=='boss' && G.enemies.length===0 && G.spawnQ.length===0){
     if(G.waveIdx < G.waves.length-1){ if(!G.tut || G.tut.step>=(G.waveIdx<0?1:4)) G.waveT-=dt; if(G.waveT<=0){ nextWave(); G.waveT=0.45; if(G.waveIdx>0) banner('Welle '+(G.waveIdx+1)); } }
@@ -501,6 +513,7 @@ function killEnemy(e){
     G.eproj=[]; G.hazards=[]; clearRoom(); return; }
   run.kills++; run.souls+=e.soul; save.stats.kills++; if(e.elite){ save.stats.elites++; run.elites=(run.elites||0)+1; }
   if(e.boss){ run.bossKills=(run.bossKills||[]); run.bossKills.push(e.kind); }
+  if(e.champ){ G.champ=null; G.champKilled=true; if(!G.boss) $('bossBar').classList.add('hidden'); banner('Champion besiegt!',e.name,1600); hype(0.6); crowdSound(1); save.stats.champs=(save.stats.champs||0)+1; }
   if(e.elite && hasRelic('r_skull')){ P.maxHp+=3; P.hp+=3; G.texts.push({x:P.x,y:P.y-40,s:'+3 max. LP',c:'#e8e2d0',t:0}); }
   if(tierHas(10) && !e.boss && Math.random()<0.25) G.hazards.push({type:'circle',x:e.x,y:e.y,r:46,delay:0.9,t:0,dmg:e.dmg*0.8,color:'#b06aff'});
   if(G.time-G.comboLast<2.5) G.combo++; else G.combo=1; G.comboLast=G.time; save.stats.maxCombo=Math.max(save.stats.maxCombo,G.combo);
@@ -888,14 +901,15 @@ function clearRoom(){
 function fadeIn(){ const f=$('fade'); if(!f) return; f.classList.add('on'); requestAnimationFrame(()=>requestAnimationFrame(()=>f.classList.remove('on'))); }
 function finishCombat(){
   if(state!=='combat') return; fadeIn();
-  run.rooms++; const t=G.type; G=null; $('hud').classList.add('hidden'); run.room=null; wakeLock(false);
+  run.rooms++; const t=G.type, champ=!!G.champKilled; G=null; $('hud').classList.add('hidden'); run.room=null; wakeLock(false);
   if(t==='boss' && hasRelic('r_chalice')){ run.p.hp=Math.min(run.p.maxHp,run.p.hp+run.p.maxHp*0.3); }
   if(t==='boss'){
     if(run.act===3 && !run.endless){ run.won=true; run.pend={mode:'boss',after:'victory'}; save.run=run; persist(); showReward('boss',showVictory); return; }
     run.pend={mode:'boss',after:'next'}; save.run=run; persist(); showReward('boss',()=>showEvo(nextAct));
   } else { const nd=nodeById(run.posId), rw=nd&&nd.rw;
     const m=t==='elite'||(runMod()||{}).eliteEvery?'elite':rw==='rare'?'rare':rw==='gold'?'gold':rw==='heal'?'heal':'normal';
-    run.pend={mode:m,after:'map'}; save.run=run; persist(); showReward(m, showMap); }
+    const rel=champ && relicsLeft().length; run.pend={mode:m,after:rel?'relic':'map'}; save.run=run; persist();
+    showReward(m, rel?()=>showRelicPick(showMap,'Beute des Champions','Der Champion hinterlässt ein Relikt. Wähle eines davon.'):showMap); }
 }
 
 function showVictory(){

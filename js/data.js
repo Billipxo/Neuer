@@ -241,6 +241,22 @@ const EVOS = {
             { id:'b_throw',  ic:'🪓', nm:'Axtwurf', ds:'Jeder 3. Angriff wirft zusätzlich eine Axt auf den nächsten Gegner in Reichweite 260.' },
             { id:'b_rage',   ic:'😡', nm:'Ungebremst', ds:'Raserei bis zu 15 Stufen statt 10.' } ],
 };
+/* Themenwellen: manche Kämpfe haben eine feste Gegnergruppe */
+const THEMES = [
+  { id:'slimepit', ic:'🟢', nm:'Schleimgrube',  kinds:['slime','shroom','slime'],                 acts:[1] },
+  { id:'goblins',  ic:'🏹', nm:'Goblin-Lager',  kinds:['archer','shaman','archer','kobold'],      acts:[1,3] },
+  { id:'undead',   ic:'💀', nm:'Untotenwelle',  kinds:['skeleton','skeleton','cultist','healer'], acts:[1,2] },
+  { id:'spikes',   ic:'🦔', nm:'Stachelnest',   kinds:['urchin','spiderling','spiderling'],       acts:[1,2] },
+  { id:'pack',     ic:'🐺', nm:'Rudelnacht',    kinds:['hound','shaman'],                         acts:[2,3] },
+  { id:'haunt',    ic:'👻', nm:'Spukhalle',     kinds:['wraith','bat','cultist'],                 acts:[2] },
+  { id:'fire',     ic:'🔥', nm:'Feuersturm',    kinds:['imp','magma','whelp'],                    acts:[3] },
+  { id:'stone',    ic:'🗿', nm:'Steinwache',    kinds:['gargoyle','shield','orc'],                acts:[3] },
+];
+/* Champions: benannte Mini-Bosse in Elite-Räumen, sie lassen ein Relikt fallen */
+const CHAMP_NAMES = { slime:'Glibber, der Ewighungrige', bat:'Nachtschwinge', skeleton:'Knochenbrecher Garm', archer:'Scharfauge Rikk', orc:'Brakk der Schlächter',
+  cultist:'Hohepriesterin Vessa', imp:'Funkenfürst Zix', whelp:'Glutschwinge', magma:'Der Glühende Koloss', kobold:'Zündler Krax', shield:'Hauptmann Eisenwall',
+  healer:'Bruder Lazarus', worm:'Die Wühlmutter', shroom:'Sporenkönig Mufft', urchin:'Stachelfürst Igor', shaman:'Ahnenrufer Grok', hound:'Grimmzahn, der Rudelführer',
+  wraith:'Die Graue Witwe', gargoyle:'Der Wächter vom Turm', spiderling:'Brutmutter Kessa', totem:'Das Uralte Totem', mimic:'Der Gierige Schlund', seraph:'Erzwächter Orin' };
 /* Relikte: einzigartige Gegenstände, die Regeln ändern (Schatzräume, Champions, Händler) */
 const RELICS = [
   { id:'r_hourglass', ic:'⏳', nm:'Sanduhr der Zeit',   ds:'In den ersten 3 Sek. jedes Kampfes bewegen sich Gegner in Zeitlupe.' },
