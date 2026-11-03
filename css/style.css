@@ -180,7 +180,7 @@ body.lefty #skillBtn{right:auto;left:calc(max(16px, env(safe-area-inset-left,0px
 body.lefty #dashBtn{right:auto;left:calc(max(16px, env(safe-area-inset-left,0px)) + 108px)}
 @media (orientation:landscape) and (max-height:560px){
   .title-block{padding-top:0;gap:6px} .crest{width:64px;height:64px} h1{font-size:30px}
-  .wrap{max-width:760px;gap:10px} .menu-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px} .menu-btns .row,.menu-btns .tiles{grid-column:1/-1} .tiles{grid-template-columns:repeat(5,1fr)}
+  .wrap{max-width:760px;gap:10px} .menu-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px} .menu-btns .row,.menu-btns .tiles{grid-column:1/-1} .tiles{grid-template-columns:repeat(3,1fr)}
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:8px} .mapscreen{height:auto} .mapbox{flex:none;height:500px} .btn{padding:10px 14px}
   #skillBtn{width:70px;height:70px;font-size:30px;bottom:calc(18px + env(safe-area-inset-bottom,0px))} #dashBtn{width:54px;height:54px;bottom:calc(14px + env(safe-area-inset-bottom,0px))}
   #banner{top:22%}
@@ -203,3 +203,22 @@ body.bigui #hud .bar, body.bigui #hpbar{transform-origin:left top}
 
 .node .rw{position:absolute;right:-8px;top:-8px;font-size:13px;line-height:1;filter:drop-shadow(0 1px 2px #000)}
 .syn.part{opacity:.85;font-size:12px}
+
+/* Arenameister, Kopfgelder, Verdammnis-Raster, Kalender */
+.am{display:flex;gap:10px;align-items:flex-start;background:linear-gradient(135deg,#2a1d2e,#1a1320);border:1px solid #5a3a5a;border-radius:12px;padding:10px 12px}
+.am .amface{font-size:30px;line-height:1;filter:drop-shadow(0 2px 4px #000)}
+.am .amtxt{font-size:15px;line-height:1.4;color:var(--parch);font-style:italic}
+.bounties{background:#0006;border:1px solid var(--iron);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.bty{display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--parch)}
+.bty b{color:var(--soul);white-space:nowrap}
+.bty.done{opacity:.6;text-decoration:line-through}
+.bty.done b{text-decoration:none}
+.trow{display:flex;gap:3px;flex-wrap:wrap;margin-top:6px}
+.tdot{width:20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;background:#0008;border:1px solid var(--iron);color:var(--parch-dim)}
+.tdot.won{color:#1a1320;border-color:transparent}
+.tdot.open{border-color:var(--gold);color:var(--gold)}
+.calrow{display:grid;grid-template-columns:repeat(14,1fr);gap:3px}
+.cal{aspect-ratio:1;border-radius:5px;background:#0006;border:1px solid var(--iron);font-size:11px;display:flex;align-items:center;justify-content:center;color:var(--parch-dim)}
+.cal.played{background:#5a3a1c;color:#fff}
+.cal.won{background:#2f6b40;color:#fff}
+.cal.today{border-color:var(--gold)}

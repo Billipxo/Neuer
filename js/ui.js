@@ -57,24 +57,31 @@ const SKINS={
     frost:{nm:'Frostbringerin',ach:'all_bosses',cape:'#e8f0f8',body:'#3a6a9a',trim:'#ffffff',hat:'#c8d8e8',hat2:'#ffffff',hair:'#f0f4f8',paint:'#2a4a8a'},
     ash:{nm:'Aschekriegerin',ach:'elites',cape:'#2a2220',body:'#3a2a26',trim:'#ff7a2a',hat:'#4a4040',hat2:'#2a2020',hair:'#1a1414',paint:'#ff5a1a'} },
 };
+const SKIN_PRICE=400;
+function skinOwned(cid,k){ const sk=SKINS[cid][k]; return k==='base' || !!save.ach[sk.ach] || !!(save.skinBought||{})[cid+':'+k]; }
 function skinOf(cid){ const S=SKINS[cid]; return Object.assign({skin:'#f1c9a0',eye:'#2a1a14'},S.base,S[(save.skin||{})[cid]]||{}); }
 const ST=()=>save.stats;
 const ACH=[
   { id:'first_win', ic:'🐉', nm:'Bezwinger', ds:'Gewinne einen Lauf', souls:100, ok:()=>ST().anyWin },
   { id:'no_hit', ic:'🛡️', nm:'Unberührbar', ds:'Besiege einen Boss, ohne getroffen zu werden', souls:80, ok:()=>ST().noHitBoss },
-  { id:'all_syn', ic:'💠', nm:'Alchemist', ds:'Entdecke alle 5 Synergien', souls:80, prog:()=>[ST().syns.length,5] },
+  { id:'all_syn', ic:'💠', nm:'Alchemist', ds:'Entdecke 5 Synergien', souls:80, prog:()=>[ST().syns.length,5] },
   { id:'all_bosses', ic:'👑', nm:'Bossjäger', ds:'Besiege alle 6 Bosse', souls:120, prog:()=>[ST().bosses.length,6] },
   { id:'kills', ic:'⚔️', nm:'Schlächter', ds:'Besiege insgesamt 1.000 Gegner', souls:60, prog:()=>[ST().kills,1000] },
   { id:'elites', ic:'💀', nm:'Elitejäger', ds:'Besiege insgesamt 40 Elitegegner', souls:60, prog:()=>[ST().elites,40] },
   { id:'endless', ic:'♾️', nm:'Unendlich', ds:'Erreiche Akt 5 im Endlosmodus', souls:150, prog:()=>[Math.min(5,ST().maxEndless),5] },
   { id:'daily', ic:'📅', nm:'Tagwerk', ds:'Gewinne eine Tägliche Herausforderung', souls:100, ok:()=>ST().dailyWin },
-  { id:'all_heroes', ic:'🎖️', nm:'Meister aller Klassen', ds:'Gewinne mit jedem Helden', souls:200, prog:()=>[Object.keys(ST().wins).length,4] },
+  { id:'all_heroes', ic:'🎖️', nm:'Meister aller Klassen', ds:'Gewinne mit jedem Helden', souls:200, prog:()=>[Object.keys(ST().wins).length,Object.keys(CHARS).length] },
   { id:'crowd', ic:'📣', nm:'Liebling der Massen', ds:'Bring die Menge 10-mal zum Toben', souls:50, prog:()=>[ST().cheers,10] },
   { id:'events', ic:'❓', nm:'Neugierig', ds:'Erlebe alle 8 Ereignisse', souls:50, prog:()=>[ST().events.length,8] },
   { id:'rich', ic:'💰', nm:'Goldrausch', ds:'Sammle 600 Gold in einem Lauf', souls:50, prog:()=>[Math.min(600,ST().maxGold),600] },
   { id:'combo', ic:'🔥', nm:'Kettenreaktion', ds:'Erreiche eine 30er-Kombo', souls:50, prog:()=>[Math.min(30,ST().maxCombo),30] },
   { id:'ng3', ic:'⚔️', nm:'Unbezwingbar', ds:'Gewinne einen Lauf auf NG+3', souls:150, prog:()=>[Math.min(4,save.ngMax||0),4] },
   { id:'bestiary', ic:'📖', nm:'Forscher', ds:'Vervollständige das Bestiarium', souls:120, prog:()=>[Object.keys(BEAST).filter(k=>save.stats.beast[k]).length,Object.keys(BEAST).length] },
+  { id:'tier5', ic:'🔥', nm:'Tief in der Verdammnis', ds:'Gewinne mit einem Helden auf Verdammnis-Stufe 5', souls:150, prog:()=>[Math.max(0,...Object.values(save.tierWon||{0:0})),5] },
+  { id:'tier10', ic:'☠️', nm:'Herr der Verdammnis', ds:'Gewinne auf Verdammnis-Stufe 10', souls:400, prog:()=>[Math.max(0,...Object.values(save.tierWon||{0:0})),10] },
+  { id:'chal5', ic:'🏁', nm:'Prüfling', ds:'Bestehe 5 Herausforderungen', souls:120, prog:()=>[CHALLENGES.filter(c=>(save.chal||{})[c.id]).length,5] },
+  { id:'streak7', ic:'📆', nm:'Treue Seele', ds:'Spiele 7 Tage in Folge die Tagesprüfung', souls:120, prog:()=>[Math.min(7,(save.streak||{}).best||0),7] },
+  { id:'perfect', ic:'💨', nm:'Tänzer', ds:'Weiche 50-mal perfekt aus', souls:80, prog:()=>[Math.min(50,ST().perfect||0),50] },
   { id:'forge', ic:'⚒️', nm:'Meisterschmied', ds:'Bringe alle Schmiede-Upgrades auf die höchste Stufe', souls:0, prog:()=>[META.filter(m=>metaLvl(m.id)>=m.max).length,META.length] },
 ];
 function achDone(a){ if(a.ok) return !!a.ok(); const [v,m]=a.prog(); return v>=m; }
@@ -128,7 +135,8 @@ function showMenu(){
   const newBeast=Math.max(0,Object.keys(save.stats.beast).length-(save.beastSeen||0));
   const forgeAff=META.some(m=>metaLvl(m.id)<m.max && save.souls>=m.cost(metaLvl(m.id)));
   const heroBuyable=Object.entries(CHARS).some(([id,c])=>!save.unlocked[id]&&save.souls>=c.cost);
-  const dailyOpen=!(save.daily&&save.daily.key===todayKey()&&save.daily.tries>0);
+  const dailyOpen=!((save.dailyHist||{})[todayKey()]);
+  const veteran=save.runs>0, chalNew=CHALLENGES.some((c,i)=>chalOpen(i)&&!chalDone(c.id))&&!save.chalSeen;
   render(`<div class="wrap">
     <div class="title-block">${CREST}
       <div class="eyebrow">Ein Roguelike in drei Akten</div>
@@ -137,17 +145,21 @@ function showMenu(){
       <span class="pill s">👻 ${save.souls} Seelen</span>
     </div>
     ${IOS && !STANDALONE && !save.settings.iosTip?`<div class="tip">📱 <div><b>Tipp fürs iPhone:</b> Tippe in Safari auf „Teilen“ und dann „Zum Home-Bildschirm“. Dann läuft das Spiel im Vollbild wie eine App, und deine Spielstände bleiben sicher gespeichert. <button class="linkbtn" data-a="tipok">Verstanden</button></div></div>`:''}
+    ${arenaMasterHtml()}
     <div class="menu-btns">
       ${hasRun?`<button class="btn primary stack" data-a="cont">▶ Lauf fortsetzen<span class="sub" style="font-size:13px;color:#f0dcb0">${CHARS[save.run.cid].icon} Akt ${save.run.act}</span></button>`:''}
       <button class="btn ${hasRun?'':'primary'}" data-a="play">⚔️ Neues Abenteuer${badge(heroBuyable,'Held')}</button>
-      <button class="btn" data-a="daily">📅 Tägliche Herausforderung${badge(dailyOpen,'Heute')}</button>
-      <div class="tiles">
+      ${veteran?`<button class="btn" data-a="daily">📅 Tages- und Wochenprüfung${badge(dailyOpen,'Heute')}</button>
+      <button class="btn" data-a="chal">🏁 Herausforderungen${badge(chalNew,'Neu')}</button>`:''}
+      ${veteran?`<div class="tiles">`:'<div class="tiles" style="display:none">'}
         <button class="btn tile" data-a="forge"><span class="ti">⚒️</span>Schmiede${badge(forgeAff,'!')}</button>
         <button class="btn tile" data-a="ach"><span class="ti">🏅</span>Erfolge${badge(newAch,newAch)}</button>
         <button class="btn tile" data-a="beast"><span class="ti">📖</span>Bestiarium${badge(newBeast,newBeast)}</button>
         <button class="btn tile" data-a="scores"><span class="ti">🏆</span>Ruhmeshalle</button>
         <button class="btn tile" data-a="codex"><span class="ti">📚</span>Kodex</button>
+        <button class="btn tile" data-a="tiers"><span class="ti">🔥</span>Verdammnis</button>
       </div>
+      ${veteran?bountyHtml():`<p class="sub center" style="font-size:14px">Nach deinem ersten Lauf öffnen sich Schmiede, Prüfungen, Herausforderungen und mehr.</p>`}
     </div>
     <div class="foot">
       <button class="linkbtn" data-a="help">Anleitung</button>
@@ -155,26 +167,11 @@ function showMenu(){
       <button class="linkbtn" data-a="slots">💾 ${esc(save.name||'Spielstand')}</button>
       <span>Läufe: ${save.runs}</span>
     </div></div>`,
-  { play:showChars, daily:showDaily, forge:showForge, scores:showScores, ach:showAch, beast:showBeast, help:showHelp, codex:()=>showCodex(showMenu),
+  { play:showChars, daily:showDaily, forge:showForge, scores:showScores, ach:showAch, beast:showBeast, help:showHelp, codex:()=>showCodex(showMenu), tiers:()=>showTiers(showMenu), chal:()=>{ save.chalSeen=true; persist(); showChallenges(); },
     cont:()=>{ run=save.run; resumeRun(); },
     settings:showSettings, slots:showSlots, tipok:()=>{ save.settings.iosTip=true; persist(); showMenu(); } });
 }
 
-function showDaily(){
-  const key=todayKey(), info=dailyInfo(key), c=CHARS[info.cid], m=info.mod;
-  const d=save.daily&&save.daily.key===key?save.daily:{best:0,tries:0};
-  const date=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long'});
-  render(`<div class="wrap"><div class="eyebrow">Tägliche Herausforderung · ${date}</div><h2>Die Prüfung des Tages</h2>
-    <p class="sub">Heute spielen alle dieselben Karten, Räume und Belohnungen. Schmiede-Upgrades gelten hier nicht. Morgen gibt es eine neue Prüfung.</p>
-    <div class="cards">
-      <div class="card" style="border-color:${c.color}"><div class="ic port" style="background:radial-gradient(circle at 50% 40%,${c.color}88,#0008 75%)"><canvas data-port="hero:${id}" data-size="46"></canvas></div><div class="body"><div class="rar">Held des Tages</div><div class="nm">${c.name}</div><div class="ds">${c.desc}${save.unlocked[info.cid]?'':' Noch nicht freigeschaltet, heute aber spielbar!'}</div></div></div>
-      <div class="card epic"><div class="ic">${m.ic}</div><div class="body"><div class="rar">Modifikator</div><div class="nm">${m.nm}</div><div class="ds">${m.ds}</div></div></div>
-    </div>
-    <div class="row" style="gap:6px"><span class="pill g">🏆 Tagesbestwert: ${d.best}</span><span class="pill">Versuche heute: ${d.tries}</span></div>
-    <button class="btn primary" data-a="go">Herausforderung starten</button>
-    <button class="btn" data-a="back">Zurück</button></div>`,
-  { go:()=>startRun(info.cid,{daily:key}), back:showMenu });
-}
 function showSettings(){
   const st=save.settings;
   const tg=(key,label,on,desc)=>`<button class="toggle ${on?'on':''}" data-a="tg" data-v="${key}" aria-pressed="${on}"><span><b>${label}</b><br><span class="sub" style="font-size:13px">${desc}</span></span><span class="sw"></span></button>`;
@@ -269,7 +266,7 @@ function showBeast(){
   const B=save.stats.beast, all=Object.keys(BEAST), found=all.filter(k=>B[k]).length; save.beastSeen=Object.keys(B).length; persist();
   const entry=k=>{ const isBoss=!!BOSSES[k], d=isBoss?BOSSES[k]:ENEMIES[k], n=B[k]||0;
     const where=isBoss?ACTS.findIndex(a=>a.bosses.includes(k)):(d.minAct||1)-1;
-    return n?`<div class="card ${isBoss?'epic':''}"><div class="ic port">${isBoss?BEAST[k].ic:`<canvas data-port="foe:${k}" data-size="46"></canvas>`}</div><div class="body"><div class="rar">${isBoss?'Boss · ':''}${ACTS[Math.max(0,where)].name}</div><div class="nm">${esc(d.name)}</div><div class="ds">${BEAST[k].ds}</div><div class="ds" style="font-size:12px;color:var(--gold)">Besiegt: ${n}×</div></div></div>`
+    return n?`<div class="card ${isBoss?'epic':''}"><div class="ic port">${isBoss?BEAST[k].ic:`<canvas data-port="foe:${k}" data-size="46"></canvas>`}</div><div class="body"><div class="rar">${isBoss?'Boss · ':''}${ACTS[Math.max(0,where)].name}</div><div class="nm">${esc(d.name)}</div><div class="ds">${BEAST[k].ds}</div><div class="ds" style="font-size:12px;color:var(--gold)">Besiegt: ${n}× ${(()=>{ const m=masteryOf(k), nx=MASTERY.find(x=>n<x[0]); return (m?`· ${m[2]} +${Math.round((m[1]-1)*100)} % Schaden`:'')+(nx?` · nächster Stern bei ${nx[0]}`:''); })()}</div></div></div>`
       :`<div class="card" style="opacity:.6"><div class="ic">❔</div><div class="body"><div class="rar">${isBoss?'Boss':'Gegner'}</div><div class="nm">???</div><div class="ds">Noch nicht besiegt.</div></div></div>`; };
   render(`<div class="wrap"><div class="eyebrow">${found} von ${all.length} entdeckt</div><h2>Bestiarium</h2>
     <div class="eyebrow">Gegner</div><div class="cards">${Object.keys(ENEMIES).filter(k=>BEAST[k]).map(entry).join('')}</div>
@@ -329,28 +326,32 @@ function showIntro(next){
     <button class="btn primary" data-a="next">Betritt die Arena</button></div>`,{ next });
 }
 function showChars(){
+  const anyWon=Object.keys(CHARS).some(id=>tierWon(id)>=0), tmax=Math.max(0,...Object.keys(CHARS).map(tierOpen)), tsel=Math.min(save.tierSel||0,tmax);
   const list=Object.entries(CHARS).map(([id,c])=>{
-    const un=save.unlocked[id], can=save.souls>=c.cost;
-    return `<button class="card ${un&&save.lastChar===id?'sel':''}" data-a="${un?'go':'buy'}" data-v="${id}" ${!un&&!can?'disabled':''}>
-      <div class="ic port" style="background:radial-gradient(circle at 50% 40%,${c.color}88,#0008 75%)"><canvas data-port="hero:${id}" data-size="46"></canvas></div>
+    const un=save.unlocked[id], can=save.souls>=c.cost, tw=tierWon(id), tlock=un && tsel>tierOpen(id);
+    return `<button class="card ${un&&save.lastChar===id?'sel':''}" data-a="${un?(tlock?'x':'go'):'buy'}" data-v="${id}" ${(!un&&!can)||tlock?'disabled':''} style="${tw>=1?'border-color:'+tierColor(tw):''}">
+      <div class="ic port" style="background:radial-gradient(circle at 50% 40%,${c.color}88,#0008 75%);${tw>=1?'box-shadow:0 0 0 2px '+tierColor(tw):''}"><canvas data-port="hero:${id}" data-size="46"></canvas></div>
       <div class="body"><div class="nm">${c.name}</div><div class="ds">${c.desc}</div>
         <div class="ds" style="color:var(--parch)">${c.skill.icon} <b>${c.skill.name}:</b> ${c.skill.desc}</div>${c.passive?`<div class="ds" style="color:var(--gold)">${c.passive}</div>`:''}
         ${un?(()=>{ const L=heroLvl(id), xp=(save.heroXp||{})[id]||0, a=xpFor(L), b=xpFor(L+1);
           return `<div class="ds" style="font-size:13px;color:var(--parch)">⭐ Stufe ${L}${L?` · +${L*3} LP, +${L*2} % Schaden`:''}</div>${L<HERO_MAX?`<div style="height:5px;background:#0008;border:1px solid var(--iron);border-radius:3px;overflow:hidden;margin:2px 0 4px"><div style="height:100%;width:${Math.min(100,(xp-a)/(b-a)*100)}%;background:var(--gold)"></div></div>`:''}`; })():''}
         <div class="stats"><span>LP<b>${c.hp}</b></span><span>Schaden<b>${c.dmg}</b></span><span>Tempo<b>${c.speed}</b></span><span>Reichw.<b>${c.range}</b></span></div>
+        ${un&&anyWon?`<div class="ds" style="font-size:13px;color:${tierColor(Math.max(0,tw))}">🔥 ${tw<0?'Noch kein Sieg':'Verdammnis '+tw+' geschafft'}${tlock?' – erst Stufe '+(tsel-1)+' gewinnen':''}</div>`:''}
       </div>
       ${un?'':`<span class="pill s price">🔒 ${c.cost} 👻</span>`}
     </button>`;}).join('');
   render(`<div class="wrap"><div class="eyebrow">Neues Abenteuer</div><h2>Wähle deinen Helden</h2>
     <span class="pill s" style="align-self:flex-start">👻 ${save.souls} Seelen</span>
-    ${save.ngMax?`<div class="eyebrow" style="margin-top:4px">Schwierigkeit</div><div class="skinrow">${[...Array(save.ngMax+1)].map((_,n)=>`<button class="skin ${(save.ngSel||0)===n?'sel':''}" data-a="ng" data-v="${n}">${n?'⚔️ NG+'+n:'Normal'}</button>`).join('')}</div>
-      ${save.ngSel?`<p class="sub" style="font-size:13px">NG+${save.ngSel}: Gegner +${45*save.ngSel} % LP und +${25*save.ngSel} % Schaden, mehr Elitegegner, Bosse früher wütend. Seelen und Punkte +${50*save.ngSel} %.</p>`:''}`:''}
+    ${anyWon?`<div class="eyebrow" style="margin-top:4px">Verdammnis-Stufe</div><div class="skinrow">${[...Array(tmax+1)].map((_,t)=>`<button class="skin ${tsel===t?'sel':''}" data-a="tier" data-v="${t}" style="${t?'border-color:'+tierColor(t):''}">${t?TIERS[t].ic+' '+t:'Normal'}</button>`).join('')}<button class="skin" data-a="tiers">ℹ️ Übersicht</button></div>
+      ${tsel?`<p class="sub" style="font-size:13px">${TIERS.slice(1,tsel+1).map(t=>t.ic+' '+t.ds).join('<br>')}<br><b style="color:var(--gold)">Seelen und Punkte +${15*tsel} %</b></p>`:''}`:''}
     <div class="cards">${list}</div>
     <div class="eyebrow" style="margin-top:6px">Aussehen</div>
-    ${Object.keys(CHARS).filter(id=>save.unlocked[id]).map(id=>`<div class="skinrow"><b style="min-width:96px">${CHARS[id].icon} ${CHARS[id].name}</b>${Object.entries(SKINS[id]).map(([k,sk])=>{ const own=k==='base'||save.ach[sk.ach], sel=(save.skin[id]||'base')===k;
-      return `<button class="skin ${sel?'sel':''}" data-a="skin" data-v="${id}:${k}" ${own?'':'disabled'} title="${own?'':'Erfolg: '+ACH.find(a=>a.id===sk.ach).nm}"><i style="background:linear-gradient(135deg,${sk.cape||SKINS[id].base.cape} 50%,${sk.body||SKINS[id].base.body} 50%)"></i>${own?'':'🔒 '}${sk.nm}</button>`; }).join('')}</div>`).join('')}
+    ${Object.keys(CHARS).filter(id=>save.unlocked[id]).map(id=>`<div class="skinrow"><b style="min-width:96px">${CHARS[id].icon} ${CHARS[id].name}</b>${Object.entries(SKINS[id]).map(([k,sk])=>{ const own=skinOwned(id,k), sel=(save.skin[id]||'base')===k;
+      return `<button class="skin ${sel?'sel':''}" data-a="${own?'skin':'skinbuy'}" data-v="${id}:${k}" ${own||save.souls>=SKIN_PRICE?'':'disabled'} title="${own?'':'Erfolg: '+ACH.find(a=>a.id===sk.ach).nm+' oder '+SKIN_PRICE+' Seelen'}"><i style="background:linear-gradient(135deg,${sk.cape||SKINS[id].base.cape} 50%,${sk.body||SKINS[id].base.body} 50%)"></i>${own?'':'🔒 '}${sk.nm}${own?'':' · '+SKIN_PRICE+' 👻'}</button>`; }).join('')}</div>`).join('')}
+    <p class="sub" style="font-size:13px">Gesperrte Aussehen gibt es über Erfolge – oder für ${SKIN_PRICE} Seelen.</p>
     <button class="btn" data-a="back">Zurück</button></div>`,
-  { back:showMenu, go:id=>{ const go=()=>startRun(id,{ng:Math.min(save.ngSel||0,save.ngMax||0)}); save.introSeen?go():showIntro(go); }, ng:n=>{ save.ngSel=+n; persist(); showChars(); }, skin:v=>{ const [id,k]=v.split(':'); save.skin[id]=k; persist(); showChars(); },
+  { back:showMenu, x:()=>{}, tiers:()=>showTiers(showChars), go:id=>{ const go=()=>startRun(id,{tier:Math.min(tsel,tierOpen(id))}); save.introSeen?go():showIntro(go); }, tier:n=>{ save.tierSel=+n; persist(); showChars(); }, skin:v=>{ const [id,k]=v.split(':'); save.skin[id]=k; persist(); showChars(); },
+    skinbuy:v=>{ const [id,k]=v.split(':'); if(save.souls<SKIN_PRICE) return; save.souls-=SKIN_PRICE; save.skinBought=save.skinBought||{}; save.skinBought[v]=true; save.skin[id]=k; persist(); sfx('pick'); showChars(); },
     buy:id=>{ const c=CHARS[id]; if(save.souls>=c.cost){ save.souls-=c.cost; save.unlocked[id]=true; persist(); sfx('pick'); showChars(); } } });
 }
 
@@ -400,7 +401,7 @@ function showMap(){
   }).join('');
   const p=run.p;
   render(`<div class="mapscreen">
-    <div class="maphead"><div><div class="eyebrow">${run.ng?'⚔️ NG+'+run.ng+' · ':''}${run.act>3?'Endlos · Akt '+run.act:'Akt '+run.act+' von 3'}${run.daily?' · 📅 '+runMod().ic+' '+runMod().nm:''}</div><h2>${A.name}</h2><div class="sub" style="font-size:13px">👑 ${BOSSES[bossKind()].name} erwartet dich</div></div>
+    <div class="maphead"><div><div class="eyebrow">${run.tier?'🔥 Verdammnis '+run.tier+' · ':''}${run.challenge?'🏁 ':''}${run.ng?'⚔️ NG+'+run.ng+' · ':''}${run.act>3?'Endlos · Akt '+run.act:'Akt '+run.act+' von 3'}${(run.daily||run.challenge)&&runMod()?' · '+(run.daily?'📅 ':'')+runMod().ic+' '+runMod().nm:''}</div><h2>${A.name}</h2><div class="sub" style="font-size:13px">👑 ${BOSSES[bossKind()].name} erwartet dich</div></div>
       <div class="row" style="gap:6px"><button class="btn small" data-a="stats">📜 Werte</button><button class="btn small" data-a="menu">☰ Menü</button></div></div>
     <div class="row" style="gap:6px"><span class="pill h">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span><span class="pill s">👻 ${run.souls}</span><span class="pill">${CHARS[run.cid].icon} ${CHARS[run.cid].name}</span></div>
     <div class="mapbox"><svg viewBox="0 0 100 100" preserveAspectRatio="none">${lines}</svg>${btns}</div>
@@ -590,7 +591,7 @@ function showReward(mode, after, offer, banMode){
 function showBounty(mode, after){
   const p=run.p; let txt;
   if(mode==='gold'){ const g=Math.round((70+20*run.act)*(1+0.1*(run.ng||0))); run.gold+=g; run.goldTotal+=g; txt=`Du findest einen prall gefüllten Beutel: <b style="color:var(--gold)">+${g} Gold</b>.`; sfx('coin'); }
-  else { const h=Math.round(p.maxHp*0.4); p.maxHp+=5; p.hp=Math.min(p.maxHp,p.hp+h+5); txt=`Eine Heilquelle sprudelt in der Arena: <b style="color:#7dff8a">+${h} LP</b> und dauerhaft +5 max. LP.`; sfx('pick'); }
+  else { const h=Math.round(p.maxHp*(tierHas(9)?0.2:0.4)); p.maxHp+=5; p.hp=Math.min(p.maxHp,p.hp+h+5); txt=`Eine Heilquelle sprudelt in der Arena: <b style="color:#7dff8a">+${h} LP</b> und dauerhaft +5 max. LP.`; sfx('pick'); }
   render(`<div class="wrap" style="justify-content:center"><div class="eyebrow center">Belohnung</div><h2 class="center">${mode==='gold'?'💰 Goldfund':'❤️ Heilquelle'}</h2>
     <p class="sub center" style="font-size:17px;color:var(--parch)">${txt}</p>
     <div class="row" style="gap:6px;justify-content:center"><span class="pill h">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span></div>
@@ -612,11 +613,11 @@ function showEvo(after){
 }
 function showShop(stock){
   if(!stock){
-    const priceOf=u=>Math.round(({common:45,rare:80,epic:130,cursed:60})[u.r]*(1+0.15*(run.act-1))*(run.p.shopMul||1));
-    stock={ items:seeded(roomKey('shop'),()=>{ const o=rollUpgrades(4,'elite'); const cur=availUpgrades().filter(u=>u.r==='cursed'); if(cur.length && RNG()<0.3) o.push(pick(cur)); return o; }).map(u=>({id:u.id, price:priceOf(u), sold:false})), potion:{price:Math.round((30+run.act*5)*(run.p.shopMul||1)), sold:false} };
+    const tm=tierHas(7)?1.3:1, priceOf=u=>Math.round(({common:45,rare:80,epic:130,cursed:60})[u.r]*(1+0.15*(run.act-1))*(run.p.shopMul||1)*tm);
+    stock={ items:seeded(roomKey('shop'),()=>{ const o=rollUpgrades(4,'elite'); const cur=availUpgrades().filter(u=>u.r==='cursed'); if(cur.length && RNG()<0.3) o.push(pick(cur)); return o; }).map(u=>({id:u.id, price:priceOf(u), sold:false})), potion:{price:Math.round((30+run.act*5)*(run.p.shopMul||1)*tm), sold:false} };
   }
   const p=run.p;
-  const potionHeal=Math.round(p.maxHp*0.4);
+  const potionHeal=Math.round(p.maxHp*(tierHas(9)?0.2:0.4));
   render(`<div class="wrap"><div class="eyebrow">Ein wandernder Händler</div><h2>Der Händler</h2>
     <p class="sub">„Feine Waren für tapfere Seelen. Nur Gold, keine Schuldscheine."</p>
     <div class="row" style="gap:6px"><span class="pill h">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span><span class="pill g">💰 ${run.gold}</span></div>
@@ -633,7 +634,7 @@ function showShop(stock){
 }
 
 function showRest(){
-  const p=run.p, heal=Math.round(p.maxHp*0.4);
+  const p=run.p, heal=Math.round(p.maxHp*(tierHas(4)?0.25:0.4));
   render(`<div class="wrap" style="justify-content:center"><div class="eyebrow">Ein ruhiger Ort</div><h2>Das Lagerfeuer</h2>
     <p class="sub">Die Flammen knistern. Du hast Zeit für genau eine Sache.</p>
     <span class="pill h" style="align-self:flex-start">❤️ ${Math.ceil(p.hp)}/${Math.round(p.maxHp)}</span>

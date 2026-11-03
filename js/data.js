@@ -73,6 +73,14 @@ const BOSSES = {
   lavaworm:{ name:'Der Lavawurm', hp:1450, speed:150, dmg:22, r:38 },
 };
 
+const BOSS_AGAIN = {
+  golem:'„Du … schon wieder. Stein … vergisst nicht.“',
+  spider:'„Zurückgekrochen? Meine Kinder haben dich vermisst.“',
+  lich:'„Ich erinnere mich an deinen letzten Atemzug. Er war köstlich.“',
+  vampire:'„Wie rührend. Du bringst mir dein Blut ein zweites Mal.“',
+  dragon:'„Asche kehrt also zurück. Diesmal verbrenne ich auch deinen Namen.“',
+  lavaworm:'Die Erde grollt – sie erinnert sich an dich.',
+};
 const BOSS_LINES = {
   golem:'„Stein … zermalmt … Fleisch.“',
   spider:'„Wie schön. Frisches Futter für meine Kinder.“',
@@ -263,7 +271,66 @@ const DAILY_MODS = [
   { id:'blood', ic:'🩸', nm:'Blutmond',   ds:'Jeder Kill heilt 3 LP, aber Lagerfeuer heilen nicht', start:p=>{ p.lifeOnKill+=3; }, noRestHeal:true },
   { id:'rich',  ic:'💎', nm:'Goldrausch', ds:'Start mit 150 Gold, aber Gegner lassen kein Gold fallen', gold:150, noGold:true },
 ];
-const runMod = () => run && run.mod ? DAILY_MODS.find(m=>m.id===run.mod) : null;
+// Zusätzliche Regeln für Herausforderungen und die Wochenprüfung
+const EXTRA_MODS = [
+  { id:'nodash',  ic:'🚫', nm:'Standhaft',       ds:'Ausweichen ist nicht möglich', noDash:true },
+  { id:'noskill', ic:'🤐', nm:'Ohne Fähigkeit',  ds:'Keine Fähigkeit, dafür +25 % Schaden', noSkill:true, start:p=>{ p.dmg*=1.25; } },
+  { id:'fragile', ic:'🥚', nm:'Zerbrechlich',    ds:'Nur 60 max. LP, dafür +50 % Schaden und 2 Schutzrunen', start:p=>{ p.maxHp=60; p.hp=60; p.dmg*=1.5; p.shield+=2; } },
+  { id:'cursed',  ic:'🕯️', nm:'Verfluchter Weg', ds:'Du beginnst mit „Hexenmal“ und „Fluch der Gier“', curses:['c_hex','c_greed'] },
+  { id:'noshop',  ic:'🚷', nm:'Kein Händler',    ds:'Alle Händler sind verschwunden – dort warten Ereignisse', mapSwap:{shop:'event'} },
+  { id:'norest',  ic:'🌑', nm:'Keine Rast',      ds:'Keine Lagerfeuer, dafür Schätze und +50 % Gold', mapSwap:{rest:'treasure'}, start:p=>{ p.goldMul+=0.5; } },
+];
+const MOD_LIST = DAILY_MODS.concat(EXTRA_MODS);
+// Aktive Regeln des Laufs (mehrere werden zusammengeführt)
+function runMod(){
+  if(!run) return null; const ids=run.mods||(run.mod?[run.mod]:[]); if(!ids.length) return null;
+  const ms=ids.map(id=>MOD_LIST.find(m=>m.id===id)).filter(Boolean); if(!ms.length) return null; if(ms.length===1) return ms[0];
+  const o={ id:ids.join('+'), ic:ms.map(m=>m.ic).join(''), nm:ms.map(m=>m.nm).join(' + '), ds:ms.map(m=>m.ds).join(' · ') };
+  for(const m of ms) for(const k in m){ if(k==='id'||k==='ic'||k==='nm'||k==='ds') continue; const v=m[k];
+    if(k==='start'){ const prev=o.start; o.start=prev?(p=>{ prev(p); v(p); }):v; }
+    else if(k==='gold') o.gold=(o.gold||0)+v;
+    else if(typeof v==='number') o[k]=(o[k]||1)*v;
+    else if(Array.isArray(v)) o[k]=(o[k]||[]).concat(v);
+    else if(v && typeof v==='object') o[k]=Object.assign({},o[k]||{},v);
+    else o[k]=o[k]||v; }
+  return o;
+}
+/* Verdammnis-Stufen: je Held freischaltbar, jede Stufe fügt eine Regel hinzu (wie Aufstiegsstufen) */
+const TIERS = [
+  { ic:'⚔️', nm:'Normal',          ds:'Die Arena, wie sie ist.' },
+  { ic:'💀', nm:'Härtere Gegner',  ds:'Gegner haben 20 % mehr Leben.' },
+  { ic:'👑', nm:'Elite-Plage',     ds:'In jedem Kampf kann ein zusätzlicher Elitegegner lauern.' },
+  { ic:'🐲', nm:'Zorn der Bosse',  ds:'Bosse haben 25 % mehr Leben und werden schon bei 60 % wütend.' },
+  { ic:'🔥', nm:'Karge Feuer',     ds:'Lagerfeuer heilen nur noch 25 % statt 40 %.' },
+  { ic:'💨', nm:'Flinke Gegner',   ds:'Gegner sind 10 % schneller.' },
+  { ic:'🗡️', nm:'Scharfe Klingen', ds:'Gegner verursachen 20 % mehr Schaden.' },
+  { ic:'💰', nm:'Gierige Händler', ds:'Händler verlangen 30 % mehr.' },
+  { ic:'🧬', nm:'Zähe Elite',      ds:'Elitegegner haben eine zusätzliche Eigenschaft.' },
+  { ic:'💔', nm:'Gnadenlos',       ds:'Heilherzen, Heilquellen und Heiltränke wirken nur halb.' },
+  { ic:'☠️', nm:'Die Verdammten',  ds:'Besiegte Gegner hinterlassen manchmal eine Seelenexplosion.' },
+];
+const TIER_MAX = TIERS.length-1;
+const tierNow = () => (run && run.tier) || 0;
+const tierHas = n => tierNow()>=n;
+const tierColor = t => t>=10?'#ff5a2a':t>=7?'#ffd04a':t>=4?'#d8e4f4':t>=1?'#d08a4a':'#8d7f86';
+/* Herausforderungen: feste Regeln, Freischaltung nacheinander */
+const CHALLENGES = [
+  { id:'ch_glass',  ic:'🔪', nm:'Glaskanone',           mods:['glass'],              souls:60 },
+  { id:'ch_horde',  ic:'🐀', nm:'Die Horde',            mods:['horde'],              souls:60 },
+  { id:'ch_elite',  ic:'👑', nm:'Elitekrieg',           mods:['elite'],              souls:80 },
+  { id:'ch_nodash', ic:'🚫', nm:'Standhaft',            mods:['nodash'],             souls:100 },
+  { id:'ch_noskill',ic:'🤐', nm:'Nur der Grundangriff', mods:['noskill'],            souls:100 },
+  { id:'ch_blood',  ic:'🩸', nm:'Blutiger Reichtum',    mods:['rich','blood'],       souls:100 },
+  { id:'ch_fragile',ic:'🥚', nm:'Zerbrechlich',         mods:['fragile'],            souls:120 },
+  { id:'ch_cursed', ic:'🕯️', nm:'Verfluchter Weg',      mods:['cursed','noshop'],    souls:140 },
+  { id:'ch_haste',  ic:'⚡', nm:'Hast der Horde',       mods:['haste','horde'],      souls:140 },
+  { id:'ch_norest', ic:'🌑', nm:'Ohne Rast',            mods:['norest','elite'],     souls:160 },
+  { id:'ch_final',  ic:'☠️', nm:'Prüfung der Verdammten', mods:['glass','haste','elite'], souls:250 },
+];
 function todayKey(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function dailyInfo(key){ const ids=Object.keys(CHARS); return { cid:ids[hashStr(key+'|hero')%ids.length], mod:DAILY_MODS[hashStr(key+'|mod')%DAILY_MODS.length] }; }
+// Wochenprüfung: ISO-Woche, zwei Regeln, eigener Held
+function weekKey(d=new Date()){ const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())); const day=t.getUTCDay()||7; t.setUTCDate(t.getUTCDate()+4-day); const y=t.getUTCFullYear(); const wk=Math.ceil(((t-Date.UTC(y,0,1))/86400000+1)/7); return 'W'+y+'-'+String(wk).padStart(2,'0'); }
+function weeklyInfo(key){ const ids=Object.keys(CHARS), pool=MOD_LIST.filter(m=>!['noshop','norest'].includes(m.id)), a=hashStr(key+'|m1')%pool.length; let b=hashStr(key+'|m2')%pool.length; if(b===a) b=(b+1)%pool.length;
+  return { cid:ids[hashStr(key+'|hero')%ids.length], mods:[pool[a].id,pool[b].id] }; }
 

@@ -127,6 +127,7 @@ function drawHero(){
   const bob=p.moving?Math.abs(Math.sin(p.anim))*-2.5:Math.sin(G.time*2.5)*0.7;
   if(p.inv>0 && Math.floor(G.time*20)%2) ctx.globalAlpha=0.45;
   drawShadow(p.x,p.y+13,14);
+  { const tw=tierWon(p.cid); if(tw>=1 && !G.over){ const col=tierColor(tw), pu=0.5+0.5*Math.sin(G.time*3); ctx.strokeStyle=col; ctx.globalAlpha=(ctx.globalAlpha||1)*(0.35+0.25*pu); ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(p.x,p.y+13,17,6.5,0,0,TAU); ctx.stroke(); ctx.globalAlpha=1; if(tw>=10 && FX() && Math.random()<0.3) part(p.x+rand(-12,12),p.y+12,0,-50,0.6,2.5,'#ff7a2a',true); } }
   if(p.shieldLeft>0){ ctx.strokeStyle='rgba(127,212,255,0.5)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(p.x,p.y-2,24+Math.sin(G.time*4),0,TAU); ctx.stroke(); }
   const lift=p.leap?Math.sin(Math.min(1,p.leap.t/p.leap.T)*Math.PI)*38:0;
   if(p.fury>0){ drawGlow(p.x,p.y-lift,24+p.fury*2.2,'#ff3a2a',0.12+p.fury*0.045); if(p.fury>=10 && Math.random()<0.4) part(p.x+rand(-10,10),p.y-lift+rand(-10,8),0,-60,0.5,3,'#ff5a2a',true); }
@@ -756,4 +757,5 @@ function loop(now){
 }
 applyBodyClasses();
 resize(); showMenu(); requestAnimationFrame(loop);
+try{ if(new URLSearchParams(location.search).get('tag')) setTimeout(showDaily,0); }catch(e){}
 if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }

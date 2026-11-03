@@ -89,6 +89,27 @@ const tests = {
       (actions.skip||actions.next)(); const r3=!run.pend && !!ui.querySelector('.mapbox');
       return {ok:r1&&!!pendMode&&r2&&r3, r1, pendMode, r2, r3}; });
   },
+  async menus(pg){ // Jeder Bildschirm lässt sich fehlerfrei öffnen (auch für ganz neue Spielstände)
+    return pg.evaluate(()=>{ const bad=[]; const tryS=(n,f)=>{ try{ f(); if(!ui.innerHTML.length) bad.push(n+': leer'); }catch(e){ bad.push(n+': '+e.message); } };
+      const keep=save; save=defSave(); tryS('menu-neu',showMenu); save=keep; save.runs=Math.max(1,save.runs);
+      for(const [n,f] of Object.entries({showMenu,showChars,showDaily,showForge,showAch,showBeast,showScores,showSettings,showSlots,showHelp,showChallenges})) tryS(n,f);
+      tryS('codex',()=>showCodex(showMenu)); tryS('codex-evo',()=>showCodex(showMenu,'evo')); tryS('tiers',()=>showTiers(showMenu));
+      save.tutDone=true; startRun('alchi'); tryS('map',showMap); tryS('runmenu',showRunMenu); tryS('runstats',showRunStats); tryS('rest',showRest); tryS('shop',()=>showShop()); tryS('evo',()=>showEvo(showMap)); tryS('bounty',()=>showBounty('gold',showMap)); tryS('event',showEvent);
+      return {ok:!bad.length, bad}; });
+  },
+  async meta(pg){ // Verdammnis-Stufen, Herausforderungen, Wochenprüfung, Kopfgelder und Teilen
+    return pg.evaluate(()=>{ const out={};
+      save.tutDone=true; save.tierWon={krieger:9}; startRun('krieger',{tier:10}); out.tier=run.tier===10;
+      run.posId=run.map.rows[2][0].id; const e10=makeEnemy('slime',100,100,false); run.tier=0; const e0=makeEnemy('slime',100,100,false); out.hp=e10.maxHp>e0.maxHp*1.15;
+      startRun('jaegerin',{challenge:'ch_cursed'}); out.chal=!!run.upg.c_hex && !!run.upg.c_greed && !run.map.rows.some(r=>r.some(n=>n.type==='shop'));
+      out.merge=runMod().nm.includes('+');
+      const wk=weekKey(); startRun(weeklyInfo(wk).cid,{daily:wk}); out.week=Array.isArray(run.mods)&&run.mods.length===2&&!!runMod();
+      run.posId=run.map.rows[1][0].id; startCombat('fight'); __bot(true,60); run.act=2; endRun(false); out.hist=!!save.dailyHist[wk];
+      out.share=shareText(wk,save.dailyHist[wk],'Test').includes('Arena der Verdammten');
+      out.bounty=bountyList(todayKey()).length===3; out.am=arenaMasterLine().length>10;
+      startRun('krieger',{challenge:'ch_nodash'}); run.posId=run.map.rows[1][0].id; startCombat('fight'); useDash(); out.nodash=P.dashT<=0 && $('dashBtn').style.display==='none'; endRun(false);
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
   async music(pg){ // Musik-Engine spielt alle Stücke inklusive B-Teil fehlerfrei
     await pg.mouse.click(10,10);
     return pg.evaluate(()=>{ audio(); if(!AC) return {ok:true, skipped:'kein Audio'}; let n=0;

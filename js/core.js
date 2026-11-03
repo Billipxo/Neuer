@@ -7,7 +7,7 @@ const SAVE_V=2, RUN_V=6;
 const reducedMotion = (()=>{ try{ return matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } })();
 function defSettings(){ return { shake:!reducedMotion, vibrate:true, music:true, fx:true, joyFixed:false, lefty:false, cb:false, musicVol:0.7, gfx:'auto', showFps:false, dmgNums:true, dmgOff:false, gameSpeed:1.2, shakeAmt:1, calm:reducedMotion, fpsCap:60, assist:false, bigUi:false, iosTip:false }; }
 function defStats(){ return { beast:{}, kills:0, elites:0, cheers:0, events:[], syns:[], bosses:[], wins:{}, anyWin:false, noHitBoss:false, dailyWin:false, maxEndless:0, maxGold:0, maxCombo:0 }; }
-function defSave(){ return { v:SAVE_V, tutDone:false, ach:{}, skin:{}, heroXp:{}, stats:defStats(), souls:0, meta:{}, unlocked:{krieger:true}, scores:[], runs:0, lastChar:'krieger', sound:true, run:null, assistN:0, seenFoes:{}, settings:defSettings(), name:'Spielstand 1', last:0, ngMax:0, ngSel:0 }; }
+function defSave(){ return { v:SAVE_V, tutDone:false, ach:{}, skin:{}, heroXp:{}, stats:defStats(), souls:0, meta:{}, unlocked:{krieger:true}, scores:[], runs:0, lastChar:'krieger', sound:true, run:null, assistN:0, seenFoes:{}, tierWon:{}, tierSel:0, chal:{}, dailyHist:{}, streak:null, lastRun:null, lossStreak:0, settings:defSettings(), name:'Spielstand 1', last:0, ngMax:0, ngSel:0 }; }
 function migrate(s){
   const d=defSave(); s=Object.assign(d, s);
   s.settings=Object.assign(defSettings(), s.settings||{}); if(s.settings.fx===false && !s.settings._gfxMig){ s.settings.gfx='low'; } s.settings._gfxMig=true;
@@ -15,6 +15,8 @@ function migrate(s){
   if(!Array.isArray(s.scores)) s.scores=[];
   s.stats=Object.assign(defStats(), s.stats||{}); if(!Object.keys(s.stats.beast).length) for(const b of s.stats.bosses) s.stats.beast[b]=1; s.ach=s.ach||{}; s.skin=s.skin||{};
   if(s.runs>0 && s.tutDone===undefined) s.tutDone=true;
+  if(!s.tierWon||typeof s.tierWon!=='object') s.tierWon={}; for(const cid in (s.stats.wins||{})) if(s.tierWon[cid]===undefined) s.tierWon[cid]=0;
+  if(!s.dailyHist||typeof s.dailyHist!=='object') s.dailyHist={}; if(s.daily && s.daily.key && !s.dailyHist[s.daily.key] && s.daily.tries) s.dailyHist[s.daily.key]={best:s.daily.best||0,first:s.daily.best||0,tries:s.daily.tries,won:false,act:0};
   if(!s.seenFoes||typeof s.seenFoes!=='object') s.seenFoes={}; for(const k in s.stats.beast) s.seenFoes[k]=1;
   if(s.run && s.run.v!==RUN_V) s.run=null;   // alter Laufstand passt nicht mehr zur Spielversion
   s.v=SAVE_V; return s;

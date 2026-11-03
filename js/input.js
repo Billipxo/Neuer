@@ -71,17 +71,23 @@ function newPlayer(cid, noMeta){
 function startRun(cid, opts={}){
   const daily=opts.daily||null; if(!daily) save.lastChar=cid; save.runs++;
   const seed = daily ? 'daily-'+daily : Math.random().toString(36).slice(2);
-  const mod = daily ? dailyInfo(daily).mod : null;
+  const weekly = !!(daily && daily[0]==='W');
+  const mod = daily && !weekly ? dailyInfo(daily).mod : null;
+  const ch = opts.challenge ? CHALLENGES.find(c=>c.id===opts.challenge) : null;
+  const mods = weekly ? weeklyInfo(daily).mods : ch ? ch.mods.slice() : null;
   run={ v:RUN_V, cid, p:newPlayer(cid,!!daily), act:1, map:null, posId:null, visited:[], gold:daily?10:25*metaLvl('m_gold')+10, goldTotal:0, souls:0, kills:0, rooms:0, bosses:0,
-    upg:{}, syn:[], rerolls:daily?1:metaLvl('m_reroll'), won:false, endless:false, seed, daily, mod:mod?mod.id:null, ng:daily?0:(opts.ng||0) };
+    upg:{}, syn:[], rerolls:daily?1:metaLvl('m_reroll'), won:false, endless:false, seed, daily, mod:mod?mod.id:null, mods, challenge:ch?ch.id:null,
+    tier:(daily||ch)?0:Math.max(0,Math.min(opts.tier||0, typeof tierOpen==='function'?tierOpen(cid):0)), ng:daily?0:(opts.ng||0), elites:0, bossKills:[] };
   if(run.ng) run.p.goldMul+=0.2*run.ng;
-  if(mod){ if(mod.start) mod.start(run.p); if(mod.gold) run.gold=mod.gold; }
-  run.map=seeded(seed+'|map|1',()=>genMap(1));
+  const M=runMod(); if(M){ if(M.start) M.start(run.p); if(M.gold) run.gold=M.gold; if(M.curses) for(const id of M.curses) if(UPG[id]) applyUpgrade(UPG[id]); }
+  run.map=seeded(seed+'|map|1',()=>genMap(1)); applyMapMods(run.map);
   showMap();
 }
 function nextAct(){
-  run.act++; run.map=seeded(run.seed+'|map|'+run.act,()=>genMap(run.act)); run.posId=null; run.visited=[];
+  run.act++; run.map=seeded(run.seed+'|map|'+run.act,()=>genMap(run.act)); applyMapMods(run.map); run.posId=null; run.visited=[];
   run.p.hp=Math.min(run.p.maxHp,run.p.hp+run.p.maxHp*0.35); showMap();
 }
 const roomKey = k => run.seed+'|'+k+'|'+run.posId;
+// Sonderregeln, die Knoten der Karte austauschen (z. B. keine Händler)
+function applyMapMods(map){ const M=runMod(); if(!M||!M.mapSwap) return; for(const rw of map.rows) for(const n of rw) if(M.mapSwap[n.type]) n.type=M.mapSwap[n.type]; }
 
