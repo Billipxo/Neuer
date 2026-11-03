@@ -14,7 +14,7 @@ const BOT = `
       if(n){ const a=angTo(P,n), d=dist(P,n), s=d<(melee?50:200)?-1:1; input.jx=Math.cos(a+0.6)*s; input.jy=Math.sin(a+0.6)*s; } else { input.jx=input.jy=0; }
       if(P.skillT<=0) useSkill();
       if(G.eproj.some(p=>Math.hypot(p.x-P.x,p.y-P.y)<45) || G.hazards.some(h=>h.t>h.delay*0.7 && Math.hypot(h.x-P.x,h.y-P.y)<(h.r||200))) useDash();
-      if(god) P.hp=P.maxHp; G.stop=0; update(1/30); f++;
+      if(god){ P.hp=P.maxHp; P.inv=Math.max(P.inv,0.2); } G.stop=0; update(1/30); f++;
     }
     return {frames:f, over:!!(G&&G.over), state};
   };`;
@@ -27,7 +27,7 @@ const tests = {
     return pg.evaluate(()=>{ const out={};
       for(const ch of Object.keys(CHARS)){ for(const id in CHARS) save.unlocked[id]=true; save.tutDone=true; startRun(ch); let rooms=0, guard=0;
         while(run && run.act===1 && guard++<40){
-          if(state==='combat'){ __bot(true,240); if(state==='combat') return {ok:false, hero:ch, stuck:G.type}; continue; }
+          if(state==='combat'){ __bot(true,240); if(state==='combat') return {ok:false, hero:ch, stuck:G.type, en:G.enemies.map(e=>e.kind+(e.champ?'*':'')+':'+(e.affix||[]).join('+')+':'+Math.round(e.hp)+'/'+Math.round(e.maxHp))}; continue; }
           const a=Object.keys(actions);
           if(a.includes('go') && ui.querySelector('.mapbox')) { enterNode(availNodes()[0]); rooms++; }
           else if(a.includes('pick')) actions.pick(ui.querySelector('[data-a=pick]').dataset.v);

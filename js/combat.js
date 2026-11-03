@@ -940,7 +940,7 @@ function hurtPlayer(dmg,src,via){
   hype(-0.06); G.combo=0; if(G.type==='boss') G.bossHit=true; p.hurtT=0.25;
   if(src){ const ka=Math.atan2(p.y-src.y,p.x-src.x); p.kbx=Math.cos(ka)*260; p.kby=Math.sin(ka)*260; }
   { const at=src&&src.affix?src:(via&&via.affix?via:null);
-    if(at){ if(at.affix.includes('vamp')&&!at.dead){ at.hp=Math.min(at.maxHp,at.hp+at.maxHp*0.15); G.texts.push({x:at.x,y:at.y-at.r-10,s:'+Blut',c:'#ff4a5a',t:0}); }
+    if(at){ if(at.affix.includes('vamp')&&!at.dead){ at.hp=Math.min(at.maxHp,at.hp+at.maxHp*(at.champ?0.05:0.08)); G.texts.push({x:at.x,y:at.y-at.r-10,s:'+Blut',c:'#ff4a5a',t:0}); }
       if(at.affix.includes('frost')){ p.chill=2; G.texts.push({x:p.x,y:p.y-40,s:'Verlangsamt',c:'#bfe6ff',t:0}); } } }
   if(G.rc && G.rc.id==='nohit' && !G.rc.failed){ G.rc.failed=true; rcFail(); }
   if(p.vengeance){ explosion(p.x,p.y,95*Math.sqrt(p.area),p.dmg*p.vengeance,'#ff7a5a',false,'vengeance'); }

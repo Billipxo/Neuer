@@ -132,7 +132,7 @@ const AFFIXES = {
   armor: { ic:'🛡️', nm:'Gepanzert',  ds:'erleidet 40 % weniger Schaden' },
   boom:  { ic:'💥', nm:'Explosiv',   ds:'explodiert kurz nach dem Tod' },
   split: { ic:'🧬', nm:'Teilend',    ds:'zerfällt beim Tod in zwei kleinere Gegner' },
-  vamp:  { ic:'🩸', nm:'Vampirisch', ds:'heilt sich, wenn er dich trifft' },
+  vamp:  { ic:'🩸', nm:'Vampirisch', ds:'heilt sich, wenn er dich trifft (Champions weniger)' },
   frost: { ic:'❄️', nm:'Frostig',    ds:'seine Treffer verlangsamen dich' },
   summon:{ ic:'🦇', nm:'Beschwörer', ds:'ruft regelmäßig Fledermäuse' },
 };
