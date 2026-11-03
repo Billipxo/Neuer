@@ -145,6 +145,7 @@ function update(dt){
   if(G.over){ G.deathT+=dt; dt*=0.3; }
   if(G.whiteFlash>0) G.whiteFlash-=dt;
   G.time+=dt; if(G.tut) updTut(dt);
+  if(!G.over){ run.actTime=run.actTime||{}; run.actTime[run.act]=(run.actTime[run.act]||0)+dt; }
   // spawns
   for(const s of G.spawnQ){ s.t-=dt; if(s.t<=0){ if(!s.boss) newFoeHint(s.kind); { const en=s.boss?makeBoss(s.kind,s.x,s.y):makeEnemy(s.kind,s.x,s.y,s.elite); if(s.champ) champify(en); G.enemies.push(en); } if(s.boss){ roar(s.kind); G.shake+=10; } burst(s.x,s.y,s.boss?40:10,'#b69cff',s.boss?220:120); } }
   G.spawnQ=G.spawnQ.filter(s=>s.t>0);
@@ -159,17 +160,17 @@ function update(dt){
   updProjectiles(dt);
   updHazards(dt);
   for(const z of G.pzones){ z.life-=dt; z.tick-=dt; const zc=ZONE_COL[z.kind]||'#9a5aff';
-    if(z.tick<=0){ z.tick=0.3; for(const e of G.enemies){ if(!e.dead && Math.hypot(e.x-z.x,e.y-z.y)<z.r+e.r){ dealDamage(e,z.dps*0.3,{noChain:true,noCrit:true,color:z.kind?zc:'#c9a0ff'}); if(z.kind==='acid') e.slow=Math.max(e.slow,0.4);
+    if(z.tick<=0){ z.tick=0.3; for(const e of G.enemies){ if(!e.dead && Math.hypot(e.x-z.x,e.y-z.y)<z.r+e.r){ dealDamage(e,z.dps*0.3,{src:z.src||(z.kind?'atk':'shadow'),noChain:true,noCrit:true,color:z.kind?zc:'#c9a0ff'}); if(z.kind==='acid') e.slow=Math.max(e.slow,0.4);
       if(e.dead && P.chainR && z.kind) G.booms.push({x:e.x,y:e.y,r:55,dmg:P.dmg*0.9}); } } }
     if(Math.random()<dt*(z.kind?6:3)) part(z.x+rand(-0.7,0.7)*z.r,z.y+rand(-0.4,0.4)*z.r,0,-40,0.5,z.kind?3:4,zc,true); }
   for(const z of G.ezones){ z.life-=dt; if(!G.over && z.life<z.max-0.3 && Math.hypot(P.x-z.x,P.y-z.y)<z.r+P.r*0.3) hurtPlayer(z.dmg,null);
     if(Math.random()<dt*5) part(z.x+rand(-0.7,0.7)*z.r,z.y+rand(-0.5,0.5)*z.r,rand(-10,10),-20,0.8,4,'#9ad84a'); }
   G.ezones=G.ezones.filter(z=>z.life>0);
   G.pzones=G.pzones.filter(z=>z.life>0);
-  for(const s of G.pstrikes){ s.t+=dt; if(s.t>=s.delay){ s.done=true; explosion(s.x,s.y,s.r,s.dmg,'#8ec8ff'); G.shake+=4; if(hasSyn('comet')) for(const e of G.enemies) if(!e.dead && Math.hypot(e.x-s.x,e.y-s.y)<s.r+e.r) e.freeze=Math.max(e.freeze,e.boss?0.4:1.5); } }
+  for(const s of G.pstrikes){ s.t+=dt; if(s.t>=s.delay){ s.done=true; explosion(s.x,s.y,s.r,s.dmg,'#8ec8ff',false,'meteor'); G.shake+=4; if(hasSyn('comet')) for(const e of G.enemies) if(!e.dead && Math.hypot(e.x-s.x,e.y-s.y)<s.r+e.r) e.freeze=Math.max(e.freeze,e.boss?0.4:1.5); } }
   G.pstrikes=G.pstrikes.filter(s=>!s.done);
   // pending explosions (Explosive Seelen)
-  const bl=G.booms; G.booms=[]; for(const b of bl){ explosion(b.x,b.y,b.r,b.dmg,b.barrel?'#ffb03a':'#ff8a3a',true);
+  const bl=G.booms; G.booms=[]; for(const b of bl){ explosion(b.x,b.y,b.r,b.dmg,b.barrel?'#ffb03a':'#ff8a3a',true,b.barrel?'barrel':(b.src||'boom'));
     if(b.barrel){ G.shake+=6; for(let i=0;i<10;i++) part(b.x,b.y,rand(-160,160),rand(-160,160),0.6,rand(2,4),'#6b4a2a'); if(Math.hypot(P.x-b.x,P.y-b.y)<b.r+P.r*0.5) hurtPlayer(10+3*run.act,null); } }
   G.obs=G.obs.filter(o=>!o.dead);
   updTraps(dt);
@@ -228,13 +229,13 @@ function updPlayer(dt){
   // Wirbelwind
   if(p.spin>0){ p.spin-=dt; p.spinTick-=dt; p.face+=dt*18;
     if(p.spinTick<=0){ p.spinTick=0.16; const R=95*p.area; sfx('swing');
-      for(const e of G.enemies){ if(Math.hypot(e.x-p.x,e.y-p.y)<R+e.r) dealDamage(e,p.dmg*0.65,{kb:140,from:p}); }
+      for(const e of G.enemies){ if(Math.hypot(e.x-p.x,e.y-p.y)<R+e.r) dealDamage(e,p.dmg*0.65,{src:'skill',kb:140,from:p}); }
       G.fx.push({type:'ring',x:p.x,y:p.y,r:R,t:0,life:0.2,color:'#cfe3ff'}); } }
   // Feuerkugeln
   if(p.orbit>0){ G.orbitA+=dt*3.2; const R=62*Math.sqrt(p.area);
     for(let i=0;i<p.orbit;i++){ const a=G.orbitA+i*TAU/p.orbit, ox=p.x+Math.cos(a)*R, oy=p.y+Math.sin(a)*R;
       if(Math.random()<0.5) part(ox,oy,rand(-20,20),rand(-20,20),0.3,3,'#ff9a3a',true);
-      for(const e of G.enemies){ if(e.orbCd<=0 && Math.hypot(e.x-ox,e.y-oy)<e.r+11){ e.orbCd=0.45; dealDamage(e,p.dmg*0.55,{kb:60,from:{x:ox,y:oy}}); if(hasSyn('frostfire')) e.freeze=Math.max(e.freeze,e.boss?0.2:0.6); if(hasSyn('inferno')) G.booms.push({x:ox,y:oy,r:44,dmg:p.dmg*0.45}); } } } }
+      for(const e of G.enemies){ if(e.orbCd<=0 && Math.hypot(e.x-ox,e.y-oy)<e.r+11){ e.orbCd=0.45; dealDamage(e,p.dmg*0.55,{src:'orbit',kb:60,from:{x:ox,y:oy}}); if(hasSyn('frostfire')) e.freeze=Math.max(e.freeze,e.boss?0.2:0.6); if(hasSyn('inferno')) G.booms.push({x:ox,y:oy,r:44,dmg:p.dmg*0.45}); } } } }
 }
 const ZONE_COL={acid:'#8dff6a',fire:'#ff8a2a'};
 const FLASK_COL={acid:'#8dff6a',fire:'#ff8a2a',frost:'#9fe6ff',boom:'#ffb03a',heal:'#ff7ab0'};
@@ -244,36 +245,36 @@ function heroPassives(p,dt){
     p.holy=p.stillT>(p.sanct?0.05:0.8)?Math.min(1,(p.holy||0)+dt*4):Math.max(0,(p.holy||0)-dt*3);
     if(p.holy>0.5){ p.holyTick=(p.holyTick||0)-dt; if(p.holyTick<=0){ p.holyTick=0.25; const R=(p.sanct?120:85)*Math.sqrt(p.area);
       p.hp=Math.min(p.maxHp,p.hp+(p.sanct?1:0.5));
-      for(const e of G.enemies) if(!e.dead && !e.under && Math.hypot(e.x-p.x,e.y-p.y)<R+e.r) dealDamage(e,p.dmg*0.12,{noChain:true,noCrit:true,quiet:true}); } }
+      for(const e of G.enemies) if(!e.dead && !e.under && Math.hypot(e.x-p.x,e.y-p.y)<R+e.r) dealDamage(e,p.dmg*0.12,{src:'passive',noChain:true,noCrit:true,quiet:true}); } }
     if(p.ward>0){ p.ward-=dt;
       for(const pr of G.eproj){ if(pr.life>0 && Math.hypot(pr.x-p.x,pr.y-p.y)<72){ pr.life=0; const a=Math.atan2(pr.y-p.y,pr.x-p.x);
-        G.pproj.push({type:'holy',x:pr.x,y:pr.y,vx:Math.cos(a)*480,vy:Math.sin(a)*480,r:7,dmg:p.dmg*1.5,life:0.8,pierce:1,hit:new Set()}); burst(pr.x,pr.y,6,'#ffe08a',120); } } } }
+        G.pproj.push({type:'holy',src:'skill',x:pr.x,y:pr.y,vx:Math.cos(a)*480,vy:Math.sin(a)*480,r:7,dmg:p.dmg*1.5,life:0.8,pierce:1,hit:new Set()}); burst(pr.x,pr.y,6,'#ffe08a',120); } } } }
   else if(p.cid==='berserk'){
     if(p.furyT>0) p.furyT-=dt; else if(p.fury>0) p.fury=Math.max(0,p.fury-dt*4);
     if(p.leap){ const L=p.leap; L.t+=dt; const k=Math.min(1,L.t/L.T); p.x=L.x0+(L.x1-L.x0)*k; p.y=L.y0+(L.y1-L.y0)*k; p.inv=Math.max(p.inv,0.12); p.vx=p.vy=0;
       if(k>=1){ p.leap=null; const R=95*Math.sqrt(p.area); let hit=0;
-        for(const e of G.enemies){ if(!e.dead && !e.under && Math.hypot(e.x-p.x,e.y-p.y)<R+e.r){ dealDamage(e,p.dmg*2,{kb:220,from:p,bleed:p.bleed}); e.stun=e.boss?0.3:1.1; hit++; } }
+        for(const e of G.enemies){ if(!e.dead && !e.under && Math.hypot(e.x-p.x,e.y-p.y)<R+e.r){ dealDamage(e,p.dmg*2,{src:'skill',kb:220,from:p,bleed:p.bleed}); e.stun=e.boss?0.3:1.1; hit++; } }
         if(hit){ p.fury=p.furyMax||10; p.furyT=p.frenzyLong?4:2; }
         G.fx.push({type:'shock',x:p.x,y:p.y,r:R*1.1,t:0,life:0.4,color:'#ff8a6a'}); G.fx.push({type:'ring',x:p.x,y:p.y,r:R,t:0,life:0.3,color:'#c8402a',fill:true});
         burst(p.x,p.y+8,22,'#8a7a6a',260); G.shake+=8; sfx('boom'); hitstop(0.05); } } }
   else if(p.cid==='alchi' && p.vortex){ const V=p.vortex; V.t+=dt;
     if(V.t>0){ V.tick-=dt;
       for(const e of G.enemies){ if(e.dead||e.boss||e.under) continue; const d=Math.hypot(V.x-e.x,V.y-e.y); if(d<V.R+e.r && d>6){ const pull=Math.min(d,170*dt); e.x+=(V.x-e.x)/d*pull; e.y+=(V.y-e.y)/d*pull; } }
-      if(V.tick<=0){ V.tick=0.3; for(const e of G.enemies) if(!e.dead && Math.hypot(V.x-e.x,V.y-e.y)<V.R+e.r) dealDamage(e,p.dmg*0.3,{noChain:true,noCrit:true,quiet:true}); }
-      if(V.t>=V.T){ explosion(V.x,V.y,V.R*0.8,p.dmg*3,'#8dff6a'); G.shake+=6; burst(V.x,V.y,30,'#c8ff8a',300); p.vortex=null; } } }
+      if(V.tick<=0){ V.tick=0.3; for(const e of G.enemies) if(!e.dead && Math.hypot(V.x-e.x,V.y-e.y)<V.R+e.r) dealDamage(e,p.dmg*0.3,{src:'skill',noChain:true,noCrit:true,quiet:true}); }
+      if(V.t>=V.T){ explosion(V.x,V.y,V.R*0.8,p.dmg*3,'#8dff6a',false,'skill'); G.shake+=6; burst(V.x,V.y,30,'#c8ff8a',300); p.vortex=null; } } }
 }
 function flaskLand(pr){
   const p=P, k=pr.kind, A=Math.sqrt(p.area), B=1+0.3*(p.brew||0), x=pr.x2, y=pr.y2;
   sfx('hit'); burst(x,y,10,FLASK_COL[k],160); for(let i=0;i<5;i++) part(x,y,rand(-90,90),rand(-140,-40),0.5,2,'#e8f4f8',false,300);
-  for(const e of G.enemies) if(!e.dead && !e.under && Math.hypot(e.x-x,e.y-y)<38*A+e.r) dealDamage(e,pr.dmg,{kb:60,from:{x,y}});
+  for(const e of G.enemies) if(!e.dead && !e.under && Math.hypot(e.x-x,e.y-y)<38*A+e.r) dealDamage(e,pr.dmg,{src:'atk',kb:60,from:{x,y}});
   const big=hasEvo('a_big')?2:1;
-  if(hasEvo('a_volatile')) explosion(x,y,52*A,pr.dmg*0.6,'#ffb03a');
+  if(hasEvo('a_volatile')) explosion(x,y,52*A,pr.dmg*0.6,'#ffb03a',false,'atk');
   if(k==='acid'||k==='fire'){ const L=3+(p.brew||0); G.pzones.push({x,y,r:44*A*B*big,life:L,max:L,dps:p.dmg*(k==='fire'?0.5:0.33),tick:0,kind:k});
     if(hasEvo('a_cluster')) for(let i=0;i<3;i++){ const ang=i/3*TAU+rand(0,1); G.pzones.push({x:clamp(x+Math.cos(ang)*60*A,20,AW-20),y:clamp(y+Math.sin(ang)*60*A,20,AH-20),r:24*A*B*big,life:L*0.8,max:L*0.8,dps:p.dmg*(k==='fire'?0.45:0.3),tick:0,kind:k}); } }
   else if(hasSyn('genius')) p.skillT=Math.max(0,p.skillT-1.5);
   else { G.texts.push({x,y:y-20,s:{frost:'Frost!',boom:'Bumm!',heal:'Heilung!'}[k],c:FLASK_COL[k],t:0});
     if(k==='frost'){ for(const e of G.enemies) if(!e.dead && Math.hypot(e.x-x,e.y-y)<85*A+e.r) e.freeze=e.boss?0.5:1.6; G.fx.push({type:'ring',x,y,r:85*A,t:0,life:0.4,color:'#9fe6ff',fill:true}); }
-    else if(k==='boom'){ explosion(x,y,85*A,pr.dmg*1.6,'#ffb03a'); G.shake+=4; }
+    else if(k==='boom'){ explosion(x,y,85*A,pr.dmg*1.6,'#ffb03a',false,'atk'); G.shake+=4; }
     else { const h=Math.round(p.maxHp*0.08); p.hp=Math.min(p.maxHp,p.hp+h); G.texts.push({x:p.x,y:p.y-30,s:'+'+h,c:'#7dff8a',t:0}); G.fx.push({type:'ring',x,y,r:60,t:0,life:0.4,color:'#ff7ab0',fill:true}); } }
 }
 // Zielwahl: nächster Gegner, aber Heiler und Totems werden bevorzugt, Schildträger von vorne gemieden
@@ -292,7 +293,7 @@ function nearestEnemy(from,maxD,exclude,needLos){
 
 const hasEvo=id=>!!(run && run.evo && run.evo.includes(id));
 function meleeSwing(p,a,R,arc,dmg,o){ let hitAny=false;
-  for(const e of G.enemies){ const d=Math.hypot(e.x-p.x,e.y-p.y); if(d<R+e.r && !e.under && (arc>=TAU-0.01 || Math.abs(angDiff(Math.atan2(e.y-p.y,e.x-p.x),a))<arc/2+0.2)){ dealDamage(e,dmg,Object.assign({from:p},o)); if(o.stun) e.stun=e.boss?0.25:o.stun; hitAny=true; } }
+  for(const e of G.enemies){ const d=Math.hypot(e.x-p.x,e.y-p.y); if(d<R+e.r && !e.under && (arc>=TAU-0.01 || Math.abs(angDiff(Math.atan2(e.y-p.y,e.x-p.x),a))<arc/2+0.2)){ dealDamage(e,dmg,Object.assign({from:p,src:'atk'},o)); if(o.stun) e.stun=e.boss?0.25:o.stun; hitAny=true; } }
   for(const ob of G.obs){ if(ob.type==='barrel' && Math.hypot(ob.x-p.x,ob.y-p.y)<R+ob.r && (arc>=TAU-0.01 || Math.abs(angDiff(Math.atan2(ob.y-p.y,ob.x-p.x),a))<arc/2+0.2)) blowBarrel(ob); }
   return hitAny; }
 function attack(tgt){
@@ -352,7 +353,7 @@ function attack(tgt){
 }
 
 // Perfektes Ausweichen: wer im letzten Moment durch einen Angriff hechtet, wird belohnt (Zeitlupe, Ausweichen sofort wieder bereit)
-function perfectDodge(){ const p=P; p.dashCd=0; if(hasRelic('r_feather')) p.dashChg=2; if(hasSyn('blooddance')){ p.hp=Math.min(p.maxHp,p.hp+8); G.texts.push({x:p.x,y:p.y-50,s:'+8',c:'#7dff8a',t:0}); } G.slowT=Math.max(G.slowT,0.22); p.perfT=0.6; G.stats_perf=(G.stats_perf||0)+1; save.stats.perfect=(save.stats.perfect||0)+1;
+function perfectDodge(){ const p=P; p.dashCd=0; if(hasRelic('r_feather')) p.dashChg=2; if(hasSyn('blooddance')){ p.hp=Math.min(p.maxHp,p.hp+8); G.texts.push({x:p.x,y:p.y-50,s:'+8',c:'#7dff8a',t:0}); } G.slowT=Math.max(G.slowT,0.22); p.perfT=0.6; G.stats_perf=(G.stats_perf||0)+1; run.perf=(run.perf||0)+1; save.stats.perfect=(save.stats.perfect||0)+1;
   G.texts.push({x:p.x,y:p.y-34,s:'Perfekt!',c:'#9fe6ff',big:true,t:0}); G.fx.push({type:'shock',x:p.x,y:p.y,r:70,t:0,life:0.35,color:'#9fe6ff'}); sfx('pick'); buzz(15); hype(0.05); }
 function useDash(){
   if((runMod()||{}).noDash) return;
@@ -369,7 +370,7 @@ function useDash(){
 }
 function onDashMove(dt){
   const p=P;
-  if(p.dashDmg>0) for(const e of G.enemies){ if(!e.dead && !p.dashHit.includes(e) && Math.hypot(e.x-p.x,e.y-p.y)<p.r+e.r+8){ p.dashHit.push(e); dealDamage(e,p.dmg*p.dashDmg,{kb:340,from:p}); G.shake+=2; } }
+  if(p.dashDmg>0) for(const e of G.enemies){ if(!e.dead && !p.dashHit.includes(e) && Math.hypot(e.x-p.x,e.y-p.y)<p.r+e.r+8){ p.dashHit.push(e); dealDamage(e,p.dmg*p.dashDmg,{src:'dash',kb:340,from:p}); G.shake+=2; } }
   if(p.shadow>0){ p.trailT-=dt; if(p.trailT<=0){ p.trailT=0.05; G.pzones.push({x:p.x,y:p.y,r:24,life:1.4+0.5*p.shadow,max:1.4+0.5*p.shadow,dps:p.dmg*(0.5+0.3*p.shadow),tick:0}); } }
 }
 function raiseAlly(x,y,life){
@@ -383,7 +384,7 @@ function updAllies(dt){
     let best=null,bd=1e9; for(const e of G.enemies){ if(e.dead||e.under) continue; const d=Math.hypot(e.x-a.x,e.y-a.y)-e.r; if(d<bd){bd=d;best=e;} }
     if(best){ const ang=Math.atan2(best.y-a.y,best.x-a.x); a.face=ang;
       if(bd>a.r+4){ a.x+=Math.cos(ang)*125*dt; a.y+=Math.sin(ang)*125*dt; }
-      else if(a.atkT<=0){ a.atkT=0.7; dealDamage(best,P.dmg*0.5*P.minionDmg,{noChain:true,kb:60,from:a}); } }
+      else if(a.atkT<=0){ a.atkT=0.7; dealDamage(best,P.dmg*0.5*P.minionDmg,{src:'minion',noChain:true,kb:60,from:a}); } }
     else { const d=Math.hypot(P.x-a.x,P.y-a.y); if(d>60){ const ang=Math.atan2(P.y-a.y,P.x-a.x); a.x+=Math.cos(ang)*125*dt; a.y+=Math.sin(ang)*125*dt; } }
     pushOut(a);
   }
@@ -453,10 +454,10 @@ function useSkill(){
     const t=nearestEnemy(p,380), tx=t?t.x:p.x+Math.cos(p.face)*150, ty=t?t.y:p.y+Math.sin(p.face)*150;
     p.leap={x0:p.x,y0:p.y,x1:clamp(tx,p.r,AW-p.r),y1:clamp(ty,p.r,AH-p.r),t:0,T:0.38}; burst(p.x,p.y+10,10,'#8a7a6a',140); }
   else if(p.cid==='magier'){ const R=170*p.area;
-    for(const e of G.enemies){ if(Math.hypot(e.x-p.x,e.y-p.y)<R+e.r){ dealDamage(e,p.dmg*2.2,{from:p,kb:120}); e.freeze=e.boss?0.7:2.4; } }
+    for(const e of G.enemies){ if(Math.hypot(e.x-p.x,e.y-p.y)<R+e.r){ dealDamage(e,p.dmg*2.2,{src:'skill',from:p,kb:120}); e.freeze=e.boss?0.7:2.4; } }
     G.fx.push({type:'nova',x:p.x,y:p.y,r:R,t:0,life:1.1,seed:Math.random()*TAU}); G.fx.push({type:'ring',x:p.x,y:p.y,r:R,t:0,life:0.45,color:'#9fe6ff',fill:true}); burst(p.x,p.y,40,'#bdf2ff',320); G.shake+=5;
   } else { const n=24;
-    for(let i=0;i<n;i++){ const a=i/n*TAU; G.pproj.push({type:'arrow',x:p.x,y:p.y,vx:Math.cos(a)*620,vy:Math.sin(a)*620,r:5,dmg:p.dmg*1.6,life:0.9,pierce:3,bounce:p.bounce,poison:p.poison,hit:new Set(),gold:true}); }
+    for(let i=0;i<n;i++){ const a=i/n*TAU; G.pproj.push({type:'arrow',src:'skill',x:p.x,y:p.y,vx:Math.cos(a)*620,vy:Math.sin(a)*620,r:5,dmg:p.dmg*1.6,life:0.9,pierce:3,bounce:p.bounce,poison:p.poison,hit:new Set(),gold:true}); }
     G.fx.push({type:'volley',x:p.x,y:p.y,r:90,t:0,life:0.45}); G.fx.push({type:'ring',x:p.x,y:p.y,r:60,t:0,life:0.25,color:'#e6ffb0'});
   }
 }
@@ -479,6 +480,7 @@ function dealDamage(e,amount,o={}){
   if(o.bleed){ e.bleedT=3; e.bleedDps=Math.max(e.bleedDps||0, amount*o.bleed/3); }
   if(o.poison){ e.poisonT=3; e.poisonDps=Math.max(e.poisonDps||0, amount*o.poison/3); }
   if(crit && hasSyn('bladestorm')) P.atkT-=P.rate/P.atkSpd*0.25;
+  { const dealt=Math.max(0,Math.min(d,e.hp)), s=o.src||'atk'; run.dmgBy=run.dmgBy||{}; run.dmgBy[s]=(run.dmgBy[s]||0)+dealt; }
   e.hp-=d; e.flash=e.boss?0.04:0.09; sfx('hit');
   if(o.kb && !e.boss && o.from){ const a=Math.atan2(e.y-o.from.y,e.x-o.from.x), k=o.kb*(e.elite?0.4:1); e.kx+=Math.cos(a)*k; e.ky+=Math.sin(a)*k; }
   if(o.from && !o.noCrit && FX()){ const ha=Math.atan2(e.y-o.from.y,e.x-o.from.x);
@@ -489,7 +491,7 @@ function dealDamage(e,amount,o={}){
   if(!o.noChain && P.chain>0 && Math.random()<0.12+0.06*P.chain) chainLightning(e, amount*0.7, 2+P.chain+(hasSyn('storm')?2:0));
   if(e.hp<=0){ const over=-e.hp; killEnemy(e);
     if(P.overkill && !o.noOver && over>2){ let best=null,bd=170; for(const o2 of G.enemies){ if(o2.dead||o2===e||o2.under) continue; const dd=Math.hypot(o2.x-e.x,o2.y-e.y); if(dd<bd){bd=dd;best=o2;} }
-      if(best){ G.fx.push({type:'bolt',x:e.x,y:e.y,x2:best.x,y2:best.y,t:0,life:0.18}); dealDamage(best,over*0.8,{noOver:true,noChain:true,noCrit:true,color:'#ffb0ff'}); } } }
+      if(best){ G.fx.push({type:'bolt',x:e.x,y:e.y,x2:best.x,y2:best.y,t:0,life:0.18}); dealDamage(best,over*0.8,{src:'overkill',noOver:true,noChain:true,noCrit:true,color:'#ffb0ff'}); } } }
 }
 function chainLightning(src,dmg,n){
   let cur=src; const hit=new Set([src]);
@@ -497,12 +499,12 @@ function chainLightning(src,dmg,n){
     let best=null,bd=170; for(const e of G.enemies){ if(e.dead||hit.has(e)) continue; const d=Math.hypot(e.x-cur.x,e.y-cur.y); if(d<bd){bd=d;best=e;} }
     if(!best) break; G.fx.push({type:'bolt',x:cur.x,y:cur.y,x2:best.x,y2:best.y,t:0,life:0.18}); hit.add(best);
     const nx=best.x, ny=best.y, cold=best.freeze>0||best.slow>0||(P.frost>0&&Math.hypot(P.x-nx,P.y-ny)<110+30*P.frost);
-    dealDamage(best,dmg*(cold&&hasSyn('shatter')?2:1),{noChain:true,color:'#bfe6ff'}); cur={x:nx,y:ny};
+    dealDamage(best,dmg*(cold&&hasSyn('shatter')?2:1),{src:'chain',noChain:true,color:'#bfe6ff'}); cur={x:nx,y:ny};
   }
 }
-function explosion(x,y,r,dmg,color,fromBoom){
+function explosion(x,y,r,dmg,color,fromBoom,src){
   G.fx.push({type:'ring',x,y,r,t:0,life:0.3,color,fill:true}); burst(x,y,16,color,200); sfx('boom'); G.shake+=2;
-  for(const e of G.enemies){ if(!e.dead && Math.hypot(e.x-x,e.y-y)<r+e.r) dealDamage(e,dmg,{noChain:true,kb:120,from:{x,y}}); }
+  for(const e of G.enemies){ if(!e.dead && Math.hypot(e.x-x,e.y-y)<r+e.r) dealDamage(e,dmg,{src:src||'boom',noChain:true,kb:120,from:{x,y}}); }
   for(const o of G.obs){ if(o.type==='barrel' && !o.dead && Math.hypot(o.x-x,o.y-y)<r+o.r) blowBarrel(o); }
 }
 // Hinweis beim ersten Auftauchen einer Gegnerart (Einstieg: Mechaniken erklären, wenn sie gebraucht werden)
@@ -533,7 +535,7 @@ function killEnemy(e){
   if(Math.random()<0.035) G.coins.push({x:e.x,y:e.y,vx:rand(-40,40),vy:rand(-60,-20),v:0,heart:true,t:0});
   if(P.lifeOnKill) P.hp=Math.min(P.maxHp,P.hp+P.lifeOnKill);
   if(P.minions && !e.small && e.kind!=='mimic' && G.allies.length<P.minions && Math.random()<P.raise) raiseAlly(e.x,e.y,14);
-  if(P.explode>0){ const py=hasSyn('pyre'); G.booms.push({x:e.x,y:e.y,r:(48+12*P.explode)*(py?1.4:1),dmg:P.dmg*(0.4+0.3*P.explode)}); if(py) G.pzones.push({x:e.x,y:e.y,r:42,life:2,max:2,dps:P.dmg*0.4,tick:0,kind:'fire'}); }
+  if(P.explode>0){ const py=hasSyn('pyre'); G.booms.push({x:e.x,y:e.y,r:(48+12*P.explode)*(py?1.4:1),dmg:P.dmg*(0.4+0.3*P.explode)}); if(py) G.pzones.push({x:e.x,y:e.y,r:42,life:2,max:2,dps:P.dmg*0.4,tick:0,kind:'fire',src:'boom'}); }
   if(hasSyn('fountain') && e.bleedT>0){ for(const o of G.enemies) if(!o.dead && o!==e && Math.hypot(o.x-e.x,o.y-e.y)<90){ o.bleedT=3; o.bleedDps=Math.max(o.bleedDps||0,e.bleedDps||0); } burst(e.x,e.y,14,'#c81a2a',180); }
   if(e.kind==='magma') G.traps.push({type:'lava',x:e.x,y:e.y,r:34,tick:0,id:800+Math.floor(rand(0,99999)),life:5});
   if(e.affix){
@@ -565,10 +567,10 @@ function updEnemy(e,dt){
   if(e.sumT!==undefined && !G.cleared){ e.sumT-=dt; if(e.sumT<=0){ e.sumT=7; for(let i=0;i<2;i++) G.spawnQ.push({x:clamp(e.x+rand(-60,60),30,AW-30),y:clamp(e.y+rand(-60,60),30,AH-30),t:0.5,kind:'bat'}); G.fx.push({type:'ring',x:e.x,y:e.y,r:40,t:0,life:0.4,color:'#9a5ab0'}); } }
   e.t+=dt; if(e.flash>0)e.flash-=dt; if(e.orbCd>0)e.orbCd-=dt;
   if(e.poisonT>0){ e.poisonT-=dt; e.poisonAcc=(e.poisonAcc||0)+e.poisonDps*dt;
-    if(e.poisonAcc>=5||e.poisonT<=0){ const pa=e.poisonAcc; e.poisonAcc=0; if(e.poisonT<=0) e.poisonDps=0; dealDamage(e,pa,{noChain:true,noCrit:true,color:'#8dff6a'}); if(e.dead) return; }
+    if(e.poisonAcc>=5||e.poisonT<=0){ const pa=e.poisonAcc; e.poisonAcc=0; if(e.poisonT<=0) e.poisonDps=0; dealDamage(e,pa,{src:'poison',noChain:true,noCrit:true,color:'#8dff6a'}); if(e.dead) return; }
     if(Math.random()<dt*6) part(e.x+rand(-0.6,0.6)*e.r,e.y-e.r*0.3,0,-30,0.5,3,'#8dff6a',true); }
   if(e.bleedT>0){ e.bleedT-=dt; e.bleedAcc=(e.bleedAcc||0)+e.bleedDps*dt;
-    if(e.bleedAcc>=5||e.bleedT<=0){ const ba=e.bleedAcc; e.bleedAcc=0; if(e.bleedT<=0) e.bleedDps=0; dealDamage(e,ba,{noChain:true,noCrit:true,color:'#ff5a5a'}); if(e.dead) return; }
+    if(e.bleedAcc>=5||e.bleedT<=0){ const ba=e.bleedAcc; e.bleedAcc=0; if(e.bleedT<=0) e.bleedDps=0; dealDamage(e,ba,{src:'bleed',noChain:true,noCrit:true,color:'#ff5a5a'}); if(e.dead) return; }
     if(Math.random()<dt*8) part(e.x+rand(-0.5,0.5)*e.r,e.y,0,40,0.5,2.5,'#c81a2a'); }
   let sm=1; if(e.freeze>0){ e.freeze-=dt; sm=0; } else if(e.slow>0){ e.slow-=dt; sm=0.5; }
   if(e.stun>0){ e.stun-=dt; sm=0; }
@@ -816,13 +818,13 @@ function updProjectiles(dt){
       if(e.dead||e.under||pr.hit.has(e)||(e.alpha!==undefined&&e.alpha<0.3)) continue;
       if(Math.hypot(e.x-pr.x,e.y-pr.y)<e.r+pr.r){
         if(pr.type==='bolt'){ pr.life=0; G.fx.push({type:'ring',x:pr.x,y:pr.y,r:pr.aoe,t:0,life:0.22,color:'#c58cff',fill:true}); burst(pr.x,pr.y,8,'#d9b3ff',140);
-          for(const o of G.enemies){ if(!o.dead && Math.hypot(o.x-pr.x,o.y-pr.y)<pr.aoe+o.r){ dealDamage(o, o===e?pr.dmg:pr.dmg*0.4,{kb:80,from:pr}); if(pr.frost) o.slow=Math.max(o.slow,1.5); if(pr.frz) o.freeze=Math.max(o.freeze,o.boss?0.3:1.2); } }
+          for(const o of G.enemies){ if(!o.dead && Math.hypot(o.x-pr.x,o.y-pr.y)<pr.aoe+o.r){ dealDamage(o, o===e?pr.dmg:pr.dmg*0.4,{src:pr.src||'atk',kb:80,from:pr}); if(pr.frost) o.slow=Math.max(o.slow,1.5); if(pr.frz) o.freeze=Math.max(o.freeze,o.boss?0.3:1.2); } }
           if(pr.split){ const n=2+pr.split, o0=rand(0,TAU); for(let i=0;i<n;i++){ const sa=o0+i/n*TAU; G.pproj.push({type:'spark',x:pr.x,y:pr.y,vx:Math.cos(sa)*380,vy:Math.sin(sa)*380,r:4,dmg:pr.dmg*0.35,life:0.4,pierce:0,hit:new Set([e])}); } }
           break; }
         if(pr.type==='hammer' && pr.back && P.judg) e.stun=e.boss?0.2:0.6;
         if(pr.type==='hammer' && pr.back && hasSyn('thunder') && !pr.thundered){ pr.thundered=true; chainLightning(e,pr.dmg*0.6,3); }
         if((pr.type==='hammer'&&hasEvo('p_light')) || (pr.type==='skull'&&pr.drain)) P.hp=Math.min(P.maxHp,P.hp+1);
-        pr.hit.add(e); dealDamage(e,pr.dmg,{kb:pr.type==='wave'?120:pr.type==='hammer'?150:70,from:{x:pr.x-(pr.vx||0)*0.05,y:pr.y-(pr.vy||0)*0.05},poison:pr.poison,bleed:pr.bleed}); pr.pierce--; if(pr.pierce<0){ pr.life=0; break; }
+        pr.hit.add(e); dealDamage(e,pr.dmg,{src:pr.src||({wave:'wave',spark:'split',taxe:'evo',holy:'skill'}[pr.type])||'atk',kb:pr.type==='wave'?120:pr.type==='hammer'?150:70,from:{x:pr.x-(pr.vx||0)*0.05,y:pr.y-(pr.vy||0)*0.05},poison:pr.poison,bleed:pr.bleed}); pr.pierce--; if(pr.pierce<0){ pr.life=0; break; }
       }
     }
   }
@@ -866,11 +868,11 @@ function updTraps(dt){
     if(t.type==='spikes'){ t.t+=dt; const c=t.t%2.8, cyc=Math.floor(t.t/2.8);
       if(c>2.1){ if(Math.hypot(P.x-t.x,P.y-t.y)<t.r+P.r*0.4) hurtPlayer(7+4*run.act,null);
         for(const e of G.enemies){ if(e.boss||FLY[e.kind]||e.dead||e['sp'+t.id]===cyc) continue;
-          if(Math.hypot(e.x-t.x,e.y-t.y)<t.r+e.r*0.4){ e['sp'+t.id]=cyc; dealDamage(e,30*sc,{noChain:true,noCrit:true,color:'#ffb35a'}); } } } }
+          if(Math.hypot(e.x-t.x,e.y-t.y)<t.r+e.r*0.4){ e['sp'+t.id]=cyc; dealDamage(e,30*sc,{src:'trap',noChain:true,noCrit:true,color:'#ffb35a'}); } } } }
     else if(t.type==='lava'){ t.tick-=dt;
       if(Math.random()<dt*4) part(t.x+rand(-t.r,t.r)*0.6,t.y+rand(-t.r,t.r)*0.5,0,-25,0.7,3,'#ffb03a',true);
       if(t.tick<=0){ t.tick=0.5; if(Math.hypot(P.x-t.x,P.y-t.y)<t.r) hurtPlayer(5+2*run.act,null);
-        for(const e of G.enemies){ if(!e.boss && !FLY[e.kind] && !e.dead && Math.hypot(e.x-t.x,e.y-t.y)<t.r) dealDamage(e,10*sc,{noChain:true,noCrit:true,color:'#ff8a3a'}); } } }
+        for(const e of G.enemies){ if(!e.boss && !FLY[e.kind] && !e.dead && Math.hypot(e.x-t.x,e.y-t.y)<t.r) dealDamage(e,10*sc,{src:'trap',noChain:true,noCrit:true,color:'#ff8a3a'}); } } }
   }
 }
 // Hilfemodus (wie der Gottmodus in Hades): 20 % weniger Schaden, +2 % je Niederlage, höchstens 80 %
@@ -887,10 +889,10 @@ function hurtPlayer(dmg,src,via){
     if(at){ if(at.affix.includes('vamp')&&!at.dead){ at.hp=Math.min(at.maxHp,at.hp+at.maxHp*0.15); G.texts.push({x:at.x,y:at.y-at.r-10,s:'+Blut',c:'#ff4a5a',t:0}); }
       if(at.affix.includes('frost')){ p.chill=2; G.texts.push({x:p.x,y:p.y-40,s:'Verlangsamt',c:'#bfe6ff',t:0}); } } }
   if(G.rc && G.rc.id==='nohit' && !G.rc.failed){ G.rc.failed=true; rcFail(); }
-  if(p.vengeance){ explosion(p.x,p.y,95*Math.sqrt(p.area),p.dmg*p.vengeance,'#ff7a5a'); }
+  if(p.vengeance){ explosion(p.x,p.y,95*Math.sqrt(p.area),p.dmg*p.vengeance,'#ff7a5a',false,'vengeance'); }
   p.hp-=d; p.inv=0.75; G.shake=Math.min(14,G.shake+7); G.hurtFlash=0.3; sfx('hurt'); buzz(40); hitstop(0.06);
   G.texts.push({x:p.x,y:p.y-26,s:'-'+d,c:'#ff5a4a',big:true,t:0});
-  if(src && p.thorns>0 && !src.dead){ dealDamage(src,p.thorns,{noChain:true}); if(hasSyn('vampthorn')) p.hp=Math.min(p.maxHp,p.hp+5); }
+  if(src && p.thorns>0 && !src.dead){ dealDamage(src,p.thorns,{src:'thorns',noChain:true}); if(hasSyn('vampthorn')) p.hp=Math.min(p.maxHp,p.hp+5); }
   if(p.hp<=0 && p.undying && !G.undyUsed){ G.undyUsed=true; p.hp=1; p.inv=2; G.texts.push({x:p.x,y:p.y-40,s:'Unbeugsam!',c:'#ff5a4a',big:true,t:0}); burst(p.x,p.y,30,'#c8402a',220); }
   if(p.hp<=0){
     if(p.revive>0){ p.revive--; run.upg.phoenix=Math.max(0,(run.upg.phoenix||1)-1); if(!run.upg.phoenix) delete run.upg.phoenix; p.hp=Math.ceil(p.maxHp*0.5); p.inv=2.5; burst(p.x,p.y,50,'#ffb84a',260); banner('Phönixfeder!','Du erhebst dich erneut'); }
@@ -951,6 +953,22 @@ function showVictory(){
   { endless:()=>{ run.endless=true; nextAct(); }, claim:()=>endRun(true),
     ngp:()=>{ run.ng=nn; run.act=0; run.won=false; run.seed+='|ng'+nn; run.p.goldMul+=0.2; nextAct(); run.p.hp=run.p.maxHp; save.run=run; persist(); } },true);
 }
+const DMG_SRC={ atk:'⚔️ Grundangriff', orbit:'🔥 Feuerkugeln', chain:'⚡ Kettenblitz', boom:'💥 Explosionen', wave:'🌊 Klingenwelle', split:'💫 Splitterfunken', meteor:'☄️ Meteore',
+  shadow:'🌑 Schattenspur', poison:'🧪 Gift', bleed:'🩸 Blutung', minion:'💀 Diener', thorns:'🌵 Dornen', vengeance:'💢 Vergeltung', passive:'🌞 Geweihter Boden', overkill:'➰ Überschuss',
+  dash:'🐗 Sturmangriff', barrel:'🛢️ Fässer', evo:'🪓 Axtwurf', r_mirror:'🪞 Splitterspiegel', trap:'⚙️ Fallen', pet:'🐾 Begleiter' };
+// Laufzusammenfassung: Schaden nach Quelle, Zeit je Akt, Todesursache
+function runSummaryHtml(r,won){
+  const by=r.dmgBy||{}, tot=Object.values(by).reduce((a,b)=>a+b,0);
+  if(!tot) return '';
+  const top=Object.entries(by).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const lab=k=>k==='skill'?CHARS[r.cid].skill.icon+' '+CHARS[r.cid].skill.name:(DMG_SRC[k]||k);
+  const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+  const t=r.actTime||{}, times=Object.keys(t).map(a=>`Akt ${a} ${fmt(t[a])}`).join(' · ');
+  const kn=r.killer?(BOSSES[r.killer]?BOSSES[r.killer].name:ENEMIES[r.killer]?ENEMIES[r.killer].name:''):'';
+  return `<div class="summary"><div class="eyebrow">Laufzusammenfassung · ${Math.round(tot).toLocaleString('de-DE')} Schaden</div>
+    ${top.map(([k,v])=>`<div class="dbar"><span>${lab(k)}</span><i><u style="width:${Math.max(2,v/tot*100).toFixed(1)}%"></u></i><b>${Math.round(v/tot*100)} %</b></div>`).join('')}
+    <div class="sub" style="font-size:13px;margin-top:4px">⏱️ ${times||'–'}${!won&&kn?` · ☠️ Gefallen durch ${esc(kn)}`:''}${r.perf?` · 💨 ${r.perf}× perfekt ausgewichen`:''}</div></div>`;
+}
 function endRun(won){
   state='ui'; const r=run; r.ended=true; r.room=null; wakeLock(false); G=null; $('hud').classList.add('hidden');
   const bonus=won?100:0;
@@ -982,6 +1000,7 @@ function endRun(won){
       <div><span>Bosse</span><b>${r.bosses}</b></div><div><span>Gold gesammelt</span><b>${r.goldTotal}</b></div>
       <div style="grid-column:1/-1;color:var(--soul)"><span>Seelen erhalten${bonus?' (inkl. Siegbonus)':''}</span><b>+${souls} 👻</b></div></div>
     ${unlockable?`<p class="sub center" style="color:var(--soul)">Du hast genug Seelen, um ${unlockable[1].name} freizuschalten.</p>`:''}
+    ${runSummaryHtml(r,won)}
     ${bties.length?`<div class="cards">${bties.map(b=>`<div class="card rare"><div class="ic">📜</div><div class="body"><div class="rar">Kopfgeld erfüllt</div><div class="nm">${esc(b.txt)}</div><div class="ds" style="color:var(--soul)">+${b.souls} Seelen</div></div></div>`).join('')}</div>`:''}
     <div class="relics" style="justify-content:center">${Object.entries(r.upg).map(([id,n])=>`<span class="relic">${UPG[id].ic}${n>1?`<sup>${n}</sup>`:''}</span>`).join('')}</div>
     ${r.daily?`<button class="btn" data-a="share">📤 Ergebnis teilen</button>`:''}
