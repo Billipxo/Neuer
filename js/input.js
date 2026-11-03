@@ -80,11 +80,11 @@ function startRun(cid, opts={}){
     tier:(daily||ch)?0:Math.max(0,Math.min(opts.tier||0, typeof tierOpen==='function'?tierOpen(cid):0)), ng:daily?0:(opts.ng||0), elites:0, bossKills:[] };
   if(run.ng) run.p.goldMul+=0.2*run.ng;
   const M=runMod(); if(M){ if(M.start) M.start(run.p); if(M.gold) run.gold=M.gold; if(M.curses) for(const id of M.curses) if(UPG[id]) applyUpgrade(UPG[id]); }
-  run.map=seeded(seed+'|map|1',()=>genMap(1)); applyMapMods(run.map);
+  run.map=seeded(seed+'|map|1',()=>genMap(1)); applyMapMods(run.map); unlockLore('act1');
   showMap();
 }
 function nextAct(){
-  run.act++; run.map=seeded(run.seed+'|map|'+run.act,()=>genMap(run.act)); applyMapMods(run.map); run.posId=null; run.visited=[];
+  run.act++; if(run.act<=4) unlockLore('act'+run.act); run.map=seeded(run.seed+'|map|'+run.act,()=>genMap(run.act)); applyMapMods(run.map); run.posId=null; run.visited=[];
   run.p.hp=Math.min(run.p.maxHp,run.p.hp+run.p.maxHp*0.35); showMap();
 }
 const roomKey = k => run.seed+'|'+k+'|'+run.posId;

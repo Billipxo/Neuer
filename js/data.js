@@ -241,6 +241,37 @@ const EVOS = {
             { id:'b_throw',  ic:'🪓', nm:'Axtwurf', ds:'Jeder 3. Angriff wirft zusätzlich eine Axt auf den nächsten Gegner in Reichweite 260.' },
             { id:'b_rage',   ic:'😡', nm:'Ungebremst', ds:'Raserei bis zu 15 Stufen statt 10.' } ],
 };
+/* Chronik: Lore-Einträge, die sich durch Fortschritt freischalten */
+const LORE = [
+  { id:'act1', ic:'🏚️', nm:'Die Verliese', hint:'Betritt Akt 1', tx:'Unter der alten Königsstadt liegen die Verliese, in denen einst Schuldner und Ketzer verrotteten. Heute sind sie die erste Bühne der Arena. Wer hier fällt, wird von den Zuschauern rasch vergessen.' },
+  { id:'act2', ic:'⚰️', nm:'Die Krypta', hint:'Erreiche Akt 2', tx:'Die Krypta ist älter als die Stadt selbst. Kultisten halten hier die Toten wach, damit die Ränge niemals leer bleiben – denn auch Geister zahlen Eintritt, in Seelen.' },
+  { id:'act3', ic:'🌋', nm:'Der Drachenhort', hint:'Erreiche Akt 3', tx:'Tief im glühenden Gestein ruht der Schatz eines untergegangenen Reiches. Ignaroth bewacht ihn seit Jahrhunderten und verbrennt jeden, der nach Gold greift – oder nach Ruhm.' },
+  { id:'act4', ic:'✨', nm:'Der Himmelsturm', hint:'Erreiche Akt 4', tx:'Über der Arena, verborgen hinter Wolken aus Sternenstaub, erhebt sich der Himmelsturm. Hier begann alles: Ein gefallener Stern versprach den Menschen ewigen Ruhm – und erschuf dafür die Arena.' },
+  { id:'b_golem', ic:'🗿', nm:'Der Steingolem', hint:'Besiege den Steingolem', tx:'Aus den Grundmauern der Verliese gemeißelt, erwachte der Golem, als hier der erste Kämpfer starb. Er kennt nur einen Befehl: Niemand verlässt die Tiefe.' },
+  { id:'b_spider', ic:'🕸️', nm:'Die Spinnenkönigin', hint:'Besiege die Spinnenkönigin', tx:'Die Königin nistet in vergessenen Schächten. Man sagt, ihre Netze halten die Seelen der Gefallenen fest, bis sie sie verschlingt.' },
+  { id:'b_lich', ic:'☠️', nm:'Der Lichkönig', hint:'Besiege den Lichkönig', tx:'Einst war er der Hofmagier des alten Königs. Für ein Leben ohne Ende gab er seine Seele hin – und herrscht nun über eine Krypta ohne Ausgang.' },
+  { id:'b_vampire', ic:'🧛', nm:'Graf Morvath', hint:'Besiege Graf Morvath', tx:'Der Graf besitzt seit dreihundert Jahren die besten Plätze der Arena. Wer ihm eine gute Vorstellung liefert, darf gehen. Bisher hat das niemand geschafft.' },
+  { id:'b_dragon', ic:'🐉', nm:'Ignaroth', hint:'Besiege Ignaroth', tx:'Ignaroth war der letzte Wächter des alten Reichs. Er hat seinen Eid nicht vergessen – nur das Reich, das er schützen sollte.' },
+  { id:'b_lavaworm', ic:'🔥', nm:'Der Lavawurm', hint:'Besiege den Lavawurm', tx:'Ein Wurm, so alt wie der Berg. Er frisst Gestein und spuckt Feuer, und die Zuschauer wetten darauf, wie lange ein Held in seinem Schlund überlebt.' },
+  { id:'b_fallen', ic:'🌠', nm:'Vaeloth, der Gefallene Stern', hint:'Besiege den Herrn des Himmelsturms', tx:'Vaeloth war ein Stern, der heller brennen wollte als alle anderen. Gestürzt und voller Zorn, baute er die Arena, um sich an den Seelen der Kämpfer zu nähren. Jede Niederlage macht ihn stärker.' },
+  { id:'h_krieger', ic:'🛡️', nm:'Sir Aldric', hint:'Gewinne mit dem Krieger', tx:'Aldric diente der Stadtwache, bis man ihn für ein Verbrechen verurteilte, das er nicht beging. Die Arena ist seine einzige Chance auf Freiheit – und auf die Wahrheit.' },
+  { id:'h_magier', ic:'🔮', nm:'Elara', hint:'Gewinne mit der Magierin', tx:'Elara studierte an der Sternenakademie, bis sie ein verbotenes Buch über die Arena fand. Sie kämpft, um herauszufinden, wer die Seelen der Gefallenen sammelt.' },
+  { id:'h_jaegerin', ic:'🏹', nm:'Nyra', hint:'Gewinne mit der Jägerin', tx:'Nyra jagte in den Wäldern jenseits der Mauern, bis ihr Bruder in die Arena verschleppt wurde. Jeder Pfeil bringt sie ihm ein Stück näher.' },
+  { id:'h_nekro', ic:'🦴', nm:'Morgana', hint:'Gewinne mit der Nekromantin', tx:'Morgana hört die Toten flüstern. Die Seelen der Arena sind gefangen, und nur sie kann ihnen den Weg nach Hause zeigen – mit Hilfe der Toten selbst.' },
+  { id:'h_paladin', ic:'🔨', nm:'Bruder Cassian', hint:'Gewinne mit dem Paladin', tx:'Cassian gehört dem Orden der Morgenröte. Sein Schwur verlangt, das Böse an seiner Quelle zu stellen – und alle Spuren führen zur Spitze des Himmelsturms.' },
+  { id:'h_alchi', ic:'⚗️', nm:'Isolde Funkelbrand', hint:'Gewinne mit der Alchemistin', tx:'Isolde wurde aus jeder Akademie geworfen. In der Arena testet sie ihre Tränke an Freiwilligen. Und an Unfreiwilligen.' },
+  { id:'h_berserk', ic:'🪓', nm:'Hilda Eisenhaar', hint:'Gewinne mit der Berserkerin', tx:'Hilda stammt aus den Nordlanden, wo man Schlachten singt statt erzählt. Sie kam wegen des Ruhms – und bleibt, weil ihr bisher keiner standhielt.' },
+];
+/* Was die Helden vor Bosskämpfen und beim Sieg sagen */
+const HERO_LINES = {
+  krieger: { boss:['Für die Gefallenen dieser Arena!','Mein Schild hält. Komm nur her!','Ich habe schon Schlimmeres gesehen – im Gerichtssaal.'], win:'Heute habe ich mir das Recht verdient, die Wahrheit auszusprechen.' },
+  magier:  { boss:['Interessant. Lass mich dich … analysieren.','Kapitel sieben: Wie man ein Monster schmilzt.','Meine Bücher haben dich unterschätzt. Ich nicht.'], win:'Jede Seele, die hier gefangen war, ist frei. Das steht in keinem Buch.' },
+  jaegerin:{ boss:['Halt still, dann geht es schneller.','Ich habe größere Bestien erlegt. Na ja, fast.','Bruder, ich bin gleich bei dir.'], win:'Ich bringe dich nach Hause, Bruder. Endlich.' },
+  nekro:   { boss:['Die Toten flüstern deinen Namen. Sie warten auf dich.','Du wirst einen guten Diener abgeben.','Noch eine Seele, die ich zur Ruhe schicke.'], win:'Geht heim, ihr Seelen. Die Arena hält euch nicht länger fest.' },
+  paladin: { boss:['Im Licht gibt es keine Furcht.','Bereue, solange du noch kannst.','Mein Schwur ist stärker als dein Zorn.'], win:'Die Morgenröte bricht an. Mein Schwur ist erfüllt.' },
+  alchi:   { boss:['Oh, ein neues Versuchsobjekt!','Mal sehen, wie du auf Säure reagierst.','Bitte stillhalten, das ist Wissenschaft!'], win:'Hypothese bestätigt: Ich bin großartig. Notiz an mich: mehr Explosionen.' },
+  berserk: { boss:['Endlich ein würdiger Gegner!','Die Skalden werden von diesem Tag singen!','Komm schon, schlag zu – ich warte!'], win:'Heute Nacht wird im Norden gesungen. Von mir. Laut.' },
+};
 /* Raum-Herausforderungen: freiwillige Ziele mit Belohnung */
 const ROOM_CHAL = [
   { id:'nohit',   ic:'🛡️', nm:'Unberührt',      ds:'Schließe den Raum ab, ohne Schaden zu nehmen.', rew:'gold' },

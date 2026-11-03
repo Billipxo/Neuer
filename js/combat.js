@@ -85,6 +85,7 @@ function startCombat(type, customWaves){
     G.spawnQ.push({x:AW/2,y:AH*0.3,t:1.1,kind:bk,boss:true});
     const again=save.lastRun && save.lastRun.killer===bk && BOSS_AGAIN[bk];
     setTimeout(()=>{ if(G) banner(BOSSES[bk].name, again||BOSS_LINES[bk]||actOf(run.act).name, 3200); },50); sfx('boss');
+    { const hl=heroLine(run.cid,'boss'); if(hl) setTimeout(()=>{ if(G&&!G.over) banner(CHARS[run.cid].name,'„'+hl+'“',2300); },3500); }
   }
   buildFloor(); initAmbient(); initWeather();
   DECOR.candles=DECOR.candles.filter(c=>!G.obs.some(o=>o.type==='pillar'&&Math.hypot(o.x-c.x,o.y-c.y)<o.r+10));
@@ -520,7 +521,7 @@ function killEnemy(e){
     for(const o of G.enemies) if(!o.dead&&!o.boss){ o.dead=true; burst(o.x,o.y,8,enemyColor(o),120); }
     G.eproj=[]; G.hazards=[]; clearRoom(); return; }
   run.kills++; run.souls+=e.soul; save.stats.kills++; if(e.elite){ save.stats.elites++; run.elites=(run.elites||0)+1; }
-  if(e.boss){ run.bossKills=(run.bossKills||[]); run.bossKills.push(e.kind); }
+  if(e.boss){ run.bossKills=(run.bossKills||[]); run.bossKills.push(e.kind); unlockLore('b_'+e.kind); }
   if(e.champ){ G.champ=null; G.champKilled=true; if(!G.boss) $('bossBar').classList.add('hidden'); banner('Champion besiegt!',e.name,1600); hype(0.6); crowdSound(1); save.stats.champs=(save.stats.champs||0)+1; }
   if(e.elite && hasRelic('r_skull')){ P.maxHp+=3; P.hp+=3; G.texts.push({x:P.x,y:P.y-40,s:'+3 max. LP',c:'#e8e2d0',t:0}); }
   if(tierHas(10) && !e.boss && Math.random()<0.25) G.hazards.push({type:'circle',x:e.x,y:e.y,r:46,delay:0.9,t:0,dmg:e.dmg*0.8,color:'#b06aff'});
@@ -937,14 +938,15 @@ function finishCombat(){
 
 function showVictory(){
   const nn=(run.ng||0)+1; if(!run.daily){ save.ngMax=Math.max(save.ngMax||0,nn); persist(); checkAch(); }
-  if(!run.victoryDone){ run.victoryDone=true; save.stats.wins[run.cid]=1;
+  if(!run.victoryDone){ run.victoryDone=true; save.stats.wins[run.cid]=1; unlockLore('h_'+run.cid);
     if(!run.daily && !run.challenge){ const t=run.tier||0; save.tierWon=save.tierWon||{}; if(tierWon(run.cid)<t || tierWon(run.cid)<0){ save.tierWon[run.cid]=Math.max(tierWon(run.cid),t);
       if(t<TIER_MAX) setTimeout(()=>toast(`<span style="font-size:26px">🔥</span><div><div class="eyebrow" style="color:var(--gold)">Verdammnis-Stufe ${t+1} freigeschaltet</div><b>${CHARS[run.cid].name}</b><div class="sub" style="font-size:13px">${TIERS[t+1].ic} ${TIERS[t+1].nm}: ${TIERS[t+1].ds}</div></div>`),300); } }
     if(run.challenge && !chalDone(run.challenge)){ const ch=CHALLENGES.find(x=>x.id===run.challenge); save.chal=save.chal||{}; save.chal[ch.id]=true; save.souls+=ch.souls;
       setTimeout(()=>toast(`<span style="font-size:26px">${ch.ic}</span><div><div class="eyebrow" style="color:var(--gold)">Herausforderung bestanden</div><b>${ch.nm}</b><div class="sub" style="font-size:13px">+${ch.souls} Seelen</div></div>`),600); }
     persist(); checkAch(); }
   render(`<div class="wrap" style="justify-content:center"><div class="center"><div class="eyebrow">${run.ng?'NG+'+run.ng+' · ':''}${esc(BOSSES[bossKind()].name)} ist gefallen</div><h1 style="margin-top:8px">Triumph!</h1>
-    <p class="sub" style="margin-top:8px">Die Arena gehört dir. Doch aus der Tiefe steigen neue Schrecken empor …</p></div>
+    <p class="sub" style="margin-top:8px">Die Arena gehört dir. Doch aus der Tiefe steigen neue Schrecken empor …</p>
+    <p class="sub" style="margin-top:6px;color:var(--parch);font-style:italic">${CHARS[run.cid].icon} ${CHARS[run.cid].name}: „${heroLine(run.cid,'win')}“</p></div>
     <div class="cards">
       <button class="card epic reward-card" data-a="endless"><div class="ic">♾️</div><div class="body"><div class="nm">Endlosmodus</div><div class="ds">Kämpfe mit all deinen Upgrades weiter. Jeder Akt wird härter und bringt mehr Punkte.</div></div></button>
       ${run.daily?'':`<button class="card epic reward-card" data-a="ngp"><div class="ic">⚔️</div><div class="body"><div class="nm">Neues Spiel+ (NG+${nn})</div><div class="ds">Beginne erneut in Akt 1 – mit all deinen Upgrades und Werten. Gegner +${45*nn} % LP und +${25*nn} % Schaden, mehr Elitegegner. Seelen und Punkte +${50*nn} %.</div></div></button>`}

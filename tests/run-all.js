@@ -95,7 +95,7 @@ const tests = {
       const keep=save; save=defSave(); tryS('menu-neu',showMenu); save=keep; save.runs=Math.max(1,save.runs);
       for(const [n,f] of Object.entries({showMenu,showChars,showDaily,showForge,showAch,showBeast,showScores,showSettings,showSlots,showHelp,showChallenges})) tryS(n,f);
       tryS('codex',()=>showCodex(showMenu)); tryS('codex-evo',()=>showCodex(showMenu,'evo')); tryS('tiers',()=>showTiers(showMenu));
-      save.tutDone=true; startRun('alchi'); tryS('map',showMap); tryS('runmenu',showRunMenu); tryS('runstats',showRunStats); tryS('rest',showRest); tryS('shop',()=>showShop()); tryS('evo',()=>showEvo(showMap)); tryS('bounty',()=>showBounty('gold',showMap)); tryS('event',showEvent); tryS('treasure',showTreasure); tryS('relicpick',()=>showRelicPick(showMap)); tryS('codex-rel',()=>showCodex(showMenu,'rel'));
+      save.tutDone=true; startRun('alchi'); tryS('map',showMap); tryS('runmenu',showRunMenu); tryS('runstats',showRunStats); tryS('rest',showRest); tryS('shop',()=>showShop()); tryS('evo',()=>showEvo(showMap)); tryS('bounty',()=>showBounty('gold',showMap)); tryS('event',showEvent); tryS('treasure',showTreasure); tryS('relicpick',()=>showRelicPick(showMap)); tryS('codex-rel',()=>showCodex(showMenu,'rel')); tryS('codex-lore',()=>showCodex(showMenu,'lore'));
       return {ok:!bad.length, bad}; });
   },
   async meta(pg){ // Verdammnis-Stufen, Herausforderungen, Wochenprüfung, Kopfgelder und Teilen
@@ -107,7 +107,7 @@ const tests = {
       const wk=weekKey(); startRun(weeklyInfo(wk).cid,{daily:wk}); out.week=Array.isArray(run.mods)&&run.mods.length===2&&!!runMod();
       run.posId=run.map.rows[1][0].id; startCombat('fight'); __bot(true,60); run.act=2; endRun(false); out.hist=!!save.dailyHist[wk];
       out.share=shareText(wk,save.dailyHist[wk],'Test').includes('Arena der Verdammten');
-      out.bounty=bountyList(todayKey()).length===3; out.am=arenaMasterLine().length>10;
+      out.bounty=bountyList(todayKey()).length===3; save.lore={}; unlockLore('b_golem'); out.lore=!!save.lore.b_golem && heroLine('paladin','boss').length>3; out.am=arenaMasterLine().length>10;
       startRun('krieger',{challenge:'ch_nodash'}); run.posId=run.map.rows[1][0].id; startCombat('fight'); useDash(); out.nodash=P.dashT<=0 && $('dashBtn').style.display==='none'; endRun(false);
       return {ok:Object.values(out).every(Boolean), out}; });
   },

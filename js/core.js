@@ -17,7 +17,8 @@ function migrate(s){
   if(s.runs>0 && s.tutDone===undefined) s.tutDone=true;
   if(!s.tierWon||typeof s.tierWon!=='object') s.tierWon={}; for(const cid in (s.stats.wins||{})) if(s.tierWon[cid]===undefined) s.tierWon[cid]=0;
   if(!s.dailyHist||typeof s.dailyHist!=='object') s.dailyHist={}; if(s.daily && s.daily.key && !s.dailyHist[s.daily.key] && s.daily.tries) s.dailyHist[s.daily.key]={best:s.daily.best||0,first:s.daily.best||0,tries:s.daily.tries,won:false,act:0};
-  if(!s.seenFoes||typeof s.seenFoes!=='object') s.seenFoes={}; for(const k in s.stats.beast) s.seenFoes[k]=1;
+  if(!s.seenFoes||typeof s.seenFoes!=='object') s.seenFoes={};
+  if(!s.lore||typeof s.lore!=='object') s.lore={}; for(const b of s.stats.bosses||[]) if(!s.lore['b_'+b]) s.lore['b_'+b]=1; for(const cid in (s.stats.wins||{})) if(!s.lore['h_'+cid]) s.lore['h_'+cid]=1; if(s.runs>0 && !s.lore.act1) s.lore.act1=1; for(const k in s.stats.beast) s.seenFoes[k]=1;
   if(s.run && s.run.v!==RUN_V) s.run=null;   // alter Laufstand passt nicht mehr zur Spielversion
   s.v=SAVE_V; return s;
 }

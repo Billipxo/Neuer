@@ -155,3 +155,12 @@ function arenaMasterHtml(){ return `<div class="am"><div class="amface">🎭</di
 const MASTERY=[[25,1.05,'★'],[100,1.1,'★★'],[300,1.15,'★★★']];
 function masteryOf(kind){ const n=(save.stats.beast||{})[kind]||0; let r=null; for(const m of MASTERY) if(n>=m[0]) r=m; return r; }
 const masteryMul = kind => { const m=masteryOf(kind); return m?m[1]:1; };
+
+/* ---------------- CHRONIK ---------------- */
+function unlockLore(id){ const L=LORE.find(l=>l.id===id); if(!L) return; save.lore=save.lore||{}; if(save.lore[id]) return; save.lore[id]=Date.now(); persist();
+  setTimeout(()=>toast(`<span style="font-size:26px">📜</span><div><div class="eyebrow" style="color:var(--gold)">Neuer Chronik-Eintrag</div><b>${L.ic} ${L.nm}</b><div class="sub" style="font-size:13px">Nachzulesen im Kodex</div></div>`),900); }
+function loreHtml(){ const S=save.lore||{}, n=LORE.filter(l=>S[l.id]).length;
+  return `<p class="sub" style="font-size:14px">${n} von ${LORE.length} Einträgen. Neue Einträge schaltest du frei, indem du Akte erreichst, Bosse besiegst und mit Helden gewinnst.</p>
+  <div class="cards">${LORE.map(l=>S[l.id]?`<div class="card rare"><div class="ic">${l.ic}</div><div class="body"><div class="nm">${l.nm}</div><div class="ds" style="color:var(--parch)">${l.tx}</div></div></div>`
+    :`<div class="card" style="opacity:.7"><div class="ic">🔒</div><div class="body"><div class="nm">???</div><div class="ds">${l.hint}</div></div></div>`).join('')}</div>`; }
+function heroLine(cid,kind){ const H=HERO_LINES[cid]; if(!H) return ''; return kind==='win'?H.win:H.boss[hashStr((run&&run.seed||'')+'|'+(run&&run.act))%H.boss.length]; }
