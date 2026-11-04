@@ -170,6 +170,9 @@ const tests = {
       out.file=parseCode(backupFileText()).souls===777;
       const c=exportCode(), url=c.replace(/\+/g,'-').replace(/\//g,'_'); out.b64url=parseCode('Nachricht: '+url+' Ende').souls===777;
       let bad=false; try{ await parseLink(link.slice(0,-40)+'AAAA.12345'); }catch(e){ bad=true; } out.badLink=bad;
+      out.dlBrowser=(await downloadBackup())===true;
+      ART_DL={save:async r=>{ window.__dl=r; return {status:'saved'}; }}; save.bkAt=0; out.dlViewer=(await downloadBackup())===true && /\.txt$/.test(__dl.filename) && /ARENA1:/.test(__dl.data) && save.bkAt>0;
+      ART_DL=null; showBackup(showMenu); out.noFileBtn=!ui.querySelector('[data-a=file]'); ART_DL=undefined;
       markBackup(); out.notDue=!backupDue();
       // Link öffnen: Spielstand landet auf einem freien Platz
       const was=slotIdx; save.souls=1; persist(); checkLinkImport('#'+link.split('#')[1]);

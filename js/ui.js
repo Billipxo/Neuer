@@ -285,10 +285,16 @@ function markBackup(){ save.bkAt=Date.now(); save.bkRuns=save.runs; persist(); }
 function backupDue(){ return save.runs-(save.bkRuns||0)>=3 && Date.now()-Math.max(save.bkAt||0,save.bkSnooze||0)>3*864e5; }
 function backupFileText(){ return 'Arena der Verdammten – Spielstand „'+save.name+'“ vom '+new Date().toLocaleDateString('de-DE')+'\n'
   +'Laden: im Spiel unter „Spielstand sichern“ → „Sicherung laden“ → „Sicherungsdatei wählen“.\n\n'+exportCode()+'\n'; }
-function downloadBackup(){
-  const nm=String(save.name||'spielstand').toLowerCase().replace(/[^a-z0-9äöüß]+/g,'-').replace(/^-|-$/g,'')||'spielstand';
+// In der Claude-Vorschau speichert nur die Downloads-Schnittstelle des Betrachters Dateien (der Browser-Download wird dort blockiert).
+// ART_DL: undefined = normaler Browser, null = Vorschau ohne Speichern, sonst die Schnittstelle
+let ART_DL;
+try{ if(window.claude && typeof window.claude.use==='function'){ ART_DL=null; window.claude.use('downloads').then(d=>{ ART_DL=d||null; },()=>{ ART_DL=null; }); } }catch(e){}
+async function downloadBackup(){
+  const nm=String(save.name||'spielstand').toLowerCase().replace(/[^a-z0-9äöüß]+/g,'-').replace(/^-|-$/g,'')||'spielstand', file='arena-'+nm+'-'+new Date().toISOString().slice(0,10)+'.txt';
+  if(ART_DL){ try{ await ART_DL.save({filename:file,data:backupFileText()}); markBackup(); return true; }catch(e){ return e&&e.code==='declined'?'declined':false; } }
+  if(ART_DL===null) return false;
   try{ const url=URL.createObjectURL(new Blob([backupFileText()],{type:'text/plain;charset=utf-8'})), a=document.createElement('a');
-    a.href=url; a.download='arena-'+nm+'-'+new Date().toISOString().slice(0,10)+'.txt'; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },1500);
+    a.href=url; a.download=file; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },1500);
     markBackup(); return true; }catch(e){ return false; }
 }
 async function shareLink(msg,copyOnly){
@@ -314,14 +320,14 @@ function showBackup(back){ back=back||showSlots;
     <button class="btn primary" data-a="link">🔗 Als Link teilen</button>
     <div class="sub" style="font-size:13px;margin-top:-4px">Schick den Link dir selbst, zum Beispiel per Nachricht oder E-Mail. Öffnest du ihn auf dem anderen Gerät, wird der Spielstand übernommen.</div>
     <button class="btn" data-a="copy">📋 Link kopieren</button>
-    <button class="btn" data-a="file">📄 Als Datei speichern</button>
+    ${ART_DL===null?'':'<button class="btn" data-a="file">📄 Als Datei speichern</button>'}
     <button class="btn" data-a="imp">📥 Sicherung laden</button>
     <button class="btn" data-a="code">🔢 Sicherungscode anzeigen</button>
     <div class="sub" id="bkMsg" style="font-size:13px;min-height:18px"></div>
     ${here?'':`<div class="tip">🌐 <div>Das Spiel gibt es auch im Browser unter <b>${esc(PUBLIC_URL.replace(/^https:\/\//,'').replace(/\/$/,''))}</b>. Dort lässt es sich am Handy und am PC als App installieren.</div></div>`}
     <button class="btn" data-a="back">Zurück</button></div>`,
   { back, link:()=>shareLink($('bkMsg')), copy:()=>shareLink($('bkMsg'),true),
-    file:()=>{ const ok=downloadBackup(), m=$('bkMsg'); if(m){ m.textContent=ok?'Datei gespeichert. Bewahre sie gut auf, zum Beispiel in deiner Cloud.':'Speichern ist hier nicht möglich. Nimm bitte den Link oder den Code.'; m.style.color=ok?'var(--gold)':'#ff8a80'; } },
+    file:()=>downloadBackup().then(ok=>{ const m=$('bkMsg'); if(!m) return; m.textContent=ok===true?'Datei gespeichert. Bewahre sie gut auf, zum Beispiel in deiner Cloud.':ok==='declined'?'Speichern abgebrochen.':'Speichern ist hier nicht möglich. Nimm bitte den Link oder den Code.'; m.style.color=ok===true?'var(--gold)':'#ff8a80'; }),
     code:()=>showExport(()=>showBackup(back)), imp:()=>showImport(null,()=>showBackup(back)) });
 }
 function showExport(back){ back=back||showSlots;
