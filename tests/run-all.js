@@ -94,7 +94,8 @@ const tests = {
   async menus(pg){ // Jeder Bildschirm lässt sich fehlerfrei öffnen (auch für ganz neue Spielstände)
     return pg.evaluate(()=>{ const bad=[]; const tryS=(n,f)=>{ try{ f(); if(!ui.innerHTML.length) bad.push(n+': leer'); }catch(e){ bad.push(n+': '+e.message); } };
       const keep=save; save=defSave(); tryS('menu-neu',showMenu); tryS('chars-neu',showChars); save=keep; save.runs=Math.max(1,save.runs);
-      for(const [n,f] of Object.entries({showMenu,showChars,showDaily,showForge,showAch,showBeast,showScores,showSettings,showSlots,showHelp,showChallenges,showControls})) tryS(n,f);
+      for(const [n,f] of Object.entries({showMenu,showChars,showDaily,showForge,showAch,showBeast,showScores,showSettings,showSlots,showHelp,showChallenges,showControls,showBackup,showExport,showImport})) tryS(n,f);
+      tryS('import-ziel',()=>showImportTarget(migrate(JSON.parse(JSON.stringify(save))),showMenu)); tryS('link-text',()=>showLinkText('https://example.org/#x'));
       tryS('codex',()=>showCodex(showMenu)); tryS('codex-evo',()=>showCodex(showMenu,'evo')); tryS('tiers',()=>showTiers(showMenu));
       save.tutDone=true; startRun('alchi'); tryS('map',showMap); tryS('runmenu',showRunMenu); tryS('runstats',showRunStats); tryS('rest',showRest); tryS('shop',()=>showShop()); tryS('evo',()=>showEvo(showMap)); tryS('bounty',()=>showBounty('gold',showMap)); tryS('event',showEvent); tryS('treasure',showTreasure); tryS('relicpick',()=>showRelicPick(showMap)); tryS('codex-rel',()=>showCodex(showMenu,'rel')); tryS('codex-lore',()=>showCodex(showMenu,'lore'));
       return {ok:!bad.length, bad}; });
@@ -158,6 +159,23 @@ const tests = {
       startRun('paladin'); for(const u of UPGRADES) if(!u.only||u.only.includes('paladin')) applyUpgrade(u); run.act=3; run.map=genMap(3); run.posId=run.map.boss.id; startCombat('boss'); __bot(true,240);
       for(let g=0; g<5 && state!=='combat' && !ui.querySelector('.mapbox'); g++){ const a=Object.keys(actions); if(a.includes('pick')) actions.pick(ui.querySelector('[data-a=pick]').dataset.v); else if(a.includes('evo')) actions.evo(ui.querySelector('[data-a=evo]').dataset.v); else break; }
       out.notWonAfter3=!run.won && run.act===4;
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
+  async backup(pg){ // Spielstand als Link und Datei sichern, per Link übernehmen (mit Platzwahl), Erinnerung im Menü
+    return pg.evaluate(async ()=>{ const out={};
+      save.souls=777; save.runs=5; save.bkAt=0; save.bkRuns=0; save.bkSnooze=0; save.name='Testheld'; persist();
+      out.due=backupDue(); save.settings.iosTip=true; showMenu(); out.tip=!!ui.querySelector('[data-a=backup]');   // iPhone-Tipp zuerst weggeklickt
+      const link=await exportLink(); out.link=/#spielstand=Z\./.test(link) && link.length<4000;
+      const d=await parseLink(link); out.roundtrip=d.souls===777 && d.runs===5 && d.name==='Testheld' && !d.settings.__nope;
+      out.file=parseCode(backupFileText()).souls===777;
+      const c=exportCode(), url=c.replace(/\+/g,'-').replace(/\//g,'_'); out.b64url=parseCode('Nachricht: '+url+' Ende').souls===777;
+      let bad=false; try{ await parseLink(link.slice(0,-40)+'AAAA.12345'); }catch(e){ bad=true; } out.badLink=bad;
+      markBackup(); out.notDue=!backupDue();
+      // Link öffnen: Spielstand landet auf einem freien Platz
+      const was=slotIdx; save.souls=1; persist(); checkLinkImport('#'+link.split('#')[1]);
+      for(let i=0;i<50 && !ui.querySelector('[data-a=to]');i++) await new Promise(r=>setTimeout(r,20));
+      const free=[...ui.querySelectorAll('[data-a=to]')].find(b=>b.classList.contains('primary')); out.target=!!free; if(free) free.click();
+      out.imported=save.souls===777 && slotIdx!==was && !!readSlot(was) && readSlot(was).souls===1;
       return {ok:Object.values(out).every(Boolean), out}; });
   },
   async pc(pg){ // PC: Kamera im Querformat, Maus zielt, Rechtsklick/Leertaste weichen aus, Q wirkt, Esc pausiert, Zahlentasten wählen, Controller

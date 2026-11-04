@@ -7,7 +7,7 @@ const SAVE_V=2, RUN_V=6;
 const reducedMotion = (()=>{ try{ return matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } })();
 function defSettings(){ return { shake:!reducedMotion, vibrate:true, music:true, fx:true, joyFixed:false, lefty:false, cb:false, musicVol:0.7, gfx:'auto', showFps:false, dmgNums:true, dmgOff:false, gameSpeed:1.2, shakeAmt:1, calm:reducedMotion, fpsCap:60, assist:false, bigUi:false, iosTip:false }; }
 function defStats(){ return { beast:{}, kills:0, elites:0, cheers:0, events:[], syns:[], bosses:[], wins:{}, anyWin:false, noHitBoss:false, dailyWin:false, maxEndless:0, maxGold:0, maxCombo:0 }; }
-function defSave(){ return { v:SAVE_V, tutDone:false, ach:{}, skin:{}, heroXp:{}, stats:defStats(), souls:0, meta:{}, unlocked:{krieger:true}, scores:[], runs:0, lastChar:'krieger', sound:true, run:null, assistN:0, seenFoes:{}, tierWon:{}, tierSel:0, chal:{}, dailyHist:{}, streak:null, lastRun:null, lossStreak:0, settings:defSettings(), name:'Spielstand 1', last:0, ngMax:0, ngSel:0 }; }
+function defSave(){ return { v:SAVE_V, tutDone:false, ach:{}, skin:{}, heroXp:{}, stats:defStats(), souls:0, meta:{}, unlocked:{krieger:true}, scores:[], runs:0, lastChar:'krieger', sound:true, run:null, assistN:0, seenFoes:{}, tierWon:{}, tierSel:0, chal:{}, dailyHist:{}, streak:null, lastRun:null, lossStreak:0, settings:defSettings(), name:'Spielstand 1', last:0, ngMax:0, ngSel:0, bkAt:0, bkRuns:0, bkSnooze:0 }; }
 function migrate(s){
   const d=defSave(); s=Object.assign(d, s);
   s.settings=Object.assign(defSettings(), s.settings||{}); if(s.settings.fx===false && !s.settings._gfxMig){ s.settings.gfx='low'; } s.settings._gfxMig=true;

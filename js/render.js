@@ -831,6 +831,6 @@ function loop(now){
   else if(!G) drawMenuBg(dt);
 }
 applyBodyClasses(); applyInputMode();
-resize(); showMenu(); requestAnimationFrame(loop);
+resize(); showMenu(); checkLinkImport(); requestAnimationFrame(loop);
 try{ if(new URLSearchParams(location.search).get('tag')) setTimeout(showDaily,0); }catch(e){}
 if('serviceWorker' in navigator && /^https?:$/.test(location.protocol)){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }

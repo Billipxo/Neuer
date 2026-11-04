@@ -60,6 +60,9 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **Verdammnis-Stufen 1–10** je Held, **11 Herausforderungen**, **Kopfgelder**, **Tages- und Wochenprüfung** mit Serie,
   Kalender und Teilen-Funktion, ein **Arenameister**, der deine Läufe kommentiert, Meisterschaft im Bestiarium
 - **Spielgefühl:** perfektes Ausweichen, Eingabepuffer, Zielmarkierung, Warnblitz vor Einschlägen, Musik, die mit dem Kampf anschwillt
+- **Feste Adresse und App:** https://billipxo.github.io/Neuer/ (über GitHub Pages) – dort am Handy und am PC als App installierbar, läuft offline
+- **Spielstand sichern und mitnehmen:** als Link (öffnet das Spiel auf dem anderen Gerät und übernimmt den Fortschritt), als Datei oder als Code;
+  das Spiel erinnert ans Sichern (wichtig fürs iPhone: Safari löscht Daten von Webseiten nach 7 Tagen ohne Besuch)
 - **Am PC spielbar:** W A S D bewegen, Linksklick oder Q für die Fähigkeit (zielt auf den Mauszeiger), Leertaste oder Rechtsklick zum Ausweichen,
   Esc Pause, F Vollbild, Zifferntasten wählen Belohnungen und Wege; Controller (Xbox/PlayStation) werden automatisch erkannt;
   auf großen Querformat-Bildschirmen zeigt die Kamera fast die ganze Arena

@@ -17,7 +17,7 @@ out_dir = root / 'dist'; out_dir.mkdir(exist_ok=True)
 if '--fragment' in sys.argv:
     head = html[html.index('<head>') + 6: html.index('</head>')]
     body = html[html.index('<body>') + 6: html.index('</body>')]
-    keep = [l for l in head.split('\n') if not re.search(r'charset|name="viewport"|theme-color|web-app|rel="manifest"|rel="icon"', l)]
+    keep = [l for l in head.split('\n') if not re.search(r'charset|name="viewport"|theme-color|web-app|rel="manifest"|rel="icon"|apple-touch-icon', l)]
     html = '\n'.join(keep).strip() + '\n' + body
     target = out_dir / 'arena-fragment.html'
 else:

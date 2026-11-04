@@ -5,11 +5,13 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 
 ## Befehle
 
-- `npm test` – 19 Headless-Tests (inkl. `render`, der wirklich zeichnet, und `pc` mit Maus, Tastatur und Controller-Attrappe im Querformat) (`tests/run-all.js`), einzeln: `node tests/run-all.js bosses saves`, Details mit `VERBOSE=1`.
+- `npm test` – 20 Headless-Tests (inkl. `render`, der wirklich zeichnet, `pc` mit Maus, Tastatur und Controller-Attrappe im Querformat, `backup` für Spielstand-Link und -Datei) (`tests/run-all.js`), einzeln: `node tests/run-all.js bosses saves`, Details mit `VERBOSE=1`.
 - `npm run balance` (`node tools/balance.js [Läufe] [Held …]`) – der Bot spielt komplette Läufe ohne Gottmodus: Siegquote, Todesursachen, Hänger je Held.
 - `node tools/chaos.js [Läufe] [Sekunden]` – Chaos-Bot: komplette Läufe mit Zeichnen, zufälligen Menüknöpfen, Pausen und Einstellungen; meldet jeden Laufzeitfehler mit Stelle. Nach größeren Änderungen laufen lassen.
   Playwright ist in der Cloud-Umgebung vorinstalliert, in CI per Workflow.
 - `python3 tools/build_single.py` – eine einzelne HTML-Datei in `dist/` (`--fragment` ohne `<html>/<head>`-Gerüst).
+- `node tools/make_icons.js` – erzeugt die App-Icons (`icons/*.png`) aus `icon.svg` neu.
+- Feste Adresse: GitHub Pages (`.github/workflows/pages.yml`, bei Push auf `main`) → https://billipxo.github.io/Neuer/ – mit Icons, Offline-Cache (`sw.js`) und der Einzeldatei zum Herunterladen. Als App installierbar (`manifest.webmanifest`, Knopf über `beforeinstallprompt`).
 - Vor jedem Commit `npm test` laufen lassen.
 
 ## Dateien (klassische Skripte, gemeinsamer globaler Gültigkeitsbereich, Ladereihenfolge wie in `index.html`)
@@ -54,6 +56,8 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
   Controller (Standardbelegung): linker Stick, A ausweichen, X Fähigkeit, rechter Stick zielt, Start Pause; Menüs mit Stick, A, B. Querformat ab 560 px Höhe zeigt mehr Arena (`resize`).
 - **Akt hinzufügen:** `ACTS`-Eintrag, Deko (`decorTower` als Vorbild), `WEATHER_POOL`, `crowdLook`, Kleintier in `spawnCritter`, Musik `calmN`/`fightN`, `LORE`.
 - **Fortsetzen:** `run.room` (laufender Kampfraum) und `run.pend` (offene Belohnung) werden beim Verlassen gespeichert (`saveNow`) und von `resumeRun` wiederhergestellt.
+- **Spielstand sichern und übertragen:** `showBackup` – Link (`exportLink`, gepackt mit `CompressionStream`, `#spielstand=Z.…` an `gameUrl()`/`PUBLIC_URL`), Datei (`downloadBackup`, enthält den Code), Code (`exportCode`).
+  Laden über `parseAny` (Code, Link oder Dateiinhalt) → `showImportTarget` (Platz wählen); Links beim Start über `checkLinkImport`. `markBackup` merkt sich `bkAt`/`bkRuns`; `backupDue()` blendet die Erinnerung im Menü ein.
 
 ## Tests schreiben
 

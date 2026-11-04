@@ -11,7 +11,7 @@ const {chromium,devices}=require('playwright'); const fs=require('fs'); const pa
   const log=[];
   for(let n=0;n<RUNS && Date.now()-t0<LIMIT;n++){
     const r=await p.evaluate(n=>{
-      const heroes=Object.keys(CHARS), cid=heroes[n%heroes.length], BAD=['reset','del','quit','yes','imp','copy','exp','slots','load','new','ren','share'];
+      const heroes=Object.keys(CHARS), cid=heroes[n%heroes.length], BAD=['reset','del','quit','yes','imp','copy','exp','slots','load','new','ren','share','link','file','install'];
       for(const id in CHARS) save.unlocked[id]=true; save.tutDone=true; save.souls=5000; save.pets={raven:1,cat:1,wisp:1,wolf:1}; save.pet=PETS[n%4].id; save.tierWon=save.tierWon||{};
       const opts=n%5===3?{challenge:CHALLENGES[n%CHALLENGES.length].id}:n%5===4?{daily:n%2?todayKey():weekKey()}:{tier:n%3};
       startRun(cid,opts); let steps=0, rooms=0, menus=0;

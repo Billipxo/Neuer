@@ -147,6 +147,8 @@ function showMenu(){
       <span class="pill s">👻 ${save.souls} Seelen</span>
     </div>
     ${IOS && !STANDALONE && !save.settings.iosTip?`<div class="tip">📱 <div><b>Tipp fürs iPhone:</b> Tippe in Safari auf „Teilen“ und dann „Zum Home-Bildschirm“. Dann läuft das Spiel im Vollbild wie eine App, und deine Spielstände bleiben sicher gespeichert. <button class="linkbtn" data-a="tipok">Verstanden</button></div></div>`:''}
+    ${veteran && backupDue() && !(IOS && !STANDALONE && !save.settings.iosTip)?`<div class="tip">💾 <div><b>Sichere deinen Fortschritt.</b> ${save.bkAt?'Deine letzte Sicherung ist '+Math.floor((Date.now()-save.bkAt)/864e5)+' Tage her.':'Du hast deinen Spielstand noch nie gesichert.'} Er liegt nur in diesem Browser${IOS&&!STANDALONE?', und Safari löscht Daten von Webseiten, die 7 Tage nicht geöffnet werden':''}. Als Link oder Datei nimmst du ihn auch auf ein anderes Gerät mit.
+      <div class="row" style="margin-top:8px;gap:6px"><button class="btn small primary" data-a="backup">Jetzt sichern</button><button class="btn small" data-a="bklater">Später</button></div></div></div>`:''}
     ${arenaMasterHtml()}
     <div class="menu-btns">
       ${hasRun?`<button class="btn primary stack" data-a="cont">▶ Lauf fortsetzen<span class="sub" style="font-size:13px;color:#f0dcb0">${CHARS[save.run.cid].icon} Akt ${save.run.act}</span></button>`:''}
@@ -167,11 +169,14 @@ function showMenu(){
       <button class="linkbtn" data-a="help">Anleitung</button>
       <button class="linkbtn" data-a="settings">Einstellungen</button>
       <button class="linkbtn" data-a="slots">💾 ${esc(save.name||'Spielstand')}</button>
+      ${INSTALL_EV?'<button class="linkbtn" data-a="install">📲 Als App installieren</button>':''}
       <span>Läufe: ${save.runs}</span>
     </div></div>`,
   { play:showChars, daily:showDaily, forge:showForge, scores:showScores, ach:showAch, beast:showBeast, help:showHelp, codex:()=>showCodex(showMenu), tiers:()=>showTiers(showMenu), chal:()=>{ save.chalSeen=true; persist(); showChallenges(); },
     cont:()=>{ run=save.run; resumeRun(); },
-    settings:showSettings, slots:showSlots, tipok:()=>{ save.settings.iosTip=true; persist(); showMenu(); } });
+    settings:showSettings, slots:showSlots, tipok:()=>{ save.settings.iosTip=true; persist(); showMenu(); },
+    backup:()=>showBackup(showMenu), bklater:()=>{ save.bkSnooze=Date.now(); persist(); showMenu(); },
+    install:()=>{ const ev=INSTALL_EV; if(!ev) return; try{ ev.prompt(); (ev.userChoice||Promise.resolve()).then(()=>{ INSTALL_EV=null; if(state==='menu') showMenu(); }); }catch(e){ INSTALL_EV=null; showMenu(); } } });
 }
 
 function showSettings(){
@@ -236,38 +241,135 @@ let settingsBack=null;
 function applyBodyClasses(){ const st=save.settings; document.body.classList.toggle('lefty',!!st.lefty); document.body.classList.toggle('bigui',!!st.bigUi); }
 /* Sicherungscode: der komplette Spielstand als Text zum Kopieren und Wiedereinfügen */
 const SAVE_PREFIX='ARENA1:';
-function exportCode(){ const d=Object.assign({},save); delete d.settings; const json=JSON.stringify(d);
+// Spielstand ohne Einstellungen (die gelten pro Gerät) und ohne flüchtige Kampfdaten
+function saveJsonForExport(){ const d=JSON.parse(saveJson(save)); delete d.settings; return JSON.stringify(d); }
+function exportCode(){ const json=saveJsonForExport();
   const b=btoa(unescape(encodeURIComponent(json))); return SAVE_PREFIX+b+':'+(hashStr(json)%100000); }
+// findet den Code auch mitten in einem Text (Sicherungsdatei, weitergeleitete Nachricht)
 function parseCode(txt){
-  const t=(txt||'').replace(/\s+/g,''); if(!t.startsWith(SAVE_PREFIX)) throw new Error('Das ist kein Sicherungscode von Arena der Verdammten.');
-  const [b,chk]=t.slice(SAVE_PREFIX.length).split(':'); let json;
+  const t=String(txt||'').replace(/\s+/g,''), m=t.match(/ARENA1:([A-Za-z0-9+/=_-]+):(\d+)/);
+  if(!m) throw new Error('Das ist kein Sicherungscode von Arena der Verdammten.');
+  let b=m[1].replace(/-/g,'+').replace(/_/g,'/'); while(b.length%4) b+='='; const chk=m[2]; let json;
   try{ json=decodeURIComponent(escape(atob(b))); }catch(e){ throw new Error('Der Code ist unvollständig oder beschädigt. Kopiere ihn bitte noch einmal komplett.'); }
   if(String(hashStr(json)%100000)!==chk) throw new Error('Die Prüfsumme stimmt nicht. Der Code wurde beim Kopieren vermutlich abgeschnitten.');
   const d=JSON.parse(json); if(!d||typeof d!=='object'||typeof d.souls!=='number') throw new Error('Der Code enthält keinen gültigen Spielstand.');
   return migrate(d);
 }
-function showExport(){
+
+/* Spielstand als Link (gepackt, etwa 2 KB) und als Datei – zum Sichern und zum Mitnehmen auf ein anderes Gerät */
+const PUBLIC_URL='https://billipxo.github.io/Neuer/';   // feste Adresse über GitHub Pages (.github/workflows/pages.yml)
+function gameUrl(){ try{ const h=location.hostname; if(/^https?:$/.test(location.protocol) && (h.endsWith('github.io')||h==='localhost'||h==='127.0.0.1')) return location.origin+location.pathname.replace(/index\.html$/,''); }catch(e){} return PUBLIC_URL; }
+const B64U={ enc:bytes=>{ const B=new Uint8Array(bytes); let s=''; for(let i=0;i<B.length;i+=0x8000) s+=String.fromCharCode.apply(null,B.subarray(i,i+0x8000)); return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); },
+  dec:str=>{ let s=str.replace(/-/g,'+').replace(/_/g,'/'); while(s.length%4) s+='='; const bin=atob(s), B=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) B[i]=bin.charCodeAt(i); return B; } };
+async function exportLink(){
+  const json=saveJsonForExport(), chk=hashStr(json)%100000; let pay;
+  try{ if(typeof CompressionStream==='undefined') throw 0; const buf=await new Response(new Blob([json]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer(); pay='Z.'+B64U.enc(buf); }
+  catch(e){ pay='B.'+B64U.enc(new TextEncoder().encode(json)); }
+  return gameUrl()+'#spielstand='+pay+'.'+chk;
+}
+async function parseLink(txt){
+  let t=String(txt||'').replace(/\s+/g,''); try{ t=decodeURIComponent(t); }catch(e){}
+  const m=t.match(/spielstand=([ZB])\.([A-Za-z0-9_-]+)\.(\d+)/); if(!m) throw new Error('Das ist kein Spielstand-Link von Arena der Verdammten.');
+  let bytes, json; try{ bytes=B64U.dec(m[2]); }catch(e){ throw new Error('Der Link ist unvollständig. Kopiere ihn bitte noch einmal komplett.'); }
+  if(m[1]==='Z'){ if(typeof DecompressionStream==='undefined') throw new Error('Dieser Browser kann den Link nicht öffnen. Nimm bitte die Sicherungsdatei oder den Sicherungscode.');
+    try{ json=await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text(); }catch(e){ throw new Error('Der Link ist beschädigt. Kopiere ihn bitte noch einmal komplett.'); } }
+  else json=new TextDecoder().decode(bytes);
+  if(String(hashStr(json)%100000)!==m[3]) throw new Error('Die Prüfsumme stimmt nicht. Der Link wurde vermutlich abgeschnitten.');
+  let d; try{ d=JSON.parse(json); }catch(e){ throw new Error('Der Link enthält keinen gültigen Spielstand.'); }
+  if(!d||typeof d!=='object'||typeof d.souls!=='number') throw new Error('Der Link enthält keinen gültigen Spielstand.');
+  return migrate(d);
+}
+// Code, Link oder Dateiinhalt – alles wird erkannt
+async function parseAny(txt){ return /spielstand=/.test(String(txt||'')) ? parseLink(txt) : parseCode(txt); }
+function markBackup(){ save.bkAt=Date.now(); save.bkRuns=save.runs; persist(); }
+function backupDue(){ return save.runs-(save.bkRuns||0)>=3 && Date.now()-Math.max(save.bkAt||0,save.bkSnooze||0)>3*864e5; }
+function backupFileText(){ return 'Arena der Verdammten – Spielstand „'+save.name+'“ vom '+new Date().toLocaleDateString('de-DE')+'\n'
+  +'Laden: im Spiel unter „Spielstand sichern“ → „Sicherung laden“ → „Sicherungsdatei wählen“.\n\n'+exportCode()+'\n'; }
+function downloadBackup(){
+  const nm=String(save.name||'spielstand').toLowerCase().replace(/[^a-z0-9äöüß]+/g,'-').replace(/^-|-$/g,'')||'spielstand';
+  try{ const url=URL.createObjectURL(new Blob([backupFileText()],{type:'text/plain;charset=utf-8'})), a=document.createElement('a');
+    a.href=url; a.download='arena-'+nm+'-'+new Date().toISOString().slice(0,10)+'.txt'; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); },1500);
+    markBackup(); return true; }catch(e){ return false; }
+}
+async function shareLink(msg,copyOnly){
+  const say=(t,ok)=>{ if(msg){ msg.textContent=t; msg.style.color=ok?'var(--gold)':'#ff8a80'; } };
+  let url; try{ url=await exportLink(); }catch(e){ say('Der Link konnte nicht erstellt werden. Nimm bitte die Datei oder den Code.'); return; }
+  if(!copyOnly && navigator.share){ try{ await navigator.share({title:'Arena der Verdammten – Spielstand',text:'Mein Spielstand „'+save.name+'“ – öffne den Link auf dem anderen Gerät:',url}); markBackup(); say('Link geteilt. Öffne ihn auf dem anderen Gerät.',true); return; }
+    catch(e){ if(e&&e.name==='AbortError') return; } }
+  const shown=()=>showLinkText(url);
+  try{ navigator.clipboard.writeText(url).then(()=>{ markBackup(); say('Link kopiert. Schick ihn dir selbst, zum Beispiel per Nachricht oder E-Mail, und öffne ihn auf dem anderen Gerät.',true); },shown); }catch(e){ shown(); }
+}
+function showLinkText(url){ const back=actions.back;
+  render(`<div class="wrap"><div class="eyebrow">Spielstand-Link</div><h2>Link kopieren</h2>
+    <p class="sub">Kopieren klappt hier nicht automatisch. Markiere den Link und kopiere ihn von Hand.</p>
+    <textarea id="lnk" readonly rows="6" style="width:100%;font:12px/1.4 ui-monospace,monospace;padding:10px;border-radius:8px;border:2px solid var(--iron);background:#0008;color:var(--parch);word-break:break-all">${esc(url)}</textarea>
+    <button class="btn primary" data-a="ok">Erledigt</button></div>`,{ ok:()=>{ markBackup(); (back||showMenu)(); } },true);
+  const ta=$('lnk'); try{ ta.focus(); ta.select(); }catch(e){} }
+function showBackup(back){ back=back||showSlots;
+  const ago=save.bkAt?Math.floor((Date.now()-save.bkAt)/864e5):-1, here=gameUrl()!==PUBLIC_URL;
+  render(`<div class="wrap"><div class="eyebrow">${esc(save.name)}</div><h2>Spielstand sichern</h2>
+    <p class="sub">Dein Fortschritt liegt nur in diesem Browser. Sichere ihn ab und zu – damit kannst du ihn wiederherstellen oder auf einem anderen Gerät weiterspielen, zum Beispiel erst am Handy und dann am PC.</p>
+    ${IOS&&!STANDALONE?'<div class="tip">📱 <div><b>iPhone:</b> Safari löscht die Daten von Webseiten, die du 7 Tage lang nicht öffnest. Auf dem Home-Bildschirm passiert das nicht. Sichere deinen Spielstand trotzdem regelmäßig.</div></div>':''}
+    <div class="sub" style="font-size:14px">${ago<0?'Noch nie gesichert.':ago===0?'Zuletzt heute gesichert.':'Zuletzt vor '+ago+(ago===1?' Tag':' Tagen')+' gesichert.'}</div>
+    <button class="btn primary" data-a="link">🔗 Als Link teilen</button>
+    <div class="sub" style="font-size:13px;margin-top:-4px">Schick den Link dir selbst, zum Beispiel per Nachricht oder E-Mail. Öffnest du ihn auf dem anderen Gerät, wird der Spielstand übernommen.</div>
+    <button class="btn" data-a="copy">📋 Link kopieren</button>
+    <button class="btn" data-a="file">📄 Als Datei speichern</button>
+    <button class="btn" data-a="imp">📥 Sicherung laden</button>
+    <button class="btn" data-a="code">🔢 Sicherungscode anzeigen</button>
+    <div class="sub" id="bkMsg" style="font-size:13px;min-height:18px"></div>
+    ${here?'':`<div class="tip">🌐 <div>Das Spiel gibt es auch im Browser unter <b>${esc(PUBLIC_URL.replace(/^https:\/\//,'').replace(/\/$/,''))}</b>. Dort lässt es sich am Handy und am PC als App installieren.</div></div>`}
+    <button class="btn" data-a="back">Zurück</button></div>`,
+  { back, link:()=>shareLink($('bkMsg')), copy:()=>shareLink($('bkMsg'),true),
+    file:()=>{ const ok=downloadBackup(), m=$('bkMsg'); if(m){ m.textContent=ok?'Datei gespeichert. Bewahre sie gut auf, zum Beispiel in deiner Cloud.':'Speichern ist hier nicht möglich. Nimm bitte den Link oder den Code.'; m.style.color=ok?'var(--gold)':'#ff8a80'; } },
+    code:()=>showExport(()=>showBackup(back)), imp:()=>showImport(null,()=>showBackup(back)) });
+}
+function showExport(back){ back=back||showSlots;
   const code=exportCode();
-  render(`<div class="wrap"><div class="eyebrow">Sicherung · ${esc(save.name)}</div><h2>Spielstand sichern</h2>
+  render(`<div class="wrap"><div class="eyebrow">Sicherung · ${esc(save.name)}</div><h2>Sicherungscode</h2>
     <p class="sub">Kopiere diesen Code und bewahre ihn auf, zum Beispiel in einer Notiz oder Nachricht an dich selbst. Damit kannst du den Spielstand wiederherstellen oder auf ein anderes Gerät übertragen.</p>
     <textarea id="saveCode" readonly rows="7" style="width:100%;font:12px/1.4 ui-monospace,monospace;padding:10px;border-radius:8px;border:2px solid var(--iron);background:#0008;color:var(--parch);word-break:break-all">${code}</textarea>
     <div class="sub" style="font-size:13px" id="copyMsg">${(code.length/1024).toFixed(1)} KB · enthält Seelen, Helden, Erfolge, Rekorde und das laufende Abenteuer</div>
     <button class="btn primary" data-a="copy">📋 Code kopieren</button><button class="btn" data-a="back">Zurück</button></div>`,
-  { back:showSlots, copy:()=>{ const ta=$('saveCode'), msg=$('copyMsg');
-      const ok=()=>{ msg.textContent='Kopiert! Bewahre den Code gut auf.'; msg.style.color='var(--gold)'; };
+  { back, copy:()=>{ const ta=$('saveCode'), msg=$('copyMsg');
+      const ok=()=>{ markBackup(); msg.textContent='Kopiert! Bewahre den Code gut auf.'; msg.style.color='var(--gold)'; };
       const fb=()=>{ ta.focus(); ta.select(); try{ document.execCommand('copy'); ok(); }catch(e){ msg.textContent='Kopieren nicht möglich. Der Code ist markiert, bitte manuell kopieren.'; } };
       try{ navigator.clipboard.writeText(ta.value).then(ok,fb); }catch(e){ fb(); } } },true);
 }
-function showImport(err){
+function showImport(err,back){ back=back||showSlots;
   render(`<div class="wrap"><div class="eyebrow">Wiederherstellen</div><h2>Sicherung laden</h2>
-    <p class="sub">Füge deinen Sicherungscode ein. Er ersetzt den aktiven Spielstand „${esc(save.name)}“. Wechsle vorher den Platz, wenn du diesen behalten willst.</p>
-    <form id="impForm" class="cards" style="grid-template-columns:1fr"><textarea id="impCode" rows="7" placeholder="ARENA1:…" style="width:100%;font:12px/1.4 ui-monospace,monospace;padding:10px;border-radius:8px;border:2px solid var(--gold);background:#0008;color:var(--parch);word-break:break-all"></textarea>
+    <p class="sub">Füge deinen Sicherungscode oder Spielstand-Link ein, oder wähle eine Sicherungsdatei. Danach entscheidest du, auf welchem Platz er landet.</p>
+    <form id="impForm" class="cards" style="grid-template-columns:1fr"><textarea id="impCode" rows="6" placeholder="Code (ARENA1:…) oder Link einfügen" style="width:100%;font:12px/1.4 ui-monospace,monospace;padding:10px;border-radius:8px;border:2px solid var(--gold);background:#0008;color:var(--parch);word-break:break-all"></textarea>
     ${err?`<div class="sub" style="color:#ff8a80">${esc(err)}</div>`:''}
-    <button class="btn primary" type="submit">Spielstand laden</button></form><button class="btn" data-a="back">Abbrechen</button></div>`,{ back:showSlots },true);
-  $('impForm').addEventListener('submit',e=>{ e.preventDefault();
-    try{ const d=parseCode($('impCode').value); const keep=save.settings, snd=save.sound; save=d; save.settings=keep; save.sound=snd; persist(); sfx('pick'); toast('<span style="font-size:26px">📥</span><div><b>Spielstand geladen</b><div class="sub" style="font-size:13px">'+esc(save.name)+' · '+save.souls+' Seelen</div></div>'); showSlots(); }
-    catch(ex){ showImport(ex.message); } });
+    <button class="btn primary" type="submit">Weiter</button></form>
+    <button class="btn" data-a="file">📄 Sicherungsdatei wählen</button><input type="file" id="impFile" accept=".txt,text/plain" style="display:none">
+    <button class="btn" data-a="back">Abbrechen</button></div>`,{ back, file:()=>$('impFile').click() },true);
+  const go=p=>p.then(d=>showImportTarget(d,back)).catch(ex=>showImport(ex.message,back));
+  $('impForm').addEventListener('submit',e=>{ e.preventDefault(); go(parseAny($('impCode').value)); });
+  $('impFile').addEventListener('change',e=>{ const f=e.target.files&&e.target.files[0]; if(f) go(f.text().then(parseAny)); });
 }
+// Zielplatz wählen: freie Plätze zuerst empfohlen, belegte werden überschrieben
+function showImportTarget(d,back){ back=back||showMenu;
+  const wins=s=>Object.keys((s.stats||{}).wins||{}).length, info=s=>`${s.souls} Seelen · ${s.runs} Läufe · ${wins(s)} Siege`;
+  const slots=[...Array(SLOTS)].map((_,i)=>{ const s=i===slotIdx?save:readSlot(i); return {i,s,empty:!s||(!s.runs&&!s.souls)}; });
+  const rec=(slots.find(x=>x.empty)||slots.find(x=>x.i===slotIdx)).i;
+  render(`<div class="wrap"><div class="eyebrow">Sicherung gefunden</div><h2>Spielstand übernehmen?</h2>
+    <div class="card"><div class="ic">💾</div><div class="body"><div class="nm">${esc(d.name||'Spielstand')}</div><div class="ds">${info(d)}${d.last?' · gespeichert am '+new Date(d.last).toLocaleDateString('de-DE'):''}</div></div></div>
+    <p class="sub">Wähle den Platz. Ein belegter Platz wird dabei überschrieben.</p>
+    ${slots.map(x=>`<button class="btn ${x.i===rec?'primary':''}" data-a="to" data-v="${x.i}">Platz ${x.i+1}: ${x.empty?'frei':'ersetzt „'+esc(x.s.name||'Spielstand')+'“ ('+x.s.runs+' Läufe)'}</button>`).join('')}
+    <button class="btn" data-a="no">Abbrechen</button></div>`,
+  { no:back, to:i=>{ i=+i; persist(); const keep=save.settings, snd=save.sound; slotIdx=i; save=d; save.settings=keep; save.sound=snd; save.bkAt=Date.now(); save.bkRuns=save.runs; persist(); applyBodyClasses();
+      sfx('pick'); toast('<span style="font-size:26px">📥</span><div><b>Spielstand übernommen</b><div class="sub" style="font-size:13px">'+esc(save.name)+' · Platz '+(i+1)+' · '+save.souls+' Seelen</div></div>'); showMenu(); } },true);
+}
+// Spielstand-Link beim Start: #spielstand=… in der Adresse
+function checkLinkImport(hash){ hash=hash===undefined?location.hash:hash; if(!/spielstand=/.test(hash||'')) return false;
+  try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){}
+  parseLink(hash).then(d=>showImportTarget(d,showMenu)).catch(err=>toast('<span style="font-size:24px">⚠️</span><div><b>Spielstand-Link geht nicht</b><div class="sub" style="font-size:13px">'+esc(err.message)+'</div></div>'));
+  return true; }
+// „Als App installieren“ (Chrome, Edge, Android): der Browser bietet es an, der Knopf erscheint dann im Menü
+let INSTALL_EV=null;
+addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); INSTALL_EV=e; if(state==='menu' && ui.querySelector('.foot')) showMenu(); });
+addEventListener('appinstalled',()=>{ INSTALL_EV=null; toast('<span style="font-size:24px">📲</span><div><b>Als App installiert</b><div class="sub" style="font-size:13px">Du findest das Spiel jetzt bei deinen Apps.</div></div>'); });
 function showBeast(){
   const B=save.stats.beast, all=Object.keys(BEAST), found=all.filter(k=>B[k]).length; save.beastSeen=Object.keys(B).length; persist();
   const entry=k=>{ const isBoss=!!BOSSES[k], d=isBoss?BOSSES[k]:ENEMIES[k], n=B[k]||0;
@@ -291,10 +393,10 @@ function showSlots(){
   render(`<div class="wrap"><div class="eyebrow">Drei getrennte Profile</div><h2>Spielstände</h2>
     <p class="sub">Jeder Spielstand hat eigene Seelen, Schmiede, Helden, Erfolge, Ruhmeshalle und ein eigenes laufendes Abenteuer. Einstellungen gelten für alle.</p>
     <div class="cards" style="grid-template-columns:1fr">${rows}</div>
-    <div class="row"><button class="btn" data-a="exp">📤 Aktiven Spielstand sichern</button><button class="btn" data-a="imp">📥 Sicherung laden</button></div>
+    <div class="row"><button class="btn" data-a="exp">💾 Aktiven Spielstand sichern</button><button class="btn" data-a="imp">📥 Sicherung laden</button></div>
     <button class="btn" data-a="back">Zurück</button></div>`,
   { back:showMenu,
-    load:i=>{ switchSlot(+i); sfx('pick'); showSlots(); }, exp:showExport, imp:showImport,
+    load:i=>{ switchSlot(+i); sfx('pick'); showSlots(); }, exp:()=>showBackup(showSlots), imp:()=>showImport(null,showSlots),
     new:i=>{ persist(); slotIdx=+i; const keep=save.settings, snd=save.sound; save=defSave(); save.name='Spielstand '+(+i+1); save.settings=keep; save.sound=snd; persist(); sfx('pick'); showSlots(); },
     ren:i=>{ const s=+i===slotIdx?save:readSlot(+i);
       render(`<div class="wrap" style="justify-content:center"><h2 class="center">Spielstand umbenennen</h2>

@@ -27,7 +27,10 @@ jobs:
       - name: Seite zusammenstellen
         run: |
           mkdir _site
-          cp -r index.html css js sw.js manifest.webmanifest icon.svg _site/
+          cp -r index.html css js icons sw.js manifest.webmanifest icon.svg _site/
+          # Das ganze Spiel zusätzlich als eine Datei zum Herunterladen (offline am PC)
+          python3 tools/build_single.py
+          cp dist/arena-der-verdammten.html _site/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
