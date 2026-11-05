@@ -227,7 +227,7 @@ const tests = {
     const ctx=await pg.context().browser().newContext({viewport:{width:1600,height:900}}), p=await ctx.newPage(), errs=[]; p.on('pageerror',e=>errs.push(e.message));
     await p.goto(URL); await p.waitForTimeout(300); const out={};
     out.scale=await p.evaluate(()=>Math.abs(SCALE-Math.min(900/820,1600/1100))<0.01);
-    await p.evaluate(()=>{ save.tutDone=true; startRun('magier'); run.posId=run.map.rows[1][0].id; startCombat('fight',[[{kind:'slime'}]]); for(let i=0;i<5;i++) update(1/30); draw(); });
+    await p.evaluate(()=>{ save.tutDone=true; startRun('magier'); run.map.rows[1][0].rw=null; run.posId=run.map.rows[1][0].id; startCombat('fight',[[{kind:'slime'}]]); for(let i=0;i<5;i++) update(1/30); draw(); });   // ohne Gold-/Heil-Knoten, damit Karten zur Wahl stehen
     await p.mouse.move(1000,390); await p.mouse.down(); await p.mouse.up();
     out.click=await p.evaluate(()=>{ draw(); const n=G.fx.find(f=>f.type==='nova'), w=mouseWorld(); return INPUT_MODE==='pc' && P.skillT>0 && !!n && Math.hypot(n.x-w.x,n.y-w.y)<2; });
     await p.evaluate(()=>{ P.dashCd=0; P.dashT=0; }); await p.mouse.click(500,450,{button:'right'});

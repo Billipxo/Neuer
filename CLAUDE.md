@@ -36,6 +36,11 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 - **Menüs:** `render(html, {aktion:fn})`; Knöpfe tragen `data-a="aktion" data-v="wert"`.
 - **Zufall:** immer `rand`/`pick`/`wpick` (nutzen `RNG`). Karten, Wellen, Arenen, Belohnungen und Wetter laufen über `seeded(roomKey(...))`, damit die Tagesherausforderung deterministisch bleibt.
 - **Speicherstand:** Neue Felder in `defSave()`/`defStats()`/`defSettings()` ergänzen, `migrate()` füllt alte Stände auf. Ändert sich die Struktur von `run`/`run.p` inkompatibel, `RUN_V` erhöhen (alte Läufe werden verworfen). Einstellungen sind global für alle 3 Slots.
+- **Gestaltung (altdeutsch):** Schriften über CSS-Variablen `--f-fraktur` (UnifrakturMaguntia: `h1`, `#banner`, Boss-Name), `--f-display` (Grenze Gotisch: Überschriften, Knöpfe, Kartennamen),
+  `--f-body` (Grenze: Fließtext); Fraktur nie in Großbuchstaben setzen, Hervorhebung durch Sperren (`letter-spacing`). Zierrat als SVG-Daten-URIs in `:root`
+  (`--orn-line` Schnörkellinie, `--orn-corner` Eckornamente per `border-image` auf `::before`, `--orn-side`, `--grain`, Nieten `--rivets`); `::after` von Karten ist für Tastenhinweise reserviert.
+  Option „Schlichte Schrift“ (`settings.plainFont` → `body.plainfont`) setzt die Variablen auf Cinzel/Alegreya Sans zurück; Canvas-Texte holen ihre Schrift über `numFont()`.
+  HUD: Porträt-Medaillon `#hudPort` (in `startCombat` per `fillPortraits`), Lebensleiste mit Nachzieh-Balken `#hpLag`, beim Raumstart `hudSnap()`.
 - **Grafikstufe:** Teure Effekte nur bei `FX()` (Licht, Partikel, Kleintiere, Zuschauerdichte, Helden-Umriss per `shadowBlur`). Zuschauer werden in Gruppen vorgerendert (`buildCrowdChunks`). Bildrate wählbar (`settings.fpsCap`).
 - **Spieltempo:** `loop` ruft `update(gdt/n)` in Teilschritten ≤ 0,034 s auf; `update` immer mit kleinen Schritten testen.
 - **Gegner hinzufügen:** Eintrag in `ENEMIES` (+ `BEAST`), KI-Fall in `updEnemy`, Zeichnung als Sprite in `SPR_BODY`/`SPR_KIND` (`js/sprites.js`) oder live in `drawEnemy`, Farbe in `enemyColor`, Todeseffekt in `DEATH_FX`, Todesklang in `DIE_SND`, fliegend → `FLY`.

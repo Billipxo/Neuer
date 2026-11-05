@@ -219,6 +219,7 @@ function showSettings(){
       ${cy('shake','Bildschirmwackeln',shakeTxt,'Bei Treffern und Explosionen')}
       ${tg('calm','Blitze abschwächen',st.calm,'Rote Treffer-Blitze, Gewitter und helle Effekte gedämpft')}
       ${tg('bigUi','Große Schrift und Knöpfe',st.bigUi,'Menüs, Texte und die Knöpfe im Kampf werden größer')}
+      ${tg('plainFont','Schlichte Schrift',st.plainFont,'Klare, schnörkellose Buchstaben statt der altdeutschen Schrift')}
       ${tg('cb','Farbenblind-Modus',st.cb,'Warnkreise gelb-weiß gestrichelt, gegnerische Geschosse mit weißem Rand')}
     </div>
     <button class="btn" data-a="back">Zurück</button>
@@ -240,7 +241,9 @@ function showSettings(){
   const sv=$('sfxVol'); if(sv){ sv.addEventListener('input',e=>{ audio(); setSfxVol(+e.target.value); }); sv.addEventListener('change',()=>{ persist(); sfx('hit',{pan:0}); }); }
 }
 let settingsBack=null;
-function applyBodyClasses(){ const st=save.settings; document.body.classList.toggle('lefty',!!st.lefty); document.body.classList.toggle('bigui',!!st.bigUi); }
+function applyBodyClasses(){ const st=save.settings; document.body.classList.toggle('lefty',!!st.lefty); document.body.classList.toggle('bigui',!!st.bigUi); document.body.classList.toggle('plainfont',!!st.plainFont); }
+// Schrift für Zahlen und Texte auf der Spielfläche (folgt der Einstellung „Schlichte Schrift“)
+const numFont=()=>save&&save.settings&&save.settings.plainFont?'"Alegreya Sans", sans-serif':'"Grenze", "Alegreya Sans", sans-serif';
 /* Sicherungscode: der komplette Spielstand als Text zum Kopieren und Wiedereinfügen */
 const SAVE_PREFIX='ARENA1:';
 // Spielstand ohne Einstellungen (die gelten pro Gerät) und ohne flüchtige Kampfdaten
@@ -739,7 +742,7 @@ function synHint(u){
   const part=SYN.find(s=>!hasSyn(s.id) && synFor(s) && s.req.includes(u.id) && !run.upg[u.id]);
   if(part){ const other=part.req.filter(r=>r!==u.id).map(r=>UPG[r]); return `<div class="syn part">🔗 Teil von ${part.ic} ${part.nm} · fehlt: ${other.map(o=>o.ic+' '+o.nm).join(', ')}</div>`; }
   return ''; }
-function statsHtml(p){ return `<div class="stats" style="grid-template-columns:repeat(3,1fr);background:#0006;border:1px solid var(--iron);border-radius:8px;padding:12px">${Object.entries(statSheet(p)).map(([k,v])=>`<span>${k}<b>${v}</b></span>`).join('')}</div>`; }
+function statsHtml(p){ return `<div class="stats statbox">${Object.entries(statSheet(p)).map(([k,v])=>`<span>${k}<b>${v}</b></span>`).join('')}</div>`; }
 function evoHtml(){ if(!run||!run.evo||!run.evo.length) return ''; const all=Object.values(EVOS).flat(); return `<div class="cards">${run.evo.map(id=>{ const e=all.find(x=>x.id===id); return e?`<div class="card epic"><div class="ic">${e.ic}</div><div class="body"><div class="rar">Waffen-Entwicklung</div><div class="nm">${e.nm}</div><div class="ds">${e.ds}</div></div></div>`:''; }).join('')}</div>`; }
 function synHtml(){ if(!run||!run.syn||!run.syn.length) return ''; return `<div class="cards">${run.syn.map(id=>{ const s=SYN.find(x=>x.id===id); return `<div class="card epic"><div class="ic">${s.ic}</div><div class="body"><div class="rar">Synergie aktiv</div><div class="nm">${s.nm}</div><div class="ds">${s.ds}</div></div></div>`; }).join('')}</div>`; }
 function upgCard(u,extra='',act='pick'){

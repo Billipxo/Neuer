@@ -47,6 +47,9 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **Tägliche Herausforderung:** jeden Tag dieselbe Karte für alle, mit Held und Modifikator des Tages
 - **Meta-Fortschritt:** Seelen bleiben erhalten und gehen in die Schmiede (6 dauerhafte Upgrades) oder in neue Helden
 - **Ruhmeshalle** mit den 10 besten Läufen; laufende Abenteuer werden auf der Karte automatisch gespeichert
+- **Altdeutsche Gestaltung:** Titel und Banner in Fraktur mit Blattgold, Überschriften und Knöpfe in gebrochener Schrift,
+  genietete Tafeln aus Eisen und Bronze, goldene Eckornamente und Schnörkellinien; im Kampf ein Medaillon mit dem Heldenporträt
+  und Lebensleiste mit Nachzieh-Balken
 - Atmosphärische Arenen: dynamisches Licht und Schatten, Fackeln und Feuerbecken, Nebel, Funken,
   Kleintiere (Ratten, Spinnen, Feuersalamander) und je Akt eigene Bodendetails
 - **Tribünen mit Zuschauern** (Menschen und Goblins, Skelette und Geister, Teufelchen und Kultisten),
@@ -68,7 +71,7 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **Am PC spielbar:** W A S D bewegen, Linksklick oder Q für die Fähigkeit (zielt auf den Mauszeiger), Leertaste oder Rechtsklick zum Ausweichen,
   Esc Pause, F Vollbild, Zifferntasten wählen Belohnungen und Wege; Controller (Xbox/PlayStation) werden automatisch erkannt;
   auf großen Querformat-Bildschirmen zeigt die Kamera fast die ganze Arena
-- **Barrierefreiheit:** Hilfemodus, Tempo 0,8×, Bildschirmwackeln in Stufen, Blitze dämpfen, große Schrift und Knöpfe,
+- **Barrierefreiheit:** Hilfemodus, Tempo 0,8×, Bildschirmwackeln in Stufen, Blitze dämpfen, große Schrift und Knöpfe, schlichte Schrift statt Fraktur,
   Farbenblind-Modus, Linkshänder-Modus, Akkusparmodus mit 30 Bildern pro Sekunde
 - Läufe überstehen das Schließen der App: der laufende Raum startet beim Fortsetzen neu
 - Detailliert gezeichnete Helden (mit Gesicht, Rüstung, Umhang, Rückansicht) und Gegner mit Umriss und Schattierung,

@@ -93,6 +93,7 @@ function startCombat(type, customWaves){
   DECOR.candles=DECOR.candles.filter(c=>!G.obs.some(o=>o.type==='pillar'&&Math.hypot(o.x-c.x,o.y-c.y)<o.r+10));
   input.id=null; input.jx=input.jy=0; $('banner').classList.remove('show');
   ui.classList.add('hidden'); $('hud').classList.remove('hidden'); fadeIn();
+  { const hp=$('hudPort'); if(hp){ hp.dataset.port='hero:'+run.cid; fillPortraits($('hud')); } hudSnap(); }
   const c=CHARS[run.cid]; $('skillIc').textContent=c.skill.icon; $('skillLbl').textContent=c.skill.name;
   $('bossBar').classList.toggle('hidden', type!=='boss');
   $('hudRoom').innerHTML=`Akt ${run.act}<br>${NODE[type].nm} ${WEATHER[G.weather].ic}`;
@@ -480,7 +481,7 @@ function updTut(dt){
 function wrapLines(text,maxW){ const words=text.split(' '), lines=[]; let cur=''; for(const w of words){ const t=cur?cur+' '+w:w; if(ctx.measureText(t).width>maxW && cur){ lines.push(cur); cur=w; } else cur=t; } if(cur) lines.push(cur); return lines; }
 function drawTut(){
   const T=G.tut; if(!T||(T.step===4&&T.t>3.5)) return;
-  ctx.font='700 16px "Alegreya Sans", sans-serif'; const maxW=Math.min(W-48,380), lines=wrapLines(TUT_MSG[INPUT_MODE][T.step]+(T.step===3&&AIM_SKILLS[P.cid]?TUT_AIM[INPUT_MODE]:''),maxW-28);
+  ctx.font='700 17px '+numFont(); const maxW=Math.min(W-48,380), lines=wrapLines(TUT_MSG[INPUT_MODE][T.step]+(T.step===3&&AIM_SKILLS[P.cid]?TUT_AIM[INPUT_MODE]:''),maxW-28);
   const h=lines.length*22+22, y=96, a=Math.min(1,T.t*3);
   ctx.globalAlpha=a; ctx.fillStyle='rgba(18,14,22,0.88)'; ctx.strokeStyle='#e6b450'; ctx.lineWidth=2;
   ctx.beginPath(); if(ctx.roundRect) ctx.roundRect(W/2-maxW/2,y,maxW,h,10); else ctx.rect(W/2-maxW/2,y,maxW,h); ctx.fill(); ctx.stroke();
