@@ -189,7 +189,8 @@ function showSettings(){
   render(`<div class="wrap"><div class="eyebrow">Optionen</div><h2>Einstellungen</h2>
     <div class="eyebrow" style="margin-top:4px">Ton</div>
     <div class="cards">
-      ${tg('sound','Soundeffekte',save.sound,'Treffer, Münzen, Explosionen')}
+      ${tg('sound','Soundeffekte',save.sound,'Treffer, Waffen, Gegner, Explosionen – mit Hall und Raumklang')}
+      <label class="toggle" for="sfxVol" style="cursor:default"><span><b>Effektlautstärke</b></span><input type="range" id="sfxVol" min="0" max="1" step="0.05" value="${st.sfxVol??0.8}" style="flex:1;max-width:180px;accent-color:#e6b450"></label>
       ${tg('music','Musik',st.music,'Titelthema, Kartenmusik und Kampfthemen je Akt, Bossmusik')}
       <label class="toggle" for="musicVol" style="cursor:default"><span><b>Musiklautstärke</b></span><input type="range" id="musicVol" min="0" max="1" step="0.05" value="${st.musicVol??0.7}" style="flex:1;max-width:180px;accent-color:#e6b450"></label>
     </div>
@@ -236,6 +237,7 @@ function showSettings(){
       <button class="btn danger" data-a="yes">Endgültig löschen</button><button class="btn" data-a="no">Abbrechen</button></div>`,
       { yes:()=>{ const keep=save.settings, snd=save.sound, nm=save.name; save=defSave(); save.settings=keep; save.sound=snd; save.name=nm; persist(); showMenu(); }, no:showSettings }) });
   const mv=$('musicVol'); if(mv) mv.addEventListener('input',e=>{ st.musicVol=+e.target.value; persist(); musicUpdate(); });
+  const sv=$('sfxVol'); if(sv){ sv.addEventListener('input',e=>{ audio(); setSfxVol(+e.target.value); }); sv.addEventListener('change',()=>{ persist(); sfx('hit',{pan:0}); }); }
 }
 let settingsBack=null;
 function applyBodyClasses(){ const st=save.settings; document.body.classList.toggle('lefty',!!st.lefty); document.body.classList.toggle('bigui',!!st.bigUi); }
@@ -504,9 +506,9 @@ function showChars(){
     <button class="btn" data-a="back">Zurück</button></div>`,
   { back:showMenu, x:()=>{}, tiers:()=>showTiers(showChars), go:id=>{ const go=()=>startRun(id,{tier:Math.min(tsel,tierOpen(id))}); save.introSeen?go():showIntro(go); }, tier:n=>{ save.tierSel=+n; persist(); showChars(); }, skin:v=>{ const [id,k]=v.split(':'); save.skin[id]=k; persist(); showChars(); },
     pet:id=>{ save.pet=save.pet===id?null:id; persist(); showChars(); },
-    petbuy:id=>{ const pt=PETS.find(x=>x.id===id); if(save.souls<pt.cost) return; save.souls-=pt.cost; save.pets=save.pets||{}; save.pets[id]=true; save.pet=id; persist(); sfx('pick'); showChars(); },
-    skinbuy:v=>{ const [id,k]=v.split(':'); if(save.souls<SKIN_PRICE) return; save.souls-=SKIN_PRICE; save.skinBought=save.skinBought||{}; save.skinBought[v]=true; save.skin[id]=k; persist(); sfx('pick'); showChars(); },
-    buy:id=>{ const c=CHARS[id]; if(save.souls>=c.cost){ save.souls-=c.cost; save.unlocked[id]=true; persist(); sfx('pick'); showChars(); } } });
+    petbuy:id=>{ const pt=PETS.find(x=>x.id===id); if(save.souls<pt.cost) return; save.souls-=pt.cost; save.pets=save.pets||{}; save.pets[id]=true; save.pet=id; persist(); sfx('buy'); showChars(); },
+    skinbuy:v=>{ const [id,k]=v.split(':'); if(save.souls<SKIN_PRICE) return; save.souls-=SKIN_PRICE; save.skinBought=save.skinBought||{}; save.skinBought[v]=true; save.skin[id]=k; persist(); sfx('buy'); showChars(); },
+    buy:id=>{ const c=CHARS[id]; if(save.souls>=c.cost){ save.souls-=c.cost; save.unlocked[id]=true; persist(); sfx('buy'); showChars(); } } });
 }
 
 function showForge(){
@@ -521,7 +523,7 @@ function showForge(){
     <p class="sub">Seelen aus vergangenen Läufen stärken jeden neuen Helden.</p>
     <span class="pill s" style="align-self:flex-start">👻 ${save.souls} Seelen</span>
     <div class="cards">${list}</div><button class="btn" data-a="back">Zurück</button></div>`,
-  { back:showMenu, up:id=>{ const m=META.find(x=>x.id===id), l=metaLvl(id); if(l<m.max && save.souls>=m.cost(l)){ save.souls-=m.cost(l); save.meta[id]=l+1; persist(); sfx('pick'); checkAch(); showForge(); } } });
+  { back:showMenu, up:id=>{ const m=META.find(x=>x.id===id), l=metaLvl(id); if(l<m.max && save.souls>=m.cost(l)){ save.souls-=m.cost(l); save.meta[id]=l+1; persist(); sfx('buy'); checkAch(); showForge(); } } });
 }
 
 function showScores(){
@@ -536,7 +538,7 @@ function relicBar(){ const rl=(run&&run.relics)||[]; return rl.length?`<div clas
 function relicCard(r,act='relic'){ return `<button class="card ${r.cursed?'cursed':'epic'} reward-card" data-a="${act}" data-v="${r.id}"><div class="ic">${r.ic}</div><div class="body"><div class="rar">${r.cursed?'Verfluchtes Relikt':'Relikt'}</div><div class="nm">${r.nm}</div><div class="ds">${r.ds}</div></div></button>`; }
 function relicsLeft(){ return RELICS.filter(r=>!hasRelic(r.id)); }
 function gainRelic(id){ const r=REL[id]; run.relics=run.relics||[]; if(run.relics.includes(id)) return; run.relics.push(id); if(r.on) r.on(run.p);
-  save.stats.relics=save.stats.relics||[]; if(!save.stats.relics.includes(id)) save.stats.relics.push(id); sfx('skill'); }
+  save.stats.relics=save.stats.relics||[]; if(!save.stats.relics.includes(id)) save.stats.relics.push(id); sfx('relic'); }
 // Relikt-Auswahl: eins von zwei (Schatz, Champion)
 function showRelicPick(after, title='Ein Relikt!', sub='Wähle eines – Relikte wirken für den Rest des Laufs.'){
   const left=relicsLeft(); if(!left.length){ after(); return; }
@@ -705,7 +707,7 @@ function rollUpgrades(n, mode, exclude=[]){
 function checkSyn(){ run.syn=run.syn||[]; const out=[]; for(const s of SYN){ if(!run.syn.includes(s.id) && s.req.every(r=>run.upg[r])){ run.syn.push(s.id); out.push(s); if(!save.stats.syns.includes(s.id)) save.stats.syns.push(s.id); } } if(out.length) checkAch(); return out; }
 function applyUpgrade(u){ u.ap(run.p); run.upg[u.id]=(run.upg[u.id]||0)+1; sfx('pick'); return checkSyn(); }
 function showSynergy(list, after){
-  sfx('skill');
+  sfx('relic');
   render(`<div class="wrap" style="justify-content:center"><div class="eyebrow center">Zwei Kräfte verbinden sich</div><h2 class="center">Synergie entdeckt!</h2>
     <div class="cards">${list.map(s=>`<div class="card epic reward-card"><div class="ic">${s.ic}</div><div class="body"><div class="rar">Synergie · ${s.req.map(r=>UPG[r].ic).join(' + ')}</div><div class="nm">${s.nm}</div><div class="ds">${s.ds}</div></div></div>`).join('')}</div>
     <button class="btn primary" data-a="next">Weiter</button></div>`,{ next:after },true);
@@ -762,14 +764,14 @@ function showReward(mode, after, offer, banMode){
     idol:()=>{ run.idolUsed=true; showReward(mode, after, rollUpgrades(offer.length,mode,offer.map(u=>u.id))); },
     banm:()=>showReward(mode, after, offer, !banMode),
     ban:id=>{ run.banned=run.banned||[]; run.banned.push(id); run.bans=(run.bans??1)-1; const rep=rollUpgrades(1,mode,offer.map(u=>u.id))[0];
-      const no=offer.map(u=>u.id===id?rep:u).filter(Boolean); sfx('boom'); showReward(mode, after, no, false); },
+      const no=offer.map(u=>u.id===id?rep:u).filter(Boolean); sfx('banish'); showReward(mode, after, no, false); },
     skip:()=>{ run.gold+=15; after(); } },true);
 }
 
 // Belohnung statt Upgrade (auf der Karte angekündigt)
 function showBounty(mode, after){
   const p=run.p; let txt;
-  if(mode==='gold'){ const g=Math.round((70+20*run.act)*(1+0.1*(run.ng||0))); run.gold+=g; run.goldTotal+=g; txt=`Du findest einen prall gefüllten Beutel: <b style="color:var(--gold)">+${g} Gold</b>.`; sfx('coin'); }
+  if(mode==='gold'){ const g=Math.round((70+20*run.act)*(1+0.1*(run.ng||0))); run.gold+=g; run.goldTotal+=g; txt=`Du findest einen prall gefüllten Beutel: <b style="color:var(--gold)">+${g} Gold</b>.`; sfx('buy'); }
   else { const h=Math.round(p.maxHp*(tierHas(9)?0.2:0.4)); p.maxHp+=5; p.hp=Math.min(p.maxHp,p.hp+h+5); txt=`Eine Heilquelle sprudelt in der Arena: <b style="color:#7dff8a">+${h} LP</b> und dauerhaft +5 max. LP.`; sfx('pick'); }
   render(`<div class="wrap" style="justify-content:center"><div class="eyebrow center">Belohnung</div><h2 class="center">${mode==='gold'?'💰 Goldfund':'❤️ Heilquelle'}</h2>
     <p class="sub center" style="font-size:17px;color:var(--parch)">${txt}</p>
@@ -788,7 +790,7 @@ function showEvo(after){
   { evo:id=>{ run.evo=run.evo||[]; run.evo.push(id); const p=run.p;
       if(id==='n_grave') p.raise+=0.25; if(id==='b_rage') p.furyMax=15;
       if(!save.stats.evos) save.stats.evos=[]; if(!save.stats.evos.includes(id)) save.stats.evos.push(id);
-      run.pend=null; sfx('skill'); after(); } },true);
+      run.pend=null; sfx('relic'); after(); } },true);
 }
 function showShop(stock){
   if(!stock){
@@ -809,7 +811,7 @@ function showShop(stock){
       ${stock.items.map((it,i)=>{ const u=UPG[it.id]; const html=upgCard(u,`<span class="pill g price">${it.sold?'Verkauft':it.price+' 💰'}</span>`,'buy').replace('data-v="'+u.id+'"','data-v="'+i+'"'+(it.sold||run.gold<it.price?' disabled':'')); return html; }).join('')}
     </div>
     <button class="btn primary" data-a="leave">Weiterziehen</button></div>`,
-  { potion:()=>{ run.gold-=stock.potion.price; stock.potion.sold=true; p.hp=Math.min(p.maxHp,p.hp+potionHeal); sfx('coin'); showShop(stock); },
+  { potion:()=>{ run.gold-=stock.potion.price; stock.potion.sold=true; p.hp=Math.min(p.maxHp,p.hp+potionHeal); sfx('buy'); showShop(stock); },
     brel:()=>{ const s=stock.relic; if(s.sold||run.gold<s.price) return; run.gold-=s.price; s.sold=true; gainRelic(s.id); showShop(stock); },
     buy:i=>{ const it=stock.items[+i]; if(it.sold||run.gold<it.price) return; run.gold-=it.price; it.sold=true; const ns=applyUpgrade(UPG[it.id]); ns.length?showSynergy(ns,()=>showShop(stock)):showShop(stock); },
     leave:showMap },true);
@@ -827,7 +829,7 @@ function showRest(){
     </div></div>`,
   { purge:()=>{ const list=Object.keys(run.upg).filter(id=>UPG[id]&&UPG[id].r==='cursed');
       render(`<div class="wrap" style="justify-content:center"><h2>Welchen Fluch läutern?</h2><div class="cards">${list.map(id=>upgCard(UPG[id],'','rm')).join('')}</div><button class="btn" data-a="back">Zurück</button></div>`,
-      { rm:id=>{ const up=UPG[id]; if(up.un) up.un(run.p); delete run.upg[id]; run.p.hp=Math.min(run.p.hp,run.p.maxHp); sfx('skill'); toast(`<span style="font-size:24px">🕯️</span><div><b>${up.nm}</b> wurde geläutert.</div>`); showMap(); }, back:showRest },true); },
+      { rm:id=>{ const up=UPG[id]; if(up.un) up.un(run.p); delete run.upg[id]; run.p.hp=Math.min(run.p.hp,run.p.maxHp); sfx('relic'); toast(`<span style="font-size:24px">🕯️</span><div><b>${up.nm}</b> wurde geläutert.</div>`); showMap(); }, back:showRest },true); },
     heal:()=>{ p.hp=Math.min(p.maxHp,p.hp+heal); sfx('pick'); showMap(); },
     train:()=>{ p.maxHp+=10; p.hp+=10; p.dmg*=1.08; sfx('pick'); showMap(); } },true);
 }

@@ -5,7 +5,7 @@
 const SAVE_KEY = 'arena_verdammten_v1';
 const SAVE_V=2, RUN_V=6;
 const reducedMotion = (()=>{ try{ return matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } })();
-function defSettings(){ return { shake:!reducedMotion, vibrate:true, music:true, fx:true, joyFixed:false, lefty:false, cb:false, musicVol:0.7, gfx:'auto', showFps:false, dmgNums:true, dmgOff:false, gameSpeed:1.2, shakeAmt:1, calm:reducedMotion, fpsCap:60, assist:false, bigUi:false, iosTip:false }; }
+function defSettings(){ return { shake:!reducedMotion, vibrate:true, music:true, fx:true, joyFixed:false, lefty:false, cb:false, musicVol:0.7, sfxVol:0.8, gfx:'auto', showFps:false, dmgNums:true, dmgOff:false, gameSpeed:1.2, shakeAmt:1, calm:reducedMotion, fpsCap:60, assist:false, bigUi:false, iosTip:false }; }
 function defStats(){ return { beast:{}, kills:0, elites:0, cheers:0, events:[], syns:[], bosses:[], wins:{}, anyWin:false, noHitBoss:false, dailyWin:false, maxEndless:0, maxGold:0, maxCombo:0 }; }
 function defSave(){ return { v:SAVE_V, tutDone:false, ach:{}, skin:{}, heroXp:{}, stats:defStats(), souls:0, meta:{}, unlocked:{krieger:true}, scores:[], runs:0, lastChar:'krieger', sound:true, run:null, assistN:0, seenFoes:{}, tierWon:{}, tierSel:0, chal:{}, dailyHist:{}, streak:null, lastRun:null, lossStreak:0, settings:defSettings(), name:'Spielstand 1', last:0, ngMax:0, ngSel:0, bkAt:0, bkRuns:0, bkSnooze:0 }; }
 function migrate(s){
@@ -78,7 +78,7 @@ function audio(){
     // Soundeffekte laufen über einen Kompressor, damit viele gleichzeitige Treffer nicht übersteuern
     try{ const comp=AC.createDynamicsCompressor(); comp.threshold.value=-18; comp.knee.value=12; comp.ratio.value=4; comp.attack.value=0.003; comp.release.value=0.2;
       SFXOUT=AC.createGain(); SFXOUT.gain.value=1; SFXOUT.connect(comp); comp.connect(AC.destination); }catch(e){ SFXOUT=AC.destination; }
-    musicInit(); }catch(e){} }
+    musicInit(); sndInit(); }catch(e){} }
   if(AC && AC.state!=='running' && AC.state!=='closed'){ try{ AC.resume(); }catch(e){} }
   if(!persistAsked){ persistAsked=true; try{ navigator.storage && navigator.storage.persist && navigator.storage.persist().catch(()=>{}); }catch(e){} }
 }
@@ -86,7 +86,7 @@ const sfxOut=()=>SFXOUT||AC.destination;
 /* iOS kann den Ton nach dem Hintergrund stumm lassen: dann wird die Audio-Engine beim nächsten Tippen neu aufgebaut */
 function audioRevive(){
   if(!AC || document.hidden) return; try{ AC.resume(); }catch(e){}
-  setTimeout(()=>{ if(AC && AC.state!=='running' && !document.hidden){ try{ AC.close(); }catch(e){} AC=null; SFXOUT=null; MUS.gain=null; MUS.song=null; if(MUS.timer){ clearInterval(MUS.timer); MUS.timer=0; } } },600);
+  setTimeout(()=>{ if(AC && AC.state!=='running' && !document.hidden){ try{ AC.close(); }catch(e){} AC=null; SFXOUT=null; SND.bus=null; SND.revIn=null; SND.rev=null; MUS.gain=null; MUS.song=null; if(MUS.timer){ clearInterval(MUS.timer); MUS.timer=0; } } },600);
 }
 /* ---------------- MUSIK ----------------
    Komponierte Stücke, live mit Web Audio gespielt: Titelthema, ruhige Kartenmusik und Kampfthema je Akt,
@@ -217,53 +217,5 @@ function musicSting(kind){
   else { MUS.duck=t+3.6; [69,68,65,62].forEach((m,i)=>mk('triangle',m,i*0.42,0.6,0.6)); [50,53,57].forEach(m=>mk('sawtooth',m,1.6,2.2,0.15)); }
 }
 const musicUpdate=()=>{ if(AC) musicTick(); };
-function sfx(type){
-  if(!save.sound || !AC) return;
-  const now=AC.currentTime; if(lastSfx[type] && now-lastSfx[type]<0.05) return; lastSfx[type]=now;
-  const o=AC.createOscillator(), g=AC.createGain(); o.connect(g); g.connect(sfxOut());
-  const S={ zap:['sine',700,1500,.05,.09], twang:['triangle',820,330,.06,.07], skullthrow:['sawtooth',260,520,.035,.1], hit:['square',220,90,.05,.06], swing:['triangle',300,120,.06,.08], coin:['sine',900,1500,.05,.07], hurt:['sawtooth',160,50,.1,.22],
-    kill:['triangle',180,60,.06,.12], shoot:['sine',600,300,.03,.07], skill:['sawtooth',120,600,.08,.35], boom:['sawtooth',90,30,.12,.3],
-    pick:['sine',500,1000,.08,.18], dash:['sine',260,820,.06,.14], boss:['sawtooth',70,40,.12,.8] }[type];
-  if(!S) return;
-  const pv=0.92+Math.random()*0.16; o.type=S[0]; o.frequency.setValueAtTime(S[1]*pv,now); o.frequency.exponentialRampToValueAtTime(S[2]*pv,now+S[4]);
-  g.gain.setValueAtTime(S[3],now); g.gain.exponentialRampToValueAtTime(0.0001,now+S[4]);
-  o.start(now); o.stop(now+S[4]+0.02);
-}
-function blip(type,f0,f1,vol,dur,delay=0){
-  if(!save.sound||!AC) return; const t=AC.currentTime+delay, o=AC.createOscillator(), g=AC.createGain();
-  o.type=type; o.frequency.setValueAtTime(f0,t); o.frequency.exponentialRampToValueAtTime(Math.max(20,f1),t+dur);
-  g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.connect(g); g.connect(sfxOut()); o.start(t); o.stop(t+dur+0.02);
-}
-function deathSound(kind){
-  if(!save.sound||!AC) return; const now=AC.currentTime, k='d_'+kind; if(lastSfx[k] && now-lastSfx[k]<0.07) return; lastSfx[k]=now;
-  const v=0.9+Math.random()*0.2;
-  if(kind==='skeleton'||kind==='spiderling'){ for(let i=0;i<3;i++) blip('square',1300*v-i*150,900,0.03,0.035,i*0.045); }
-  else if(kind==='slime'){ blip('sine',420*v,80,0.09,0.16); blip('sine',260*v,60,0.05,0.12,0.05); }
-  else if(kind==='bat'){ blip('sine',2100*v,2700,0.04,0.08); blip('sine',2500*v,1800,0.03,0.06,0.06); }
-  else if(kind==='orc'||kind==='shield'||kind==='mimic'){ blip('sawtooth',150*v,60,0.08,0.25); }
-  else if(kind==='cultist'||kind==='healer'){ blip('triangle',620*v,180,0.06,0.3); }
-  else if(kind==='archer'){ blip('square',520*v,220,0.04,0.12); }
-  else { blip('triangle',180*v,60,0.06,0.12); }
-}
-function coinSound(){
-  if(!G) return; G.coinN=(G.time-(G.coinLast||-9)<0.35)?Math.min(12,(G.coinN||0)+1):0; G.coinLast=G.time;
-  const f=880*Math.pow(2,G.coinN/12); blip('sine',f,f*1.5,0.045,0.08);
-}
-const ROAR={golem:0.75,spider:1.6,lich:1.2,vampire:1.35,dragon:0.65,lavaworm:0.55,fallen:1.8};
-function roar(kind){
-  if(!save.sound||!AC) return; const p=ROAR[kind]||1, t=AC.currentTime; MUS.soft=t+1.5;
-  const o=AC.createOscillator(), lfo=AC.createOscillator(), lg=AC.createGain(), f=AC.createBiquadFilter(), g=AC.createGain();
-  o.type='sawtooth'; o.frequency.setValueAtTime(95*p,t); o.frequency.exponentialRampToValueAtTime(55*p,t+1.5);
-  lfo.frequency.value=11; lg.gain.value=18*p; lfo.connect(lg); lg.connect(o.frequency);
-  f.type='lowpass'; f.frequency.setValueAtTime(1400,t); f.frequency.exponentialRampToValueAtTime(300,t+1.5);
-  g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(0.28,t+0.12); g.gain.exponentialRampToValueAtTime(0.0001,t+1.6);
-  o.connect(f); f.connect(g); g.connect(sfxOut()); o.start(t); lfo.start(t); o.stop(t+1.7); lfo.stop(t+1.7);
-  noiseSound(1.3,'lowpass',500*p,0.25,0.1);
-}
-function critSound(){ if(!save.sound||!AC) return; const now=AC.currentTime; if(lastSfx.crit && now-lastSfx.crit<0.06) return; lastSfx.crit=now; const v=0.95+Math.random()*0.1; blip('triangle',1500*v,2300*v,0.045,0.07); blip('sine',2900*v,2400*v,0.025,0.09,0.02); }
-function comboSound(n){ if(!save.sound||!AC) return; const base=n>=50?72:n>=30?67:n>=20?64:60; [0,4,7,12].forEach((s,i)=>blip('triangle',mtof(base+s),mtof(base+s)*1.01,0.05,0.12,i*0.06)); }
-function uiClick(){ if(!save.sound||!AC) return; const now=AC.currentTime; if(lastSfx.ui && now-lastSfx.ui<0.04) return; lastSfx.ui=now; blip('triangle',520,380,0.035,0.05); }
-function warnSound(){ if(!save.sound||!AC) return; const now=AC.currentTime; if(lastSfx.warn && now-lastSfx.warn<0.3) return; lastSfx.warn=now; blip('triangle',990,740,0.05,0.1); blip('triangle',990,740,0.04,0.1,0.12); }
-function heartbeat(){ if(!save.sound||!AC) return; blip('sine',78,42,0.28,0.13); blip('sine',66,38,0.2,0.11,0.16); }
 function buzz(ms){ if(!save.settings.vibrate) return; try{ navigator.vibrate && navigator.vibrate(ms); }catch(e){} }
 

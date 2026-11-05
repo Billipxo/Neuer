@@ -219,6 +219,21 @@ const tests = {
         out.ok=true; }catch(e){ out.err=e.message+' @ '+(e.stack||'').split('\n')[1]; }
       return {ok:!!out.ok, ...out}; });
   },
+  async sounds(pg){ // Soundeffekte: alle Klänge werden gebacken (ohne Fehler, nicht stumm, nicht übersteuert) und lassen sich abspielen
+    await pg.mouse.click(10,10);
+    return pg.evaluate(async ()=>{ const out={}; audio(); if(!AC) return {ok:true, skipped:'kein Audio'};
+      for(let i=0;i<400 && !SB.ready;i++) await new Promise(r=>setTimeout(r,50)); out.ready=SB.ready;
+      const bad=[]; for(const [n,D] of Object.entries(SDEF)){ const L=SB.buf[n]||[]; if(L.length!==(D.n||3)){ bad.push(n+': '+L.length+' Varianten'); continue; }
+        for(const b of L){ const d=b.getChannelData(0); let pk=0, e=0; for(let i=0;i<d.length;i++){ const a=Math.abs(d[i]); if(!(a<=1)) { pk=9; break; } if(a>pk) pk=a; e+=a; } if(pk>0.95||pk<0.5||e/d.length<0.002) bad.push(n+': Pegel '+pk.toFixed(2)); } }
+      out.baked=!bad.length; out.bad=bad.slice(0,5);
+      // jeder Klang lässt sich abspielen, auch mit Position, Verzögerung und Tonhöhe
+      save.tutDone=true; startRun('krieger'); run.posId=run.map.rows[1][0].id; startCombat('fight',[[{kind:'slime'}]]); draw(); let n=0;
+      for(const name of Object.keys(SDEF)){ SB.last={}; sfx(name,{x:P.x+100,y:P.y,vol:0.5}); n++; } sfx('chime',{rate:1.5,delay:0.1}); comboSound(30); coinSound(); deathSound('skeleton',P.x,P.y); deathSound('unbekannt');
+      out.played=n===Object.keys(SDEF).length && SB.voices.length>0;
+      out.mapped=Object.keys(ENEMIES).every(k=>DIE_SND[k]&&SDEF[DIE_SND[k]]) && ['arrow','spike','orb','soul','star','fire','rock','web','blood'].every(k=>SDEF[ESHOT_SND[k]]) && Object.keys(CHARS).every(c=>SDEF['skill_'+c]) && Object.keys(BOSSES).every(b=>SDEF['roar_'+b]);
+      setSfxVol(0.4); out.vol=Math.abs(save.settings.sfxVol-0.4)<1e-9; setSfxVol(0.8);
+      return {ok:Object.values(out).every(v=>v===true||Array.isArray(v)) && out.baked, out}; });
+  },
   async music(pg){ // Musik-Engine spielt alle Stücke inklusive B-Teil fehlerfrei
     await pg.mouse.click(10,10);
     return pg.evaluate(()=>{ audio(); if(!AC) return {ok:true, skipped:'kein Audio'}; let n=0;

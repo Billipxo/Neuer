@@ -270,16 +270,6 @@ function crowdThrow(n,heart){
   }
 }
 function hype(add){ if(!G) return; G.hype=clamp((G.hype||0)+add,0,1); }
-function noiseSound(dur,type,freq,vol,attack){
-  if(!save.sound||!AC||!MUS.noise) return;
-  const t=AC.currentTime, s=AC.createBufferSource(), f=AC.createBiquadFilter(), g=AC.createGain();
-  s.buffer=MUS.noise; s.loop=true; f.type=type; f.frequency.value=freq; f.Q.value=0.7;
-  g.gain.setValueAtTime(0.0001,t); g.gain.linearRampToValueAtTime(vol,t+attack); g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
-  s.connect(f); f.connect(g); g.connect(sfxOut()); s.start(t); s.stop(t+dur+0.05);
-}
-const crowdSound=v=>{ noiseSound(1.4,'bandpass',900,0.18*v,0.25); noiseSound(1.1,'bandpass',2200,0.07*v,0.2); };
-const thunder=v=>noiseSound(2.2,'lowpass',180,0.7*v,0.05);
-
 /* ---- Wetter ---- */
 const WEATHER={
   clear:{ ic:'🌙', nm:'Klare Nacht' },

@@ -5,7 +5,7 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 
 ## Befehle
 
-- `npm test` – 20 Headless-Tests (inkl. `render`, der wirklich zeichnet, `pc` mit Maus, Tastatur und Controller-Attrappe im Querformat, `backup` für Spielstand-Link und -Datei) (`tests/run-all.js`), einzeln: `node tests/run-all.js bosses saves`, Details mit `VERBOSE=1`.
+- `npm test` – 21 Headless-Tests (inkl. `render`, der wirklich zeichnet, `pc` mit Maus, Tastatur und Controller-Attrappe im Querformat, `backup` für Spielstand-Link und -Datei, `sounds` für alle Klänge) (`tests/run-all.js`), einzeln: `node tests/run-all.js bosses saves`, Details mit `VERBOSE=1`.
 - `npm run balance` (`node tools/balance.js [Läufe] [Held …]`) – der Bot spielt komplette Läufe ohne Gottmodus: Siegquote, Todesursachen, Hänger je Held.
 - `node tools/chaos.js [Läufe] [Sekunden]` – Chaos-Bot: komplette Läufe mit Zeichnen, zufälligen Menüknöpfen, Pausen und Einstellungen; meldet jeden Laufzeitfehler mit Stelle. Nach größeren Änderungen laufen lassen.
   Playwright ist in der Cloud-Umgebung vorinstalliert, in CI per Workflow.
@@ -19,7 +19,8 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 | Datei | Inhalt |
 |---|---|
 | `js/data.js` | `ACTS` (4 Akte, `ACT_N`), `CHARS`, `ENEMIES`, `BOSSES`, `BOSS_LINES`/`BOSS_AGAIN`, `BEAST`, `AFFIXES`, `UPGRADES`/`UPG`, `SYN`, `EVOS`, `RELICS`/`REL`, `THEMES`, `CHAMP_NAMES`, `ROOM_CHAL`, `PETS`, `LORE`, `HERO_LINES`, `META`, `NODE`, `DAILY_MODS`/`EXTRA_MODS`/`runMod()`, `TIERS`, `CHALLENGES`, `weeklyInfo` |
-| `js/core.js` | Speicherstand (Slots, `migrate`, `persist`), Heldenstufen, Grafikstufe `FX()`, RNG (`rand`, `pick`, `seeded`), Soundeffekte, Musik (`SONGS2`, `MEL`, `playStep`) |
+| `js/core.js` | Speicherstand (Slots, `migrate`, `persist`), Heldenstufen, Grafikstufe `FX()`, RNG (`rand`, `pick`, `seeded`), Audio-Start (`audio`), Musik (`SONGS2`, `MEL`, `playStep`) |
+| `js/sound.js` | Soundeffekte: Klangkatalog `SDEF` (Baukasten `sndKit`: Rauschen, Filter, Glocken-Teiltöne, Stimmformanten, Verzerrung), Backen im Hintergrund (`sndBake`, OfflineAudioContext, mehrere Varianten), Abspielen `sfx(name,{x,y,vol,rate,delay})` mit Stereo, Hall je Akt (`sndAct`), Stimmenbegrenzung; Zuordnungen `DIE_SND`, `ESHOT_SND` |
 | `js/world.js` | Canvas/`resize`, Boden (`buildFloor`, `DECOR`), Tribünen und Zuschauer, Wetter, Ambiente, Licht (`renderLights`) |
 | `js/input.js` | Steuerung: Touch-Joystick, Maus und Tastatur, Controller (`pollPad`), Menüs per Tasten (`menuKey`, `navMove`), Vollbild; Spielzustand, `newPlayer`, `startRun`, `nextAct`, `roomKey` |
 | `js/ui.js` | Alle Menüs (`render(html, actions)`), Karte (`genMap`, `showMap`, Belohnungsvorschau `rw`), Erfolge (`ACH`, `checkAch`), Skins, Einstellungen, Kodex, Spielstände/Sicherungscode, Händler, Lagerfeuer, Ereignisse, Belohnungen (`showReward`, Verbannen, `showEvo`), Fortsetzen (`resumeRun`) |
@@ -37,11 +38,13 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 - **Speicherstand:** Neue Felder in `defSave()`/`defStats()`/`defSettings()` ergänzen, `migrate()` füllt alte Stände auf. Ändert sich die Struktur von `run`/`run.p` inkompatibel, `RUN_V` erhöhen (alte Läufe werden verworfen). Einstellungen sind global für alle 3 Slots.
 - **Grafikstufe:** Teure Effekte nur bei `FX()` (Licht, Partikel, Kleintiere, Zuschauerdichte, Helden-Umriss per `shadowBlur`). Zuschauer werden in Gruppen vorgerendert (`buildCrowdChunks`). Bildrate wählbar (`settings.fpsCap`).
 - **Spieltempo:** `loop` ruft `update(gdt/n)` in Teilschritten ≤ 0,034 s auf; `update` immer mit kleinen Schritten testen.
-- **Gegner hinzufügen:** Eintrag in `ENEMIES` (+ `BEAST`), KI-Fall in `updEnemy`, Zeichnung als Sprite in `SPR_BODY`/`SPR_KIND` (`js/sprites.js`) oder live in `drawEnemy`, Farbe in `enemyColor`, Todeseffekt in `DEATH_FX`, fliegend → `FLY`.
+- **Gegner hinzufügen:** Eintrag in `ENEMIES` (+ `BEAST`), KI-Fall in `updEnemy`, Zeichnung als Sprite in `SPR_BODY`/`SPR_KIND` (`js/sprites.js`) oder live in `drawEnemy`, Farbe in `enemyColor`, Todeseffekt in `DEATH_FX`, Todesklang in `DIE_SND`, fliegend → `FLY`.
 - **Bosse:** `BOSSES` + `ACTS[i].bosses` + `BOSS_LINES`/`BOSS_AGAIN` + `BEAST`, Logik in `updBoss`, Zeichnung in `drawBoss`, Tonhöhe in `ROAR`.
   Bosse nehmen von Fähigkeiten nur 60 % Schaden, sind beim Wechsel in die Wutphase kurz immun (`shieldT`) und stoßen den Helden aus ihrem Körper.
   Auftritt: `bossIntro()` (Kamera, Kinobalken, Boss und Held warten, Tippen kürzt ab); Tod: `bossDeathStart` → `updBossDie` → `bossBlast` → `clearRoom`. Neue Bosse brauchen einen Eintrag in `BOSS_DEATH`.
 - **Effekte:** Neue Gegner bekommen einen Eintrag in `DEATH_FX` (Trümmerart, Fleckfarbe, Brandfleck/Riss). Rein optische Zufälle mit `Math.random`/`mr`, nicht mit `RNG`.
+- **Sounds:** Neuer Klang = Eintrag in `SDEF` (`dur`, `n` Varianten, `vol`, `gap`, `rev`, `f:(K,v,R)=>…` mit dem Baukasten), aufrufen mit `sfx(name,{x,y})` (Position → Stereo).
+  Neue Gegner: Todesklang in `DIE_SND`, Geschossart in `ESHOT_SND`; neue Helden: `skill_<id>`; neue Bosse: Tonhöhe in `ROAR` (ergibt `roar_<id>`). Pegel prüfen mit dem Test `sounds`.
 - **Sonderregeln:** `run.mod` (Tagesprüfung) oder `run.mods` (Wochenprüfung, Herausforderungen) – `runMod()` führt mehrere Regeln zusammen (Zahlen multiplizieren, `start` verketten, `mapSwap` tauscht Kartenknoten).
 - **Verdammnis-Stufen:** `run.tier` 0–10, Abfrage mit `tierHas(n)`; Freischaltung je Held in `save.tierWon` (bei Sieg in `showVictory`).
 - **Build-System:** Synergien in `SYN` (Rezept `req`, heldenspezifisch über `UPG[...].only`), Waffen-Entwicklungen in `EVOS` (nach jedem Boss, Abfrage `hasEvo(id)`), regelverändernde Upgrades setzen Felder auf `run.p`.

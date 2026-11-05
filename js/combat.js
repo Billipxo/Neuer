@@ -150,7 +150,7 @@ function update(dt){
   G.time+=dt; if(G.tut) updTut(dt); if(G.cine) updCine(dt);
   if(!G.over){ run.actTime=run.actTime||{}; run.actTime[run.act]=(run.actTime[run.act]||0)+dt; }
   // spawns
-  for(const s of G.spawnQ){ s.t-=dt; if(s.t<=0){ if(!s.boss) newFoeHint(s.kind); { const en=s.boss?makeBoss(s.kind,s.x,s.y):makeEnemy(s.kind,s.x,s.y,s.elite); if(s.champ) champify(en); G.enemies.push(en); } if(s.boss){ roar(s.kind); G.shake+=10; } burst(s.x,s.y,s.boss?40:10,'#b69cff',s.boss?220:120); } }
+  for(const s of G.spawnQ){ s.t-=dt; if(s.t<=0){ if(!s.boss) newFoeHint(s.kind); { const en=s.boss?makeBoss(s.kind,s.x,s.y):makeEnemy(s.kind,s.x,s.y,s.elite); if(s.champ) champify(en); G.enemies.push(en); } if(s.boss){ roar(s.kind); G.shake+=10; } else sfx('spawn',{x:s.x,y:s.y}); burst(s.x,s.y,s.boss?40:10,'#b69cff',s.boss?220:120); } }
   G.spawnQ=G.spawnQ.filter(s=>s.t>0);
   if(!G.cleared && G.type!=='boss' && G.enemies.length===0 && G.spawnQ.length===0){
     if(G.waveIdx < G.waves.length-1){ if(!G.tut || G.tut.step>=(G.waveIdx<0?1:4)) G.waveT-=dt; if(G.waveT<=0){ nextWave(); G.waveT=0.45; if(G.waveIdx>0) banner('Welle '+(G.waveIdx+1)); } }
@@ -231,7 +231,7 @@ function updPlayer(dt){
     p.atkT=p.rate/sp; }
   // Wirbelwind
   if(p.spin>0){ p.spin-=dt; p.spinTick-=dt; p.face+=dt*18;
-    if(p.spinTick<=0){ p.spinTick=0.16; const R=95*p.area; sfx('swing');
+    if(p.spinTick<=0){ p.spinTick=0.16; const R=95*p.area; sfx('spin');
       for(const e of G.enemies){ if(Math.hypot(e.x-p.x,e.y-p.y)<R+e.r) dealDamage(e,p.dmg*0.65,{src:'skill',kb:140,from:p}); }
       G.fx.push({type:'ring',x:p.x,y:p.y,r:R,t:0,life:0.2,color:'#cfe3ff'}); } }
   // Feuerkugeln
@@ -259,7 +259,7 @@ function heroPassives(p,dt){
         for(const e of G.enemies){ if(!e.dead && !e.under && Math.hypot(e.x-p.x,e.y-p.y)<R+e.r){ dealDamage(e,p.dmg*2,{src:'skill',kb:220,from:p,bleed:p.bleed}); e.stun=e.boss?0.3:1.1; hit++; } }
         if(hit){ p.fury=p.furyMax||10; p.furyT=p.frenzyLong?4:2; }
         G.fx.push({type:'shock',x:p.x,y:p.y,r:R*1.1,t:0,life:0.4,color:'#ff8a6a'}); G.fx.push({type:'ring',x:p.x,y:p.y,r:R,t:0,life:0.3,color:'#c8402a',fill:true});
-        burst(p.x,p.y+8,22,'#8a7a6a',260); G.shake+=8; sfx('boom'); hitstop(0.05); } } }
+        burst(p.x,p.y+8,22,'#8a7a6a',260); G.shake+=8; sfx('slam',{x:p.x,y:p.y}); hitstop(0.05); } } }
   else if(p.cid==='alchi' && p.vortex){ const V=p.vortex; V.t+=dt;
     if(V.t>0){ V.tick-=dt;
       for(const e of G.enemies){ if(e.dead||e.boss||e.under) continue; const d=Math.hypot(V.x-e.x,V.y-e.y); if(d<V.R+e.r && d>6){ const pull=Math.min(d,170*dt); e.x+=(V.x-e.x)/d*pull; e.y+=(V.y-e.y)/d*pull; } }
@@ -268,7 +268,7 @@ function heroPassives(p,dt){
 }
 function flaskLand(pr){
   const p=P, k=pr.kind, A=Math.sqrt(p.area), B=1+0.3*(p.brew||0), x=pr.x2, y=pr.y2;
-  sfx('hit'); burst(x,y,10,FLASK_COL[k],160); for(let i=0;i<5;i++) part(x,y,rand(-90,90),rand(-140,-40),0.5,2,'#e8f4f8',false,300);
+  sfx('splash',{x,y}); burst(x,y,10,FLASK_COL[k],160); for(let i=0;i<5;i++) part(x,y,rand(-90,90),rand(-140,-40),0.5,2,'#e8f4f8',false,300);
   for(const e of G.enemies) if(!e.dead && !e.under && Math.hypot(e.x-x,e.y-y)<38*A+e.r) dealDamage(e,pr.dmg,{src:'atk',kb:60,from:{x,y}});
   const big=hasEvo('a_big')?2:1;
   if(hasEvo('a_volatile')) explosion(x,y,52*A,pr.dmg*0.6,'#ffb03a',false,'atk');
@@ -322,23 +322,23 @@ function attack(tgt){
       G.pproj.push({type:'bolt',x:p.x+Math.cos(ang)*14,y:p.y+Math.sin(ang)*14-6,vx:Math.cos(ang)*360,vy:Math.sin(ang)*360,sp:360,r:7,dmg:p.dmg*(tri?0.55:1),life:1.6,target:tgt,aoe:34*p.area*(hasEvo('m_nova')?2:1),pierce:0,split:p.split,hit:new Set(),frost:hasEvo('m_frost'),frz}); }
     if(p.meteor && p.atkCount%6===0) G.pstrikes.push({x:tgt.x,y:tgt.y,t:0,delay:0.55,r:80*p.area,dmg:p.dmg*3});
   } else if(c.attack==='skull'){
-    sfx('skullthrow');
+    sfx('skull');
     const sw=hasEvo('n_swarm');
     for(let i=0;i<p.count;i++) for(let j=0;j<(sw?2:1);j++){ const ang=a+(i-(p.count-1)/2)*0.3+(sw?(j?0.25:-0.25):0);
       G.pproj.push({type:'skull',x:p.x+Math.cos(ang)*12,y:p.y-6,vx:Math.cos(ang)*300,vy:Math.sin(ang)*300,sp:300,r:sw?6:8,dmg:p.dmg*(sw?0.65:1),life:1.5,target:tgt,pierce:0,hit:new Set(),drain:hasEvo('n_drain')}); }
   } else if(c.attack==='hammer'){
-    sfx('swing');
+    sfx('hammer');
     const n=p.count+(hasEvo('p_twin')?1:0);
     for(let i=0;i<n;i++){ const ang=a+(i?(i%2?1:-1)*Math.ceil(i/2)*0.32:0), sp=440;   // erster Hammer immer genau aufs Ziel
       G.pproj.push({type:'hammer',x:p.x,y:p.y-4,vx:Math.cos(ang)*sp,vy:Math.sin(ang)*sp,sp,r:11,dmg:p.dmg*(p.hamDmg||1),life:4,pierce:999,hit:new Set(),out:p.range*Math.sqrt(p.area)/sp,back:false,spin:0}); }
   } else if(c.attack==='flask'){
-    sfx('skullthrow');
+    sfx('flask');
     for(let i=0;i<p.count;i++){ p.flaskN=(p.flaskN||0)+1;
       const exp=p.flaskN%(p.expEvery||5)===0, kind=exp?pick(['frost','boom','heal']):(p.flaskN%2?'acid':'fire');
       const tx=clamp(tgt.x+(i?rand(-45,45):0),20,AW-20), ty=clamp(tgt.y+(i?rand(-45,45):0),20,AH-20), T=clamp(Math.hypot(tx-p.x,ty-p.y)/520,0.25,0.55);
       G.pproj.push({type:'flask',x:p.x,y:p.y-8,x0:p.x,y0:p.y-8,x2:tx,y2:ty,t:0,T,kind,r:0,dmg:p.dmg,life:T+0.05,pierce:0,hit:new Set(),vx:0,vy:0}); }
   } else if(c.attack==='axe'){
-    const R=p.range*p.area+14, arc=hasEvo('b_whirl')?TAU:1.8; p.swingT=0.22; sfx('swing');
+    const R=p.range*p.area+14, arc=hasEvo('b_whirl')?TAU:1.8; p.swingT=0.22; sfx('axe');
     for(let i=0;i<p.count;i++){ const ang=a+i*TAU/p.count;
       const hit=meleeSwing(p,ang,R,arc,p.dmg,{kb:130,bleed:p.bleed});
       if(hit){ p.fury=Math.min(p.furyMax||10,(p.fury||0)+1); p.furyT=p.frenzyLong?4:2; G.shake+=1.5; }
@@ -357,7 +357,7 @@ function attack(tgt){
 
 // Perfektes Ausweichen: wer im letzten Moment durch einen Angriff hechtet, wird belohnt (Zeitlupe, Ausweichen sofort wieder bereit)
 function perfectDodge(){ const p=P; p.dashCd=0; if(hasRelic('r_feather')) p.dashChg=2; if(hasSyn('blooddance')){ p.hp=Math.min(p.maxHp,p.hp+8); G.texts.push({x:p.x,y:p.y-50,s:'+8',c:'#7dff8a',t:0}); } G.slowT=Math.max(G.slowT,0.22); p.perfT=0.6; G.stats_perf=(G.stats_perf||0)+1; run.perf=(run.perf||0)+1; save.stats.perfect=(save.stats.perfect||0)+1;
-  G.texts.push({x:p.x,y:p.y-34,s:'Perfekt!',c:'#9fe6ff',big:true,t:0}); G.fx.push({type:'shock',x:p.x,y:p.y,r:70,t:0,life:0.35,color:'#9fe6ff'}); sfx('pick'); buzz(15); hype(0.05); }
+  G.texts.push({x:p.x,y:p.y-34,s:'Perfekt!',c:'#9fe6ff',big:true,t:0}); G.fx.push({type:'shock',x:p.x,y:p.y,r:70,t:0,life:0.35,color:'#9fe6ff'}); sfx('perfect'); buzz(15); hype(0.05); }
 function useDash(){
   if((runMod()||{}).noDash) return;
   if(state!=='combat'||!P||!G||G.over||G.cine) return;
@@ -467,7 +467,7 @@ function useSkill(aim){
   if(mc>1){ if(p.charges===undefined) p.charges=mc; if(p.charges<=0){ if(p.skillT<0.25) p.skillBuf=0.25; return; } p.charges--; if(p.skillT<=0) p.skillT=c.skill.cd*p.cdMul; }
   else { if(p.skillT>0){ if(p.skillT<0.25) p.skillBuf=0.25; return; } p.skillT=c.skill.cd*p.cdMul; }
   p.skillBuf=0;
-  sfx('skill'); buzz(20); G.tutSkill=true;
+  sfx('skill_'+p.cid); buzz(20); G.tutSkill=true;
   if(G.rc && G.rc.id==='noskill' && !G.rc.failed){ G.rc.failed=true; rcFail(); }
   if(p.cid==='krieger'){ p.spin=1.5; p.spinTick=0; G.fx.push({type:'shock',x:p.x,y:p.y,r:90,t:0,life:0.35,color:'#dbe8ff'}); burst(p.x,p.y+6,16,'#e8f0ff',220); }
   else if(p.cid==='nekro'){ const C=aim?aimPoint(p,aim,...AIM_RANGE.nekro):p; for(let i=0;i<4;i++){ const a=i/4*TAU; raiseAlly(C.x+Math.cos(a)*34,C.y+Math.sin(a)*34,10); } G.fx.push({type:'summon',x:C.x,y:C.y,r:62,t:0,life:1.0}); G.fx.push({type:'ring',x:C.x,y:C.y,r:70,t:0,life:0.4,color:'#5affd0',fill:true}); }
@@ -494,7 +494,7 @@ function dealDamage(e,amount,o={}){
   let blocked=false;
   if(e.affix&&e.affix.includes('armor')) amount*=0.6;
   if(e.stone){ amount*=0.15; blocked=true; }
-  if(e.boss){ if(e.shieldT>0){ if(!o.quiet && G.time-(e.immT||0)>0.4){ e.immT=G.time; G.texts.push({x:e.x+rand(-10,10),y:e.y-e.r-10,s:'Immun',c:'#bfe0ff',t:0}); } return; }
+  if(e.boss){ if(e.shieldT>0){ if(!o.quiet && G.time-(e.immT||0)>0.4){ e.immT=G.time; G.texts.push({x:e.x+rand(-10,10),y:e.y-e.r-10,s:'Immun',c:'#bfe0ff',t:0}); sfx('immune',{x:e.x,y:e.y}); } return; }
     if(o.src==='skill') amount*=0.6; }
   if(e.kind==='shield' && o.from){ const ba=Math.atan2(o.from.y-e.y,o.from.x-e.x); if(Math.abs(angDiff(ba,e.face))<1.1){ amount*=0.25; blocked=true; } }
   let crit=!o.noCrit && (P.nextCrit || Math.random()<P.crit); if(crit && P.nextCrit) P.nextCrit=false;
@@ -509,14 +509,14 @@ function dealDamage(e,amount,o={}){
   if(o.poison){ e.poisonT=3; e.poisonDps=Math.max(e.poisonDps||0, amount*o.poison/3); }
   if(crit && hasSyn('bladestorm')) P.atkT-=P.rate/P.atkSpd*0.25;
   { const dealt=Math.max(0,Math.min(d,e.hp)), s=o.src||'atk'; run.dmgBy=run.dmgBy||{}; run.dmgBy[s]=(run.dmgBy[s]||0)+dealt; }
-  e.hp-=d; e.flash=e.boss?0.04:0.09; sfx('hit');
+  e.hp-=d; e.flash=e.boss?0.04:0.09; if(o.from||!o.noCrit) sfx(blocked?'block':crit?'crit':e.boss?'hitheavy':'hit',{x:e.x,y:e.y});   // Dauerschaden tickt leise
   if(o.kb && !e.boss && o.from){ const a=Math.atan2(e.y-o.from.y,e.x-o.from.x), k=o.kb*(e.elite?0.4:1); e.kx+=Math.cos(a)*k; e.ky+=Math.sin(a)*k; }
   if(o.from && !o.noCrit && FX()){ const ha=Math.atan2(e.y-o.from.y,e.x-o.from.x);
     for(let i=0;i<(crit?6:3);i++){ const a2=ha+rand(-0.7,0.7), sp=rand(140,280); part(e.x-Math.cos(ha)*e.r*0.5,e.y-Math.sin(ha)*e.r*0.5,Math.cos(a2)*sp,Math.sin(a2)*sp,0.22,crit?2.6:2,crit?'#ffd34d':'#fff6e0',true); }
     impactFx(e,ha,crit); }
   if(!o.quiet && !(save.settings.dmgOff&&!blocked) && (save.settings.dmgNums||blocked||crit)) G.texts.push({x:e.x+rand(-6,6),y:e.y-e.r-4,s:blocked?'Block':String(Math.round(d)),c:blocked?'#9fb3d9':(o.color||(crit?'#ffd34d':'#ffffff')),big:crit&&!blocked,t:0});
   if(blocked){ burst(e.x+Math.cos(e.face)*e.r,e.y+Math.sin(e.face)*e.r,3,'#ffe08a',90); }
-  if(crit){ critSound(); if(G.stopCd<=0){ hitstop(0.03); G.stopCd=0.25; } }
+  if(crit){ if(G.stopCd<=0){ hitstop(0.03); G.stopCd=0.25; } }
   if(!o.noChain && P.chain>0 && Math.random()<0.12+0.06*P.chain) chainLightning(e, amount*0.7, 2+P.chain+(hasSyn('storm')?2:0));
   if(e.hp<=0){ const over=-e.hp; killEnemy(e);
     if(P.overkill && !o.noOver && over>2){ let best=null,bd=170; for(const o2 of G.enemies){ if(o2.dead||o2===e||o2.under) continue; const dd=Math.hypot(o2.x-e.x,o2.y-e.y); if(dd<bd){bd=dd;best=o2;} }
@@ -532,7 +532,7 @@ function chainLightning(src,dmg,n){
   }
 }
 function explosion(x,y,r,dmg,color,fromBoom,src){
-  G.fx.push({type:'ring',x,y,r,t:0,life:0.3,color,fill:true}); burst(x,y,16,color,200); sfx('boom'); G.shake+=2; explosionFx(x,y,r,color);
+  G.fx.push({type:'ring',x,y,r,t:0,life:0.3,color,fill:true}); burst(x,y,16,color,200); sfx('boom',{x,y,vol:Math.min(1.1,Math.max(0.45,r/80))}); G.shake+=2; explosionFx(x,y,r,color);
   for(const e of G.enemies){ if(!e.dead && Math.hypot(e.x-x,e.y-y)<r+e.r) dealDamage(e,dmg,{src:src||'boom',noChain:true,kb:120,from:{x,y}}); }
   for(const o of G.obs){ if(o.type==='barrel' && !o.dead && Math.hypot(o.x-x,o.y-y)<r+o.r) blowBarrel(o); }
 }
@@ -544,7 +544,7 @@ function newFoeHint(k){ if(G.tut || !BEAST[k] || (save.seenFoes||{})[k]) return;
     if(ks.length===1){ const k1=ks[0]; toast(`<span style="font-size:26px">${BEAST[k1].ic}</span><div data-foe="1"><div class="eyebrow" style="color:var(--gold)">Neuer Gegner</div><b>${esc(ENEMIES[k1].name)}</b><div class="sub" style="font-size:13px">${BEAST[k1].ds}</div></div>`); }
     else toast(`<span style="font-size:26px">${ks.slice(0,3).map(x=>BEAST[x].ic).join('')}</span><div data-foe="1"><div class="eyebrow" style="color:var(--gold)">${ks.length} neue Gegner</div>${ks.slice(0,3).map(x=>`<div class="sub" style="font-size:13px"><b>${esc(ENEMIES[x].name)}:</b> ${BEAST[x].ds}</div>`).join('')}</div>`); },350); }
 function killEnemy(e){
-  e.dead=true; if(!e.boss && !e.elite && G.stopCd<=0){ hitstop(0.018); G.stopCd=0.12; } if(e.boss) roar(e.kind); else deathSound(e.kind); if(e.elite) hitstop(0.09); if(e.boss) hitstop(0.35);
+  e.dead=true; if(!e.boss && !e.elite && G.stopCd<=0){ hitstop(0.018); G.stopCd=0.12; } if(e.boss) roar(e.kind); else deathSound(e.kind,e.x,e.y); if(e.elite) hitstop(0.09); if(e.boss) hitstop(0.35);
   burst(e.x,e.y,e.boss?30:12,enemyColor(e),e.boss?260:160);
   save.stats.beast[e.kind]=(save.stats.beast[e.kind]||0)+1;
   if(P && P.cid==='berserk' && !G.over){ P.hp=Math.min(P.maxHp,P.hp+P.maxHp*0.03); }
@@ -589,13 +589,13 @@ function updCoins(dt){
     if(c.vz){ c.z+=c.vz*dt; c.vz-=800*dt; if(c.z<=0){ c.z=0; c.vz=Math.abs(c.vz)>60?-c.vz*0.45:0; } }
     c.x+=c.vx*dt; c.y+=c.vy*dt; c.x=clamp(c.x,6,AW-6); c.y=clamp(c.y,6,AH-6);
     if(d<P.r+10 && c.t>0.25){ c.done=true;
-      if(c.heart){ const hh=tierHas(9)?8:15; P.hp=Math.min(P.maxHp,P.hp+hh); G.texts.push({x:P.x,y:P.y-24,s:'+'+hh,c:'#7dff8a',t:0}); sfx('pick'); }
+      if(c.heart){ const hh=tierHas(9)?8:15; P.hp=Math.min(P.maxHp,P.hp+hh); G.texts.push({x:P.x,y:P.y-24,s:'+'+hh,c:'#7dff8a',t:0}); sfx('heal'); }
       else { const v=Math.max(1,Math.round(c.v*P.goldMul)); run.gold+=v; run.goldTotal+=v; coinSound(); if(hasSyn('goldheart')) P.hp=Math.min(P.maxHp,P.hp+1); if(FX()) burst(c.x,c.y,3,'#ffe08a',70); } }
   }
   G.coins=G.coins.filter(c=>!c.done);
 }
 
-function enemyShoot(e,ang,speed,dmg,kind,r=6){ G.eproj.push({x:e.x+Math.cos(ang)*e.r,y:e.y+Math.sin(ang)*e.r,vx:Math.cos(ang)*speed,vy:Math.sin(ang)*speed,dmg,kind,r,life:4,src:e}); }
+function enemyShoot(e,ang,speed,dmg,kind,r=6){ sfx(ESHOT_SND[kind]||'emagic',{x:e.x,y:e.y}); G.eproj.push({x:e.x+Math.cos(ang)*e.r,y:e.y+Math.sin(ang)*e.r,vx:Math.cos(ang)*speed,vy:Math.sin(ang)*speed,dmg,kind,r,life:4,src:e}); }
 
 function updEnemy(e,dt){
   if(e.dead) return;
@@ -713,7 +713,7 @@ function updEnemy(e,dt){
       if(e.st>0){ e.st-=dt; mx*=0.15; my*=0.15; e.face=e.ca; }
       break; }
     case 'charger':
-      if(e.st===0){ mx=Math.cos(a); my=Math.sin(a); e.timer-=dt*sm; if(e.timer<=0 && d<320){ e.st=1; e.stT=0.65; e.ca=a; } }
+      if(e.st===0){ mx=Math.cos(a); my=Math.sin(a); e.timer-=dt*sm; if(e.timer<=0 && d<320){ e.st=1; e.stT=0.65; e.ca=a; sfx('growl',{x:e.x,y:e.y}); } }
       else if(e.st===1){ e.stT-=dt*sm; e.face=e.ca; if(e.stT<=0){ e.st=2; e.stT=0.5; } }
       else { e.face=e.ca; mx=Math.cos(e.ca)*7.5; my=Math.sin(e.ca)*7.5; e.stT-=dt; if(Math.random()<0.6) part(e.x,e.y+e.r*0.6,rand(-20,20),rand(-20,20),0.4,4,'#8a7a6a');
         if(e.stT<=0||e.x<=e.r||e.x>=AW-e.r||e.y<=e.r||e.y>=AH-e.r){ e.st=0; e.timer=rand(2.8,4.2); } }
@@ -802,7 +802,7 @@ function updBoss(e,dt,sm,d,a){
 
   else if(e.ai==='spider'){
     if(e.leap){ e.leapT+=dt; const k=Math.min(1,e.leapT/0.55); e.x=e.lx0+(e.lx1-e.lx0)*k; e.y=e.ly0+(e.ly1-e.ly0)*k; e.hgt=Math.sin(k*Math.PI)*60;
-      if(k>=1){ e.leap=false; e.hgt=0; G.shake+=8; sfx('boom'); burst(e.x,e.y,22,'#6a5a4a',200); if(Math.hypot(P.x-e.x,P.y-e.y)<75+P.r) hurtPlayer(e.dmg*1.2,e); endCast(e); } }
+      if(k>=1){ e.leap=false; e.hgt=0; G.shake+=8; sfx('slam',{x:e.x,y:e.y}); burst(e.x,e.y,22,'#6a5a4a',200); if(Math.hypot(P.x-e.x,P.y-e.y)<75+P.r) hurtPlayer(e.dmg*1.2,e); endCast(e); } }
     else if(!e.cast){ mx=Math.cos(a)*0.8; my=Math.sin(a)*0.8; e.face=a;
       if(e.timer<=0){ e.cast=pick(e.phase2?['leap','web','brood','leap','web']:['leap','web','brood']); e.castT=0; e.fired=0;
         if(e.cast==='leap'){ e.lx1=clamp(P.x,60,AW-60); e.ly1=clamp(P.y,60,AH-60); G.hazards.push({type:'circle',x:e.lx1,y:e.ly1,r:75,delay:0.9,t:0,dmg:0,color:'#c8a0ff',visual:true}); }
@@ -835,7 +835,7 @@ function updBoss(e,dt,sm,d,a){
     if(e.st===0){ e.under=true; mx=Math.cos(a); my=Math.sin(a);
       if(Math.random()<0.8) part(e.x+rand(-14,14),e.y+rand(-6,6),rand(-30,30),rand(-60,-20),0.6,4,Math.random()<0.5?'#ff7a1a':'#4a2a1a',Math.random()<0.5);
       if(e.wt<=0||d<30){ e.st=1; e.wt=1.0; G.hazards.push({type:'circle',x:e.x,y:e.y,r:85,delay:1.0,t:0,dmg:e.dmg*1.3,color:'#ff6a1a'}); } }
-    else if(e.st===1){ if(e.wt<=0){ e.st=2; e.under=false; e.wt=4.0; e.fireT=0.6; burst(e.x,e.y,30,'#ff7a1a',240); G.shake+=10; sfx('boom');
+    else if(e.st===1){ if(e.wt<=0){ e.st=2; e.under=false; e.wt=4.0; e.fireT=0.6; burst(e.x,e.y,30,'#ff7a1a',240); G.shake+=10; sfx('slam',{x:e.x,y:e.y}); sfx('efire',{x:e.x,y:e.y,vol:2.2});
         G.traps.push({type:'lava',x:e.x,y:e.y,r:44,tick:0,id:900+Math.floor(rand(0,99999)),life:8});
         if(e.phase2) for(let i=0;i<2;i++) G.spawnQ.push({x:clamp(e.x+rand(-120,120),30,AW-30),y:clamp(e.y+rand(-120,120),30,AH-30),t:0.6,kind:'imp'}); } }
     else { e.face=a; e.fireT-=dt*sm; if(e.fireT<=0){ e.fireT=e.phase2?0.7:0.95; for(let i=-2;i<=2;i++) enemyShoot(e,a+i*0.24,210,e.dmg*0.55,'fire',9); }
@@ -922,10 +922,10 @@ function updHazards(dt){
     h.t+=dt; if(h.owner && h.type==='cone'){ h.x=h.owner.x; h.y=h.owner.y; }
     if(h.t>=h.delay){ h.done=true; if(h.visual) continue;
       if(h.type==='circle'){ if(Math.hypot(P.x-h.x,P.y-h.y)<h.r+P.r*0.6) hurtPlayer(h.dmg,null);
-        burst(h.x,h.y,h.meteor?22:16,h.color,220); G.fx.push({type:'ring',x:h.x,y:h.y,r:h.r,t:0,life:0.3,color:h.color,fill:true}); G.shake+=h.meteor?3:5; sfx('boom'); hazardFx(h); if(h.storm) stormStrike(h); }
+        burst(h.x,h.y,h.meteor?22:16,h.color,220); G.fx.push({type:'ring',x:h.x,y:h.y,r:h.r,t:0,life:0.3,color:h.color,fill:true}); G.shake+=h.meteor?3:5; sfx(h.meteor?'boom':h.color==='#ffb35a'?'slam':'pop',{x:h.x,y:h.y,vol:h.meteor?0.7:1}); hazardFx(h); if(h.storm) stormStrike(h); }
       else if(h.type==='cone'){ const d=Math.hypot(P.x-h.x,P.y-h.y), ang=Math.atan2(P.y-h.y,P.x-h.x); if(d<h.len && Math.abs(angDiff(ang,h.a))<h.spread) hurtPlayer(h.dmg,null); }
       else if(h.type==='line'){ const dx=P.x-h.x, dy=P.y-h.y, ca=Math.cos(h.a), sa=Math.sin(h.a), along=dx*ca+dy*sa, perp=Math.abs(-dx*sa+dy*ca);
-        if(along>-10 && along<h.len && perp<h.w/2+P.r*0.5) hurtPlayer(h.dmg,null); G.fx.push({type:'beamfx',x:h.x,y:h.y,a:h.a,len:h.len,w:h.w,t:0,life:0.35,color:h.color}); }
+        if(along>-10 && along<h.len && perp<h.w/2+P.r*0.5) hurtPlayer(h.dmg,null); G.fx.push({type:'beamfx',x:h.x,y:h.y,a:h.a,len:h.len,w:h.w,t:0,life:0.35,color:h.color}); sfx('beam',{x:h.x,y:h.y}); }
     }
   }
   G.hazards=G.hazards.filter(h=>!h.done);
@@ -952,7 +952,7 @@ function hurtPlayer(dmg,src,via){
   const p=P; if(p.dashI>0 && !G.over && !G.cleared && !p.perfUsed){ p.perfUsed=true; perfectDodge(); return; }
   if(p.inv>0||p.dashI>0||G.over||G.cleared) return;
   p.lastHurt=G.time;
-  if(p.shieldLeft>0){ p.shieldLeft--; p.inv=0.7; G.fx.push({type:'ring',x:p.x,y:p.y,r:30,t:0,life:0.35,color:'#7fd4ff'}); G.texts.push({x:p.x,y:p.y-26,s:'Geblockt',c:'#7fd4ff',t:0}); sfx('pick'); return; }
+  if(p.shieldLeft>0){ p.shieldLeft--; p.inv=0.7; sfx('block'); G.fx.push({type:'ring',x:p.x,y:p.y,r:30,t:0,life:0.35,color:'#7fd4ff'}); G.texts.push({x:p.x,y:p.y-26,s:'Geblockt',c:'#7fd4ff',t:0}); sfx('pick'); return; }
   const d=Math.max(1,Math.round((dmg*(p.dmgTaken||1)-p.armor-(p.boneArmor?G.allies.length:0))*(p.spin>0?0.5:1)*(p.ward>0?0.5:1)*assistMul()));
   hype(-0.06); G.combo=0; if(G.type==='boss') G.bossHit=true; p.hurtT=0.25;
   if(src){ const ka=Math.atan2(p.y-src.y,p.x-src.x); p.kbx=Math.cos(ka)*260; p.kby=Math.sin(ka)*260; }
@@ -989,7 +989,7 @@ function clearRoom(){
   for(const a of G.allies) a.life=Math.min(a.life,0.8);
   if(G.rc && G.rc.id==='speed' && G.time>G.rc.limit) G.rc.failed=true;
   const h=(run.daily?0:metaLvl('m_heal'))*0.04*P.maxHp; if(h>0) P.hp=Math.min(P.maxHp,P.hp+h);
-  if(G.type!=='boss') banner('Raum gesäubert!');
+  if(G.type!=='boss'){ banner('Raum gesäubert!'); sfx('clear'); }
   else banner('Sieg!', BOSSES[bossKind()].name+' ist besiegt');
 }
 function fadeIn(){ const f=$('fade'); if(!f) return; f.classList.add('on'); requestAnimationFrame(()=>requestAnimationFrame(()=>f.classList.remove('on'))); }

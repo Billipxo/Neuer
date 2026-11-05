@@ -227,12 +227,12 @@ function updBossDie(dt){
   const d=G.bossDie, e=d.e; d.t+=dt;
   if(!d.blown){ const k=clamp(d.t/d.tb,0,1); e.jx=mr(-1,1)*(1+3*k); e.jy=mr(-1,1)*(1+2*k); if(e.flash>0) e.flash-=dt;
     d.popT-=dt; if(d.popT<=0){ d.popT=mr(0.09,0.18)*(1-0.45*k); const a=Math.random()*TAU, rr=e.r*mr(0.2,0.95), x=e.x+Math.cos(a)*rr, y=e.y-e.r*0.3+Math.sin(a)*rr*0.7;
-      G.fx.push({type:'ring',x,y,r:mr(16,30)*(1+k),t:0,life:0.25,color:'#ffe8b0',fill:true}); burst(x,y,7,enemyColor(e),180); flashLight(x,y,130,0.25,0.9); sfx('hit'); G.shake+=1.5+2*k; e.flash=0.06; }
+      G.fx.push({type:'ring',x,y,r:mr(16,30)*(1+k),t:0,life:0.25,color:'#ffe8b0',fill:true}); burst(x,y,7,enemyColor(e),180); flashLight(x,y,130,0.25,0.9); sfx('pop',{x,y}); G.shake+=1.5+2*k; e.flash=0.06; }
     if(d.t>=d.tb){ d.blown=true; bossBlast(e); } }
   if(d.t>=d.life){ G.bossDie=null; clearRoom(); }
 }
 function bossBlast(e){
-  G.whiteFlash=0.45; G.shake=24; buzz(220); G.slowT=Math.max(G.slowT,0.45); hitstop(0.12); sfx('kill'); sfx('boom'); musicSting('win'); crowdSound(1.4); hype(1);
+  G.whiteFlash=0.45; G.shake=24; buzz(220); G.slowT=Math.max(G.slowT,0.45); hitstop(0.12); sfx('bigboom'); musicSting('win'); crowdSound(1.4); hype(1);
   flashLight(e.x,e.y,700,0.9,1);
   G.fx.push({type:'shock',x:e.x,y:e.y,r:e.r*7,t:0,life:0.8,color:'#fff4d0'}); G.fx.push({type:'shock',x:e.x,y:e.y,r:e.r*4.5,t:0,life:0.55,color:'#ffd08a'});
   G.fx.push({type:'ring',x:e.x,y:e.y,r:e.r*3,t:0,life:0.4,color:'#fff0c0',fill:true}); G.fx.push({type:'flare',x:e.x,y:e.y-e.r*0.3,r:e.r*3,t:0,life:0.35,color:'#ffb04a'});
