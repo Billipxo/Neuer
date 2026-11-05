@@ -35,8 +35,10 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **Arenen mit Hindernissen:** Säulen als Deckung, Sprengfässer, Stachelfallen und Lava
 - **Über 20 Gegnertypen** (u. a. Schildträger, Heiler, Grabwurm, Mimic, Giftpilz, Stachelkugel, Goblin-Schamane mit Kriegstotem,
   Schattenhunde im Rudel, Gespenst, Wasserspeier) plus Elite-Varianten
-- **35 Upgrades** in drei Seltenheitsstufen, davon 12 heldenspezifische, dazu **5 Synergien**,
-  die beim Kombinieren bestimmter Upgrades aktiv werden. Die Upgrade-Karten zeigen die genaue Werteänderung.
+- **Über 100 Perks** in drei Seltenheitsstufen plus verfluchte Perks mit Vor- und Nachteil, davon 50 heldenspezifische
+  (7–8 je Held, z. B. Konter und Schwertmeister, Eisfeld, Schlingen und Splitterpfeile, Leichenexplosion, Göttliches Urteil,
+  Großer Kessel, Doppelaxt und Wutausbruch), dazu **32 Synergien**, die beim Kombinieren bestimmter Perks aktiv werden.
+  Die Karten zeigen die genaue Werteänderung; Helden-Perks werden etwas häufiger angeboten.
 - **8 Ereignisse** mit Entscheidungen zwischen Risiko und Belohnung
 - **Endlosmodus** nach dem Sieg im vierten Akt
 - **Neues Spiel+:** nach dem Sieg mit allen Upgrades schwerer weitermachen (NG+1, NG+2 …) oder neue Läufe
@@ -52,7 +54,7 @@ Im allerersten Raum führt ein kurzes Tutorial durch die Steuerung.
 - **Wetter** je Raum: Regen, Gewitter mit Blitzeinschlägen, Nebel, Schnee, Ascheregen und Feuersturm
 - **Musik:** komponiertes Titelthema, Kartenmusik und Kampfthema je Akt, Bossthema mit Pauken und Chor,
   Fanfaren bei Sieg und Niederlage, live per Web Audio gespielt; Lautstärke einstellbar
-- **Build-Vielfalt:** 20 Synergien (Rezepte im Kodex, Fortschritt auf den Upgrade-Karten), regelverändernde Upgrades
+- **Build-Vielfalt:** 32 Synergien (Rezepte im Kodex, Fortschritt auf den Upgrade-Karten), regelverändernde Upgrades
   (z. B. Echo, Zweite Luft, Spiegelbild), Waffen-Entwicklungen nach jedem Boss, Verbannen, Belohnungsvorschau auf der Karte
 - **Relikte** (12 einzigartige Gegenstände), **Champions** in Elite-Räumen, **Themenwellen**, **Raum-Herausforderungen**,
   **Begleiter** (Rabe, Katze, Irrlicht, Wolfswelpe), **Chronik** mit Hintergrundgeschichten und Helden-Dialogen,
@@ -110,7 +112,7 @@ npm test
 ```
 
 `tests/run-all.js` startet das Spiel in einem Headless-Chromium und prüft per simuliertem Spiel:
-Laufstart, einen ganzen Akt mit jedem Helden, alle Upgrades und Synergien, jede Ereignis-Option,
+Laufstart, einen ganzen Akt mit jedem Helden, alle Upgrades und Synergien, die Wirkung jedes neuen Perks einzeln, jede Ereignis-Option,
 jede Gegnerart, alle sieben Bosse, Relikte, Champions, Raum-Herausforderungen, Begleiter, Zielen per Wischgeste, den vierten Akt, die Tagesherausforderung, Spielstände/Sicherungscode/Neues Spiel+ und die Musik.
 Der GitHub-Workflow `.github/workflows/test.yml` führt die Tests bei jedem Push aus.
 

@@ -47,6 +47,48 @@ const tests = {
         run.evo=EVOS[ch].map(e=>e.id); run.p.furyMax=15; run.posId=run.map.rows[3][0].id; startCombat('elite'); __bot(true,60); useSkill(); __bot(true,30); }
       return {ok:Object.values(syn).every(([a,b])=>a===b), syn}; });
   },
+  async perks(pg){ // Die neuen Perks wirken wirklich: jede Mechanik wird gezielt ausgelöst und geprüft
+    return pg.evaluate(()=>{ const ok={};
+      const setup=(ch,perks,foes=[])=>{ save.tutDone=true; startRun(ch); for(const id of perks) applyUpgrade(UPG[id]);
+        run.posId=run.map.rows[1][0].id; startCombat('fight',[[{kind:'slime'}]]); G.traps=[]; G.obs=[]; G.rc=null; G.waveT=999; P.maxHp=P.hp=5000;
+        return foes.map(([k,dx,dy,el])=>{ const e=makeEnemy(k,P.x+dx,P.y+dy,!!el); e.spawnT=0; e.affix=[]; e.hp=e.maxHp=1e6; e.speed=0; G.enemies.push(e); return e; }); };
+      const step=s=>{ for(let i=0;i<s*30 && G;i++){ G.stop=0; update(1/30); } };
+      const by=k=>(run.dmgBy||{})[k]||0;
+      let e,f;
+      [e]=setup('krieger',['burn'],[['orc',28,0]]); step(3); ok.burn=by('burn')>0;
+      [e]=setup('magier',['quake'],[['skeleton',30,0]]); P.atkCount=7; attack(e); ok.quake=by('quake')>0;
+      [e]=setup('krieger',['parry'],[['orc',24,0]]); P.inv=0; P.dashI=0; hurtPlayer(5,e); ok.parry=by('parry')>0;
+      [e]=setup('jaegerin',['snare'],[['orc',0,4]]); P.atkSpd=1e-4; P.atkT=999; step(2.5); ok.snare=by('snare')>0 && e.snareT>0;
+      [e]=setup('paladin',['divine'],[['skeleton',200,0]]); step(3.5); ok.divine=by('divine')>0;
+      [e]=setup('berserk',['outburst'],[['orc',30,0]]); P.fury=P.furyMax=10; attack(e); ok.outburst=by('outburst')>0 && P.fury<10;
+      [e]=setup('nekro',['corpseboom'],[['orc',40,0]]); P.atkT=999; P.atkSpd=1e-4; raiseAlly(P.x+30,P.y,0.1); step(0.5); ok.corpseboom=by('minion')>0;
+      [e]=setup('krieger',['lifesteal'],[['orc',300,0]]); P.hp=50; dealDamage(e,1000,{src:'atk'}); ok.lifesteal=P.hp>50;
+      [e]=setup('krieger',['headhunt'],[['skeleton',300,0,true]]); e.hp=1; f=run.gold; dealDamage(e,100,{src:'atk'}); ok.headhunt=run.gold-f>=25;
+      [e]=setup('magier',['manaflow'],[['skeleton',300,0]]); P.skillT=5; e.hp=1; dealDamage(e,100,{src:'atk'}); ok.manaflow=P.skillT<4.8;
+      [e]=setup('krieger',['tailwind','frostdash','dashzap'],[['orc',60,0]]); useDash(); ok.dash=P.tailT>0 && e.slow>0 && by('chain')>0;
+      setup('jaegerin',['retreat']); f=G.pproj.length; useDash(); ok.retreat=G.pproj.length>=f+3;
+      [e,f]=setup('krieger',['master'],[['orc',40,0],['orc',-40,0]]); P.atkCount=3; attack(e); ok.master=f.hp<f.maxHp;
+      [e]=setup('magier',['overload'],[['skeleton',150,0]]); P.atkCount=4; attack(e); ok.overload=G.pproj.some(p=>p.big);
+      setup('magier',['icefield'],[['skeleton',150,0]]); P.skillT=0; useSkill(); ok.icefield=G.pzones.some(z=>z.kind==='frost');
+      [e]=setup('jaegerin',['shrapnel'],[['orc',120,0]]); attack(e); ok.shrapnel=false; for(let i=0;i<30&&!ok.shrapnel;i++){ step(1/30); ok.shrapnel=G.pproj.some(p=>p.type==='spark'); }
+      [e]=setup('nekro',['soulfire'],[['orc',100,0]]); attack(e); ok.soulfire=false; for(let i=0;i<40&&!ok.soulfire;i++){ step(1/30); ok.soulfire=e.slow>0; }
+      setup('nekro',['unholy']); raiseAlly(P.x,P.y,10); ok.unholy=G.allies[G.allies.length-1].life===15;
+      [e]=setup('paladin',['smite'],[['orc',120,0]]); attack(e); ok.smite=G.pproj.some(p=>p.type==='hammer'&&p.burn>0);
+      setup('paladin',['aegis']); f=P.shieldLeft; P.skillT=0; useSkill(); ok.aegis=P.shieldLeft===f+1 && P.ward===5;
+      [e]=setup('alchi',['corrode'],[['orc',150,0]]); P.atkT=999; P.atkSpd=1e-4; G.pzones.push({x:e.x,y:e.y,r:40,life:3,max:3,dps:1,tick:0,kind:'acid'}); step(0.5); ok.corrode=e.corrodeT>0;
+      [e]=setup('alchi',['double'],[['orc',150,0]]); P.dblN=3; f=G.pproj.length; attack(e); ok.double=G.pproj.length===f+2;
+      setup('alchi',['elixir']); P.hp=20; flaskLand({kind:'heal',x2:P.x,y2:P.y,dmg:1}); ok.elixir=P.tailT>4 && P.hp>=20+Math.round(P.maxHp*0.16);
+      [e]=setup('alchi',['cauldron'],[['orc',150,0]]); P.atkT=999; P.atkSpd=1e-4; P.skillT=0; useSkill(); ok.cauldron=P.vortex && Math.abs(P.vortex.R-196)<1; f=false; for(let i=0;i<110;i++){ step(1/30); f=f||G.pstrikes.some(s=>s.col); } ok.cauldron=ok.cauldron&&f;
+      [e]=setup('berserk',['bloodlust'],[['orc',30,0]]); P.hp=50; e.bleedT=3; e.bleedDps=1; dealDamage(e,10,{src:'atk'}); ok.bloodlust=P.hp>50;
+      [e]=setup('berserk',['unstop'],[['orc',20,0]]); P.fury=6; P.inv=0; P.dashI=0; P.kbx=P.kby=0; hurtPlayer(10,e); ok.unstop=P.kbx===0 && P.kby===0;
+      [e,f]=setup('berserk',['twinaxe'],[['orc',40,0],['orc',-40,0]]); attack(e); ok.twinaxe=f.hp<f.maxHp;
+      { const [a,b]=setup('krieger',['giant','giant','giant'],[['orc',300,0,true],['orc',-300,0]]); dealDamage(a,100,{src:'atk',noCrit:true}); dealDamage(b,100,{src:'atk',noCrit:true}); ok.giant=(a.maxHp-a.hp)/(b.maxHp-b.hp)>1.25; }
+      setup('krieger',['trapper'],[['slime',600,0]]); G.traps=[{type:'spikes',x:P.x,y:P.y,r:30,t:2.2,id:0}]; P.inv=0; f=P.hp; step(0.3); ok.trapper=P.hp===f;
+      setup('krieger',['deflect']); P.spin=1; G.eproj.push({x:P.x+40,y:P.y,vx:0,vy:0,dmg:5,kind:'orb',r:6,life:3}); step(1/30); ok.deflect=G.eproj.length===0;
+      setup('krieger',['longspin']); P.skillT=0; useSkill(); ok.longspin=P.spin>2.4;
+      const bad=Object.keys(ok).filter(k=>!ok[k]);
+      return {ok:!bad.length, bad, n:Object.keys(ok).length}; });
+  },
   async events(pg){ // Jede Ereignis-Option lässt sich wählen
     return pg.evaluate(()=>{ let n=0;
       for(const ev of EVENTS){ const cnt=ev.opts({gold:999,p:{hp:100,maxHp:100},souls:0}).length;
@@ -96,8 +138,8 @@ const tests = {
       const keep=save; save=defSave(); tryS('menu-neu',showMenu); tryS('chars-neu',showChars); save=keep; save.runs=Math.max(1,save.runs);
       for(const [n,f] of Object.entries({showMenu,showChars,showDaily,showForge,showAch,showBeast,showScores,showSettings,showSlots,showHelp,showChallenges,showControls,showBackup,showExport,showImport})) tryS(n,f);
       tryS('import-ziel',()=>showImportTarget(migrate(JSON.parse(JSON.stringify(save))),showMenu)); tryS('link-text',()=>showLinkText('https://example.org/#x'));
-      tryS('codex',()=>showCodex(showMenu)); tryS('codex-evo',()=>showCodex(showMenu,'evo')); tryS('tiers',()=>showTiers(showMenu));
-      save.tutDone=true; startRun('alchi'); tryS('map',showMap); tryS('runmenu',showRunMenu); tryS('runstats',showRunStats); tryS('rest',showRest); tryS('shop',()=>showShop()); tryS('evo',()=>showEvo(showMap)); tryS('bounty',()=>showBounty('gold',showMap)); tryS('event',showEvent); tryS('treasure',showTreasure); tryS('relicpick',()=>showRelicPick(showMap)); tryS('codex-rel',()=>showCodex(showMenu,'rel')); tryS('codex-lore',()=>showCodex(showMenu,'lore'));
+      tryS('codex',()=>showCodex(showMenu)); tryS('codex-evo',()=>showCodex(showMenu,'evo')); tryS('codex-perk',()=>showCodex(showMenu,'perk')); tryS('codex-perk-berserk',()=>showCodex(showMenu,'perk:berserk')); tryS('tiers',()=>showTiers(showMenu));
+      save.tutDone=true; startRun('alchi'); tryS('map',showMap); tryS('runmenu',showRunMenu); tryS('runstats',showRunStats); tryS('rest',showRest); tryS('shop',()=>showShop()); tryS('evo',()=>showEvo(showMap)); tryS('bounty',()=>showBounty('gold',showMap)); tryS('event',showEvent); tryS('treasure',showTreasure); tryS('relicpick',()=>showRelicPick(showMap)); tryS('codex-rel',()=>showCodex(showMenu,'rel')); tryS('codex-lore',()=>showCodex(showMenu,'lore')); tryS('codex-perk-run',()=>showCodex(showMenu,'perk'));
       return {ok:!bad.length, bad}; });
   },
   async meta(pg){ // Verdammnis-Stufen, Herausforderungen, Wochenprüfung, Kopfgelder und Teilen

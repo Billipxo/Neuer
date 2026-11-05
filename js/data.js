@@ -202,6 +202,58 @@ const UPGRADES = [
   { id:'undying',r:'epic',  ic:'💀', nm:'Unbeugsam',        ds:'Einmal pro Raum überlebst du einen tödlichen Treffer mit 1 LP', ap:p=>p.undying=1, max:1, only:['berserk'] },
   { id:'frenzy',r:'rare',   ic:'🔥', nm:'Kriegsschrei',     ds:'Raserei hält 2 Sek. länger und Blutsprung kostet keine LP mehr', ap:p=>p.frenzyLong=1, max:1, only:['berserk'] },
   { id:'volley',r:'epic',   ic:'🎐', nm:'Pfeilsalve',       ds:'Jeder 4. Angriff feuert zusätzlich einen Fächer aus 5 Pfeilen', ap:p=>p.volley=1, max:1, only:['jaegerin'] },
+  // Weitere allgemeine Perks
+  { id:'swift',    r:'common', ic:'🏃', nm:'Leichtfüßig',      ds:'+6 % Lauf- und Angriffstempo', ap:p=>{p.spdMul*=1.06; p.atkSpd*=1.06;}, max:3 },
+  { id:'iron',     r:'common', ic:'🧱', nm:'Eiserner Wille',   ds:'Erlittener Schaden −10 %', ap:p=>p.dmgTaken=(p.dmgTaken||1)*0.9, max:3 },
+  { id:'tailwind', r:'common', ic:'🌬️', nm:'Rückenwind',       ds:'Nach dem Ausweichen 2 Sek. lang +25 % Lauf- und Angriffstempo', ap:p=>p.tailwind=1, max:1 },
+  { id:'trapper',  r:'common', ic:'⚙️', nm:'Fallenkundig',     ds:'Stachelfallen und Lava verletzen dich nicht mehr und treffen Gegner doppelt', ap:p=>p.trapper=1, max:1 },
+  { id:'headhunt', r:'common', ic:'🎖️', nm:'Kopfjäger',        ds:'Besiegte Elitegegner geben +25 Gold und +3 Seelen', ap:p=>p.headhunt=(p.headhunt||0)+1, max:2 },
+  { id:'critdmg',  r:'rare',   ic:'💥', nm:'Wuchtige Treffer', ds:'Kritische Treffer verursachen +50 % Schaden', ap:p=>p.critMul+=0.5, max:3 },
+  { id:'giant',    r:'rare',   ic:'🗡️', nm:'Riesentöter',      ds:'+20 % Schaden gegen Elitegegner, Champions und Bosse', ap:p=>p.giant=(p.giant||0)+1, max:3 },
+  { id:'reaper',   r:'rare',   ic:'⚰️', nm:'Gnadenstoß',       ds:'+30 % Schaden gegen Gegner unter 30 % LP', ap:p=>p.reaper=1, max:1 },
+  { id:'burn',     r:'rare',   ic:'🕯️', nm:'Glühende Klinge',  ds:'Angriffe setzen Gegner in Brand: weitere 30 % Schaden über 3 Sek.', ap:p=>p.burn=(p.burn||0)+0.3, max:2 },
+  { id:'dashzap',  r:'rare',   ic:'⚡', nm:'Blitzschritt',     ds:'Ausweichen entlädt einen Blitz, der auf bis zu 3 Gegner überspringt', ap:p=>p.dashzap=1, max:1 },
+  { id:'frostdash',r:'rare',   ic:'🧊', nm:'Eisschritt',       ds:'Ausweichen verlangsamt Gegner in deiner Nähe 2 Sek. lang', ap:p=>p.frostdash=1, max:1 },
+  { id:'laststand',r:'epic',   ic:'🔥', nm:'Letztes Gefecht',  ds:'Unter 30 % LP: +30 % Schaden und 20 % weniger erlittener Schaden', ap:p=>p.laststand=1, max:1 },
+  { id:'lifesteal',r:'epic',   ic:'🧛', nm:'Lebensraub',       ds:'3 % des verursachten Schadens heilen dich (bis zu 4 LP pro Sekunde)', ap:p=>p.lifesteal=1, max:1 },
+  { id:'quake',    r:'epic',   ic:'🌋', nm:'Nachbeben',        ds:'Jeder 8. Angriff löst eine Schockwelle um dich aus (120 % Schaden)', ap:p=>p.quake=1, max:1 },
+  { id:'c_haste',  r:'cursed', ic:'⌛', nm:'Fluch der Hast',  ds:'+30 % Angriffs- und +15 % Lauftempo, aber deine Fähigkeit lädt 50 % langsamer', ap:p=>{p.atkSpd*=1.3; p.spdMul*=1.15; p.cdMul*=1.5;}, un:p=>{p.atkSpd/=1.3; p.spdMul/=1.15; p.cdMul/=1.5;}, max:1 },
+  { id:'c_titan',  r:'cursed', ic:'🗿', nm:'Titanenfluch',    ds:'+60 max. LP und erlittener Schaden −4, aber −20 % Lauf- und Angriffstempo', ap:p=>{p.maxHp+=60; p.hp+=60; p.armor+=4; p.spdMul*=0.8; p.atkSpd*=0.8;}, un:p=>{p.maxHp=Math.max(30,p.maxHp-60); p.hp=Math.min(p.hp,p.maxHp); p.armor-=4; p.spdMul/=0.8; p.atkSpd/=0.8;}, max:1 },
+  // Krieger
+  { id:'parry',    r:'rare', ic:'🤺', nm:'Konter',            ds:'Trifft dich ein Gegner aus der Nähe, schlägst du sofort zurück (200 % Schaden, garantiert kritisch, höchstens 1× pro Sek.)', ap:p=>p.parry=1, max:1, only:['krieger'] },
+  { id:'deflect',  r:'rare', ic:'🛡️', nm:'Klingenschild',     ds:'Der Wirbelwind zerschlägt gegnerische Geschosse in deiner Nähe', ap:p=>p.deflect=1, max:1, only:['krieger'] },
+  { id:'longspin', r:'rare', ic:'🌪️', nm:'Sog des Sturms',    ds:'Der Wirbelwind dauert 1 Sek. länger und zieht Gegner zu dir heran', ap:p=>p.longspin=1, max:1, only:['krieger'] },
+  { id:'master',   r:'epic', ic:'⚔️', nm:'Schwertmeister',    ds:'Jeder 4. Schwerthieb ist ein garantiert kritischer Rundumschlag mit +15 % Reichweite', ap:p=>p.master=1, max:1, only:['krieger'] },
+  // Magierin
+  { id:'overload', r:'rare', ic:'🔮', nm:'Arkane Überladung', ds:'Jeder 5. Zauber ist doppelt so groß und verursacht doppelten Schaden', ap:p=>p.overload=1, max:1, only:['magier'] },
+  { id:'frostbite',r:'rare', ic:'🥶', nm:'Frostbiss',         ds:'Gefrorene Gegner nehmen +40 % Schaden', ap:p=>p.frostbite=1, max:1, only:['magier'] },
+  { id:'manaflow', r:'rare', ic:'💧', nm:'Manafluss',         ds:'Jeder besiegte Gegner verkürzt die Abklingzeit der Fähigkeit um 0,4 Sek.', ap:p=>p.manaflow=(p.manaflow||0)+0.4, max:2, only:['magier'] },
+  { id:'icefield', r:'epic', ic:'❄️', nm:'Eisfeld',           ds:'Die Frostnova hinterlässt 4 Sek. lang ein Eisfeld, das Gegner verlangsamt und verletzt', ap:p=>p.icefield=1, max:1, only:['magier'] },
+  // Jägerin
+  { id:'marksman', r:'rare', ic:'🎯', nm:'Scharfschützin',    ds:'+35 % Schaden gegen Gegner, die weit entfernt sind', ap:p=>p.marksman=1, max:1, only:['jaegerin'] },
+  { id:'snare',    r:'rare', ic:'🪤', nm:'Fallenstellerin',   ds:'Alle 6 Sek. legst du eine Schlinge: Sie hält den ersten Gegner 2 Sek. fest und trifft mit 200 % Schaden', ap:p=>p.snare=1, max:1, only:['jaegerin'] },
+  { id:'retreat',  r:'rare', ic:'🏹', nm:'Rückzugsschuss',    ds:'Beim Ausweichen feuerst du 3 Pfeile nach hinten', ap:p=>p.retreat=1, max:1, only:['jaegerin'] },
+  { id:'shrapnel', r:'epic', ic:'🎇', nm:'Splitterpfeile',    ds:'Pfeile zerspringen beim ersten Treffer in 4 Splitter (40 % Schaden)', ap:p=>p.shrapnel=1, max:1, only:['jaegerin'] },
+  // Nekromantin
+  { id:'corpseboom',r:'rare',ic:'💥', nm:'Leichenexplosion',  ds:'Diener explodieren, wenn ihre Zeit abläuft (100 % Schaden)', ap:p=>p.corpseboom=1, max:1, only:['nekro'] },
+  { id:'soulfire', r:'rare', ic:'💚', nm:'Seelenfeuer',       ds:'Schädel verursachen +25 % Schaden und verlangsamen Gegner', ap:p=>p.soulfire=1, max:1, only:['nekro'] },
+  { id:'unholy',   r:'rare', ic:'🕯️', nm:'Unheiliger Wille',  ds:'Diener leben 50 % länger und greifen 25 % schneller an', ap:p=>p.unholy=1, max:1, only:['nekro'] },
+  { id:'siphon',   r:'epic', ic:'🩸', nm:'Lebensentzug',      ds:'Jeder Treffer deiner Diener heilt dich um 1 LP (bis zu 4 LP pro Sekunde)', ap:p=>p.siphon=1, max:1, only:['nekro'] },
+  // Paladin
+  { id:'blessing', r:'rare', ic:'✨', nm:'Segen',             ds:'Auf geweihtem Boden greifst du 20 % schneller an', ap:p=>p.blessing=1, max:1, only:['paladin'] },
+  { id:'smite',    r:'rare', ic:'🔥', nm:'Läuterung',         ds:'Der Hammer setzt Gegner in heilige Flammen: weitere 40 % Schaden über 3 Sek.', ap:p=>p.smite=1, max:1, only:['paladin'] },
+  { id:'aegis',    r:'rare', ic:'🛡️', nm:'Ägis',              ds:'Der Bannkreis hält 2 Sek. länger und gibt dir einen Schutz, der einen Treffer blockt', ap:p=>p.aegis=1, max:1, only:['paladin'] },
+  { id:'divine',   r:'epic', ic:'⚡', nm:'Göttliches Urteil', ds:'Alle 5 Sek. schlägt ein heiliger Blitz in den stärksten Gegner in deiner Nähe ein (250 % Schaden)', ap:p=>p.divine=1, max:1, only:['paladin'] },
+  // Alchemistin
+  { id:'corrode',  r:'rare', ic:'🟢', nm:'Ätzende Säure',     ds:'Gegner in Säurepfützen nehmen 25 % mehr Schaden von allem', ap:p=>p.corrode=1, max:1, only:['alchi'] },
+  { id:'double',   r:'rare', ic:'🍶', nm:'Doppelwurf',        ds:'Jede 4. Flasche wirft eine zweite hinterher', ap:p=>p.double=1, max:1, only:['alchi'] },
+  { id:'elixir',   r:'rare', ic:'🧉', nm:'Lebenselixier',     ds:'Heilflaschen heilen doppelt und geben 5 Sek. lang +25 % Tempo', ap:p=>p.elixir=1, max:1, only:['alchi'] },
+  { id:'cauldron', r:'epic', ic:'🌀', nm:'Großer Kessel',     ds:'Das Große Gebräu ist 40 % größer, zieht stärker und explodiert ein zweites Mal', ap:p=>p.cauldron=1, max:1, only:['alchi'] },
+  // Berserkerin
+  { id:'bloodlust',r:'rare', ic:'🩸', nm:'Blutgier',          ds:'Treffer an blutenden Gegnern heilen 1 LP (bis zu 4 LP pro Sekunde)', ap:p=>p.bloodlust=1, max:1, only:['berserk'] },
+  { id:'outburst', r:'rare', ic:'💢', nm:'Wutausbruch',       ds:'Bei voller Raserei entlädt sich eine Schockwelle (200 % Schaden, kostet 5 Raserei-Stufen)', ap:p=>p.outburst=1, max:1, only:['berserk'] },
+  { id:'unstop',   r:'rare', ic:'🐂', nm:'Unaufhaltsam',      ds:'Ab 5 Raserei-Stufen: kein Rückstoß und 20 % weniger erlittener Schaden', ap:p=>p.unstop=1, max:1, only:['berserk'] },
+  { id:'twinaxe',  r:'epic', ic:'🪓', nm:'Doppelaxt',         ds:'Jeder Hieb trifft zusätzlich nach hinten (60 % Schaden)', ap:p=>p.twinaxe=1, max:1, only:['berserk'] },
 ];
 const SYN = [
   { id:'shatter',   ic:'💠', nm:'Zersplittern', req:['frost','chain'],  ds:'Kettenblitze verursachen an verlangsamten oder gefrorenen Gegnern doppelten Schaden.' },
@@ -224,6 +276,18 @@ const SYN = [
   { id:'thunder',   ic:'🌩️', nm:'Donnerhammer', req:['judg','hammer2'], ds:'Paladin: Der zurückkehrende Hammer schleudert Kettenblitze.' },
   { id:'genius',    ic:'🤪', nm:'Wahnsinniges Genie', req:['expt','cd'], ds:'Alchemistin: Jedes Experiment lädt die Fähigkeit um 1,5 Sek. auf.' },
   { id:'fountain',  ic:'⛲', nm:'Blutfontäne',  req:['gore','rate'],    ds:'Berserkerin: Blutende Gegner platzen beim Tod und lassen Gegner in der Nähe bluten.' },
+  { id:'merciless', ic:'🗡️', nm:'Gnadenlos',    req:['reaper','critdmg'],      ds:'Kritische Treffer gegen Gegner unter 30 % LP verursachen +50 % Schaden.' },
+  { id:'stormrunner',ic:'🌩️', nm:'Blitzläufer', req:['dashzap','tailwind'],    ds:'Der Ausweich-Blitz springt auf 3 weitere Gegner über.' },
+  { id:'icestep',   ic:'🧊', nm:'Eiskristall',   req:['frostdash','frost'],     ds:'Ausweichen friert Gegner in der Nähe kurz ein, statt sie nur zu verlangsamen.' },
+  { id:'wellspring',ic:'⛲', nm:'Lebensquelle',  req:['lifesteal','laststand'], ds:'Unter 30 % LP heilt der Lebensraub doppelt.' },
+  { id:'firebrand', ic:'🔥', nm:'Feuermal',      req:['burn','orbit'],          ds:'Feuerkugeln setzen Gegner in Brand.' },
+  { id:'bladelord', ic:'🗡️', nm:'Klingenfürst',  req:['master','wave'],         ds:'Krieger: Der Meisterhieb sendet Klingenwellen in alle Richtungen.' },
+  { id:'icequeen',  ic:'👑', nm:'Eiskönigin',    req:['icefield','frostbite'],  ds:'Magierin: Das Eisfeld friert Gegner immer wieder kurz ein.' },
+  { id:'hunt',      ic:'🐺', nm:'Jagdrevier',    req:['snare','marksman'],      ds:'Jägerin: Gefangene Gegner nehmen dreifachen Schaden von deinen Pfeilen.' },
+  { id:'deathmarch',ic:'⚰️', nm:'Totenheer',     req:['corpseboom','legion'],   ds:'Nekromantin: Explodierte Diener erheben sich oft gleich wieder.' },
+  { id:'crusade',   ic:'⚜️', nm:'Kreuzzug',      req:['divine','blessing'],     ds:'Paladin: Auf geweihtem Boden schlägt das Göttliche Urteil doppelt so oft ein.' },
+  { id:'toxic',     ic:'☣️', nm:'Giftküche',     req:['corrode','double'],      ds:'Alchemistin: Ätzende Säure verstärkt den Schaden um 50 % statt 25 %.' },
+  { id:'bloodstorm',ic:'🌪️', nm:'Blutorkan',     req:['twinaxe','outburst'],    ds:'Berserkerin: Der Wutausbruch lässt alle getroffenen Gegner bluten.' },
 ];
 /* Waffen-Entwicklungen: nach jedem Boss eine von zwei Verwandlungen des Grundangriffs wählen */
 const EVOS = {

@@ -597,8 +597,16 @@ function showRunStats(){
     <div class="cards">${ups.length?ups.map(([id,n])=>{ const u=UPG[id]; return `<div class="card ${u.r}"><div class="ic">${u.ic}</div><div class="body"><div class="rar">${RAR[u.r]}${n>1?' · Stufe '+n:''}</div><div class="nm">${u.nm}</div><div class="ds">${u.ds}</div></div></div>`; }).join(''):'<p class="sub">Noch keine Upgrades. Besiege Gegner, um welche zu verdienen.</p>'}</div>
     <button class="btn primary" data-a="back">Zurück zur Karte</button></div>`,{ back:showMap },true);
 }
-/* Kodex: alle Synergien mit Rezept und alle Waffen-Entwicklungen – damit man Builds gezielt planen kann */
+/* Kodex: alle Synergien mit Rezept, alle Perks und alle Waffen-Entwicklungen – damit man Builds gezielt planen kann */
+function perkCodexHtml(grp){
+  const list=UPGRADES.filter(u=>grp==='alle'?!u.only:(u.only&&u.only.includes(grp))), cnt=g=>UPGRADES.filter(u=>g==='alle'?!u.only:(u.only&&u.only.includes(g))).length;
+  const chips=['alle',...Object.keys(CHARS)].map(g=>`<button class="skin ${g===grp?'sel':''}" data-a="tab" data-v="perk:${g}">${g==='alle'?'🌐 Allgemein':CHARS[g].icon+' '+CHARS[g].name} · ${cnt(g)}</button>`).join('');
+  const lim=u=>u.max===1?' · einmalig':u.max?` · bis ${u.max}×`:'';
+  return `<p class="sub" style="font-size:14px">Perks wählst du nach jedem Raum, beim Händler und in Schätzen. Helden-Perks gibt es nur für ihren Helden, dafür erscheinen sie etwas häufiger.</p><div class="skinrow">${chips}</div>
+    <div class="cards">${list.map(u=>{ const n=run&&run.upg?run.upg[u.id]||0:0; return `<div class="card ${u.r}"><div class="ic">${u.ic}</div><div class="body"><div class="rar">${RAR[u.r]}${lim(u)}${n?` · im Lauf ${n}×`:''}</div><div class="nm">${u.nm}</div><div class="ds">${u.ds}</div></div></div>`; }).join('')}</div>`;
+}
 function showCodex(back, tab='syn'){
+  if(tab==='perk') tab='perk:'+(run&&run.cid&&!run.ended?run.cid:'alle');
   const found=save.stats.syns||[], evos=save.stats.evos||[];
   const synCard=s=>{ const f=found.includes(s.id), act=hasSyn(s.id), only=s.req.map(r=>UPG[r].only).find(Boolean);
     return `<div class="card ${act?'epic':f?'rare':''}" style="${f||act?'':'opacity:.8'}"><div class="ic">${f?s.ic:'❔'}</div><div class="body"><div class="rar">${act?'Aktiv in diesem Lauf':f?'Entdeckt':'Noch nicht entdeckt'}${only?' · '+CHARS[only[0]].name:''}</div>
@@ -606,8 +614,8 @@ function showCodex(back, tab='syn'){
   const evoHtml=Object.entries(EVOS).map(([cid,list])=>`<div class="eyebrow" style="margin-top:6px">${CHARS[cid].icon} ${CHARS[cid].name}</div><div class="cards">${list.map(e=>{ const f=evos.includes(e.id), act=hasEvo(e.id);
     return `<div class="card ${act?'epic':f?'rare':''}"><div class="ic">${f?e.ic:'❔'}</div><div class="body"><div class="rar">${act?'Aktiv in diesem Lauf':f?'Entdeckt':'Nach einem Bosskampf wählbar'}</div><div class="nm">${f?e.nm:'???'}</div>${f?`<div class="ds">${e.ds}</div>`:''}</div></div>`; }).join('')}</div>`).join('');
   render(`<div class="wrap"><div class="eyebrow">${found.length} von ${SYN.length} Synergien · ${evos.length} von ${Object.values(EVOS).flat().length} Entwicklungen</div><h2>Kodex</h2>
-    <div class="skinrow"><button class="skin ${tab==='syn'?'sel':''}" data-a="tab" data-v="syn">🔗 Synergien</button><button class="skin ${tab==='evo'?'sel':''}" data-a="tab" data-v="evo">⚒️ Entwicklungen</button><button class="skin ${tab==='rel'?'sel':''}" data-a="tab" data-v="rel">🏺 Relikte</button><button class="skin ${tab==='lore'?'sel':''}" data-a="tab" data-v="lore">📜 Chronik</button></div>
-    ${tab==='lore'?loreHtml():tab==='rel'?`<p class="sub" style="font-size:14px">Relikte findest du in Schatzräumen, bei Champions in Elite-Räumen und manchmal beim Händler.</p><div class="cards">${RELICS.map(r=>{ const f=(save.stats.relics||[]).includes(r.id), act=hasRelic(r.id); return `<div class="card ${act?'epic':f?(r.cursed?'cursed':'rare'):''}"><div class="ic">${f?r.ic:'❔'}</div><div class="body"><div class="rar">${act?'Im Besitz':f?'Gefunden':'Noch nicht gefunden'}</div><div class="nm">${f?r.nm:'???'}</div>${f?`<div class="ds">${r.ds}</div>`:''}</div></div>`; }).join('')}</div>`:
+    <div class="skinrow"><button class="skin ${tab==='syn'?'sel':''}" data-a="tab" data-v="syn">🔗 Synergien</button><button class="skin ${tab.startsWith('perk')?'sel':''}" data-a="tab" data-v="perk">🃏 Perks</button><button class="skin ${tab==='evo'?'sel':''}" data-a="tab" data-v="evo">⚒️ Entwicklungen</button><button class="skin ${tab==='rel'?'sel':''}" data-a="tab" data-v="rel">🏺 Relikte</button><button class="skin ${tab==='lore'?'sel':''}" data-a="tab" data-v="lore">📜 Chronik</button></div>
+    ${tab.startsWith('perk:')?perkCodexHtml(tab.slice(5)):tab==='lore'?loreHtml():tab==='rel'?`<p class="sub" style="font-size:14px">Relikte findest du in Schatzräumen, bei Champions in Elite-Räumen und manchmal beim Händler.</p><div class="cards">${RELICS.map(r=>{ const f=(save.stats.relics||[]).includes(r.id), act=hasRelic(r.id); return `<div class="card ${act?'epic':f?(r.cursed?'cursed':'rare'):''}"><div class="ic">${f?r.ic:'❔'}</div><div class="body"><div class="rar">${act?'Im Besitz':f?'Gefunden':'Noch nicht gefunden'}</div><div class="nm">${f?r.nm:'???'}</div>${f?`<div class="ds">${r.ds}</div>`:''}</div></div>`; }).join('')}</div>`:
     tab==='syn'?`<p class="sub" style="font-size:14px">Wähle beide Upgrades eines Rezepts in einem Lauf, um die Synergie auszulösen.</p><div class="cards">${SYN.map(synCard).join('')}</div>`:`<p class="sub" style="font-size:14px">Nach jedem Boss verwandelst du deinen Grundangriff: Du wählst eine von zwei Entwicklungen.</p>${evoHtml}`}
     <button class="btn" data-a="back">Zurück</button></div>`,{ back, tab:t=>showCodex(back,t) });
 }
@@ -700,7 +708,7 @@ function rollUpgrades(n, mode, exclude=[]){
   for(let i=0;i<n && pool.length;i++){
     let r=wpick([['common',w[0]],['rare',w[1]],['epic',w[2]]]);
     let opts=pool.filter(u=>u.r===r && !out.includes(u)); if(!opts.length) opts=pool.filter(u=>!out.includes(u)); if(!opts.length) break;
-    out.push(pick(opts));
+    out.push(wpick(opts.map(u=>[u,u.only?1.8:1])));   // Helden-Perks erscheinen etwas häufiger
   }
   return out;
 }
@@ -717,7 +725,7 @@ function statSheet(p){
     'Tempo':Math.round(p.speed*p.spdMul), 'Krit':Math.round(p.crit*100)+' %', 'Fläche':Math.round(p.area*100)+' %', 'Gold':Math.round(p.goldMul*100)+' %',
     'Geschosse':p.count, 'Fähigkeit':(c.skill.cd*p.cdMul).toFixed(1)+' s', 'Ausweichen':(1.0*p.dashCdMul).toFixed(1)+' s' };
   if(p.minions){ s['Diener']=p.minions; s['Erweckung']=Math.round(p.raise*100)+' %'; }
-  if(p.regen) s['Regeneration']=p.regen.toFixed(1)+'/s'; if(p.pierce) s['Durchschlag']=p.pierce; if(p.lifeOnKill) s['LP pro Kill']=p.lifeOnKill; if(p.thorns) s['Dornen']=p.thorns; if(p.dmgTaken&&p.dmgTaken!==1) s['Erlittener Schaden']='+'+Math.round((p.dmgTaken-1)*100)+' %'; if(p.drain) s['LP-Verlust']=p.drain+'/s';
+  if(p.regen) s['Regeneration']=p.regen.toFixed(1)+'/s'; if(p.pierce) s['Durchschlag']=p.pierce; if(p.lifeOnKill) s['LP pro Kill']=p.lifeOnKill; if(p.thorns) s['Dornen']=p.thorns; if(p.dmgTaken&&Math.abs(p.dmgTaken-1)>0.004) s['Erlittener Schaden']=(p.dmgTaken>1?'+':'−')+Math.round(Math.abs(p.dmgTaken-1)*100)+' %'; if(p.critMul&&Math.abs(p.critMul-2)>0.01) s['Krit-Schaden']=Math.round(p.critMul*100)+' %'; if(p.drain) s['LP-Verlust']=p.drain+'/s';
   return s;
 }
 function previewUpg(u){

@@ -5,7 +5,7 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 
 ## Befehle
 
-- `npm test` – 21 Headless-Tests (inkl. `render`, der wirklich zeichnet, `pc` mit Maus, Tastatur und Controller-Attrappe im Querformat, `backup` für Spielstand-Link und -Datei, `sounds` für alle Klänge) (`tests/run-all.js`), einzeln: `node tests/run-all.js bosses saves`, Details mit `VERBOSE=1`.
+- `npm test` – 22 Headless-Tests (inkl. `perks`, der jede Perk-Mechanik gezielt auslöst, `render`, der wirklich zeichnet, `pc` mit Maus, Tastatur und Controller-Attrappe im Querformat, `backup` für Spielstand-Link und -Datei, `sounds` für alle Klänge) (`tests/run-all.js`), einzeln: `node tests/run-all.js bosses saves`, Details mit `VERBOSE=1`.
 - `npm run balance` (`node tools/balance.js [Läufe] [Held …]`) – der Bot spielt komplette Läufe ohne Gottmodus: Siegquote, Todesursachen, Hänger je Held.
 - `node tools/chaos.js [Läufe] [Sekunden]` – Chaos-Bot: komplette Läufe mit Zeichnen, zufälligen Menüknöpfen, Pausen und Einstellungen; meldet jeden Laufzeitfehler mit Stelle. Nach größeren Änderungen laufen lassen.
   Playwright ist in der Cloud-Umgebung vorinstalliert, in CI per Workflow.
@@ -48,6 +48,9 @@ Grafik komplett per Canvas gezeichnet, Sound und Musik per Web Audio erzeugt. Al
 - **Sonderregeln:** `run.mod` (Tagesprüfung) oder `run.mods` (Wochenprüfung, Herausforderungen) – `runMod()` führt mehrere Regeln zusammen (Zahlen multiplizieren, `start` verketten, `mapSwap` tauscht Kartenknoten).
 - **Verdammnis-Stufen:** `run.tier` 0–10, Abfrage mit `tierHas(n)`; Freischaltung je Held in `save.tierWon` (bei Sieg in `showVictory`).
 - **Build-System:** Synergien in `SYN` (Rezept `req`, heldenspezifisch über `UPG[...].only`), Waffen-Entwicklungen in `EVOS` (nach jedem Boss, Abfrage `hasEvo(id)`), regelverändernde Upgrades setzen Felder auf `run.p`.
+  Perks wirken über diese Felder an festen Stellen: Schaden in `dealDamage` (Multiplikatoren, `o.forceCrit`, Brand `o.burn` → `e.burnT`), Treffer am Helden in `hurtPlayer` (Konter, Unaufhaltsam),
+  Ausweichen in `dashPerks`, Kills in `killEnemy`, Heldenpassiven in `heroPassives` (Schlingen `G.snares`/`updSnares`, Göttliches Urteil). Heilung pro Treffer immer über `sipHeal` (höchstens 4 LP/s).
+  `rollUpgrades` gewichtet Helden-Perks mit 1,8. Neuer Perk → Prüfung im Test `perks` ergänzen. Zeitgeber pro Raum gehören auf `G` oder werden in `startCombat` zurückgesetzt.
 - **Relikte:** `run.relics`, Abfrage `hasRelic(id)`, Vergabe `gainRelic(id)` (Schatz `showTreasure`, Champion `showRelicPick`, Händler).
 - **Champions und Themen:** `buildWaves` markiert in Elite-Räumen den letzten Elitegegner als `champ` (→ `champify`), Themenwellen hängen als `waves.theme` an.
 - **Raum-Herausforderungen:** `G.rc` (`ROOM_CHAL`), Fehlschlag in `hurtPlayer`/`useDash`/`useSkill`, Belohnung in `rcReward` beim Raumende.
