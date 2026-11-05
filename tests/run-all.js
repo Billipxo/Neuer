@@ -1,0 +1,307 @@
+// Automatische Tests für „Arena der Verdammten“.
+// Startet das Spiel in einem Headless-Chromium und prüft Kernabläufe per simuliertem Spiel.
+// Aufruf: npm test   (oder: node tests/run-all.js [name …] für einzelne Tests)
+const path = require('path');
+const { chromium, devices } = require('playwright');
+const URL = 'file://' + path.resolve(__dirname, '..', 'index.html');
+
+// Bot-Hilfen, die im Browser laufen
+const BOT = `
+  window.__bot = function(god, maxSec){
+    let f=0; const melee=CHARS[P.cid].range<100;
+    while(state==='combat' && G && !G.over && f<30*maxSec){
+      const n=nearestEnemy(P,9999);
+      if(n){ const a=angTo(P,n), d=dist(P,n)-(n.boss?n.r:0), s=d<(melee?(n.boss?24:50):200)?-1:1; input.jx=Math.cos(a+0.6)*s; input.jy=Math.sin(a+0.6)*s; } else { input.jx=input.jy=0; }
+      if(P.skillT<=0) useSkill();
+      if(G.eproj.some(p=>Math.hypot(p.x-P.x,p.y-P.y)<45) || G.hazards.some(h=>h.t>h.delay*0.7 && Math.hypot(h.x-P.x,h.y-P.y)<(h.r||200))) useDash();
+      if(god){ P.hp=P.maxHp; P.inv=Math.max(P.inv,0.2); } G.stop=0; update(1/30); f++;
+    }
+    return {frames:f, over:!!(G&&G.over), state};
+  };`;
+
+const tests = {
+  async start(pg){ // Menü lädt, Lauf startet, erster Raum lässt sich spielen
+    return pg.evaluate(()=>{ save.tutDone=true; startRun('krieger'); enterNode(availNodes()[0]); const r=__bot(true,120); return {ok: state==='ui' && !!document.querySelector('.reward-card'), ...r}; });
+  },
+  async heroes(pg){ // Jeder Held übersteht mit Gott-Modus einen ganzen Akt
+    return pg.evaluate(()=>{ const out={};
+      for(const ch of Object.keys(CHARS)){ for(const id in CHARS) save.unlocked[id]=true; save.tutDone=true; startRun(ch); let rooms=0, guard=0;
+        while(run && run.act===1 && guard++<40){
+          if(state==='combat'){ __bot(true,240); if(state==='combat') return {ok:false, hero:ch, stuck:G.type, en:G.enemies.map(e=>e.kind+(e.champ?'*':'')+':'+(e.affix||[]).join('+')+':'+Math.round(e.hp)+'/'+Math.round(e.maxHp))}; continue; }
+          const a=Object.keys(actions);
+          if(a.includes('go') && ui.querySelector('.mapbox')) { enterNode(availNodes()[0]); rooms++; }
+          else if(a.includes('pick')) actions.pick(ui.querySelector('[data-a=pick]').dataset.v);
+          else if(a.includes('evo')) actions.evo(ui.querySelector('[data-a=evo]').dataset.v);
+          else if(a.includes('relic')) actions.relic(ui.querySelector('[data-a=relic]').dataset.v);
+          else if(a.includes('opt')) actions.opt(ui.querySelector('[data-a=opt]:not([disabled])').dataset.v);
+          else if(a.includes('next')) actions.next(); else if(a.includes('leave')) actions.leave(); else if(a.includes('heal')) actions.heal();
+          else return {ok:false, hero:ch, actions:a}; }
+        out[ch]=rooms; }
+      return {ok:Object.values(out).every(n=>n>=6), rooms:out}; });
+  },
+  async upgrades(pg){ // Alle Upgrades und Synergien gleichzeitig für jeden Helden
+    return pg.evaluate(()=>{ const syn={};
+      for(const ch of Object.keys(CHARS)){ save.tutDone=true; startRun(ch);
+        for(const u of UPGRADES){ if(u.only&&!u.only.includes(ch)) continue; for(let i=0;i<(u.max||2);i++) applyUpgrade(u); }
+        syn[ch]=[run.syn.length, SYN.filter(s=>s.req.every(r=>!UPG[r].only||UPG[r].only.includes(ch))).length];
+        run.evo=EVOS[ch].map(e=>e.id); run.p.furyMax=15; run.posId=run.map.rows[3][0].id; startCombat('elite'); __bot(true,60); useSkill(); __bot(true,30); }
+      return {ok:Object.values(syn).every(([a,b])=>a===b), syn}; });
+  },
+  async perks(pg){ // Die neuen Perks wirken wirklich: jede Mechanik wird gezielt ausgelöst und geprüft
+    return pg.evaluate(()=>{ const ok={};
+      const setup=(ch,perks,foes=[])=>{ save.tutDone=true; startRun(ch); for(const id of perks) applyUpgrade(UPG[id]);
+        run.posId=run.map.rows[1][0].id; startCombat('fight',[[{kind:'slime'}]]); G.traps=[]; G.obs=[]; G.rc=null; G.waveT=999; P.maxHp=P.hp=5000;
+        return foes.map(([k,dx,dy,el])=>{ const e=makeEnemy(k,P.x+dx,P.y+dy,!!el); e.spawnT=0; e.affix=[]; e.hp=e.maxHp=1e6; e.speed=0; G.enemies.push(e); return e; }); };
+      const step=s=>{ for(let i=0;i<s*30 && G;i++){ G.stop=0; update(1/30); } };
+      const by=k=>(run.dmgBy||{})[k]||0;
+      let e,f;
+      [e]=setup('krieger',['burn'],[['orc',28,0]]); step(3); ok.burn=by('burn')>0;
+      [e]=setup('magier',['quake'],[['skeleton',30,0]]); P.atkCount=7; attack(e); ok.quake=by('quake')>0;
+      [e]=setup('krieger',['parry'],[['orc',24,0]]); P.inv=0; P.dashI=0; hurtPlayer(5,e); ok.parry=by('parry')>0;
+      [e]=setup('jaegerin',['snare'],[['orc',0,4]]); P.atkSpd=1e-4; P.atkT=999; step(2.5); ok.snare=by('snare')>0 && e.snareT>0;
+      [e]=setup('paladin',['divine'],[['skeleton',200,0]]); step(3.5); ok.divine=by('divine')>0;
+      [e]=setup('berserk',['outburst'],[['orc',30,0]]); P.fury=P.furyMax=10; attack(e); ok.outburst=by('outburst')>0 && P.fury<10;
+      [e]=setup('nekro',['corpseboom'],[['orc',40,0]]); P.atkT=999; P.atkSpd=1e-4; raiseAlly(P.x+30,P.y,0.1); step(0.5); ok.corpseboom=by('minion')>0;
+      [e]=setup('krieger',['lifesteal'],[['orc',300,0]]); P.hp=50; dealDamage(e,1000,{src:'atk'}); ok.lifesteal=P.hp>50;
+      [e]=setup('krieger',['headhunt'],[['skeleton',300,0,true]]); e.hp=1; f=run.gold; dealDamage(e,100,{src:'atk'}); ok.headhunt=run.gold-f>=25;
+      [e]=setup('magier',['manaflow'],[['skeleton',300,0]]); P.skillT=5; e.hp=1; dealDamage(e,100,{src:'atk'}); ok.manaflow=P.skillT<4.8;
+      [e]=setup('krieger',['tailwind','frostdash','dashzap'],[['orc',60,0]]); useDash(); ok.dash=P.tailT>0 && e.slow>0 && by('chain')>0;
+      setup('jaegerin',['retreat']); f=G.pproj.length; useDash(); ok.retreat=G.pproj.length>=f+3;
+      [e,f]=setup('krieger',['master'],[['orc',40,0],['orc',-40,0]]); P.atkCount=3; attack(e); ok.master=f.hp<f.maxHp;
+      [e]=setup('magier',['overload'],[['skeleton',150,0]]); P.atkCount=4; attack(e); ok.overload=G.pproj.some(p=>p.big);
+      setup('magier',['icefield'],[['skeleton',150,0]]); P.skillT=0; useSkill(); ok.icefield=G.pzones.some(z=>z.kind==='frost');
+      [e]=setup('jaegerin',['shrapnel'],[['orc',120,0]]); attack(e); ok.shrapnel=false; for(let i=0;i<30&&!ok.shrapnel;i++){ step(1/30); ok.shrapnel=G.pproj.some(p=>p.type==='spark'); }
+      [e]=setup('nekro',['soulfire'],[['orc',100,0]]); attack(e); ok.soulfire=false; for(let i=0;i<40&&!ok.soulfire;i++){ step(1/30); ok.soulfire=e.slow>0; }
+      setup('nekro',['unholy']); raiseAlly(P.x,P.y,10); ok.unholy=G.allies[G.allies.length-1].life===15;
+      [e]=setup('paladin',['smite'],[['orc',120,0]]); attack(e); ok.smite=G.pproj.some(p=>p.type==='hammer'&&p.burn>0);
+      setup('paladin',['aegis']); f=P.shieldLeft; P.skillT=0; useSkill(); ok.aegis=P.shieldLeft===f+1 && P.ward===5;
+      [e]=setup('alchi',['corrode'],[['orc',150,0]]); P.atkT=999; P.atkSpd=1e-4; G.pzones.push({x:e.x,y:e.y,r:40,life:3,max:3,dps:1,tick:0,kind:'acid'}); step(0.5); ok.corrode=e.corrodeT>0;
+      [e]=setup('alchi',['double'],[['orc',150,0]]); P.dblN=3; f=G.pproj.length; attack(e); ok.double=G.pproj.length===f+2;
+      setup('alchi',['elixir']); P.hp=20; flaskLand({kind:'heal',x2:P.x,y2:P.y,dmg:1}); ok.elixir=P.tailT>4 && P.hp>=20+Math.round(P.maxHp*0.16);
+      [e]=setup('alchi',['cauldron'],[['orc',150,0]]); P.atkT=999; P.atkSpd=1e-4; P.skillT=0; useSkill(); ok.cauldron=P.vortex && Math.abs(P.vortex.R-196)<1; f=false; for(let i=0;i<110;i++){ step(1/30); f=f||G.pstrikes.some(s=>s.col); } ok.cauldron=ok.cauldron&&f;
+      [e]=setup('berserk',['bloodlust'],[['orc',30,0]]); P.hp=50; e.bleedT=3; e.bleedDps=1; dealDamage(e,10,{src:'atk'}); ok.bloodlust=P.hp>50;
+      [e]=setup('berserk',['unstop'],[['orc',20,0]]); P.fury=6; P.inv=0; P.dashI=0; P.kbx=P.kby=0; hurtPlayer(10,e); ok.unstop=P.kbx===0 && P.kby===0;
+      [e,f]=setup('berserk',['twinaxe'],[['orc',40,0],['orc',-40,0]]); attack(e); ok.twinaxe=f.hp<f.maxHp;
+      { const [a,b]=setup('krieger',['giant','giant','giant'],[['orc',300,0,true],['orc',-300,0]]); dealDamage(a,100,{src:'atk',noCrit:true}); dealDamage(b,100,{src:'atk',noCrit:true}); ok.giant=(a.maxHp-a.hp)/(b.maxHp-b.hp)>1.25; }
+      setup('krieger',['trapper'],[['slime',600,0]]); G.traps=[{type:'spikes',x:P.x,y:P.y,r:30,t:2.2,id:0}]; P.inv=0; f=P.hp; step(0.3); ok.trapper=P.hp===f;
+      setup('krieger',['deflect']); P.spin=1; G.eproj.push({x:P.x+40,y:P.y,vx:0,vy:0,dmg:5,kind:'orb',r:6,life:3}); step(1/30); ok.deflect=G.eproj.length===0;
+      setup('krieger',['longspin']); P.skillT=0; useSkill(); ok.longspin=P.spin>2.4;
+      const bad=Object.keys(ok).filter(k=>!ok[k]);
+      return {ok:!bad.length, bad, n:Object.keys(ok).length}; });
+  },
+  async events(pg){ // Jede Ereignis-Option lässt sich wählen
+    return pg.evaluate(()=>{ let n=0;
+      for(const ev of EVENTS){ const cnt=ev.opts({gold:999,p:{hp:100,maxHp:100},souls:0}).length;
+        for(let i=0;i<cnt;i++){ startRun('krieger'); run.gold=200; run.posId=run.map.rows[2][0].id; run.seen=EVENTS.filter(e=>e!==ev).map(e=>e.id);
+          showEvent(); actions.opt(String(i)); if(state==='combat') __bot(true,90); n++; } }
+      return {ok:n>=18, options:n}; });
+  },
+  async enemies(pg){ // Jede Gegnerart lässt sich besiegen, ohne dass etwas hängen bleibt
+    return pg.evaluate(()=>{ const out={};
+      for(const k of Object.keys(ENEMIES)){ save.tutDone=true; startRun('krieger'); run.act=3; run.map=genMap(3); run.posId=run.map.rows[3][0].id;
+        startCombat('fight',[[{kind:k},{kind:k},{kind:k}]]); const r=__bot(true,120); out[k]=state!=='combat'; if(state==='combat'){ endRun(false); } }
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
+  async bosses(pg){ // Alle Bosse aller vier Akte lassen sich besiegen
+    return pg.evaluate(()=>{ const out={};
+      for(const [act,kinds] of ACTS.map((A,i)=>[i+1,A.bosses])) for(const k of kinds){
+        startRun('magier'); for(const u of UPGRADES) if(!u.only||u.only.includes('magier')) applyUpgrade(u);
+        run.act=act; run.map=genMap(act); run.map.bossKind=k; run.posId=run.map.boss.id; startCombat('boss'); const r=__bot(true,240);
+        out[k]=state!=='combat'; }
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
+  async daily(pg){ // Tagesherausforderung ist deterministisch
+    return pg.evaluate(()=>{ const key=todayKey(), sig=()=>JSON.stringify(run.map.rows.map(r=>r.map(n=>n.type)));
+      startRun(dailyInfo(key).cid,{daily:key}); const a=sig(); startRun(dailyInfo(key).cid,{daily:key}); const b=sig();
+      return {ok:a===b && !!run.mod}; });
+  },
+  async saves(pg){ // Spielstände, Sicherungscode, Neues Spiel+
+    return pg.evaluate(()=>{ save.souls=1234; persist(); const code=exportCode();
+      showSlots(); actions.new('1'); const fresh=save.souls; actions.load('0'); const back=save.souls;
+      let bad=false; try{ parseCode(code.slice(0,-12)); }catch(e){ bad=true; }
+      const d=parseCode(code);
+      startRun('krieger',{ng:2}); run.posId=run.map.rows[0][0].id; startCombat('fight'); __bot(true,3); const e=G.enemies[0]||G.spawnQ[0];
+      return {ok: fresh===0 && back===1234 && bad && d.souls===1234 && run.ng===2, slots:[fresh,back]}; });
+  },
+  async resume(pg){ // Unterbrochene Läufe: Kampfraum startet neu, offene Belohnung bleibt erhalten
+    return pg.evaluate(()=>{ save.tutDone=true; startRun('jaegerin'); showMap(); const id=availNodes()[0]; enterNode(id); const hp=P.hp;
+      for(let i=0;i<40;i++) update(1/30); const en=G.enemies[0]||{}; P.tgtRef=en; P.weird={self:null}; P.weird.self=P.weird; en.owner=en;
+      saveNow(); const s1=readSlot(slotIdx).run; delete P.weird; run=null; G=null; state='menu'; if(!s1) return {ok:false, why:'Kreisverweis verhindert Speichern'};
+      run=s1; resumeRun(); const r1=state==='combat' && run.posId===id && G && G.type===run.room;
+      __bot(true,240); const pendMode=run&&run.pend&&run.pend.mode; saveNow(); const s2=readSlot(slotIdx).run; run=s2; resumeRun();
+      const r2=!!ui.querySelector('[data-a=pick]')||!!ui.querySelector('[data-a=next]');
+      (actions.skip||actions.next)(); const r3=!run.pend && !!ui.querySelector('.mapbox');
+      return {ok:r1&&!!pendMode&&r2&&r3, r1, pendMode, r2, r3}; });
+  },
+  async menus(pg){ // Jeder Bildschirm lässt sich fehlerfrei öffnen (auch für ganz neue Spielstände)
+    return pg.evaluate(()=>{ const bad=[]; const tryS=(n,f)=>{ try{ f(); if(!ui.innerHTML.length) bad.push(n+': leer'); }catch(e){ bad.push(n+': '+e.message); } };
+      const keep=save; save=defSave(); tryS('menu-neu',showMenu); tryS('chars-neu',showChars); save=keep; save.runs=Math.max(1,save.runs);
+      for(const [n,f] of Object.entries({showMenu,showChars,showDaily,showForge,showAch,showBeast,showScores,showSettings,showSlots,showHelp,showChallenges,showControls,showBackup,showExport,showImport})) tryS(n,f);
+      tryS('import-ziel',()=>showImportTarget(migrate(JSON.parse(JSON.stringify(save))),showMenu)); tryS('link-text',()=>showLinkText('https://example.org/#x'));
+      tryS('codex',()=>showCodex(showMenu)); tryS('codex-evo',()=>showCodex(showMenu,'evo')); tryS('codex-perk',()=>showCodex(showMenu,'perk')); tryS('codex-perk-berserk',()=>showCodex(showMenu,'perk:berserk')); tryS('tiers',()=>showTiers(showMenu));
+      save.tutDone=true; startRun('alchi'); tryS('map',showMap); tryS('runmenu',showRunMenu); tryS('runstats',showRunStats); tryS('rest',showRest); tryS('shop',()=>showShop()); tryS('evo',()=>showEvo(showMap)); tryS('bounty',()=>showBounty('gold',showMap)); tryS('event',showEvent); tryS('treasure',showTreasure); tryS('relicpick',()=>showRelicPick(showMap)); tryS('codex-rel',()=>showCodex(showMenu,'rel')); tryS('codex-lore',()=>showCodex(showMenu,'lore')); tryS('codex-perk-run',()=>showCodex(showMenu,'perk'));
+      return {ok:!bad.length, bad}; });
+  },
+  async meta(pg){ // Verdammnis-Stufen, Herausforderungen, Wochenprüfung, Kopfgelder und Teilen
+    return pg.evaluate(()=>{ const out={};
+      save.tutDone=true; save.tierWon={krieger:9}; startRun('krieger',{tier:10}); out.tier=run.tier===10;
+      run.posId=run.map.rows[2][0].id; const e10=makeEnemy('slime',100,100,false); run.tier=0; const e0=makeEnemy('slime',100,100,false); out.hp=e10.maxHp>e0.maxHp*1.15;
+      startRun('jaegerin',{challenge:'ch_cursed'}); out.chal=!!run.upg.c_hex && !!run.upg.c_greed && !run.map.rows.some(r=>r.some(n=>n.type==='shop'));
+      out.merge=runMod().nm.includes('+');
+      const wk=weekKey(); startRun(weeklyInfo(wk).cid,{daily:wk}); out.week=Array.isArray(run.mods)&&run.mods.length===2&&!!runMod();
+      run.posId=run.map.rows[1][0].id; startCombat('fight'); __bot(true,60); run.act=2; endRun(false); out.hist=!!save.dailyHist[wk];
+      out.share=shareText(wk,save.dailyHist[wk],'Test').includes('Arena der Verdammten');
+      out.bounty=bountyList(todayKey()).length===3; save.lore={}; unlockLore('b_golem'); out.lore=!!save.lore.b_golem && heroLine('paladin','boss').length>3; out.am=arenaMasterLine().length>10;
+      startRun('krieger',{challenge:'ch_nodash'}); run.posId=run.map.rows[1][0].id; startCombat('fight'); useDash(); out.nodash=P.dashT<=0 && $('dashBtn').style.display==='none'; endRun(false);
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
+  async relics(pg){ // Alle Relikte gleichzeitig, Schatzraum, Händler, doppeltes Ausweichen
+    return pg.evaluate(()=>{ const out={}; save.tutDone=true; startRun('krieger'); for(const r of RELICS) gainRelic(r.id); out.all=run.relics.length===RELICS.length;
+      run.posId=run.map.rows[2][0].id; startCombat('elite'); for(let i=0;i<20;i++) update(1/30); useDash(); const c1=P.dashChg; for(let i=0;i<6;i++) update(1/30); useDash(); out.feather=c1===1 && P.dashT>0;
+      __bot(true,90); out.combat=state!=='combat';
+      startRun('magier'); run.posId=run.map.rows[2][0].id; showTreasure(); out.treasure=!!ui.querySelector('[data-a=relic]'); actions.relic(ui.querySelector('[data-a=relic]').dataset.v); out.got=run.relics.length===1;
+      run.gold=999; showShop(); out.shop=!!ui.querySelector('[data-a=brel]'); actions.brel(); out.bought=run.relics.length===2;
+      startRun('paladin'); run.posId=run.map.rows[3][0].id; startCombat('elite'); let champ=false; for(let i=0;i<30*90 && state==='combat';i++){ __bot(true,0.2); if(G&&G.champ) champ=true; }
+      out.champ=champ; if(ui.querySelector('[data-a=pick]')) actions.pick(ui.querySelector('[data-a=pick]').dataset.v); out.champRelic=!!ui.querySelector('[data-a=relic]');
+      const th=seeded('x',()=>{ let n=0; for(let i=0;i<40;i++){ run.act=2; run.posId=run.map.rows[3][0].id; run.seed='t'+i; const w=buildWaves('fight'); if(w.theme) n++; } return n; }); out.themes=th>0;
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
+  async roomchal(pg){ // Raum-Herausforderungen: Scheitern, Erfolg, Belohnung
+    return pg.evaluate(()=>{ const out={}; save.tutDone=true; startRun('krieger'); run.posId=run.map.rows[2][0].id;
+      startCombat('fight'); G.rc={...ROOM_CHAL[0],failed:false,done:true}; P.inv=0; hurtPlayer(10,null); out.nohitFail=G.rc.failed;
+      G.rc={...ROOM_CHAL.find(r=>r.id==='combo'),failed:false,done:false}; for(let i=0;i<16;i++){ const e=makeEnemy('slime',100,100); G.enemies.push(e); killEnemy(e); } out.combo=G.rc.done;
+      const g0=run.gold; G.rc={...ROOM_CHAL[0],failed:false,done:true}; const m=rcReward(G.rc,'normal'); out.gold=run.gold>g0 && m==='normal';
+      const m2=rcReward({...ROOM_CHAL.find(r=>r.id==='speed'),failed:false,done:true},'normal'); out.rare=m2==='rare';
+      let seen=0; for(let i=0;i<30;i++){ run.seed='rc'+i; run.posId=run.map.rows[2][0].id; startCombat('fight'); if(G.rc) seen++; } out.offered=seen>0;
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
+  async pets(pg){ // Jeder Begleiter folgt, hilft und verursacht keine Fehler
+    return pg.evaluate(()=>{ const out={}; save.tutDone=true; save.pets={raven:1,cat:1,wisp:1,wolf:1};
+      for(const id of ['raven','cat','wisp','wolf']){ save.pet=id; startRun('jaegerin'); run.posId=run.map.rows[2][0].id; startCombat('fight',[[{kind:'slime'}]]);
+        G.traps=[]; G.obs=[]; P.atkSpd=0.0001; P.atkT=999; for(let i=0;i<120 && !(G.enemies[0] && G.enemies[0].spawnT<=0);i++) update(1/30);   // keine Fallen/Fässer, Held greift nicht an
+        const e=G.enemies[0]; e.x=P.x+90; e.y=P.y; e.hp=e.maxHp=1e6;
+        P.hp=P.maxHp*0.5; const hp0=P.hp;
+        for(let i=0;i<30*8 && state==='combat';i++){ e.freeze=9; e.x=P.x+90; e.y=P.y; update(1/30); }
+        out[id]=id==='raven'||id==='wolf'?(run.dmgBy||{}).pet>0:id==='wisp'?P.hp>hp0:run.p.crit>0.09; if(state==='combat') endRun(false); }
+      save.pet=null; startRun('krieger',{daily:todayKey()}); out.noDaily=!run.pet;
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
+  async aim(pg){ // Fähigkeit per Wischgeste zielen: Ziehen nach links setzt den Kessel links vom Helden ab
+    await pg.evaluate(()=>{ save.tutDone=true; startRun('alchi'); run.posId=run.map.rows[1][0].id; startCombat('fight',[[{kind:'slime'}]]); P.skillT=0; for(let i=0;i<5;i++) update(1/30); });
+    const b=await pg.locator('#skillBtn').boundingBox(); const cx=b.x+b.width/2, cy=b.y+b.height/2;
+    await pg.mouse.move(cx,cy); await pg.mouse.down(); await pg.mouse.move(cx-60,cy,{steps:4}); await pg.mouse.move(cx-110,cy,{steps:4});
+    const mid=await pg.evaluate(()=>!!P.aim); await pg.mouse.up();
+    return pg.evaluate(mid=>{ const v=P.vortex; return {ok: mid && !!v && v.x<P.x-60 && Math.abs(v.y-P.y)<40 && !P.aim, mid, v:v&&[Math.round(v.x),Math.round(P.x)]}; },mid);
+  },
+  async act4(pg){ // Vierter Akt: Karte, Himmelswächter, Sieg erst nach Akt 4
+    return pg.evaluate(()=>{ const out={}; save.tutDone=true; startRun('krieger'); run.act=3; nextAct(); out.act=run.act===4 && visAct()===4 && actOf(4).name==='Der Himmelsturm';
+      out.pool=enemyPool(4,3).includes('seraph') && !enemyPool(3,3).includes('seraph');
+      run.posId=run.map.rows[2][0].id; startCombat('fight',[[{kind:'seraph'},{kind:'seraph'}]]); let beam=false; for(let i=0;i<30*12 && state==='combat';i++){ __bot(true,0.1); if(G&&G.hazards.some(h=>h.type==='line')) beam=true; } out.beam=beam;
+      out.song=!!SONGS2.fight4 && !!SONGS2.calm4 && !!WEATHER_POOL[4];
+      startRun('paladin'); for(const u of UPGRADES) if(!u.only||u.only.includes('paladin')) applyUpgrade(u); run.act=3; run.map=genMap(3); run.posId=run.map.boss.id; startCombat('boss'); __bot(true,240);
+      for(let g=0; g<5 && state!=='combat' && !ui.querySelector('.mapbox'); g++){ const a=Object.keys(actions); if(a.includes('pick')) actions.pick(ui.querySelector('[data-a=pick]').dataset.v); else if(a.includes('evo')) actions.evo(ui.querySelector('[data-a=evo]').dataset.v); else break; }
+      out.notWonAfter3=!run.won && run.act===4;
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
+  async backup(pg){ // Spielstand als Link und Datei sichern, per Link übernehmen (mit Platzwahl), Erinnerung im Menü
+    return pg.evaluate(async ()=>{ const out={};
+      save.souls=777; save.runs=5; save.bkAt=0; save.bkRuns=0; save.bkSnooze=0; save.name='Testheld'; persist();
+      out.due=backupDue(); save.settings.iosTip=true; showMenu(); out.tip=!!ui.querySelector('[data-a=backup]');   // iPhone-Tipp zuerst weggeklickt
+      const link=await exportLink(); out.link=/#spielstand=Z\./.test(link) && link.length<4000;
+      const d=await parseLink(link); out.roundtrip=d.souls===777 && d.runs===5 && d.name==='Testheld' && !d.settings.__nope;
+      out.file=parseCode(backupFileText()).souls===777;
+      const c=exportCode(), url=c.replace(/\+/g,'-').replace(/\//g,'_'); out.b64url=parseCode('Nachricht: '+url+' Ende').souls===777;
+      let bad=false; try{ await parseLink(link.slice(0,-40)+'AAAA.12345'); }catch(e){ bad=true; } out.badLink=bad;
+      out.dlBrowser=(await downloadBackup())===true;
+      ART_DL={save:async r=>{ window.__dl=r; return {status:'saved'}; }}; save.bkAt=0; out.dlViewer=(await downloadBackup())===true && /\.txt$/.test(__dl.filename) && /ARENA1:/.test(__dl.data) && save.bkAt>0;
+      ART_DL=null; showBackup(showMenu); out.noFileBtn=!ui.querySelector('[data-a=file]'); ART_DL=undefined;
+      markBackup(); out.notDue=!backupDue();
+      // Link öffnen: Spielstand landet auf einem freien Platz
+      const was=slotIdx; save.souls=1; persist(); checkLinkImport('#'+link.split('#')[1]);
+      for(let i=0;i<50 && !ui.querySelector('[data-a=to]');i++) await new Promise(r=>setTimeout(r,20));
+      const free=[...ui.querySelectorAll('[data-a=to]')].find(b=>b.classList.contains('primary')); out.target=!!free; if(free) free.click();
+      out.imported=save.souls===777 && slotIdx!==was && !!readSlot(was) && readSlot(was).souls===1;
+      return {ok:Object.values(out).every(Boolean), out}; });
+  },
+  async pc(pg){ // PC: Kamera im Querformat, Maus zielt, Rechtsklick/Leertaste weichen aus, Q wirkt, Esc pausiert, Zahlentasten wählen, Controller
+    const ctx=await pg.context().browser().newContext({viewport:{width:1600,height:900}}), p=await ctx.newPage(), errs=[]; p.on('pageerror',e=>errs.push(e.message));
+    await p.goto(URL); await p.waitForTimeout(300); const out={};
+    out.scale=await p.evaluate(()=>Math.abs(SCALE-Math.min(900/820,1600/1100))<0.01);
+    await p.evaluate(()=>{ save.tutDone=true; startRun('magier'); run.map.rows[1][0].rw=null; run.posId=run.map.rows[1][0].id; startCombat('fight',[[{kind:'slime'}]]); for(let i=0;i<5;i++) update(1/30); draw(); });   // ohne Gold-/Heil-Knoten, damit Karten zur Wahl stehen
+    await p.mouse.move(1000,390); await p.mouse.down(); await p.mouse.up();
+    out.click=await p.evaluate(()=>{ draw(); const n=G.fx.find(f=>f.type==='nova'), w=mouseWorld(); return INPUT_MODE==='pc' && P.skillT>0 && !!n && Math.hypot(n.x-w.x,n.y-w.y)<2; });
+    await p.evaluate(()=>{ P.dashCd=0; P.dashT=0; }); await p.mouse.click(500,450,{button:'right'});
+    out.rclick=await p.evaluate(()=>P.dashT>0 && Math.cos(P.dashA)<0);
+    await p.evaluate(()=>{ P.dashCd=0; P.dashT=0; P.skillT=0; for(let i=0;i<10;i++) update(1/30); });
+    await p.keyboard.press(' '); out.space=await p.evaluate(()=>P.dashT>0||P.dashCd>0);
+    await p.keyboard.press('q'); out.q=await p.evaluate(()=>P.skillT>0);
+    await p.keyboard.press('Escape'); out.pause=await p.evaluate(()=>state==='paused'); await p.keyboard.press('Escape'); out.resume=await p.evaluate(()=>state==='combat');
+    await p.evaluate(()=>{ for(let i=0;i<400 && state==='combat';i++){ for(const e of G.enemies) e.hp=0.1; if(G.enemies[0]) dealDamage(G.enemies[0],99,{}); update(1/30); } });
+    out.keys=await p.evaluate(()=>[...ui.querySelectorAll('[data-a=pick]')].map(b=>b.dataset.key).join(',')==='1,2,3');
+    await p.keyboard.press('2'); out.picked=await p.evaluate(()=>!!ui.querySelector('.mapbox'));
+    await p.keyboard.press('ArrowDown'); out.nav=await p.evaluate(()=>!!ui.querySelector('.navf[data-a=go]'));
+    await p.evaluate(()=>{ window.__pad={axes:[0,0,0,0],buttons:Array.from({length:17},()=>({pressed:false})),connected:true}; navigator.getGamepads=()=>[__pad]; startCombat('fight',[[{kind:'slime'}]]); for(let i=0;i<5;i++) update(1/30); });
+    out.pad=await p.evaluate(()=>{ const x0=P.x; __pad.axes[0]=1; for(let i=0;i<10;i++){ pollPad(1/30); update(1/30); } __pad.axes[0]=0; pollPad(1/30); const moved=P.x-x0>20;
+      P.dashCd=0; P.dashT=0; __pad.buttons[0].pressed=true; pollPad(1/30); __pad.buttons[0].pressed=false; pollPad(1/30); const dash=P.dashT>0;
+      P.skillT=0; __pad.axes[2]=-1; pollPad(1/30); __pad.buttons[2].pressed=true; pollPad(1/30); __pad.buttons[2].pressed=false; __pad.axes[2]=0; pollPad(1/30); const n=G.fx.filter(f=>f.type==='nova').pop();
+      return INPUT_MODE==='pad' && moved && dash && P.skillT>0 && !!n && n.x<P.x; });
+    await ctx.close(); return {ok:Object.values(out).every(Boolean)&&!errs.length, out, errs};
+  },
+  async render(pg){ // Zeichnen: jeder Akt, jeder Boss (Auftritt, Wutphase, Tod), jedes Wetter, Begleiter, Relikte, Champions, Zielvorschau – ohne Fehler
+    return pg.evaluate(()=>{ const out={}; save.tutDone=true; save.settings.gfx='high'; resize(); save.pets={raven:1,cat:1,wisp:1,wolf:1};
+      const frames=(n,god=true)=>{ for(let i=0;i<n;i++){ if(G&&P&&god) P.hp=P.maxHp; if(state==='combat') update(1/30); if(G) draw(); } };
+      try{
+        for(let act=1;act<=ACT_N;act++){ save.pet=PETS[act%PETS.length].id; startRun(Object.keys(CHARS)[act%7]); run.act=act; run.map=genMap(act); run.posId=run.map.rows[3][0].id;
+          for(const r of RELICS.slice(0,6)) gainRelic(r.id); startCombat('elite'); frames(25); G.spawnQ.push({x:AW/2,y:AH/3,t:0.1,kind:'orc',elite:true,champ:true}); frames(12);
+          for(const w of Object.keys(WEATHER)){ G.weather=w; initWeather(); frames(2); }
+          P.aim={a:-1,k:0.6}; frames(2); P.aim=null; useSkill(); frames(15); useDash(); frames(6); pauseGame(); draw(); state='combat';
+          for(const k of ACTS[act-1].bosses){ run.map.bossKind=k; run.posId=run.map.boss.id; startCombat('boss'); frames(45); G.cine=null; G.boss.hp=G.boss.maxHp*0.4; frames(40);
+            Object.assign(G.boss,{shieldT:0,under:false,alpha:1}); dealDamage(G.boss,1e9,{from:P}); for(let i=0;i<100 && state==='combat';i++){ update(1/30); if(i%4===0&&G) draw(); } if(state==='combat'&&G&&!G.cleared) throw new Error('Boss-Tod endet nicht: '+k); } }
+        startRun('nekro'); run.posId=run.map.rows[2][0].id; startCombat('fight',[Object.keys(ENEMIES).filter(k=>k!=='mimic').map(kind=>({kind}))]); frames(60); P.hp=0; hurtPlayer(999,null); frames(40);
+        out.ok=true; }catch(e){ out.err=e.message+' @ '+(e.stack||'').split('\n')[1]; }
+      return {ok:!!out.ok, ...out}; });
+  },
+  async sounds(pg){ // Soundeffekte: alle Klänge werden gebacken (ohne Fehler, nicht stumm, nicht übersteuert) und lassen sich abspielen
+    await pg.mouse.click(10,10);
+    return pg.evaluate(async ()=>{ const out={}; audio(); if(!AC) return {ok:true, skipped:'kein Audio'};
+      for(let i=0;i<400 && !SB.ready;i++) await new Promise(r=>setTimeout(r,50)); out.ready=SB.ready;
+      const bad=[]; for(const [n,D] of Object.entries(SDEF)){ const L=SB.buf[n]||[]; if(L.length!==(D.n||3)){ bad.push(n+': '+L.length+' Varianten'); continue; }
+        for(const b of L){ const d=b.getChannelData(0); let pk=0, e=0; for(let i=0;i<d.length;i++){ const a=Math.abs(d[i]); if(!(a<=1)) { pk=9; break; } if(a>pk) pk=a; e+=a; } if(pk>0.95||pk<0.5||e/d.length<0.002) bad.push(n+': Pegel '+pk.toFixed(2)); } }
+      out.baked=!bad.length; out.bad=bad.slice(0,5);
+      // jeder Klang lässt sich abspielen, auch mit Position, Verzögerung und Tonhöhe
+      save.tutDone=true; startRun('krieger'); run.posId=run.map.rows[1][0].id; startCombat('fight',[[{kind:'slime'}]]); draw(); let n=0;
+      for(const name of Object.keys(SDEF)){ SB.last={}; sfx(name,{x:P.x+100,y:P.y,vol:0.5}); n++; } sfx('chime',{rate:1.5,delay:0.1}); comboSound(30); coinSound(); deathSound('skeleton',P.x,P.y); deathSound('unbekannt');
+      out.played=n===Object.keys(SDEF).length && SB.voices.length>0;
+      out.mapped=Object.keys(ENEMIES).every(k=>DIE_SND[k]&&SDEF[DIE_SND[k]]) && ['arrow','spike','orb','soul','star','fire','rock','web','blood'].every(k=>SDEF[ESHOT_SND[k]]) && Object.keys(CHARS).every(c=>SDEF['skill_'+c]) && Object.keys(BOSSES).every(b=>SDEF['roar_'+b]);
+      setSfxVol(0.4); out.vol=Math.abs(save.settings.sfxVol-0.4)<1e-9; setSfxVol(0.8);
+      return {ok:Object.values(out).every(v=>v===true||Array.isArray(v)) && out.baked, out}; });
+  },
+  async music(pg){ // Musik-Engine spielt alle Stücke inklusive B-Teil fehlerfrei
+    await pg.mouse.click(10,10);
+    return pg.evaluate(()=>{ audio(); if(!AC) return {ok:true, skipped:'kein Audio'}; let n=0;
+      for(const k in SONGS2) for(let st=0;st<256;st++){ playStep(st,AC.currentTime+5+st*0.01,SONGS2[k],0.01); n++; }
+      return {ok:n===256*Object.keys(SONGS2).length, steps:n}; });
+  },
+};
+
+(async()=>{
+  const only=process.argv.slice(2), names=Object.keys(tests).filter(n=>!only.length||only.includes(n));
+  const browser=await chromium.launch({args:['--autoplay-policy=no-user-gesture-required']});
+  let failed=0;
+  for(const name of names){
+    const ctx=await browser.newContext({...devices['iPhone 13']}), pg=await ctx.newPage(), errs=[];
+    pg.on('pageerror',e=>errs.push(e.message));
+    const t0=Date.now();
+    try{
+      await pg.goto(URL); await pg.waitForTimeout(300); await pg.evaluate(BOT);
+      const res=await tests[name](pg);
+      const ok=res&&res.ok&&!errs.length;
+      console.log(`${ok?'✔':'✘'} ${name} (${((Date.now()-t0)/1000).toFixed(1)} s)`, (process.env.VERBOSE||!ok)?JSON.stringify(res):'', errs.length?'\n  Fehler: '+errs.slice(0,3).join('\n  '):'');
+      if(!ok) failed++;
+    }catch(e){ failed++; console.log(`✘ ${name}: ${e.message.split('\n')[0]}`); }
+    await ctx.close();
+  }
+  await browser.close();
+  console.log(failed?`\n${failed} Test(s) fehlgeschlagen`:`\nAlle ${names.length} Tests bestanden`);
+  process.exit(failed?1:0);
+})();
