@@ -16,6 +16,7 @@ import { DaySwitcher } from '../components/today/DaySwitcher'
 import { MealSection } from '../components/today/MealSection'
 import { EntrySheet } from '../components/today/EntrySheet'
 import { WaterSheet } from '../components/today/WaterSheet'
+import { WaterReminder } from '../components/today/WaterReminder'
 import { WeightSheet } from '../components/today/WeightSheet'
 
 function greeting(hour: number) {
@@ -96,6 +97,8 @@ export function TodayPage() {
         />
         <QuickAction label="Gewicht" icon={<Scale className="size-5" aria-hidden />} onClick={() => setWeightOpen(true)} />
       </div>
+
+      <WaterReminder date={date} ml={waterMl} target={profile.water_target_ml} onOpen={() => setWaterOpen(true)} />
 
       <div className="mt-6 space-y-3">
         {MEAL_TYPES.map((m) => (
