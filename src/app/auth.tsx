@@ -4,8 +4,24 @@ import { isSupabaseConfigured, supabase } from '../lib/supabase'
 import { createSupabaseStore } from '../data/supabaseStore'
 import { createLocalStore } from '../data/localStore'
 import type { DataStore } from '../data/store'
+import { createOfflineStore, type OfflineDataStore } from '../data/offlineStore'
 
 const LOCAL_FLAG = 'teller-local-mode'
+
+/** Ein Offline-Speicher pro Nutzer (Warteschlange und Abos bleiben über Re-Renders erhalten) */
+const offlineStores = new Map<string, OfflineDataStore>()
+function offlineStoreFor(userId: string): OfflineDataStore {
+  let s = offlineStores.get(userId)
+  if (!s) {
+    s = createOfflineStore(createSupabaseStore(supabase!, userId), { userId, storage: window.localStorage })
+    offlineStores.set(userId, s)
+  }
+  return s
+}
+
+export function isOfflineStore(s: DataStore | null): s is OfflineDataStore {
+  return Boolean(s && 'flush' in s)
+}
 
 interface AuthState {
   loading: boolean
@@ -14,6 +30,7 @@ interface AuthState {
   email: string | null
   userId: string | null
   sendMagicLink: (email: string) => Promise<void>
+  verifyCode: (email: string, code: string) => Promise<void>
   startLocalMode: () => void
   signOut: () => Promise<void>
 }
@@ -43,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<AuthState>(() => {
     let store: DataStore | null = null
-    if (supabase && session) store = createSupabaseStore(supabase, session.user.id)
+    if (supabase && session) store = offlineStoreFor(session.user.id)
     else if (localMode) store = createLocalStore()
     return {
       loading,
@@ -58,6 +75,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         })
         if (error) throw new Error(error.message)
       },
+      async verifyCode(email: string, code: string) {
+        if (!supabase) throw new Error('Supabase ist nicht konfiguriert.')
+        const { error } = await supabase.auth.verifyOtp({ email, token: code, type: 'email' })
+        if (error) throw new Error(error.message)
+      },
       startLocalMode() {
         localStorage.setItem(LOCAL_FLAG, '1')
         setLocalMode(true)
@@ -65,6 +87,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async signOut() {
         localStorage.removeItem(LOCAL_FLAG)
         localStorage.removeItem('teller-query-cache')
+        // Zwischengespeicherte Kopien der Daten entfernen (noch nicht übertragene Änderungen bleiben erhalten)
+        Object.keys(localStorage)
+          .filter((k) => k.startsWith('teller-mirror-'))
+          .forEach((k) => localStorage.removeItem(k))
         setLocalMode(false)
         if (supabase) await supabase.auth.signOut()
       },

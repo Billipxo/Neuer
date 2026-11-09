@@ -41,3 +41,23 @@ export function rescaleEntry<T extends Pick<LogEntry, 'amount' | 'grams' | 'kcal
     ...n,
   }
 }
+
+/** Einträge auf einen anderen Tag / eine andere Mahlzeit kopieren (ohne IDs) */
+export function copyEntries(entries: LogEntry[], date: string, meal: MealType): Omit<LogEntry, 'id' | 'user_id' | 'created_at'>[] {
+  return entries.map((e) => ({
+    date,
+    meal,
+    name: e.name,
+    amount: Number(e.amount),
+    unit: e.unit,
+    grams: e.grams === null ? null : Number(e.grams),
+    kcal: Number(e.kcal),
+    protein: Number(e.protein),
+    carbs: Number(e.carbs),
+    fat: Number(e.fat),
+    food_id: e.food_id,
+    dish_id: e.dish_id,
+    recipe_id: e.recipe_id,
+    veggies: e.veggies ?? [],
+  }))
+}

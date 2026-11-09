@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Plus } from 'lucide-react'
+import { Copy, History, Plus } from 'lucide-react'
 import type { LogEntry, MealType } from '../../types'
 import { MEAL_LABELS } from '../../lib/meals'
 import { fmtInt } from '../../lib/format'
@@ -14,11 +14,18 @@ export function MealSection({
   date,
   entries,
   onEdit,
+  yesterday = [],
+  onCopy,
+  onTakeYesterday,
 }: {
   meal: MealType
   date: string
   entries: LogEntry[]
   onEdit: (e: LogEntry) => void
+  /** Einträge derselben Mahlzeit am Vortag (für „Wie gestern“) */
+  yesterday?: LogEntry[]
+  onCopy?: () => void
+  onTakeYesterday?: () => void
 }) {
   const total = totalsOf(entries)
   return (
@@ -31,6 +38,17 @@ export function MealSection({
           <h3 className="font-semibold">{MEAL_LABELS[meal]}</h3>
           <p className="text-xs text-muted tabular">{entries.length ? `${fmtInt(total.kcal)} kcal` : 'Noch nichts eingetragen'}</p>
         </div>
+        {entries.length > 0 && onCopy && (
+          <button
+            type="button"
+            onClick={onCopy}
+            aria-label={`${MEAL_LABELS[meal]} kopieren`}
+            title="Kopieren"
+            className="flex size-11 items-center justify-center rounded-full text-muted transition hover:bg-surface-2 active:scale-95"
+          >
+            <Copy className="size-[18px]" aria-hidden />
+          </button>
+        )}
         <Link
           to={`/hinzufuegen?meal=${meal}&date=${date}`}
           aria-label={`${MEAL_LABELS[meal]}: Lebensmittel hinzufügen`}
@@ -39,6 +57,18 @@ export function MealSection({
           <Plus className="size-5" aria-hidden />
         </Link>
       </div>
+      {entries.length === 0 && yesterday.length > 0 && onTakeYesterday && (
+        <div className="px-4 pb-3">
+          <button
+            type="button"
+            onClick={onTakeYesterday}
+            className="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-surface-2 px-3 text-sm font-medium transition hover:bg-line/60 active:scale-95"
+          >
+            <History className="size-4" aria-hidden />
+            Wie am Vortag ({fmtInt(totalsOf(yesterday).kcal)} kcal)
+          </button>
+        </div>
+      )}
       {entries.length > 0 && (
         <ul className="border-t border-line/70">
           {entries.map((e) => (

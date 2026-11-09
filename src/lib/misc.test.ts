@@ -129,3 +129,25 @@ describe('Export', () => {
     expect(lines[1]).toBe('2026-11-09;Frühstück;Müsli;100;g;100;412,5;10;10;1')
   })
 })
+
+describe('Mahlzeit kopieren', () => {
+  it('übernimmt Werte ohne IDs auf neuen Tag und neue Mahlzeit', async () => {
+    const { copyEntries } = await import('./log')
+    const src = entry({ id: 'x', user_id: 'u', created_at: 'c', meal: 'breakfast', veggies: ['Tomate'] })
+    const [c] = copyEntries([src], '2026-11-10', 'lunch')
+    expect(c).not.toHaveProperty('id')
+    expect(c).not.toHaveProperty('created_at')
+    expect(c).toMatchObject({ date: '2026-11-10', meal: 'lunch', kcal: 100, veggies: ['Tomate'] })
+  })
+})
+
+describe('Fehlermeldungen', () => {
+  it('übersetzt typische Fehler', async () => {
+    const { friendlyError } = await import('./errors')
+    expect(friendlyError(new Error('TypeError: Failed to fetch'))).toMatch(/Keine Verbindung/)
+    expect(friendlyError(new Error('Could not find the table public.foods in the schema cache'))).toMatch(/SQL-Datei/)
+    expect(friendlyError(new Error('new row violates row-level security policy'))).toMatch(/Berechtigung/)
+    expect(friendlyError(new Error('Email rate limit exceeded'))).toMatch(/warten/)
+    expect(friendlyError(new Error('xyz'))).toBe('Speichern fehlgeschlagen: xyz')
+  })
+})

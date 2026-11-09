@@ -5,8 +5,21 @@ import { isSupabaseConfigured } from '../lib/supabase'
 import { Button } from '../components/ui/Button'
 import { Field } from '../components/ui/Field'
 
+/** Demo-Modus anzeigen? Ohne Supabase immer; mit Supabase nur, wenn VITE_ENABLE_DEMO=true gesetzt ist */
+const showDemo = !isSupabaseConfigured || import.meta.env.VITE_ENABLE_DEMO === 'true'
+
+function loginError(msg: string): string {
+  if (/rate limit|security purposes|seconds/i.test(msg)) return 'Bitte warte kurz, bevor du einen neuen Link anforderst.'
+  if (/invalid.*email|unable to validate email/i.test(msg)) return 'Diese E-Mail-Adresse sieht ungültig aus.'
+  if (/signups not allowed/i.test(msg)) return 'Neue Registrierungen sind in Supabase deaktiviert (Authentication → Sign In / Providers).'
+  if (/failed to fetch|network/i.test(msg)) return 'Keine Verbindung zum Server. Prüfe deine Internetverbindung und die Supabase-URL.'
+  return `Der Link konnte nicht gesendet werden: ${msg}`
+}
+
 export function LoginPage() {
-  const { sendMagicLink, startLocalMode } = useAuth()
+  const { sendMagicLink, verifyCode, startLocalMode } = useAuth()
+  const [code, setCode] = useState('')
+  const [verifying, setVerifying] = useState(false)
   const [email, setEmail] = useState('')
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle')
   const [error, setError] = useState<string | null>(null)
@@ -19,7 +32,7 @@ export function LoginPage() {
       await sendMagicLink(email.trim())
       setState('sent')
     } catch (err) {
-      setError((err as Error).message)
+      setError(loginError((err as Error).message))
       setState('idle')
     }
   }
@@ -38,9 +51,43 @@ export function LoginPage() {
           <h2 className="text-lg font-semibold">Schau in dein Postfach</h2>
           <p className="mt-1 text-sm text-muted">
             Wir haben einen Anmeldelink an <strong className="text-ink">{email}</strong> geschickt. Tippe auf den Link,
-            um dich anzumelden.
+            um dich anzumelden. Öffne ihn am besten auf demselben Gerät und im selben Browser. Kein Mail da? Schau auch
+            im Spam-Ordner nach.
           </p>
-          <Button variant="ghost" className="mt-4" onClick={() => setState('idle')}>
+          <form
+            className="mt-5 space-y-3 text-left"
+            onSubmit={async (e) => {
+              e.preventDefault()
+              setError(null)
+              setVerifying(true)
+              try {
+                await verifyCode(email.trim(), code.trim())
+              } catch (err) {
+                setError(/expired|invalid/i.test((err as Error).message) ? 'Der Code ist ungültig oder abgelaufen.' : loginError((err as Error).message))
+              } finally {
+                setVerifying(false)
+              }
+            }}
+          >
+            <Field
+              label="Oder Code aus der E-Mail eingeben"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              value={code}
+              onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 10))}
+              placeholder="123456"
+              hint="Praktisch, wenn die App auf dem Startbildschirm installiert ist."
+            />
+            {error && (
+              <p role="alert" className="text-sm text-danger">
+                {error}
+              </p>
+            )}
+            <Button type="submit" block disabled={code.length < 6 || verifying}>
+              {verifying ? 'Prüfe …' : 'Mit Code anmelden'}
+            </Button>
+          </form>
+          <Button variant="ghost" className="mt-2" onClick={() => setState('idle')}>
             Andere E-Mail verwenden
           </Button>
         </div>
@@ -76,7 +123,7 @@ export function LoginPage() {
         </div>
       )}
 
-      {state !== 'sent' && (
+      {state !== 'sent' && showDemo && (
         <div className="mt-8 text-center">
           <Button variant="ghost" icon={<Sparkles className="size-4" aria-hidden />} onClick={startLocalMode}>
             Ohne Konto ausprobieren

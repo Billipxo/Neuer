@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react'
 
 interface ToastItem {
   id: number
@@ -15,6 +15,11 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setItems((s) => [...s, { id, text, emoji }])
     setTimeout(() => setItems((s) => s.filter((t) => t.id !== id)), 2600)
   }, [])
+  useEffect(() => {
+    const onError = (e: Event) => show((e as CustomEvent<string>).detail, '⚠️')
+    window.addEventListener('teller-error', onError)
+    return () => window.removeEventListener('teller-error', onError)
+  }, [show])
   return (
     <ToastCtx.Provider value={show}>
       {children}

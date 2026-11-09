@@ -159,3 +159,18 @@ export function parseItemText(text: string): { name: string; amount: number | nu
   const unit = /^(g|kg|ml|l)$/i.test(unitRaw) ? unitRaw.toLowerCase() : unitRaw[0].toUpperCase() + unitRaw.slice(1).toLowerCase()
   return { name: m[3].trim(), amount, unit }
 }
+
+/** Einkaufsliste als Text zum Teilen (z. B. per Messenger) – nur offene Artikel, nach Kategorien */
+export function shoppingListText(items: ShoppingItem[]): string {
+  const open = items.filter((i) => !i.checked && !i.in_stock)
+  const groups = groupByCategory(open)
+  const lines = ['🛒 Einkaufsliste']
+  for (const g of groups) {
+    lines.push('', `${g.label}:`)
+    for (const i of g.items) {
+      const q = formatQuantity(i.amount === null ? null : Number(i.amount), i.unit)
+      lines.push(`• ${i.name}${q ? ` – ${q}` : ''}`)
+    }
+  }
+  return lines.join('\n')
+}

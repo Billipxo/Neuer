@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { useAchievementInput, useAchievementRows, useSaveAchievements, newlyUnlocked } from '../../hooks/achievements'
 import type { AchievementDef } from '../../lib/achievements'
 import { Sheet } from '../ui/Sheet'
@@ -11,6 +12,9 @@ export function AchievementWatcher() {
   const save = useSaveAchievements()
   const [queue, setQueue] = useState<AchievementDef[]>([])
   const busy = useRef(false)
+  const { pathname } = useLocation()
+  // Während man Lebensmittel erfasst, nicht unterbrechen – die Feier folgt danach
+  const quiet = pathname.startsWith('/hinzufuegen') || pathname.startsWith('/gerichte')
 
   useEffect(() => {
     if (!input || !isSuccess || !rows || busy.current) return
@@ -26,7 +30,7 @@ export function AchievementWatcher() {
       })
   }, [input, rows, isSuccess, save])
 
-  const current = queue[0]
+  const current = quiet ? undefined : queue[0]
   return (
     <Sheet open={!!current} onClose={() => setQueue((q) => q.slice(1))} title="Neues Abzeichen">
       {current && (

@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Droplets, Plus, Scale, UserRound } from 'lucide-react'
-import type { LogEntry } from '../types'
+import type { LogEntry, MealType } from '../types'
 import { MEAL_TYPES } from '../types'
-import { useLog, useProfile, useWater } from '../hooks/data'
-import { groupByMeal, totalsOf } from '../lib/log'
+import { useAddLogEntries, useLog, useProfile, useWater } from '../hooks/data'
+import { copyEntries, groupByMeal, totalsOf } from '../lib/log'
 import { macroGrams, motivationLine, progress } from '../lib/nutrition'
 import { mealForHour } from '../lib/meals'
 import { fmt1, fmtInt } from '../lib/format'
-import { todayISO } from '../lib/dates'
+import { shiftISO, todayISO } from '../lib/dates'
 import { Card } from '../components/ui/Card'
 import { ProgressRing } from '../components/ui/ProgressRing'
 import { MacroBar } from '../components/ui/MacroBar'
@@ -17,6 +17,8 @@ import { MealSection } from '../components/today/MealSection'
 import { EntrySheet } from '../components/today/EntrySheet'
 import { WaterSheet } from '../components/today/WaterSheet'
 import { WaterReminder } from '../components/today/WaterReminder'
+import { CopyMealSheet } from '../components/today/CopyMealSheet'
+import { useToast } from '../components/ui/Toast'
 import { WeightSheet } from '../components/today/WeightSheet'
 
 function greeting(hour: number) {
@@ -33,6 +35,10 @@ export function TodayPage() {
 
   const { data: profile } = useProfile()
   const { data: entries = [] } = useLog(date)
+  const { data: prevEntries = [] } = useLog(shiftISO(date, -1))
+  const addLog = useAddLogEntries()
+  const toast = useToast()
+  const [copying, setCopying] = useState<{ meal: MealType; date: string; entries: LogEntry[] } | null>(null)
   const { data: water = [] } = useWater(date)
   const [editing, setEditing] = useState<LogEntry | null>(null)
   const [waterOpen, setWaterOpen] = useState(false)
@@ -47,6 +53,7 @@ export function TodayPage() {
     fat: profile.fat_pct,
   })
   const byMeal = groupByMeal(entries)
+  const prevByMeal = groupByMeal(prevEntries)
   const waterMl = water.reduce((s, w) => s + Number(w.ml), 0)
   const hour = new Date().getHours()
 
@@ -102,11 +109,24 @@ export function TodayPage() {
 
       <div className="mt-6 space-y-3">
         {MEAL_TYPES.map((m) => (
-          <MealSection key={m} meal={m} date={date} entries={byMeal[m]} onEdit={setEditing} />
+          <MealSection
+            key={m}
+            meal={m}
+            date={date}
+            entries={byMeal[m]}
+            onEdit={setEditing}
+            yesterday={prevByMeal[m]}
+            onCopy={() => setCopying({ meal: m, date, entries: byMeal[m] })}
+            onTakeYesterday={async () => {
+              await addLog.mutateAsync(copyEntries(prevByMeal[m], date, m))
+              toast('Vom Vortag übernommen', '📋')
+            }}
+          />
         ))}
       </div>
 
       <EntrySheet entry={editing} onClose={() => setEditing(null)} />
+      <CopyMealSheet source={copying} onClose={() => setCopying(null)} />
       <WaterSheet open={waterOpen} onClose={() => setWaterOpen(false)} date={date} target={profile.water_target_ml} />
       <WeightSheet open={weightOpen} onClose={() => setWeightOpen(false)} date={date} />
     </>

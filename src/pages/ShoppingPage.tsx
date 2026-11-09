@@ -1,9 +1,9 @@
 import { useState, type FormEvent } from 'react'
-import { Check, ListRestart, Package, PackageCheck, Plus, ShoppingBasket, Trash2, X } from 'lucide-react'
+import { Check, ListRestart, Package, PackageCheck, Plus, Share2, ShoppingBasket, Trash2, X } from 'lucide-react'
 import type { ShoppingCategory, ShoppingItem } from '../types'
 import { useShoppingItems, useAddToShopping, useDeleteShoppingItems, useUpdateShoppingItem } from '../hooks/shopping'
 import { usePlanRange } from '../hooks/plan'
-import { CATEGORY_LABELS, CATEGORY_ORDER, formatQuantity, groupByCategory, guessCategory, parseItemText } from '../lib/shopping'
+import { CATEGORY_LABELS, CATEGORY_ORDER, formatQuantity, groupByCategory, guessCategory, parseItemText, shoppingListText } from '../lib/shopping'
 import { shiftISO, todayISO, weekDaysISO, weekStartISO, fmtDayShort } from '../lib/dates'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Button, IconButton } from '../components/ui/Button'
@@ -34,9 +34,29 @@ export function ShoppingPage() {
         subtitle={toBuy.length ? `${done} von ${toBuy.length} erledigt` : undefined}
         actions={
           items.length > 0 && (
-            <IconButton label="Liste leeren" onClick={() => setClearOpen(true)}>
-              <Trash2 className="size-5" />
-            </IconButton>
+            <>
+              <IconButton
+                label="Liste teilen"
+                onClick={async () => {
+                  const text = shoppingListText(items)
+                  try {
+                    if (navigator.share) {
+                      await navigator.share({ title: 'Einkaufsliste', text })
+                    } else {
+                      await navigator.clipboard.writeText(text)
+                      toast('Liste in die Zwischenablage kopiert', '📋')
+                    }
+                  } catch (e) {
+                    if ((e as Error).name !== 'AbortError') toast('Teilen nicht möglich')
+                  }
+                }}
+              >
+                <Share2 className="size-5" />
+              </IconButton>
+              <IconButton label="Liste leeren" onClick={() => setClearOpen(true)}>
+                <Trash2 className="size-5" />
+              </IconButton>
+            </>
           )
         }
       />

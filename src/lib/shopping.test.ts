@@ -110,3 +110,17 @@ describe('Eigene Artikel – Eingabe', () => {
     expect(parseItemText('  ')).toBeNull()
   })
 })
+
+describe('Einkaufsliste teilen', () => {
+  it('erzeugt lesbaren Text ohne erledigte und vorrätige Artikel', async () => {
+    const { shoppingListText } = await import('./shopping')
+    const text = shoppingListText([
+      item({ name: 'Zwiebel', amount: 2 }),
+      item({ name: 'Milch', unit: 'ml', amount: 1500, category: 'milch', source: 'manual' }),
+      item({ name: 'Reis', checked: true, category: 'vorrat' }),
+      item({ name: 'Salz', in_stock: true, category: 'vorrat' }),
+      item({ name: 'Kaffee', amount: null, unit: '', category: 'vorrat' }),
+    ])
+    expect(text).toBe('🛒 Einkaufsliste\n\nObst & Gemüse:\n• Zwiebel – 2 Stück\n\nMilchprodukte:\n• Milch – 1,5 l\n\nVorrat:\n• Kaffee')
+  })
+})

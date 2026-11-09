@@ -1,15 +1,21 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import { QueryClient } from '@tanstack/react-query'
+import { MutationCache, QueryClient } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
 import { AuthProvider } from './app/auth'
 import { ToastProvider } from './components/ui/Toast'
 import { App } from './App'
+import { ErrorBoundary } from './components/layout/ErrorBoundary'
 import './index.css'
+import { friendlyError } from './lib/errors'
 
 const queryClient = new QueryClient({
+  // Fehler beim Speichern verständlich anzeigen (siehe ToastProvider)
+  mutationCache: new MutationCache({
+    onError: (error) => window.dispatchEvent(new CustomEvent('teller-error', { detail: friendlyError(error) })),
+  }),
   defaultOptions: {
     queries: {
       staleTime: 30_000,
@@ -32,7 +38,9 @@ createRoot(document.getElementById('root')!).render(
       <AuthProvider>
         <ToastProvider>
           <BrowserRouter>
-            <App />
+            <ErrorBoundary>
+              <App />
+            </ErrorBoundary>
           </BrowserRouter>
         </ToastProvider>
       </AuthProvider>

@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { Plus, ScanBarcode, Search, UtensilsCrossed, WifiOff } from 'lucide-react'
+import { Check, Plus, ScanBarcode, Search, UtensilsCrossed, WifiOff } from 'lucide-react'
+import { fmtInt } from '../lib/format'
 import type { AmountUnit, Dish, Food, MealType } from '../types'
 import { MEAL_TYPES } from '../types'
 import { MEAL_LABELS } from '../lib/meals'
@@ -72,6 +73,9 @@ export function AddFoodPage() {
   const [scanOpen, setScanOpen] = useState(false)
   const [scanMiss, setScanMiss] = useState<string | null>(null)
   const [scanBusy, setScanBusy] = useState(false)
+  /** In dieser Sitzung hinzugefügte Einträge – man kann mehrere nacheinander erfassen */
+  const [added, setAdded] = useState<{ name: string; kcal: number }[]>([])
+  const done = () => navigate(date === todayISO() ? '/' : `/?datum=${date}`)
 
   const off = useQuery({
     queryKey: ['off-search', debounced],
@@ -126,7 +130,8 @@ export function AddFoodPage() {
     ])
     touchFood.mutate(stored)
     toast(`Zu ${MEAL_LABELS[meal]} hinzugefügt`, '✅')
-    navigate(date === todayISO() ? '/' : `/?datum=${date}`)
+    setSelected(null)
+    setAdded((a) => [...a, { name: stored.name, kcal: n.kcal }])
   }
 
   async function addDish(servings: number) {
@@ -149,7 +154,8 @@ export function AddFoodPage() {
     ])
     saveDish.mutate({ ...selectedDish, last_used_at: new Date().toISOString() })
     toast(`Zu ${MEAL_LABELS[meal]} hinzugefügt`, '✅')
-    navigate(date === todayISO() ? '/' : `/?datum=${date}`)
+    setAdded((a) => [...a, { name: selectedDish.name, kcal: n.kcal }])
+    setSelectedDish(null)
   }
 
   async function onBarcode(code: string) {
@@ -175,8 +181,8 @@ export function AddFoodPage() {
   const searching = q.length >= 2
 
   return (
-    <div className="mx-auto min-h-dvh max-w-lg px-4 pb-10 safe-top">
-      <PageHeader title="Hinzufügen" back />
+    <div className={`mx-auto min-h-dvh max-w-lg px-4 safe-top ${added.length ? 'pb-28' : 'pb-10'}`}>
+      <PageHeader title="Hinzufügen" back subtitle={added.length ? 'Du kannst weitere Lebensmittel hinzufügen.' : undefined} />
       <Segmented<MealType>
         label="Mahlzeit"
         value={meal}
@@ -384,6 +390,21 @@ export function AddFoodPage() {
         }}
         onSaved={(f) => setSelected(f)}
       />
+      {added.length > 0 && (
+        <div className="safe-bottom fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface/95 backdrop-blur animate-fade-up">
+          <div className="mx-auto flex max-w-lg items-center gap-3 px-4 py-3">
+            <div className="min-w-0 flex-1" aria-live="polite">
+              <p className="text-sm font-semibold">
+                {added.length} {added.length === 1 ? 'Eintrag' : 'Einträge'} · {fmtInt(added.reduce((s, a) => s + a.kcal, 0))} kcal
+              </p>
+              <p className="truncate text-xs text-muted">{added.map((a) => a.name).join(', ')}</p>
+            </div>
+            <Button size="lg" icon={<Check className="size-5" aria-hidden />} onClick={done}>
+              Fertig
+            </Button>
+          </div>
+        </div>
+      )}
       <BarcodeScannerSheet open={scanOpen} onClose={() => setScanOpen(false)} onDetected={onBarcode} />
       {scanMiss && (
         <p className="sr-only" role="status">
