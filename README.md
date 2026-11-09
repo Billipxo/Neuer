@@ -1,5 +1,7 @@
 # Teller – Kalorien & Wochenplan (PWA)
 
+> **Einrichtung ohne Vorkenntnisse:** siehe [ANLEITUNG.md](ANLEITUNG.md) (ca. 20 Minuten).
+
 Mobile Web-App auf Deutsch, mit der du deine tägliche Kalorienzufuhr im Blick behältst, dich ausgewogen ernährst
 und Wochenpläne sowie Einkaufslisten erstellst. Die App wird über **„Zum Startbildschirm hinzufügen“** installiert und
 läuft danach im Vollbild wie eine native App – ein App Store ist nicht nötig.
@@ -8,14 +10,15 @@ läuft danach im Vollbild wie eine native App – ein App Store ist nicht nötig
 
 | Bereich | Inhalt |
 |---|---|
-| **Konto & Onboarding** | Login per Magic Link (E-Mail), Name, optionale Körperdaten, frei wählbares Ziel (Abnehmen, Halten, Zunehmen, eigene Zahl). Tagesziel frei einstellbar, optionaler Vorschlag per Mifflin-St Jeor × Aktivitätsfaktor ± Zu-/Abschlag. Makro-Vorschlag 25/45/30 %, frei anpassbar. |
-| **Heute** | Fortschrittsring (gegessen / Ziel / übrig), Balken für Eiweiß, Kohlenhydrate, Fett, Mahlzeiten getrennt nach Frühstück, Mittag, Abend, Snacks, Schnellaktionen für Mahlzeit, Wasser, Gewicht und eine sachliche Motivationszeile. |
-| **Mahlzeiten erfassen** | Suche in Open Food Facts, Barcode-Scan per Kamera (html5-qrcode, mit manueller Eingabe als Ausweichmöglichkeit), eigene Lebensmittel (pro 100 g oder pro Portion), Mengen in Gramm, Stück oder Portionen, Zuletzt verwendet und Favoriten, eigene Gerichte aus mehreren Zutaten, Bearbeiten und Löschen. |
+| **Konto & Onboarding** | Login per Magic Link oder 6-stelligem Code aus derselben E-Mail (wichtig für installierte Apps auf dem iPhone), Name, optionale Körperdaten, frei wählbares Ziel (Abnehmen, Halten, Zunehmen, eigene Zahl). Tagesziel frei einstellbar, optionaler Vorschlag per Mifflin-St Jeor × Aktivitätsfaktor ± Zu-/Abschlag. Makro-Vorschlag 25/45/30 %, frei anpassbar. |
+| **Heute** | Fortschrittsring (gegessen / Ziel / übrig), Balken für Eiweiß, Kohlenhydrate, Fett, Mahlzeiten getrennt nach Frühstück, Mittag, Abend, Snacks, Schnellaktionen für Mahlzeit, Wasser, Gewicht, eine sachliche Motivationszeile und ein Trink-Hinweis mit „+250 ml“. Mahlzeiten lassen sich kopieren oder „wie am Vortag“ übernehmen. |
+| **Mahlzeiten erfassen** | Suche in Open Food Facts, Barcode-Scan per Kamera (html5-qrcode, mit manueller Eingabe als Ausweichmöglichkeit), eigene Lebensmittel (pro 100 g oder pro Portion), Mengen in Gramm, Stück oder Portionen, Zuletzt verwendet und Favoriten, eigene Gerichte aus mehreren Zutaten, Bearbeiten und Löschen. Mehrere Lebensmittel nacheinander erfassen, ohne die Seite zu verlassen. |
 | **Rezepte** | 51 deutsche Rezepte (lokales JSON). Filter nach Mahlzeit, max. kcal, Zubereitungszeit, Stichwort und Eigenschaften, Empfehlungen passend zum Restbudget, Detailansicht mit Portionsskalierung, „Zum Tagesplan“ (gegessen oder eingeplant) und „Zutaten auf die Einkaufsliste“. |
 | **Wochenplaner** | Mo–So mit vier Slots pro Tag, Belegung per Rezept, eigenem Gericht oder Freitext, Tages- und Wochensummen, „Woche vorschlagen“ und „Als gegessen eintragen“. |
-| **Einkaufsliste** | Aus dem Wochenplan erzeugen (Zutaten zusammenführen, Mengen addieren, nach Kategorien sortieren), abhaken, eigene Artikel („2 l Milch“), „bereits im Vorrat“, Liste leeren. |
+| **Einkaufsliste** | Aus dem Wochenplan erzeugen (Zutaten zusammenführen, Mengen addieren, nach Kategorien sortieren), abhaken, eigene Artikel („2 l Milch“), „bereits im Vorrat“, Liste leeren, Liste teilen (z. B. per Messenger). |
 | **Verlauf** | Tagesprotokoll mit Datumsauswahl, Wochen- und Monatsdiagramme (Recharts) für kcal, Makros, Gewicht und Wasser, jeweils auch als Tabelle. |
 | **Erfolge** | 9 Abzeichen mit Fortschritt im Profil und kurzer Animation beim Freischalten, Serie ohne Druck. |
+| **Offline** | Ohne Verbindung weiter eintragen: Änderungen landen in einer Warteschlange und werden automatisch übertragen, sobald wieder Netz da ist. |
 | **Einstellungen** | Tagesziel, Makros, Profil, Wasserziel, Farbschema (System/Hell/Dunkel), Export als CSV oder JSON, Abmelden, Konto löschen (mit Bestätigung). |
 
 ## Technik
@@ -25,7 +28,8 @@ läuft danach im Vollbild wie eine native App – ein App Store ist nicht nötig
 - Supabase für Auth (Magic Link) und Postgres mit Row Level Security
 - TanStack Query (Cache wird im Browser gespeichert → zuletzt geladene Daten sind offline lesbar)
 - Recharts für Diagramme, html5-qrcode für den Barcode-Scan, lucide-react für Icons
-- Vitest für die reinen Rechenfunktionen in `src/lib/*.test.ts`
+- Vitest für die reinen Funktionen (`src/**/*.test.ts`), Playwright für Oberflächen-Tests (`e2e/`)
+- GitHub Actions (`.github/workflows/ci.yml`): Typprüfung, Unit-Tests, Build und Oberflächen-Tests bei jedem Push
 
 ```
 src/
@@ -53,9 +57,13 @@ supabase/migrations/   SQL-Migrationen
 ### 2. Migrationen ausführen
 
 Die Dateien in `supabase/migrations/` legen alle Tabellen, RLS-Regeln und die Funktion zum Löschen des Kontos an.
+`supabase/setup.sql` enthält alle Migrationen in einer Datei (erzeugt mit `npm run db:bundle`; ein Test prüft, dass sie aktuell ist).
 
-**Variante A – SQL Editor (am einfachsten):** Im Supabase-Dashboard **SQL Editor** öffnen und die Dateien in
-Reihenfolge (`…0001_core.sql` bis `…0004_achievements.sql`) einfügen und ausführen.
+**Variante A – SQL Editor (am einfachsten):** Im Supabase-Dashboard **SQL Editor** öffnen, den Inhalt von
+`supabase/setup.sql` einfügen und ausführen.
+
+**E-Mail-Vorlage:** Unter **Authentication → Emails → Magic Link** den Inhalt von
+`supabase/email-template-magic-link.html` einfügen. Sie enthält Link **und** Code (`{{ .Token }}`).
 
 **Variante B – Supabase CLI:**
 
@@ -76,13 +84,16 @@ npm run dev               # http://localhost:5173
 Weitere Befehle:
 
 ```bash
-npm test          # Vitest (Rechenlogik, Einkaufsliste, Planer, Erfolge …)
+npm test          # Vitest (Rechenlogik, Einkaufsliste, Planer, Erfolge, Offline-Speicher …)
+npm run test:e2e  # Playwright-Oberflächentests im Demo-Modus (baut und startet die App selbst)
+npm run db:bundle # supabase/setup.sql aus den Migrationen neu erzeugen
 npm run build     # Typprüfung + Produktions-Build nach dist/
 npm run preview   # Build lokal ansehen (inkl. Service Worker)
 ```
 
 Ohne `.env` startet die App mit dem Hinweis, dass Supabase fehlt. Über **„Ohne Konto ausprobieren“** lässt sie sich
-trotzdem vollständig testen – die Daten liegen dann nur im Browser (Demo-Modus).
+trotzdem vollständig testen – die Daten liegen dann nur im Browser (Demo-Modus). Ist Supabase eingerichtet, ist der
+Demo-Modus ausgeblendet; mit `VITE_ENABLE_DEMO=true` lässt er sich wieder einblenden.
 
 ### 4. Deployment
 
@@ -154,12 +165,27 @@ Entscheidungen, die ich ohne Rückfrage getroffen habe:
 - Erfolge werden aus den Daten der letzten 365 Tage berechnet und einmalig gespeichert (sie verschwinden nicht wieder).
 
 **Technik**
+- **Offline-Schreiben**: Eine Schicht über Supabase (`src/data/offlineStore.ts`) spiegelt geladene Daten im Browser und
+  legt Änderungen ohne Verbindung in eine Warteschlange, die der Reihe nach übertragen wird. IDs werden dafür im Client
+  erzeugt (UUID). Konflikte werden nicht zusammengeführt – „letzter Schreibvorgang gewinnt“. Doppelte Einfügungen nach
+  Abbrüchen gelten als erledigt; andere Serverfehler werden verworfen, damit die Warteschlange nicht hängen bleibt.
+  Konto löschen geht nur online.
+- **Anmeldung per Code**: Zusätzlich zum Magic Link kann der 6-stellige Code aus derselben Mail eingegeben werden, weil
+  installierte Web-Apps auf dem iPhone getrennt von Safari speichern.
+- **Abzeichen** erscheinen nicht, während man Lebensmittel erfasst, sondern danach.
 - **Tailwind v4** (CSS-first-Konfiguration) statt v3; Farben als CSS-Variablen für Hell/Dunkel.
-- **Offline-Grundfunktion**: App-Shell, Rezepte und zuletzt geladene Daten sind offline verfügbar. Änderungen ohne Verbindung werden nicht in einer Warteschlange gespeichert – dafür ist eine Verbindung nötig.
+- **Offline-Grundfunktion**: App-Shell, Rezepte und zuletzt geladene Daten sind offline verfügbar; Suche in Open Food Facts und Barcode-Abfrage brauchen eine Verbindung. Im Demo-Modus liegt ohnehin alles lokal.
 - **Export**: CSV mit Semikolon, Dezimalkomma und UTF-8-BOM (öffnet direkt in deutschem Excel); JSON enthält alle Tabellen und das Profil.
 - **Konto löschen** erfordert die Eingabe „LÖSCHEN“.
 - Datumswerte werden als lokales Kalenderdatum (`yyyy-MM-dd`) gespeichert, nicht als Zeitstempel.
 - Diagrammfarben für Makros sind für Hell und Dunkel auf Farbfehlsichtigkeit geprüft; jedes Diagramm hat zusätzlich eine Tabellenansicht.
+
+## Nicht umgesetzt (bewusst)
+
+- **Push-Benachrichtigungen** (z. B. Trink-Erinnerung): bräuchten einen Server-Dienst (Supabase Edge Function + Web-Push-Schlüssel) und funktionieren auf dem iPhone nur in installierten Apps. Stattdessen gibt es den Trink-Hinweis auf der Startseite.
+- **Rezeptfotos**: wegen Bildrechten Emoji-Kacheln.
+- **Nährwerte der Rezepte aus Zutaten berechnen**: bräuchte eine verlässliche Nährwertdatenbank für Zutaten.
+- **Geteilte Einkaufslisten mit anderen Konten**: stattdessen „Liste teilen“ als Text.
 
 ## Hinweis
 
