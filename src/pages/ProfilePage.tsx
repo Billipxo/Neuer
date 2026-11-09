@@ -13,6 +13,8 @@ import { useToast } from '../components/ui/Toast'
 import { BodyForm } from '../components/profile/BodyForm'
 import { GoalPicker, KcalTargetEditor, MacroEditor, WaterTargetEditor } from '../components/profile/TargetEditor'
 import { defaultDraft, type ProfileDraft } from '../components/profile/types'
+import { DataSection } from '../components/profile/DataSection'
+import { AchievementGrid, StreakCard } from '../components/achievements/AchievementGrid'
 
 export function ProfilePage() {
   const { data: profile } = useProfile()
@@ -33,7 +35,14 @@ export function ProfilePage() {
 
   return (
     <>
-      <PageHeader title="Profil" subtitle={store?.kind === 'local' ? 'Demo-Modus – Daten nur auf diesem Gerät' : email} back="/" />
+      <PageHeader title="Profil & Einstellungen" subtitle={store?.kind === 'local' ? 'Demo-Modus – Daten nur auf diesem Gerät' : email} back="/" />
+
+      <div className="mt-2">
+        <StreakCard />
+      </div>
+
+      <SectionTitle>Erfolge</SectionTitle>
+      <AchievementGrid />
 
       <SectionTitle>Tagesziel</SectionTitle>
       <Card className="space-y-5">
@@ -73,12 +82,21 @@ export function ProfilePage() {
         />
       </Card>
 
+      <SectionTitle>Deine Daten</SectionTitle>
+      <Card>
+        <DataSection />
+      </Card>
+
       <SectionTitle>Konto</SectionTitle>
       <Card className="space-y-2">
         <Button variant="secondary" block icon={<LogOut className="size-4" aria-hidden />} onClick={() => signOut()}>
           {store?.kind === 'local' ? 'Demo-Modus verlassen' : 'Abmelden'}
         </Button>
       </Card>
+
+      <p className="mt-6 px-1 text-center text-xs text-muted">
+        Teller ersetzt keine Ernährungs- oder medizinische Beratung. Alle Werte sind Richtwerte.
+      </p>
 
       {dirty && (
         <div className="fixed inset-x-0 bottom-20 z-30 px-4 safe-bottom">

@@ -17,7 +17,10 @@
       try {
         var t = localStorage.getItem('teller-theme') || 'system';
         var dark = t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
-        if (dark) document.documentElement.classList.add('dark');
+        if (dark) {
+          document.documentElement.classList.add('dark');
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0f1411');
+        }
       } catch (e) {}
     </script>
   </head>

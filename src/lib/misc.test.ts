@@ -116,3 +116,16 @@ describe('Gemüse-Erkennung – Ausnahmen', () => {
     expect(detectVeggies('Salatgurke')).toEqual(['Gurke'])
   })
 })
+
+describe('Export', () => {
+  it('erstellt deutsches CSV', async () => {
+    const { logToCsv, csvCell } = await import('./export')
+    expect(csvCell('a;b')).toBe('"a;b"')
+    expect(csvCell('Sag "Hallo"')).toBe('"Sag ""Hallo"""')
+    expect(csvCell(12.345)).toBe('12,3')
+    const csv = logToCsv([entry({ name: 'Müsli', meal: 'breakfast', kcal: 412.5 })])
+    const lines = csv.replace('﻿', '').split('\r\n')
+    expect(lines[0]).toBe('Datum;Mahlzeit;Name;Menge;Einheit;Gramm;kcal;Eiweiß (g);Kohlenhydrate (g);Fett (g)')
+    expect(lines[1]).toBe('2026-11-09;Frühstück;Müsli;100;g;100;412,5;10;10;1')
+  })
+})

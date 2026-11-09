@@ -64,6 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       async signOut() {
         localStorage.removeItem(LOCAL_FLAG)
+        localStorage.removeItem('teller-query-cache')
         setLocalMode(false)
         if (supabase) await supabase.auth.signOut()
       },

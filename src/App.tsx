@@ -8,6 +8,7 @@ import { Spinner } from './components/ui/EmptyState'
 import { LoginPage } from './pages/LoginPage'
 import { OnboardingPage } from './pages/OnboardingPage'
 import { TodayPage } from './pages/TodayPage'
+import { AchievementWatcher } from './components/achievements/AchievementWatcher'
 
 const AddFoodPage = lazy(() => import('./pages/AddFoodPage').then((m) => ({ default: m.AddFoodPage })))
 const DishEditorPage = lazy(() => import('./pages/DishEditorPage').then((m) => ({ default: m.DishEditorPage })))
@@ -18,8 +19,6 @@ const ShoppingPage = lazy(() => import('./pages/ShoppingPage').then((m) => ({ de
 const PlannerPage = lazy(() => import('./pages/PlannerPage').then((m) => ({ default: m.PlannerPage })))
 const HistoryPage = lazy(() => import('./pages/HistoryPage'))
 
-/** Bereits umgesetzte Bereiche (wächst mit jeder Phase) */
-const ENABLED = new Set(['/', '/rezepte', '/planer', '/einkauf', '/verlauf'])
 
 export function App() {
   const { loading, store, userId } = useAuth()
@@ -47,8 +46,9 @@ function Authed() {
 
   return (
     <Suspense fallback={<Spinner />}>
+    <AchievementWatcher />
     <Routes>
-      <Route element={<AppShell items={NAV_ITEMS.filter((i) => ENABLED.has(i.to))} />}>
+      <Route element={<AppShell items={NAV_ITEMS} />}>
         <Route index element={<TodayPage />} />
         <Route path="profil" element={<ProfilePage />} />
         <Route path="rezepte" element={<RecipesPage />} />
