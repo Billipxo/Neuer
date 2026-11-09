@@ -118,3 +118,25 @@ test('Offline-Hinweis erscheint ohne Verbindung', async ({ page, context }) => {
   await context.setOffline(false)
   await expect(page.getByText(/Offline/)).toBeHidden()
 })
+
+test('Rezept-Galerie: Heißluftfritteuse, Favoriten und Zubereitungsart', async ({ page }) => {
+  await startDemo(page)
+  await page.getByRole('link', { name: 'Rezepte' }).click()
+  await expect(page.getByRole('heading', { name: /Aus der Heißluftfritteuse/ })).toBeVisible()
+  await page.getByRole('button', { name: 'Süßkartoffel-Pommes mit Kräuterquark als Favorit merken' }).click()
+  await expect(page.getByRole('button', { name: 'Süßkartoffel-Pommes mit Kräuterquark aus Favoriten entfernen' })).toHaveAttribute('aria-pressed', 'true')
+  await page.getByRole('button', { name: /^Favoriten$/ }).click()
+  await expect(page.getByText('1 Treffer')).toBeVisible()
+  await page.getByRole('button', { name: 'Filter zurücksetzen' }).click()
+  await page.getByRole('button', { name: /^Heißluftfritteuse$/ }).first().click()
+  await expect(page.getByText(/^\d+ Treffer$/)).toBeVisible()
+  // Backofen-Rezept mit Variante: Heißluftfritteuse ist voreingestellt, Backofen umschaltbar
+  await page.goto('/rezepte/ofenlachs-kartoffeln')
+  await expect(page.getByRole('radio', { name: 'Heißluftfritteuse' })).toHaveAttribute('aria-checked', 'true')
+  await expect(page.getByText(/bei 200 °C ca\. 15 Minuten garen/)).toBeVisible()
+  await page.getByRole('radio', { name: 'Backofen' }).click()
+  await expect(page.getByText(/Ofen auf 200 °C vorheizen/)).toBeVisible()
+  // Favorit bleibt nach dem Neuladen erhalten
+  await page.goto('/rezepte')
+  await expect(page.getByRole('heading', { name: 'Deine Favoriten' })).toBeVisible()
+})

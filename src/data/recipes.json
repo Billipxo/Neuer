@@ -823,7 +823,8 @@
   "servings": 2,
   "tags": [
    "proteinreich",
-   "glutenfrei"
+   "glutenfrei",
+   "heissluftfritteuse"
   ],
   "ingredients": [
    {
@@ -874,6 +875,16 @@
    "protein": 36,
    "carbs": 45,
    "fat": 27
+  },
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 25,
+   "steps": [
+    "Kartoffeln vierteln, mit der Hälfte des Öls, Salz und Pfeffer mischen und bei 200 °C ca. 15 Minuten garen. Zwischendurch einmal schütteln.",
+    "Brokkoli in Röschen teilen und mit dem restlichen Öl mischen. Lachs würzen und Zitronenscheiben darauflegen.",
+    "Brokkoli und Lachs zu den Kartoffeln in den Korb geben (Trennwand oder Grillrost nutzen) und bei 190 °C weitere 8–10 Minuten garen.",
+    "Mit Dill bestreuen und servieren."
+   ]
   }
  },
  {
@@ -1389,7 +1400,8 @@
   "servings": 2,
   "tags": [
    "vegetarisch",
-   "glutenfrei"
+   "glutenfrei",
+   "heissluftfritteuse"
   ],
   "ingredients": [
    {
@@ -1445,6 +1457,15 @@
    "protein": 23,
    "carbs": 40,
    "fat": 33
+  },
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 22,
+   "steps": [
+    "Gemüse in mundgerechte Stücke schneiden und mit Öl, Thymian, Salz und Pfeffer mischen.",
+    "Bei 200 °C ca. 15 Minuten garen, dabei zweimal schütteln.",
+    "Halloumi in Scheiben schneiden, auf das Gemüse legen und weitere 6–7 Minuten goldbraun garen."
+   ]
   }
  },
  {
@@ -1943,7 +1964,8 @@
   "time_min": 40,
   "servings": 2,
   "tags": [
-   "vegetarisch"
+   "vegetarisch",
+   "heissluftfritteuse"
   ],
   "ingredients": [
    {
@@ -1994,6 +2016,16 @@
    "protein": 18,
    "carbs": 55,
    "fat": 15
+  },
+  "airfryer": {
+   "temp_c": 180,
+   "time_min": 18,
+   "steps": [
+    "Couscous mit 120 ml heißem Wasser übergießen und 5 Minuten quellen lassen.",
+    "Zwiebel fein würfeln, mit Couscous, zerbröseltem Feta und Petersilie mischen.",
+    "Paprika halbieren, entkernen und füllen.",
+    "Passierte Tomaten in eine kleine ofenfeste Form geben, Paprika daraufsetzen und bei 180 °C 15–18 Minuten garen."
+   ]
   }
  },
  {
@@ -2262,7 +2294,8 @@
   "servings": 2,
   "tags": [
    "vegetarisch",
-   "ballaststoffreich"
+   "ballaststoffreich",
+   "heissluftfritteuse"
   ],
   "ingredients": [
    {
@@ -2306,6 +2339,16 @@
    "protein": 17,
    "carbs": 88,
    "fat": 4
+  },
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 30,
+   "steps": [
+    "Süßkartoffeln längs halbieren, Schnittflächen mit etwas Öl einreiben.",
+    "Mit der Schnittfläche nach oben bei 200 °C 25–30 Minuten garen, bis sie weich sind.",
+    "Bohnen abspülen, mit Paprikapulver, Salz und Pfeffer in einer Pfanne erwärmen.",
+    "Süßkartoffeln mit Bohnen füllen, Joghurt und Frühlingszwiebelringe darauf geben."
+   ]
   }
  },
  {
@@ -2452,7 +2495,8 @@
   "tags": [
    "vegetarisch",
    "low-carb",
-   "meal-prep"
+   "meal-prep",
+   "heissluftfritteuse"
   ],
   "ingredients": [
    {
@@ -2502,6 +2546,15 @@
    "protein": 19,
    "carbs": 6,
    "fat": 17
+  },
+  "airfryer": {
+   "temp_c": 160,
+   "time_min": 18,
+   "steps": [
+    "Gemüse klein würfeln. Eier mit Milch, Salz und Pfeffer verquirlen.",
+    "Eine passende Back- oder Silikonform leicht einfetten, Gemüse hineingeben und die Eimasse darübergießen. Käse darüberreiben.",
+    "Bei 160 °C 15–18 Minuten stocken lassen. Bei kleinem Korb in zwei Durchgängen backen."
+   ]
   }
  },
  {
@@ -2515,7 +2568,8 @@
   "servings": 2,
   "tags": [
    "proteinreich",
-   "glutenfrei"
+   "glutenfrei",
+   "heissluftfritteuse"
   ],
   "ingredients": [
    {
@@ -2565,6 +2619,15 @@
    "protein": 42,
    "carbs": 52,
    "fat": 12
+  },
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 30,
+   "steps": [
+    "Kartoffeln und Karotten in Stücke, Zwiebel in Spalten schneiden, mit Öl, Rosmarin, Salz und Pfeffer mischen.",
+    "Bei 200 °C ca. 15 Minuten garen, einmal schütteln.",
+    "Hähnchen in große Stücke schneiden, würzen, dazugeben und bei 190 °C weitere 12–15 Minuten garen, bis es durchgegart ist."
+   ]
   }
  },
  {
@@ -3237,6 +3300,906 @@
    "protein": 10,
    "carbs": 44,
    "fat": 5
+  }
+ },
+ {
+  "id": "knusprige-haehnchenstreifen",
+  "title": "Knusprige Hähnchenstreifen mit Joghurt-Dip",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [
+   "proteinreich",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Haferflocken im Mixer fein mahlen und mit Paprikapulver, Salz und Pfeffer mischen.",
+   "Hähnchen in Streifen schneiden, erst durch das verquirlte Ei ziehen, dann in der Haferflocken-Mischung wälzen.",
+   "Streifen nebeneinander in den Korb legen, dünn mit Öl besprühen oder bepinseln und bei 190 °C 10–12 Minuten garen. Nach der Hälfte wenden.",
+   "Joghurt mit Schnittlauch, Salz und Pfeffer verrühren und als Dip servieren."
+  ],
+  "nutrition": {
+   "kcal": 360,
+   "protein": 45,
+   "carbs": 19,
+   "fat": 10
+  },
+  "airfryer": {
+   "temp_c": 190,
+   "time_min": 12
+  }
+ },
+ {
+  "id": "suesskartoffel-pommes",
+  "title": "Süßkartoffel-Pommes mit Kräuterquark",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "glutenfrei",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Süßkartoffel",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Süßkartoffeln schälen und in gleichmäßige Stifte schneiden (ca. 1 cm).",
+   "Mit Stärke bestäuben, dann mit Öl, Paprikapulver und Salz mischen.",
+   "In einer Lage in den Korb geben und bei 200 °C 18–20 Minuten knusprig garen, dabei 2–3-mal schütteln. Bei Bedarf in zwei Portionen garen.",
+   "Quark mit etwas Wasser glatt rühren, Schnittlauch unterheben und würzen."
+  ],
+  "nutrition": {
+   "kcal": 392,
+   "protein": 20,
+   "carbs": 66,
+   "fat": 6
+  },
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 20
+  }
+ },
+ {
+  "id": "airfryer-lachs-bohnen",
+  "title": "Lachs aus der Heißluftfritteuse mit grünen Bohnen und Reis",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [
+   "proteinreich",
+   "glutenfrei",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Lachsfilet",
+    "amount": 250,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "grüne Bohnen",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Reis",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Dill",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe kochen. Bohnen putzen und 5 Minuten in Salzwasser vorgaren.",
+   "Lachs mit Salz, Pfeffer und etwas Zitronenschale würzen, mit Öl bepinseln.",
+   "Lachs mit der Hautseite nach unten in den Korb legen und bei 190 °C 8–10 Minuten garen. Bohnen die letzten 4 Minuten danebenlegen.",
+   "Mit Zitronensaft und Dill servieren."
+  ],
+  "nutrition": {
+   "kcal": 540,
+   "protein": 32,
+   "carbs": 54,
+   "fat": 20
+  },
+  "airfryer": {
+   "temp_c": 190,
+   "time_min": 10
+  }
+ },
+ {
+  "id": "knusprige-kichererbsen",
+  "title": "Knusprige Kichererbsen",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 20,
+  "servings": 4,
+  "tags": [
+   "vegan",
+   "glutenfrei",
+   "meal-prep",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Kichererbsen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kichererbsen abgießen, abspülen und mit Küchenpapier gründlich trocken tupfen.",
+   "Mit Öl und Gewürzen mischen.",
+   "Bei 200 °C 12–15 Minuten knusprig garen, alle 5 Minuten schütteln. Abkühlen lassen – sie werden dabei noch knuspriger."
+  ],
+  "nutrition": {
+   "kcal": 95,
+   "protein": 4,
+   "carbs": 10,
+   "fat": 4
+  },
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 15
+  }
+ },
+ {
+  "id": "gemuese-ei-muffins",
+  "title": "Gemüse-Ei-Muffins",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 20,
+  "servings": 3,
+  "tags": [
+   "vegetarisch",
+   "low-carb",
+   "proteinreich",
+   "meal-prep",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Eier",
+    "amount": 6,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 50,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Feta",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Paprika und Frühlingszwiebeln fein würfeln, Spinat hacken.",
+   "Eier verquirlen, Gemüse und zerbröselten Feta unterrühren, würzen.",
+   "Masse in 6 Silikon-Muffinförmchen füllen und bei 160 °C 10–12 Minuten stocken lassen.",
+   "2 Muffins = 1 Portion. Halten sich im Kühlschrank 3 Tage."
+  ],
+  "nutrition": {
+   "kcal": 195,
+   "protein": 15,
+   "carbs": 4,
+   "fat": 13
+  },
+  "airfryer": {
+   "temp_c": 160,
+   "time_min": 12
+  }
+ },
+ {
+  "id": "falafel-airfryer",
+  "title": "Falafel mit Salat und Joghurtsauce",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 3,
+  "tags": [
+   "vegetarisch",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Kichererbsen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Mehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Römersalat",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomate",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Vollkorn-Fladenbrot",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kichererbsen gut abtropfen lassen. Mit Zwiebel, Knoblauch, Petersilie, Mehl und Kreuzkümmel im Mixer grob pürieren, salzen.",
+   "Aus der Masse 12 kleine Bällchen formen und leicht flachdrücken.",
+   "Mit Öl bepinseln und bei 190 °C 12–14 Minuten garen, nach der Hälfte wenden.",
+   "Joghurt mit Salz und etwas Knoblauch verrühren. Falafel mit Salat, Tomaten, Sauce und Fladenbrot servieren."
+  ],
+  "nutrition": {
+   "kcal": 388,
+   "protein": 16,
+   "carbs": 56,
+   "fat": 10
+  },
+  "airfryer": {
+   "temp_c": 190,
+   "time_min": 14
+  }
+ },
+ {
+  "id": "blumenkohl-wings",
+  "title": "Blumenkohl-Wings mit Kräuterdip",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Blumenkohl",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Mehl",
+    "amount": 60,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 80,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauchpulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Blumenkohl in mundgerechte Röschen teilen.",
+   "Mehl, Milch, Gewürze und eine Prise Salz zu einem dicken Teig verrühren, Röschen darin wenden.",
+   "In einer Lage in den Korb geben, mit Öl besprühen und bei 200 °C 14–16 Minuten knusprig garen. Nach der Hälfte schütteln.",
+   "Joghurt mit gehackter Petersilie verrühren und als Dip servieren."
+  ],
+  "nutrition": {
+   "kcal": 301,
+   "protein": 13,
+   "carbs": 38,
+   "fat": 10
+  },
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 16
+  }
+ },
+ {
+  "id": "bratapfel-crumble",
+  "title": "Bratapfel mit Haferflocken-Crumble",
+  "meal": [
+   "snack",
+   "breakfast"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Apfel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Butter",
+    "amount": 10,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Äpfel halbieren und das Kerngehäuse herausschneiden.",
+   "Haferflocken mit Butter, Honig und Zimt verkneten und auf die Apfelhälften verteilen.",
+   "Bei 180 °C 12–14 Minuten garen, bis die Äpfel weich sind und der Crumble goldbraun ist.",
+   "Mit Joghurt servieren."
+  ],
+  "nutrition": {
+   "kcal": 223,
+   "protein": 4,
+   "carbs": 36,
+   "fat": 6
+  },
+  "airfryer": {
+   "temp_c": 180,
+   "time_min": 14
+  }
+ },
+ {
+  "id": "kartoffelspalten-rosmarin",
+  "title": "Kartoffelspalten mit Rosmarin und Kräuterquark",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "glutenfrei",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 700,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rosmarin",
+    "amount": 2,
+    "unit": "Zweig",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln gründlich waschen und mit Schale in Spalten schneiden, trocken tupfen.",
+   "Mit Öl, gehacktem Rosmarin und Salz mischen.",
+   "Bei 200 °C 20–22 Minuten garen, dabei 2–3-mal schütteln.",
+   "Quark mit etwas Wasser und Schnittlauch verrühren, würzen und dazu servieren."
+  ],
+  "nutrition": {
+   "kcal": 421,
+   "protein": 22,
+   "carbs": 63,
+   "fat": 8
+  },
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 22
+  }
+ },
+ {
+  "id": "puten-frikadellen-gurkensalat",
+  "title": "Puten-Frikadellen mit Gurkensalat",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [
+   "proteinreich",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Putenhackfleisch",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Dill",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Zwiebel fein würfeln. Mit Hack, Ei, Haferflocken, Senf, Salz und Pfeffer verkneten und 6 Frikadellen formen.",
+   "Bei 190 °C 10–12 Minuten garen, nach der Hälfte wenden, bis sie durchgegart sind.",
+   "Gurke in dünne Scheiben hobeln, mit Joghurt, Dill, Salz und Pfeffer mischen."
+  ],
+  "nutrition": {
+   "kcal": 386,
+   "protein": 38,
+   "carbs": 18,
+   "fat": 16
+  },
+  "airfryer": {
+   "temp_c": 190,
+   "time_min": 12
+  }
+ },
+ {
+  "id": "zucchini-parmesan-sticks",
+  "title": "Zucchini-Sticks mit Parmesankruste",
+  "meal": [
+   "snack",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Zucchini",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 40,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Zucchini in fingerdicke Sticks schneiden.",
+   "Paniermehl mit geriebenem Parmesan und Oregano mischen. Sticks erst durch das verquirlte Ei ziehen, dann panieren.",
+   "In einer Lage in den Korb legen und bei 200 °C 8–10 Minuten goldbraun garen."
+  ],
+  "nutrition": {
+   "kcal": 205,
+   "protein": 14,
+   "carbs": 19,
+   "fat": 8
+  },
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 10
+  }
+ },
+ {
+  "id": "gefuellte-champignons-feta",
+  "title": "Gefüllte Champignons mit Feta und Spinat",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Champignons (groß)",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Feta",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkornbrot",
+    "amount": 2,
+    "unit": "Scheiben",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Stiele aus den Champignons drehen und fein hacken.",
+   "Stiele mit Knoblauch im Öl anbraten, Spinat zugeben und zusammenfallen lassen. Feta unterbröseln, würzen.",
+   "Pilze füllen und bei 180 °C 8–10 Minuten garen.",
+   "Mit Vollkornbrot servieren."
+  ],
+  "nutrition": {
+   "kcal": 323,
+   "protein": 20,
+   "carbs": 23,
+   "fat": 15
+  },
+  "airfryer": {
+   "temp_c": 180,
+   "time_min": 10
+  }
+ },
+ {
+  "id": "apfelchips-zimt",
+  "title": "Apfelchips mit Zimt",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 40,
+  "servings": 2,
+  "tags": [
+   "vegan",
+   "glutenfrei",
+   "heissluftfritteuse"
+  ],
+  "ingredients": [
+   {
+    "name": "Apfel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Äpfel waschen, Kerngehäuse ausstechen und in sehr dünne Scheiben hobeln (ca. 2 mm).",
+   "Mit Zimt bestreuen und locker in den Korb legen.",
+   "Bei 150 °C 25–30 Minuten trocknen, alle 8 Minuten schütteln. Auf einem Gitter auskühlen lassen."
+  ],
+  "nutrition": {
+   "kcal": 95,
+   "protein": 1,
+   "carbs": 22,
+   "fat": 0
+  },
+  "airfryer": {
+   "temp_c": 150,
+   "time_min": 30
   }
  }
 ]

@@ -72,6 +72,8 @@ export interface SuggestOptions {
   /** Bereits belegte Einträge – diese Slots bleiben unverändert */
   existing: PlanItem[]
   includeSnacks?: boolean
+  /** Heißluftfritteusen-Rezepte leicht bevorzugen */
+  preferAirfryer?: boolean
   random?: () => number
 }
 
@@ -105,7 +107,7 @@ export function suggestWeek(opts: SuggestOptions): NewPlanItem[] {
     const candidates = (fresh.length ? fresh : pool)
       .map((r) => {
         const servings = servingsFor(slotKcal, r.nutrition.kcal)
-        return { r, servings, s: score(r, servings, slotKcal, macros) }
+        return { r, servings, s: score(r, servings, slotKcal, macros) - (opts.preferAirfryer && r.airfryer ? 0.05 : 0) }
       })
       .sort((a, b) => a.s - b.s)
       .slice(0, 4)

@@ -45,6 +45,7 @@ export function PlannerPage() {
       kcalTarget: target,
       macros: { protein: profile!.protein_pct, carbs: profile!.carbs_pct, fat: profile!.fat_pct },
       existing: items,
+      preferAirfryer: profile!.has_airfryer ?? true,
     })
     if (!suggested.length) {
       toast('Alle Slots sind schon belegt')

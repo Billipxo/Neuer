@@ -63,3 +63,16 @@ describe('Portionen und Summen', () => {
     expect(s.avgPerPlannedDay.kcal).toBe((360 * 3 + 300) / 2)
   })
 })
+
+describe('Wochenvorschlag mit Heißluftfritteuse', () => {
+  it('wählt mit Vorliebe mehr Heißluftfritteusen-Rezepte', () => {
+    let withPref = 0
+    let without = 0
+    for (let seed = 1; seed <= 10; seed++) {
+      const base = { recipes: RECIPES, days, kcalTarget: 2000, macros, existing: [] }
+      withPref += suggestWeek({ ...base, preferAirfryer: true, random: mulberry32(seed) }).filter((i) => getRecipe(i.recipe_id)?.airfryer).length
+      without += suggestWeek({ ...base, random: mulberry32(seed) }).filter((i) => getRecipe(i.recipe_id)?.airfryer).length
+    }
+    expect(withPref).toBeGreaterThan(without)
+  })
+})

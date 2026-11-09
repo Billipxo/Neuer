@@ -212,3 +212,10 @@ create policy "achievements_select_own" on public.achievements for select using 
 create policy "achievements_insert_own" on public.achievements for insert with check (auth.uid() = user_id);
 create policy "achievements_update_own" on public.achievements for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
 create policy "achievements_delete_own" on public.achievements for delete using (auth.uid() = user_id);
+
+-- ===== 20261110000005_kitchen.sql =====
+-- Teller – Küche: Heißluftfritteuse und Lieblingsrezepte im Profil
+
+alter table public.profiles
+  add column if not exists has_airfryer boolean not null default true,
+  add column if not exists favorite_recipes text[] not null default '{}';

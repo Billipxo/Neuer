@@ -35,6 +35,10 @@ export interface Profile {
   carbs_pct: number
   fat_pct: number
   water_target_ml: number
+  /** Heißluftfritteuse vorhanden → Rezepte zeigen deren Zubereitung zuerst */
+  has_airfryer: boolean
+  /** IDs der Lieblingsrezepte */
+  favorite_recipes: string[]
   onboarded: boolean
   created_at?: string
 }
@@ -161,6 +165,13 @@ export interface RecipeIngredient {
   category: ShoppingCategory
 }
 
+export interface AirfryerInfo {
+  temp_c: number
+  time_min: number
+  /** Eigene Schritte, wenn das Rezept eigentlich für den Backofen ist. Fehlen sie, sind die normalen Schritte schon für die Heißluftfritteuse. */
+  steps?: string[]
+}
+
 export interface Recipe {
   id: string
   title: string
@@ -172,4 +183,5 @@ export interface Recipe {
   steps: string[]
   /** pro Portion */
   nutrition: Nutrients
+  airfryer?: AirfryerInfo
 }

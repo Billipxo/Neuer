@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { useParams, Navigate } from 'react-router-dom'
-import { Clock, Minus, Plus, ShoppingBasket, Users, CalendarPlus } from 'lucide-react'
-import { getRecipe, recipeEmoji, recipeNutrients, scaleIngredients, TAG_LABELS } from '../lib/recipes'
+import { Clock, Heart, Minus, Plus, ShoppingBasket, Thermometer, Users, CalendarPlus } from 'lucide-react'
+import { getRecipe, hasAirfryerVariant, isAirfryerNative, recipeEmoji, recipeNutrients, recipeSteps, scaleIngredients, TAG_LABELS } from '../lib/recipes'
+import { useProfile, useToggleFavoriteRecipe } from '../hooks/data'
+import { Segmented } from '../components/ui/Segmented'
+import { AirfryerIcon } from '../components/recipes/AirfryerIcon'
+import { recipeGradient } from '../components/recipes/RecipeCard'
 import { formatQuantity } from '../lib/shopping'
 import { fmtInt } from '../lib/format'
 import { useAddToShopping } from '../hooks/shopping'
@@ -19,16 +23,39 @@ export function RecipeDetailPage() {
   const [addOpen, setAddOpen] = useState(false)
   const addToShopping = useAddToShopping()
   const toast = useToast()
+  const { data: profile } = useProfile()
+  const toggleFav = useToggleFavoriteRecipe()
+  const hasAirfryer = profile?.has_airfryer ?? true
+  const [method, setMethod] = useState<'airfryer' | 'oven' | null>(null)
 
   if (!recipe) return <Navigate to="/rezepte" replace />
   const ingredients = scaleIngredients(recipe, servings)
+  const variant = hasAirfryerVariant(recipe)
+  const activeMethod = method ?? (hasAirfryer ? 'airfryer' : 'oven')
+  const steps = recipeSteps(recipe, variant ? activeMethod : 'airfryer')
+  const showAirfryerInfo = recipe.airfryer && (isAirfryerNative(recipe) || activeMethod === 'airfryer')
+  const favorite = profile?.favorite_recipes?.includes(recipe.id) ?? false
 
   return (
     <div className="mx-auto min-h-dvh max-w-lg px-4 pb-36 safe-top">
-      <PageHeader title="" back />
+      <PageHeader
+        title=""
+        back
+        actions={
+          <button
+            type="button"
+            onClick={() => toggleFav.mutate(recipe.id)}
+            aria-pressed={favorite}
+            aria-label={favorite ? 'Aus Favoriten entfernen' : 'Als Favorit merken'}
+            className="flex size-11 items-center justify-center rounded-full bg-surface ring-1 ring-line transition active:scale-90"
+          >
+            <Heart className={`size-5 ${favorite ? 'fill-fat text-fat animate-pop' : 'text-muted'}`} aria-hidden />
+          </button>
+        }
+      />
       <div className="flex flex-col items-center text-center">
-        <span aria-hidden className="flex size-28 items-center justify-center rounded-[2rem] bg-brand-soft text-6xl animate-pop">
-          {recipeEmoji(recipe)}
+        <span aria-hidden className={`flex h-36 w-full items-center justify-center rounded-[2rem] bg-gradient-to-br text-7xl ${recipeGradient(recipe)}`}>
+          <span className="animate-pop">{recipeEmoji(recipe)}</span>
         </span>
         <h1 className="mt-4 text-2xl font-bold leading-tight">{recipe.title}</h1>
         <p className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-muted">
@@ -39,7 +66,7 @@ export function RecipeDetailPage() {
         </p>
         {recipe.tags.length > 0 && (
           <ul className="mt-3 flex flex-wrap justify-center gap-1.5" aria-label="Eigenschaften">
-            {recipe.tags.map((t) => (
+            {recipe.tags.filter((t) => t !== 'heissluftfritteuse').map((t) => (
               <li key={t} className="rounded-full bg-surface-2 px-2.5 py-1 text-xs font-medium">
                 {TAG_LABELS[t] ?? t}
               </li>
@@ -83,8 +110,44 @@ export function RecipeDetailPage() {
       </Card>
 
       <SectionTitle>Zubereitung</SectionTitle>
+      {variant && (
+        <Segmented<'airfryer' | 'oven'>
+          className="mb-3"
+          label="Zubereitungsart"
+          value={activeMethod}
+          onChange={setMethod}
+          options={[
+            { value: 'airfryer', label: 'Heißluftfritteuse' },
+            { value: 'oven', label: 'Backofen' },
+          ]}
+        />
+      )}
+      {showAirfryerInfo && recipe.airfryer && (
+        <div className="mb-4 flex items-center gap-3 rounded-2xl bg-brand-soft/60 p-3 text-sm">
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-surface text-brand">
+            <AirfryerIcon className="size-5" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold">Heißluftfritteuse</p>
+            <p className="flex flex-wrap gap-x-3 text-muted tabular">
+              <span className="inline-flex items-center gap-1">
+                <Thermometer className="size-3.5" aria-hidden /> {recipe.airfryer.temp_c} °C
+              </span>
+              <span className="inline-flex items-center gap-1">
+                <Clock className="size-3.5" aria-hidden /> ca. {recipe.airfryer.time_min} Min. Garzeit
+              </span>
+            </p>
+          </div>
+        </div>
+      )}
+      {isAirfryerNative(recipe) && !hasAirfryer && (
+        <p className="mb-4 rounded-2xl bg-surface-2 p-3 text-sm text-muted">
+          Ohne Heißluftfritteuse: im Backofen (Umluft) etwa 20 °C heißer und einige Minuten länger garen, auf einem Blech mit
+          Backpapier.
+        </p>
+      )}
       <ol className="space-y-3">
-        {recipe.steps.map((s, idx) => (
+        {steps.map((s, idx) => (
           <li key={idx} className="flex gap-3">
             <span aria-hidden className="flex size-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-bold text-brand-ink">
               {idx + 1}
@@ -96,6 +159,12 @@ export function RecipeDetailPage() {
           </li>
         ))}
       </ol>
+      {showAirfryerInfo && (
+        <p className="mt-4 text-xs text-muted">
+          Tipp: Den Korb nicht zu voll machen und zwischendurch schütteln – dann wird alles gleichmäßig knusprig. Garzeiten
+          schwanken je nach Gerät.
+        </p>
+      )}
       <p className="mt-6 text-xs text-muted">Nährwerte sind gerundete Richtwerte und können je nach Produkt abweichen.</p>
 
       <div className="safe-bottom fixed inset-x-0 bottom-0 z-30 border-t border-line bg-surface/95 backdrop-blur">

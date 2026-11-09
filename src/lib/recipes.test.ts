@@ -73,3 +73,47 @@ describe('Skalierung', () => {
     expect(recipeVeggies(getRecipe('ofenlachs-kartoffeln')!)).toEqual(expect.arrayContaining(['Brokkoli', 'Kartoffel']))
   })
 })
+
+describe('Heißluftfritteuse', async () => {
+  const { airfryerRecipes, recipeSteps, hasAirfryerVariant, isAirfryerNative, sortRecipes, proteinDensity, toggleFavorite } = await import('./recipes')
+
+  it('hat genug Rezepte und plausible Angaben', () => {
+    const af = airfryerRecipes(RECIPES)
+    expect(af.length).toBeGreaterThanOrEqual(15)
+    for (const r of af) {
+      expect(r.tags).toContain('heissluftfritteuse')
+      expect(r.airfryer!.temp_c).toBeGreaterThanOrEqual(140)
+      expect(r.airfryer!.temp_c).toBeLessThanOrEqual(210)
+      expect(r.airfryer!.time_min).toBeLessThanOrEqual(r.time_min + 5)
+      // Schritte nennen die Temperatur
+      expect(recipeSteps(r, 'airfryer').join(' ')).toMatch(/°C/)
+    }
+    // jedes Rezept mit Tag hat auch Angaben
+    RECIPES.filter((r) => r.tags.includes('heissluftfritteuse')).forEach((r) => expect(r.airfryer).toBeDefined())
+  })
+  it('unterscheidet Backofen-Variante und reine Heißluftfritteusen-Rezepte', () => {
+    const lachs = getRecipe('ofenlachs-kartoffeln')!
+    expect(hasAirfryerVariant(lachs)).toBe(true)
+    expect(recipeSteps(lachs, 'oven')).toBe(lachs.steps)
+    expect(recipeSteps(lachs, 'airfryer')).not.toBe(lachs.steps)
+    const pommes = getRecipe('suesskartoffel-pommes')!
+    expect(isAirfryerNative(pommes)).toBe(true)
+    expect(recipeSteps(pommes, 'oven')).toBe(pommes.steps)
+  })
+  it('sortiert nach kcal, Zeit, Eiweiß und Empfehlung', () => {
+    const kcal = sortRecipes(RECIPES, 'kcal').map((r) => r.nutrition.kcal)
+    expect(kcal).toEqual([...kcal].sort((a, b) => a - b))
+    const zeit = sortRecipes(RECIPES, 'zeit').map((r) => r.time_min)
+    expect(zeit).toEqual([...zeit].sort((a, b) => a - b))
+    const prot = sortRecipes(RECIPES, 'eiweiss').map(proteinDensity)
+    expect(prot).toEqual([...prot].sort((a, b) => b - a))
+    const rec = sortRecipes(RECIPES, 'empfohlen', { favorites: ['linsensuppe'], preferAirfryer: true })
+    expect(rec[0].id).toBe('linsensuppe')
+    expect(rec[1].airfryer).toBeDefined()
+    expect(sortRecipes(RECIPES, 'empfohlen').map((r) => r.id)).toEqual(RECIPES.map((r) => r.id))
+  })
+  it('schaltet Favoriten um', () => {
+    expect(toggleFavorite(['a'], 'b')).toEqual(['a', 'b'])
+    expect(toggleFavorite(['a', 'b'], 'a')).toEqual(['b'])
+  })
+})

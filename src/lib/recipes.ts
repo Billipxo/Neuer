@@ -90,7 +90,7 @@ const EMOJI_RULES: [RegExp, string][] = [
   [/salat/i, '🥗'],
   [/pancake/i, '🥞'],
   [/lachs|kabeljau|thunfisch|garnele/i, '🐟'],
-  [/hähnchen|pute/i, '🍗'],
+  [/hähnchen|pute|frikadelle/i, '🍗'],
   [/hack/i, '🥩'],
   [/spaghetti|nudel|bolognese|gnocchi/i, '🍝'],
   [/curry|reis|bowl/i, '🍛'],
@@ -98,7 +98,13 @@ const EMOJI_RULES: [RegExp, string][] = [
   [/oats|porridge|müsli/i, '🥣'],
   [/smoothie/i, '🥤'],
   [/brot|toast|brötchen|wrap|knäcke/i, '🥪'],
-  [/apfel|beeren|banane/i, '🍎'],
+  [/apfelchips|bratapfel|apfel|beeren|banane/i, '🍎'],
+  [/pommes|kartoffelspalten/i, '🍟'],
+  [/falafel|kichererbse/i, '🧆'],
+  [/blumenkohl/i, '🥦'],
+  [/champignon/i, '🍄'],
+  [/muffin/i, '🧁'],
+  [/zucchini-sticks|sticks/i, '🥒'],
   [/kartoffel/i, '🥔'],
   [/paprika|gemüse|zucchini|kürbis|süßkartoffel/i, '🫑'],
   [/hummus|edamame|kichererbse|linse|bohne/i, '🫘'],
@@ -119,4 +125,70 @@ export const TAG_LABELS: Record<string, string> = {
   'meal-prep': 'Meal Prep',
   glutenfrei: 'Glutenfrei',
   ballaststoffreich: 'Ballaststoffreich',
+  heissluftfritteuse: 'Heißluftfritteuse',
+}
+
+export type RecipeSort = 'empfohlen' | 'kcal' | 'zeit' | 'eiweiss'
+
+export const SORT_LABELS: Record<RecipeSort, string> = {
+  empfohlen: 'Empfohlen',
+  kcal: 'Wenig kcal zuerst',
+  zeit: 'Schnell zuerst',
+  eiweiss: 'Viel Eiweiß zuerst',
+}
+
+/** Eiweiß in Gramm pro 100 kcal – Maß für „proteinreich“ unabhängig von der Portionsgröße */
+export function proteinDensity(r: Recipe): number {
+  return r.nutrition.kcal > 0 ? (r.nutrition.protein / r.nutrition.kcal) * 100 : 0
+}
+
+/**
+ * Sortierung. „Empfohlen“ stellt Favoriten und (falls vorhanden) Heißluftfritteusen-Rezepte nach vorne,
+ * sonst bleibt die Reihenfolge des Datensatzes.
+ */
+export function sortRecipes(
+  recipes: Recipe[],
+  sort: RecipeSort,
+  opts: { favorites?: string[]; preferAirfryer?: boolean } = {},
+): Recipe[] {
+  const fav = new Set(opts.favorites ?? [])
+  const index = new Map(recipes.map((r, i) => [r.id, i]))
+  const byIndex = (a: Recipe, b: Recipe) => index.get(a.id)! - index.get(b.id)!
+  const list = [...recipes]
+  switch (sort) {
+    case 'kcal':
+      return list.sort((a, b) => a.nutrition.kcal - b.nutrition.kcal || byIndex(a, b))
+    case 'zeit':
+      return list.sort((a, b) => a.time_min - b.time_min || byIndex(a, b))
+    case 'eiweiss':
+      return list.sort((a, b) => proteinDensity(b) - proteinDensity(a) || byIndex(a, b))
+    default: {
+      const rank = (r: Recipe) => (fav.has(r.id) ? 0 : opts.preferAirfryer && r.airfryer ? 1 : 2)
+      return list.sort((a, b) => rank(a) - rank(b) || byIndex(a, b))
+    }
+  }
+}
+
+export function airfryerRecipes(recipes: Recipe[]): Recipe[] {
+  return recipes.filter((r) => r.airfryer)
+}
+
+/** Zubereitungsschritte je nach Gerät */
+export function recipeSteps(r: Recipe, method: 'airfryer' | 'oven'): string[] {
+  if (method === 'airfryer' && r.airfryer?.steps) return r.airfryer.steps
+  return r.steps
+}
+
+/** Rezept ist eine Backofen-Variante mit zusätzlicher Anleitung für die Heißluftfritteuse */
+export function hasAirfryerVariant(r: Recipe): boolean {
+  return Boolean(r.airfryer?.steps)
+}
+
+/** Rezept ist direkt für die Heißluftfritteuse geschrieben */
+export function isAirfryerNative(r: Recipe): boolean {
+  return Boolean(r.airfryer && !r.airfryer.steps)
+}
+
+export function toggleFavorite(list: string[], id: string): string[] {
+  return list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
 }

@@ -268,3 +268,36 @@ export function useDeleteWeight() {
     onSuccess: () => qc.invalidateQueries({ queryKey: qk.weights }),
   })
 }
+
+/** Rezept als Favorit markieren (im Profil gespeichert, damit es auf allen Geräten gleich ist) */
+export function useToggleFavoriteRecipe() {
+  const store = useStore()
+  const qc = useQueryClient()
+  return useMutation({
+    // Nacheinander ausführen, damit schnelles Mehrfach-Tippen nichts überschreibt
+    scope: { id: 'favorite-recipes' },
+    // Ausgangspunkt ist der gespeicherte Stand – der Cache wurde in onMutate schon optimistisch umgeschaltet
+    mutationFn: async (recipeId: string) => {
+      const current = await store.getProfile()
+      if (!current) throw new Error('Kein Profil')
+      const { id: _id, created_at: _c, ...rest } = current
+      const list = rest.favorite_recipes ?? []
+      const favorite_recipes = list.includes(recipeId) ? list.filter((x) => x !== recipeId) : [...list, recipeId]
+      return store.saveProfile({ ...rest, has_airfryer: rest.has_airfryer ?? true, favorite_recipes })
+    },
+    onMutate: async (recipeId) => {
+      await qc.cancelQueries({ queryKey: qk.profile })
+      const prev = qc.getQueryData<Profile | null>(qk.profile)
+      if (prev) {
+        const list = prev.favorite_recipes ?? []
+        qc.setQueryData<Profile>(qk.profile, {
+          ...prev,
+          favorite_recipes: list.includes(recipeId) ? list.filter((x) => x !== recipeId) : [...list, recipeId],
+        })
+      }
+      return { prev }
+    },
+    onError: (_e, _v, ctx) => ctx?.prev !== undefined && qc.setQueryData(qk.profile, ctx.prev),
+    onSuccess: (p) => qc.setQueryData(qk.profile, p),
+  })
+}

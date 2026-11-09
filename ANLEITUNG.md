@@ -130,6 +130,13 @@ Auf einem zweiten Gerät meldest du dich mit derselben E-Mail an und siehst dies
 | „Keine Verbindung zu Open Food Facts“ | Der freie Lebensmitteldienst ist kurz nicht erreichbar – später erneut versuchen oder das Lebensmittel selbst anlegen. |
 | Barcode-Scan startet nicht | Kamera in den Handy-Einstellungen für den Browser bzw. die App erlauben. Alternativ die Nummer unter dem Barcode eintippen. |
 
+## Später: Updates der Datenbank
+
+Wenn du die Datenbank **schon einmal** eingerichtet hast und eine neue Version der App kommt, musst du nur die **neuen**
+Dateien aus `supabase/migrations/` im SQL Editor ausführen (die Dateinamen sind nach Datum sortiert). Beispiel: Für die
+Heißluftfritteuse und die Lieblingsrezepte ist das `20261110000005_kitchen.sql`. Wer noch gar nichts eingerichtet hat,
+nimmt wie oben einfach die komplette `supabase/setup.sql`.
+
 ## Optional: Ausprobieren ohne Konto
 
 Wenn du die App jemandem zeigen willst, ohne Konto: In Vercel die Variable `VITE_ENABLE_DEMO` mit dem Wert `true`

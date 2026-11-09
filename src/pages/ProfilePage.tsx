@@ -14,6 +14,8 @@ import { BodyForm } from '../components/profile/BodyForm'
 import { GoalPicker, KcalTargetEditor, MacroEditor, WaterTargetEditor } from '../components/profile/TargetEditor'
 import { defaultDraft, type ProfileDraft } from '../components/profile/types'
 import { DataSection } from '../components/profile/DataSection'
+import { Switch } from '../components/ui/Switch'
+import { AirfryerIcon } from '../components/recipes/AirfryerIcon'
 import { AchievementGrid, StreakCard } from '../components/achievements/AchievementGrid'
 
 export function ProfilePage() {
@@ -60,6 +62,21 @@ export function ProfilePage() {
         <Field label="Name" value={draft.name} onChange={(e) => patch({ name: e.target.value })} />
         <BodyForm draft={draft} onChange={patch} />
         <WaterTargetEditor draft={draft} onChange={patch} />
+      </Card>
+
+      <SectionTitle>Küche</SectionTitle>
+      <Card>
+        <Switch
+          label="Heißluftfritteuse vorhanden"
+          description="Rezepte zeigen dann zuerst die Zubereitung in der Heißluftfritteuse und werden in der Galerie bevorzugt."
+          checked={draft.has_airfryer}
+          onChange={(v) => patch({ has_airfryer: v })}
+          icon={
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-brand-soft text-brand">
+              <AirfryerIcon className="size-5" />
+            </span>
+          }
+        />
       </Card>
 
       <SectionTitle>Darstellung</SectionTitle>
