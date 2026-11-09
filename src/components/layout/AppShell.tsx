@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { CalendarDays, ChefHat, Home, ShoppingBasket, LineChart } from 'lucide-react'
-import type { ComponentType } from 'react'
+import { Suspense, type ComponentType } from 'react'
+import { Spinner } from '../ui/EmptyState'
 
 interface NavItem {
   to: string
@@ -23,7 +24,9 @@ export function AppShell({ items = NAV_ITEMS }: { items?: NavItem[] }) {
         Zum Inhalt springen
       </a>
       <main id="main" className="safe-top px-4 pb-32">
-        <Outlet />
+        <Suspense fallback={<Spinner />}>
+          <Outlet />
+        </Suspense>
       </main>
       <nav
         aria-label="Hauptnavigation"

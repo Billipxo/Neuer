@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { lazy, Suspense, useRef } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from './app/auth'
@@ -8,16 +8,18 @@ import { Spinner } from './components/ui/EmptyState'
 import { LoginPage } from './pages/LoginPage'
 import { OnboardingPage } from './pages/OnboardingPage'
 import { TodayPage } from './pages/TodayPage'
-import { AddFoodPage } from './pages/AddFoodPage'
-import { DishEditorPage } from './pages/DishEditorPage'
-import { ProfilePage } from './pages/ProfilePage'
-import { RecipesPage } from './pages/RecipesPage'
-import { RecipeDetailPage } from './pages/RecipeDetailPage'
-import { ShoppingPage } from './pages/ShoppingPage'
-import { PlannerPage } from './pages/PlannerPage'
+
+const AddFoodPage = lazy(() => import('./pages/AddFoodPage').then((m) => ({ default: m.AddFoodPage })))
+const DishEditorPage = lazy(() => import('./pages/DishEditorPage').then((m) => ({ default: m.DishEditorPage })))
+const ProfilePage = lazy(() => import('./pages/ProfilePage').then((m) => ({ default: m.ProfilePage })))
+const RecipesPage = lazy(() => import('./pages/RecipesPage').then((m) => ({ default: m.RecipesPage })))
+const RecipeDetailPage = lazy(() => import('./pages/RecipeDetailPage').then((m) => ({ default: m.RecipeDetailPage })))
+const ShoppingPage = lazy(() => import('./pages/ShoppingPage').then((m) => ({ default: m.ShoppingPage })))
+const PlannerPage = lazy(() => import('./pages/PlannerPage').then((m) => ({ default: m.PlannerPage })))
+const HistoryPage = lazy(() => import('./pages/HistoryPage'))
 
 /** Bereits umgesetzte Bereiche (wächst mit jeder Phase) */
-const ENABLED = new Set(['/', '/rezepte', '/planer', '/einkauf'])
+const ENABLED = new Set(['/', '/rezepte', '/planer', '/einkauf', '/verlauf'])
 
 export function App() {
   const { loading, store, userId } = useAuth()
@@ -44,6 +46,7 @@ function Authed() {
   if (!profile?.onboarded) return <OnboardingPage existing={profile ?? null} />
 
   return (
+    <Suspense fallback={<Spinner />}>
     <Routes>
       <Route element={<AppShell items={NAV_ITEMS.filter((i) => ENABLED.has(i.to))} />}>
         <Route index element={<TodayPage />} />
@@ -51,6 +54,7 @@ function Authed() {
         <Route path="rezepte" element={<RecipesPage />} />
         <Route path="einkauf" element={<ShoppingPage />} />
         <Route path="planer" element={<PlannerPage />} />
+        <Route path="verlauf" element={<HistoryPage />} />
       </Route>
       <Route path="rezepte/:id" element={<RecipeDetailPage />} />
       <Route path="hinzufuegen" element={<AddFoodPage />} />
@@ -58,5 +62,6 @@ function Authed() {
       <Route path="gerichte/:id" element={<DishEditorPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </Suspense>
   )
 }
