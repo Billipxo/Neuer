@@ -84,7 +84,11 @@ describe('Einkaufsliste – Anzeige', () => {
   it('formatiert Mengen', () => {
     expect(formatQuantity(1400, 'g')).toBe('1,4 kg')
     expect(formatQuantity(250, 'ml')).toBe('250 ml')
-    expect(formatQuantity(1.5, 'Stück')).toBe('1,5 Stück')
+    expect(formatQuantity(1.5, 'Stück')).toBe('1½ Stück')
+    expect(formatQuantity(0.75, 'EL')).toBe('¾ EL')
+    expect(formatQuantity(2, 'Dose')).toBe('2 Dose')
+    expect(formatQuantity(1.2, 'TL')).toBe('1,2 TL')
+    expect(formatQuantity(12.5, 'g')).toBe('12,5 g')
     expect(formatQuantity(null, '')).toBe('')
   })
   it('errät Kategorien', () => {
@@ -93,5 +97,16 @@ describe('Einkaufsliste – Anzeige', () => {
     expect(guessCategory('Lachsfilet')).toBe('fleisch_fisch')
     expect(guessCategory('Reis')).toBe('vorrat')
     expect(guessCategory('Spülmittel')).toBe('sonstiges')
+  })
+})
+
+describe('Eigene Artikel – Eingabe', () => {
+  it('erkennt Menge und Einheit', async () => {
+    const { parseItemText } = await import('./shopping')
+    expect(parseItemText('2 l Milch')).toEqual({ name: 'Milch', amount: 2, unit: 'l' })
+    expect(parseItemText('0,5 kg Mehl')).toEqual({ name: 'Mehl', amount: 0.5, unit: 'kg' })
+    expect(parseItemText('3 Äpfel')).toEqual({ name: 'Äpfel', amount: 3, unit: 'Stück' })
+    expect(parseItemText('Kaffee')).toEqual({ name: 'Kaffee', amount: null, unit: '' })
+    expect(parseItemText('  ')).toBeNull()
   })
 })

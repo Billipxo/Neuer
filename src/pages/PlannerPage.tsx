@@ -17,6 +17,7 @@ import { Card } from '../components/ui/Card'
 import { useToast } from '../components/ui/Toast'
 import { PlanSlotSheet } from '../components/planner/PlanSlotSheet'
 import { PlanItemSheet } from '../components/planner/PlanItemSheet'
+import { GenerateShoppingButton } from '../components/planner/GenerateShoppingButton'
 
 export function PlannerPage() {
   const [params, setParams] = useSearchParams()
@@ -103,10 +104,11 @@ export function PlannerPage() {
         <p className="mt-3 text-center text-xs text-muted tabular">
           Makros Woche: {fmtInt(summary.total.protein)} g Eiweiß · {fmtInt(summary.total.carbs)} g KH · {fmtInt(summary.total.fat)} g Fett
         </p>
-        <div className="mt-4 grid grid-cols-1 gap-2">
+        <div className="mt-4 grid grid-cols-2 gap-2">
           <Button icon={<Sparkles className="size-4" aria-hidden />} disabled={add.isPending} onClick={suggest}>
             Woche vorschlagen
           </Button>
+          <GenerateShoppingButton items={items} />
         </div>
         {items.length > 0 && (
           <Button

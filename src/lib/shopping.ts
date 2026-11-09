@@ -1,5 +1,5 @@
 import type { ShoppingCategory, ShoppingItem } from '../types'
-import { fmt1 } from './format'
+import { fmt1, parseDecimal } from './format'
 
 export const CATEGORY_ORDER: ShoppingCategory[] = ['obst_gemuese', 'milch', 'fleisch_fisch', 'vorrat', 'sonstiges']
 
@@ -115,7 +115,26 @@ export function formatQuantity(amount: number | null, unit: string | null): stri
   const u = unit ?? ''
   if (u === 'g' && amount >= 1000) return `${fmt1(amount / 1000)} kg`
   if (u === 'ml' && amount >= 1000) return `${fmt1(amount / 1000)} l`
-  return `${fmt1(amount)}${u ? ` ${u}` : ''}`
+  const num = u === 'g' || u === 'ml' ? fmt1(amount) : fmtFraction(amount)
+  return `${num}${u ? ` ${u}` : ''}`
+}
+
+const FRACTIONS: [number, string][] = [
+  [0.25, '¼'],
+  [1 / 3, '⅓'],
+  [0.5, '½'],
+  [2 / 3, '⅔'],
+  [0.75, '¾'],
+]
+
+/** 1,5 → „1½“, 0,25 → „¼“; andere Werte mit einer Nachkommastelle */
+export function fmtFraction(n: number): string {
+  const whole = Math.floor(n + 1e-9)
+  const rest = n - whole
+  if (rest < 0.02) return fmt1(whole)
+  const hit = FRACTIONS.find(([v]) => Math.abs(v - rest) < 0.02)
+  if (hit) return whole > 0 ? `${whole}${hit[1]}` : hit[1]
+  return fmt1(n)
 }
 
 /** Einfache Kategorie-Erkennung für eigene Artikel */
@@ -127,4 +146,16 @@ export function guessCategory(name: string): ShoppingCategory {
   if (/(fleisch|hähnchen|pute|rind|hack|schwein|lachs|fisch|thunfisch|garnele|wurst|schinken|aufschnitt)/.test(n)) return 'fleisch_fisch'
   if (/(nudel|reis|mehl|zucker|öl|essig|dose|linsen|bohnen|haferflocken|brot|gewürz|salz|pfeffer|honig|nuss|nüsse|kaffee|tee|müsli|couscous|bulgur|quinoa)/.test(n)) return 'vorrat'
   return 'sonstiges'
+}
+
+/** „2 l Milch“ → { amount: 2, unit: 'l', name: 'Milch' }; „Kaffee“ → { amount: null, unit: '', name: 'Kaffee' } */
+export function parseItemText(text: string): { name: string; amount: number | null; unit: string } | null {
+  const t = text.trim()
+  if (!t) return null
+  const m = t.match(/^(\d+(?:[.,]\d+)?)\s*(g|kg|ml|l|stück|stk\.?|pck\.?|packung|dose|dosen|bund|flasche|flaschen|becher|glas|gläser)?\s+(.+)$/i)
+  if (!m) return { name: t, amount: null, unit: '' }
+  const amount = parseDecimal(m[1])
+  const unitRaw = m[2] ?? 'Stück'
+  const unit = /^(g|kg|ml|l)$/i.test(unitRaw) ? unitRaw.toLowerCase() : unitRaw[0].toUpperCase() + unitRaw.slice(1).toLowerCase()
+  return { name: m[3].trim(), amount, unit }
 }

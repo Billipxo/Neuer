@@ -1,0 +1,30 @@
+import type { Dish, PlanItem } from '../types'
+import { getRecipe, scaleIngredients } from './recipes'
+import { guessCategory, mergeIngredients, type ShoppingInput } from './shopping'
+
+/**
+ * Zutaten aus dem Wochenplan sammeln:
+ * - Rezepte: Zutaten passend zur geplanten Portionszahl
+ * - Eigene Gerichte: Zutaten in Gramm, anteilig zur Portionszahl
+ * - Freitext: keine Zutaten
+ * Ergebnis ist bereits zusammengeführt.
+ */
+export function ingredientsFromPlan(items: PlanItem[], dishes: Dish[]): ShoppingInput[] {
+  const out: ShoppingInput[] = []
+  for (const item of items) {
+    const servings = Number(item.servings) || 1
+    if (item.kind === 'recipe') {
+      const recipe = getRecipe(item.recipe_id)
+      if (!recipe) continue
+      for (const i of scaleIngredients(recipe, servings)) out.push({ name: i.name, amount: i.amount, unit: i.unit, category: i.category })
+    } else if (item.kind === 'dish') {
+      const dish = dishes.find((d) => d.id === item.dish_id)
+      if (!dish) continue
+      const f = servings / (Number(dish.servings) || 1)
+      for (const ing of dish.ingredients) {
+        out.push({ name: ing.name, amount: Math.round(ing.grams * f), unit: 'g', category: guessCategory(ing.name) })
+      }
+    }
+  }
+  return mergeIngredients(out)
+}
