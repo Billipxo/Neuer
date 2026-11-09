@@ -1,0 +1,3242 @@
+[
+ {
+  "id": "overnight-oats-beeren",
+  "title": "Overnight Oats mit Beeren",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 10,
+  "servings": 1,
+  "tags": [
+   "vegetarisch",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Haferflocken",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Beeren (TK)",
+    "amount": 80,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Chiasamen",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Haferflocken, Chiasamen, Joghurt und Milch in einem Glas verrühren.",
+   "Abgedeckt über Nacht (mind. 4 Stunden) in den Kühlschrank stellen.",
+   "Morgens mit Beeren und Honig toppen."
+  ],
+  "nutrition": {
+   "kcal": 430,
+   "protein": 20,
+   "carbs": 60,
+   "fat": 11
+  }
+ },
+ {
+  "id": "ruehrei-vollkornbrot",
+  "title": "Rührei mit Vollkornbrot und Tomate",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 10,
+  "servings": 1,
+  "tags": [
+   "vegetarisch",
+   "schnell",
+   "proteinreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Eier",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Vollkornbrot",
+    "amount": 1,
+    "unit": "Scheibe",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomate",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Butter",
+    "amount": 5,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salz und Pfeffer",
+    "amount": null,
+    "unit": "",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Eier verquirlen, mit Salz und Pfeffer würzen.",
+   "Butter in einer Pfanne schmelzen, Eier bei mittlerer Hitze langsam stocken lassen und dabei mit einem Pfannenwender zusammenschieben.",
+   "Mit Schnittlauch bestreuen und mit Brot und Tomatenscheiben servieren."
+  ],
+  "nutrition": {
+   "kcal": 420,
+   "protein": 25,
+   "carbs": 24,
+   "fat": 24
+  }
+ },
+ {
+  "id": "skyr-bowl-apfel",
+  "title": "Skyr-Bowl mit Apfel und Walnüssen",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 5,
+  "servings": 1,
+  "tags": [
+   "vegetarisch",
+   "schnell",
+   "proteinreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Skyr",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Apfel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 15,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Apfel waschen und in kleine Würfel schneiden.",
+   "Skyr in eine Schüssel geben, Apfel darauf verteilen.",
+   "Walnüsse grob hacken, darüberstreuen, mit Honig und Zimt verfeinern."
+  ],
+  "nutrition": {
+   "kcal": 370,
+   "protein": 26,
+   "carbs": 38,
+   "fat": 11
+  }
+ },
+ {
+  "id": "frischkaese-gurke-brot",
+  "title": "Vollkornbrot mit Frischkäse und Gurke",
+  "meal": [
+   "breakfast",
+   "dinner"
+  ],
+  "time_min": 5,
+  "servings": 1,
+  "tags": [
+   "vegetarisch",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Vollkornbrot",
+    "amount": 2,
+    "unit": "Scheiben",
+    "category": "vorrat"
+   },
+   {
+    "name": "Frischkäse (leicht)",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kresse",
+    "amount": 1,
+    "unit": "Schale",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salz und Pfeffer",
+    "amount": null,
+    "unit": "",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Brot mit Frischkäse bestreichen.",
+   "Gurke in dünne Scheiben schneiden und darauflegen.",
+   "Mit Kresse, Salz und Pfeffer bestreuen."
+  ],
+  "nutrition": {
+   "kcal": 330,
+   "protein": 14,
+   "carbs": 44,
+   "fat": 9
+  }
+ },
+ {
+  "id": "bananen-pancakes",
+  "title": "Bananen-Hafer-Pancakes",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [
+   "vegetarisch"
+  ],
+  "ingredients": [
+   {
+    "name": "Bananen",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 80,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Backpulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Bananen mit einer Gabel zerdrücken, mit Eiern, Haferflocken und Backpulver zu einem Teig verrühren.",
+   "5 Minuten quellen lassen.",
+   "Öl in einer beschichteten Pfanne erhitzen, kleine Pancakes von beiden Seiten je 2 Minuten goldbraun backen.",
+   "Mit Joghurt servieren."
+  ],
+  "nutrition": {
+   "kcal": 450,
+   "protein": 22,
+   "carbs": 55,
+   "fat": 15
+  }
+ },
+ {
+  "id": "shakshuka",
+  "title": "Shakshuka",
+  "meal": [
+   "breakfast",
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "low-carb"
+  ],
+  "ingredients": [
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Zwiebel, Knoblauch und Paprika würfeln und in Olivenöl 5 Minuten andünsten.",
+   "Tomaten und Kreuzkümmel zugeben, 10 Minuten köcheln lassen, mit Salz und Pfeffer abschmecken.",
+   "Vier Mulden formen, Eier hineinschlagen und zugedeckt 6–8 Minuten stocken lassen.",
+   "Mit gehackter Petersilie bestreuen."
+  ],
+  "nutrition": {
+   "kcal": 360,
+   "protein": 18,
+   "carbs": 24,
+   "fat": 20
+  }
+ },
+ {
+  "id": "porridge-birne",
+  "title": "Porridge mit Birne und Zimt",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 10,
+  "servings": 1,
+  "tags": [
+   "vegetarisch",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Haferflocken",
+    "amount": 60,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 250,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Birne",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Haferflocken mit Milch aufkochen und unter Rühren 3–5 Minuten köcheln lassen.",
+   "Birne würfeln und unterheben oder darauf verteilen.",
+   "Mit Zimt bestreuen."
+  ],
+  "nutrition": {
+   "kcal": 440,
+   "protein": 17,
+   "carbs": 72,
+   "fat": 9
+  }
+ },
+ {
+  "id": "quark-broetchen-erdbeeren",
+  "title": "Vollkornbrötchen mit Quark und Erdbeeren",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 5,
+  "servings": 1,
+  "tags": [
+   "vegetarisch",
+   "schnell",
+   "proteinreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Vollkornbrötchen",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Erdbeeren",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Brötchen aufschneiden.",
+   "Quark mit Honig glatt rühren und aufstreichen.",
+   "Erdbeeren in Scheiben schneiden und darauflegen."
+  ],
+  "nutrition": {
+   "kcal": 300,
+   "protein": 20,
+   "carbs": 46,
+   "fat": 3
+  }
+ },
+ {
+  "id": "gruene-smoothie-bowl",
+  "title": "Grüne Smoothie-Bowl",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 10,
+  "servings": 1,
+  "tags": [
+   "vegan",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Bananen",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 50,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Mango (TK)",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Haferdrink",
+    "amount": 150,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 20,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kokosraspeln",
+    "amount": 10,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Banane, Spinat, Mango und Haferdrink im Mixer cremig pürieren.",
+   "In eine Schüssel füllen.",
+   "Mit Haferflocken und Kokosraspeln bestreuen."
+  ],
+  "nutrition": {
+   "kcal": 360,
+   "protein": 9,
+   "carbs": 62,
+   "fat": 8
+  }
+ },
+ {
+  "id": "huettenkaese-avocado-toast",
+  "title": "Hüttenkäse-Avocado-Toast",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 10,
+  "servings": 1,
+  "tags": [
+   "vegetarisch",
+   "proteinreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Vollkorntoast",
+    "amount": 2,
+    "unit": "Scheiben",
+    "category": "vorrat"
+   },
+   {
+    "name": "Hüttenkäse",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Avocado",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomate",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Toast rösten.",
+   "Avocado mit einer Gabel zerdrücken und auf den Toast streichen.",
+   "Hüttenkäse und Tomatenscheiben darauf verteilen, mit Chili, Salz und Pfeffer würzen."
+  ],
+  "nutrition": {
+   "kcal": 430,
+   "protein": 22,
+   "carbs": 34,
+   "fat": 21
+  }
+ },
+ {
+  "id": "bircher-muesli",
+  "title": "Bircher-Müsli mit Apfel",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 10,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Haferflocken",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 200,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Apfel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Haselnüsse",
+    "amount": 20,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitronensaft",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Haferflocken mit Milch mischen und mindestens 30 Minuten (oder über Nacht) quellen lassen.",
+   "Äpfel grob raspeln, mit Zitronensaft beträufeln und mit dem Joghurt unterrühren.",
+   "Haselnüsse hacken und darüberstreuen."
+  ],
+  "nutrition": {
+   "kcal": 390,
+   "protein": 15,
+   "carbs": 58,
+   "fat": 11
+  }
+ },
+ {
+  "id": "linsen-bolognese",
+  "title": "Linsen-Bolognese mit Vollkornspaghetti",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 4,
+  "tags": [
+   "vegan",
+   "meal-prep",
+   "ballaststoffreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Vollkornspaghetti",
+    "amount": 320,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "rote Linsen",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Zwiebel, Knoblauch und Karotten fein würfeln und im Olivenöl 5 Minuten anbraten.",
+   "Tomatenmark kurz mitrösten, Linsen, Tomaten und 300 ml Wasser zugeben.",
+   "15 Minuten köcheln lassen, bis die Linsen weich sind. Mit Oregano, Salz und Pfeffer abschmecken.",
+   "Spaghetti nach Packungsangabe kochen und mit der Sauce servieren."
+  ],
+  "nutrition": {
+   "kcal": 490,
+   "protein": 23,
+   "carbs": 85,
+   "fat": 6
+  }
+ },
+ {
+  "id": "haehnchen-gemuese-pfanne",
+  "title": "Hähnchen-Gemüse-Pfanne mit Reis",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [
+   "proteinreich",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 250,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Reis",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe kochen.",
+   "Hähnchen in Streifen schneiden und im Öl rundum anbraten, herausnehmen.",
+   "Zwiebel, Paprika und Zucchini in Stücke schneiden und 5 Minuten braten.",
+   "Hähnchen zurück in die Pfanne geben, mit Sojasauce ablöschen und mit dem Reis servieren."
+  ],
+  "nutrition": {
+   "kcal": 520,
+   "protein": 40,
+   "carbs": 60,
+   "fat": 11
+  }
+ },
+ {
+  "id": "ofenlachs-kartoffeln",
+  "title": "Ofenlachs mit Kartoffeln und Brokkoli",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 2,
+  "tags": [
+   "proteinreich",
+   "glutenfrei"
+  ],
+  "ingredients": [
+   {
+    "name": "Lachsfilet",
+    "amount": 250,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Brokkoli",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Dill",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C vorheizen. Kartoffeln vierteln, mit der Hälfte des Öls, Salz und Pfeffer mischen und 15 Minuten backen.",
+   "Brokkoli in Röschen teilen und mit dem Lachs zu den Kartoffeln aufs Blech legen.",
+   "Mit restlichem Öl beträufeln, Zitronenscheiben auf den Lachs legen und weitere 12–15 Minuten garen.",
+   "Mit Dill bestreuen."
+  ],
+  "nutrition": {
+   "kcal": 590,
+   "protein": 36,
+   "carbs": 45,
+   "fat": 27
+  }
+ },
+ {
+  "id": "chili-sin-carne",
+  "title": "Chili sin Carne mit Reis",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 4,
+  "tags": [
+   "vegan",
+   "meal-prep",
+   "ballaststoffreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kidneybohnen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mais",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe kochen.",
+   "Zwiebel, Knoblauch und Paprika würfeln und im Öl anbraten.",
+   "Gewürze kurz mitrösten, Tomaten, abgespülte Bohnen und Mais zugeben.",
+   "20 Minuten köcheln lassen, abschmecken und mit Reis servieren."
+  ],
+  "nutrition": {
+   "kcal": 460,
+   "protein": 16,
+   "carbs": 82,
+   "fat": 6
+  }
+ },
+ {
+  "id": "griechischer-salat",
+  "title": "Griechischer Salat mit Feta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 15,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "low-carb",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Salatgurke",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomate",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Feta",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Oliven",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Gurke, Tomaten und Paprika in mundgerechte Stücke schneiden, Zwiebel in feine Ringe.",
+   "Alles mit Oliven mischen, mit Olivenöl, Oregano, Salz und Pfeffer anmachen.",
+   "Feta in Würfel schneiden oder darüberbröseln."
+  ],
+  "nutrition": {
+   "kcal": 320,
+   "protein": 10,
+   "carbs": 12,
+   "fat": 26
+  }
+ },
+ {
+  "id": "kartoffel-lauch-suppe",
+  "title": "Kartoffel-Lauch-Suppe",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 4,
+  "tags": [
+   "vegetarisch",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 800,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Lauch",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 1,
+    "unit": "l",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sahne",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen und würfeln, Lauch in Ringe schneiden und gründlich waschen.",
+   "Lauch im Öl andünsten, Kartoffeln und Brühe zugeben, 20 Minuten köcheln.",
+   "Ein Drittel der Suppe pürieren und zurückgeben, Sahne einrühren und mit Muskat, Salz und Pfeffer abschmecken."
+  ],
+  "nutrition": {
+   "kcal": 280,
+   "protein": 6,
+   "carbs": 38,
+   "fat": 11
+  }
+ },
+ {
+  "id": "putengeschnetzeltes-champignons",
+  "title": "Putengeschnetzeltes mit Champignons und Bandnudeln",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [
+   "proteinreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Putenbrust",
+    "amount": 250,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Champignons",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Bandnudeln",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kochsahne 15 %",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Nudeln nach Packungsangabe kochen.",
+   "Pute in Streifen schneiden und im Öl scharf anbraten, herausnehmen.",
+   "Zwiebel und Champignons in Scheiben schneiden und anbraten, bis sie Farbe haben.",
+   "Mit Kochsahne und 100 ml Wasser ablöschen, Fleisch zurückgeben, 3 Minuten köcheln. Mit Petersilie servieren."
+  ],
+  "nutrition": {
+   "kcal": 610,
+   "protein": 45,
+   "carbs": 65,
+   "fat": 15
+  }
+ },
+ {
+  "id": "kichererbsen-gemuese-curry",
+  "title": "Gemüse-Curry mit Kichererbsen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 4,
+  "tags": [
+   "vegan",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 240,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kichererbsen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kokosmilch (light)",
+    "amount": 400,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Blumenkohl",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Currypaste",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe kochen.",
+   "Zwiebel würfeln und mit der Currypaste anschwitzen.",
+   "Blumenkohlröschen und Karottenscheiben zugeben, mit Kokosmilch und 200 ml Wasser ablöschen, 12 Minuten köcheln.",
+   "Abgespülte Kichererbsen und Spinat unterrühren, kurz erhitzen und mit Reis servieren."
+  ],
+  "nutrition": {
+   "kcal": 520,
+   "protein": 15,
+   "carbs": 70,
+   "fat": 18
+  }
+ },
+ {
+  "id": "haehnchen-wrap",
+  "title": "Vollkorn-Wraps mit Hähnchen und Joghurtsauce",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [
+   "proteinreich",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Vollkorn-Wraps",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Hähnchenbrust",
+    "amount": 200,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomate",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Römersalat",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Hähnchen in Streifen schneiden, mit Paprikapulver würzen und im Öl durchbraten.",
+   "Joghurt mit Salz, Pfeffer und etwas geriebener Gurke verrühren.",
+   "Wraps kurz erwärmen, mit Salat, Tomate, Gurke und Hähnchen belegen, Sauce darüber und aufrollen."
+  ],
+  "nutrition": {
+   "kcal": 430,
+   "protein": 35,
+   "carbs": 40,
+   "fat": 12
+  }
+ },
+ {
+  "id": "spinat-feta-omelett",
+  "title": "Spinat-Feta-Omelett",
+  "meal": [
+   "breakfast",
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 10,
+  "servings": 1,
+  "tags": [
+   "vegetarisch",
+   "low-carb",
+   "schnell",
+   "proteinreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Eier",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 50,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Feta",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Eier verquirlen und würzen.",
+   "Spinat im Öl kurz zusammenfallen lassen, Eier darübergießen.",
+   "Bei mittlerer Hitze stocken lassen, Feta darüberbröseln und zusammenklappen."
+  ],
+  "nutrition": {
+   "kcal": 340,
+   "protein": 25,
+   "carbs": 3,
+   "fat": 25
+  }
+ },
+ {
+  "id": "ofengemuese-halloumi",
+  "title": "Ofengemüse mit Halloumi",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "glutenfrei"
+  ],
+  "ingredients": [
+   {
+    "name": "Süßkartoffel",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Halloumi",
+    "amount": 160,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C vorheizen.",
+   "Gemüse in mundgerechte Stücke schneiden, mit Öl, Thymian, Salz und Pfeffer mischen und 25 Minuten rösten.",
+   "Halloumi in Scheiben schneiden, aufs Blech legen und weitere 10 Minuten backen."
+  ],
+  "nutrition": {
+   "kcal": 560,
+   "protein": 23,
+   "carbs": 40,
+   "fat": 33
+  }
+ },
+ {
+  "id": "kartoffelsalat-joghurt",
+  "title": "Kartoffelsalat mit Gurke und Joghurtdressing",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 4,
+  "tags": [
+   "vegetarisch",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 1,
+    "unit": "kg",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln in der Schale ca. 20 Minuten garen, pellen und in Scheiben schneiden.",
+   "Zwiebel fein würfeln, Gurke in dünne Scheiben hobeln.",
+   "Joghurt, Senf, Öl, Salz und Pfeffer verrühren, mit allem mischen.",
+   "Mindestens 15 Minuten ziehen lassen, mit Schnittlauch bestreuen."
+  ],
+  "nutrition": {
+   "kcal": 230,
+   "protein": 7,
+   "carbs": 40,
+   "fat": 4
+  }
+ },
+ {
+  "id": "spaghetti-tomatensauce",
+  "title": "Spaghetti mit Tomatensauce und Basilikum",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Spaghetti",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 20,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Spaghetti nach Packungsangabe kochen.",
+   "Knoblauch im Olivenöl andünsten, Tomaten zugeben und 10 Minuten köcheln, würzen.",
+   "Spaghetti untermischen, mit Basilikum und geriebenem Parmesan servieren."
+  ],
+  "nutrition": {
+   "kcal": 520,
+   "protein": 18,
+   "carbs": 84,
+   "fat": 12
+  }
+ },
+ {
+  "id": "hack-bulgur-pfanne",
+  "title": "Rinderhack-Gemüse-Pfanne mit Bulgur",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [
+   "proteinreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Rinderhack (mager)",
+    "amount": 200,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Bulgur",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Bulgur mit 250 ml kochendem Wasser übergießen und 10 Minuten quellen lassen.",
+   "Hack krümelig anbraten, gewürfelte Zwiebel zugeben.",
+   "Zucchini und Paprika würfeln, mitbraten, Tomatenmark und Paprikapulver einrühren.",
+   "Bulgur untermischen und abschmecken."
+  ],
+  "nutrition": {
+   "kcal": 560,
+   "protein": 34,
+   "carbs": 55,
+   "fat": 20
+  }
+ },
+ {
+  "id": "linsensuppe",
+  "title": "Linsensuppe mit Gemüse",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 4,
+  "tags": [
+   "vegan",
+   "meal-prep",
+   "ballaststoffreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Tellerlinsen",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Lauch",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 1,
+    "unit": "l",
+    "category": "vorrat"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Zwiebel würfeln, Karotten, Kartoffeln und Lauch klein schneiden.",
+   "Alles mit Linsen und Brühe aufkochen und 30 Minuten köcheln lassen.",
+   "Mit Essig, Salz und Pfeffer abschmecken."
+  ],
+  "nutrition": {
+   "kcal": 300,
+   "protein": 17,
+   "carbs": 48,
+   "fat": 2
+  }
+ },
+ {
+  "id": "kabeljau-senfsauce",
+  "title": "Kabeljau mit Senfsauce, Kartoffeln und Erbsen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [
+   "proteinreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Kabeljaufilet",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Erbsen (TK)",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 150,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mehl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Butter",
+    "amount": 10,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen und in Salzwasser ca. 20 Minuten garen.",
+   "Butter schmelzen, Mehl einrühren, Milch nach und nach zugießen, Senf zugeben und 3 Minuten köcheln.",
+   "Kabeljau würzen und in der Sauce zugedeckt 8 Minuten gar ziehen lassen.",
+   "Erbsen 4 Minuten garen und alles zusammen servieren."
+  ],
+  "nutrition": {
+   "kcal": 450,
+   "protein": 38,
+   "carbs": 50,
+   "fat": 8
+  }
+ },
+ {
+  "id": "quinoa-avocado-salat",
+  "title": "Quinoa-Salat mit Avocado",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [
+   "vegan",
+   "glutenfrei"
+  ],
+  "ingredients": [
+   {
+    "name": "Quinoa",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Avocado",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Quinoa heiß abspülen und in der doppelten Menge Wasser 15 Minuten garen, abkühlen lassen.",
+   "Avocado, Tomaten und Gurke klein schneiden, Petersilie hacken.",
+   "Alles mit Zitronensaft, Olivenöl, Salz und Pfeffer vermengen."
+  ],
+  "nutrition": {
+   "kcal": 480,
+   "protein": 12,
+   "carbs": 50,
+   "fat": 25
+  }
+ },
+ {
+  "id": "caesar-salat-leicht",
+  "title": "Leichter Hähnchen-Caesar-Salat",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [
+   "proteinreich",
+   "low-carb"
+  ],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 250,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Römersalat",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Vollkornbrot",
+    "amount": 1,
+    "unit": "Scheibe",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Hähnchen würzen und im Öl durchbraten, in Streifen schneiden.",
+   "Brot würfeln und ohne Fett zu Croutons rösten.",
+   "Joghurt, Senf, Zitronensaft und die Hälfte des Parmesans zu einem Dressing verrühren.",
+   "Salat zupfen, mit Dressing mischen, Hähnchen, Croutons und restlichen Parmesan darauf verteilen."
+  ],
+  "nutrition": {
+   "kcal": 380,
+   "protein": 42,
+   "carbs": 16,
+   "fat": 15
+  }
+ },
+ {
+  "id": "gefuellte-paprika-couscous",
+  "title": "Gefüllte Paprika mit Couscous und Feta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 2,
+  "tags": [
+   "vegetarisch"
+  ],
+  "ingredients": [
+   {
+    "name": "Paprika",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Couscous",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Feta",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 190 °C vorheizen. Couscous mit 120 ml heißem Wasser übergießen und 5 Minuten quellen lassen.",
+   "Zwiebel fein würfeln, mit Couscous, zerbröseltem Feta und Petersilie mischen.",
+   "Paprika halbieren, entkernen und füllen.",
+   "Passierte Tomaten in eine Form geben, Paprika daraufsetzen und 25 Minuten backen."
+  ],
+  "nutrition": {
+   "kcal": 440,
+   "protein": 18,
+   "carbs": 55,
+   "fat": 15
+  }
+ },
+ {
+  "id": "tofu-brokkoli-pfanne",
+  "title": "Tofu-Brokkoli-Pfanne mit Reis",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [
+   "vegan",
+   "proteinreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Tofu (natur)",
+    "amount": 200,
+    "unit": "g",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Brokkoli",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Reis",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sesamöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe kochen.",
+   "Tofu trocken tupfen, würfeln und im Rapsöl knusprig braten.",
+   "Brokkoli in Röschen teilen und mit geriebenem Ingwer 5 Minuten mitbraten.",
+   "Mit Sojasauce und Sesamöl würzen und mit Reis servieren."
+  ],
+  "nutrition": {
+   "kcal": 480,
+   "protein": 22,
+   "carbs": 58,
+   "fat": 16
+  }
+ },
+ {
+  "id": "pellkartoffeln-kraeuterquark",
+  "title": "Pellkartoffeln mit Kräuterquark",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "proteinreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Leinöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kartoffeln in der Schale ca. 20–25 Minuten kochen.",
+   "Quark mit etwas Wasser cremig rühren, Schnittlauch schneiden, Gurke fein würfeln und unterheben.",
+   "Mit Salz, Pfeffer und Leinöl abschmecken und zu den Kartoffeln servieren."
+  ],
+  "nutrition": {
+   "kcal": 400,
+   "protein": 25,
+   "carbs": 58,
+   "fat": 4
+  }
+ },
+ {
+  "id": "zucchini-nudeln-garnelen",
+  "title": "Zucchini-Nudeln mit Garnelen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [
+   "low-carb",
+   "proteinreich",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Zucchini",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Garnelen",
+    "amount": 200,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Zucchini mit einem Spiralschneider zu Nudeln schneiden.",
+   "Knoblauch im Öl andünsten, Garnelen 3 Minuten braten.",
+   "Tomaten halbieren und mit den Zucchininudeln 2 Minuten mitschwenken, mit Chili, Salz und Pfeffer würzen."
+  ],
+  "nutrition": {
+   "kcal": 220,
+   "protein": 23,
+   "carbs": 9,
+   "fat": 9
+  }
+ },
+ {
+  "id": "kuerbissuppe-ingwer",
+  "title": "Kürbissuppe mit Ingwer",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 4,
+  "tags": [
+   "vegan",
+   "glutenfrei",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Hokkaido-Kürbis",
+    "amount": 1,
+    "unit": "kg",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kokosmilch (light)",
+    "amount": 200,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 800,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kürbis entkernen und mit Schale würfeln, Zwiebel und Ingwer hacken.",
+   "Zwiebel und Ingwer im Öl andünsten, Kürbis und Brühe zugeben, 20 Minuten köcheln.",
+   "Kokosmilch zugeben, fein pürieren und abschmecken."
+  ],
+  "nutrition": {
+   "kcal": 200,
+   "protein": 4,
+   "carbs": 22,
+   "fat": 10
+  }
+ },
+ {
+  "id": "suesskartoffel-bohnen",
+  "title": "Ofen-Süßkartoffel mit Bohnen und Joghurt",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "ballaststoffreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Süßkartoffel",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kidneybohnen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C vorheizen, Süßkartoffeln längs halbieren und 35–40 Minuten backen.",
+   "Bohnen abspülen, mit Paprikapulver, Salz und Pfeffer in einer Pfanne erwärmen.",
+   "Süßkartoffeln mit Bohnen füllen, Joghurt und Frühlingszwiebelringe darauf geben."
+  ],
+  "nutrition": {
+   "kcal": 480,
+   "protein": 17,
+   "carbs": 88,
+   "fat": 4
+  }
+ },
+ {
+  "id": "thunfisch-reis-bowl",
+  "title": "Thunfisch-Reis-Bowl",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [
+   "proteinreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thunfisch (naturell)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Avocado",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sesam",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe kochen und etwas abkühlen lassen.",
+   "Gurke und Avocado in Scheiben schneiden, Karotte raspeln.",
+   "Reis auf zwei Schalen verteilen, Thunfisch und Gemüse darauf anrichten, mit Sojasauce und Sesam toppen."
+  ],
+  "nutrition": {
+   "kcal": 520,
+   "protein": 32,
+   "carbs": 55,
+   "fat": 18
+  }
+ },
+ {
+  "id": "gnocchi-spinat-pfanne",
+  "title": "Gnocchi-Pfanne mit Spinat und Tomaten",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Gnocchi",
+    "amount": 400,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Gnocchi im Öl rundherum goldbraun braten.",
+   "Knoblauch und halbierte Tomaten zugeben und 2 Minuten mitbraten.",
+   "Spinat unterheben, bis er zusammenfällt, mit Parmesan bestreuen."
+  ],
+  "nutrition": {
+   "kcal": 470,
+   "protein": 14,
+   "carbs": 78,
+   "fat": 12
+  }
+ },
+ {
+  "id": "ofen-frittata",
+  "title": "Ofen-Frittata mit Gemüse",
+  "meal": [
+   "breakfast",
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 4,
+  "tags": [
+   "vegetarisch",
+   "low-carb",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Eier",
+    "amount": 8,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Bergkäse",
+    "amount": 50,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C vorheizen. Gemüse klein würfeln und in einer ofenfesten Pfanne kurz anbraten.",
+   "Eier mit Milch, Salz und Pfeffer verquirlen und über das Gemüse gießen.",
+   "Käse darüberreiben und 20 Minuten im Ofen stocken lassen."
+  ],
+  "nutrition": {
+   "kcal": 260,
+   "protein": 19,
+   "carbs": 6,
+   "fat": 17
+  }
+ },
+ {
+  "id": "haehnchen-kartoffel-blech",
+  "title": "Hähnchen-Kartoffel-Blech mit Rosmarin",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 2,
+  "tags": [
+   "proteinreich",
+   "glutenfrei"
+  ],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rosmarin",
+    "amount": 2,
+    "unit": "Zweig",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C vorheizen. Kartoffeln und Karotten in Stücke, Zwiebel in Spalten schneiden.",
+   "Mit Öl, Rosmarin, Salz und Pfeffer mischen und 20 Minuten backen.",
+   "Hähnchen in große Stücke schneiden, würzen, aufs Blech legen und weitere 15–20 Minuten garen."
+  ],
+  "nutrition": {
+   "kcal": 520,
+   "protein": 42,
+   "carbs": 52,
+   "fat": 12
+  }
+ },
+ {
+  "id": "spitzkohl-hack-pfanne",
+  "title": "Spitzkohl-Hack-Pfanne",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [
+   "low-carb",
+   "proteinreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Spitzkohl",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rinderhack (mager)",
+    "amount": 200,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kartoffeln klein würfeln und im Öl 10 Minuten braten.",
+   "Hack und Zwiebel zugeben und krümelig braten.",
+   "Spitzkohl in Streifen schneiden, mit Kümmel zugeben und 5–7 Minuten mitbraten, abschmecken."
+  ],
+  "nutrition": {
+   "kcal": 430,
+   "protein": 27,
+   "carbs": 25,
+   "fat": 23
+  }
+ },
+ {
+  "id": "abendbrot-teller",
+  "title": "Abendbrot-Teller mit Rohkost",
+  "meal": [
+   "dinner"
+  ],
+  "time_min": 10,
+  "servings": 1,
+  "tags": [
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Vollkornbrot",
+    "amount": 2,
+    "unit": "Scheiben",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gouda",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Putenbrust-Aufschnitt",
+    "amount": 50,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Tomate",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Butter",
+    "amount": 5,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Brot dünn mit Butter bestreichen.",
+   "Mit Käse und Putenbrust belegen.",
+   "Tomate und Paprika in Spalten bzw. Streifen schneiden und dazu servieren."
+  ],
+  "nutrition": {
+   "kcal": 420,
+   "protein": 26,
+   "carbs": 42,
+   "fat": 15
+  }
+ },
+ {
+  "id": "erbseneintopf",
+  "title": "Erbseneintopf mit Kartoffeln",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [
+   "vegan",
+   "meal-prep",
+   "ballaststoffreich"
+  ],
+  "ingredients": [
+   {
+    "name": "Schälerbsen (getrocknet)",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Lauch",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 1.2,
+    "unit": "l",
+    "category": "vorrat"
+   },
+   {
+    "name": "Majoran",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Zwiebel würfeln, Erbsen abspülen und mit Brühe aufkochen, 20 Minuten köcheln.",
+   "Kartoffeln, Karotten und Lauch klein schneiden, zugeben und weitere 20 Minuten garen.",
+   "Mit Majoran, Salz und Pfeffer abschmecken, nach Wunsch etwas pürieren."
+  ],
+  "nutrition": {
+   "kcal": 340,
+   "protein": 18,
+   "carbs": 55,
+   "fat": 4
+  }
+ },
+ {
+  "id": "rote-bete-salat-ziegenkaese",
+  "title": "Rote-Bete-Salat mit Ziegenkäse",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 15,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "glutenfrei",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Rote Bete (vorgegart)",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Feldsalat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ziegenkäse",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 20,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Rote Bete in Spalten schneiden, Feldsalat waschen.",
+   "Öl, Balsamico, Honig, Salz und Pfeffer verrühren.",
+   "Salat anrichten, Ziegenkäse darüberbröseln und mit gehackten Walnüssen bestreuen."
+  ],
+  "nutrition": {
+   "kcal": 360,
+   "protein": 14,
+   "carbs": 24,
+   "fat": 23
+  }
+ },
+ {
+  "id": "gemuese-reispfanne-ei",
+  "title": "Gebratener Gemüsereis mit Ei",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Erbsen (TK)",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reis kochen (am besten schon am Vortag) und abkühlen lassen.",
+   "Karotten würfeln und mit Erbsen im Öl 4 Minuten braten.",
+   "Reis zugeben und anbraten, an den Rand schieben, Eier in die Mitte geben und stocken lassen.",
+   "Alles mischen, mit Sojasauce würzen und mit Frühlingszwiebeln bestreuen."
+  ],
+  "nutrition": {
+   "kcal": 480,
+   "protein": 18,
+   "carbs": 66,
+   "fat": 15
+  }
+ },
+ {
+  "id": "apfel-erdnussbutter",
+  "title": "Apfel mit Erdnussbutter",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 3,
+  "servings": 1,
+  "tags": [
+   "vegan",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Apfel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Erdnussbutter",
+    "amount": 15,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Apfel in Spalten schneiden.",
+   "Mit Erdnussbutter zum Dippen servieren."
+  ],
+  "nutrition": {
+   "kcal": 180,
+   "protein": 4,
+   "carbs": 23,
+   "fat": 8
+  }
+ },
+ {
+  "id": "hummus-gemuesesticks",
+  "title": "Hummus mit Gemüsesticks",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 15,
+  "servings": 4,
+  "tags": [
+   "vegan",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Kichererbsen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tahin",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kichererbsen abgießen (etwas Flüssigkeit auffangen).",
+   "Mit Tahin, Zitronensaft, Knoblauch, Öl und 3–4 EL Flüssigkeit cremig pürieren, abschmecken.",
+   "Gemüse in Sticks schneiden und zum Hummus servieren."
+  ],
+  "nutrition": {
+   "kcal": 210,
+   "protein": 8,
+   "carbs": 20,
+   "fat": 11
+  }
+ },
+ {
+  "id": "dattel-energiekugeln",
+  "title": "Dattel-Energiekugeln",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 15,
+  "servings": 6,
+  "tags": [
+   "vegan",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Datteln (entsteint)",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 80,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mandeln",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kakaopulver",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Mandeln im Mixer grob zerkleinern.",
+   "Datteln, Haferflocken und Kakao zugeben und zu einer klebrigen Masse mixen.",
+   "12 Kugeln formen (2 Kugeln = 1 Portion) und kühl lagern."
+  ],
+  "nutrition": {
+   "kcal": 190,
+   "protein": 4,
+   "carbs": 30,
+   "fat": 6
+  }
+ },
+ {
+  "id": "quark-beeren",
+  "title": "Magerquark mit Beeren",
+  "meal": [
+   "snack",
+   "breakfast"
+  ],
+  "time_min": 3,
+  "servings": 1,
+  "tags": [
+   "vegetarisch",
+   "proteinreich",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Magerquark",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Beeren (TK)",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Quark mit einem Schuss Wasser cremig rühren.",
+   "Beeren (aufgetaut) unterheben und mit Honig süßen."
+  ],
+  "nutrition": {
+   "kcal": 170,
+   "protein": 19,
+   "carbs": 20,
+   "fat": 1
+  }
+ },
+ {
+  "id": "tzatziki-knaeckebrot",
+  "title": "Tzatziki mit Knäckebrot",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 2,
+  "tags": [
+   "vegetarisch",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Vollkorn-Knäckebrot",
+    "amount": 4,
+    "unit": "Scheiben",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Gurke raspeln und gut ausdrücken.",
+   "Mit Joghurt und gepresstem Knoblauch verrühren, salzen.",
+   "Mit Knäckebrot servieren."
+  ],
+  "nutrition": {
+   "kcal": 190,
+   "protein": 9,
+   "carbs": 25,
+   "fat": 4
+  }
+ },
+ {
+  "id": "edamame-meersalz",
+  "title": "Edamame mit Meersalz",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 8,
+  "servings": 2,
+  "tags": [
+   "vegan",
+   "proteinreich",
+   "glutenfrei"
+  ],
+  "ingredients": [
+   {
+    "name": "Edamame (TK, in der Schale)",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Meersalz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Edamame in kochendem Wasser 4–5 Minuten garen.",
+   "Abgießen und mit Meersalz bestreuen."
+  ],
+  "nutrition": {
+   "kcal": 180,
+   "protein": 16,
+   "carbs": 10,
+   "fat": 8
+  }
+ },
+ {
+  "id": "bananen-joghurt",
+  "title": "Joghurt mit Banane und Haferflocken",
+  "meal": [
+   "snack",
+   "breakfast"
+  ],
+  "time_min": 3,
+  "servings": 1,
+  "tags": [
+   "vegetarisch",
+   "schnell"
+  ],
+  "ingredients": [
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Bananen",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 15,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Banane in Scheiben schneiden.",
+   "Mit Joghurt und Haferflocken in einer Schale mischen."
+  ],
+  "nutrition": {
+   "kcal": 260,
+   "protein": 10,
+   "carbs": 44,
+   "fat": 5
+  }
+ }
+]

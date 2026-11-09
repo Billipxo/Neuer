@@ -11,9 +11,12 @@ import { TodayPage } from './pages/TodayPage'
 import { AddFoodPage } from './pages/AddFoodPage'
 import { DishEditorPage } from './pages/DishEditorPage'
 import { ProfilePage } from './pages/ProfilePage'
+import { RecipesPage } from './pages/RecipesPage'
+import { RecipeDetailPage } from './pages/RecipeDetailPage'
+import { ShoppingPage } from './pages/ShoppingPage'
 
 /** Bereits umgesetzte Bereiche (wächst mit jeder Phase) */
-const ENABLED = new Set(['/'])
+const ENABLED = new Set(['/', '/rezepte', '/einkauf'])
 
 export function App() {
   const { loading, store, userId } = useAuth()
@@ -44,7 +47,10 @@ function Authed() {
       <Route element={<AppShell items={NAV_ITEMS.filter((i) => ENABLED.has(i.to))} />}>
         <Route index element={<TodayPage />} />
         <Route path="profil" element={<ProfilePage />} />
+        <Route path="rezepte" element={<RecipesPage />} />
+        <Route path="einkauf" element={<ShoppingPage />} />
       </Route>
+      <Route path="rezepte/:id" element={<RecipeDetailPage />} />
       <Route path="hinzufuegen" element={<AddFoodPage />} />
       <Route path="gerichte/neu" element={<DishEditorPage />} />
       <Route path="gerichte/:id" element={<DishEditorPage />} />

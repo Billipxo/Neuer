@@ -20,6 +20,7 @@ const VEGGIES: Record<string, string[]> = {
   Kürbis: ['kürbis', 'hokkaido'],
   Pilze: ['champignon', 'pilz', 'pfifferling', 'kräuterseitling'],
   Erbsen: ['erbse'],
+  Schälerbsen: ['schälerbse'],
   Bohnen: ['bohne', 'kidneybohne'],
   Linsen: ['linse'],
   Kichererbsen: ['kichererbse'],
@@ -40,6 +41,13 @@ const VEGGIES: Record<string, string[]> = {
   Edamame: ['edamame'],
 }
 
+/** Wörter, die ein Stichwort enthalten, aber kein (anderes) Gemüse meinen */
+const EXCLUDE: Record<string, string[]> = {
+  Lauch: ['knoblauch', 'schnittlauch'],
+  Erbsen: ['kichererbse', 'schälerbse'],
+  Salat: ['salatgurke'],
+}
+
 const ENTRIES = Object.entries(VEGGIES)
 
 /** Liefert die erkannten Gemüsesorten (kanonische Namen) für einen oder mehrere Texte. */
@@ -48,7 +56,8 @@ export function detectVeggies(...texts: string[]): string[] {
   for (const t of texts) {
     const lower = t.toLowerCase()
     for (const [canon, keys] of ENTRIES) {
-      if (keys.some((k) => lower.includes(k))) found.add(canon)
+      const cleaned = (EXCLUDE[canon] ?? []).reduce((acc, ex) => acc.split(ex).join(' '), lower)
+      if (keys.some((k) => cleaned.includes(k))) found.add(canon)
     }
   }
   return [...found].sort()
