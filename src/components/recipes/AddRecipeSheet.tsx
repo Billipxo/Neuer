@@ -7,6 +7,9 @@ import { roundNutrients } from '../../lib/nutrition'
 import { todayISO, shiftISO, relativeDayLabel } from '../../lib/dates'
 import { fmt1 } from '../../lib/format'
 import { useAddLogEntries } from '../../hooks/data'
+import { useAddPlanItems } from '../../hooks/plan'
+import { recipePlanItem } from '../../lib/planner'
+import { Field } from '../ui/Field'
 import { Sheet } from '../ui/Sheet'
 import { Button } from '../ui/Button'
 import { Segmented } from '../ui/Segmented'
@@ -20,7 +23,9 @@ export function AddRecipeSheet({ recipe, open, onClose }: { recipe: Recipe; open
   const [date, setDate] = useState(today)
   const [meal, setMeal] = useState<MealType>('lunch')
   const [servings, setServings] = useState<number | null>(1)
+  const [mode, setMode] = useState<'log' | 'plan'>('log')
   const add = useAddLogEntries()
+  const addPlan = useAddPlanItems()
   const toast = useToast()
 
   useEffect(() => {
@@ -29,6 +34,7 @@ export function AddRecipeSheet({ recipe, open, onClose }: { recipe: Recipe; open
     setMeal(recipe.meal.includes(m) ? m : recipe.meal[0])
     setServings(1)
     setDate(today)
+    setMode('log')
   }, [open, recipe, today])
 
   const n = recipeNutrients(recipe, servings ?? 0)
@@ -41,9 +47,15 @@ export function AddRecipeSheet({ recipe, open, onClose }: { recipe: Recipe; open
         <Button
           block
           size="lg"
-          disabled={!servings || add.isPending}
+          disabled={!servings || !date || add.isPending || addPlan.isPending}
           onClick={async () => {
             if (!servings) return
+            if (mode === 'plan') {
+              await addPlan.mutateAsync([recipePlanItem(recipe, date, meal, servings)])
+              toast(`Im Wochenplan eingeplant (${relativeDayLabel(date, today)})`, '📅')
+              onClose()
+              return
+            }
             await add.mutateAsync([
               {
                 date,
@@ -63,20 +75,36 @@ export function AddRecipeSheet({ recipe, open, onClose }: { recipe: Recipe; open
             onClose()
           }}
         >
-          Eintragen
+          {mode === 'plan' ? 'Einplanen' : 'Als gegessen eintragen'}
         </Button>
       }
     >
       <div className="space-y-4">
-        <div>
-          <p className="mb-1.5 text-sm font-medium">Tag</p>
-          <Segmented
-            label="Tag"
-            value={date}
-            onChange={setDate}
-            options={[shiftISO(today, -1), today, shiftISO(today, 1)].map((d) => ({ value: d, label: relativeDayLabel(d, today) }))}
-          />
-        </div>
+        <Segmented
+          label="Gegessen oder geplant"
+          value={mode}
+          onChange={(m) => {
+            setMode(m)
+            setDate(m === 'plan' ? shiftISO(today, 1) : today)
+          }}
+          options={[
+            { value: 'log', label: 'Gegessen' },
+            { value: 'plan', label: 'Einplanen' },
+          ]}
+        />
+        {mode === 'log' ? (
+          <div>
+            <p className="mb-1.5 text-sm font-medium">Tag</p>
+            <Segmented
+              label="Tag"
+              value={date}
+              onChange={setDate}
+              options={[shiftISO(today, -1), today, shiftISO(today, 1)].map((d) => ({ value: d, label: relativeDayLabel(d, today) }))}
+            />
+          </div>
+        ) : (
+          <Field label="Datum" type="date" value={date} min={today} onChange={(e) => setDate(e.target.value)} />
+        )}
         <div>
           <p className="mb-1.5 text-sm font-medium">Mahlzeit</p>
           <Segmented<MealType>
