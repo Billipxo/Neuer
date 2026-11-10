@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useParams, Navigate } from 'react-router-dom'
-import { Clock, Heart, Hourglass, Lightbulb, Minus, Plus, ShoppingBasket, Thermometer, Users, CalendarPlus } from 'lucide-react'
+import { useParams, Navigate, Link } from 'react-router-dom'
+import { ChefHat, Clock, Heart, Hourglass, Lightbulb, Minus, Plus, ShoppingBasket, Thermometer, Users, CalendarPlus } from 'lucide-react'
 import { getRecipe, hasAirfryerVariant, isAirfryerNative, recipeEmoji, recipeNutrients, recipeSteps, scaleIngredients, TAG_LABELS } from '../lib/recipes'
 import { useProfile, useToggleFavoriteRecipe } from '../hooks/data'
 import { Segmented } from '../components/ui/Segmented'
@@ -128,6 +128,16 @@ export function RecipeDetailPage() {
       </Card>
 
       <SectionTitle>Zubereitung</SectionTitle>
+      <Link
+        to={`/rezepte/${recipe.id}/kochen?portionen=${servings}&methode=${variant ? activeMethod : 'airfryer'}`}
+        className="mb-4 flex min-h-14 items-center gap-3 rounded-2xl bg-brand px-4 text-brand-ink shadow-sm transition active:scale-[0.99]"
+      >
+        <ChefHat className="size-6 shrink-0" aria-hidden />
+        <span className="flex-1">
+          <span className="block font-semibold">Kochmodus starten</span>
+          <span className="block text-xs opacity-90">Schritt für Schritt, mit Timern – Display bleibt an</span>
+        </span>
+      </Link>
       {variant && (
         <Segmented<'airfryer' | 'oven'>
           className="mb-3"

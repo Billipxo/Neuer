@@ -9,6 +9,7 @@ import { LoginPage } from './pages/LoginPage'
 import { OnboardingPage } from './pages/OnboardingPage'
 import { TodayPage } from './pages/TodayPage'
 import { AchievementWatcher } from './components/achievements/AchievementWatcher'
+import { TimerTray } from './components/cooking/TimerTray'
 
 const AddFoodPage = lazy(() => import('./pages/AddFoodPage').then((m) => ({ default: m.AddFoodPage })))
 const DishEditorPage = lazy(() => import('./pages/DishEditorPage').then((m) => ({ default: m.DishEditorPage })))
@@ -18,6 +19,7 @@ const RecipeDetailPage = lazy(() => import('./pages/RecipeDetailPage').then((m) 
 const ShoppingPage = lazy(() => import('./pages/ShoppingPage').then((m) => ({ default: m.ShoppingPage })))
 const PlannerPage = lazy(() => import('./pages/PlannerPage').then((m) => ({ default: m.PlannerPage })))
 const HistoryPage = lazy(() => import('./pages/HistoryPage'))
+const CookModePage = lazy(() => import('./pages/CookModePage').then((m) => ({ default: m.CookModePage })))
 
 
 export function App() {
@@ -47,6 +49,7 @@ function Authed() {
   return (
     <Suspense fallback={<Spinner />}>
     <AchievementWatcher />
+    <TimerTray />
     <Routes>
       <Route element={<AppShell items={NAV_ITEMS} />}>
         <Route index element={<TodayPage />} />
@@ -57,6 +60,7 @@ function Authed() {
         <Route path="verlauf" element={<HistoryPage />} />
       </Route>
       <Route path="rezepte/:id" element={<RecipeDetailPage />} />
+      <Route path="rezepte/:id/kochen" element={<CookModePage />} />
       <Route path="hinzufuegen" element={<AddFoodPage />} />
       <Route path="gerichte/neu" element={<DishEditorPage />} />
       <Route path="gerichte/:id" element={<DishEditorPage />} />

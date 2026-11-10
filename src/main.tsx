@@ -8,6 +8,7 @@ import { AuthProvider } from './app/auth'
 import { ToastProvider } from './components/ui/Toast'
 import { App } from './App'
 import { ErrorBoundary } from './components/layout/ErrorBoundary'
+import { TimerProvider } from './app/timers'
 import './index.css'
 import { friendlyError } from './lib/errors'
 
@@ -39,7 +40,9 @@ createRoot(document.getElementById('root')!).render(
         <ToastProvider>
           <BrowserRouter>
             <ErrorBoundary>
-              <App />
+              <TimerProvider>
+                <App />
+              </TimerProvider>
             </ErrorBoundary>
           </BrowserRouter>
         </ToastProvider>

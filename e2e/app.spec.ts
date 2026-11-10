@@ -142,3 +142,23 @@ test('Rezept-Galerie: Heißluftfritteuse, Favoriten und Zubereitungsart', async 
   await page.goto('/rezepte')
   await expect(page.getByRole('heading', { name: 'Deine Favoriten' })).toBeVisible()
 })
+
+test('Kochmodus: Zutaten abhaken, Schritte durchgehen und Timer starten', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/rezepte/koenigsberger-klopse')
+  await page.getByRole('link', { name: /Kochmodus starten/ }).click()
+  await expect(page.getByRole('heading', { name: 'Zutaten bereitlegen' })).toBeVisible()
+  await page.getByText('Rinderhack (mager)').click()
+  await page.getByRole('button', { name: /Los geht/ }).click()
+  await expect(page.getByText('Schritt 1 von 5')).toBeVisible()
+  await page.getByRole('button', { name: /20 Min\. Timer/ }).click()
+  // Timer läuft und bleibt beim Seitenwechsel sichtbar
+  await expect(page.getByRole('status').filter({ hasText: 'Schritt 1 · 20 Min.' })).toBeVisible()
+  await page.keyboard.press('ArrowRight')
+  await expect(page.getByText('Schritt 2 von 5')).toBeVisible()
+  await page.getByRole('button', { name: 'Kochmodus beenden' }).click()
+  await expect(page).toHaveURL(/\/rezepte\/koenigsberger-klopse$/)
+  await expect(page.getByRole('status').filter({ hasText: 'Schritt 1 · 20 Min.' })).toBeVisible()
+  await page.getByRole('button', { name: /Timer abbrechen/ }).click()
+  await expect(page.getByRole('status').filter({ hasText: 'Schritt 1 · 20 Min.' })).toBeHidden()
+})
