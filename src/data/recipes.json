@@ -27287,5 +27287,2641 @@
     "Linsen garen, Tahin-Sauce anrühren und wie beschrieben anrichten."
    ]
   }
+ },
+ {
+  "id": "moussaka",
+  "title": "Moussaka mit Auberginen, Hack und Joghurthaube",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 90,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Aubergine",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rinderhack (mager)",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "oder Lammhack"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Griechischer Joghurt 2 %",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C Umluft vorheizen. Auberginen in 1 cm dicke Scheiben, Kartoffeln in 5 mm dünne Scheiben schneiden. Auf zwei Bleche legen, mit Öl bepinseln, salzen und 20 Minuten backen.",
+   "Inzwischen das Hack in einer Pfanne krümelig braten. Gehackte Zwiebel und Knoblauch 3 Minuten mitbraten.",
+   "Tomaten, Zimt und Oregano zugeben und 15 Minuten offen einköcheln lassen. Kräftig mit Salz und Pfeffer abschmecken.",
+   "Ofen auf 180 °C herunterschalten. In eine Auflaufform erst Kartoffeln, dann die Hälfte der Auberginen, die Hacksauce und die restlichen Auberginen schichten.",
+   "Joghurt mit Eiern, der Hälfte des Parmesans und Muskat verrühren, darauf verstreichen und mit restlichem Parmesan bestreuen. 35–40 Minuten goldbraun backen und vor dem Anschneiden 10 Minuten ruhen lassen."
+  ],
+  "tips": [
+   "Die Joghurthaube ist leichter als die klassische Béchamel und wird schön goldbraun.",
+   "Moussaka lässt sich gut am Vortag vorbereiten."
+  ]
+ },
+ {
+  "id": "pizza-vollkorn-gemuese",
+  "title": "Vollkornpizza mit Gemüse und Mozzarella",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Dinkelvollkornmehl",
+    "amount": 300,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Trockenhefe",
+    "amount": 0.5,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Champignons",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Mozzarella (light)",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Rucola",
+    "amount": 50,
+    "unit": "g",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Mehl, Hefe und Salz mischen. 200 ml lauwarmes Wasser und das Öl zugeben und 5 Minuten zu einem glatten Teig kneten.",
+   "Zugedeckt an einem warmen Ort 60 Minuten gehen lassen, bis sich der Teig sichtbar vergrößert hat.",
+   "Ofen auf 250 °C Ober-/Unterhitze vorheizen, das Blech mit Backpapier auslegen. Teig dünn darauf ausrollen.",
+   "Passierte Tomaten mit Oregano und Salz verrühren und auf den Teig streichen. Mit Paprikastreifen, Pilzscheiben, Zwiebelringen und zerzupftem Mozzarella belegen.",
+   "Auf der untersten Schiene 12–15 Minuten backen, bis der Rand knusprig ist. Mit Rucola belegt servieren."
+  ],
+  "rest_min": 60,
+  "tips": [
+   "Für eine knusprige Unterseite das Blech mit vorheizen und die Pizza auf dem Backpapier daraufziehen.",
+   "Der Teig kann auch über Nacht im Kühlschrank gehen – dann wird er besonders aromatisch."
+  ]
+ },
+ {
+  "id": "flammkuchen-klassisch",
+  "title": "Elsässer Flammkuchen mit Zwiebeln und Speck",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Mehl",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salz",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "saure Sahne (10 %)",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "oder rote Zwiebeln"
+   },
+   {
+    "name": "Frühstücksspeck",
+    "amount": 80,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "in Streifen"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen mit Blech auf höchster Stufe (mindestens 250 °C Ober-/Unterhitze) vorheizen.",
+   "Mehl, Öl, Salz und 110 ml Wasser 3 Minuten zu einem glatten Teig kneten. Hefe braucht es nicht.",
+   "Saure Sahne mit Quark, Muskat, Salz und Pfeffer verrühren. Zwiebeln in hauchdünne Ringe schneiden.",
+   "Teig auf Backpapier hauchdünn ausrollen, mit der Creme bestreichen und mit Zwiebeln und Speck belegen.",
+   "Mit dem Backpapier auf das heiße Blech ziehen und 10–12 Minuten backen, bis der Rand braun und knusprig ist. Mit Schnittlauch bestreuen."
+  ],
+  "tips": [
+   "Vegetarisch: statt Speck Champignons, Lauch oder Ziegenkäse.",
+   "Je dünner der Teig, desto echter der Flammkuchen."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 8,
+   "steps": [
+    "Teig und Creme wie beschrieben zubereiten, Teig in 3 Portionen teilen und passend zum Korb dünn ausrollen.",
+    "Jeden Fladen auf Backpapier mit Creme, Zwiebeln und Speck belegen.",
+    "Nacheinander bei 200 °C 7–8 Minuten backen, bis der Rand knusprig ist."
+   ]
+  }
+ },
+ {
+  "id": "lauch-quiche",
+  "title": "Lauch-Quiche mit Bergkäse",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 70,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Dinkelvollkornmehl",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 75,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 3,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Salz",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Lauch",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 200,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "saure Sahne (10 %)",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Bergkäse",
+    "amount": 60,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kopfsalat",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Mehl, Quark, 2 EL Öl, 3 EL Milch und Salz zu einem glatten Teig verkneten und 15 Minuten kühl stellen. Ofen auf 180 °C Umluft vorheizen.",
+   "Lauch putzen, gründlich waschen und in feine Ringe schneiden. Im restlichen Öl 6–8 Minuten weich dünsten, salzen.",
+   "Teig rund ausrollen, eine gefettete Tarteform (26 cm) damit auslegen und einen Rand hochziehen. Boden mehrmals mit einer Gabel einstechen.",
+   "Eier, Milch, saure Sahne, die Hälfte des Käses, Muskat, Salz und Pfeffer verquirlen. Lauch auf dem Boden verteilen, Guss darübergießen und mit restlichem Käse bestreuen.",
+   "35–40 Minuten backen, bis der Guss gestockt und goldbraun ist. 10 Minuten ruhen lassen und mit Salat servieren."
+  ],
+  "tips": [
+   "Der Quark-Öl-Teig ist leichter als Mürbeteig und braucht kein Blindbacken.",
+   "Schmeckt auch kalt – ideal fürs Picknick."
+  ]
+ },
+ {
+  "id": "tomaten-tarte-ziegenkaese",
+  "title": "Tomaten-Tarte mit Ziegenkäse und Thymian",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Blätterteig",
+    "amount": 1,
+    "unit": "Rolle",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "Dijon"
+   },
+   {
+    "name": "Tomate",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "gemischte Sorten"
+   },
+   {
+    "name": "Ziegenkäse",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch",
+    "note": "Rolle"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rucola",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C Umluft vorheizen. Blätterteig auf dem Backpapier aufs Blech legen und rundherum einen 1 cm breiten Rand leicht einritzen.",
+   "Innenfläche mit einer Gabel einstechen und dünn mit Senf bestreichen.",
+   "Tomaten in Scheiben schneiden, leicht salzen und 5 Minuten auf Küchenpapier abtropfen lassen. Dachziegelartig auf den Teig legen.",
+   "Ziegenkäse in Scheiben darauf verteilen, mit Thymian bestreuen und mit Honig und Öl beträufeln. 22–25 Minuten backen, bis der Teig aufgegangen und goldbraun ist.",
+   "Rucola mit Balsamico anmachen und auf oder neben der Tarte servieren."
+  ],
+  "tips": [
+   "Abgetropfte Tomaten verhindern einen matschigen Boden."
+  ]
+ },
+ {
+  "id": "hackbraten-ofengemuese",
+  "title": "Hackbraten mit Ei, Ofenkartoffeln und Möhren",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 75,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Vollkornbrötchen",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "vorrat",
+    "note": "vom Vortag"
+   },
+   {
+    "name": "Rinderhack (mager)",
+    "amount": 600,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch",
+    "note": "für den Teig"
+   },
+   {
+    "name": "Eier",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch",
+    "note": "hart gekocht"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Majoran",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 800,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Karotten",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C Umluft vorheizen. Brötchen in Wasser einweichen und gut ausdrücken. Die drei Eier 9 Minuten hart kochen und pellen.",
+   "Hack mit Brötchen, fein gewürfelter Zwiebel, rohem Ei, Senf, Paprika, Majoran, Salz und Pfeffer gründlich verkneten.",
+   "Die Hälfte der Masse in eine Auflaufform zu einem länglichen Laib formen, die gekochten Eier in einer Reihe darauflegen, mit der restlichen Masse bedecken und gut verschließen.",
+   "Kartoffeln in Spalten und Karotten in Stifte schneiden, mit Öl, Thymian und Salz mischen und um den Braten verteilen.",
+   "Alles 50–55 Minuten backen, bis der Braten durchgegart ist. 10 Minuten ruhen lassen, in Scheiben schneiden und mit Petersilie bestreuen."
+  ],
+  "tips": [
+   "Auch Falscher Hase genannt – kalt in Scheiben schmeckt er auf Brot.",
+   "Fertig ist er bei einer Kerntemperatur von 72 °C."
+  ]
+ },
+ {
+  "id": "gefuellte-zucchini-bulgur-feta",
+  "title": "Gefüllte Zucchini mit Bulgur, Tomaten und Feta",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Zucchini",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Bulgur",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 200,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomate",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Feta",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C Umluft vorheizen. Bulgur mit kochender Brühe übergießen und 10 Minuten quellen lassen.",
+   "Zucchini längs halbieren und mit einem Teelöffel aushöhlen. Das Fruchtfleisch hacken.",
+   "Zwiebel und Knoblauch im Öl 3 Minuten andünsten, Zucchinifleisch und Tomatenwürfel zugeben und 5 Minuten braten. Mit Paprika, Salz und Pfeffer würzen.",
+   "Gemüse mit Bulgur, der Hälfte des Fetas und Petersilie mischen und in die Zucchinihälften füllen. Passierte Tomaten gesalzen in eine Auflaufform geben und die Zucchini daraufsetzen.",
+   "Restlichen Feta darüberbröseln und 25 Minuten backen. Mit Joghurt servieren."
+  ],
+  "tips": [
+   "Große Zucchini aus dem Garten eignen sich perfekt zum Füllen."
+  ],
+  "airfryer": {
+   "temp_c": 180,
+   "time_min": 15,
+   "steps": [
+    "Füllung wie beschrieben zubereiten und die Zucchinihälften füllen.",
+    "In eine passende Form mit den passierten Tomaten setzen, Feta darüberbröseln.",
+    "Bei 180 °C 15 Minuten garen. Mit Joghurt servieren."
+   ]
+  }
+ },
+ {
+  "id": "haehnchen-brokkoli-reis-auflauf",
+  "title": "Hähnchen-Brokkoli-Reis-Auflauf",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Hähnchenbrust",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Brokkoli",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 300,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Frischkäse (leicht)",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 200,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gouda",
+    "amount": 80,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C Umluft vorheizen. Reis 10 Minuten in Salzwasser vorgaren – er gart im Ofen fertig. Abgießen.",
+   "Hähnchen würfeln, salzen und im Öl 4 Minuten anbraten. Brokkoli in kleine Röschen teilen, Zwiebel würfeln.",
+   "Milch, Frischkäse, Brühe, Senf und Muskat verrühren und abschmecken.",
+   "Reis, Hähnchen, Brokkoli und Zwiebel in einer Auflaufform mischen, die Sauce darübergießen und mit Käse bestreuen.",
+   "Zugedeckt 15 Minuten, dann offen weitere 15 Minuten backen, bis der Käse goldbraun ist."
+  ],
+  "tips": [
+   "Portionsweise in Boxen gefüllt ein gutes Mittagessen für die Arbeit."
+  ]
+ },
+ {
+  "id": "enchiladas-haehnchen-bohnen",
+  "title": "Enchiladas mit Hähnchen und Bohnen",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kidneybohnen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mais",
+    "amount": 0.5,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 500,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkorn-Wraps",
+    "amount": 6,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gouda",
+    "amount": 80,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   },
+   {
+    "name": "saure Sahne (10 %)",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C Umluft vorheizen. Hähnchen in kleine Würfel schneiden und im Öl 5 Minuten braten. Zwiebel und Paprika würfeln und 3 Minuten mitbraten.",
+   "Abgespülte Bohnen, Mais und die Hälfte der Gewürze zugeben, mit 4 EL passierten Tomaten mischen und salzen.",
+   "Restliche passierte Tomaten mit den übrigen Gewürzen und Salz verrühren. Ein Drittel davon in eine Auflaufform streichen.",
+   "Füllung auf die Wraps verteilen, aufrollen und mit der Naht nach unten nebeneinander in die Form legen. Mit restlicher Sauce übergießen und mit Käse bestreuen.",
+   "20 Minuten backen, bis der Käse blubbert. Mit saurer Sahne und Koriander servieren."
+  ],
+  "tips": [
+   "Vegetarisch: statt Hähnchen eine zweite Dose Bohnen oder Süßkartoffelwürfel."
+  ]
+ },
+ {
+  "id": "blech-gnocchi",
+  "title": "Blech-Gnocchi mit Paprika, Zucchini und Feta",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Gnocchi",
+    "amount": 500,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Feta",
+    "amount": 120,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 220 °C Umluft vorheizen.",
+   "Paprika, Zucchini und Zwiebel in mundgerechte Stücke schneiden.",
+   "Gnocchi direkt aus der Packung mit Gemüse, Tomaten, Öl, Oregano, gepresstem Knoblauch, Salz und Pfeffer auf einem Blech mischen.",
+   "Feta in die Mitte bröseln und alles 25 Minuten rösten, bis die Gnocchi knusprig und die Tomaten aufgeplatzt sind. Nach 15 Minuten einmal wenden.",
+   "Mit Basilikum bestreuen und servieren."
+  ],
+  "tips": [
+   "Die Gnocchi werden im Ofen außen knusprig und innen weich – ganz ohne Vorkochen."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 18,
+   "steps": [
+    "Gemüse schneiden und mit Gnocchi, Tomaten, Öl und Gewürzen mischen.",
+    "Im Korb bei 200 °C 15 Minuten garen, zweimal schütteln.",
+    "Feta darüberbröseln und weitere 3 Minuten garen. Mit Basilikum servieren."
+   ]
+  }
+ },
+ {
+  "id": "gemuese-tian",
+  "title": "Provenzalisches Gemüse-Tian mit Ziegenkäse",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 70,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Aubergine",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomate",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ziegenkäse",
+    "amount": 80,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Baguette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C Umluft vorheizen. Zwiebel und Knoblauch fein hacken und in 1 EL Öl 4 Minuten andünsten. Mit den passierten Tomaten mischen, salzen und in eine runde Auflaufform streichen.",
+   "Zucchini, Aubergine und Tomaten in gleich dünne Scheiben (3–4 mm) schneiden.",
+   "Die Scheiben abwechselnd hochkant und dicht an dicht in Kreisen in die Form stellen.",
+   "Mit restlichem Öl beträufeln, mit Thymian, Salz und Pfeffer bestreuen und mit Alufolie abgedeckt 30 Minuten backen.",
+   "Folie entfernen, Ziegenkäse darüberbröseln und weitere 15–20 Minuten backen, bis das Gemüse weich und leicht gebräunt ist. Mit Baguette servieren."
+  ],
+  "tips": [
+   "Gleich dicke Scheiben sind der Trick – ein Gemüsehobel hilft.",
+   "Ohne Käse ist das Tian vegan."
+  ]
+ },
+ {
+  "id": "shepherds-pie",
+  "title": "Shepherd's Pie mit Hack und Kartoffelhaube",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 70,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 900,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "mehligkochend"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 150,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rinderhack (mager)",
+    "amount": 500,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "oder Lammhack"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mehl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rinderbrühe",
+    "amount": 300,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Erbsen (TK)",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Bergkäse",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen, würfeln und 20 Minuten in Salzwasser weich kochen. Abgießen und mit heißer Milch und Butter zu Püree stampfen, salzen.",
+   "Hack im Öl krümelig braun braten. Gewürfelte Zwiebel und Karotten 5 Minuten mitbraten.",
+   "Tomatenmark und Mehl 1 Minute mitrösten, mit Brühe und Sojasauce ablöschen. Thymian zugeben und 10 Minuten sämig köcheln. Erbsen unterrühren.",
+   "Ofen auf 200 °C Umluft vorheizen. Hackmasse in eine Auflaufform geben, Püree darauf verstreichen und mit einer Gabel Rillen ziehen.",
+   "Mit Käse bestreuen und 25 Minuten backen, bis die Rillen goldbraun sind."
+  ],
+  "tips": [
+   "Die Gabel-Rillen werden besonders knusprig.",
+   "Mit Lammhack heißt er traditionell Shepherd’s Pie, mit Rind Cottage Pie."
+  ]
+ },
+ {
+  "id": "blumenkohl-ueberbacken",
+  "title": "Überbackener Blumenkohl mit Käsesauce und Kartoffeln",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Blumenkohl",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 400,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Bergkäse",
+    "amount": 70,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C Umluft vorheizen. Blumenkohl in Röschen teilen und 6 Minuten in Salzwasser vorgaren. Kartoffeln schälen und 20 Minuten kochen.",
+   "Butter schmelzen, Mehl 1 Minute anschwitzen. Milch unter Rühren zugießen und 5 Minuten köcheln, bis die Sauce bindet.",
+   "Zwei Drittel des Käses einrühren und mit Muskat, Salz und Pfeffer abschmecken.",
+   "Blumenkohl in eine Auflaufform geben, Sauce darübergießen, mit restlichem Käse und Paniermehl bestreuen.",
+   "15 Minuten überbacken, bis die Oberfläche goldbraun ist. Mit Kartoffeln und Petersilie servieren."
+  ],
+  "tips": [
+   "Mit Brokkoli oder halb-halb gemischt genauso lecker."
+  ]
+ },
+ {
+  "id": "auberginen-parmigiana",
+  "title": "Auberginen-Parmigiana",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 75,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Aubergine",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 700,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Mozzarella (light)",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   },
+   {
+    "name": "Baguette",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C Umluft vorheizen. Auberginen längs in 1 cm dicke Scheiben schneiden, auf Bleche legen, mit 1 1/2 EL Öl bepinseln, salzen und 20 Minuten backen, bis sie weich und gebräunt sind.",
+   "Zwiebel und Knoblauch hacken, im restlichen Öl 4 Minuten andünsten, passierte Tomaten zugeben und 15 Minuten einköcheln. Salzen und die Hälfte des Basilikums zupfen und unterrühren.",
+   "Ofen auf 180 °C herunterschalten. In eine Form abwechselnd Sauce, Auberginen, Mozzarella und Parmesan schichten, mit Sauce, Mozzarella und Parmesan abschließen.",
+   "30 Minuten backen, bis es blubbert und goldbraun ist.",
+   "10 Minuten ruhen lassen, mit restlichem Basilikum bestreuen und mit Baguette servieren."
+  ],
+  "tips": [
+   "Gebacken statt frittiert spart das viel Öl – der Geschmack bleibt."
+  ]
+ },
+ {
+  "id": "spinat-feta-boerek",
+  "title": "Spinat-Feta-Börek-Schnecke",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 60,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Blattspinat (TK)",
+    "amount": 450,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "aufgetaut"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Feta",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "für den Guss"
+   },
+   {
+    "name": "Yufka-Teigblätter",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sesam",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kopfsalat",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C Umluft vorheizen. Spinat sehr gut ausdrücken. Zwiebel fein würfeln und im Öl 3 Minuten dünsten.",
+   "Spinat, Zwiebel und zerbröselten Feta mischen und mit Pfeffer würzen.",
+   "Eier mit Joghurt und 2 EL Öl verquirlen. Jedes Teigblatt mit etwas Guss bestreichen, einen Streifen Füllung an die lange Seite legen und locker aufrollen.",
+   "Die Rollen in einer runden, gefetteten Form zu einer Schnecke legen. Restlichen Guss darübergießen und mit Sesam bestreuen.",
+   "35–40 Minuten goldbraun backen. Mit Salat servieren – schmeckt warm und kalt."
+  ],
+  "tips": [
+   "Yufka-Teigblätter gibt es im Kühlregal türkischer Supermärkte und in vielen Supermärkten."
+  ]
+ },
+ {
+  "id": "zucchini-lasagne",
+  "title": "Zucchini-Lasagne mit Hack und Ricotta",
+  "chapter": "ofen",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 70,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Zucchini",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rinderhack (mager)",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ricotta",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Mozzarella (light)",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C Umluft vorheizen. Zucchini längs in 5 mm dünne Scheiben schneiden, auf Bleche legen, mit Öl bepinseln, salzen und 10 Minuten backen – so ziehen sie Wasser.",
+   "Hack in einer Pfanne krümelig braten, Zwiebel und Knoblauch 3 Minuten mitbraten. Tomaten und Oregano zugeben und 15 Minuten dick einköcheln.",
+   "Ricotta mit Ei, Salz und Pfeffer verrühren.",
+   "Ofen auf 180 °C herunterschalten. In eine Form abwechselnd Hacksauce, Zucchinischeiben und Ricotta schichten, mit Sauce abschließen und mit Mozzarella belegen.",
+   "30 Minuten backen, 10 Minuten ruhen lassen und mit Basilikum servieren."
+  ],
+  "tips": [
+   "Das Vorbacken der Zucchini verhindert, dass die Lasagne wässrig wird."
+  ]
+ },
+ {
+  "id": "guacamole-tortillachips",
+  "title": "Guacamole mit Tortillachips aus der Heißluftfritteuse",
+  "chapter": "snacks",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 20,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Tortillas (Mais)",
+    "amount": 8,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Avocado",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "reif"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomate",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Tortillas mit Öl bepinseln, mit Paprika und Salz bestreuen und in Achtel schneiden.",
+   "Die Ecken im Korb bei 180 °C 6–8 Minuten knusprig backen, nach der Hälfte der Zeit schütteln. In zwei Durchgängen backen.",
+   "Avocados halbieren, entkernen und das Fruchtfleisch mit einer Gabel grob zerdrücken. Sofort mit Limettensaft mischen.",
+   "Tomate entkernen und würfeln, Zwiebel fein hacken, Koriander hacken. Alles unter die Avocado heben und mit Salz und Chili abschmecken.",
+   "Guacamole mit den Chips servieren."
+  ],
+  "tips": [
+   "Reife Avocados geben auf leichten Druck nach.",
+   "Im Backofen: 200 °C Umluft, 6–8 Minuten."
+  ],
+  "airfryer": {
+   "temp_c": 180,
+   "time_min": 8
+  }
+ },
+ {
+  "id": "bruschetta-tomate",
+  "title": "Bruschetta mit Tomaten und Basilikum",
+  "chapter": "snacks",
+  "meal": [
+   "snack",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Baguette",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomate",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "aromatisch"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Tomaten entkernen und in kleine Würfel schneiden. Mit Olivenöl, Balsamico, gezupftem Basilikum, Salz und Pfeffer mischen und 10 Minuten ziehen lassen.",
+   "Baguette schräg in 12 Scheiben schneiden.",
+   "Scheiben im Ofen bei 200 °C oder im Toaster 4–5 Minuten goldbraun rösten.",
+   "Die warmen Brote mit der halbierten Knoblauchzehe einreiben.",
+   "Tomaten erst kurz vor dem Servieren daraufgeben, damit das Brot knusprig bleibt."
+  ],
+  "tips": [
+   "Bruschetta lebt von reifen Sommertomaten – im Winter lieber Cherrytomaten nehmen."
+  ]
+ },
+ {
+  "id": "sommerrollen-garnelen",
+  "title": "Sommerrollen mit Garnelen und Erdnuss-Dip",
+  "chapter": "snacks",
+  "meal": [
+   "snack",
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Reisnudeln",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Reispapier",
+    "amount": 8,
+    "unit": "Blatt",
+    "category": "vorrat"
+   },
+   {
+    "name": "Garnelen",
+    "amount": 200,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "gegart"
+   },
+   {
+    "name": "Karotten",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Römersalat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Minze",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Erdnussbutter",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reisnudeln nach Packungsangabe einweichen, abtropfen lassen. Karotte und Gurke in feine Streifen schneiden, Garnelen längs halbieren.",
+   "Ein Blatt Reispapier 10–15 Sekunden in lauwarmes Wasser tauchen und auf ein feuchtes Brett legen.",
+   "Im unteren Drittel Salat, Nudeln, Gemüse und Kräuter auflegen, darauf 3–4 Garnelenhälften. Unten einschlagen, die Seiten einklappen und fest aufrollen.",
+   "Mit den übrigen Blättern genauso verfahren. Die Rollen unter einem feuchten Tuch aufbewahren.",
+   "Erdnussbutter mit Sojasauce, Limettensaft, Honig und 3–4 EL warmem Wasser glatt rühren und als Dip servieren."
+  ],
+  "tips": [
+   "Vegan mit gebratenen Tofustreifen statt Garnelen und Ahornsirup statt Honig.",
+   "Das Reispapier wird beim Rollen weicher – nicht zu lange einweichen."
+  ]
+ },
+ {
+  "id": "gefuellte-eier",
+  "title": "Gefüllte Eier mit Senf-Joghurt-Creme",
+  "chapter": "snacks",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 25,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Eier",
+    "amount": 6,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Griechischer Joghurt 2 %",
+    "amount": 50,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kresse",
+    "amount": 1,
+    "unit": "Schale",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Eier 10 Minuten hart kochen, kalt abschrecken und pellen.",
+   "Eier längs halbieren und das Eigelb vorsichtig herauslösen.",
+   "Eigelb mit Joghurt und Senf fein zerdrücken und mit Salz, Pfeffer und einer Prise Paprika abschmecken.",
+   "Creme mit einem Spritzbeutel oder Teelöffel in die Eiweißhälften füllen.",
+   "Mit Paprikapulver, Schnittlauch und Kresse bestreuen."
+  ],
+  "tips": [
+   "Der Joghurt ersetzt die klassische Mayonnaise und macht die Creme frischer."
+  ]
+ },
+ {
+  "id": "pizzabroetchen-airfryer",
+  "title": "Pizzabrötchen aus der Heißluftfritteuse",
+  "chapter": "snacks",
+  "meal": [
+   "snack",
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkornbrötchen",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kochschinken (mager)",
+    "amount": 80,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "oder Mais für die vegetarische Variante"
+   },
+   {
+    "name": "Mozzarella (light)",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Brötchen waagerecht halbieren.",
+   "Passierte Tomaten mit Oregano, Salz und Pfeffer verrühren und auf die Brötchenhälften streichen.",
+   "Mit fein gewürfelter Paprika, Schinkenstreifen und zerzupftem Mozzarella belegen.",
+   "Im Korb bei 180 °C 7–8 Minuten backen, bis der Käse geschmolzen ist. In zwei Durchgängen backen."
+  ],
+  "tips": [
+   "Ideal zur Resteverwertung von Brötchen und Gemüse.",
+   "Im Backofen: 200 °C Umluft, ca. 10 Minuten."
+  ],
+  "airfryer": {
+   "temp_c": 180,
+   "time_min": 8
+  }
+ },
+ {
+  "id": "baba-ganoush",
+  "title": "Baba Ganoush mit Gemüsesticks und Fladenbrot",
+  "chapter": "snacks",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Aubergine",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tahin",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Vollkorn-Fladenbrot",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 220 °C Umluft vorheizen. Auberginen mehrmals mit einer Gabel einstechen und auf dem Blech 40 Minuten backen, bis sie zusammenfallen und ganz weich sind.",
+   "Etwas abkühlen lassen, längs aufschneiden und das Fruchtfleisch mit einem Löffel herauskratzen. In einem Sieb 5 Minuten abtropfen lassen.",
+   "Mit Tahin, Zitronensaft, gepresstem Knoblauch, Kreuzkümmel und Salz zerdrücken oder grob pürieren.",
+   "In eine Schale füllen, mit Olivenöl beträufeln und mit Petersilie bestreuen.",
+   "Mit Karotten- und Paprikasticks und Fladenbrot servieren."
+  ],
+  "tips": [
+   "Für ein rauchiges Aroma die Auberginen über der Gasflamme oder auf dem Grill rösten.",
+   "In der Heißluftfritteuse: ganze Auberginen bei 200 °C 25–30 Minuten."
+  ]
+ },
+ {
+  "id": "kartoffelchips-airfryer",
+  "title": "Kartoffelchips aus der Heißluftfritteuse",
+  "chapter": "snacks",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 40,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Meersalz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kartoffeln waschen und mit einem Gemüsehobel in 1–2 mm dünne Scheiben hobeln.",
+   "Scheiben 15 Minuten in kaltem Wasser wässern, damit Stärke austritt, dann sehr gründlich trocken tupfen.",
+   "Mit Öl und Paprika mischen und locker in den Korb geben – die Scheiben sollen kaum überlappen.",
+   "Bei 180 °C 15–20 Minuten backen, alle 5 Minuten schütteln, bis die Chips goldbraun und knusprig sind. In mehreren Durchgängen backen.",
+   "Sofort mit Meersalz bestreuen und abkühlen lassen – erst dann werden sie richtig knusprig."
+  ],
+  "tips": [
+   "Gegen Ende genau hinsehen: Dünne Chips werden in einer Minute von goldbraun zu dunkel."
+  ],
+  "airfryer": {
+   "temp_c": 180,
+   "time_min": 20
+  }
+ },
+ {
+  "id": "zucchini-feta-muffins",
+  "title": "Herzhafte Zucchini-Feta-Muffins",
+  "chapter": "snacks",
+  "meal": [
+   "snack",
+   "breakfast"
+  ],
+  "time_min": 40,
+  "servings": 12,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Dinkelvollkornmehl",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Backpulver",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Feta",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C Umluft vorheizen und ein Muffinblech mit Papierförmchen auslegen.",
+   "Zucchini grob raspeln, leicht salzen und nach 5 Minuten gut ausdrücken.",
+   "Mehl mit Backpulver mischen. Eier, Joghurt und Öl verquirlen und kurz unter das Mehl rühren.",
+   "Zucchini, zerbröselten Feta, Frühlingszwiebelringe und Petersilie unterheben. Teig auf 12 Förmchen verteilen.",
+   "25 Minuten backen, bis ein Holzstäbchen sauber herauskommt."
+  ],
+  "tips": [
+   "Halten sich 3 Tage im Kühlschrank und lassen sich einfrieren."
+  ],
+  "airfryer": {
+   "temp_c": 160,
+   "time_min": 16,
+   "steps": [
+    "Teig wie beschrieben zubereiten und in Silikonförmchen füllen.",
+    "Bei 160 °C 15–17 Minuten backen, bis ein Holzstäbchen sauber herauskommt. In mehreren Durchgängen backen.",
+    "Kurz in den Förmchen abkühlen lassen."
+   ]
+  }
+ },
+ {
+  "id": "gurken-lachs-haeppchen",
+  "title": "Gurken-Häppchen mit Räucherlachs-Creme",
+  "chapter": "snacks",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 15,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Salatgurke",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Frischkäse (leicht)",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Meerrettich",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Räucherlachs",
+    "amount": 80,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Dill",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Gurke in 1 cm dicke Scheiben schneiden.",
+   "Frischkäse mit Meerrettich, etwas Zitronensaft und Pfeffer glatt rühren.",
+   "Je einen Klecks Creme auf die Gurkenscheiben geben.",
+   "Räucherlachs in Streifen schneiden, kleine Röschen formen und daraufsetzen. Mit Dill garnieren."
+  ],
+  "tips": [
+   "Ein frisches Fingerfood fürs Buffet – low carb und in 15 Minuten fertig."
+  ]
+ },
+ {
+  "id": "caprese-spiesse",
+  "title": "Tomate-Mozzarella-Spieße mit Basilikum",
+  "chapter": "snacks",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 15,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Cherrytomaten",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Mozzarella (light)",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Mozzarella in etwa 2 cm große Würfel schneiden.",
+   "Abwechselnd Tomate, Basilikumblatt und Mozzarella auf kleine Spieße stecken.",
+   "Auf einer Platte anrichten, mit Öl und Balsamico beträufeln und mit Salz und Pfeffer würzen."
+  ],
+  "tips": [
+   "Mit Mini-Mozzarellakugeln geht es noch schneller."
+  ]
+ },
+ {
+  "id": "ofen-antipasti",
+  "title": "Ofen-Antipasti mit Zucchini, Paprika und Aubergine",
+  "chapter": "snacks",
+  "meal": [
+   "snack",
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 4,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Aubergine",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rosmarin",
+    "amount": 1,
+    "unit": "Zweig",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 220 °C Umluft vorheizen. Aubergine und Zucchini in Scheiben, Paprika in breite Streifen, Zwiebel in Spalten schneiden.",
+   "Gemüse auf zwei Bleche verteilen, mit 2 EL Öl beträufeln, salzen und 20–25 Minuten rösten, bis es weich und an den Rändern gebräunt ist.",
+   "Restliches Öl mit Balsamico, gepresstem Knoblauch, gehacktem Rosmarin, Thymian und Pfeffer verrühren.",
+   "Das warme Gemüse in der Marinade wenden und mindestens 30 Minuten durchziehen lassen."
+  ],
+  "tips": [
+   "Hält sich im Glas, mit Öl bedeckt, 4–5 Tage im Kühlschrank.",
+   "Passt zu Brot, Pasta, als Beilage oder auf ein Sandwich."
+  ]
+ },
+ {
+  "id": "obazda",
+  "title": "Obazda mit Radieschen und Vollkornbrot",
+  "chapter": "snacks",
+  "meal": [
+   "snack",
+   "dinner"
+  ],
+  "time_min": 15,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Camembert",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch",
+    "note": "reif"
+   },
+   {
+    "name": "Frischkäse (leicht)",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat",
+    "note": "edelsüß"
+   },
+   {
+    "name": "Kümmel",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Radieschen",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Vollkornbrot",
+    "amount": 4,
+    "unit": "Scheibe",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Camembert klein schneiden und mit einer Gabel fein zerdrücken.",
+   "Mit Frischkäse, sehr fein gewürfelter Zwiebel, Paprika und Kümmel zu einer cremigen Masse verrühren. Mit Salz und Pfeffer abschmecken.",
+   "Mindestens 10 Minuten durchziehen lassen.",
+   "Mit Schnittlauch bestreuen und mit Radieschen und Brot servieren."
+  ],
+  "tips": [
+   "Die bayerische Brotzeit-Spezialität schmeckt mit sehr reifem Camembert am kräftigsten."
+  ]
+ },
+ {
+  "id": "pizza-schnecken",
+  "title": "Pizza-Schnecken aus Blätterteig",
+  "chapter": "snacks",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 30,
+  "servings": 8,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Blätterteig",
+    "amount": 1,
+    "unit": "Rolle",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kochschinken (mager)",
+    "amount": 60,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "fein gewürfelt"
+   },
+   {
+    "name": "Gouda",
+    "amount": 60,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C Umluft vorheizen.",
+   "Blätterteig ausrollen, Tomatenmark mit Oregano und 2 EL Wasser verrühren und dünn daraufstreichen.",
+   "Mit Schinken und Käse bestreuen und von der langen Seite her fest aufrollen.",
+   "Die Rolle in 16 Scheiben schneiden und mit Abstand auf ein Blech mit Backpapier legen.",
+   "15 Minuten backen, bis die Schnecken goldbraun sind."
+  ],
+  "tips": [
+   "Für Kindergeburtstage oder Partys – auch kalt lecker.",
+   "Heißluftfritteuse: 180 °C, 8–10 Minuten."
+  ]
+ },
+ {
+  "id": "wrap-roellchen-lachs",
+  "title": "Wrap-Röllchen mit Frischkäse, Lachs und Rucola",
+  "chapter": "snacks",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 15,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkorn-Wraps",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Frischkäse (leicht)",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "unbehandelt"
+   },
+   {
+    "name": "Dill",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Räucherlachs",
+    "amount": 100,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rucola",
+    "amount": 40,
+    "unit": "g",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Frischkäse mit Zitronenschale, gehacktem Dill und Pfeffer verrühren.",
+   "Wraps dünn mit der Creme bestreichen, dabei einen Rand frei lassen.",
+   "Mit Lachs und Rucola belegen und fest aufrollen.",
+   "In Frischhaltefolie wickeln und 30 Minuten kühl stellen, dann in 2 cm breite Röllchen schneiden."
+  ],
+  "rest_min": 30,
+  "tips": [
+   "Vegetarisch mit gegrillter Paprika statt Lachs."
+  ]
+ },
+ {
+  "id": "haehnchen-satay-spiesse",
+  "title": "Hähnchen-Satay-Spieße mit Erdnusssauce",
+  "chapter": "snacks",
+  "meal": [
+   "snack",
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Currypulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Erdnussbutter",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kokosmilch (light)",
+    "amount": 100,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "für die Sauce"
+   },
+   {
+    "name": "Limette",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Hähnchen in lange, dünne Streifen schneiden und mit Sojasauce, Curry, Honig und gepresstem Knoblauch 15 Minuten marinieren.",
+   "Streifen wellenförmig auf eingeweichte Holzspieße stecken.",
+   "Im Korb bei 200 °C 8–10 Minuten garen, nach der Hälfte der Zeit wenden.",
+   "Erdnussbutter, Kokosmilch, Sojasauce, Limettensaft und Chili in einem kleinen Topf unter Rühren 2 Minuten erwärmen, bis die Sauce glatt ist.",
+   "Spieße mit der Erdnusssauce servieren."
+  ],
+  "tips": [
+   "Im Backofen unter dem Grill: 6–8 Minuten, einmal wenden.",
+   "Mit Reis und Gurkensalat wird ein Hauptgericht daraus."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 10
+  }
+ },
+ {
+  "id": "gefuellte-mini-paprika",
+  "title": "Mini-Paprika mit Kräuter-Feta-Creme",
+  "chapter": "snacks",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 15,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Paprika",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "Snack- oder Mini-Paprika"
+   },
+   {
+    "name": "Frischkäse (leicht)",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Feta",
+    "amount": 60,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Paprika längs halbieren und entkernen.",
+   "Frischkäse mit zerbröseltem Feta, gehackten Kräutern, gepresstem Knoblauch und Pfeffer verrühren.",
+   "Creme in die Paprikahälften füllen.",
+   "Bis zum Servieren kühl stellen."
+  ],
+  "tips": [
+   "Warm sind sie auch lecker: 8 Minuten bei 180 °C in der Heißluftfritteuse."
+  ]
  }
 ]

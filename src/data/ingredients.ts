@@ -339,6 +339,10 @@ add('Tintenfischringe', [80, 16, 1.0, 1.3, 0], 'F', { base: 'Tintenfisch' })
 add('Miesmuscheln (mit Schale)', [25, 3.4, 1.0, 0.6, 0], 'F', { base: 'Muscheln', s: [1, 2, 3, 4, 9, 10, 11, 12] })
 add('Nordseekrabben', [90, 19, 0, 1.4, 0], 'F', { base: 'Krabben' })
 add('Baguette', [260, 8.5, 52, 1.5, 3.0], 'G', { u: { Stück: 250, Scheibe: 20 } })
+add('Trockenhefe', [325, 40, 13, 7.6, 27], '', { u: { Päckchen: 7, TL: 3 }, base: 'Hefe' })
+add('Blätterteig', [380, 6.0, 38, 22, 1.5], 'G', { u: { Rolle: 275 } })
+add('Yufka-Teigblätter', [290, 9.0, 60, 1.5, 2.5], 'G', { base: 'Yufka' })
+add('Reispapier', [340, 0.5, 83, 0.5, 1.0], '', { u: { Blatt: 9 } })
 
 export const INGREDIENTS: ReadonlyMap<string, IngredientInfo> = new Map(LIST.map((i) => [i.name, i]))
 export const INGREDIENT_LIST: readonly IngredientInfo[] = LIST
