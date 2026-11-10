@@ -133,9 +133,12 @@ Auf einem zweiten Gerät meldest du dich mit derselben E-Mail an und siehst dies
 ## Später: Updates der Datenbank
 
 Wenn du die Datenbank **schon einmal** eingerichtet hast und eine neue Version der App kommt, musst du nur die **neuen**
-Dateien aus `supabase/migrations/` im SQL Editor ausführen (die Dateinamen sind nach Datum sortiert). Beispiel: Für die
-Heißluftfritteuse und die Lieblingsrezepte ist das `20261110000005_kitchen.sql`. Wer noch gar nichts eingerichtet hat,
-nimmt wie oben einfach die komplette `supabase/setup.sql`.
+Dateien aus `supabase/migrations/` im SQL Editor ausführen (die Dateinamen sind nach Datum sortiert). Aktuell sind das:
+
+- `20261110000005_kitchen.sql` – Heißluftfritteuse und Lieblingsrezepte
+- `20261110000006_diet.sql` – Ernährungsweise (alles, vegetarisch, vegan)
+
+Wer noch gar nichts eingerichtet hat, nimmt wie oben einfach die komplette `supabase/setup.sql` – sie enthält alles.
 
 ## Optional: Ausprobieren ohne Konto
 

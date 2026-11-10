@@ -13,13 +13,16 @@ läuft danach im Vollbild wie eine native App – ein App Store ist nicht nötig
 | **Konto & Onboarding** | Login per Magic Link oder 6-stelligem Code aus derselben E-Mail (wichtig für installierte Apps auf dem iPhone), Name, optionale Körperdaten, frei wählbares Ziel (Abnehmen, Halten, Zunehmen, eigene Zahl). Tagesziel frei einstellbar, optionaler Vorschlag per Mifflin-St Jeor × Aktivitätsfaktor ± Zu-/Abschlag. Makro-Vorschlag 25/45/30 %, frei anpassbar. |
 | **Heute** | Fortschrittsring (gegessen / Ziel / übrig), Balken für Eiweiß, Kohlenhydrate, Fett, Mahlzeiten getrennt nach Frühstück, Mittag, Abend, Snacks, Schnellaktionen für Mahlzeit, Wasser, Gewicht, eine sachliche Motivationszeile und ein Trink-Hinweis mit „+250 ml“. Mahlzeiten lassen sich kopieren oder „wie am Vortag“ übernehmen. |
 | **Mahlzeiten erfassen** | Suche in Open Food Facts, Barcode-Scan per Kamera (html5-qrcode, mit manueller Eingabe als Ausweichmöglichkeit), eigene Lebensmittel (pro 100 g oder pro Portion), Mengen in Gramm, Stück oder Portionen, Zuletzt verwendet und Favoriten, eigene Gerichte aus mehreren Zutaten, Bearbeiten und Löschen. Mehrere Lebensmittel nacheinander erfassen, ohne die Seite zu verlassen. |
-| **Rezepte** | 64 deutsche Rezepte (lokales JSON), davon 19 für die Heißluftfritteuse (13 eigene Rezepte + 6 Ofenrezepte mit eigener Heißluftfritteusen-Anleitung). Galerie- oder Listenansicht, Favoriten (geräteübergreifend im Profil), Sortierung nach kcal, Zeit oder Eiweiß, Karussells „Passt zu deinem Tag“, „Aus der Heißluftfritteuse“ und „Deine Favoriten“. Filter nach Mahlzeit, max. kcal, Zubereitungszeit, Stichwort und Eigenschaften, Empfehlungen passend zum Restbudget, Detailansicht mit Portionsskalierung, „Zum Tagesplan“ (gegessen oder eingeplant) und „Zutaten auf die Einkaufsliste“. |
+| **Rezepte** | 158 deutsche Rezepte (lokales JSON) mit ausführlichen Schritt-für-Schritt-Anleitungen, Zutaten-Hinweisen und Tipps & Varianten – davon 46 für die Heißluftfritteuse (eigene Rezepte oder Variante zu Ofen/Pfanne). kcal, Makros und Ballaststoffe werden aus den Zutaten berechnet; vegetarisch, vegan, glutenfrei, proteinreich, low carb, schnell und ballaststoffreich werden automatisch erkannt. Galerie- oder Listenansicht, Favoriten (geräteübergreifend), Sortierung nach Empfehlung, kcal, Zeit, Eiweiß oder „Oft gekocht“, Karussells „Passt zu deinem Tag“, „Aus der Heißluftfritteuse“, „Saison im &lt;Monat&gt;“, „Zuletzt gekocht“ und „Deine Favoriten“. Filter nach Mahlzeit, max. kcal, Zubereitungszeit, Stichwort und Eigenschaften, Detailansicht mit Portionsskalierung, „Zum Tagesplan“, „Zutaten auf die Einkaufsliste“, „Schon X× gekocht“ und Rezept teilen. |
+| **Kochmodus** | Ein Schritt pro Bildschirm in großer Schrift, Zutaten zum Abhaken, Zeitangaben im Text werden zu Timer-Knöpfen, app-weite Timer-Leiste mit Ton und Vibration, Display bleibt an. |
+| **Kochwissen** | 15 Anleitungen: Heißluftfritteuse mit Garzeiten-Tabelle, Reis, Nudeln, Kartoffeln, Eier, Gemüse, Hülsenfrüchte, Kerntemperaturen & Küchenhygiene, Meal Prep, Messen ohne Waage, Würzen, Schneiden, Saisonkalender, Grundvorrat, Lagerung. Rezepte verlinken passendes Kochwissen. |
+| **Was habe ich da?** | Zutaten antippen → passende Rezepte („Alles da“, „Fast alles da“), fehlende Zutaten mit einem Tipp auf die Einkaufsliste, Vorrat aus der Einkaufsliste übernehmen. |
 | **Wochenplaner** | Mo–So mit vier Slots pro Tag, Belegung per Rezept, eigenem Gericht oder Freitext, Tages- und Wochensummen, „Woche vorschlagen“ und „Als gegessen eintragen“. |
 | **Einkaufsliste** | Aus dem Wochenplan erzeugen (Zutaten zusammenführen, Mengen addieren, nach Kategorien sortieren), abhaken, eigene Artikel („2 l Milch“), „bereits im Vorrat“, Liste leeren, Liste teilen (z. B. per Messenger). |
 | **Verlauf** | Tagesprotokoll mit Datumsauswahl, Wochen- und Monatsdiagramme (Recharts) für kcal, Makros, Gewicht und Wasser, jeweils auch als Tabelle. |
 | **Erfolge** | 9 Abzeichen mit Fortschritt im Profil und kurzer Animation beim Freischalten, Serie ohne Druck. |
 | **Offline** | Ohne Verbindung weiter eintragen: Änderungen landen in einer Warteschlange und werden automatisch übertragen, sobald wieder Netz da ist. |
-| **Einstellungen** | Tagesziel, Makros, Profil, Wasserziel, Farbschema (System/Hell/Dunkel), Export als CSV oder JSON, Abmelden, Konto löschen (mit Bestätigung). |
+| **Einstellungen** | Tagesziel, Makros, Profil, Wasserziel, Ernährungsweise (alles/vegetarisch/vegan), Heißluftfritteuse vorhanden, Farbschema (System/Hell/Dunkel), Export als CSV oder JSON, Abmelden, Konto löschen (mit Bestätigung). |
 
 ## Technik
 
@@ -34,7 +37,8 @@ läuft danach im Vollbild wie eine native App – ein App Store ist nicht nötig
 ```
 src/
   app/          Auth-Kontext, Farbschema
-  data/         Datenschnittstelle (Supabase und lokaler Demo-Speicher), recipes.json
+  data/         Datenschnittstelle (Supabase, Offline-Schicht, Demo-Speicher), recipes.json,
+                ingredients.ts (Nährwerttabelle), guides.ts (Kochwissen)
   hooks/        Datenzugriff (React Query)
   lib/          reine Funktionen: Kalorien, Makros, Einkaufsliste, Planer, Erfolge, Statistik, Export …
   components/   UI-Bausteine und Feature-Komponenten
@@ -138,7 +142,15 @@ Entscheidungen, die ich ohne Rückfrage getroffen habe:
 - **Wasserziel** 2.000 ml als Startwert, frei änderbar.
 - **Heißluftfritteuse**: Im Profil (und im Onboarding) einstellbar, standardmäßig an. Dann zeigen Rezepte mit Variante zuerst die Heißluftfritteusen-Schritte (Temperatur und Garzeit), die Galerie stellt solche Rezepte bei „Empfohlen“ nach vorne und „Woche vorschlagen“ bevorzugt sie leicht. Ohne Gerät gibt es bei reinen Heißluftfritteusen-Rezepten einen Hinweis für den Backofen (ca. 20 °C mehr, etwas länger). Garzeiten sind Richtwerte für Geräte mit Korb (ca. 4–6 l).
 - **Rezept-Favoriten** werden als Liste von Rezept-IDs im Profil gespeichert (Migration `…0005_kitchen.sql`), damit sie auf allen Geräten gleich sind.
-- **Rezeptnährwerte** sind gerundete Richtwerte, die ich aus üblichen Nährwerttabellen geschätzt habe; ein Test prüft, dass kcal und Makros zueinander passen (±20 %). Rezepte haben statt Fotos Emoji-Kacheln (keine Bildrechte nötig, klein, offline verfügbar).
+- **Rezeptnährwerte werden berechnet**: `src/data/ingredients.ts` enthält für jede Rezeptzutat gerundete Richtwerte pro 100 g (nach gängigen Nährwerttabellen) und typische Gewichte (z. B. 1 Zwiebel ≈ 80 g, 1 Dose Kichererbsen ≈ 240 g abgetropft). Daraus ergeben sich kcal, Makros und Ballaststoffe pro Portion (kcal auf 5 gerundet). Öl wird vollständig mitgerechnet, auch wenn ein Teil in der Pfanne bleibt. Tests stellen sicher, dass jede Zutat aufgelöst werden kann und die Werte plausibel sind.
+- **Automatische Kennzeichnung**: vegetarisch = ohne Fleisch/Fisch; vegan = zusätzlich ohne Milch, Ei, Honig; glutenfrei = ohne glutenhaltige Zutaten (Haferflocken und Sojasauce gelten vorsichtshalber als glutenhaltig, bei Zöliakie trotzdem Packungsangaben prüfen); Zartbitterschokolade gilt vorsichtshalber nicht als vegan. Parmesan wird als vegetarisch gewertet, mit Hinweis auf tierisches Lab. Proteinreich = mind. 30 % der Energie aus Eiweiß (oder mind. 25 g bei mind. 20 %), low carb = höchstens 20 g Kohlenhydrate und 25 % der Energie, ballaststoffreich = mind. 8 g (oder 5 g bei 2,5 g pro 100 kcal), schnell = höchstens 15 Minuten inklusive Wartezeit.
+- **Wartezeiten** (Quellen, Kühlen, Einfrieren) stehen getrennt von der aktiven Zubereitungszeit; der Zeitfilter bezieht sich auf die aktive Zeit.
+- Rezepte haben statt Fotos Farbverläufe mit Emoji (keine Bildrechte nötig, klein, offline verfügbar).
+- **Kochmodus-Timer** laufen im Browser: Ton, Vibration und Benachrichtigung gibt es zuverlässig, solange die App geöffnet ist. Eine Benachrichtigung bei geschlossener App bräuchte Web-Push mit Server und ist nicht umgesetzt. „Display bleibt an“ nutzt die Wake-Lock-Schnittstelle, sofern der Browser sie unterstützt.
+- **Saison** bezieht sich auf regionale Freiland- oder Lagerware in Deutschland (vereinfachte Monatslisten). Saisonempfehlungen gewichten typische Saisonware (z. B. Grünkohl) stärker als fast ganzjährige (z. B. Äpfel); „Woche vorschlagen“ bevorzugt saisonale Rezepte leicht.
+- **„Was habe ich da?“** vergleicht Oberbegriffe (z. B. „Joghurt“ für alle Joghurtsorten). Salz, Öl, Gewürze, Brühe, Mehl, Senf, Honig und Sojasauce zählen nie als fehlend; Zwiebeln und Knoblauch optional. Die Auswahl wird nur auf dem Gerät gespeichert.
+- **Ernährungsweise** im Profil (Migration `…0006_diet.sql`) filtert Wochenvorschlag, Planer-Auswahl, Empfehlungen und die Zutaten-Suche; in der Galerie per Chip abschaltbar.
+- **Kochwissen** enthält Richtwerte für den Haushalt (Garzeiten, Kerntemperaturen, Haltbarkeiten) – keine Gewähr für jedes Gerät.
 - **„Zum Tagesplan hinzufügen“** bietet zwei Wege: als gegessen ins Tagesprotokoll oder als Eintrag in den Wochenplan.
 - **Motivationszeilen und Erfolge** sind bewusst neutral formuliert. Überschreitungen werden in Orange statt Rot dargestellt, ohne Warnungen.
 
@@ -182,11 +194,19 @@ Entscheidungen, die ich ohne Rückfrage getroffen habe:
 - Datumswerte werden als lokales Kalenderdatum (`yyyy-MM-dd`) gespeichert, nicht als Zeitstempel.
 - Diagrammfarben für Makros sind für Hell und Dunkel auf Farbfehlsichtigkeit geprüft; jedes Diagramm hat zusätzlich eine Tabellenansicht.
 
+## Rezepte erweitern
+
+Rezepte stehen in `src/data/recipes.json`. Pro Rezept: `id`, `title`, `meal` (breakfast/lunch/dinner/snack), `time_min`,
+optional `rest_min`, `servings`, `tags` (nur `meal-prep`, `one-pot`, `klassiker`, `suess` – alles andere wird abgeleitet),
+`ingredients` (`name`, `amount`, `unit`, `category`, optional `note`), `steps`, `tips` und optional `airfryer`
+(`temp_c`, `time_min`, eigene `steps`, falls das Rezept eigentlich für Ofen oder Pfanne ist). Nährwerte nicht eintragen –
+sie werden berechnet. Neue Zutaten in `src/data/ingredients.ts` ergänzen; `npm test` meldet Zutaten, die fehlen oder
+deren Einheit nicht umgerechnet werden kann.
+
 ## Nicht umgesetzt (bewusst)
 
 - **Push-Benachrichtigungen** (z. B. Trink-Erinnerung): bräuchten einen Server-Dienst (Supabase Edge Function + Web-Push-Schlüssel) und funktionieren auf dem iPhone nur in installierten Apps. Stattdessen gibt es den Trink-Hinweis auf der Startseite.
 - **Rezeptfotos**: wegen Bildrechten Emoji-Kacheln.
-- **Nährwerte der Rezepte aus Zutaten berechnen**: bräuchte eine verlässliche Nährwertdatenbank für Zutaten.
 - **Geteilte Einkaufslisten mit anderen Konten**: stattdessen „Liste teilen“ als Text.
 
 ## Hinweis
