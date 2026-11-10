@@ -67,7 +67,8 @@ export function recommendRecipes(
   if (remainingKcal <= 0) return []
   const perMeal = remainingKcal / Math.max(1, openMeals)
   return recipes
-    .filter((r) => r.meal.includes(meal) && r.nutrition.kcal <= remainingKcal)
+    // Grundrezepte (Brot, Marmelade, Saucen …) sind Bausteine, keine eigene Mahlzeit
+    .filter((r) => r.chapter !== 'grundrezepte' && r.meal.includes(meal) && r.nutrition.kcal <= remainingKcal)
     .map((r) => ({ r, score: Math.abs(r.nutrition.kcal - perMeal) }))
     .sort((a, b) => a.score - b.score || a.r.title.localeCompare(b.r.title, 'de'))
     .slice(0, limit)

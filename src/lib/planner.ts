@@ -94,11 +94,21 @@ function score(r: Recipe, servings: number, slotKcal: number, macros: MacroPerce
 }
 
 /**
+ * Für „Woche vorschlagen“ geeignet: keine Grundrezepte (Saucen, Brühe, Brot …) und keine Rezepte für große Mengen
+ * wie Kuchen, Kekse oder Müsli (ab 8 Portionen) – sonst landet z. B. ein Sechzehntel eines Kuchens auf der
+ * Einkaufsliste. Selbst einplanen lassen sie sich trotzdem.
+ */
+export function isSuggestible(r: Recipe): boolean {
+  return r.chapter !== 'grundrezepte' && r.servings < 8
+}
+
+/**
  * „Woche vorschlagen“: füllt leere Slots (Frühstück, Mittag, Abend und optional Snack) mit Rezepten, die zum
  * Tagesziel passen. Wiederholungen innerhalb der Woche werden vermieden, solange genug Rezepte da sind.
  */
 export function suggestWeek(opts: SuggestOptions): NewPlanItem[] {
-  const { recipes, days, kcalTarget, macros, existing, includeSnacks = true } = opts
+  const { days, kcalTarget, macros, existing, includeSnacks = true } = opts
+  const recipes = opts.recipes.filter(isSuggestible)
   const random = opts.random ?? Math.random
   const used = new Set(existing.filter((e) => e.recipe_id).map((e) => e.recipe_id as string))
   const out: NewPlanItem[] = []

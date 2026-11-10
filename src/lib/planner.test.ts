@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { mulberry32, servingsFor, suggestWeek, weekSummary, dayTotals, recipePlanItem } from './planner'
+import { isSuggestible, mulberry32, servingsFor, suggestWeek, weekSummary, dayTotals, recipePlanItem } from './planner'
 import { RECIPES, getRecipe } from './recipes'
 import { weekDaysISO } from './dates'
 import type { PlanItem } from '../types'
@@ -38,6 +38,13 @@ describe('Wochenvorschlag', () => {
     expect(res.some((i) => i.recipe_id === 'shakshuka')).toBe(false)
   })
   it('ist mit gleichem Seed reproduzierbar', () => {
+    // Keine Grundrezepte und keine Kuchen oder Kekse, die man nur im Ganzen backt
+    for (let seed = 1; seed <= 5; seed++) {
+      const res = suggestWeek({ recipes: RECIPES, days, kcalTarget: 2000, macros, existing: [], random: mulberry32(seed) })
+      res.forEach((i) => expect(isSuggestible(getRecipe(i.recipe_id)!), i.recipe_id ?? '').toBe(true))
+    }
+    expect(isSuggestible(getRecipe('marmorkuchen')!)).toBe(false)
+    expect(isSuggestible(getRecipe('kraeuterbutter')!)).toBe(false)
     const a = suggestWeek({ recipes: RECIPES, days, kcalTarget: 2000, macros, existing: [], random: mulberry32(42) })
     const b = suggestWeek({ recipes: RECIPES, days, kcalTarget: 2000, macros, existing: [], random: mulberry32(42) })
     expect(a).toEqual(b)
