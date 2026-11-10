@@ -6,7 +6,7 @@ import { inSeasonNow, seasonalRecipes, seasonRows, seasonScore } from './season'
 
 describe('Kochwissen', () => {
   it('hat vollständige Anleitungen mit gültigen Rezeptverweisen', () => {
-    expect(GUIDES.length).toBeGreaterThanOrEqual(15)
+    expect(GUIDES.length).toBeGreaterThanOrEqual(25)
     expect(new Set(GUIDES.map((g) => g.id)).size).toBe(GUIDES.length)
     for (const g of GUIDES) {
       expect(g.blocks.length, g.id).toBeGreaterThan(1)
@@ -20,6 +20,9 @@ describe('Kochwissen', () => {
     expect(ids('suesskartoffel-pommes')).toContain('heissluftfritteuse')
     expect(ids('haehnchen-curry-joghurt')).toEqual(expect.arrayContaining(['kerntemperaturen', 'reis-kochen']))
     expect(ids('dal-rote-linsen')).toEqual(expect.arrayContaining(['reis-kochen', 'huelsenfruechte']))
+    expect(ids('marmorkuchen')).toContain('backen-grundlagen')
+    expect(ids('forelle-muellerin')).toEqual(expect.arrayContaining(['kerntemperaturen', 'fisch-zubereiten']))
+    expect(ids('bulgur-pilaw')).toContain('getreide')
     expect(getGuide('gibt-es-nicht')).toBeUndefined()
     // höchstens drei pro Rezept
     RECIPES.forEach((r) => expect(relatedGuides(r).length).toBeLessThanOrEqual(3))
