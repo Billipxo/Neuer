@@ -42,9 +42,10 @@ describe('Saison', () => {
   it('bewertet Rezepte nach Saison', () => {
     expect(seasonScore(getRecipe('gruenkohl-kartoffeln')!, 11).inSeason).toContain('Grünkohl')
     expect(seasonScore(getRecipe('spargel-kartoffeln')!, 11).outOfSeason).toContain('Spargel')
-    const nov = seasonalRecipes(RECIPES, 11).map((r) => r.id)
+    const nov = seasonalRecipes(RECIPES, 11, 60).map((r) => r.id)
     expect(nov).toContain('gruenkohl-kartoffeln')
     expect(nov).not.toContain('spargel-kartoffeln')
-    expect(seasonalRecipes(RECIPES, 5).map((r) => r.id)).toContain('spargel-kartoffeln')
+    seasonalRecipes(RECIPES, 11).forEach((r) => expect(seasonScore(r, 11).score).toBeGreaterThanOrEqual(1.2))
+    expect(seasonalRecipes(RECIPES, 5, 60).map((r) => r.id)).toContain('spargel-kartoffeln')
   })
 })

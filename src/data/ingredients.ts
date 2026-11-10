@@ -295,5 +295,15 @@ spice('Knoblauchpulver', [331, 17, 62, 0.7, 9.0])
 spice('Currypulver', [325, 14, 25, 14, 33])
 spice('Lorbeerblätter', [313, 7.6, 48, 8.4, 26], { Stück: 0.2 })
 
+// --- Ergänzungen für den Kochbuch-Ausbau ---------------------------------------------------------------------
+add('Hirse', [355, 10.6, 69, 3.9, 3.8])
+add('Kirschen (TK)', [63, 1.0, 14, 0.2, 2.0], '', { base: 'Kirschen' })
+add('Pflaumen', [47, 0.6, 10.2, 0.2, 1.6], '', { u: { Stück: 40 }, s: [8, 9, 10] })
+add('Kiwi', [61, 1.1, 10.5, 0.5, 3.0], '', { u: { Stück: 75 } })
+add('Meerrettich', [48, 1.2, 8.0, 0.7, 3.3], '', { u: { TL: 5, EL: 15 } })
+add('Camembert', [290, 20, 0.1, 23.5, 0], 'D', { u: { Stück: 125 }, base: 'Käse' })
+add('Geflügelwürstchen', [200, 14, 1.0, 15.5, 0], 'M', { u: { Stück: 50 }, base: 'Würstchen' })
+add('Weißkohl', [25, 1.3, 3.3, 0.1, 2.5], '', { u: { Stück: 1000 }, s: [1, 2, 3, 4, 8, 9, 10, 11, 12] })
+
 export const INGREDIENTS: ReadonlyMap<string, IngredientInfo> = new Map(LIST.map((i) => [i.name, i]))
 export const INGREDIENT_LIST: readonly IngredientInfo[] = LIST
