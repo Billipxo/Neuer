@@ -29,6 +29,14 @@ describe('Rezept-Datensatz', () => {
   it('hat eindeutige IDs', () => {
     expect(new Set(RECIPES.map((r) => r.id)).size).toBe(RECIPES.length)
   })
+  it('hat eindeutige Titel', () => {
+    const seen = new Map<string, string>()
+    for (const r of RECIPES) {
+      const key = r.title.toLowerCase()
+      expect(seen.get(key), `${r.id} doppelt mit ${seen.get(key)}`).toBeUndefined()
+      seen.set(key, r.id)
+    }
+  })
   it('deckt alle Mahlzeitenarten ab', () => {
     for (const m of MEAL_TYPES) expect(RECIPES.filter((r) => r.meal.includes(m)).length).toBeGreaterThanOrEqual(5)
   })

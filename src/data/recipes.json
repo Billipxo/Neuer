@@ -25165,91 +25165,6 @@
   ]
  },
  {
-  "id": "gruene-shakshuka",
-  "title": "Grüne Shakshuka mit Spinat und Feta",
-  "chapter": "vegetarisch",
-  "meal": [
-   "breakfast",
-   "lunch",
-   "dinner"
-  ],
-  "time_min": 25,
-  "servings": 2,
-  "tags": [],
-  "ingredients": [
-   {
-    "name": "Olivenöl",
-    "amount": 1,
-    "unit": "EL",
-    "category": "vorrat"
-   },
-   {
-    "name": "Lauch",
-    "amount": 1,
-    "unit": "Stück",
-    "category": "obst_gemuese"
-   },
-   {
-    "name": "Zucchini",
-    "amount": 1,
-    "unit": "Stück",
-    "category": "obst_gemuese"
-   },
-   {
-    "name": "Knoblauch",
-    "amount": 2,
-    "unit": "Zehe",
-    "category": "obst_gemuese"
-   },
-   {
-    "name": "Kreuzkümmel",
-    "amount": 0.5,
-    "unit": "TL",
-    "category": "vorrat"
-   },
-   {
-    "name": "Babyspinat",
-    "amount": 200,
-    "unit": "g",
-    "category": "obst_gemuese"
-   },
-   {
-    "name": "Eier",
-    "amount": 4,
-    "unit": "Stück",
-    "category": "milch"
-   },
-   {
-    "name": "Feta",
-    "amount": 50,
-    "unit": "g",
-    "category": "milch"
-   },
-   {
-    "name": "Petersilie",
-    "amount": 0.5,
-    "unit": "Bund",
-    "category": "obst_gemuese"
-   },
-   {
-    "name": "Vollkornbrot",
-    "amount": 2,
-    "unit": "Scheibe",
-    "category": "vorrat"
-   }
-  ],
-  "steps": [
-   "Lauch in feine Ringe schneiden, Zucchini raspeln.",
-   "Öl in einer Pfanne erhitzen, Lauch und Zucchini 6 Minuten weich dünsten. Knoblauch und Kreuzkümmel 1 Minute mitbraten.",
-   "Spinat portionsweise zugeben, bis er zusammenfällt. Mit Salz und Pfeffer würzen.",
-   "Vier Mulden formen, die Eier hineingleiten lassen und zugedeckt bei kleiner Hitze 6–8 Minuten stocken lassen, bis das Eiweiß fest und das Eigelb noch flüssig ist.",
-   "Mit Feta und Petersilie bestreuen und mit Brot servieren."
-  ],
-  "tips": [
-   "Mit einem Klecks Joghurt und Chiliflocken wird es frischer und schärfer."
-  ]
- },
- {
   "id": "pilz-stroganoff",
   "title": "Pilz-Stroganoff mit Reis",
   "chapter": "vegetarisch",
@@ -29584,81 +29499,6 @@
   ]
  },
  {
-  "id": "obazda",
-  "title": "Obazda mit Radieschen und Vollkornbrot",
-  "chapter": "snacks",
-  "meal": [
-   "snack",
-   "dinner"
-  ],
-  "time_min": 15,
-  "servings": 4,
-  "tags": [
-   "klassiker"
-  ],
-  "ingredients": [
-   {
-    "name": "Camembert",
-    "amount": 1,
-    "unit": "Stück",
-    "category": "milch",
-    "note": "reif"
-   },
-   {
-    "name": "Frischkäse (leicht)",
-    "amount": 100,
-    "unit": "g",
-    "category": "milch"
-   },
-   {
-    "name": "rote Zwiebel",
-    "amount": 0.5,
-    "unit": "Stück",
-    "category": "obst_gemuese"
-   },
-   {
-    "name": "Paprikapulver",
-    "amount": 1,
-    "unit": "TL",
-    "category": "vorrat",
-    "note": "edelsüß"
-   },
-   {
-    "name": "Kümmel",
-    "amount": 0.5,
-    "unit": "TL",
-    "category": "vorrat"
-   },
-   {
-    "name": "Schnittlauch",
-    "amount": 0.5,
-    "unit": "Bund",
-    "category": "obst_gemuese"
-   },
-   {
-    "name": "Radieschen",
-    "amount": 1,
-    "unit": "Bund",
-    "category": "obst_gemuese"
-   },
-   {
-    "name": "Vollkornbrot",
-    "amount": 4,
-    "unit": "Scheibe",
-    "category": "vorrat"
-   }
-  ],
-  "steps": [
-   "Camembert klein schneiden und mit einer Gabel fein zerdrücken.",
-   "Mit Frischkäse, sehr fein gewürfelter Zwiebel, Paprika und Kümmel zu einer cremigen Masse verrühren. Mit Salz und Pfeffer abschmecken.",
-   "Mindestens 10 Minuten durchziehen lassen.",
-   "Mit Schnittlauch bestreuen und mit Radieschen und Brot servieren."
-  ],
-  "tips": [
-   "Die bayerische Brotzeit-Spezialität schmeckt mit sehr reifem Camembert am kräftigsten."
-  ]
- },
- {
   "id": "pizza-schnecken",
   "title": "Pizza-Schnecken aus Blätterteig",
   "chapter": "snacks",
@@ -29923,5 +29763,146 @@
   "tips": [
    "Warm sind sie auch lecker: 8 Minuten bei 180 °C in der Heißluftfritteuse."
   ]
+ },
+ {
+  "id": "tortilla-espanola",
+  "title": "Spanische Kartoffel-Tortilla mit Paprika",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 45,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 6,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rucola",
+    "amount": 50,
+    "unit": "g",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen, vierteln und in 3 mm dünne Scheiben schneiden. Zwiebel in Streifen, Paprika in Würfel schneiden.",
+   "Öl in einer beschichteten Pfanne (24 cm) erhitzen und Kartoffeln, Zwiebel und Paprika zugedeckt bei mittlerer Hitze 15 Minuten garen, gelegentlich wenden. Sie sollen weich werden, aber kaum bräunen. Salzen.",
+   "Eier mit Paprikapulver, Petersilie, Salz und Pfeffer verquirlen und das warme Gemüse untermischen. 5 Minuten ziehen lassen.",
+   "Masse zurück in die Pfanne geben und bei kleiner Hitze zugedeckt 8–10 Minuten stocken lassen.",
+   "Tortilla mit Hilfe eines großen Tellers wenden und weitere 3–4 Minuten braten. Lauwarm in Stücke schneiden und mit Tomaten und Rucola servieren."
+  ],
+  "tips": [
+   "Schmeckt warm und kalt – in Spanien gibt es sie als Tapa in kleinen Würfeln.",
+   "Wem das Wenden zu heikel ist: die Pfanne für die letzten Minuten unter den Ofengrill stellen."
+  ]
+ },
+ {
+  "id": "wuerstchen-im-schlafrock",
+  "title": "Würstchen im Schlafrock aus der Heißluftfritteuse",
+  "chapter": "snacks",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 25,
+  "servings": 6,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Blätterteig",
+    "amount": 1,
+    "unit": "Rolle",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Geflügelwürstchen",
+    "amount": 6,
+    "unit": "Stück",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch",
+    "note": "nur das Eigelb zum Bestreichen"
+   },
+   {
+    "name": "Sesam",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Blätterteig ausrollen und in 6 lange Streifen schneiden.",
+   "Streifen dünn mit Senf bestreichen und je einen Streifen spiralförmig um ein Würstchen wickeln. Die Enden gut andrücken.",
+   "Eigelb mit 1 EL Wasser verquirlen, die Teigspiralen damit bestreichen und mit Sesam bestreuen.",
+   "Im Korb auf Backpapier bei 180 °C 10–12 Minuten goldbraun backen. Eventuell in zwei Durchgängen backen."
+  ],
+  "tips": [
+   "Im Backofen: 200 °C Umluft, ca. 15 Minuten.",
+   "Mit Ketchup, Senf oder einem Joghurt-Dip ein Klassiker auf Kindergeburtstagen."
+  ],
+  "airfryer": {
+   "temp_c": 180,
+   "time_min": 12
+  }
  }
 ]
