@@ -99,7 +99,7 @@ add('Champignons', [22, 3.1, 0.6, 0.3, 2.0])
 add('Champignons (groß)', [22, 3.1, 0.6, 0.3, 2.0], '', { base: 'Champignons' })
 add('Cherrytomaten', [20, 0.9, 3.0, 0.2, 1.3], '', { base: 'Tomaten', s: SOMMER })
 add('Chinakohl', [13, 1.1, 1.2, 0.2, 1.2], '', { u: { Stück: 800 }, s: [1, 2, 9, 10, 11, 12] })
-add('Datteln (entsteint)', [282, 2.5, 64, 0.4, 8.0], '', { base: 'Datteln' })
+add('Datteln (entsteint)', [282, 2.5, 64, 0.4, 8.0], '', { u: { Stück: 8 }, base: 'Datteln' })
 add('Dill', [43, 3.5, 4.9, 1.1, 2.1], '', { u: { Bund: 20 } })
 add('Edamame (TK, in der Schale)', [66, 6.5, 4.0, 2.9, 2.9], '', { base: 'Edamame' })
 add('Edamame (TK, geschält)', [121, 11.9, 3.7, 5.2, 5.2], '', { base: 'Edamame' })
@@ -352,6 +352,8 @@ add('Rhabarber', [21, 0.6, 1.4, 0.1, 3.2], '', { u: { Stück: 100 }, s: [4, 5, 6
 add('Heidelbeeren', [42, 0.6, 7.4, 0.6, 4.9], '', { s: [7, 8, 9] })
 add('Pinienkerne', [675, 14, 4.0, 68, 4.0], '')
 add('Eigelb', [330, 16, 0.3, 29, 0], 'E', { u: { Stück: 18 }, base: 'Eier' })
+add('Schwarzer Tee', [1, 0, 0.3, 0, 0], '', { u: { Beutel: 2 }, base: 'Tee' })
+spice('Kardamom', [311, 11, 40, 6.7, 28])
 
 export const INGREDIENTS: ReadonlyMap<string, IngredientInfo> = new Map(LIST.map((i) => [i.name, i]))
 export const INGREDIENT_LIST: readonly IngredientInfo[] = LIST

@@ -32852,5 +32852,820 @@
    "Reicht für eine Pfanne mit 2–3 Portionen Gemüse, Tofu, Hähnchen oder Nudeln.",
    "Mit Chili, Erdnussbutter oder Limette variieren."
   ]
+ },
+ {
+  "id": "gruener-smoothie",
+  "title": "Grüner Smoothie mit Spinat, Apfel und Banane",
+  "chapter": "getraenke",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 5,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Babyspinat",
+    "amount": 60,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Apfel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Bananen",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "daumennagelgroß"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Haferdrink",
+    "amount": 300,
+    "unit": "ml",
+    "category": "milch",
+    "note": "oder Wasser"
+   }
+  ],
+  "steps": [
+   "Apfel entkernen und grob schneiden, Banane schälen, Gurke in Stücke schneiden, Ingwer schälen.",
+   "Alles mit Spinat, Zitronensaft und Haferdrink in den Mixer geben.",
+   "Auf höchster Stufe 1 Minute fein pürieren, bis keine Blattstückchen mehr zu sehen sind.",
+   "Sofort servieren, nach Wunsch mit ein paar Eiswürfeln."
+  ],
+  "tips": [
+   "Mit gefrorener Banane wird der Smoothie cremig und kalt.",
+   "Wer es süßer mag, nimmt eine Dattel dazu."
+  ]
+ },
+ {
+  "id": "mango-lassi",
+  "title": "Mango-Lassi",
+  "chapter": "getraenke",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 5,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Mango (TK)",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "leicht angetaut, oder frisch"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 150,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat",
+    "note": "oder Kardamom"
+   }
+  ],
+  "steps": [
+   "Mango, Joghurt, Milch und Honig in den Mixer geben.",
+   "Etwa 1 Minute cremig pürieren.",
+   "In Gläser füllen und mit einer Prise Zimt oder Kardamom bestäuben."
+  ],
+  "tips": [
+   "Das indische Joghurtgetränk wird traditionell gut gekühlt getrunken – auch zu scharfen Currys."
+  ]
+ },
+ {
+  "id": "erdbeer-bananen-smoothie",
+  "title": "Erdbeer-Bananen-Smoothie",
+  "chapter": "getraenke",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 5,
+  "servings": 2,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Erdbeeren",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "frisch oder TK"
+   },
+   {
+    "name": "Bananen",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 200,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Erdbeeren putzen, Banane schälen und in Stücke brechen.",
+   "Mit Joghurt, Milch und Haferflocken in den Mixer geben.",
+   "Etwa 1 Minute fein pürieren und sofort servieren."
+  ],
+  "tips": [
+   "Die Haferflocken machen den Smoothie sämiger und sättigender."
+  ]
+ },
+ {
+  "id": "schoko-erdnuss-shake",
+  "title": "Schoko-Erdnuss-Shake mit Banane",
+  "chapter": "getraenke",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 5,
+  "servings": 2,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Bananen",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "gefroren"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 400,
+    "unit": "ml",
+    "category": "milch",
+    "note": "oder Haferdrink"
+   },
+   {
+    "name": "Erdnussbutter",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kakaopulver",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Gefrorene Bananen in Stücke brechen.",
+   "Mit Milch, Erdnussbutter, Kakao und Quark in den Mixer geben.",
+   "Etwa 1 Minute cremig pürieren und sofort servieren."
+  ],
+  "tips": [
+   "Reife Bananen geschält und in Stücken einfrieren – so sind sie für Shakes immer griffbereit."
+  ]
+ },
+ {
+  "id": "eiskaffee",
+  "title": "Eiskaffee mit Milchschaum",
+  "chapter": "getraenke",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Espresso",
+    "amount": 150,
+    "unit": "ml",
+    "category": "vorrat",
+    "note": "oder starker Kaffee, abgekühlt"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 300,
+    "unit": "ml",
+    "category": "milch",
+    "note": "gut gekühlt"
+   },
+   {
+    "name": "Zucker",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat",
+    "note": "nach Wunsch"
+   },
+   {
+    "name": "Kakaopulver",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Espresso kochen, nach Wunsch süßen und abkühlen lassen.",
+   "Zwei Gläser mit Eiswürfeln füllen und den Kaffee daraufgießen.",
+   "Milch mit einem Milchaufschäumer oder im Schraubglas kräftig geschüttelt aufschäumen und darübergeben.",
+   "Mit etwas Kakao bestäuben."
+  ],
+  "tips": [
+   "Kaffee-Eiswürfel aus übrigem Kaffee verwässern den Eiskaffee nicht."
+  ]
+ },
+ {
+  "id": "goldene-milch",
+  "title": "Goldene Milch mit Kurkuma und Ingwer",
+  "chapter": "getraenke",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Milch 1,5 %",
+    "amount": 400,
+    "unit": "ml",
+    "category": "milch",
+    "note": "oder Haferdrink"
+   },
+   {
+    "name": "Kurkuma",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "daumennagelgroß"
+   },
+   {
+    "name": "Pfeffer",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ingwer schälen und fein reiben.",
+   "Milch mit Kurkuma, Zimt, Ingwer und Pfeffer in einem Topf verrühren und unter Rühren langsam erhitzen, nicht kochen lassen.",
+   "5 Minuten bei kleiner Hitze ziehen lassen.",
+   "Durch ein feines Sieb in Tassen gießen und mit Honig süßen."
+  ],
+  "tips": [
+   "Kurkuma färbt stark – Topf und Löffel gleich ausspülen.",
+   "Ein wärmendes Getränk für kalte Abende."
+  ]
+ },
+ {
+  "id": "ingwer-zitronen-tee",
+  "title": "Ingwer-Zitronen-Tee mit Honig",
+  "chapter": "getraenke",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "ca. 4 cm"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Honig",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Minze",
+    "amount": 2,
+    "unit": "Zweig",
+    "category": "obst_gemuese",
+    "note": "nach Wunsch"
+   }
+  ],
+  "steps": [
+   "Ingwer waschen und in dünne Scheiben schneiden – schälen ist nicht nötig.",
+   "500 ml Wasser aufkochen, Ingwer zugeben und 8–10 Minuten ziehen lassen.",
+   "Zitronensaft und nach Wunsch Minze zugeben, in Tassen gießen und mit Honig süßen."
+  ],
+  "tips": [
+   "Je länger der Ingwer zieht, desto schärfer wird der Tee.",
+   "Honig erst in den etwas abgekühlten Tee rühren."
+  ]
+ },
+ {
+  "id": "infused-water-gurke-minze",
+  "title": "Wasser mit Gurke, Minze und Limette",
+  "chapter": "getraenke",
+  "meal": [
+   "breakfast",
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 5,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Minze",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Gurke und Limette in dünne Scheiben schneiden, Minzblätter leicht andrücken, damit sie ihr Aroma abgeben.",
+   "Alles in eine große Karaffe geben und mit 1,5 l kaltem Wasser auffüllen.",
+   "Mindestens 30 Minuten im Kühlschrank ziehen lassen."
+  ],
+  "rest_min": 30,
+  "tips": [
+   "Eine einfache Idee für alle, die mehr trinken möchten – die Karaffe sichtbar auf den Tisch stellen.",
+   "Weitere Kombinationen: Erdbeere und Basilikum, Orange und Ingwer, Apfel und Zimt.",
+   "Mit frischem Wasser lässt sich die Karaffe einmal nachfüllen."
+  ]
+ },
+ {
+  "id": "heisse-schokolade",
+  "title": "Heiße Schokolade",
+  "chapter": "getraenke",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 2,
+  "tags": [
+   "suess",
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Milch 1,5 %",
+    "amount": 400,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Zartbitterschokolade (70 %)",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kakaopulver",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucker",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Schokolade fein hacken.",
+   "Milch mit Kakao, Zucker und Zimt in einem Topf verrühren und unter Rühren erhitzen.",
+   "Kurz vor dem Kochen vom Herd nehmen, die Schokolade einrühren und schmelzen lassen.",
+   "Mit dem Schneebesen oder Milchaufschäumer schaumig schlagen und heiß servieren."
+  ],
+  "tips": [
+   "Mit Haferdrink und veganer Schokolade gelingt sie auch vegan."
+  ]
+ },
+ {
+  "id": "chai-latte",
+  "title": "Chai Latte",
+  "chapter": "getraenke",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 15,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Schwarzer Tee",
+    "amount": 2,
+    "unit": "Beutel",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "daumengroß"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat",
+    "note": "oder 1 Zimtstange"
+   },
+   {
+    "name": "Kardamom",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Pfeffer",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 300,
+    "unit": "ml",
+    "category": "milch",
+    "note": "oder Haferdrink"
+   },
+   {
+    "name": "Honig",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ingwer in Scheiben schneiden und mit Zimt, Kardamom, Pfeffer und 200 ml Wasser in einem Topf aufkochen. 5 Minuten köcheln lassen.",
+   "Teebeutel zugeben und 3 Minuten ziehen lassen, dann herausnehmen.",
+   "Milch zugeben und erhitzen, aber nicht kochen lassen.",
+   "Durch ein Sieb in Tassen gießen, mit Honig süßen und nach Wunsch aufschäumen."
+  ],
+  "tips": [
+   "Mit Rooibos statt Schwarztee ist der Chai koffeinfrei."
+  ]
+ },
+ {
+  "id": "bratapfel-smoothie",
+  "title": "Bratapfel-Smoothie mit Zimt",
+  "chapter": "getraenke",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 2,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Apfel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Bananen",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 200,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 10,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Äpfel entkernen, in Stücke schneiden und mit 2 EL Wasser und dem Zimt in einem kleinen Topf 5 Minuten weich dünsten. Kurz abkühlen lassen.",
+   "Mit Banane, Joghurt, Milch und Haferflocken in den Mixer geben und cremig pürieren.",
+   "In Gläser füllen und mit gehackten Walnüssen bestreuen."
+  ],
+  "tips": [
+   "Schmeckt im Winter auch lauwarm."
+  ]
+ },
+ {
+  "id": "himbeer-limonade",
+  "title": "Himbeer-Limonade mit Minze",
+  "chapter": "getraenke",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 4,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Beeren (TK)",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "Himbeeren"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Honig",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "oder Zucker"
+   },
+   {
+    "name": "Minze",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Himbeeren mit Zitronensaft und Honig pürieren und durch ein Sieb streichen.",
+   "Den Sirup auf vier Gläser verteilen.",
+   "Mit insgesamt 1 l kaltem Sprudelwasser auffüllen, umrühren und mit Eiswürfeln und Minze servieren."
+  ],
+  "tips": [
+   "Die Süße lässt sich gut nach Geschmack anpassen – mit weniger Honig wird sie herb-frisch."
+  ]
+ },
+ {
+  "id": "rote-bete-smoothie",
+  "title": "Rote-Bete-Beeren-Smoothie",
+  "chapter": "getraenke",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 5,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Rote Bete (vorgegart)",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Beeren (TK)",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Bananen",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Orange",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Haferdrink",
+    "amount": 200,
+    "unit": "ml",
+    "category": "milch",
+    "note": "oder Wasser"
+   }
+  ],
+  "steps": [
+   "Rote Bete in Stücke schneiden, Orange schälen, Banane in Stücke brechen.",
+   "Alles mit Beeren und Haferdrink in den Mixer geben.",
+   "Etwa 1 Minute fein pürieren und sofort servieren."
+  ],
+  "tips": [
+   "Die Beeren und die Orange überdecken den erdigen Geschmack der Roten Bete."
+  ]
+ },
+ {
+  "id": "haferdrink-selbstgemacht",
+  "title": "Haferdrink selbst gemacht",
+  "chapter": "getraenke",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Haferflocken",
+    "amount": 80,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "kernig"
+   },
+   {
+    "name": "Datteln (entsteint)",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "vorrat",
+    "note": "nach Wunsch"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Haferflocken mit 1 l kaltem Wasser, Datteln und Salz in den Mixer geben.",
+   "Nur 20–30 Sekunden mixen – länger gemixt wird der Drink schleimig.",
+   "Durch ein feines Tuch oder Nussmilchbeutel abseihen.",
+   "In eine Flasche füllen und vor dem Trinken schütteln."
+  ],
+  "tips": [
+   "Im Kühlschrank 3–4 Tage haltbar.",
+   "Kaltes Wasser ist wichtig, warmes macht den Drink schleimig."
+  ]
+ },
+ {
+  "id": "ayran",
+  "title": "Ayran – Joghurtgetränk mit Minze",
+  "chapter": "getraenke",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 5,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 300,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Minze",
+    "amount": 2,
+    "unit": "Zweig",
+    "category": "obst_gemuese",
+    "note": "nach Wunsch"
+   }
+  ],
+  "steps": [
+   "Joghurt mit 200 ml kaltem Wasser und Salz verquirlen oder im Mixer kurz aufschäumen.",
+   "Mindestens 10 Minuten kalt stellen – Ayran schmeckt am besten eiskalt.",
+   "In Gläser füllen und mit Minzblättern servieren."
+  ],
+  "tips": [
+   "Ayran wird in der Türkei zu Döner, Köfte und Gegrilltem getrunken – salzig und erfrischend."
+  ]
  }
 ]
