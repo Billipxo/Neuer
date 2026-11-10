@@ -19,6 +19,7 @@ const RecipeDetailPage = lazy(() => import('./pages/RecipeDetailPage').then((m) 
 const ShoppingPage = lazy(() => import('./pages/ShoppingPage').then((m) => ({ default: m.ShoppingPage })))
 const PlannerPage = lazy(() => import('./pages/PlannerPage').then((m) => ({ default: m.PlannerPage })))
 const HistoryPage = lazy(() => import('./pages/HistoryPage'))
+const PantryPage = lazy(() => import('./pages/PantryPage').then((m) => ({ default: m.PantryPage })))
 const KnowledgePage = lazy(() => import('./pages/KnowledgePage').then((m) => ({ default: m.KnowledgePage })))
 const GuidePage = lazy(() => import('./pages/GuidePage').then((m) => ({ default: m.GuidePage })))
 const CookModePage = lazy(() => import('./pages/CookModePage').then((m) => ({ default: m.CookModePage })))
@@ -58,6 +59,7 @@ function Authed() {
         <Route path="profil" element={<ProfilePage />} />
         <Route path="rezepte" element={<RecipesPage />} />
         <Route path="rezepte/wissen" element={<KnowledgePage />} />
+        <Route path="rezepte/zutaten" element={<PantryPage />} />
         <Route path="rezepte/wissen/:id" element={<GuidePage />} />
         <Route path="einkauf" element={<ShoppingPage />} />
         <Route path="planer" element={<PlannerPage />} />

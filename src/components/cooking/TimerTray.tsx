@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { BellRing, Timer, X } from 'lucide-react'
 import { useTimers } from '../../app/timers'
-import { fmtCountdown } from '../../lib/cooking'
+import { fmtCountdown } from '../../lib/countdown'
 
 /** Laufende und abgelaufene Küchen-Timer – auf allen Seiten sichtbar */
 export function TimerTray() {

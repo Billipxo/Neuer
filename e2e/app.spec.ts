@@ -179,3 +179,22 @@ test('Kochwissen: Übersicht, Anleitung und Verknüpfung mit Rezepten', async ({
   await page.goto('/rezepte/wissen/saisonkalender')
   await expect(page.getByText(/Jetzt im \w+: \d+ Sorten mit Saison/)).toBeVisible()
 })
+
+test('Was habe ich da? findet Rezepte und setzt Fehlendes auf die Einkaufsliste', async ({ page }) => {
+  await startDemo(page)
+  await page.getByRole('link', { name: 'Rezepte' }).click()
+  await page.getByRole('link', { name: /Was habe ich da/ }).click()
+  for (const z of ['Eier', 'Spinat']) {
+    await page.getByLabel('Zutat suchen').fill(z)
+    await page.getByRole('button', { name: new RegExp(`^\\s*${z}$`) }).first().click()
+  }
+  await expect(page.getByRole('button', { name: 'Eier entfernen' })).toBeVisible()
+  const omelett = page.getByRole('listitem').filter({ hasText: 'Spinat-Feta-Omelett' })
+  await expect(omelett).toContainText('Fehlt: Feta')
+  await omelett.getByRole('button', { name: /Einkaufsliste/ }).click()
+  await page.goto('/einkauf')
+  await expect(page.getByText('Feta')).toBeVisible()
+  // Auswahl bleibt gespeichert
+  await page.goto('/rezepte/zutaten')
+  await expect(page.getByRole('button', { name: 'Spinat entfernen' })).toBeVisible()
+})

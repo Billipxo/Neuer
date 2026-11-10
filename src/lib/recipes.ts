@@ -165,13 +165,31 @@ export const TAG_LABELS: Record<string, string> = {
   suess: 'Süßes',
 }
 
-export type RecipeSort = 'empfohlen' | 'kcal' | 'zeit' | 'eiweiss'
+export type RecipeSort = 'empfohlen' | 'kcal' | 'zeit' | 'eiweiss' | 'oft'
 
 export const SORT_LABELS: Record<RecipeSort, string> = {
   empfohlen: 'Empfohlen',
   kcal: 'Wenig kcal zuerst',
   zeit: 'Schnell zuerst',
   eiweiss: 'Viel Eiweiß zuerst',
+  oft: 'Oft gekocht',
+}
+
+export interface CookedStat {
+  count: number
+  /** Datum des letzten Eintrags (yyyy-MM-dd) */
+  last: string
+}
+
+/** Wie oft und wann zuletzt ein Rezept als gegessen eingetragen wurde */
+export function cookedStats(log: { recipe_id: string | null; date: string }[]): Map<string, CookedStat> {
+  const map = new Map<string, CookedStat>()
+  for (const e of log) {
+    if (!e.recipe_id) continue
+    const cur = map.get(e.recipe_id)
+    map.set(e.recipe_id, { count: (cur?.count ?? 0) + 1, last: cur && cur.last > e.date ? cur.last : e.date })
+  }
+  return map
 }
 
 /** Eiweiß in Gramm pro 100 kcal – Maß für „proteinreich“ unabhängig von der Portionsgröße */
@@ -186,7 +204,7 @@ export function proteinDensity(r: Recipe): number {
 export function sortRecipes(
   recipes: Recipe[],
   sort: RecipeSort,
-  opts: { favorites?: string[]; preferAirfryer?: boolean } = {},
+  opts: { favorites?: string[]; preferAirfryer?: boolean; cooked?: Map<string, CookedStat> } = {},
 ): Recipe[] {
   const fav = new Set(opts.favorites ?? [])
   const index = new Map(recipes.map((r, i) => [r.id, i]))
@@ -199,6 +217,10 @@ export function sortRecipes(
       return list.sort((a, b) => a.time_min - b.time_min || byIndex(a, b))
     case 'eiweiss':
       return list.sort((a, b) => proteinDensity(b) - proteinDensity(a) || byIndex(a, b))
+    case 'oft': {
+      const c = (r: Recipe) => opts.cooked?.get(r.id)?.count ?? 0
+      return list.sort((a, b) => c(b) - c(a) || byIndex(a, b))
+    }
     default: {
       const rank = (r: Recipe) => (fav.has(r.id) ? 0 : opts.preferAirfryer && r.airfryer ? 1 : 2)
       return list.sort((a, b) => rank(a) - rank(b) || byIndex(a, b))
@@ -228,4 +250,25 @@ export function isAirfryerNative(r: Recipe): boolean {
 
 export function toggleFavorite(list: string[], id: string): string[] {
   return list.includes(id) ? list.filter((x) => x !== id) : [...list, id]
+}
+
+/** Rezept als Text zum Teilen (Messenger, E-Mail) */
+export function recipeShareText(r: Recipe, servings: number, steps: string[]): string {
+  const lines = [
+    `${recipeEmoji(r)} ${r.title}`,
+    `${servings} Portion${servings === 1 ? '' : 'en'} · ${r.time_min} Min. · ca. ${Math.round(r.nutrition.kcal)} kcal pro Portion`,
+    '',
+    'Zutaten:',
+    ...scaleIngredients(r, servings).map((i) => `• ${[formatAmount(i.amount, i.unit), i.name].filter(Boolean).join(' ')}${i.note ? ` (${i.note})` : ''}`),
+    '',
+    'Zubereitung:',
+    ...steps.map((s, idx) => `${idx + 1}. ${s}`),
+  ]
+  return lines.join('\n')
+}
+
+function formatAmount(amount: number | null, unit: string): string {
+  if (amount === null) return ''
+  const n = String(Math.round(amount * 100) / 100).replace('.', ',')
+  return unit ? `${n} ${unit}` : n
 }

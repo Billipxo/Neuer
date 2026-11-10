@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useParams, Navigate, Link } from 'react-router-dom'
-import { ChefHat, Clock, Heart, Hourglass, Lightbulb, Minus, Plus, ShoppingBasket, Thermometer, Users, CalendarPlus } from 'lucide-react'
-import { getRecipe, hasAirfryerVariant, isAirfryerNative, recipeEmoji, recipeNutrients, recipeSteps, scaleIngredients, TAG_LABELS } from '../lib/recipes'
+import { ChefHat, Clock, Heart, History, Hourglass, Lightbulb, Minus, Plus, Share2, ShoppingBasket, Thermometer, Users, CalendarPlus } from 'lucide-react'
+import { getRecipe, hasAirfryerVariant, isAirfryerNative, recipeEmoji, recipeNutrients, recipeShareText, recipeSteps, scaleIngredients, TAG_LABELS } from '../lib/recipes'
+import { useCookedStats } from '../hooks/cooked'
+import { fmtDate } from '../lib/dates'
 import { useProfile, useToggleFavoriteRecipe } from '../hooks/data'
 import { relatedGuides } from '../lib/guides'
 import { Segmented } from '../components/ui/Segmented'
@@ -28,6 +30,7 @@ export function RecipeDetailPage() {
   const toggleFav = useToggleFavoriteRecipe()
   const hasAirfryer = profile?.has_airfryer ?? true
   const [method, setMethod] = useState<'airfryer' | 'oven' | null>(null)
+  const cooked = useCookedStats()
 
   if (!recipe) return <Navigate to="/rezepte" replace />
   const ingredients = scaleIngredients(recipe, servings)
@@ -36,6 +39,21 @@ export function RecipeDetailPage() {
   const steps = recipeSteps(recipe, variant ? activeMethod : 'airfryer')
   const showAirfryerInfo = recipe.airfryer && (isAirfryerNative(recipe) || activeMethod === 'airfryer')
   const favorite = profile?.favorite_recipes?.includes(recipe.id) ?? false
+  const cookedStat = cooked.get(recipe.id)
+
+  async function share() {
+    if (!recipe) return
+    const text = recipeShareText(recipe, servings, steps)
+    try {
+      if (navigator.share) await navigator.share({ title: recipe.title, text })
+      else {
+        await navigator.clipboard.writeText(text)
+        toast('Rezept in die Zwischenablage kopiert', '📋')
+      }
+    } catch (e) {
+      if ((e as Error).name !== 'AbortError') toast('Teilen nicht möglich')
+    }
+  }
 
   return (
     <div className="mx-auto min-h-dvh max-w-lg px-4 pb-36 safe-top">
@@ -43,6 +61,15 @@ export function RecipeDetailPage() {
         title=""
         back
         actions={
+          <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={share}
+            aria-label="Rezept teilen"
+            className="flex size-11 items-center justify-center rounded-full bg-surface ring-1 ring-line transition active:scale-90"
+          >
+            <Share2 className="size-5 text-muted" aria-hidden />
+          </button>
           <button
             type="button"
             onClick={() => toggleFav.mutate(recipe.id)}
@@ -52,6 +79,7 @@ export function RecipeDetailPage() {
           >
             <Heart className={`size-5 ${favorite ? 'fill-fat text-fat animate-pop' : 'text-muted'}`} aria-hidden />
           </button>
+          </div>
         }
       />
       <div className="flex flex-col items-center text-center">
@@ -70,6 +98,12 @@ export function RecipeDetailPage() {
           ) : null}
           <span className="tabular">{fmtInt(recipe.nutrition.kcal)} kcal pro Portion</span>
         </p>
+        {cookedStat && (
+          <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-xs font-medium text-brand">
+            <History className="size-3.5" aria-hidden />
+            Schon {cookedStat.count}× gekocht · zuletzt am {fmtDate(cookedStat.last)}
+          </p>
+        )}
         {recipe.tags.length > 0 && (
           <ul className="mt-3 flex flex-wrap justify-center gap-1.5" aria-label="Eigenschaften">
             {recipe.tags.filter((t) => t !== 'heissluftfritteuse').map((t) => (

@@ -120,3 +120,27 @@ describe('Heißluftfritteuse', async () => {
     expect(toggleFavorite(['a', 'b'], 'a')).toEqual(['b'])
   })
 })
+
+describe('Gekocht-Statistik und Teilen', async () => {
+  const { cookedStats, sortRecipes, recipeShareText } = await import('./recipes')
+  it('zählt gekochte Rezepte und sortiert danach', () => {
+    const stats = cookedStats([
+      { recipe_id: 'shakshuka', date: '2026-11-01' },
+      { recipe_id: 'shakshuka', date: '2026-11-05' },
+      { recipe_id: 'linsensuppe', date: '2026-11-03' },
+      { recipe_id: null, date: '2026-11-04' },
+    ])
+    expect(stats.get('shakshuka')).toEqual({ count: 2, last: '2026-11-05' })
+    expect(stats.get('linsensuppe')?.count).toBe(1)
+    const sorted = sortRecipes(RECIPES, 'oft', { cooked: stats })
+    expect(sorted.slice(0, 2).map((r) => r.id)).toEqual(['shakshuka', 'linsensuppe'])
+  })
+  it('erzeugt einen Teilen-Text mit Zutaten und Schritten', () => {
+    const r = getRecipe('shakshuka')!
+    const text = recipeShareText(r, 4, r.steps)
+    expect(text).toContain('Shakshuka')
+    expect(text).toContain('4 Portionen')
+    expect(text).toContain('• 8 Stück Eier')
+    expect(text).toContain('1. ')
+  })
+})

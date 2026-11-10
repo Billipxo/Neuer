@@ -301,3 +301,4 @@ export function useToggleFavoriteRecipe() {
     onSuccess: (p) => qc.setQueryData(qk.profile, p),
   })
 }
+
