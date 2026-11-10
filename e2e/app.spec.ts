@@ -162,3 +162,20 @@ test('Kochmodus: Zutaten abhaken, Schritte durchgehen und Timer starten', async 
   await page.getByRole('button', { name: /Timer abbrechen/ }).click()
   await expect(page.getByRole('status').filter({ hasText: 'Schritt 1 · 20 Min.' })).toBeHidden()
 })
+
+test('Kochwissen: Übersicht, Anleitung und Verknüpfung mit Rezepten', async ({ page }) => {
+  await startDemo(page)
+  await page.getByRole('link', { name: 'Rezepte' }).click()
+  await page.getByRole('link', { name: /Kochwissen/ }).click()
+  await expect(page.getByRole('heading', { name: 'Kochwissen' })).toBeVisible()
+  await page.getByRole('link', { name: /Reis perfekt kochen/ }).click()
+  await expect(page.getByRole('heading', { name: 'Reis perfekt kochen' })).toBeVisible()
+  await expect(page.getByText('Basmati, Jasmin')).toBeVisible()
+  // Rezept → passendes Kochwissen
+  await page.goto('/rezepte/haehnchen-curry-joghurt')
+  await page.getByRole('link', { name: /Fleisch & Fisch sicher garen/ }).click()
+  await expect(page.getByText('Kerntemperaturen')).toBeVisible()
+  // Saisonkalender zeigt den aktuellen Monat
+  await page.goto('/rezepte/wissen/saisonkalender')
+  await expect(page.getByText(/Jetzt im \w+: \d+ Sorten mit Saison/)).toBeVisible()
+})

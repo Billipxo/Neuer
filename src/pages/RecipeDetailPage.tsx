@@ -3,6 +3,7 @@ import { useParams, Navigate, Link } from 'react-router-dom'
 import { ChefHat, Clock, Heart, Hourglass, Lightbulb, Minus, Plus, ShoppingBasket, Thermometer, Users, CalendarPlus } from 'lucide-react'
 import { getRecipe, hasAirfryerVariant, isAirfryerNative, recipeEmoji, recipeNutrients, recipeSteps, scaleIngredients, TAG_LABELS } from '../lib/recipes'
 import { useProfile, useToggleFavoriteRecipe } from '../hooks/data'
+import { relatedGuides } from '../lib/guides'
 import { Segmented } from '../components/ui/Segmented'
 import { AirfryerIcon } from '../components/recipes/AirfryerIcon'
 import { recipeGradient } from '../components/recipes/RecipeCard'
@@ -204,6 +205,29 @@ export function RecipeDetailPage() {
               </p>
             ))}
           </Card>
+        </>
+      )}
+      {relatedGuides(recipe).length > 0 && (
+        <>
+          <SectionTitle>Passendes Kochwissen</SectionTitle>
+          <ul className="space-y-2">
+            {relatedGuides(recipe).map((g) => (
+              <li key={g.id}>
+                <Link
+                  to={`/rezepte/wissen/${g.id}`}
+                  className="flex min-h-14 items-center gap-3 rounded-2xl bg-surface px-3 ring-1 ring-line/60 transition hover:ring-brand/40"
+                >
+                  <span aria-hidden className="text-2xl">
+                    {g.emoji}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block font-medium leading-snug">{g.title}</span>
+                    <span className="block truncate text-xs text-muted">{g.summary}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </>
       )}
       <p className="mt-6 text-xs text-muted">Nährwerte sind gerundete Richtwerte und können je nach Produkt abweichen.</p>

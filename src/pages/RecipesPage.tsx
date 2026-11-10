@@ -1,5 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react'
-import { Heart, LayoutGrid, List, Search, SlidersHorizontal, X } from 'lucide-react'
+import { BookOpen, Heart, LayoutGrid, List, Search, SlidersHorizontal, X } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { GUIDES } from '../data/guides'
 import type { MealType, Recipe } from '../types'
 import { MEAL_TYPES } from '../types'
 import { useLog, useProfile, useToggleFavoriteRecipe } from '../hooks/data'
@@ -211,6 +213,14 @@ export function RecipesPage() {
 
       {!filtered && (
         <>
+          <div className="mt-4 grid grid-cols-1 gap-2">
+            <FeatureCard
+              to="/rezepte/wissen"
+              icon={<BookOpen className="size-6" aria-hidden />}
+              title="Kochwissen"
+              text={`${GUIDES.length} Anleitungen: Garzeiten, Heißluftfritteuse, Saisonkalender …`}
+            />
+          </div>
           {recommended.length > 0 && (
             <Carousel title="Passt zu deinem Tag" subtitle={`${MEAL_LABELS[currentMeal]} · noch ${fmtInt(remaining)} kcal übrig`} recipes={recommended} />
           )}
@@ -261,6 +271,21 @@ export function RecipesPage() {
         )}
       </section>
     </>
+  )
+}
+
+function FeatureCard({ to, icon, title, text }: { to: string; icon: ReactNode; title: string; text: string }) {
+  return (
+    <Link
+      to={to}
+      className="flex min-h-16 items-center gap-3 rounded-3xl bg-surface p-3 ring-1 ring-line/60 transition active:scale-[0.99] hover:ring-brand/40"
+    >
+      <span className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-brand-soft text-brand">{icon}</span>
+      <span className="min-w-0">
+        <span className="block font-semibold">{title}</span>
+        <span className="block truncate text-sm text-muted">{text}</span>
+      </span>
+    </Link>
   )
 }
 
