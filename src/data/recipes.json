@@ -23044,5 +23044,4248 @@
   "tips": [
    "Das Fleisch erst ganz zum Schluss in die Sauce geben, sonst wird es zäh."
   ]
+ },
+ {
+  "id": "forelle-muellerin",
+  "title": "Forelle Müllerin mit Mandelbutter und Petersilienkartoffeln",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 2,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Forellenfilet",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "fleisch_fisch",
+    "note": "mit Haut, à 80 g"
+   },
+   {
+    "name": "Mehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Mandeln",
+    "amount": 20,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "gehobelt"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Feldsalat",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen und in Salzwasser 20 Minuten garen.",
+   "Forellenfilets trocken tupfen, salzen und die Hautseite leicht in Mehl wenden, überschüssiges Mehl abklopfen.",
+   "Öl in einer beschichteten Pfanne erhitzen und die Filets auf der Hautseite 3 Minuten knusprig braten. Wenden und 1 Minute fertig garen. Herausnehmen.",
+   "Butter in die Pfanne geben, Mandeln darin 1–2 Minuten goldbraun rösten und mit einem Spritzer Zitronensaft ablöschen.",
+   "Kartoffeln in gehackter Petersilie schwenken. Forelle mit Mandelbutter, Kartoffeln und Feldsalat mit Essig-Öl-Dressing servieren."
+  ],
+  "tips": [
+   "Die Filets nur kurz auf der Fleischseite garen – Forelle ist sehr zart und schnell durch."
+  ]
+ },
+ {
+  "id": "zander-rahmlinsen",
+  "title": "Zanderfilet auf Rahmlinsen",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Tellerlinsen",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "oder Berglinsen"
+   },
+   {
+    "name": "Karotten",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knollensellerie",
+    "amount": 80,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 400,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "Balsamico oder Apfelessig"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kochsahne 15 %",
+    "amount": 50,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Zanderfilet",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "mit Haut"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Karotte, Sellerie und Zwiebel sehr fein würfeln und im Rapsöl 3 Minuten andünsten.",
+   "Linsen und Brühe zugeben und zugedeckt 25–30 Minuten köcheln, bis die Linsen weich sind, aber nicht zerfallen.",
+   "Essig, Senf und Kochsahne einrühren und 2 Minuten einköcheln. Mit Salz und Pfeffer kräftig abschmecken.",
+   "Zander in zwei Stücke teilen, die Haut mehrfach leicht einritzen und salzen. Im Olivenöl auf der Hautseite 4 Minuten kross braten, wenden und 1 Minute fertig garen.",
+   "Linsen auf Teller verteilen, Zander mit der Hautseite nach oben daraufsetzen und mit Petersilie bestreuen."
+  ],
+  "tips": [
+   "Das Einritzen der Haut verhindert, dass sich das Filet in der Pfanne wölbt."
+  ]
+ },
+ {
+  "id": "fisch-blech-kartoffeln-oliven",
+  "title": "Fisch vom Blech mit Kartoffeln, Tomaten und Oliven",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 700,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Oliven",
+    "amount": 40,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kapern",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rotbarschfilet",
+    "amount": 450,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "oder Kabeljau"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C Umluft vorheizen. Kartoffeln in dünne Spalten schneiden, mit der Hälfte des Öls, Oregano und Salz mischen und auf dem Blech 20 Minuten vorbacken.",
+   "Tomaten, Zwiebelspalten, Oliven und Kapern mit restlichem Öl zu den Kartoffeln geben.",
+   "Fischfilets salzen, pfeffern, mit Zitronenscheiben belegen und auf das Gemüse legen.",
+   "Alles weitere 12–15 Minuten backen, bis sich der Fisch leicht mit einer Gabel zerteilen lässt.",
+   "Mit Petersilie und Zitronensaft servieren."
+  ],
+  "tips": [
+   "Ein Blech, wenig Abwasch – die Tomaten werden im Ofen zur Sauce."
+  ]
+ },
+ {
+  "id": "matjes-hausfrauenart",
+  "title": "Matjes nach Hausfrauenart mit Pellkartoffeln",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Matjesfilet",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Apfel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "säuerlich"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Gewürzgurken",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "saure Sahne (10 %)",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Dill",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln mit Schale in Salzwasser 20–25 Minuten garen.",
+   "Matjes kurz kalt abspülen, trocken tupfen und in mundgerechte Stücke schneiden.",
+   "Apfel entkernen und würfeln, Zwiebel in feine Ringe, Gurken in Scheiben schneiden.",
+   "Saure Sahne mit Joghurt, einem Schuss Gurkenwasser aus dem Glas, gehacktem Dill und Pfeffer verrühren. Apfel, Zwiebel, Gurken und Matjes vorsichtig unterheben und 10 Minuten durchziehen lassen.",
+   "Mit den heißen Pellkartoffeln servieren."
+  ],
+  "tips": [
+   "Neue Matjes gibt es ab Juni – dann sind sie besonders mild.",
+   "Matjes sind bereits salzig, deshalb nicht nachsalzen."
+  ]
+ },
+ {
+  "id": "miesmuscheln-tomatensud",
+  "title": "Miesmuscheln im Tomaten-Knoblauch-Sud",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Miesmuscheln (mit Schale)",
+    "amount": 1,
+    "unit": "kg",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 3,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 100,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Baguette",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Muscheln in kaltem Wasser waschen, Bärte abziehen. Geöffnete Muscheln, die sich beim Antippen nicht schließen, wegwerfen.",
+   "Öl in einem großen Topf erhitzen, Zwiebel und Knoblauch fein hacken und mit Chili 3 Minuten andünsten.",
+   "Tomaten und Brühe zugeben und 5 Minuten köcheln.",
+   "Muscheln zugeben, Deckel auflegen und bei hoher Hitze 5–7 Minuten garen, dabei den Topf zweimal rütteln, bis sich die Muscheln geöffnet haben.",
+   "Muscheln, die geschlossen bleiben, aussortieren. Mit Petersilie bestreuen und mit Baguette zum Auftunken servieren."
+  ],
+  "tips": [
+   "Muscheln haben von September bis April Saison.",
+   "Eine leere Muschelschale eignet sich prima als Zange zum Essen."
+  ]
+ },
+ {
+  "id": "tintenfischringe-airfryer",
+  "title": "Knusprige Tintenfischringe mit Zitronen-Joghurt-Dip",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Tintenfischringe",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "aufgetaut"
+   },
+   {
+    "name": "Mehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Griechischer Joghurt 2 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "unbehandelt"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Tintenfischringe gründlich trocken tupfen und salzen.",
+   "Nacheinander in Mehl, verquirltem Ei und mit Paprika gemischtem Paniermehl wenden.",
+   "Ringe nebeneinander in den Korb legen und mit dem Öl beträufeln oder einsprühen.",
+   "Bei 200 °C 8–10 Minuten backen, nach der Hälfte der Zeit wenden, bis sie goldbraun sind.",
+   "Joghurt mit Zitronenschale, etwas Saft, gepresstem Knoblauch und Salz verrühren. Ringe mit Zitronenspalten und Dip servieren."
+  ],
+  "tips": [
+   "Nicht zu lange garen – Tintenfisch wird sonst gummiartig.",
+   "Dazu passt ein grüner Salat oder Tomatenreis."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 10
+  }
+ },
+ {
+  "id": "thunfischsteak-sesam",
+  "title": "Thunfischsteak im Sesammantel mit Pak Choi",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Thunfischsteak",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "fleisch_fisch",
+    "note": "à 150 g"
+   },
+   {
+    "name": "Sesam",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Pak Choi",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Reis",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe garen.",
+   "Thunfisch trocken tupfen, mit 1 EL Sojasauce bestreichen und rundherum in Sesam wenden.",
+   "Öl in einer Pfanne stark erhitzen und die Steaks pro Seite 1–2 Minuten braten – innen bleiben sie rosa.",
+   "Pak Choi längs vierteln und mit Knoblauch und Ingwer in derselben Pfanne 3 Minuten braten. Mit restlicher Sojasauce ablöschen.",
+   "Thunfisch in Scheiben schneiden und mit Pak Choi, Reis und Limettenspalten servieren."
+  ],
+  "tips": [
+   "Wer Thunfisch lieber durch mag, brät ihn pro Seite 3 Minuten – er wird dann aber fester."
+  ]
+ },
+ {
+  "id": "seelachs-kokos-curry",
+  "title": "Fisch-Curry mit Seelachs, Kokos und Spinat",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Currypaste",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "rote oder gelbe"
+   },
+   {
+    "name": "Kurkuma",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kokosmilch (light)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Seelachsfilet",
+    "amount": 450,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe garen. Zwiebel, Knoblauch und Ingwer fein hacken.",
+   "Öl in einem breiten Topf erhitzen und Zwiebel 3 Minuten andünsten. Knoblauch, Ingwer, Currypaste und Kurkuma 1 Minute mitrösten.",
+   "Kokosmilch und Tomaten zugeben und 8 Minuten köcheln.",
+   "Fisch in große Stücke schneiden, in die Sauce legen und bei kleiner Hitze 5–6 Minuten garziehen lassen – nicht mehr umrühren, damit er nicht zerfällt.",
+   "Spinat vorsichtig unterheben, mit Limettensaft und Salz abschmecken und mit Reis servieren."
+  ],
+  "tips": [
+   "Tiefgekühlter Seelachs funktioniert genauso – vorher auftauen und trocken tupfen."
+  ]
+ },
+ {
+  "id": "fischfrikadellen",
+  "title": "Fischfrikadellen mit Gurken-Dill-Salat",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Seelachsfilet",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Vollkornbrötchen",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "vorrat",
+    "note": "vom Vortag"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Dill",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "unbehandelt"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen und 20 Minuten in Salzwasser kochen. Brötchen in Wasser einweichen und gut ausdrücken.",
+   "Fisch mit einem großen Messer fein hacken. Mit Brötchen, fein gewürfelter Zwiebel, Ei, Senf, der Hälfte des gehackten Dills, Zitronenschale, Salz und Pfeffer verkneten.",
+   "Mit feuchten Händen 9 flache Frikadellen formen und im Öl bei mittlerer Hitze pro Seite 4 Minuten goldbraun braten.",
+   "Gurke in dünne Scheiben hobeln und mit Joghurt, restlichem Dill, Zitronensaft und Salz mischen.",
+   "Frikadellen mit Gurkensalat und Kartoffeln servieren."
+  ],
+  "tips": [
+   "Zum Hacken ist ein Blitzhacker praktisch – nur kurz pulsieren, sonst wird die Masse zu fein."
+  ],
+  "airfryer": {
+   "temp_c": 190,
+   "time_min": 12,
+   "steps": [
+    "Kartoffeln kochen und die Fischmasse wie beschrieben zubereiten.",
+    "Frikadellen formen, mit wenig Öl bepinseln und auf Backpapier in den Korb legen.",
+    "Bei 190 °C 12 Minuten backen, nach 7 Minuten wenden. Gurkensalat wie beschrieben anmachen."
+   ]
+  }
+ },
+ {
+  "id": "gambas-al-ajillo",
+  "title": "Knoblauch-Garnelen mit Chili und Baguette",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 15,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Garnelen",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "roh, geschält"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 4,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Baguette",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Garnelen trocken tupfen und leicht salzen. Knoblauch in dünne Scheiben schneiden.",
+   "Öl in einer kleinen Pfanne bei mittlerer Hitze erwärmen, Knoblauch und Chili 1–2 Minuten sanft anschwitzen, bis der Knoblauch duftet.",
+   "Garnelen und Paprikapulver zugeben und 2–3 Minuten braten, bis sie rosa sind, einmal wenden.",
+   "Mit Petersilie und Zitronensaft vollenden und in der Pfanne mit Baguette servieren."
+  ],
+  "tips": [
+   "Ein spanischer Tapas-Klassiker – mit Salat ein schnelles Abendessen."
+  ]
+ },
+ {
+  "id": "kabeljau-kraeuterkruste-airfryer",
+  "title": "Kabeljau mit Kräuterkruste auf Tomaten-Zucchini",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Zucchini",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kabeljaufilet",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 15,
+    "unit": "g",
+    "category": "milch",
+    "note": "fein gerieben"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "unbehandelt"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Zucchini in Scheiben schneiden, mit halbierten Tomaten, der Hälfte des Öls und Salz in eine Form geben, die in den Korb passt.",
+   "Bei 190 °C 8 Minuten vorgaren.",
+   "Paniermehl mit Parmesan, gehackter Petersilie, Zitronenschale, gepresstem Knoblauch und restlichem Öl zu einer krümeligen Masse mischen.",
+   "Fisch salzen, auf das Gemüse legen, die Kräuterkruste daraufdrücken und weitere 10 Minuten bei 190 °C garen, bis die Kruste goldbraun ist."
+  ],
+  "tips": [
+   "Im Backofen: 200 °C Umluft, Gemüse 10 Minuten vorgaren, mit Fisch weitere 15 Minuten.",
+   "Dazu passen Baguette oder Reis."
+  ],
+  "airfryer": {
+   "temp_c": 190,
+   "time_min": 18
+  }
+ },
+ {
+  "id": "fish-and-chips-airfryer",
+  "title": "Fish & Chips aus der Heißluftfritteuse mit Erbsen-Minz-Dip",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kabeljaufilet",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Erbsen (TK)",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Griechischer Joghurt 2 %",
+    "amount": 50,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Minze",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln in Stäbchen schneiden, 10 Minuten wässern, gründlich trocken tupfen und mit der Hälfte des Öls und Salz mischen.",
+   "Pommes bei 200 °C 18 Minuten backen, zweimal schütteln. Herausnehmen und warm halten.",
+   "Fisch in 4 Stücke schneiden, salzen und nacheinander in Mehl, Ei und Paniermehl wenden. Mit restlichem Öl bepinseln und bei 200 °C 10 Minuten backen, nach 6 Minuten wenden.",
+   "Erbsen 3 Minuten in kochendem Wasser garen, abgießen und mit Joghurt, Minze, Salz und etwas Zitronensaft grob pürieren.",
+   "Pommes in den letzten 2 Minuten zum Aufknuspern zurück in den Korb geben. Mit Fisch, Erbsen-Dip und Zitronenspalten servieren."
+  ],
+  "tips": [
+   "Die Erbsencreme ersetzt die englischen „mushy peas“."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 30
+  }
+ },
+ {
+  "id": "makrele-rote-bete-kartoffeln",
+  "title": "Geräucherte Makrele mit Rote-Bete-Kartoffelsalat",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Rote Bete (vorgegart)",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Apfel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Meerrettich",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Dill",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Makrele (geräuchert)",
+    "amount": 200,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   }
+  ],
+  "steps": [
+   "Kartoffeln mit Schale 20 Minuten garen, pellen und lauwarm in Würfel schneiden.",
+   "Rote Bete und Apfel würfeln, Zwiebel fein hacken.",
+   "Joghurt mit Meerrettich, Senf, Essig, Salz und Pfeffer verrühren und alles mit den Kartoffeln mischen. 10 Minuten durchziehen lassen.",
+   "Makrele von Haut und Gräten befreien und in Stücke zupfen.",
+   "Salat mit Dill bestreuen und mit der Makrele anrichten."
+  ],
+  "tips": [
+   "Geräucherte Makrele ist bereits gegart und lange haltbar – ideal für schnelle Abendessen."
+  ]
+ },
+ {
+  "id": "thunfisch-bratlinge",
+  "title": "Thunfisch-Bratlinge mit Joghurt-Dip und Salat",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Thunfisch (naturell)",
+    "amount": 2,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Dill",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kopfsalat",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomate",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Thunfisch gut abtropfen lassen und mit Ei, Haferflocken, Frühlingszwiebelringen, Senf, Zitronenschale und Pfeffer vermengen. 10 Minuten quellen lassen.",
+   "Mit feuchten Händen 6 Bratlinge formen.",
+   "Öl in einer beschichteten Pfanne erhitzen und die Bratlinge pro Seite 3–4 Minuten goldbraun braten.",
+   "Joghurt mit Dill, Zitronensaft und Salz verrühren. Salat und Tomate schneiden.",
+   "Bratlinge mit Dip und Salat servieren."
+  ],
+  "tips": [
+   "Aus dem Vorrat: Thunfisch, Ei und Haferflocken hat man meist im Haus.",
+   "Heißluftfritteuse: 190 °C, 10 Minuten, nach 6 Minuten wenden."
+  ]
+ },
+ {
+  "id": "lachs-rote-bete-meerrettich",
+  "title": "Lachs mit Ofen-Rote-Bete und Meerrettich-Quark",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Rote Bete (vorgegart)",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "klein"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Lachsfilet",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Meerrettich",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C Umluft vorheizen. Kartoffeln halbieren, Rote Bete in Spalten schneiden, mit Öl, Thymian und Salz mischen und 25 Minuten auf dem Blech rösten.",
+   "Lachs salzen und pfeffern, auf das Blech legen und weitere 12 Minuten garen.",
+   "Quark mit Meerrettich, Zitronensaft, Schnittlauch, Salz und 2 EL Wasser glatt rühren.",
+   "Lachs mit Ofengemüse und Meerrettich-Quark servieren."
+  ],
+  "tips": [
+   "Rote Bete färbt stark – Handschuhe tragen oder vorgegarte Knollen verwenden."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 22,
+   "steps": [
+    "Kartoffeln halbieren, Rote Bete in Spalten schneiden, mit Öl, Thymian und Salz mischen und im Korb bei 200 °C 12 Minuten garen.",
+    "Lachs gewürzt auf das Gemüse legen und weitere 10 Minuten bei 200 °C garen.",
+    "Quark mit Meerrettich, Zitronensaft, Schnittlauch, Salz und 2 EL Wasser glatt rühren."
+   ]
+  }
+ },
+ {
+  "id": "garnelen-saganaki",
+  "title": "Garnelen Saganaki mit Tomaten und Feta",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Garnelen",
+    "amount": 250,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "roh, geschält"
+   },
+   {
+    "name": "Feta",
+    "amount": 80,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Baguette",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Zwiebel und Knoblauch fein hacken und im Öl in einer ofenfesten Pfanne 4 Minuten andünsten.",
+   "Tomaten, Oregano und Chili zugeben und 10 Minuten zu einer dicken Sauce einköcheln. Salzen und pfeffern.",
+   "Garnelen in die Sauce legen und Feta darüberbröseln.",
+   "Zugedeckt 4–5 Minuten garen, bis die Garnelen rosa sind und der Feta weich wird. Alternativ unter dem Ofengrill 5 Minuten überbacken.",
+   "Mit Petersilie bestreuen und mit Baguette servieren."
+  ],
+  "tips": [
+   "Ein griechischer Klassiker – Saganaki heißt die kleine Pfanne, in der er serviert wird."
+  ]
+ },
+ {
+  "id": "kabeljau-tomaten-kichererbsen",
+  "title": "Kabeljau in Tomaten-Kichererbsen-Sauce",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [
+   "one-pot"
+  ],
+  "ingredients": [
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kichererbsen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kabeljaufilet",
+    "amount": 450,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Zwiebel und Knoblauch fein hacken und im Öl in einer breiten Pfanne 4 Minuten andünsten. Paprika und Kreuzkümmel 30 Sekunden mitrösten.",
+   "Tomaten und abgespülte Kichererbsen zugeben und 10 Minuten köcheln. Spinat unterrühren.",
+   "Fisch in 3 Stücke teilen, salzen und in die Sauce setzen.",
+   "Zugedeckt bei kleiner Hitze 8 Minuten garziehen lassen, bis der Fisch sich leicht zerteilen lässt.",
+   "Mit Zitronensaft und Petersilie servieren."
+  ],
+  "tips": [
+   "Dazu passt Brot zum Auftunken – oder einfach pur als leichtes Abendessen."
+  ]
+ },
+ {
+  "id": "doradenfilet-fenchel",
+  "title": "Doradenfilet mit Zitronen-Fenchel und Kartoffeln",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "klein"
+   },
+   {
+    "name": "Fenchel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Orange",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Doradenfilet",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "fleisch_fisch",
+    "note": "mit Haut, à 75 g"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "unbehandelt"
+   },
+   {
+    "name": "Dill",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln mit Schale 20 Minuten garen.",
+   "Fenchel halbieren, den Strunk entfernen und in feine Streifen schneiden. Im halben Öl 6–8 Minuten braten, bis er weich und leicht gebräunt ist. Mit Orangensaft ablöschen, salzen.",
+   "Fischfilets trocken tupfen, die Haut leicht einritzen und salzen.",
+   "Restliches Öl in einer Pfanne erhitzen und die Filets auf der Hautseite 3 Minuten kross braten, wenden und 1 Minute fertig garen.",
+   "Mit Fenchel, Kartoffeln, Zitronenschale und Dill servieren."
+  ],
+  "tips": [
+   "Das Fenchelgrün nicht wegwerfen – es schmeckt wie Dill und passt als Garnitur."
+  ]
+ },
+ {
+  "id": "fischauflauf-spinat",
+  "title": "Fischauflauf mit Spinat und Kartoffeln",
+  "chapter": "fisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 800,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Blattspinat (TK)",
+    "amount": 450,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "aufgetaut"
+   },
+   {
+    "name": "Seelachsfilet",
+    "amount": 500,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 400,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gouda",
+    "amount": 60,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen, in Scheiben schneiden und 8 Minuten in Salzwasser vorgaren. Ofen auf 180 °C Umluft vorheizen.",
+   "Spinat gut ausdrücken, salzen und in eine Auflaufform geben. Fisch in Stücke schneiden, mit Zitronensaft beträufeln, salzen und darauflegen.",
+   "Butter schmelzen, Mehl 1 Minute anschwitzen, Milch einrühren und 3 Minuten köcheln. Mit Senf, Muskat und Salz abschmecken.",
+   "Kartoffelscheiben auf dem Fisch verteilen, Sauce darübergießen und mit Käse bestreuen.",
+   "Im Ofen 25 Minuten backen, bis die Oberfläche goldbraun ist."
+  ],
+  "tips": [
+   "Mit TK-Fisch wird der Auflauf etwas wässriger – dann vorher gut trocken tupfen."
+  ]
+ },
+ {
+  "id": "krabben-ruehrei-schwarzbrot",
+  "title": "Krabbenrührei auf Vollkornbrot",
+  "chapter": "fisch",
+  "meal": [
+   "breakfast",
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 15,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Eier",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 3,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "TL",
+    "category": "milch"
+   },
+   {
+    "name": "Nordseekrabben",
+    "amount": 100,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Vollkornbrot",
+    "amount": 4,
+    "unit": "Scheibe",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomate",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Eier mit Milch und Pfeffer verquirlen – salzen kaum nötig, die Krabben sind salzig.",
+   "Butter in einer Pfanne bei mittlerer Hitze schmelzen, die Eier hineingeben und 2–3 Minuten unter langsamem Schieben stocken lassen.",
+   "Krabben unterheben und 1 Minute mitwärmen. Das Rührei soll noch cremig glänzen.",
+   "Auf das Brot geben, mit Schnittlauch bestreuen und mit Tomatenscheiben servieren."
+  ],
+  "tips": [
+   "Ein norddeutscher Klassiker – Krabben nur kurz erwärmen, sonst werden sie zäh."
+  ]
+ },
+ {
+  "id": "thai-curry-tofu",
+  "title": "Rotes Thai-Curry mit Tofu und Gemüse",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "Jasmin"
+   },
+   {
+    "name": "Tofu (natur)",
+    "amount": 300,
+    "unit": "g",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Currypaste",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "rote, vegan"
+   },
+   {
+    "name": "Kokosmilch (light)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 150,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Brokkoli",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese",
+    "note": "oder Basilikum"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe garen. Tofu trocken tupfen, würfeln und im Öl in einem Topf 6–8 Minuten rundherum goldbraun braten. Herausnehmen.",
+   "Currypaste im selben Topf 1 Minute anrösten, bis sie duftet. Kokosmilch und Brühe einrühren und aufkochen.",
+   "Karotte in dünnen Scheiben und Brokkoliröschen zugeben und 4 Minuten köcheln. Paprikastreifen 3 Minuten mitgaren.",
+   "Spinat und Tofu unterheben, mit Limettensaft und Sojasauce abschmecken.",
+   "Mit Koriander und Reis servieren."
+  ],
+  "tips": [
+   "Viele Currypasten enthalten Fisch oder Garnelen – für die vegane Variante auf die Zutatenliste achten."
+  ]
+ },
+ {
+  "id": "chana-masala",
+  "title": "Chana Masala – Kichererbsen in würziger Tomatensauce",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 3,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 3,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Garam Masala",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kurkuma",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kichererbsen",
+    "amount": 2,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Vollkorn-Fladenbrot",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Öl in einem Topf erhitzen und den Kreuzkümmel 30 Sekunden anrösten. Zwiebeln fein hacken und 8 Minuten goldbraun braten.",
+   "Knoblauch, Ingwer und alle übrigen Gewürze zugeben und 1 Minute rösten.",
+   "Tomaten und 100 ml Wasser zugeben und 5 Minuten köcheln. Abgespülte Kichererbsen zugeben und 15 Minuten sämig einköcheln. Einige Kichererbsen mit dem Löffel zerdrücken, das bindet die Sauce.",
+   "Mit Zitronensaft und Salz abschmecken und mit Koriander bestreuen.",
+   "Mit warmem Fladenbrot servieren."
+  ],
+  "tips": [
+   "Am nächsten Tag schmeckt es noch intensiver – ideal zum Vorkochen.",
+   "Mit Reis statt Fladenbrot wird es glutenfrei."
+  ]
+ },
+ {
+  "id": "spinat-halloumi-curry",
+  "title": "Spinat-Curry mit gebratenem Halloumi",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "Basmati"
+   },
+   {
+    "name": "Halloumi",
+    "amount": 225,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Garam Masala",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kurkuma",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Blattspinat (TK)",
+    "amount": 450,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kochsahne 15 %",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Tomate",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe garen. Halloumi in Würfel schneiden und in einer beschichteten Pfanne ohne Fett 5 Minuten rundherum goldbraun braten. Herausnehmen.",
+   "Öl in die Pfanne geben, Zwiebel, Knoblauch und Ingwer fein hacken und 4 Minuten andünsten. Gewürze 1 Minute mitrösten.",
+   "Spinat zugeben und 8 Minuten bei mittlerer Hitze garen, bis er aufgetaut und heiß ist. Mit Kochsahne fein pürieren.",
+   "Tomatenwürfel und Halloumi unterheben, 2 Minuten erwärmen und abschmecken – Halloumi ist salzig.",
+   "Mit Reis servieren."
+  ],
+  "tips": [
+   "Angelehnt an das indische Palak Paneer – Halloumi wird beim Braten ähnlich fest und knusprig."
+  ]
+ },
+ {
+  "id": "linsen-spaetzle",
+  "title": "Schwäbische Linsen mit Spätzle",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Tellerlinsen",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knollensellerie",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mehl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 800,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Lorbeerblätter",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Essig",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "Rotwein- oder Apfelessig"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Spätzle (frisch)",
+    "amount": 500,
+    "unit": "g",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Zwiebel, Karotte und Sellerie sehr fein würfeln und im Öl 5 Minuten andünsten.",
+   "Mehl darüberstäuben und 1 Minute anschwitzen. Linsen, Brühe und Lorbeer zugeben.",
+   "Zugedeckt bei kleiner Hitze 35–40 Minuten köcheln, bis die Linsen weich sind. Bei Bedarf Wasser nachgießen.",
+   "Mit Essig, Senf, Salz und Pfeffer kräftig süß-sauer abschmecken – der Essig ist typisch.",
+   "Spätzle nach Packungsangabe erhitzen und mit den Linsen und Petersilie servieren."
+  ],
+  "tips": [
+   "Traditionell gibt es Saitenwürstle dazu – die vegetarische Variante ist genauso sättigend."
+  ]
+ },
+ {
+  "id": "gruene-shakshuka",
+  "title": "Grüne Shakshuka mit Spinat und Feta",
+  "chapter": "vegetarisch",
+  "meal": [
+   "breakfast",
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Lauch",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Feta",
+    "amount": 50,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Vollkornbrot",
+    "amount": 2,
+    "unit": "Scheibe",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Lauch in feine Ringe schneiden, Zucchini raspeln.",
+   "Öl in einer Pfanne erhitzen, Lauch und Zucchini 6 Minuten weich dünsten. Knoblauch und Kreuzkümmel 1 Minute mitbraten.",
+   "Spinat portionsweise zugeben, bis er zusammenfällt. Mit Salz und Pfeffer würzen.",
+   "Vier Mulden formen, die Eier hineingleiten lassen und zugedeckt bei kleiner Hitze 6–8 Minuten stocken lassen, bis das Eiweiß fest und das Eigelb noch flüssig ist.",
+   "Mit Feta und Petersilie bestreuen und mit Brot servieren."
+  ],
+  "tips": [
+   "Mit einem Klecks Joghurt und Chiliflocken wird es frischer und schärfer."
+  ]
+ },
+ {
+  "id": "pilz-stroganoff",
+  "title": "Pilz-Stroganoff mit Reis",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Champignons",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "gemischt"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 250,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gewürzgurken",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "saure Sahne (10 %)",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe garen. Pilze in dicke Scheiben schneiden.",
+   "Öl in einer großen Pfanne stark erhitzen und die Pilze in zwei Portionen je 5 Minuten kräftig braten, bis sie gebräunt sind.",
+   "Zwiebel in Streifen und Knoblauch zugeben und 3 Minuten mitbraten. Paprikapulver und Tomatenmark 1 Minute rösten.",
+   "Mit Brühe ablöschen, Senf und Gurkenstreifen zugeben und 5 Minuten köcheln. Hitze reduzieren und saure Sahne einrühren.",
+   "Mit Petersilie bestreuen und mit Reis servieren."
+  ],
+  "tips": [
+   "Mit Kräuterseitlingen oder Austernpilzen wird das Stroganoff besonders fleischig."
+  ]
+ },
+ {
+  "id": "raeuchertofu-spitzkohl-kartoffeln",
+  "title": "Spitzkohl-Kartoffel-Pfanne mit Räuchertofu",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Räuchertofu",
+    "amount": 200,
+    "unit": "g",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Spitzkohl",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen, in 1,5 cm große Würfel schneiden und 8 Minuten in Salzwasser vorgaren. Abgießen und ausdampfen lassen.",
+   "Räuchertofu würfeln und in 1 EL Öl 5 Minuten knusprig braten. Herausnehmen.",
+   "Restliches Öl erhitzen und die Kartoffeln 10 Minuten rundherum goldbraun braten.",
+   "Zwiebel in Streifen und Spitzkohl in feine Streifen schneiden, mit Kümmel und Paprika zugeben und 5 Minuten mitbraten, bis der Kohl zusammenfällt, aber noch Biss hat.",
+   "Tofu untermischen, mit Senf, Salz und Pfeffer abschmecken und mit Petersilie bestreuen."
+  ],
+  "tips": [
+   "Spitzkohl ist zarter als Weißkohl und braucht nur wenige Minuten."
+  ]
+ },
+ {
+  "id": "bohnen-burger",
+  "title": "Bohnen-Burger mit Avocado und Tomate",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kidneybohnen",
+    "amount": 2,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 60,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkornbrötchen",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Avocado",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomate",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Römersalat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "4 große Blätter"
+   }
+  ],
+  "steps": [
+   "Bohnen abspülen und sehr gut abtropfen lassen, dann auf Küchenpapier 5 Minuten trocknen lassen.",
+   "Bohnen grob zerdrücken – es dürfen Stücke bleiben. Mit Haferflocken, fein gehackter halber Zwiebel, Knoblauch, Gewürzen, Tomatenmark und Salz verkneten. 10 Minuten ruhen lassen.",
+   "Mit feuchten Händen 4 flache Patties formen und im Öl bei mittlerer Hitze pro Seite 4–5 Minuten braten. Vorsichtig wenden.",
+   "Brötchen halbieren und kurz rösten. Avocado zerdrücken und salzen.",
+   "Brötchen mit Avocado, Salat, Patty, Tomatenscheiben und restlichen Zwiebelringen belegen."
+  ],
+  "tips": [
+   "Gut getrocknete Bohnen sind das Geheimnis – sonst zerfallen die Patties."
+  ],
+  "airfryer": {
+   "temp_c": 190,
+   "time_min": 14,
+   "steps": [
+    "Bohnenmasse wie beschrieben zubereiten und 4 Patties formen.",
+    "Patties mit Öl bepinseln und auf Backpapier in den Korb legen.",
+    "Bei 190 °C 14 Minuten backen, nach 8 Minuten vorsichtig wenden. Burger wie beschrieben belegen."
+   ]
+  }
+ },
+ {
+  "id": "gemuese-tajine",
+  "title": "Marokkanische Gemüse-Tajine mit Couscous",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kurkuma",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Süßkartoffel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kichererbsen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 300,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Datteln (entsteint)",
+    "amount": 40,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "oder Rosinen"
+   },
+   {
+    "name": "Couscous",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese",
+    "note": "oder Petersilie"
+   },
+   {
+    "name": "Mandeln",
+    "amount": 20,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Zwiebel und Knoblauch hacken und im Öl in einem Schmortopf 4 Minuten andünsten. Gewürze 1 Minute mitrösten.",
+   "Karotten in dicke Scheiben, Süßkartoffel in Würfel schneiden und 3 Minuten mitbraten.",
+   "Tomaten, Brühe, abgespülte Kichererbsen und klein geschnittene Datteln zugeben und zugedeckt 20 Minuten schmoren.",
+   "Zucchini in großen Würfeln zugeben und weitere 10 Minuten garen.",
+   "Couscous mit 250 ml kochendem Salzwasser übergießen und 5 Minuten quellen lassen. Mandeln grob hacken und in einer Pfanne ohne Fett 3 Minuten rösten. Tajine mit Couscous, Mandeln und Koriander servieren."
+  ],
+  "tips": [
+   "Die Süße der Datteln und die warmen Gewürze machen den Charakter der Tajine aus."
+  ]
+ },
+ {
+  "id": "auberginen-kichererbsen-schmortopf",
+  "title": "Geschmorte Auberginen mit Tomaten und Kichererbsen",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Aubergine",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 3,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kichererbsen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Minze",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Vollkorn-Fladenbrot",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Auberginen in 3 cm große Würfel schneiden, salzen und 10 Minuten ziehen lassen. Trocken tupfen.",
+   "Öl in einem breiten Topf erhitzen und die Auberginen 8–10 Minuten rundherum goldbraun braten.",
+   "Zwiebel und Knoblauch hacken, mit den Gewürzen zugeben und 3 Minuten mitbraten.",
+   "Tomaten, abgespülte Kichererbsen und 100 ml Wasser zugeben und zugedeckt 20 Minuten schmoren, bis die Auberginen ganz weich sind.",
+   "Mit Kräutern bestreuen und mit Fladenbrot servieren."
+  ],
+  "tips": [
+   "Schmeckt warm und lauwarm – mit Joghurt wird es vegetarisch statt vegan."
+  ]
+ },
+ {
+  "id": "ofenkuerbis-linsen-feta",
+  "title": "Ofenkürbis mit Linsen, Feta und Walnüssen",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hokkaido-Kürbis",
+    "amount": 800,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tellerlinsen",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Feldsalat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "oder Rucola"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat",
+    "note": "oder Ahornsirup"
+   },
+   {
+    "name": "Feta",
+    "amount": 80,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C Umluft vorheizen. Kürbis entkernen und in Spalten schneiden, Zwiebel in Spalten. Mit der Hälfte des Öls, Thymian und Salz mischen und 25–30 Minuten rösten.",
+   "Linsen in reichlich Wasser 20–25 Minuten bissfest garen, abgießen.",
+   "Balsamico, Senf, Honig und restliches Öl verrühren, salzen und die warmen Linsen damit mischen.",
+   "Walnüsse in den letzten 5 Minuten mit aufs Blech geben.",
+   "Linsen mit Feldsalat auf Tellern anrichten, Kürbis darauflegen und mit Feta und Walnüssen bestreuen."
+  ],
+  "tips": [
+   "Im Herbst und Winter ein Lieblingsessen – der Kürbis wird im Ofen karamellig süß."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 20,
+   "steps": [
+    "Kürbis und Zwiebel wie beschrieben würzen und im Korb bei 200 °C 18–20 Minuten rösten, zwischendurch schütteln. Walnüsse in den letzten 3 Minuten zugeben.",
+    "Linsen garen und mit dem Dressing mischen.",
+    "Wie beschrieben anrichten."
+   ]
+  }
+ },
+ {
+  "id": "semmelknoedel-pilzrahm",
+  "title": "Semmelknödel mit Pilz-Rahm-Sauce",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Vollkornbrötchen",
+    "amount": 6,
+    "unit": "Stück",
+    "category": "vorrat",
+    "note": "vom Vortag"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 250,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "TL",
+    "category": "milch"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Champignons",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 200,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kochsahne 15 %",
+    "amount": 150,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Brötchen in kleine Würfel schneiden. Milch erwärmen und darübergießen. Die Hälfte der Zwiebel fein würfeln, in der Butter 3 Minuten dünsten und mit Eiern, der Hälfte der gehackten Petersilie, Muskat und Salz zugeben.",
+   "Alles gut verkneten und 15 Minuten ziehen lassen. Mit nassen Händen 8 Knödel formen.",
+   "In einem großen Topf reichlich Salzwasser aufkochen, Hitze reduzieren und die Knödel 20 Minuten im siedenden, nicht kochenden Wasser garziehen lassen.",
+   "Pilze in Scheiben schneiden und im Öl 6 Minuten kräftig braten. Restliche Zwiebel 2 Minuten mitbraten. Brühe und Kochsahne zugeben, Stärke in wenig Wasser einrühren und 2 Minuten köcheln.",
+   "Knödel mit der Pilzsauce und restlicher Petersilie servieren."
+  ],
+  "tips": [
+   "Einen Probeknödel garen: Zerfällt er, noch etwas Paniermehl in den Teig kneten.",
+   "Übrige Knödel in Scheiben schneiden und am nächsten Tag in der Pfanne braten."
+  ]
+ },
+ {
+  "id": "kartoffelgulasch",
+  "title": "Kartoffelgulasch mit Paprika",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 4,
+  "tags": [
+   "one-pot",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "edelsüß"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 1,
+    "unit": "kg",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Paprika",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Majoran",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 900,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kidneybohnen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Zwiebeln würfeln und im Öl in einem großen Topf 8 Minuten goldbraun braten. Knoblauch 1 Minute mitbraten.",
+   "Paprikapulver und Tomatenmark einrühren und nur 30 Sekunden rösten, dann sofort mit einem Schuss Brühe ablöschen.",
+   "Kartoffeln in 2 cm große Würfel und Paprika in Stücke schneiden, mit Kümmel, Majoran und restlicher Brühe zugeben.",
+   "Zugedeckt 25 Minuten köcheln, bis die Kartoffeln weich sind und einige zerfallen – das bindet das Gulasch. Abgespülte Bohnen 5 Minuten mitgaren.",
+   "Mit Salz und Pfeffer abschmecken und mit Petersilie bestreuen."
+  ],
+  "tips": [
+   "In Österreich ein Klassiker – oft mit Würstchen, hier mit Bohnen als Eiweißquelle."
+  ]
+ },
+ {
+  "id": "kohlrabi-schnitzel",
+  "title": "Kohlrabi-Schnitzel mit Kräuterquark und Kartoffeln",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kohlrabi",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Mehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 20,
+    "unit": "g",
+    "category": "milch",
+    "note": "fein gerieben"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 3,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln mit Schale 20 Minuten in Salzwasser kochen.",
+   "Kohlrabi schälen, in 1 cm dicke Scheiben schneiden und 5 Minuten in Salzwasser vorgaren. Abtropfen lassen und trocken tupfen.",
+   "Scheiben nacheinander in Mehl, verquirltem Ei und mit Parmesan gemischtem Paniermehl wenden.",
+   "Öl in einer Pfanne erhitzen und die Schnitzel bei mittlerer Hitze pro Seite 3–4 Minuten goldbraun braten.",
+   "Quark mit Milch, Schnittlauch und Salz verrühren und mit Schnitzeln und Kartoffeln servieren."
+  ],
+  "tips": [
+   "Genauso gelingt Sellerie-Schnitzel – Knollensellerie in Scheiben 8 Minuten vorgaren."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 12,
+   "steps": [
+    "Kartoffeln kochen, Kohlrabi wie beschrieben vorgaren und panieren.",
+    "Schnitzel mit dem Öl bepinseln und nebeneinander in den Korb legen.",
+    "Bei 200 °C 12 Minuten backen, nach 7 Minuten wenden. Mit Kräuterquark und Kartoffeln servieren."
+   ]
+  }
+ },
+ {
+  "id": "halloumi-spiesse-airfryer",
+  "title": "Halloumi-Gemüse-Spieße mit Kräuter-Bulgur",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Halloumi",
+    "amount": 225,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Bulgur",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 300,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Bulgur mit der kochenden Brühe übergießen und zugedeckt 10 Minuten quellen lassen.",
+   "Halloumi, Zucchini, Paprika und Zwiebel in 2–3 cm große Stücke schneiden und mit den Tomaten abwechselnd auf Spieße stecken.",
+   "Spieße mit Öl bepinseln und mit Oregano bestreuen.",
+   "Im Korb bei 200 °C 10–12 Minuten garen, nach der Hälfte der Zeit wenden.",
+   "Bulgur mit Petersilie, Zitronensaft und Pfeffer auflockern und mit den Spießen servieren."
+  ],
+  "tips": [
+   "Halloumi nicht salzen – er bringt genug Salz mit.",
+   "Im Sommer auf dem Grill: 8–10 Minuten, mehrfach wenden."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 12
+  }
+ },
+ {
+  "id": "spinat-kaese-pfannkuchen",
+  "title": "Herzhafte Pfannkuchen mit Spinat und Käse",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Dinkelvollkornmehl",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 200,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Frischkäse (leicht)",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Bergkäse",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Mehl, Eier, Milch und Salz glatt verrühren und 10 Minuten quellen lassen.",
+   "Spinat mit gehacktem Knoblauch in einer Pfanne 2 Minuten zusammenfallen lassen, ausdrücken und mit Frischkäse, Salz und Pfeffer mischen.",
+   "Pfanne mit wenig Öl auspinseln und aus dem Teig nacheinander 4 dünne Pfannkuchen backen, pro Seite etwa 1–2 Minuten.",
+   "Pfannkuchen mit der Spinatmasse und halbierten Tomaten füllen, zusammenklappen, mit Käse bestreuen und in der Pfanne 2 Minuten zugedeckt erwärmen, bis der Käse schmilzt."
+  ],
+  "tips": [
+   "Die Pfannkuchen lassen sich auch einrollen, in Stücke schneiden und kalt in die Brotdose packen."
+  ]
+ },
+ {
+  "id": "eier-curry",
+  "title": "Eier-Curry mit Tomaten und Spinat",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Eier",
+    "amount": 6,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Garam Masala",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kurkuma",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kokosmilch (light)",
+    "amount": 200,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe garen. Eier 9 Minuten hart kochen, abschrecken und pellen.",
+   "Zwiebel, Knoblauch und Ingwer fein hacken und im Öl 4 Minuten andünsten. Gewürze 1 Minute mitrösten.",
+   "Tomaten und Kokosmilch zugeben und 10 Minuten sämig köcheln.",
+   "Eier rundherum leicht einritzen, damit sie die Sauce aufnehmen, und mit dem Spinat 3 Minuten in der Sauce erwärmen.",
+   "Mit Koriander bestreuen und mit Reis servieren."
+  ],
+  "tips": [
+   "In Indien heißt es Anda Curry – günstig, schnell und eiweißreich."
+  ]
+ },
+ {
+  "id": "huevos-rancheros",
+  "title": "Huevos Rancheros mit Bohnen und Tortillas",
+  "chapter": "vegetarisch",
+  "meal": [
+   "breakfast",
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kidneybohnen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Tortillas (Mais)",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Avocado",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Zwiebel, Knoblauch und Paprika würfeln und im Öl 5 Minuten anbraten. Kreuzkümmel kurz mitrösten.",
+   "Tomaten und abgespülte Bohnen zugeben und 8 Minuten köcheln. Mit Salz und Chili abschmecken.",
+   "Vier Mulden formen, Eier hineinschlagen und zugedeckt 6–8 Minuten stocken lassen.",
+   "Tortillas in einer trockenen Pfanne kurz erwärmen.",
+   "Je zwei Tortillas mit Bohnen-Tomaten-Sauce und zwei Eiern belegen und mit Avocado und Koriander servieren."
+  ],
+  "tips": [
+   "Das mexikanische Farmer-Frühstück schmeckt genauso gut zum Abendessen."
+  ]
+ },
+ {
+  "id": "okonomiyaki",
+  "title": "Okonomiyaki – japanischer Kohlpfannkuchen",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Weißkohl",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 80,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 80,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 2,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Sesam",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kohl in sehr feine Streifen schneiden, Frühlingszwiebeln in Ringe, Karotte raspeln.",
+   "Eier mit Mehl und Brühe glatt rühren, Gemüse unterheben und leicht salzen.",
+   "Öl in einer beschichteten Pfanne erhitzen, die Hälfte der Masse hineingeben, zu einem dicken Fladen formen und bei mittlerer Hitze 5 Minuten braten.",
+   "Mit Hilfe eines Tellers wenden und weitere 5 Minuten braten. Mit dem zweiten Fladen genauso verfahren.",
+   "Sojasauce, Tomatenmark und Honig zu einer Sauce verrühren, auf die Fladen streichen, Joghurt in Streifen darüberziehen und mit Sesam bestreuen."
+  ],
+  "tips": [
+   "Okonomi heißt „was du magst“ – Garnelen, Pilze oder Käse passen auch in den Teig."
+  ]
+ },
+ {
+  "id": "mapo-tofu-pilze",
+  "title": "Scharfer Tofu mit Pilzen nach Mapo-Art",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tofu (natur)",
+    "amount": 400,
+    "unit": "g",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Champignons",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 250,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Sesamöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe garen. Tofu in 2 cm große Würfel schneiden und 3 Minuten in leicht gesalzenem, siedendem Wasser ziehen lassen – so wird er fester. Abgießen.",
+   "Pilze sehr fein hacken und im Öl in einem Wok 6 Minuten kräftig braten, bis sie krümelig sind.",
+   "Knoblauch, Ingwer, Chili und Tomatenmark 1 Minute mitbraten. Sojasauce und Brühe angießen und aufkochen.",
+   "Tofu vorsichtig zugeben und 3 Minuten köcheln. Stärke in wenig Wasser anrühren, einrühren und 1 Minute köcheln, bis die Sauce bindet.",
+   "Mit Frühlingszwiebeln und Sesamöl vollenden und mit Reis servieren."
+  ],
+  "tips": [
+   "Die fein gehackten Pilze ersetzen das Hackfleisch des Originals."
+  ]
+ },
+ {
+  "id": "gebackener-camembert-airfryer",
+  "title": "Gebackener Camembert mit Preiselbeeren und Salat",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Camembert",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch",
+    "note": "125 g, gut gekühlt"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 40,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Preiselbeeren (Glas)",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Feldsalat",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "oder gemischter Salat"
+   },
+   {
+    "name": "Birne",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 20,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkornbrot",
+    "amount": 2,
+    "unit": "Scheibe",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Camembert halbieren und jede Hälfte zweimal panieren: in Mehl, Ei und Paniermehl wenden, dann noch einmal durch Ei und Paniermehl – so läuft nichts aus.",
+   "Mit dem Rapsöl bepinseln und 10 Minuten in den Kühlschrank legen.",
+   "Bei 190 °C 7–8 Minuten backen, bis die Panade goldbraun ist und der Käse weich wird.",
+   "Salat mit Birnenspalten und Walnüssen anrichten und mit Balsamico, Öl, Salz und Pfeffer beträufeln.",
+   "Camembert mit Preiselbeeren, Salat und Brot servieren."
+  ],
+  "tips": [
+   "Der Käse muss gut gekühlt sein, sonst wird er in der Heißluftfritteuse zu schnell flüssig."
+  ],
+  "airfryer": {
+   "temp_c": 190,
+   "time_min": 8
+  }
+ },
+ {
+  "id": "spinatknoedel",
+  "title": "Spinatknödel mit Parmesan und brauner Butter",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkornbrötchen",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "vorrat",
+    "note": "vom Vortag"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 150,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Blattspinat (TK)",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "aufgetaut"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Kopfsalat",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Brötchen klein würfeln und mit warmer Milch übergießen. Spinat gut ausdrücken und fein hacken.",
+   "Zwiebel und Knoblauch fein würfeln. Mit Spinat, Eiern, Mehl, der Hälfte des Parmesans, Muskat und Salz zu den Brötchen geben und gut verkneten. 15 Minuten ziehen lassen.",
+   "Mit nassen Händen 9 Knödel formen und in siedendem Salzwasser 15 Minuten garziehen lassen.",
+   "Butter in einer Pfanne schmelzen und 2–3 Minuten bräunen, bis sie nussig duftet.",
+   "Knödel mit brauner Butter beträufeln, mit restlichem Parmesan bestreuen und mit Salat servieren."
+  ],
+  "tips": [
+   "Ein Klassiker aus Südtirol – die Knödel lassen sich roh einfrieren."
+  ]
+ },
+ {
+  "id": "tofu-nuggets-airfryer",
+  "title": "Tofu-Nuggets mit Süßkartoffel-Pommes",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Tofu (natur)",
+    "amount": 400,
+    "unit": "g",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Süßkartoffel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch",
+    "note": "oder Sojajoghurt"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ahornsirup",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Tofu in einem Tuch 10 Minuten pressen, dann in 2 cm große Stücke reißen oder schneiden. Mit Sojasauce und Paprika mischen.",
+   "Mit Stärke bestäuben, gut durchmischen und im Paniermehl wälzen.",
+   "Süßkartoffel in schmale Stäbchen schneiden, mit der Hälfte des Öls und Salz mischen und bei 200 °C 10 Minuten vorgaren.",
+   "Nuggets mit restlichem Öl beträufeln, zu den Pommes in den Korb geben und weitere 10–12 Minuten bei 200 °C knusprig backen, einmal schütteln.",
+   "Joghurt mit Senf und Ahornsirup verrühren und als Dip dazu servieren."
+  ],
+  "tips": [
+   "Gerissene Tofustücke haben mehr Oberfläche und werden knuspriger als geschnittene.",
+   "Mit Sojajoghurt komplett vegan."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 22
+  }
+ },
+ {
+  "id": "brokkoli-kaese-taler-airfryer",
+  "title": "Brokkoli-Käse-Taler mit Joghurt-Dip",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Brokkoli",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Bergkäse",
+    "amount": 60,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 40,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Brokkoli in Röschen teilen, den Stiel schälen und alles 3 Minuten in Salzwasser blanchieren. Abgießen, gut abtropfen lassen und fein hacken.",
+   "Mit Eiern, Käse, Haferflocken, gepresstem Knoblauch, Salz und Pfeffer vermengen und 10 Minuten quellen lassen.",
+   "Mit einem Esslöffel 10 flache Taler formen, auf Backpapier in den Korb legen und mit Öl bepinseln.",
+   "Bei 190 °C 12 Minuten backen, nach 7 Minuten wenden.",
+   "Joghurt mit Schnittlauch und Salz verrühren und mit Tomaten zu den Talern servieren."
+  ],
+  "tips": [
+   "Kalt passen die Taler in die Brotdose – Kinder lieben sie.",
+   "In der Pfanne: in 1 EL Öl pro Seite 3–4 Minuten braten."
+  ],
+  "airfryer": {
+   "temp_c": 190,
+   "time_min": 12
+  }
+ },
+ {
+  "id": "linsen-koefte",
+  "title": "Linsen-Köfte im Salatblatt mit Zitrone",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 45,
+  "servings": 4,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "rote Linsen",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Bulgur",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "fein"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Römersalat",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Linsen mit 400 ml Wasser aufkochen und 12 Minuten köcheln, bis sie weich sind. Vom Herd nehmen, Bulgur einrühren, zudecken und 15 Minuten quellen lassen.",
+   "Zwiebel fein hacken und im Öl 5 Minuten weich dünsten. Tomatenmark und Gewürze 1 Minute mitrösten.",
+   "Zwiebelmischung, Frühlingszwiebelringe, gehackte Petersilie, Saft einer halben Zitrone und Salz zur Linsenmasse geben und kräftig verkneten.",
+   "Mit feuchten Händen etwa 20 längliche Köfte formen und 10 Minuten kühl stellen.",
+   "In Salatblätter wickeln und mit Zitronenspalten servieren."
+  ],
+  "tips": [
+   "Mercimek Köftesi werden nicht gebraten – sie werden durch das Quellen fest.",
+   "Halten sich 3 Tage im Kühlschrank."
+  ]
+ },
+ {
+  "id": "blumenkohl-steaks-tahin",
+  "title": "Blumenkohl-Steaks mit Tahin-Sauce und Linsen",
+  "chapter": "vegetarisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Blumenkohl",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tellerlinsen",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tahin",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kürbiskerne",
+    "amount": 20,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 220 °C Umluft vorheizen. Blumenkohl von den Blättern befreien und aus der Mitte zwei 2 cm dicke Scheiben schneiden. Die Reste in Röschen teilen.",
+   "Steaks und Röschen mit Öl, Kreuzkümmel, Paprika und Salz einreiben und auf dem Blech 25 Minuten rösten, nach 15 Minuten wenden.",
+   "Linsen in reichlich Wasser 20–25 Minuten bissfest garen, abgießen und salzen.",
+   "Tahin mit Zitronensaft, gepresstem Knoblauch, Salz und 3–4 EL Wasser zu einer cremigen Sauce rühren.",
+   "Steaks auf den Linsen anrichten, mit Tahin-Sauce beträufeln und mit Petersilie und Kürbiskernen bestreuen."
+  ],
+  "tips": [
+   "Tahin dickt zuerst an, wenn Zitrone dazukommt – einfach weiter Wasser einrühren, bis es cremig ist."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 18,
+   "steps": [
+    "Blumenkohlsteaks und Röschen wie beschrieben würzen.",
+    "Im Korb bei 200 °C 16–18 Minuten rösten, nach 10 Minuten wenden.",
+    "Linsen garen, Tahin-Sauce anrühren und wie beschrieben anrichten."
+   ]
+  }
  }
 ]
