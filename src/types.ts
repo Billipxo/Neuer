@@ -190,6 +190,8 @@ export interface AirfryerInfo {
 export interface Recipe {
   id: string
   title: string
+  /** Kapitel im Kochbuch */
+  chapter: import('./data/chapters').ChapterId
   meal: MealType[]
   /** Aktive Zubereitungszeit in Minuten */
   time_min: number

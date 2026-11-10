@@ -57,7 +57,8 @@
    "Am Vorabend in ein Schraubglas füllen – morgens nur noch Toppings drauf und mitnehmen.",
    "Hält sich im Kühlschrank 2 Tage."
   ],
-  "rest_min": 240
+  "rest_min": 240,
+  "chapter": "fruehstueck"
  },
  {
   "id": "ruehrei-vollkornbrot",
@@ -113,7 +114,8 @@
   ],
   "tips": [
    "Rührei bei kleiner Hitze garen und vom Herd nehmen, solange es noch glänzt – es gart nach."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "skyr-bowl-apfel",
@@ -166,7 +168,8 @@
   ],
   "tips": [
    "Statt Apfel passt auch Birne oder eine Handvoll Beeren."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "frischkaese-gurke-brot",
@@ -217,7 +220,8 @@
   ],
   "tips": [
    "Mit Radieschen und Kresse wird es noch frischer."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "bananen-pancakes",
@@ -278,7 +282,8 @@
   "tips": [
    "Je reifer die Bananen, desto süßer werden die Pancakes – Zucker braucht es nicht.",
    "Pancakes erst wenden, wenn sich Bläschen zeigen und die Ränder fest sind."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "shakshuka",
@@ -350,7 +355,8 @@
   "tips": [
    "Mit Vollkornbrot zum Tunken servieren.",
    "Für eine milde Variante den Kreuzkümmel reduzieren und etwas Paprikapulver nehmen."
-  ]
+  ],
+  "chapter": "vegetarisch"
  },
  {
   "id": "porridge-birne",
@@ -397,7 +403,8 @@
   ],
   "tips": [
    "Mit Wasser statt Milch gekocht spart es Kalorien – mit Milch wird es cremiger."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "quark-broetchen-erdbeeren",
@@ -441,7 +448,8 @@
   ],
   "tips": [
    "Außerhalb der Erdbeersaison passen TK-Beeren oder Bananenscheiben."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "gruene-smoothie-bowl",
@@ -498,7 +506,8 @@
   "tips": [
    "Gefrorenes Obst macht die Bowl dickflüssig wie Eis.",
    "Spinat schmeckt man kaum heraus – ideal für Gemüsemuffel."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "huettenkaese-avocado-toast",
@@ -549,7 +558,8 @@
   ],
   "tips": [
    "Eine reife Avocado gibt auf leichten Druck nach."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "bircher-muesli",
@@ -608,7 +618,8 @@
   "tips": [
    "Am Vorabend zubereitet wird es besonders cremig."
   ],
-  "rest_min": 30
+  "rest_min": 30,
+  "chapter": "fruehstueck"
  },
  {
   "id": "linsen-bolognese",
@@ -687,7 +698,8 @@
   "tips": [
    "Rote Linsen zerfallen beim Kochen und geben der Sauce die Konsistenz einer Hackfleischsauce.",
    "Lässt sich gut einfrieren."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "haehnchen-gemuese-pfanne",
@@ -751,7 +763,8 @@
   ],
   "tips": [
    "Fleisch zuerst und in nicht zu großen Mengen anbraten – sonst kocht es im eigenen Saft statt zu bräunen."
-  ]
+  ],
+  "chapter": "fleisch"
  },
  {
   "id": "ofenlachs-kartoffeln",
@@ -820,7 +833,8 @@
   },
   "tips": [
    "Der Lachs ist perfekt, wenn er sich mit einer Gabel leicht teilen lässt und innen noch leicht glasig ist."
-  ]
+  ],
+  "chapter": "fisch"
  },
  {
   "id": "chili-sin-carne",
@@ -906,7 +920,8 @@
   "tips": [
    "Ein Stück dunkle Schokolade oder ein Schuss Espresso geben Tiefe.",
    "Schmeckt am nächsten Tag noch besser."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "griechischer-salat",
@@ -975,7 +990,8 @@
   ],
   "tips": [
    "Der Salat braucht keinen Blattsalat – reife Tomaten sind das Wichtigste."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "kartoffel-lauch-suppe",
@@ -1036,7 +1052,8 @@
   "tips": [
    "Lauch gründlich waschen: Zwischen den Schichten sitzt oft Sand.",
    "Wer mag, gibt geröstete Brotwürfel darüber."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "putengeschnetzeltes-champignons",
@@ -1100,7 +1117,8 @@
   ],
   "tips": [
    "Pilze erst salzen, wenn sie Farbe haben – sonst ziehen sie Wasser."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "kichererbsen-gemuese-curry",
@@ -1174,7 +1192,8 @@
   "tips": [
    "Schärfe über die Menge der Currypaste steuern.",
    "Hält sich 3 Tage im Kühlschrank und lässt sich einfrieren."
-  ]
+  ],
+  "chapter": "vegetarisch"
  },
  {
   "id": "haehnchen-wrap",
@@ -1243,7 +1262,8 @@
   ],
   "tips": [
    "Wraps kurz erwärmen, dann reißen sie beim Rollen nicht."
-  ]
+  ],
+  "chapter": "fleisch"
  },
  {
   "id": "spinat-feta-omelett",
@@ -1289,7 +1309,8 @@
   ],
   "tips": [
    "Eine beschichtete Pfanne und mittlere Hitze verhindern, dass das Omelett anbrennt."
-  ]
+  ],
+  "chapter": "vegetarisch"
  },
  {
   "id": "ofengemuese-halloumi",
@@ -1361,7 +1382,8 @@
   },
   "tips": [
    "Gemüse in gleich große Stücke schneiden, damit alles gleichzeitig gar ist."
-  ]
+  ],
+  "chapter": "ofen"
  },
  {
   "id": "kartoffelsalat-joghurt",
@@ -1428,7 +1450,8 @@
   ],
   "tips": [
    "Kartoffeln noch warm anmachen – dann nehmen sie das Dressing besser auf."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "spaghetti-tomatensauce",
@@ -1486,7 +1509,8 @@
   "tips": [
    "Nudeln in der Sauce schwenken und mit etwas Nudelwasser binden.",
    "Für eine streng vegetarische Variante Hartkäse ohne tierisches Lab verwenden."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "hack-bulgur-pfanne",
@@ -1550,7 +1574,8 @@
   ],
   "tips": [
    "Bulgur braucht nur heißes Wasser zum Quellen – kein Kochen nötig."
-  ]
+  ],
+  "chapter": "fleisch"
  },
  {
   "id": "linsensuppe",
@@ -1618,7 +1643,8 @@
   "tips": [
    "Ein Schuss Essig zum Schluss gehört zur klassischen Linsensuppe und hebt den Geschmack.",
    "Linsen erst nach dem Kochen salzen, dann werden sie schneller weich."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "kabeljau-senfsauce",
@@ -1682,7 +1708,8 @@
   ],
   "tips": [
    "Der Fisch ist gar, wenn er sich in Lamellen teilen lässt."
-  ]
+  ],
+  "chapter": "fisch"
  },
  {
   "id": "quinoa-avocado-salat",
@@ -1745,7 +1772,8 @@
   ],
   "tips": [
    "Quinoa vor dem Kochen heiß abspülen – das entfernt Bitterstoffe."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "caesar-salat-leicht",
@@ -1815,7 +1843,8 @@
   ],
   "tips": [
    "Das Joghurt-Dressing ist eine leichte Alternative zur klassischen Mayonnaise-Variante."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "gefuellte-paprika-couscous",
@@ -1883,7 +1912,8 @@
   },
   "tips": [
    "Statt Couscous passt auch Bulgur oder Reis."
-  ]
+  ],
+  "chapter": "ofen"
  },
  {
   "id": "tofu-brokkoli-pfanne",
@@ -1947,7 +1977,8 @@
   ],
   "tips": [
    "Tofu vor dem Braten gut trocken tupfen oder pressen – dann wird er knusprig."
-  ]
+  ],
+  "chapter": "vegetarisch"
  },
  {
   "id": "pellkartoffeln-kraeuterquark",
@@ -2000,7 +2031,8 @@
   ],
   "tips": [
    "Für den Kräuterquark passen alle frischen Kräuter – im Frühling auch Bärlauch."
-  ]
+  ],
+  "chapter": "kartoffeln-getreide"
  },
  {
   "id": "zucchini-nudeln-garnelen",
@@ -2057,7 +2089,8 @@
   ],
   "tips": [
    "Zucchininudeln nur kurz erwärmen, sonst werden sie wässrig."
-  ]
+  ],
+  "chapter": "fisch"
  },
  {
   "id": "kuerbissuppe-ingwer",
@@ -2118,7 +2151,8 @@
   "tips": [
    "Hokkaido muss nicht geschält werden – die Schale wird beim Kochen weich.",
    "Lässt sich portionsweise einfrieren."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "suesskartoffel-bohnen",
@@ -2179,7 +2213,8 @@
   },
   "tips": [
    "Die Süßkartoffeln sind gar, wenn ein Messer ohne Widerstand hineingleitet."
-  ]
+  ],
+  "chapter": "kartoffeln-getreide"
  },
  {
   "id": "thunfisch-reis-bowl",
@@ -2242,7 +2277,8 @@
   ],
   "tips": [
    "Reis vom Vortag funktioniert hier perfekt."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "gnocchi-spinat-pfanne",
@@ -2299,7 +2335,8 @@
   ],
   "tips": [
    "Gnocchi direkt aus der Packung braten – vorher kochen ist nicht nötig."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "ofen-frittata",
@@ -2369,7 +2406,8 @@
   "tips": [
    "Kalt in Stücke geschnitten ein guter Snack für unterwegs.",
    "Hält sich 3 Tage im Kühlschrank."
-  ]
+  ],
+  "chapter": "ofen"
  },
  {
   "id": "haehnchen-kartoffel-blech",
@@ -2435,7 +2473,8 @@
   },
   "tips": [
    "Hähnchen ist durch, wenn der austretende Saft klar ist (Kerntemperatur mindestens 75 °C)."
-  ]
+  ],
+  "chapter": "fleisch"
  },
  {
   "id": "spitzkohl-hack-pfanne",
@@ -2492,7 +2531,8 @@
   ],
   "tips": [
    "Spitzkohl ist zarter als Weißkohl und gart viel schneller."
-  ]
+  ],
+  "chapter": "fleisch"
  },
  {
   "id": "abendbrot-teller",
@@ -2550,7 +2590,8 @@
   ],
   "tips": [
    "Mehr Rohkost auf dem Teller macht satt und bringt Farbe."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "erbseneintopf",
@@ -2618,7 +2659,8 @@
   "tips": [
    "Schälerbsen müssen nicht eingeweicht werden.",
    "Der Eintopf dickt beim Stehen nach – beim Aufwärmen etwas Wasser zugeben."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "rote-bete-salat-ziegenkaese",
@@ -2681,7 +2723,8 @@
   ],
   "tips": [
    "Vorgegarte Rote Bete aus dem Kühlregal spart Zeit und färbt weniger."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "gemuese-reispfanne-ei",
@@ -2745,7 +2788,8 @@
   ],
   "tips": [
    "Kalter Reis vom Vortag klebt nicht und wird beim Braten schön körnig."
-  ]
+  ],
+  "chapter": "kartoffeln-getreide"
  },
  {
   "id": "apfel-erdnussbutter",
@@ -2776,7 +2820,8 @@
   ],
   "tips": [
    "Statt Erdnussbutter passt auch Mandelmus."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "hummus-gemuesesticks",
@@ -2846,7 +2891,8 @@
   ],
   "tips": [
    "Für extra cremigen Hummus die Kichererbsen kurz aufkochen und warm pürieren."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "dattel-energiekugeln",
@@ -2893,7 +2939,8 @@
   ],
   "tips": [
    "Sehr trockene Datteln vorher 10 Minuten in warmem Wasser einweichen."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "quark-beeren",
@@ -2931,7 +2978,8 @@
   ],
   "tips": [
    "Mit etwas Mineralwasser aufgeschlagen wird der Quark besonders luftig."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "tzatziki-knaeckebrot",
@@ -2975,7 +3023,8 @@
   ],
   "tips": [
    "Gurke gut ausdrücken, damit das Tzatziki nicht wässrig wird."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "edamame-meersalz",
@@ -3006,7 +3055,8 @@
   ],
   "tips": [
    "Die Bohnen werden aus der Schale gelutscht – die Schale selbst isst man nicht."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "bananen-joghurt",
@@ -3044,7 +3094,8 @@
   ],
   "tips": [
    "Mit Zimt bestreut schmeckt es wie Bananenbrot."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "knusprige-haehnchenstreifen",
@@ -3112,7 +3163,8 @@
   },
   "tips": [
    "Nicht zu viele Streifen auf einmal in den Korb legen – die heiße Luft muss zirkulieren können."
-  ]
+  ],
+  "chapter": "fleisch"
  },
  {
   "id": "suesskartoffel-pommes",
@@ -3175,7 +3227,8 @@
   "tips": [
    "Die Speisestärke macht die Pommes knuspriger.",
    "Gleich dicke Stifte garen gleichmäßig."
-  ]
+  ],
+  "chapter": "kartoffeln-getreide"
  },
  {
   "id": "airfryer-lachs-bohnen",
@@ -3237,7 +3290,8 @@
   },
   "tips": [
    "Lachs mit der Hautseite nach unten garen – die Haut schützt das Filet vor dem Austrocknen."
-  ]
+  ],
+  "chapter": "fisch"
  },
  {
   "id": "knusprige-kichererbsen",
@@ -3294,7 +3348,8 @@
   "tips": [
    "Je trockener die Kichererbsen, desto knuspriger werden sie.",
    "Am besten am selben Tag essen – sie ziehen mit der Zeit Feuchtigkeit."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "gemuese-ei-muffins",
@@ -3352,7 +3407,8 @@
   },
   "tips": [
    "Gut zum Vorbereiten: kalt oder kurz aufgewärmt ein schnelles Frühstück."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "falafel-airfryer",
@@ -3444,7 +3500,8 @@
   },
   "tips": [
    "Die Masse nicht zu fein pürieren – mit etwas Struktur halten die Falafel besser."
-  ]
+  ],
+  "chapter": "vegetarisch"
  },
  {
   "id": "blumenkohl-wings",
@@ -3519,7 +3576,8 @@
   },
   "tips": [
    "Mit etwas Chili im Teig werden sie zu „Buffalo Wings“."
-  ]
+  ],
+  "chapter": "vegetarisch"
  },
  {
   "id": "bratapfel-crumble",
@@ -3584,7 +3642,8 @@
   },
   "tips": [
    "Säuerliche Sorten wie Boskoop eignen sich am besten zum Backen."
-  ]
+  ],
+  "chapter": "suesses"
  },
  {
   "id": "kartoffelspalten-rosmarin",
@@ -3640,7 +3699,8 @@
   },
   "tips": [
    "Kartoffeln nach dem Schneiden trocken tupfen – das macht sie knuspriger."
-  ]
+  ],
+  "chapter": "kartoffeln-getreide"
  },
  {
   "id": "puten-frikadellen-gurkensalat",
@@ -3713,7 +3773,8 @@
   },
   "tips": [
    "Putenhack muss vollständig durchgegart sein (Kerntemperatur mindestens 75 °C)."
-  ]
+  ],
+  "chapter": "fleisch"
  },
  {
   "id": "zucchini-parmesan-sticks",
@@ -3768,7 +3829,8 @@
   },
   "tips": [
    "Mit Tomatensauce als Dip servieren."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "gefuellte-champignons-feta",
@@ -3830,7 +3892,8 @@
   },
   "tips": [
    "Große Champignons eignen sich am besten zum Füllen."
-  ]
+  ],
+  "chapter": "vegetarisch"
  },
  {
   "id": "apfelchips-zimt",
@@ -3868,7 +3931,8 @@
   },
   "tips": [
    "Je dünner die Scheiben, desto knuspriger die Chips – ein Gemüsehobel hilft."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "protein-pancakes",
@@ -3942,7 +4006,8 @@
   "tips": [
    "Die Pancakes lassen sich einfrieren und im Toaster aufbacken.",
    "Für noch mehr Eiweiß 1 EL Proteinpulver unter den Teig rühren und etwas Milch zugeben."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "chia-pudding-mango",
@@ -4005,7 +4070,8 @@
   "tips": [
    "Hält sich im Kühlschrank 3 Tage – ideal zum Vorbereiten.",
    "Zu fest geworden? Einfach einen Schuss Haferdrink unterrühren."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "ruehrei-raeucherlachs",
@@ -4068,7 +4134,8 @@
   ],
   "tips": [
    "Niedrige Hitze ist das Geheimnis von cremigem Rührei – bei zu viel Hitze wird es trocken und gummiartig."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "herzhaftes-porridge",
@@ -4126,7 +4193,8 @@
   ],
   "tips": [
    "Statt Ei passt auch ein Klecks Hüttenkäse oder ein paar geröstete Kürbiskerne."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "avocado-spiegelei-brot",
@@ -4189,7 +4257,8 @@
   ],
   "tips": [
    "Die Avocado wird nicht braun, wenn man sie direkt mit Zitronensaft vermischt."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "schoko-bananen-porridge",
@@ -4243,7 +4312,8 @@
   ],
   "tips": [
    "Je reifer die Banane, desto süßer das Porridge."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "fruehstuecks-burrito",
@@ -4316,7 +4386,8 @@
   ],
   "tips": [
    "Zum Mitnehmen fest in Backpapier wickeln – so hält der Burrito zusammen."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "knuspermuesli",
@@ -4382,7 +4453,8 @@
   "airfryer": {
    "temp_c": 160,
    "time_min": 10
-  }
+  },
+  "chapter": "fruehstueck"
  },
  {
   "id": "joghurt-parfait",
@@ -4429,7 +4501,8 @@
   ],
   "tips": [
    "Mit dem selbst gemachten Knuspermüsli wird es besonders lecker."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "quarkbroetchen",
@@ -4501,7 +4574,8 @@
   "airfryer": {
    "temp_c": 170,
    "time_min": 14
-  }
+  },
+  "chapter": "fruehstueck"
  },
  {
   "id": "huettenkaese-bowl",
@@ -4557,7 +4631,8 @@
   ],
   "tips": [
    "Leinöl nicht erhitzen – es ist für kalte Speisen gedacht."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "griessbrei",
@@ -4618,7 +4693,8 @@
   ],
   "tips": [
    "Wird beim Abkühlen fester – für einen cremigen Brei noch einen Schuss Milch unterrühren."
-  ]
+  ],
+  "chapter": "suesses"
  },
  {
   "id": "tomate-mozzarella-brot",
@@ -4675,7 +4751,8 @@
   ],
   "tips": [
    "Im Sommer mit reifen Freiland-Tomaten am aromatischsten."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "bananenbrot",
@@ -4752,7 +4829,8 @@
   "airfryer": {
    "temp_c": 160,
    "time_min": 30
-  }
+  },
+  "chapter": "suesses"
  },
  {
   "id": "beeren-protein-shake",
@@ -4803,7 +4881,8 @@
   ],
   "tips": [
    "Mit Haferdrink statt Milch und Sojajoghurt statt Skyr wird er pflanzlich."
-  ]
+  ],
+  "chapter": "getraenke"
  },
  {
   "id": "erdnuss-bananen-toast",
@@ -4848,7 +4927,8 @@
   ],
   "tips": [
    "Erdnussbutter ohne Zucker- und Palmölzusatz wählen – Zutat sollten nur Erdnüsse sein."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "huehnerfrikassee",
@@ -4949,7 +5029,8 @@
   "tips": [
    "Klassisch kommen im Frühjahr noch Spargelstücke hinein.",
    "Lässt sich gut aufwärmen – die Sauce dann mit einem Schuss Brühe auflockern."
-  ]
+  ],
+  "chapter": "fleisch"
  },
  {
   "id": "koenigsberger-klopse",
@@ -5048,7 +5129,8 @@
   "tips": [
    "Dazu passt Rote-Bete-Salat.",
    "Die Klopse sind gar, wenn sie innen nicht mehr rosa sind (Kerntemperatur mindestens 70 °C)."
-  ]
+  ],
+  "chapter": "fleisch"
  },
  {
   "id": "rindergulasch",
@@ -5137,7 +5219,8 @@
   "tips": [
    "Schmeckt aufgewärmt am nächsten Tag noch besser.",
    "Im Schnellkochtopf reichen ca. 35 Minuten Garzeit."
-  ]
+  ],
+  "chapter": "fleisch"
  },
  {
   "id": "gruenkohl-kartoffeln",
@@ -5219,7 +5302,8 @@
   "tips": [
    "Grünkohl schmeckt nach dem ersten Frost am besten – Saison ist November bis Februar.",
    "Die Haferflocken binden den Grünkohl wie die klassische Hafergrütze."
-  ]
+  ],
+  "chapter": "vegetarisch"
  },
  {
   "id": "rosenkohl-kartoffeln-airfryer",
@@ -5295,7 +5379,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 15
-  }
+  },
+  "chapter": "vegetarisch"
  },
  {
   "id": "rotkohl-apfel-salat",
@@ -5365,7 +5450,8 @@
   "tips": [
    "Hält sich im Kühlschrank 2–3 Tage und wird dabei sogar besser.",
    "Passt als Beilage zu Frikadellen oder Hähnchen."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "kaesespaetzle-leicht",
@@ -5452,7 +5538,8 @@
   ],
   "tips": [
    "Zwiebeln werden besonders süß, wenn man sie langsam bei mittlerer Hitze bräunt."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "schupfnudel-sauerkraut-pfanne",
@@ -5522,7 +5609,8 @@
   ],
   "tips": [
    "Vegetarisch: Schinken durch Räuchertofu ersetzen."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "huehnersuppe",
@@ -5598,7 +5686,8 @@
   "tips": [
    "Zum Einfrieren die Nudeln separat kochen – in der Suppe werden sie weich.",
    "Ein Zweig frischer Thymian in der Brühe gibt zusätzliches Aroma."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "seelachs-kartoffel-gurkensalat",
@@ -5686,7 +5775,8 @@
     "Auf Backpapier in den Korb legen und bei 200 °C 8–10 Minuten garen, bis er innen nicht mehr glasig ist.",
     "Mit dem Salat und Zitronenspalten servieren."
    ]
-  }
+  },
+  "chapter": "fisch"
  },
  {
   "id": "senfeier",
@@ -5765,7 +5855,8 @@
   ],
   "tips": [
    "Für eine kräftigere Note einen Teil des Senfs durch körnigen Senf ersetzen."
-  ]
+  ],
+  "chapter": "vegetarisch"
  },
  {
   "id": "bratkartoffeln-spiegelei",
@@ -5856,7 +5947,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 18
-  }
+  },
+  "chapter": "kartoffeln-getreide"
  },
  {
   "id": "flammkuchen-wrap",
@@ -5928,7 +6020,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 7
-  }
+  },
+  "chapter": "ofen"
  },
  {
   "id": "spargel-kartoffeln",
@@ -6015,7 +6108,8 @@
   "tips": [
    "Spargelsaison ist von April bis zum 24. Juni.",
    "Die Schalen mit Wasser auskochen – das ergibt einen feinen Fond für Suppe."
-  ]
+  ],
+  "chapter": "kartoffeln-getreide"
  },
  {
   "id": "moehren-ingwer-suppe",
@@ -6095,7 +6189,8 @@
   "tips": [
    "Die Kartoffel macht die Suppe sämig – ganz ohne Sahne.",
    "Lässt sich portionsweise einfrieren."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "brokkoli-kartoffel-suppe",
@@ -6166,7 +6261,8 @@
   ],
   "tips": [
    "Den Brokkolistrunk nicht wegwerfen – geschält ist er zart und aromatisch."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "bauernfruehstueck",
@@ -6240,7 +6336,8 @@
   ],
   "tips": [
    "Ideal, um Pellkartoffeln vom Vortag zu verwerten."
-  ]
+  ],
+  "chapter": "kartoffeln-getreide"
  },
  {
   "id": "pichelsteiner-eintopf",
@@ -6334,7 +6431,8 @@
   ],
   "tips": [
    "Ein echter Eintopf zum Vorkochen – hält sich im Kühlschrank 3 Tage."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "chili-con-carne",
@@ -6446,7 +6544,8 @@
   "tips": [
    "Ein Stück dunkle Schokolade rundet die Schärfe ab.",
    "Schmeckt am zweiten Tag noch besser und lässt sich gut einfrieren."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "haehnchen-curry-joghurt",
@@ -6529,7 +6628,8 @@
   ],
   "tips": [
    "Der Joghurt in der Marinade macht das Hähnchen besonders zart."
-  ]
+  ],
+  "chapter": "fleisch"
  },
  {
   "id": "dal-rote-linsen",
@@ -6634,7 +6734,8 @@
   "tips": [
    "Rote Linsen müssen nicht eingeweicht werden.",
    "Wird beim Abkühlen fester – beim Aufwärmen etwas Wasser zugeben."
-  ]
+  ],
+  "chapter": "vegetarisch"
  },
  {
   "id": "minestrone",
@@ -6738,7 +6839,8 @@
   ],
   "tips": [
    "Fast jedes Gemüse passt – ideal, um Reste aus dem Kühlschrank zu verwerten."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "ratatouille-quinoa",
@@ -6823,7 +6925,8 @@
   ],
   "tips": [
    "Schmeckt warm und kalt – und am nächsten Tag noch aromatischer."
-  ]
+  ],
+  "chapter": "vegetarisch"
  },
  {
   "id": "pilzrisotto",
@@ -6906,7 +7009,8 @@
   ],
   "tips": [
    "Regelmäßiges Rühren löst die Stärke aus dem Reis – so wird das Risotto cremig, ganz ohne Sahne."
-  ]
+  ],
+  "chapter": "kartoffeln-getreide"
  },
  {
   "id": "pasta-brokkoli-zitrone",
@@ -6979,7 +7083,8 @@
   ],
   "tips": [
    "Das stärkehaltige Nudelwasser bindet die Sauce – deshalb immer etwas davon aufheben."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "pasta-arrabbiata-thunfisch",
@@ -7050,7 +7155,8 @@
   ],
   "tips": [
    "Die Schärfe über die Menge der Chiliflocken anpassen – arrabbiata heißt „wütend“."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "spinat-feta-pasta",
@@ -7127,7 +7233,8 @@
   ],
   "tips": [
    "Feta ist salzig – erst am Ende mit Salz abschmecken."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "kuerbis-pasta-salbei",
@@ -7210,7 +7317,8 @@
   ],
   "tips": [
    "Kürbissaison ist von September bis Dezember."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "lachs-spinat-pasta",
@@ -7281,7 +7389,8 @@
   ],
   "tips": [
    "Lachs nur kurz garen – innen darf er leicht glasig sein, dann bleibt er saftig."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "gemuese-lasagne-linsen",
@@ -7397,7 +7506,8 @@
   "tips": [
    "Die Ruhezeit nach dem Backen sorgt dafür, dass die Lasagne beim Schneiden nicht zerläuft.",
    "Lässt sich in Portionen einfrieren."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "teriyaki-lachs",
@@ -7496,7 +7606,8 @@
     "Lachs mit der Hautseite nach unten in den Korb legen, Brokkoli daneben verteilen und bei 200 °C 8–10 Minuten garen.",
     "Mit Reis anrichten, mit der restlichen Sauce beträufeln und mit Sesam und Frühlingszwiebelringen bestreuen."
    ]
-  }
+  },
+  "chapter": "fisch"
  },
  {
   "id": "asia-nudelsuppe",
@@ -7585,7 +7696,8 @@
   ],
   "tips": [
    "Statt Pak Choi passt auch Chinakohl oder Spinat."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "pad-thai-tofu",
@@ -7681,7 +7793,8 @@
   ],
   "tips": [
    "Alle Zutaten vorher schneiden und bereitstellen – im Wok geht es dann sehr schnell."
-  ]
+  ],
+  "chapter": "pasta"
  },
  {
   "id": "koreanische-reis-bowl",
@@ -7776,7 +7889,8 @@
   ],
   "tips": [
    "Mit einem Klecks Chilipaste wird es schärfer und authentischer."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "fisch-tacos",
@@ -7871,7 +7985,8 @@
   "tips": [
    "Der eingeknetete Rotkohl wird mild und bleibt trotzdem knackig.",
    "Statt Kabeljau passt jeder feste weiße Fisch."
-  ]
+  ],
+  "chapter": "fisch"
  },
  {
   "id": "linsensalat-feta",
@@ -7951,7 +8066,8 @@
   "tips": [
    "Linsen erst nach dem Kochen salzen – so bleiben sie schön weich.",
    "Hält sich 3 Tage im Kühlschrank – ideal für die Mittagspause."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "tabouleh-kichererbsen",
@@ -8030,7 +8146,8 @@
   ],
   "tips": [
    "Hält sich 2 Tage im Kühlschrank – die Kräuter vor dem Servieren frisch unterheben."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "nudelsalat-leicht",
@@ -8109,7 +8226,8 @@
   ],
   "tips": [
    "Ohne Mayonnaise deutlich leichter – das Gurkenwasser bringt die typische Würze."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "couscous-haehnchen-salat",
@@ -8192,7 +8310,8 @@
   ],
   "tips": [
    "Hähnchen nach dem Braten 3 Minuten ruhen lassen, dann bleibt es beim Schneiden saftig."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "thunfisch-bohnen-salat",
@@ -8263,7 +8382,8 @@
   ],
   "tips": [
    "Ein Vorratsklassiker: fast alles kommt aus dem Schrank."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "buddha-bowl-tahin",
@@ -8357,7 +8477,8 @@
     "Tahin mit Zitronensaft, 3–4 EL Wasser und einer Prise Salz zu einer cremigen Sauce verrühren. Karotte raspeln.",
     "Alles in Schalen anrichten und mit der Tahin-Sauce beträufeln."
    ]
-  }
+  },
+  "chapter": "salate"
  },
  {
   "id": "teriyaki-tofu-bowl",
@@ -8457,7 +8578,8 @@
     "Sojasauce, Ahornsirup, geriebenen Ingwer, restliche Stärke und 3 EL Wasser in einer Pfanne aufkochen und den Tofu darin schwenken.",
     "Reis mit Tofu, Edamame, Karottenstiften und Gurkenscheiben anrichten und mit Sesam bestreuen."
    ]
-  }
+  },
+  "chapter": "salate"
  },
  {
   "id": "sushi-bowl-raeucherlachs",
@@ -8540,7 +8662,8 @@
   ],
   "tips": [
    "Der gewürzte Reis schmeckt wie Sushi-Reis – nur ohne Rollen."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "feldsalat-lachs-avocado",
@@ -8617,7 +8740,8 @@
   ],
   "tips": [
    "Feldsalat erst kurz vor dem Servieren anmachen – er fällt schnell zusammen."
-  ]
+  ],
+  "chapter": "salate"
  },
  {
   "id": "tomatensuppe-basilikum",
@@ -8694,7 +8818,8 @@
   ],
   "tips": [
    "Eine Prise Süße nimmt den Dosentomaten die Säure."
-  ]
+  ],
+  "chapter": "suppen"
  },
  {
   "id": "lachs-gemuese-paeckchen",
@@ -8765,7 +8890,8 @@
   ],
   "tips": [
    "Im Päckchen gart alles im eigenen Dampf – saftig und ohne Abwasch."
-  ]
+  ],
+  "chapter": "fisch"
  },
  {
   "id": "blechgemuese-feta-kichererbsen",
@@ -8860,7 +8986,8 @@
   },
   "tips": [
    "Je nach Saison passen auch Süßkartoffel, Aubergine oder Brokkoli."
-  ]
+  ],
+  "chapter": "ofen"
  },
  {
   "id": "haehnchenschenkel-gemuese",
@@ -8941,7 +9068,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 16
-  }
+  },
+  "chapter": "fleisch"
  },
  {
   "id": "fischstaebchen-pueree",
@@ -9037,7 +9165,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 10
-  }
+  },
+  "chapter": "fisch"
  },
  {
   "id": "putenschnitzel-kartoffelsalat",
@@ -9147,7 +9276,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 10
-  }
+  },
+  "chapter": "fleisch"
  },
  {
   "id": "cevapcici-ajvar",
@@ -9230,7 +9360,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 10
-  }
+  },
+  "chapter": "fleisch"
  },
  {
   "id": "gemuese-frikadellen",
@@ -9323,7 +9454,8 @@
   "airfryer": {
    "temp_c": 190,
    "time_min": 14
-  }
+  },
+  "chapter": "vegetarisch"
  },
  {
   "id": "burger-leicht",
@@ -9416,7 +9548,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 10
-  }
+  },
+  "chapter": "fleisch"
  },
  {
   "id": "ofenkartoffel-kraeuterquark",
@@ -9492,7 +9625,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 40
-  }
+  },
+  "chapter": "kartoffeln-getreide"
  },
  {
   "id": "knusper-tofu-erdnusssauce",
@@ -9580,7 +9714,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 15
-  }
+  },
+  "chapter": "vegetarisch"
  },
  {
   "id": "gefuellte-paprika-hack",
@@ -9655,7 +9790,8 @@
   "airfryer": {
    "temp_c": 180,
    "time_min": 18
-  }
+  },
+  "chapter": "ofen"
  },
  {
   "id": "zucchini-puffer",
@@ -9731,7 +9867,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 12
-  }
+  },
+  "chapter": "vegetarisch"
  },
  {
   "id": "gebackener-feta-tomaten",
@@ -9806,7 +9943,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 12
-  }
+  },
+  "chapter": "ofen"
  },
  {
   "id": "pizza-wrap",
@@ -9880,7 +10018,8 @@
   "airfryer": {
    "temp_c": 200,
    "time_min": 6
-  }
+  },
+  "chapter": "vegetarisch"
  },
  {
   "id": "rote-bete-hummus",
@@ -9952,7 +10091,8 @@
   ],
   "tips": [
    "Hält sich abgedeckt 4 Tage im Kühlschrank."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "gemuesesticks-kraeuterquark",
@@ -10020,7 +10160,8 @@
   ],
   "tips": [
    "Gemüsesticks bleiben in einem Glas mit etwas Wasser im Kühlschrank zwei Tage knackig."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "erdnuss-hafer-baellchen",
@@ -10081,7 +10222,8 @@
   "rest_min": 30,
   "tips": [
    "Statt Erdnussbutter funktioniert jedes Nussmus."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "studentenfutter",
@@ -10131,7 +10273,8 @@
   ],
   "tips": [
    "Nüsse sind energiereich – vorab portionieren hilft beim Maßhalten."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "frozen-joghurt-rinde",
@@ -10180,7 +10323,8 @@
   "rest_min": 180,
   "tips": [
    "Mit Mango und Kokosraspeln wird eine tropische Variante daraus."
-  ]
+  ],
+  "chapter": "suesses"
  },
  {
   "id": "reiswaffeln-frischkaese",
@@ -10224,7 +10368,8 @@
   ],
   "tips": [
    "Vollkorn-Reiswaffeln enthalten mehr Ballaststoffe."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "gruenkohl-chips",
@@ -10273,7 +10418,8 @@
   },
   "tips": [
    "Nur ganz trockene Blätter werden knusprig – lieber einmal mehr trocken tupfen."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "kaese-trauben-spiesse",
@@ -10311,7 +10457,8 @@
   ],
   "tips": [
    "Kernlose Trauben verwenden – das macht die Spieße kinderfreundlich."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "popcorn-zimt",
@@ -10356,7 +10503,8 @@
   ],
   "tips": [
    "Selbst gemachtes Popcorn hat nur einen Bruchteil der Kalorien von Kino-Popcorn."
-  ]
+  ],
+  "chapter": "snacks"
  },
  {
   "id": "schoko-bananen-quark",
@@ -10414,7 +10562,8 @@
   ],
   "tips": [
    "Mit Haferdrink und Sojaquark wird die Creme pflanzlich."
-  ]
+  ],
+  "chapter": "suesses"
  },
  {
   "id": "nicecream-beeren",
@@ -10456,7 +10605,8 @@
   "rest_min": 240,
   "tips": [
    "Ganz ohne Zucker – die Süße kommt von reifen Bananen."
-  ]
+  ],
+  "chapter": "suesses"
  },
  {
   "id": "apfel-hafer-muffins",
@@ -10534,7 +10684,8 @@
   "airfryer": {
    "temp_c": 160,
    "time_min": 15
-  }
+  },
+  "chapter": "suesses"
  },
  {
   "id": "beeren-crumble",
@@ -10606,7 +10757,8 @@
   "airfryer": {
    "temp_c": 180,
    "time_min": 15
-  }
+  },
+  "chapter": "suesses"
  },
  {
   "id": "milchreis-apfelmus",
@@ -10667,7 +10819,8 @@
   ],
   "tips": [
    "Ein Topf mit dickem Boden verhindert das Anbrennen."
-  ]
+  ],
+  "chapter": "suesses"
  },
  {
   "id": "kaiserschmarrn-leicht",
@@ -10740,7 +10893,8 @@
   ],
   "tips": [
    "Das steif geschlagene Eiweiß macht den Schmarrn luftig."
-  ]
+  ],
+  "chapter": "suesses"
  },
  {
   "id": "tofu-ruehrei",
@@ -10811,7 +10965,8 @@
   ],
   "tips": [
    "Mit einer Prise Kala Namak (Schwefelsalz) schmeckt es fast wie Ei."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "vegane-overnight-oats",
@@ -10870,7 +11025,8 @@
   "rest_min": 240,
   "tips": [
    "Hält sich im Kühlschrank 2 Tage – gleich zwei Gläser vorbereiten."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "apfel-zimt-porridge-vegan",
@@ -10927,7 +11083,8 @@
   ],
   "tips": [
    "Mit Wasser statt Haferdrink gekocht wird es leichter, mit Haferdrink cremiger."
-  ]
+  ],
+  "chapter": "fruehstueck"
  },
  {
   "id": "hummus-avocado-toast",
@@ -10992,6 +11149,7 @@
   ],
   "tips": [
    "Reste vom Hummus halten sich im Kühlschrank 3–4 Tage."
-  ]
+  ],
+  "chapter": "fruehstueck"
  }
 ]

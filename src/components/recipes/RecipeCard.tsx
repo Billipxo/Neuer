@@ -1,20 +1,30 @@
 import { Link } from 'react-router-dom'
 import { Clock, Flame, Heart } from 'lucide-react'
-import type { MealType, Recipe } from '../../types'
+import type { Recipe } from '../../types'
+import type { ChapterId } from '../../data/chapters'
 import { recipeEmoji, TAG_LABELS } from '../../lib/recipes'
 import { fmtInt } from '../../lib/format'
 import { AirfryerIcon } from './AirfryerIcon'
 
-/** Farbverlauf je Mahlzeitenart – ersetzt Fotos */
-const GRADIENTS: Record<MealType, string> = {
-  breakfast: 'from-amber-100 to-orange-200 dark:from-amber-900/50 dark:to-orange-900/30',
-  lunch: 'from-lime-100 to-emerald-200 dark:from-lime-900/40 dark:to-emerald-900/40',
-  dinner: 'from-sky-100 to-indigo-200 dark:from-sky-900/40 dark:to-indigo-900/40',
-  snack: 'from-rose-100 to-pink-200 dark:from-rose-900/40 dark:to-pink-900/30',
+/** Farbverlauf je Kapitel – ersetzt Fotos */
+const GRADIENTS: Record<ChapterId, string> = {
+  fruehstueck: 'from-amber-100 to-orange-200 dark:from-amber-900/50 dark:to-orange-900/30',
+  suppen: 'from-orange-100 to-red-200 dark:from-orange-900/40 dark:to-red-900/30',
+  salate: 'from-lime-100 to-green-200 dark:from-lime-900/40 dark:to-green-900/40',
+  pasta: 'from-yellow-100 to-amber-200 dark:from-yellow-900/40 dark:to-amber-900/30',
+  'kartoffeln-getreide': 'from-stone-100 to-amber-100 dark:from-stone-800/60 dark:to-amber-900/30',
+  fleisch: 'from-rose-100 to-orange-200 dark:from-rose-900/40 dark:to-orange-900/30',
+  fisch: 'from-sky-100 to-cyan-200 dark:from-sky-900/40 dark:to-cyan-900/40',
+  vegetarisch: 'from-emerald-100 to-teal-200 dark:from-emerald-900/40 dark:to-teal-900/40',
+  ofen: 'from-orange-100 to-amber-200 dark:from-orange-900/40 dark:to-amber-900/40',
+  snacks: 'from-teal-100 to-lime-100 dark:from-teal-900/40 dark:to-lime-900/30',
+  suesses: 'from-pink-100 to-rose-200 dark:from-pink-900/40 dark:to-rose-900/30',
+  grundrezepte: 'from-violet-100 to-indigo-100 dark:from-violet-900/40 dark:to-indigo-900/30',
+  getraenke: 'from-fuchsia-100 to-sky-100 dark:from-fuchsia-900/40 dark:to-sky-900/30',
 }
 
 export function recipeGradient(r: Recipe): string {
-  return GRADIENTS[r.meal[0]] ?? GRADIENTS.lunch
+  return GRADIENTS[r.chapter] ?? GRADIENTS.vegetarisch
 }
 
 interface CardProps {

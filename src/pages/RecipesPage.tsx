@@ -1,6 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import { BookOpen, Heart, History, LayoutGrid, Leaf, List, Refrigerator, Search, SlidersHorizontal, X } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
+import { CHAPTERS, getChapter } from '../data/chapters'
 import { GUIDES } from '../data/guides'
 import type { MealType, Recipe } from '../types'
 import { MEAL_TYPES } from '../types'
@@ -57,6 +58,8 @@ export function RecipesPage() {
   const [showMore, setShowMore] = useState(false)
   const [view, setView] = useState<ViewMode>(loadView)
   const [dietOnly, setDietOnly] = useState(true)
+  const [params] = useSearchParams()
+  const chapter = getChapter(params.get('kapitel'))
 
   const { data: profile } = useProfile()
   const { data: log = [] } = useLog(todayISO())
@@ -69,14 +72,15 @@ export function RecipesPage() {
   const base = useMemo(() => (dietOnly && diet !== 'all' ? RECIPES.filter((r) => matchesDiet(r, diet)) : RECIPES), [dietOnly, diet])
 
   const results = useMemo(() => {
-    let list = filterRecipes(base, { meal, maxKcal, maxTime, keyword, tag })
+    let list = filterRecipes(base, { chapter: chapter?.id, meal, maxKcal, maxTime, keyword, tag })
     if (onlyFav) list = list.filter((r) => favorites.includes(r.id))
     if (onlyAirfryer) list = list.filter((r) => r.airfryer)
     return sortRecipes(list, sort, { favorites, preferAirfryer: hasAirfryer, cooked })
-  }, [base, meal, maxKcal, maxTime, keyword, tag, onlyFav, onlyAirfryer, sort, favorites, hasAirfryer, cooked])
+  }, [base, chapter, meal, maxKcal, maxTime, keyword, tag, onlyFav, onlyAirfryer, sort, favorites, hasAirfryer, cooked])
 
   const filterCount = [meal, maxKcal, maxTime, tag, onlyFav || null, onlyAirfryer || null, keyword || null].filter(Boolean).length
-  const filtered = filterCount > 0
+  const filtered = filterCount > 0 || Boolean(chapter)
+  const chapterCounts = useMemo(() => new Map(CHAPTERS.map((c) => [c.id, base.filter((r) => r.chapter === c.id).length])), [base])
 
   const remaining = (profile?.kcal_target ?? 0) - totalsOf(log).kcal
   const byMeal = groupByMeal(log)
@@ -119,8 +123,13 @@ export function RecipesPage() {
   return (
     <>
       <PageHeader
-        title="Rezepte"
-        subtitle={`${base.length} Ideen · ${airfryerRecipes(base).length} für die Heißluftfritteuse`}
+        title={chapter ? chapter.title : 'Kochbuch'}
+        back={chapter ? '/rezepte' : undefined}
+        subtitle={
+          chapter
+            ? `${chapterCounts.get(chapter.id) ?? 0} Rezepte`
+            : `${base.length} Rezepte in ${CHAPTERS.length} Kapiteln · ${airfryerRecipes(base).length} für die Heißluftfritteuse`
+        }
         actions={
           <div className="flex rounded-full bg-surface-2 p-0.5" role="group" aria-label="Ansicht">
             <IconButton label="Galerie-Ansicht" aria-pressed={view === 'grid'} onClick={() => setViewMode('grid')} className={`size-10 ${view === 'grid' ? 'bg-surface shadow-sm' : 'text-muted'}`}>
@@ -237,8 +246,40 @@ export function RecipesPage() {
         </div>
       )}
 
+      {chapter && (
+        <p className="mt-3 flex gap-3 rounded-3xl bg-brand-soft/50 p-4 text-sm leading-relaxed">
+          <span aria-hidden className="text-3xl">
+            {chapter.emoji}
+          </span>
+          <span>{chapter.intro}</span>
+        </p>
+      )}
+
       {!filtered && (
         <>
+          <section className="mt-5" aria-labelledby="toc-title">
+            <h2 id="toc-title" className="px-1 font-semibold">
+              Inhalt
+            </h2>
+            <ul className="mt-3 grid grid-cols-2 gap-2">
+              {CHAPTERS.filter((c) => (chapterCounts.get(c.id) ?? 0) > 0).map((c) => (
+                <li key={c.id}>
+                  <Link
+                    to={`/rezepte?kapitel=${c.id}`}
+                    className="flex min-h-16 items-center gap-2.5 rounded-2xl bg-surface p-2.5 ring-1 ring-line/60 transition active:scale-[0.98] hover:ring-brand/40"
+                  >
+                    <span aria-hidden className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-2xl">
+                      {c.emoji}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold leading-tight">{c.title}</span>
+                      <span className="block text-xs text-muted tabular">{chapterCounts.get(c.id)} Rezepte</span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
           <div className="mt-4 grid grid-cols-2 gap-2">
             <FeatureCard to="/rezepte/zutaten" icon={<Refrigerator className="size-6" aria-hidden />} title="Was habe ich da?" text="Rezepte aus deinen Zutaten" />
             <FeatureCard to="/rezepte/wissen" icon={<BookOpen className="size-6" aria-hidden />} title="Kochwissen" text={`${GUIDES.length} Anleitungen & Garzeiten`} />
@@ -275,9 +316,9 @@ export function RecipesPage() {
       <section className="mt-6" aria-labelledby="all-recipes">
         <div className="flex items-baseline justify-between px-1">
           <h2 id="all-recipes" className="font-semibold" aria-live="polite">
-            {filtered ? `${results.length} ${results.length === 1 ? 'Treffer' : 'Treffer'}` : 'Alle Rezepte'}
+            {filterCount > 0 ? `${results.length} Treffer` : chapter ? 'Rezepte' : 'Alle Rezepte'}
           </h2>
-          {filtered && (
+          {filterCount > 0 && (
             <button type="button" onClick={resetFilters} className="inline-flex min-h-9 items-center gap-1 text-sm font-semibold text-brand">
               <X className="size-4" aria-hidden /> Filter zurücksetzen
             </button>

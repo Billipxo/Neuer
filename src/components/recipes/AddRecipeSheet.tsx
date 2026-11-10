@@ -31,7 +31,7 @@ export function AddRecipeSheet({ recipe, open, onClose }: { recipe: Recipe; open
   useEffect(() => {
     if (!open) return
     const m = mealForHour(new Date().getHours())
-    setMeal(recipe.meal.includes(m) ? m : recipe.meal[0])
+    setMeal(recipe.meal.includes(m) || !recipe.meal.length ? m : recipe.meal[0])
     setServings(1)
     setDate(today)
     setMode('log')

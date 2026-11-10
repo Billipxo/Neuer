@@ -12,7 +12,7 @@ interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { to: '/', label: 'Heute', icon: Home },
-  { to: '/rezepte', label: 'Rezepte', icon: ChefHat },
+  { to: '/rezepte', label: 'Kochbuch', icon: ChefHat },
   { to: '/planer', label: 'Planer', icon: CalendarDays },
   { to: '/einkauf', label: 'Einkauf', icon: ShoppingBasket },
   { to: '/verlauf', label: 'Verlauf', icon: LineChart },

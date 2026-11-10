@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { filterRecipes, recommendRecipes, RECIPES, roundAmount, scaleIngredients, recipeVeggies, getRecipe } from './recipes'
 import { CATEGORY_ORDER } from './shopping'
+import { CHAPTERS } from '../data/chapters'
 import { MEAL_TYPES } from '../types'
 
 describe('Rezept-Datensatz', () => {
@@ -11,7 +12,9 @@ describe('Rezept-Datensatz', () => {
       expect(r.servings).toBeGreaterThan(0)
       expect(r.ingredients.length).toBeGreaterThan(0)
       expect(r.steps.length).toBeGreaterThan(0)
-      expect(r.meal.length).toBeGreaterThan(0)
+      // Grundrezepte (Saucen, Dips, Teige) gehören zu keiner Mahlzeit
+      if (r.chapter !== 'grundrezepte') expect(r.meal.length, r.id).toBeGreaterThan(0)
+      expect(CHAPTERS.map((c) => c.id), r.id).toContain(r.chapter)
       r.meal.forEach((m) => expect(MEAL_TYPES).toContain(m))
       r.ingredients.forEach((i) => expect(CATEGORY_ORDER).toContain(i.category))
       expect(r.tips?.length, r.id).toBeGreaterThan(0)

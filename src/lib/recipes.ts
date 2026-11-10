@@ -18,6 +18,7 @@ export function getRecipe(id: string | null | undefined): Recipe | undefined {
 }
 
 export interface RecipeFilter {
+  chapter?: string | null
   meal?: MealType | null
   maxKcal?: number | null
   maxTime?: number | null
@@ -36,6 +37,7 @@ function normalize(s: string) {
 export function filterRecipes(recipes: Recipe[], f: RecipeFilter): Recipe[] {
   const kw = f.keyword ? normalize(f.keyword.trim()) : ''
   return recipes.filter((r) => {
+    if (f.chapter && r.chapter !== f.chapter) return false
     if (f.meal && !r.meal.includes(f.meal)) return false
     if (f.maxKcal && r.nutrition.kcal > f.maxKcal) return false
     if (f.maxTime && r.time_min > f.maxTime) return false
