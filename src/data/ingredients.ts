@@ -304,6 +304,13 @@ add('Meerrettich', [48, 1.2, 8.0, 0.7, 3.3], '', { u: { TL: 5, EL: 15 } })
 add('Camembert', [290, 20, 0.1, 23.5, 0], 'D', { u: { Stück: 125 }, base: 'Käse' })
 add('Geflügelwürstchen', [200, 14, 1.0, 15.5, 0], 'M', { u: { Stück: 50 }, base: 'Würstchen' })
 add('Weißkohl', [25, 1.3, 3.3, 0.1, 2.5], '', { u: { Stück: 1000 }, s: [1, 2, 3, 4, 8, 9, 10, 11, 12] })
+add('Rucola', [25, 2.6, 2.1, 0.7, 1.6], '', { s: [5, 6, 7, 8, 9, 10] })
+add('Ananas', [50, 0.5, 11.8, 0.1, 1.4], '', { u: { Stück: 900 } })
+add('Kopfsalat', [13, 1.3, 1.1, 0.2, 1.1], '', { u: { Stück: 250 }, base: 'Salat', s: [5, 6, 7, 8, 9, 10] })
+add('Ricotta', [135, 9.0, 3.5, 9.5, 0], 'D')
+add('Makkaroni', [355, 12.5, 70, 1.5, 3.0], 'G', { base: 'Nudeln' })
+add('Cannelloni', [350, 12.5, 70, 1.5, 3.0], 'G', { u: { Stück: 9 } })
+add('Tortellini (frisch)', [265, 10, 38, 7.5, 2.5], 'GEDL', { base: 'Tortellini' })
 
 export const INGREDIENTS: ReadonlyMap<string, IngredientInfo> = new Map(LIST.map((i) => [i.name, i]))
 export const INGREDIENT_LIST: readonly IngredientInfo[] = LIST

@@ -14892,5 +14892,3820 @@
   "tips": [
    "Ein Klassiker aus Österreich und Süddeutschland – die Frittaten erst im Teller mit Brühe übergießen, sonst werden sie weich."
   ]
+ },
+ {
+  "id": "caprese-vollkornbrot",
+  "title": "Caprese mit Vollkornbrot",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Tomate",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "reif"
+   },
+   {
+    "name": "Mozzarella (light)",
+    "amount": 125,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkornbrot",
+    "amount": 2,
+    "unit": "Scheibe",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Tomaten und Mozzarella in gleich dicke Scheiben schneiden.",
+   "Abwechselnd dachziegelartig auf Tellern anrichten und Basilikumblätter dazwischenstecken.",
+   "Mit Olivenöl und Balsamico beträufeln, mit grobem Salz und Pfeffer würzen.",
+   "Mit geröstetem Vollkornbrot servieren."
+  ],
+  "tips": [
+   "Tomaten nie aus dem Kühlschrank – bei Zimmertemperatur schmecken sie viel aromatischer."
+  ]
+ },
+ {
+  "id": "salat-nicoise",
+  "title": "Nizza-Salat mit Thunfisch und Ei",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "grüne Bohnen",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Römersalat",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Thunfisch (naturell)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Oliven",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kartoffeln in der Schale 20 Minuten garen, pellen und in Scheiben schneiden. Bohnen in den letzten 8 Minuten mitgaren und kalt abschrecken.",
+   "Eier 9 Minuten hart kochen, abschrecken, pellen und vierteln.",
+   "Öl, Essig, Senf, Salz und Pfeffer zu einer Vinaigrette verrühren.",
+   "Salat zerpflücken, Tomaten halbieren. Alles mit Kartoffeln und Bohnen auf Tellern anrichten.",
+   "Thunfisch, Eier und Oliven darauf verteilen und mit der Vinaigrette beträufeln."
+  ],
+  "tips": [
+   "Ein Salat, der als ganze Mahlzeit satt macht – gut auch zum Mitnehmen, Dressing separat."
+  ]
+ },
+ {
+  "id": "waldorfsalat-leicht",
+  "title": "Leichter Waldorfsalat",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 15,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Knollensellerie",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Apfel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitronensaft",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 40,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Weintrauben",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Sellerie schälen und in sehr feine Stifte schneiden oder grob raspeln. Äpfel entkernen und ebenso schneiden, sofort mit Zitronensaft mischen.",
+   "Joghurt mit Senf, Honig, Salz und Pfeffer verrühren.",
+   "Sellerie und Äpfel mit dem Dressing mischen, Trauben halbieren und unterheben.",
+   "Walnüsse grob hacken, kurz rösten und darüberstreuen."
+  ],
+  "tips": [
+   "Mit Joghurt statt Mayonnaise wird der Klassiker aus New York deutlich leichter."
+  ]
+ },
+ {
+  "id": "orientalischer-kichererbsensalat",
+  "title": "Orientalischer Kichererbsensalat",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 15,
+  "servings": 3,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Kichererbsen",
+    "amount": 2,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomate",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kichererbsen abspülen und gut abtropfen lassen.",
+   "Gurke, Tomaten und Paprika klein würfeln, Zwiebel fein hacken, Petersilie grob hacken.",
+   "Zitronensaft, Öl, Kreuzkümmel, Salz und Pfeffer verrühren.",
+   "Alles mischen und mindestens 10 Minuten ziehen lassen."
+  ],
+  "tips": [
+   "Hält sich 2 Tage im Kühlschrank – perfekt als Mittagessen zum Mitnehmen."
+  ]
+ },
+ {
+  "id": "gurkensalat-dill",
+  "title": "Gurkensalat mit Dill und Joghurt",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Salatgurke",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Dill",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Gurken waschen und in hauchdünne Scheiben hobeln.",
+   "Mit einer Prise Salz mischen, 10 Minuten ziehen lassen und das entstandene Wasser abgießen.",
+   "Joghurt mit Essig, Honig, Pfeffer und gehacktem Dill verrühren und mit den Gurken mischen."
+  ],
+  "rest_min": 10,
+  "tips": [
+   "Das Salzen vorab verhindert, dass der Salat wässrig wird."
+  ]
+ },
+ {
+  "id": "krautsalat",
+  "title": "Krautsalat mit Karotten",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 20,
+  "servings": 6,
+  "tags": [
+   "klassiker",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Weißkohl",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Essig",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kohl vierteln, den Strunk entfernen und in sehr feine Streifen hobeln. Karotten grob raspeln, Zwiebel fein würfeln.",
+   "Kohl mit 1 TL Salz in einer großen Schüssel 3 Minuten kräftig durchkneten, bis er weicher wird.",
+   "Essig, Öl, Honig, Kümmel und Pfeffer verrühren und mit Kohl, Karotten und Zwiebel mischen.",
+   "Mindestens 30 Minuten, besser über Nacht, durchziehen lassen."
+  ],
+  "rest_min": 30,
+  "tips": [
+   "Krautsalat wird mit der Zeit immer besser und hält sich 4–5 Tage im Kühlschrank."
+  ]
+ },
+ {
+  "id": "rucola-birne-walnuss",
+  "title": "Rucola mit Birne, Walnüssen und Parmesan",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Rucola",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Birne",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 20,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Rucola waschen und trocken schleudern. Birne entkernen und in dünne Spalten schneiden.",
+   "Walnüsse in einer Pfanne ohne Fett 3 Minuten rösten.",
+   "Öl, Balsamico, Honig, Salz und Pfeffer zu einem Dressing verrühren.",
+   "Rucola mit dem Dressing mischen, mit Birne und Walnüssen anrichten und den Parmesan darüberhobeln."
+  ],
+  "tips": [
+   "Im Herbst mit frischen, saftigen Birnen am besten."
+  ]
+ },
+ {
+  "id": "spinat-erdbeer-salat",
+  "title": "Spinatsalat mit Erdbeeren und Feta",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Babyspinat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Erdbeeren",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Feta",
+    "amount": 80,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Mandeln",
+    "amount": 20,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Spinat waschen, Erdbeeren putzen und vierteln.",
+   "Mandeln grob hacken und ohne Fett rösten.",
+   "Öl, Balsamico, Senf, Salz und Pfeffer verrühren.",
+   "Spinat und Erdbeeren mit dem Dressing mischen, Feta darüberbröseln und mit Mandeln bestreuen."
+  ],
+  "tips": [
+   "Süß, salzig, knackig – im Frühsommer zur Erdbeersaison ein Highlight."
+  ]
+ },
+ {
+  "id": "asia-nudelsalat-erdnuss",
+  "title": "Asia-Nudelsalat mit Erdnussdressing",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 3,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Reisnudeln",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Edamame (TK, geschält)",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Erdnussbutter",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ahornsirup",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Reisnudeln nach Packungsangabe einweichen, abgießen und kalt abspülen. Edamame 3 Minuten garen und abschrecken.",
+   "Karotten, Gurke und Paprika in feine Streifen schneiden.",
+   "Erdnussbutter mit Sojasauce, Limettensaft, Ahornsirup, geriebenem Ingwer und 4–5 EL warmem Wasser glatt rühren.",
+   "Nudeln, Gemüse und Edamame mit dem Dressing mischen.",
+   "Mit Koriander bestreuen."
+  ],
+  "tips": [
+   "Schmeckt kalt und ist ideal für die Mittagspause – vor dem Essen noch einmal durchmischen."
+  ]
+ },
+ {
+  "id": "couscous-gemuese-salat",
+  "title": "Couscous-Gemüse-Salat mit Minze",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 20,
+  "servings": 3,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Couscous",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "für das Gemüse"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Minze",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "für das Dressing"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Couscous mit 200 ml kochendem Salzwasser übergießen, abdecken und 5 Minuten quellen lassen. Mit einer Gabel auflockern.",
+   "Paprika und Zucchini würfeln und in einer Pfanne im Öl 5 Minuten anbraten.",
+   "Tomaten halbieren, Kräuter hacken.",
+   "Zitronensaft, Öl, Kreuzkümmel, Salz und Pfeffer verrühren und mit allen Zutaten mischen."
+  ],
+  "tips": [
+   "Wird lauwarm wie kalt gegessen und hält sich 2 Tage."
+  ]
+ },
+ {
+  "id": "lachs-quinoa-bowl",
+  "title": "Lachs-Quinoa-Bowl mit Gurke und Avocado",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Quinoa",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Lachsfilet",
+    "amount": 250,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Avocado",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Zitronensaft",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Dill",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Quinoa heiß abspülen und in der doppelten Menge Salzwasser 15 Minuten garen.",
+   "Lachs salzen und im Öl auf der Hautseite 4 Minuten braten, wenden und 2 Minuten fertig garen. In Stücke zupfen.",
+   "Gurke und Avocado in Scheiben schneiden.",
+   "Joghurt mit Zitronensaft, gehacktem Dill, Salz und Pfeffer verrühren.",
+   "Quinoa, Spinat, Gurke, Avocado und Lachs in Schalen anrichten und mit dem Dill-Joghurt beträufeln."
+  ],
+  "tips": [
+   "Lachs aus der Heißluftfritteuse: 190 °C, 8–10 Minuten."
+  ]
+ },
+ {
+  "id": "haehnchen-avocado-salat",
+  "title": "Hähnchen-Avocado-Salat mit Mais",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 250,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Römersalat",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Avocado",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Mais",
+    "amount": 140,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Hähnchen mit Paprikapulver und Salz würzen und im Rapsöl pro Seite 5–6 Minuten braten, bis es durchgegart ist. Kurz ruhen lassen und in Streifen schneiden.",
+   "Salat in Streifen schneiden, Avocado würfeln, Tomaten halbieren, Mais abtropfen lassen.",
+   "Limettensaft, Olivenöl, Salz und Pfeffer verrühren.",
+   "Alles mischen und das Hähnchen darauf verteilen."
+  ],
+  "tips": [
+   "Mais aus der Dose abspülen – das reduziert Salz."
+  ]
+ },
+ {
+  "id": "mexikanischer-bohnensalat",
+  "title": "Mexikanischer Bohnensalat",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 15,
+  "servings": 4,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Kidneybohnen",
+    "amount": 2,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mais",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Limette",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Bohnen und Mais abspülen und abtropfen lassen.",
+   "Paprika würfeln, Zwiebel fein hacken.",
+   "Limettensaft, Öl, Kreuzkümmel, Chili, Salz und Pfeffer verrühren.",
+   "Alles mischen und mindestens 15 Minuten ziehen lassen. Mit Koriander bestreuen."
+  ],
+  "tips": [
+   "Passt zu Gegrilltem oder gefüllt in einen Wrap."
+  ]
+ },
+ {
+  "id": "mediterraner-nudelsalat",
+  "title": "Mediterraner Nudelsalat mit Feta",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 25,
+  "servings": 4,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Vollkorn-Penne",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Oliven",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Feta",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Rucola",
+    "amount": 50,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Nudeln in Salzwasser bissfest kochen, abgießen und kalt abschrecken.",
+   "Tomaten halbieren, Gurke würfeln, Oliven halbieren.",
+   "Öl, Balsamico, Oregano, Salz und Pfeffer zu einem Dressing verrühren.",
+   "Nudeln, Gemüse und Dressing mischen, Feta darüberbröseln.",
+   "Rucola erst kurz vor dem Servieren unterheben."
+  ],
+  "tips": [
+   "Ohne Mayonnaise – das Dressing auf Öl-Essig-Basis hält den Salat frisch."
+  ]
+ },
+ {
+  "id": "reissalat-haehnchen-ananas",
+  "title": "Reissalat mit Hähnchen und Ananas",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 30,
+  "servings": 4,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Hähnchenbrust",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ananas",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Erbsen (TK)",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Currypulver",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitronensaft",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe kochen und abkühlen lassen. Erbsen 3 Minuten garen und abschrecken.",
+   "Hähnchen würfeln, mit Salz würzen und im Öl 6–8 Minuten rundherum durchbraten.",
+   "Ananas und Paprika würfeln, Frühlingszwiebeln in Ringe schneiden.",
+   "Joghurt mit Curry, Zitronensaft, Salz und Pfeffer verrühren.",
+   "Alles mischen und mindestens 20 Minuten durchziehen lassen."
+  ],
+  "tips": [
+   "Ein Partyklassiker – mit Joghurt statt Mayonnaise leichter."
+  ]
+ },
+ {
+  "id": "feldsalat-kuerbis-kerne",
+  "title": "Feldsalat mit geröstetem Kürbis und Kernen",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hokkaido-Kürbis",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Feldsalat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kürbiskerne",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ziegenkäse",
+    "amount": 60,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kürbis entkernen, in Spalten schneiden und mit der Hälfte des Öls, Thymian und Salz mischen.",
+   "Bei 200 °C 15 Minuten in der Heißluftfritteuse (oder 25 Minuten im Ofen bei 200 °C Umluft) rösten, nach der Hälfte wenden.",
+   "Kürbiskerne ohne Fett rösten, bis sie aufpoppen.",
+   "Restliches Öl, Balsamico, Honig, Senf, Salz und Pfeffer verrühren und mit dem Feldsalat mischen.",
+   "Mit dem warmen Kürbis, zerbröseltem Ziegenkäse und den Kernen anrichten."
+  ],
+  "tips": [
+   "Warmer Kürbis auf kühlem Salat – ein typischer Herbstteller."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 15
+  }
+ },
+ {
+  "id": "rote-bete-apfel-salat",
+  "title": "Rote-Bete-Apfel-Salat mit Meerrettich",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 4,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Rote Bete (vorgegart)",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Apfel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Meerrettich",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Rote Bete und Äpfel in feine Stifte schneiden oder grob raspeln.",
+   "Joghurt mit Meerrettich, Essig, Öl, Salz und Pfeffer verrühren.",
+   "Mit Roter Bete und Äpfeln mischen und mit Schnittlauch bestreuen."
+  ],
+  "tips": [
+   "Rote Bete färbt stark – Einmalhandschuhe schützen die Hände."
+  ]
+ },
+ {
+  "id": "lachs-poke-bowl",
+  "title": "Poke-Bowl mit gebratenem Lachs und Mango",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Lachsfilet",
+    "amount": 250,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mango (TK)",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "aufgetaut"
+   },
+   {
+    "name": "Edamame (TK, geschält)",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Avocado",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Sesam",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe kochen. Edamame 3 Minuten garen.",
+   "Lachs in Würfel schneiden, mit 1 EL Sojasauce marinieren und im Öl rundherum 3–4 Minuten braten.",
+   "Mango, Avocado und Gurke würfeln.",
+   "Reis in Schalen verteilen und alle Zutaten nebeneinander darauf anrichten.",
+   "Mit restlicher Sojasauce, Limettensaft und Sesam vollenden."
+  ],
+  "tips": [
+   "Statt rohem Fisch kommt hier gebratener Lachs in die Bowl – einfacher in der Küche zu Hause."
+  ]
+ },
+ {
+  "id": "burrito-bowl-haehnchen",
+  "title": "Burrito-Bowl mit Hähnchen",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Hähnchenbrust",
+    "amount": 250,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kidneybohnen",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mais",
+    "amount": 140,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Avocado",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe kochen. Bohnen und Mais abspülen und abtropfen lassen.",
+   "Hähnchen in Streifen schneiden, mit Kreuzkümmel, Paprikapulver und Salz würzen und im Öl 6–7 Minuten durchbraten.",
+   "Paprika würfeln, Avocado in Spalten schneiden. Joghurt mit dem Saft einer halben Limette, Salz und Pfeffer verrühren.",
+   "Reis in Schalen verteilen und Hähnchen, Bohnen, Mais, Paprika und Avocado darauf anrichten.",
+   "Mit Limetten-Joghurt beträufeln und mit Limettenspalten servieren."
+  ],
+  "tips": [
+   "Alle Komponenten lassen sich vorbereiten – die Bowl ist dann in 5 Minuten zusammengestellt."
+  ]
+ },
+ {
+  "id": "greek-bowl-souvlaki",
+  "title": "Greek-Bowl mit Hähnchen, Bulgur und Tzatziki",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 250,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Bulgur",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Griechischer Joghurt 2 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Feta",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Hähnchen würfeln und mit der Hälfte des Öls, Oregano, etwas Zitronensaft und Salz 10 Minuten marinieren.",
+   "Bulgur mit 200 ml kochendem Salzwasser übergießen und 10 Minuten quellen lassen.",
+   "Für das Tzatziki ein Drittel der Gurke raspeln, ausdrücken und mit Joghurt, gepresstem Knoblauch und Salz verrühren. Rest der Gurke würfeln.",
+   "Hähnchen im restlichen Öl 6–7 Minuten rundherum braten, bis es durchgegart ist.",
+   "Bulgur, Hähnchen, Gurke, Tomaten und Zwiebelringe in Schalen anrichten, mit Tzatziki und Feta toppen."
+  ],
+  "tips": [
+   "Die Hähnchenwürfel lassen sich auch auf Spieße stecken und grillen."
+  ]
+ },
+ {
+  "id": "mezze-bowl",
+  "title": "Mezze-Bowl mit Hummus, Bulgur und Gemüse",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Bulgur",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kichererbsen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat",
+    "note": "halb für Hummus, halb geröstet"
+   },
+   {
+    "name": "Tahin",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitronensaft",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Bulgur mit 200 ml kochendem Salzwasser übergießen und 10 Minuten quellen lassen.",
+   "Die Hälfte der Kichererbsen mit Tahin, Zitronensaft, Knoblauch, 2–3 EL Wasser und Salz zu Hummus pürieren.",
+   "Restliche Kichererbsen trocken tupfen und mit Öl und Paprikapulver in einer Pfanne 5 Minuten knusprig rösten.",
+   "Gurke und Tomaten würfeln, Karotte raspeln, Petersilie hacken.",
+   "Alles in Schalen anrichten und mit Hummus und gerösteten Kichererbsen servieren."
+  ],
+  "tips": [
+   "Komplett pflanzlich und trotzdem eiweißreich."
+  ]
+ },
+ {
+  "id": "linsen-bowl-ofengemuese",
+  "title": "Linsen-Bowl mit Ofengemüse und Joghurt",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 2,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Tellerlinsen",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Süßkartoffel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 50,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Zitronensaft",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Linsen in Wasser 25 Minuten bissfest garen, abgießen und salzen.",
+   "Süßkartoffel, Paprika und Zwiebel in Stücke schneiden, mit Öl, Kreuzkümmel und Salz mischen.",
+   "Bei 200 °C 15–18 Minuten in der Heißluftfritteuse oder 25 Minuten im Ofen rösten.",
+   "Joghurt mit Zitronensaft, Salz und Pfeffer verrühren.",
+   "Spinat, Linsen und Gemüse in Schalen anrichten und mit dem Joghurt servieren."
+  ],
+  "tips": [
+   "Linsen und Gemüse vorbereiten – dann ist die Bowl auch kalt ein gutes Mittagessen."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 18
+  }
+ },
+ {
+  "id": "gurken-radieschen-salat",
+  "title": "Gurken-Radieschen-Salat",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Salatgurke",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Radieschen",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Essig",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Gurke und Radieschen in dünne Scheiben hobeln.",
+   "Essig, Öl, Honig, Salz und Pfeffer verrühren.",
+   "Mit dem Gemüse und dem in Röllchen geschnittenen Schnittlauch mischen."
+  ],
+  "tips": [
+   "Eine knackige Beilage zu Fisch, Frikadellen oder Kartoffeln."
+  ]
+ },
+ {
+  "id": "tomatensalat-zwiebeln",
+  "title": "Tomatensalat mit Zwiebeln",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Tomate",
+    "amount": 6,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese",
+    "note": "oder Schnittlauch"
+   }
+  ],
+  "steps": [
+   "Tomaten in Scheiben, Zwiebel in sehr feine Ringe schneiden.",
+   "Auf einer Platte anrichten.",
+   "Mit Öl und Balsamico beträufeln, mit Salz und Pfeffer würzen und mit Kräutern bestreuen. 10 Minuten ziehen lassen."
+  ],
+  "tips": [
+   "Erst kurz vor dem Servieren salzen, sonst ziehen die Tomaten zu viel Wasser."
+  ]
+ },
+ {
+  "id": "gruener-salat-senf-honig",
+  "title": "Grüner Salat mit Senf-Honig-Dressing",
+  "chapter": "salate",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kopfsalat",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Essig",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Salat waschen, in mundgerechte Stücke zupfen und gut trocken schleudern.",
+   "Gurke in dünne Scheiben schneiden.",
+   "Senf, Honig, Essig, Öl, Salz und Pfeffer in einem Schraubglas kräftig schütteln.",
+   "Salat und Gurke kurz vor dem Servieren mit dem Dressing mischen und mit Schnittlauch bestreuen."
+  ],
+  "tips": [
+   "Nur trockener Salat nimmt das Dressing gut an.",
+   "Das Dressing hält sich im Glas eine Woche im Kühlschrank."
+  ]
+ },
+ {
+  "id": "spaghetti-bolognese",
+  "title": "Spaghetti Bolognese",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 60,
+  "servings": 4,
+  "tags": [
+   "klassiker",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rinderhack (mager)",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knollensellerie",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 2,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkornspaghetti",
+    "amount": 320,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Zwiebel, Karotten, Sellerie und Knoblauch sehr fein würfeln – je feiner, desto besser verbindet sich die Sauce.",
+   "Öl in einem breiten Topf erhitzen und das Hack bei hoher Hitze krümelig und kräftig braun anbraten.",
+   "Gemüse zugeben und 5 Minuten mitbraten. Tomatenmark einrühren und 2 Minuten rösten.",
+   "Tomaten, Oregano und 150 ml Wasser zugeben und offen bei kleiner Hitze mindestens 30 Minuten köcheln, gelegentlich umrühren.",
+   "Spaghetti bissfest kochen, mit der Sauce mischen und mit Parmesan servieren."
+  ],
+  "tips": [
+   "Je länger die Sauce köchelt, desto runder wird sie – am Wochenende gern eine Stunde.",
+   "Die Sauce lässt sich portionsweise einfrieren."
+  ]
+ },
+ {
+  "id": "carbonara-leicht",
+  "title": "Spaghetti Carbonara mit Schinken und Erbsen",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkornspaghetti",
+    "amount": 180,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kochschinken (mager)",
+    "amount": 100,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "in Streifen"
+   },
+   {
+    "name": "Erbsen (TK)",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch",
+    "note": "fein gerieben"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Pfeffer",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Spaghetti in Salzwasser bissfest kochen. In den letzten 3 Minuten die Erbsen mitkochen.",
+   "Eier mit dem Parmesan und viel schwarzem Pfeffer verquirlen.",
+   "Schinken im Öl in einer großen Pfanne 2 Minuten anbraten.",
+   "Eine Tasse Nudelwasser abnehmen. Nudeln und Erbsen abgießen und in die Pfanne geben. Pfanne vom Herd nehmen.",
+   "Ei-Käse-Mischung und etwas Nudelwasser zügig unterrühren, bis eine cremige Sauce entsteht – die Hitze der Nudeln reicht, das Ei soll nicht stocken."
+  ],
+  "tips": [
+   "Pfanne unbedingt vom Herd ziehen, bevor die Eier dazukommen – sonst gibt es Rührei."
+  ]
+ },
+ {
+  "id": "aglio-e-olio",
+  "title": "Spaghetti Aglio e Olio mit Petersilie",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 15,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkornspaghetti",
+    "amount": 180,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 3,
+    "unit": "Zehe",
+    "category": "obst_gemuese",
+    "note": "in dünnen Scheiben"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 20,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Spaghetti in reichlich Salzwasser bissfest kochen.",
+   "Öl in einer großen Pfanne bei kleiner Hitze erwärmen, Knoblauch und Chili darin 2–3 Minuten sanft goldgelb ziehen lassen.",
+   "Eine Tasse Nudelwasser abnehmen, Spaghetti abgießen und in die Pfanne geben.",
+   "Mit gehackter Petersilie und einem Schuss Nudelwasser durchschwenken, bis die Nudeln glänzen. Mit Parmesan servieren."
+  ],
+  "tips": [
+   "Knoblauch nicht braun werden lassen – sonst wird er bitter."
+  ]
+ },
+ {
+  "id": "penne-paprika-tomate",
+  "title": "Penne mit Paprika-Tomaten-Sauce",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkorn-Penne",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Penne in Salzwasser bissfest kochen.",
+   "Zwiebel und Knoblauch hacken, Paprika in Streifen schneiden.",
+   "Öl erhitzen, Zwiebel, Knoblauch und Paprika 6 Minuten braten, bis die Paprika weich ist. Paprikapulver einrühren.",
+   "Tomaten zugeben und 10 Minuten köcheln. Nach Wunsch grob pürieren und abschmecken.",
+   "Penne mit der Sauce mischen und mit Parmesan und Basilikum servieren."
+  ],
+  "tips": [
+   "Püriert wird die Sauce cremig und Kinder merken das Gemüse kaum."
+  ]
+ },
+ {
+  "id": "pasta-e-ceci",
+  "title": "Pasta mit Kichererbsen und Rosmarin",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 4,
+  "tags": [
+   "one-pot"
+  ],
+  "ingredients": [
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rosmarin",
+    "amount": 1,
+    "unit": "Zweig",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kichererbsen",
+    "amount": 2,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 1,
+    "unit": "l",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkorn-Penne",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Zwiebel und Knoblauch fein hacken und mit dem Rosmarinzweig im Öl 4 Minuten andünsten. Tomatenmark kurz mitrösten.",
+   "Kichererbsen abspülen. Die Hälfte zugeben, die andere Hälfte mit etwas Brühe pürieren und ebenfalls zugeben.",
+   "Restliche Brühe angießen, aufkochen und die Nudeln darin garen, bis sie bissfest sind (ca. 10–12 Minuten). Bei Bedarf Wasser nachgießen.",
+   "Rosmarin entfernen, mit Salz und Pfeffer abschmecken und mit Parmesan servieren."
+  ],
+  "tips": [
+   "Ein italienischer Klassiker zwischen Suppe und Pasta – die pürierten Kichererbsen machen ihn cremig."
+  ]
+ },
+ {
+  "id": "cannelloni-spinat-ricotta",
+  "title": "Cannelloni mit Spinat und Ricotta",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 60,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Blattspinat (TK)",
+    "amount": 450,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "aufgetaut, gut ausgedrückt"
+   },
+   {
+    "name": "Ricotta",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Cannelloni",
+    "amount": 16,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 500,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mozzarella (light)",
+    "amount": 125,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C Umluft vorheizen. Spinat sehr gut ausdrücken und hacken.",
+   "Spinat mit Ricotta, Ei, Muskat, Salz und Pfeffer verrühren und mit einem Teelöffel oder Spritzbeutel in die Cannelloni füllen.",
+   "Passierte Tomaten mit gepresstem Knoblauch, Oregano, Salz und Pfeffer verrühren. Ein Drittel in eine Auflaufform geben.",
+   "Cannelloni nebeneinander hineinlegen und mit der restlichen Sauce bedecken – sie müssen vollständig bedeckt sein, sonst werden sie nicht weich.",
+   "Mozzarella darauf zupfen und 35–40 Minuten backen."
+  ],
+  "tips": [
+   "Ungekochte Cannelloni direkt füllen – sie garen in der Sauce."
+  ]
+ },
+ {
+  "id": "mac-and-cheese-blumenkohl",
+  "title": "Mac and Cheese mit Blumenkohl",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Makkaroni",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Blumenkohl",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "klein"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 400,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Bergkäse",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Makkaroni in Salzwasser kochen. Blumenkohl in kleine Röschen teilen und 6 Minuten vor Ende mitkochen.",
+   "Butter schmelzen, Mehl einrühren und 1 Minute anschwitzen. Milch nach und nach einrühren und 5 Minuten köcheln, bis die Sauce bindet.",
+   "Käse und Senf einrühren, bis er geschmolzen ist. Mit Muskat, Salz und Pfeffer abschmecken.",
+   "Nudeln und Blumenkohl abgießen und mit der Käsesauce mischen."
+  ],
+  "tips": [
+   "Der Blumenkohl versteckt sich in der Käsesauce – ideal für Gemüsemuffel.",
+   "Für eine Kruste mit Paniermehl bestreuen und 8 Minuten bei 200 °C überbacken."
+  ]
+ },
+ {
+  "id": "nudelauflauf-brokkoli-schinken",
+  "title": "Nudelauflauf mit Brokkoli und Schinken",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Vollkorn-Penne",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Brokkoli",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kochschinken (mager)",
+    "amount": 150,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Eier",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 300,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gouda",
+    "amount": 80,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C Umluft vorheizen. Nudeln 3 Minuten kürzer als angegeben kochen, Brokkoliröschen in den letzten 3 Minuten mitgaren. Abgießen.",
+   "Schinken in Streifen schneiden und mit Nudeln und Brokkoli in eine Auflaufform geben.",
+   "Eier mit Milch, Muskat, Salz und Pfeffer verquirlen und darübergießen.",
+   "Mit Käse bestreuen und 25 Minuten backen, bis der Guss gestockt und die Oberfläche goldbraun ist."
+  ],
+  "tips": [
+   "In der Heißluftfritteuse in einer passenden Form: 170 °C, 18–20 Minuten."
+  ]
+ },
+ {
+  "id": "spaetzle-pilz-spinat-pfanne",
+  "title": "Spätzle-Pfanne mit Pilzen und Spinat",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Champignons",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Spätzle (frisch)",
+    "amount": 400,
+    "unit": "g",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kochsahne 15 %",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Bergkäse",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Pilze in Scheiben schneiden, Zwiebel würfeln.",
+   "Öl in einer großen Pfanne erhitzen und die Pilze 5 Minuten kräftig anbraten. Zwiebel 2 Minuten mitbraten.",
+   "Spätzle zugeben und 4 Minuten mitbraten, bis sie leicht gebräunt sind.",
+   "Spinat und Kochsahne unterrühren und 2 Minuten köcheln, bis der Spinat zusammengefallen ist. Abschmecken.",
+   "Mit geriebenem Käse und Schnittlauch servieren."
+  ],
+  "tips": [
+   "Frische Spätzle aus dem Kühlregal müssen nicht gekocht werden."
+  ]
+ },
+ {
+  "id": "gnocchi-kuerbis-salbei",
+  "title": "Gnocchi mit Kürbis und Salbei",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Gnocchi",
+    "amount": 400,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Hokkaido-Kürbis",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "TL",
+    "category": "milch"
+   },
+   {
+    "name": "Salbei",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 20,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kürbis entkernen und in 1 cm große Würfel schneiden.",
+   "Öl in einer großen Pfanne erhitzen und die Kürbiswürfel 8 Minuten braten, bis sie weich und gebräunt sind. Salzen und herausnehmen.",
+   "Gnocchi in der Pfanne 5–6 Minuten rundherum goldbraun braten.",
+   "Butter und Salbeiblätter zugeben, 1 Minute schwenken, bis der Salbei knusprig ist. Kürbis zurückgeben.",
+   "Mit Parmesan und gehackten Walnüssen servieren."
+  ],
+  "tips": [
+   "Gnocchi direkt aus der Packung in die Pfanne – vorkochen ist nicht nötig."
+  ]
+ },
+ {
+  "id": "gnocchi-auflauf-airfryer",
+  "title": "Gnocchi-Auflauf mit Tomaten und Mozzarella",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Gnocchi",
+    "amount": 400,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mozzarella (light)",
+    "amount": 125,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Passierte Tomaten mit gepresstem Knoblauch, Oregano, Salz und Pfeffer verrühren.",
+   "Gnocchi und halbierte Cherrytomaten in einer ofenfesten Form, die in den Korb passt, mit der Sauce mischen.",
+   "Mozzarella in Stücke zupfen und darauf verteilen.",
+   "Bei 190 °C 15–18 Minuten garen, bis die Sauce blubbert und der Käse goldbraun ist. Mit Basilikum servieren."
+  ],
+  "tips": [
+   "Im Backofen: 200 °C Umluft, ca. 20 Minuten."
+  ],
+  "airfryer": {
+   "temp_c": 190,
+   "time_min": 18
+  }
+ },
+ {
+  "id": "tortellini-tomatensauce",
+  "title": "Tortellini in Tomaten-Sahne-Sauce",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Tortellini (frisch)",
+    "amount": 500,
+    "unit": "g",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 400,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kochsahne 15 %",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Zwiebel und Knoblauch fein hacken und im Öl 3 Minuten andünsten.",
+   "Passierte Tomaten zugeben und 8 Minuten köcheln. Kochsahne einrühren und abschmecken.",
+   "Tortellini nach Packungsangabe in Salzwasser garen (meist 2–4 Minuten) und abgießen.",
+   "Spinat unter die Sauce rühren, bis er zusammenfällt, dann die Tortellini unterheben.",
+   "Mit Basilikum servieren."
+  ],
+  "tips": [
+   "Frische Tortellini aus dem Kühlregal sind in wenigen Minuten gar."
+  ]
+ },
+ {
+  "id": "gebratene-mie-nudeln-haehnchen",
+  "title": "Gebratene Mie-Nudeln mit Hähnchen und Gemüse",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Mie-Nudeln",
+    "amount": 125,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Hähnchenbrust",
+    "amount": 250,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Weißkohl",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Nudeln nach Packungsangabe garen, abgießen und kalt abspülen.",
+   "Hähnchen in dünne Streifen, Karotten und Paprika in feine Streifen, Kohl in dünne Streifen schneiden.",
+   "Öl im Wok oder in einer großen Pfanne stark erhitzen und das Hähnchen 4 Minuten braten. An den Rand schieben.",
+   "Gemüse, Knoblauch und Ingwer zugeben und 3 Minuten unter Rühren braten, es soll knackig bleiben.",
+   "Nudeln und Sojasauce zugeben, alles 2 Minuten durchschwenken und mit Frühlingszwiebeln bestreuen."
+  ],
+  "tips": [
+   "Im Wok bei sehr hoher Hitze arbeiten und ständig rühren – so bekommt alles Röstaroma."
+  ]
+ },
+ {
+  "id": "reisnudel-garnelen-pfanne",
+  "title": "Reisnudel-Pfanne mit Garnelen und Gemüse",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Reisnudeln",
+    "amount": 125,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Garnelen",
+    "amount": 200,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Reisnudeln nach Packungsangabe einweichen und abtropfen lassen.",
+   "Paprika und Zucchini in Streifen schneiden, Knoblauch hacken.",
+   "Öl im Wok stark erhitzen und die Garnelen 2 Minuten braten, bis sie rosa sind. Herausnehmen.",
+   "Gemüse und Knoblauch 3 Minuten braten, Nudeln, Sojasauce und Chili zugeben und durchschwenken.",
+   "Garnelen zurückgeben, mit Limettensaft abschmecken und mit Koriander servieren."
+  ],
+  "tips": [
+   "Garnelen nur kurz braten – sie werden schnell zäh."
+  ]
+ },
+ {
+  "id": "erdnuss-nudeln-tofu",
+  "title": "Erdnuss-Nudeln mit Tofu und Brokkoli",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkornspaghetti",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Brokkoli",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tofu (natur)",
+    "amount": 200,
+    "unit": "g",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Erdnussbutter",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ahornsirup",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Erdnüsse (geröstet, ungesalzen)",
+    "amount": 20,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Spaghetti kochen, Brokkoliröschen in den letzten 4 Minuten mitgaren. Eine Tasse Nudelwasser aufheben.",
+   "Tofu würfeln und im Öl 6–8 Minuten knusprig braten.",
+   "Erdnussbutter, Sojasauce, Limettensaft, Ahornsirup und gepressten Knoblauch mit 4 EL Nudelwasser glatt rühren.",
+   "Nudeln und Brokkoli mit der Sauce mischen und den Tofu unterheben.",
+   "Mit gehackten Erdnüssen bestreuen."
+  ],
+  "tips": [
+   "Schmeckt auch kalt als Nudelsalat."
+  ]
+ },
+ {
+  "id": "pasta-primavera",
+  "title": "Pasta Primavera mit Spargel und Erbsen",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkorn-Penne",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Spargel (weiß)",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Erbsen (TK)",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Frischkäse (leicht)",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Spargel schälen und in 3 cm lange Stücke schneiden, Zucchini würfeln.",
+   "Nudeln kochen. 5 Minuten vor Ende Spargel, 3 Minuten vor Ende Erbsen zugeben. Eine Tasse Nudelwasser aufheben.",
+   "Zucchini und Knoblauch im Öl 4 Minuten anbraten.",
+   "Frischkäse mit Zitronenschale, etwas Saft und Nudelwasser glatt rühren. Nudeln und Gemüse abgießen und alles in der Pfanne mischen.",
+   "Mit Parmesan und Pfeffer servieren."
+  ],
+  "tips": [
+   "Primavera heißt Frühling – im Sommer passen auch Bohnen und Tomaten."
+  ]
+ },
+ {
+  "id": "zucchini-zitronen-pasta",
+  "title": "Pasta mit Zucchini, Zitrone und Ricotta",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkornspaghetti",
+    "amount": 180,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "unbehandelt"
+   },
+   {
+    "name": "Ricotta",
+    "amount": 125,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 20,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Spaghetti kochen, eine Tasse Nudelwasser aufheben.",
+   "Zucchini grob raspeln und im Öl mit dem Knoblauch 4 Minuten braten, bis sie weich sind.",
+   "Ricotta mit Zitronenschale, Zitronensaft und etwas Nudelwasser glatt rühren.",
+   "Nudeln mit Zucchini und Ricotta-Sauce mischen und mit Basilikum und Parmesan servieren."
+  ],
+  "tips": [
+   "Geraspelte Zucchini werden zur Sauce – ideal bei einer großen Zucchini-Ernte."
+  ]
+ },
+ {
+  "id": "rote-bete-pesto-pasta",
+  "title": "Pasta mit Rote-Bete-Walnuss-Pesto",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkorn-Penne",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rote Bete (vorgegart)",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 40,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitronensaft",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ziegenkäse",
+    "amount": 60,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Nudeln in Salzwasser bissfest kochen. Eine Tasse Nudelwasser aufheben.",
+   "Rote Bete grob würfeln und mit Walnüssen, Knoblauch, Parmesan, Öl und Zitronensaft zu einem Pesto pürieren. Mit Salz und Pfeffer abschmecken.",
+   "Nudeln mit dem Pesto und etwas Nudelwasser mischen.",
+   "Mit zerbröseltem Ziegenkäse servieren."
+  ],
+  "tips": [
+   "Pinkfarbene Pasta, die Kinder lieben – der Geschmack ist mild und nussig."
+  ]
+ },
+ {
+  "id": "gruenkohl-pesto-pasta",
+  "title": "Pasta mit Grünkohl-Pesto",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkornspaghetti",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Grünkohl",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitronensaft",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Grünkohl von den Stielen zupfen und 2 Minuten in kochendem Salzwasser blanchieren, dann kalt abschrecken und ausdrücken.",
+   "Im selben Wasser die Nudeln kochen. Eine Tasse Nudelwasser aufheben.",
+   "Grünkohl mit Walnüssen, Knoblauch, Parmesan, Öl, Zitronensaft und 3 EL Wasser fein pürieren, salzen und pfeffern.",
+   "Nudeln mit dem Pesto und etwas Nudelwasser mischen."
+  ],
+  "tips": [
+   "Ein Wintergericht mit regionalem Grünkohl – das Pesto hält sich im Glas 3 Tage."
+  ]
+ },
+ {
+  "id": "pasta-alla-norma",
+  "title": "Pasta alla Norma mit Aubergine",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Aubergine",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkorn-Penne",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ricotta",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Aubergine in 2 cm große Würfel schneiden, salzen und 10 Minuten ziehen lassen, dann trocken tupfen.",
+   "Öl in einer Pfanne erhitzen und die Aubergine 8–10 Minuten rundherum goldbraun braten.",
+   "Knoblauch und Chili kurz mitbraten, Tomaten zugeben und 10 Minuten köcheln.",
+   "Nudeln kochen, abgießen und mit der Sauce mischen.",
+   "Mit Basilikum und Klecksen von Ricotta servieren."
+  ],
+  "tips": [
+   "Ein Klassiker aus Sizilien – die Auberginen in der Heißluftfritteuse (200 °C, 12 Minuten) zu rösten, spart Öl."
+  ]
+ },
+ {
+  "id": "lasagne-bolognese",
+  "title": "Lasagne Bolognese",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 90,
+  "servings": 6,
+  "tags": [
+   "klassiker",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rinderhack (mager)",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 2,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 600,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Lasagneplatten",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mozzarella (light)",
+    "amount": 125,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Hack im Öl kräftig anbraten, fein gewürfelte Zwiebel, Karotten und Knoblauch zugeben und 5 Minuten mitbraten. Tomatenmark kurz anrösten.",
+   "Tomaten, Oregano und 100 ml Wasser zugeben und 20 Minuten köcheln. Kräftig abschmecken.",
+   "Für die Béchamel Butter schmelzen, Mehl einrühren, Milch nach und nach unterrühren und 5 Minuten köcheln. Mit Muskat und Salz würzen.",
+   "Ofen auf 180 °C Umluft vorheizen. In eine Auflaufform abwechselnd Sauce, Platten und Béchamel schichten (4 Lagen), mit Béchamel und Mozzarella abschließen.",
+   "40 Minuten backen und vor dem Anschneiden 10 Minuten ruhen lassen."
+  ],
+  "tips": [
+   "Am Vortag zubereitet lässt sich die Lasagne sauber schneiden.",
+   "Portionsweise einfrieren und im Ofen aufbacken."
+  ]
+ },
+ {
+  "id": "schinkennudeln",
+  "title": "Schinkennudeln mit Ei und Salat",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 3,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Bandnudeln",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kochschinken (mager)",
+    "amount": 150,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Eier",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kopfsalat",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Nudeln kochen, abgießen und gut abtropfen lassen.",
+   "Zwiebel würfeln, Schinken in Streifen schneiden und im Öl in einer großen Pfanne 3 Minuten anbraten.",
+   "Nudeln zugeben und 5 Minuten braten, bis sie stellenweise knusprig sind.",
+   "Eier verquirlen, über die Nudeln gießen und unter Wenden stocken lassen. Mit Pfeffer und Schnittlauch würzen.",
+   "Salat mit Essig, Öl, Salz und Pfeffer anmachen und dazu servieren."
+  ],
+  "tips": [
+   "Ein fränkischer Resteklassiker – mit Nudeln vom Vortag wird er am besten."
+  ]
+ },
+ {
+  "id": "spaghetti-garnelen-tomaten",
+  "title": "Spaghetti mit Garnelen, Knoblauch und Kirschtomaten",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkornspaghetti",
+    "amount": 180,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 3,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Garnelen",
+    "amount": 200,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Spaghetti in Salzwasser bissfest kochen.",
+   "Öl erhitzen, Knoblauch in Scheiben und Chili 1 Minute anschwitzen.",
+   "Halbierte Tomaten zugeben und 4 Minuten braten, bis sie weich werden.",
+   "Garnelen zugeben und 2–3 Minuten braten, bis sie rosa sind. Mit Zitronenschale und -saft abschmecken.",
+   "Nudeln mit etwas Nudelwasser untermischen und mit Petersilie servieren."
+  ],
+  "tips": [
+   "Tiefgekühlte Garnelen über Nacht im Kühlschrank auftauen und gut trocken tupfen."
+  ]
+ },
+ {
+  "id": "one-pot-pasta-tomate-spinat",
+  "title": "One-Pot-Pasta mit Tomaten und Spinat",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 20,
+  "servings": 3,
+  "tags": [
+   "one-pot"
+  ],
+  "ingredients": [
+   {
+    "name": "Vollkorn-Penne",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 600,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Zwiebel in feine Streifen schneiden, Knoblauch hacken, Cherrytomaten halbieren.",
+   "Nudeln, Zwiebel, Knoblauch, Tomaten, Dosentomaten, Brühe und Oregano in einen großen Topf geben.",
+   "Aufkochen und unter häufigem Rühren 10–12 Minuten offen köcheln, bis die Nudeln gar sind und die Flüssigkeit zu einer Sauce eingekocht ist.",
+   "Spinat unterrühren, bis er zusammenfällt. Mit Salz, Pfeffer und Parmesan abschmecken."
+  ],
+  "tips": [
+   "Alles in einem Topf – die Stärke der Nudeln bindet die Sauce von selbst."
+  ]
+ },
+ {
+  "id": "pilz-rahm-bandnudeln",
+  "title": "Bandnudeln mit Pilz-Rahm-Sauce",
+  "chapter": "pasta",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Bandnudeln",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Champignons",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kochsahne 15 %",
+    "amount": 150,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 100,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Nudeln in Salzwasser bissfest kochen.",
+   "Pilze in Scheiben schneiden und im Öl bei hoher Hitze 6 Minuten braten, bis sie Farbe haben. Gewürfelte Zwiebel 2 Minuten mitbraten.",
+   "Kochsahne, Brühe und Thymian zugeben und 4 Minuten einköcheln lassen. Mit Salz und Pfeffer abschmecken.",
+   "Nudeln unterheben und mit Petersilie servieren."
+  ],
+  "tips": [
+   "Pilze portionsweise braten – zu viele auf einmal kochen nur im eigenen Saft."
+  ]
  }
 ]
