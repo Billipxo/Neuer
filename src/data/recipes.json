@@ -29904,5 +29904,2953 @@
    "temp_c": 180,
    "time_min": 12
   }
+ },
+ {
+  "id": "apfelkuchen-versunken",
+  "title": "Versunkener Apfelkuchen",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 75,
+  "servings": 12,
+  "tags": [
+   "klassiker",
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Butter",
+    "amount": 125,
+    "unit": "g",
+    "category": "milch",
+    "note": "weich"
+   },
+   {
+    "name": "Zucker",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Backpulver",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Apfel",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "säuerlich"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Puderzucker",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 175 °C Ober-/Unterhitze vorheizen und eine Springform (26 cm) fetten.",
+   "Äpfel schälen, vierteln und entkernen. Die gewölbte Seite mehrmals längs einschneiden, ohne durchzuschneiden, und mit Zitronensaft beträufeln.",
+   "Butter mit Zucker und Vanillezucker 3 Minuten cremig schlagen. Eier einzeln je 30 Sekunden unterrühren.",
+   "Mehl mit Backpulver mischen und abwechselnd mit der Milch kurz unterrühren, nur bis alles verbunden ist. Teig in die Form streichen.",
+   "Apfelviertel mit der eingeschnittenen Seite nach oben leicht in den Teig drücken. 40–45 Minuten backen, bis ein Holzstäbchen sauber herauskommt. Abgekühlt mit Puderzucker bestäuben."
+  ],
+  "tips": [
+   "Säuerliche Sorten wie Boskop oder Elstar bleiben saftig und geben Frische.",
+   "Der Kuchen schmeckt am zweiten Tag noch saftiger."
+  ]
+ },
+ {
+  "id": "kaesekuchen-ohne-boden",
+  "title": "Käsekuchen ohne Boden",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 90,
+  "servings": 12,
+  "tags": [
+   "klassiker",
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Magerquark",
+    "amount": 1,
+    "unit": "kg",
+    "category": "milch"
+   },
+   {
+    "name": "Eier",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Zucker",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 60,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "unbehandelt"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 200,
+    "unit": "ml",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Ofen auf 170 °C Ober-/Unterhitze vorheizen. Eine Springform (26 cm) fetten und mit Grieß oder Mehl ausstreuen.",
+   "Quark gut abtropfen lassen. Eier mit Zucker und Vanillezucker 3 Minuten schaumig schlagen.",
+   "Quark, Speisestärke, abgeriebene Zitronenschale, Zitronensaft und Milch zugeben und zu einer glatten Masse verrühren.",
+   "In die Form füllen und 60 Minuten backen. Reißt die Oberfläche, nach 20 Minuten den Rand mit einem Messer lösen.",
+   "Ofen ausschalten und den Kuchen bei leicht geöffneter Tür 30 Minuten im Ofen ruhen lassen – so fällt er weniger zusammen. Vollständig auskühlen lassen."
+  ],
+  "rest_min": 120,
+  "tips": [
+   "Am besten über Nacht im Kühlschrank durchziehen lassen.",
+   "Mit Kirschen, Mandarinen oder Beeren im Teig variieren."
+  ]
+ },
+ {
+  "id": "zwetschgenkuchen-streusel",
+  "title": "Zwetschgenkuchen vom Blech mit Streuseln",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 70,
+  "servings": 20,
+  "tags": [
+   "klassiker",
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Mehl",
+    "amount": 400,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "für den Teig"
+   },
+   {
+    "name": "Trockenhefe",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucker",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "für den Teig"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 200,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Butter",
+    "amount": 50,
+    "unit": "g",
+    "category": "milch",
+    "note": "für den Teig"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Pflaumen",
+    "amount": 1.5,
+    "unit": "kg",
+    "category": "obst_gemuese",
+    "note": "Zwetschgen"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mehl",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "für die Streusel"
+   },
+   {
+    "name": "Zucker",
+    "amount": 80,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "für die Streusel"
+   },
+   {
+    "name": "Butter",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch",
+    "note": "kalt, für die Streusel"
+   }
+  ],
+  "steps": [
+   "Mehl, Hefe und Zucker mischen. Milch lauwarm erwärmen, Butter darin schmelzen und mit Ei und einer Prise Salz zum Mehl geben. 5 Minuten zu einem glatten Teig kneten und zugedeckt 45 Minuten gehen lassen.",
+   "Zwetschgen waschen, halbieren, entsteinen und an der Spitze leicht einschneiden.",
+   "Für die Streusel Mehl, Zucker, kalte Butterwürfel und Zimt mit den Fingern zu Krümeln verreiben.",
+   "Ofen auf 180 °C Umluft vorheizen. Teig auf einem Blech mit Backpapier ausrollen, die Zwetschgen dicht an dicht und schräg stehend darauflegen und die Streusel darüber verteilen. Noch 15 Minuten gehen lassen.",
+   "30–35 Minuten backen, bis die Streusel goldbraun sind."
+  ],
+  "rest_min": 60,
+  "tips": [
+   "Zwetschgen haben von August bis Oktober Saison – sie sind fester als Pflaumen und weichen beim Backen weniger durch."
+  ]
+ },
+ {
+  "id": "brownies-walnuss",
+  "title": "Saftige Brownies mit Walnüssen",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 40,
+  "servings": 16,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Zartbitterschokolade (70 %)",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Butter",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Zucker",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 80,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kakaopulver",
+    "amount": 20,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 60,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 175 °C Ober-/Unterhitze vorheizen und eine quadratische Form (20 × 20 cm) mit Backpapier auslegen.",
+   "Schokolade hacken und mit der Butter über einem warmen Wasserbad schmelzen. Etwas abkühlen lassen.",
+   "Eier mit Zucker 3 Minuten hell und schaumig schlagen, dann die Schokoladenbutter unterrühren.",
+   "Mehl, Kakao und Salz darübersieben und nur kurz unterheben. Grob gehackte Walnüsse unterziehen.",
+   "In die Form streichen und 20–22 Minuten backen – die Mitte darf noch leicht feucht sein. In der Form auskühlen lassen und in 16 Stücke schneiden."
+  ],
+  "tips": [
+   "Lieber etwas zu kurz als zu lange backen: Brownies ziehen beim Abkühlen nach."
+  ],
+  "airfryer": {
+   "temp_c": 160,
+   "time_min": 20,
+   "steps": [
+    "Teig wie beschrieben zubereiten und in eine passende, mit Backpapier ausgelegte Form füllen.",
+    "Bei 160 °C 18–20 Minuten backen, bis die Oberfläche fest, die Mitte aber noch weich ist.",
+    "In der Form auskühlen lassen und schneiden."
+   ]
+  }
+ },
+ {
+  "id": "haferkekse-schoko",
+  "title": "Haferkekse mit Schokostückchen",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 30,
+  "servings": 20,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Butter",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch",
+    "note": "weich"
+   },
+   {
+    "name": "Zucker",
+    "amount": 80,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "am besten brauner"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "zart"
+   },
+   {
+    "name": "Dinkelvollkornmehl",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Backpulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zartbitterschokolade (70 %)",
+    "amount": 60,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C Ober-/Unterhitze vorheizen und zwei Bleche mit Backpapier auslegen.",
+   "Butter mit Zucker 2 Minuten cremig rühren, Ei unterrühren.",
+   "Haferflocken, Mehl, Backpulver und Salz mischen und unterrühren. Schokolade grob hacken und unterheben.",
+   "Mit zwei Teelöffeln 20 Häufchen mit Abstand auf die Bleche setzen und leicht flach drücken.",
+   "11–13 Minuten backen, bis die Ränder goldbraun sind. Auf dem Blech 5 Minuten fest werden lassen, dann auf einem Gitter auskühlen."
+  ],
+  "tips": [
+   "In einer Dose bleiben die Kekse eine Woche frisch."
+  ],
+  "airfryer": {
+   "temp_c": 160,
+   "time_min": 9,
+   "steps": [
+    "Teig wie beschrieben zubereiten.",
+    "Häufchen auf Backpapier in den Korb setzen und leicht flach drücken.",
+    "Bei 160 °C 8–9 Minuten backen. In mehreren Durchgängen backen und auf einem Gitter auskühlen lassen."
+   ]
+  }
+ },
+ {
+  "id": "muesliriegel",
+  "title": "Müsliriegel mit Nüssen und Datteln",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 35,
+  "servings": 12,
+  "tags": [
+   "suess",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Haferflocken",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mandeln",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kürbiskerne",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Datteln (entsteint)",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "oder Ahornsirup"
+   },
+   {
+    "name": "Erdnussbutter",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 170 °C Umluft vorheizen und eine Form (20 × 20 cm) mit Backpapier auslegen.",
+   "Mandeln grob hacken, Datteln sehr klein schneiden und mit Haferflocken, Kürbiskernen, Zimt und einer Prise Salz mischen.",
+   "Honig, Erdnussbutter und Öl in einem Topf 1–2 Minuten erwärmen, bis sich alles verbindet, und über die Mischung gießen. Gut vermengen.",
+   "Masse in die Form geben und mit einem Glas sehr fest andrücken – das ist wichtig, damit die Riegel halten.",
+   "20 Minuten goldbraun backen. Vollständig auskühlen lassen und erst dann in 12 Riegel schneiden."
+  ],
+  "tips": [
+   "Mit Ahornsirup statt Honig sind die Riegel vegan.",
+   "In einer Dose zwischen Backpapier eine Woche haltbar."
+  ]
+ },
+ {
+  "id": "rote-gruetze-vanillejoghurt",
+  "title": "Rote Grütze mit Vanillejoghurt",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 20,
+  "servings": 4,
+  "tags": [
+   "klassiker",
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Beeren (TK)",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "z. B. Himbeeren, Johannisbeeren"
+   },
+   {
+    "name": "Kirschen (TK)",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucker",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat",
+    "note": "für den Joghurt"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 300,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Beeren und Kirschen mit dem Zucker und 200 ml Wasser in einem Topf aufkochen und 3 Minuten köcheln.",
+   "Speisestärke mit 4 EL kaltem Wasser glatt rühren, in die kochenden Früchte rühren und 1 Minute köcheln, bis die Grütze andickt.",
+   "In Schalen füllen, abkühlen lassen und mindestens 2 Stunden kalt stellen.",
+   "Joghurt mit Vanillezucker glatt rühren und zur Grütze servieren."
+  ],
+  "rest_min": 120,
+  "tips": [
+   "Ein norddeutscher Klassiker – im Sommer mit frischen Beeren."
+  ]
+ },
+ {
+  "id": "tiramisu-quark",
+  "title": "Tiramisu mit Quark",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 25,
+  "servings": 6,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Espresso",
+    "amount": 200,
+    "unit": "ml",
+    "category": "vorrat",
+    "note": "kalt, oder starker Kaffee"
+   },
+   {
+    "name": "Löffelbiskuits",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 500,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Griechischer Joghurt 2 %",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Zucker",
+    "amount": 60,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kakaopulver",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Quark mit Joghurt, Zucker und Vanillezucker glatt und cremig rühren.",
+   "Löffelbiskuits nacheinander kurz in den kalten Espresso tauchen – nur 1–2 Sekunden, sonst werden sie matschig – und eine Form damit auslegen.",
+   "Die Hälfte der Creme daraufstreichen, eine zweite Lage getränkter Biskuits darauflegen und mit der restlichen Creme abschließen.",
+   "Abgedeckt mindestens 4 Stunden, am besten über Nacht, kühl stellen.",
+   "Vor dem Servieren mit Kakao bestäuben."
+  ],
+  "rest_min": 240,
+  "tips": [
+   "Die Quark-Joghurt-Creme ersetzt Mascarpone und rohe Eier.",
+   "Für Kinder statt Espresso Kakao oder Fruchtsaft verwenden."
+  ]
+ },
+ {
+  "id": "schokopudding",
+  "title": "Schokoladenpudding selbst gemacht",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 15,
+  "servings": 4,
+  "tags": [
+   "klassiker",
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Milch 1,5 %",
+    "amount": 500,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kakaopulver",
+    "amount": 25,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucker",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zartbitterschokolade (70 %)",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Stärke, Kakao, Zucker und Salz in einer Schüssel mischen und mit 100 ml der Milch klümpchenfrei verrühren.",
+   "Restliche Milch in einem Topf aufkochen. Topf vom Herd nehmen und die Kakaomischung kräftig einrühren.",
+   "Zurück auf den Herd stellen und unter ständigem Rühren 1 Minute sprudelnd kochen lassen, bis der Pudding eindickt.",
+   "Gehackte Schokolade unterrühren, bis sie geschmolzen ist. In Schälchen füllen.",
+   "Mit Frischhaltefolie direkt auf der Oberfläche abdecken, damit sich keine Haut bildet, und 1 Stunde kühl stellen."
+  ],
+  "rest_min": 60,
+  "tips": [
+   "Mit Haferdrink statt Milch und veganer Schokolade wird der Pudding vegan."
+  ]
+ },
+ {
+  "id": "apfelstrudel-yufka",
+  "title": "Apfelstrudel mit Yufka-Teig",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 60,
+  "servings": 8,
+  "tags": [
+   "klassiker",
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Apfel",
+    "amount": 1,
+    "unit": "kg",
+    "category": "obst_gemuese",
+    "note": "säuerlich"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rosinen",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucker",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Butter",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 40,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Yufka-Teigblätter",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "ca. 3 Blätter"
+   },
+   {
+    "name": "Puderzucker",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C Umluft vorheizen. Äpfel schälen, entkernen und in dünne Scheiben schneiden. Mit Zitronensaft, Rosinen, Zucker, Zimt und gehackten Walnüssen mischen.",
+   "Die Hälfte der Butter schmelzen und das Paniermehl darin 2–3 Minuten goldbraun rösten.",
+   "Restliche Butter schmelzen. Die Teigblätter übereinanderlegen und jedes dünn mit Butter bestreichen.",
+   "Brösel auf dem unteren Drittel verteilen, die Äpfel daraufgeben, die Seiten einschlagen und locker aufrollen. Mit der Naht nach unten auf ein Blech mit Backpapier legen und mit restlicher Butter bestreichen.",
+   "30–35 Minuten goldbraun backen, etwas abkühlen lassen und mit Puderzucker bestäuben."
+  ],
+  "tips": [
+   "Die gerösteten Brösel saugen den Apfelsaft auf – so bleibt der Teig knusprig.",
+   "Dazu passt Vanillejoghurt oder eine Kugel Eis."
+  ]
+ },
+ {
+  "id": "waffeln-beeren",
+  "title": "Waffeln mit Beeren und Joghurt",
+  "chapter": "suesses",
+  "meal": [
+   "snack",
+   "breakfast"
+  ],
+  "time_min": 30,
+  "servings": 4,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Butter",
+    "amount": 50,
+    "unit": "g",
+    "category": "milch",
+    "note": "geschmolzen"
+   },
+   {
+    "name": "Zucker",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "oder Dinkelvollkornmehl"
+   },
+   {
+    "name": "Backpulver",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 300,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Beeren (TK)",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "aufgetaut, oder frisch"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Geschmolzene Butter mit Zucker, Vanillezucker und Eiern verrühren.",
+   "Mehl und Backpulver abwechselnd mit der Milch unterrühren, bis ein glatter, dickflüssiger Teig entsteht. 10 Minuten quellen lassen.",
+   "Waffeleisen vorheizen und dünn einfetten.",
+   "Je eine Kelle Teig hineingeben und 3–4 Minuten goldbraun backen. Fertige Waffeln auf einem Gitter auskühlen lassen, so bleiben sie knusprig.",
+   "Mit Beeren und Joghurt servieren."
+  ],
+  "tips": [
+   "Mit Dinkelvollkornmehl etwas mehr Milch zugeben, der Teig dickt stärker an."
+  ]
+ },
+ {
+  "id": "quarkbaellchen-airfryer",
+  "title": "Quarkbällchen aus der Heißluftfritteuse",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 30,
+  "servings": 5,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Magerquark",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Zucker",
+    "amount": 60,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mehl",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Backpulver",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "EL",
+    "category": "milch",
+    "note": "geschmolzen"
+   },
+   {
+    "name": "Zucker",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "für den Zimtzucker"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Quark mit Eiern, Zucker, Vanillezucker und Salz glatt rühren.",
+   "Mehl mit Backpulver mischen und unterkneten, bis ein weicher Teig entsteht.",
+   "Mit bemehlten Händen 20 Bällchen formen und mit Abstand auf Backpapier in den Korb setzen.",
+   "Bei 160 °C 10–12 Minuten backen, bis sie goldbraun und innen durch sind. In mehreren Durchgängen backen.",
+   "Noch warm mit geschmolzener Butter bepinseln und in Zimtzucker wälzen."
+  ],
+  "tips": [
+   "Die Bällchen gehen in der Heißluftfritteuse schön auf – ganz ohne Frittierfett."
+  ],
+  "airfryer": {
+   "temp_c": 160,
+   "time_min": 12
+  }
+ },
+ {
+  "id": "zimtschnecken",
+  "title": "Zimtschnecken mit Frischkäse-Guss",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 60,
+  "servings": 12,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Mehl",
+    "amount": 400,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Trockenhefe",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucker",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "für den Teig"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 200,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Butter",
+    "amount": 50,
+    "unit": "g",
+    "category": "milch",
+    "note": "für den Teig"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Butter",
+    "amount": 50,
+    "unit": "g",
+    "category": "milch",
+    "note": "weich, für die Füllung"
+   },
+   {
+    "name": "Zucker",
+    "amount": 60,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "für die Füllung, am besten brauner"
+   },
+   {
+    "name": "Zimt",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Frischkäse (leicht)",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Puderzucker",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Mehl, Hefe, Zucker und eine Prise Salz mischen. Milch lauwarm erwärmen, Butter darin schmelzen und mit dem Ei zugeben. 5 Minuten glatt kneten und zugedeckt 60 Minuten gehen lassen.",
+   "Teig zu einem Rechteck (ca. 30 × 40 cm) ausrollen, mit weicher Butter bestreichen und mit Zucker und Zimt bestreuen.",
+   "Von der langen Seite her fest aufrollen und in 12 Scheiben schneiden. In eine gefettete Form setzen und weitere 20 Minuten gehen lassen.",
+   "Ofen auf 180 °C Umluft vorheizen und die Schnecken 20–25 Minuten goldbraun backen.",
+   "Frischkäse mit Puderzucker glatt rühren und auf die noch warmen Schnecken streichen."
+  ],
+  "rest_min": 80,
+  "tips": [
+   "Mit Zahnseide statt Messer geschnitten, behalten die Schnecken ihre Form.",
+   "Ungebacken lassen sie sich über Nacht im Kühlschrank aufbewahren."
+  ]
+ },
+ {
+  "id": "rhabarber-streuselkuchen",
+  "title": "Rhabarberkuchen mit Streuseln",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 75,
+  "servings": 12,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Rhabarber",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucker",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "für den Rhabarber"
+   },
+   {
+    "name": "Butter",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch",
+    "note": "weich, für den Teig"
+   },
+   {
+    "name": "Zucker",
+    "amount": 80,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "für den Teig"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "für den Teig"
+   },
+   {
+    "name": "Backpulver",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 50,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "für die Streusel"
+   },
+   {
+    "name": "Zucker",
+    "amount": 60,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "für die Streusel"
+   },
+   {
+    "name": "Butter",
+    "amount": 60,
+    "unit": "g",
+    "category": "milch",
+    "note": "kalt, für die Streusel"
+   },
+   {
+    "name": "Zimt",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Rhabarber putzen, in 2 cm lange Stücke schneiden und mit 30 g Zucker mischen. 15 Minuten ziehen lassen und dann abtropfen lassen.",
+   "Ofen auf 180 °C Ober-/Unterhitze vorheizen und eine Springform (26 cm) fetten.",
+   "Butter mit Zucker und Vanillezucker cremig schlagen, Eier einzeln unterrühren. Mehl mit Backpulver mischen und abwechselnd mit der Milch kurz unterrühren. Teig in die Form streichen.",
+   "Für die Streusel Mehl, Zucker, kalte Butter und Zimt zu Krümeln verreiben. Rhabarber auf dem Teig verteilen und die Streusel darüberstreuen.",
+   "45–50 Minuten backen, bis die Streusel goldbraun sind. In der Form auskühlen lassen."
+  ],
+  "tips": [
+   "Rhabarber hat von April bis Juni Saison – die säuerlichen Stangen passen perfekt zu süßen Streuseln."
+  ]
+ },
+ {
+  "id": "heidelbeer-muffins",
+  "title": "Heidelbeer-Muffins mit Joghurt",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 40,
+  "servings": 12,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Mehl",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "oder halb Dinkelvollkornmehl"
+   },
+   {
+    "name": "Backpulver",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucker",
+    "amount": 80,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 60,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "nur die abgeriebene Schale"
+   },
+   {
+    "name": "Heidelbeeren",
+    "amount": 200,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "frisch oder TK"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C Umluft vorheizen und ein Muffinblech mit Papierförmchen auslegen.",
+   "Mehl, Backpulver, Zucker und Vanillezucker in einer Schüssel mischen.",
+   "Eier, Joghurt, Öl und Zitronenschale verquirlen und mit einem Löffel kurz unter die Mehlmischung rühren – es dürfen Klümpchen bleiben, so werden die Muffins locker.",
+   "Heidelbeeren vorsichtig unterheben und den Teig auf die Förmchen verteilen.",
+   "22–25 Minuten backen, bis ein Holzstäbchen sauber herauskommt."
+  ],
+  "tips": [
+   "TK-Beeren gefroren unterheben, dann färben sie den Teig weniger."
+  ],
+  "airfryer": {
+   "temp_c": 160,
+   "time_min": 16,
+   "steps": [
+    "Teig wie beschrieben zubereiten und in Silikonförmchen füllen.",
+    "Bei 160 °C 15–17 Minuten backen. In mehreren Durchgängen backen.",
+    "Stäbchenprobe machen und kurz in den Förmchen abkühlen lassen."
+   ]
+  }
+ },
+ {
+  "id": "kokosmakronen",
+  "title": "Kokosmakronen",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 35,
+  "servings": 12,
+  "tags": [
+   "klassiker",
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Eiweiß",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucker",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kokosraspeln",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 150 °C Ober-/Unterhitze vorheizen und zwei Bleche mit Backpapier auslegen.",
+   "Eiweiß mit Salz steif schlagen. Zucker und Vanillezucker nach und nach einrieseln lassen und weiterschlagen, bis die Masse fest glänzt.",
+   "Kokosraspeln vorsichtig unterheben.",
+   "Mit zwei Teelöffeln etwa 24 Häufchen auf die Bleche setzen.",
+   "15–18 Minuten backen, bis die Spitzen leicht golden sind. Auf dem Blech auskühlen lassen."
+  ],
+  "tips": [
+   "Das übrige Eigelb eignet sich für Vanillekipferl oder eine Sauce.",
+   "In einer Blechdose bleiben die Makronen 2 Wochen frisch."
+  ]
+ },
+ {
+  "id": "vanillekipferl",
+  "title": "Vanillekipferl",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 60,
+  "servings": 20,
+  "tags": [
+   "klassiker",
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Mehl",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mandeln",
+    "amount": 100,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "gemahlen"
+   },
+   {
+    "name": "Butter",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch",
+    "note": "kalt"
+   },
+   {
+    "name": "Zucker",
+    "amount": 80,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 2,
+    "unit": "Päckchen",
+    "category": "vorrat",
+    "note": "für den Teig"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch",
+    "note": "nur das Eigelb"
+   },
+   {
+    "name": "Puderzucker",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat",
+    "note": "zum Wälzen"
+   }
+  ],
+  "steps": [
+   "Mehl, Mandeln, Zucker und Vanillezucker mischen. Kalte Butter in Stücken und das Eigelb zugeben und rasch zu einem glatten Teig verkneten.",
+   "Teig zu Rollen formen, in Folie wickeln und 30 Minuten kühl stellen.",
+   "Ofen auf 175 °C Ober-/Unterhitze vorheizen. Von den Rollen kleine Stücke abschneiden, zu fingerdicken Würstchen rollen und zu Hörnchen biegen.",
+   "Auf Bleche mit Backpapier legen und 10–12 Minuten backen – sie sollen nur an den Spitzen hellgolden werden.",
+   "Puderzucker mit Vanillezucker mischen und die noch warmen Kipferl vorsichtig darin wälzen."
+  ],
+  "rest_min": 30,
+  "tips": [
+   "Die Kipferl sind warm sehr zerbrechlich – vorsichtig mit einem Pinsel oder durch Bestäuben arbeiten.",
+   "Ergibt etwa 40 Stück, eine Portion sind zwei Kipferl."
+  ]
+ },
+ {
+  "id": "marmorkuchen",
+  "title": "Marmorkuchen",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 75,
+  "servings": 16,
+  "tags": [
+   "klassiker",
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Butter",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch",
+    "note": "weich"
+   },
+   {
+    "name": "Zucker",
+    "amount": 180,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Eier",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 350,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Backpulver",
+    "amount": 3,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 180,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Kakaopulver",
+    "amount": 20,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 175 °C Ober-/Unterhitze vorheizen. Eine Gugelhupfform (22 cm) fetten und mit Mehl ausstäuben.",
+   "Butter mit Zucker und Vanillezucker 3 Minuten cremig schlagen. Eier einzeln je 30 Sekunden unterrühren.",
+   "Mehl und Backpulver abwechselnd mit 150 ml Milch kurz unterrühren. Die Hälfte des Teigs in die Form füllen.",
+   "Kakao und restliche Milch unter den übrigen Teig rühren und auf den hellen Teig geben. Mit einer Gabel spiralförmig durchziehen.",
+   "50–55 Minuten backen, bis ein Holzstäbchen sauber herauskommt. 10 Minuten in der Form ruhen lassen, dann stürzen."
+  ],
+  "tips": [
+   "Alle Zutaten sollten Zimmertemperatur haben, dann verbindet sich der Teig am besten."
+  ]
+ },
+ {
+  "id": "quark-kirsch-auflauf",
+  "title": "Quark-Kirsch-Auflauf",
+  "chapter": "suesses",
+  "meal": [
+   "snack",
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 55,
+  "servings": 4,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Magerquark",
+    "amount": 500,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Eier",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Zucker",
+    "amount": 60,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vanillezucker",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Grieß",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Backpulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "unbehandelt"
+   },
+   {
+    "name": "Kirschen (TK)",
+    "amount": 350,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "aufgetaut und abgetropft"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "TL",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C Ober-/Unterhitze vorheizen und eine Auflaufform mit Butter fetten.",
+   "Eier trennen. Eigelb mit Zucker und Vanillezucker cremig rühren, dann Quark, Grieß, Backpulver, Zitronenschale und -saft unterrühren. 10 Minuten quellen lassen.",
+   "Eiweiß mit einer Prise Salz steif schlagen und vorsichtig unter die Quarkmasse heben.",
+   "Kirschen in der Form verteilen und die Quarkmasse daraufgeben.",
+   "35–40 Minuten goldbraun backen. Warm oder lauwarm servieren."
+  ],
+  "tips": [
+   "Als süßes Mittagessen beliebt – mit Äpfeln oder Aprikosen genauso gut."
+  ],
+  "airfryer": {
+   "temp_c": 160,
+   "time_min": 28,
+   "steps": [
+    "Masse wie beschrieben zubereiten.",
+    "Kirschen in einer passenden Form verteilen und die Quarkmasse daraufgeben.",
+    "Bei 160 °C 25–28 Minuten backen. Wird die Oberfläche zu dunkel, mit Alufolie abdecken."
+   ]
+  }
+ },
+ {
+  "id": "joghurt-eis-am-stiel",
+  "title": "Joghurt-Eis am Stiel mit Beeren",
+  "chapter": "suesses",
+  "meal": [
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 6,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Griechischer Joghurt 2 %",
+    "amount": 400,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Beeren (TK)",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Honig",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "oder Ahornsirup"
+   }
+  ],
+  "steps": [
+   "Die Hälfte der Beeren mit dem Honig fein pürieren.",
+   "Joghurt glatt rühren und abwechselnd mit dem Beerenpüree und den ganzen Beeren in Eisformen schichten.",
+   "Mit einem Holzstäbchen leicht marmorieren und die Stiele einstecken.",
+   "Mindestens 4 Stunden einfrieren. Zum Lösen die Formen kurz unter warmes Wasser halten."
+  ],
+  "rest_min": 240,
+  "tips": [
+   "Mit reifer Banane statt Honig wird das Eis von Natur aus süß."
+  ]
+ },
+ {
+  "id": "tomatensauce-grundrezept",
+  "title": "Tomatensauce (Grundrezept)",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 35,
+  "servings": 4,
+  "tags": [
+   "meal-prep",
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 2,
+    "unit": "Dose",
+    "category": "vorrat",
+    "note": "oder geschälte Tomaten"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucker",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Zwiebel und Knoblauch sehr fein würfeln und im Öl bei mittlerer Hitze 5 Minuten glasig dünsten – sie sollen nicht braun werden.",
+   "Tomatenmark einrühren und 1 Minute mitrösten.",
+   "Tomaten, Oregano, Zucker, Salz und Pfeffer zugeben und offen bei kleiner Hitze 20–25 Minuten köcheln lassen, gelegentlich umrühren.",
+   "Basilikum zupfen und unterrühren. Nach Wunsch stückig lassen oder fein pürieren."
+  ],
+  "tips": [
+   "Die Prise Zucker nimmt den Tomaten die Säure.",
+   "Grundlage für Pasta, Pizza, Lasagne und Aufläufe – portionsweise eingefroren 3 Monate haltbar.",
+   "Varianten: mit Chili zur Arrabbiata, mit Oliven und Kapern zur Puttanesca."
+  ]
+ },
+ {
+  "id": "bechamel-grundrezept",
+  "title": "Béchamelsauce (Grundrezept)",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 15,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Butter",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 500,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Butter in einem Topf bei mittlerer Hitze schmelzen.",
+   "Mehl einrühren und unter Rühren 1–2 Minuten anschwitzen, ohne dass es braun wird – das ist die Mehlschwitze.",
+   "Kalte Milch nach und nach mit dem Schneebesen einrühren, so entstehen keine Klümpchen.",
+   "Unter Rühren aufkochen und 5 Minuten bei kleiner Hitze köcheln lassen, bis die Sauce bindet und nicht mehr mehlig schmeckt. Mit Salz und Muskat abschmecken."
+  ],
+  "tips": [
+   "Faustregel: gleich viel Butter und Mehl, auf 1 Liter Flüssigkeit je 60 g für eine mittlere Bindung.",
+   "Mit geriebenem Käse wird daraus eine Käsesauce, mit Senf eine Senfsauce."
+  ]
+ },
+ {
+  "id": "basilikum-pesto",
+  "title": "Basilikum-Pesto",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 15,
+  "servings": 6,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Basilikum",
+    "amount": 2,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Pinienkerne",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "oder Cashewkerne"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 80,
+    "unit": "ml",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Pinienkerne in einer Pfanne ohne Fett 2–3 Minuten goldbraun rösten und abkühlen lassen.",
+   "Basilikumblätter abzupfen. Parmesan fein reiben.",
+   "Basilikum, Pinienkerne, Knoblauch und eine Prise Salz im Mörser oder Blitzhacker zerkleinern.",
+   "Parmesan unterrühren und das Öl nach und nach einarbeiten, bis eine sämige Paste entsteht."
+  ],
+  "tips": [
+   "Im Glas mit etwas Öl bedeckt hält sich Pesto eine Woche im Kühlschrank.",
+   "Portionsweise in der Eiswürfelform einfrieren.",
+   "Für Pasta 1–2 EL pro Portion mit etwas Nudelwasser verrühren."
+  ]
+ },
+ {
+  "id": "vinaigrette-grundrezept",
+  "title": "Vinaigrette (Grundrezept)",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 5,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "z. B. Weißwein- oder Apfelessig"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat",
+    "note": "oder Ahornsirup"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Pfeffer",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Essig mit Senf, Honig, Salz und Pfeffer verrühren, bis sich das Salz gelöst hat.",
+   "Öl in dünnem Strahl unter ständigem Rühren einlaufen lassen, bis die Vinaigrette leicht sämig ist.",
+   "Abschmecken und erst kurz vor dem Servieren über den Salat geben."
+  ],
+  "tips": [
+   "Grundverhältnis: 1 Teil Säure zu 3 Teilen Öl.",
+   "Der Senf verbindet Öl und Essig – im Schraubglas geschüttelt geht es noch schneller.",
+   "Varianten: mit Balsamico, Zitronensaft, gehackten Kräutern oder Schalotten."
+  ]
+ },
+ {
+  "id": "joghurt-kraeuter-dressing",
+  "title": "Joghurt-Kräuter-Dressing",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 10,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kräuter fein hacken.",
+   "Joghurt mit Öl, Zitronensaft, Senf und Honig glatt rühren.",
+   "Kräuter unterrühren, mit Salz und Pfeffer abschmecken und bei Bedarf mit 1–2 EL Wasser verdünnen."
+  ],
+  "tips": [
+   "Passt zu Blattsalaten, Kartoffelsalat, Bowls und als Dip zu Gemüse.",
+   "Hält sich 3 Tage im Kühlschrank."
+  ]
+ },
+ {
+  "id": "kraeuterquark-grundrezept",
+  "title": "Kräuterquark",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 10,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Magerquark",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 50,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Leinöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "oder Olivenöl"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 1,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Quark mit Milch und Öl cremig rühren.",
+   "Schnittlauch in feine Röllchen schneiden, Petersilie hacken, Knoblauch pressen.",
+   "Alles unterrühren und mit Salz und Pfeffer abschmecken. 10 Minuten durchziehen lassen."
+  ],
+  "tips": [
+   "Klassisch zu Pellkartoffeln mit Leinöl – ein schlichtes, sättigendes Essen.",
+   "Mit Gurke, Radieschen oder Kresse variieren."
+  ]
+ },
+ {
+  "id": "weisse-bohnen-dip",
+  "title": "Weiße-Bohnen-Creme mit Rosmarin",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 10,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "weiße Bohnen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rosmarin",
+    "amount": 1,
+    "unit": "Zweig",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Bohnen abspülen und abtropfen lassen.",
+   "Mit 1 1/2 EL Öl, Zitronensaft, Knoblauch, fein gehackten Rosmarinnadeln, Salz und 2–3 EL Wasser cremig pürieren.",
+   "In eine Schale füllen und mit dem restlichen Öl beträufeln."
+  ],
+  "tips": [
+   "Schmeckt als Brotaufstrich, Dip oder Basis für Bowls.",
+   "Hält sich 4 Tage im Kühlschrank."
+  ]
+ },
+ {
+  "id": "pico-de-gallo",
+  "title": "Tomatensalsa (Pico de Gallo)",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 10,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Tomate",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese",
+    "note": "oder Petersilie"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Tomaten entkernen und in kleine Würfel schneiden, Zwiebel sehr fein hacken.",
+   "Mit gehacktem Koriander, Limettensaft, Öl, Chili und Salz mischen.",
+   "10 Minuten durchziehen lassen."
+  ],
+  "tips": [
+   "Passt zu Tacos, Bowls, Ofenkartoffeln, Fisch und gegrilltem Fleisch."
+  ]
+ },
+ {
+  "id": "erdnusssauce-grundrezept",
+  "title": "Erdnusssauce",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 10,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Erdnussbutter",
+    "amount": 4,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kokosmilch (light)",
+    "amount": 200,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat",
+    "note": "oder Ahornsirup"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Alle Zutaten in einem kleinen Topf verrühren.",
+   "Bei mittlerer Hitze unter Rühren 2–3 Minuten erwärmen, bis die Sauce glatt und cremig ist.",
+   "Mit Limettensaft, Sojasauce und Chili abschmecken. Ist sie zu dick, etwas Wasser einrühren."
+  ],
+  "tips": [
+   "Zu Satay-Spießen, Sommerrollen, Nudeln, Tofu oder als Dressing für Krautsalat."
+  ]
+ },
+ {
+  "id": "joghurt-hollandaise",
+  "title": "Schnelle Joghurt-Hollandaise",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 15,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Eigelb",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Griechischer Joghurt 2 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Butter",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Eigelb, Joghurt und Senf in einer Metallschüssel verrühren.",
+   "Schüssel über ein Wasserbad mit nur leicht siedendem Wasser setzen und 5–6 Minuten ständig schlagen, bis die Sauce warm und dicklich ist. Sie darf nicht kochen, sonst gerinnt sie.",
+   "Butter in Flöckchen nach und nach unterschlagen.",
+   "Mit Zitronensaft, Salz und Pfeffer abschmecken und sofort servieren."
+  ],
+  "tips": [
+   "Klassisch zu Spargel, aber auch zu Brokkoli, Fisch und pochierten Eiern.",
+   "Gerinnt die Sauce, einen Eiswürfel unterschlagen."
+  ]
+ },
+ {
+  "id": "gemuesebruehe-selbstgemacht",
+  "title": "Gemüsebrühe selbst gemacht",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 75,
+  "servings": 8,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knollensellerie",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Lauch",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "mit Schale"
+   },
+   {
+    "name": "Tomate",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese",
+    "note": "mit Stielen"
+   },
+   {
+    "name": "Lorbeerblätter",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Pfeffer",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat",
+    "note": "Körner"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Gemüse waschen und grob zerkleinern. Die Zwiebeln halbieren und mit der Schnittfläche in einem großen Topf ohne Fett 3–4 Minuten dunkel anrösten – das gibt Farbe und Aroma.",
+   "Restliches Gemüse, Kräuter, Lorbeer und Pfefferkörner zugeben und mit 2,5 l kaltem Wasser auffüllen.",
+   "Langsam aufkochen und offen bei kleiner Hitze 60 Minuten leise köcheln lassen.",
+   "Durch ein Sieb gießen, salzen und abkühlen lassen."
+  ],
+  "tips": [
+   "Gemüsereste wie Schalen, Stiele und Enden sammeln und im Gefrierbeutel einfrieren, bis genug für eine Brühe beisammen ist.",
+   "Die Brühe hält sich im Kühlschrank 4 Tage, eingefroren 3 Monate.",
+   "Die Nährwerte sind großzügig gerechnet, da ein Teil des Gemüses im Sieb bleibt."
+  ]
+ },
+ {
+  "id": "reis-kochen",
+  "title": "Reis kochen nach der Quellmethode",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 25,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "Langkorn oder Basmati"
+   },
+   {
+    "name": "Salz",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reis in einem Sieb waschen, bis das Wasser fast klar ist. So klebt er später nicht.",
+   "Reis mit der 1,5-fachen Menge Wasser (375 ml) und dem Salz in einen Topf geben und aufkochen.",
+   "Deckel auflegen, Hitze auf die kleinste Stufe stellen und den Reis 12–15 Minuten quellen lassen, ohne den Deckel zu heben.",
+   "Vom Herd nehmen, 5 Minuten zugedeckt ruhen lassen und mit einer Gabel auflockern."
+  ],
+  "tips": [
+   "Faustregel: Basmati und Jasmin 1 : 1,5, Langkornreis 1 : 2, Vollkornreis 1 : 2,5 und 35–40 Minuten.",
+   "Pro Person rechnet man 60–80 g ungekochten Reis.",
+   "Gekochten Reis schnell abkühlen und spätestens am nächsten Tag verbrauchen."
+  ]
+ },
+ {
+  "id": "kartoffelpueree-grundrezept",
+  "title": "Kartoffelpüree",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 30,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 1,
+    "unit": "kg",
+    "category": "obst_gemuese",
+    "note": "mehligkochend"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 200,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen, in gleich große Stücke schneiden und in Salzwasser 20 Minuten weich kochen.",
+   "Abgießen und 2 Minuten im offenen Topf ausdampfen lassen.",
+   "Milch erhitzen. Kartoffeln mit einem Kartoffelstampfer oder einer Presse zerdrücken – nicht mit dem Pürierstab, sonst wird das Püree kleisterig.",
+   "Heiße Milch und Butter nach und nach unterrühren, bis das Püree cremig ist. Mit Salz und Muskat abschmecken."
+  ],
+  "tips": [
+   "Mehligkochende Kartoffeln ergeben das lockerste Püree.",
+   "Varianten: mit Sellerie, Pastinake, Süßkartoffel oder Erbsen."
+  ]
+ },
+ {
+  "id": "spaetzle-selbstgemacht",
+  "title": "Spätzle selbst gemacht",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 40,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Mehl",
+    "amount": 400,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "Spätzlemehl oder Weizenmehl Type 405"
+   },
+   {
+    "name": "Eier",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Mehl, Eier, Salz und 75 ml lauwarmes Wasser verrühren. Nach und nach weitere 50–75 ml Wasser zugeben, bis ein zähflüssiger Teig entsteht.",
+   "Den Teig mit einem Kochlöffel 5 Minuten kräftig schlagen, bis er Blasen wirft. 10 Minuten ruhen lassen.",
+   "Reichlich Salzwasser aufkochen. Teig portionsweise mit einem Spätzlehobel oder einer Presse ins siedende Wasser drücken.",
+   "Sobald die Spätzle nach etwa 2 Minuten an der Oberfläche schwimmen, mit einem Schaumlöffel herausheben und kurz in warmem Wasser schwenken."
+  ],
+  "tips": [
+   "Der Teig ist richtig, wenn er langsam und zäh vom Löffel reißt.",
+   "Für Käsespätzle abwechselnd mit geriebenem Bergkäse schichten."
+  ]
+ },
+ {
+  "id": "dinkel-vollkornbrot-saaten",
+  "title": "Dinkel-Vollkornbrot mit Saaten",
+  "chapter": "grundrezepte",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 75,
+  "servings": 20,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Dinkelvollkornmehl",
+    "amount": 500,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Trockenhefe",
+    "amount": 1,
+    "unit": "Päckchen",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salz",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sonnenblumenkerne",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Leinsamen (geschrotet)",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kürbiskerne",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "Apfelessig"
+   }
+  ],
+  "steps": [
+   "Mehl, Hefe, Salz und Saaten in einer Schüssel mischen. Essig und 500 ml lauwarmes Wasser zugeben und 2 Minuten zu einem klebrigen Teig verrühren – kneten ist nicht nötig.",
+   "Eine Kastenform (30 cm) mit Backpapier auslegen, den Teig einfüllen und glatt streichen.",
+   "In den kalten Ofen stellen, auf 200 °C Ober-/Unterhitze einschalten und 60 Minuten backen.",
+   "Brot aus der Form nehmen und ohne Form weitere 10 Minuten backen, bis es beim Klopfen auf die Unterseite hohl klingt.",
+   "Auf einem Gitter vollständig auskühlen lassen, erst dann anschneiden."
+  ],
+  "tips": [
+   "Der Essig macht die Krume locker und das Brot länger frisch.",
+   "In Scheiben geschnitten einfrieren und nach Bedarf toasten."
+  ]
+ },
+ {
+  "id": "knuspermuesli-granola",
+  "title": "Knuspermüsli (Granola) selbst gemacht",
+  "chapter": "grundrezepte",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 35,
+  "servings": 10,
+  "tags": [
+   "meal-prep",
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Haferflocken",
+    "amount": 300,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mandeln",
+    "amount": 60,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 40,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kürbiskerne",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "oder Ahornsirup"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rosinen",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 160 °C Umluft vorheizen und ein Blech mit Backpapier auslegen.",
+   "Nüsse grob hacken und mit Haferflocken, Kürbiskernen, Zimt und einer Prise Salz mischen.",
+   "Honig und Öl kurz erwärmen, über die Mischung gießen und gründlich verrühren.",
+   "Auf dem Blech verteilen, leicht andrücken und 20–25 Minuten goldbraun backen. Nach 12 Minuten einmal wenden, aber Klumpen nicht ganz zerteilen.",
+   "Auskühlen lassen – erst dann wird es knusprig – und die Rosinen untermischen."
+  ],
+  "tips": [
+   "In einem Glas luftdicht verschlossen 4 Wochen haltbar.",
+   "Eine Portion sind etwa 50 g, z. B. mit Joghurt und Obst."
+  ]
+ },
+ {
+  "id": "eingelegte-rote-zwiebeln",
+  "title": "Eingelegte rote Zwiebeln",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 10,
+  "servings": 6,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "rote Zwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Essig",
+    "amount": 150,
+    "unit": "ml",
+    "category": "vorrat",
+    "note": "Apfelessig"
+   },
+   {
+    "name": "Zucker",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Zwiebeln in sehr feine Ringe schneiden und in ein sauberes Schraubglas füllen.",
+   "Essig mit 150 ml Wasser, Zucker und Salz aufkochen, bis sich alles gelöst hat.",
+   "Heißen Sud über die Zwiebeln gießen, verschließen und mindestens 30 Minuten ziehen lassen."
+  ],
+  "rest_min": 30,
+  "tips": [
+   "Die Zwiebeln werden leuchtend pink und mild – perfekt für Bowls, Tacos, Burger und Brote.",
+   "Im Kühlschrank 2 Wochen haltbar."
+  ]
+ },
+ {
+  "id": "apfelmus-selbstgemacht",
+  "title": "Apfelmus selbst gemacht",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 25,
+  "servings": 6,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Apfel",
+    "amount": 1.5,
+    "unit": "kg",
+    "category": "obst_gemuese",
+    "note": "z. B. Boskop oder Elstar"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat",
+    "note": "nach Wunsch"
+   }
+  ],
+  "steps": [
+   "Äpfel schälen, vierteln, entkernen und in Stücke schneiden.",
+   "Mit 100 ml Wasser und dem Saft einer halben Zitrone in einem Topf aufkochen.",
+   "Zugedeckt bei kleiner Hitze 10–15 Minuten weich dünsten, gelegentlich umrühren.",
+   "Mit dem Kartoffelstampfer stückig zerdrücken oder fein pürieren und nach Wunsch mit Zimt abschmecken."
+  ],
+  "tips": [
+   "Süße Sorten brauchen keinen Zucker.",
+   "Heiß in saubere Gläser gefüllt hält sich Apfelmus im Kühlschrank 2 Wochen."
+  ]
+ },
+ {
+  "id": "chia-beeren-marmelade",
+  "title": "Chia-Beeren-Marmelade",
+  "chapter": "grundrezepte",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 15,
+  "servings": 10,
+  "tags": [
+   "suess"
+  ],
+  "ingredients": [
+   {
+    "name": "Beeren (TK)",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "oder frisch"
+   },
+   {
+    "name": "Chiasamen",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ahornsirup",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "oder Honig"
+   },
+   {
+    "name": "Zitronensaft",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Beeren in einem Topf bei mittlerer Hitze 5 Minuten erhitzen, bis sie zerfallen. Mit einer Gabel zerdrücken.",
+   "Vom Herd nehmen und Ahornsirup und Zitronensaft unterrühren.",
+   "Chiasamen einrühren und 15 Minuten quellen lassen, dabei zweimal umrühren.",
+   "In ein sauberes Glas füllen – im Kühlschrank wird die Marmelade fester."
+  ],
+  "tips": [
+   "Hält sich etwa eine Woche im Kühlschrank.",
+   "Eine Portion entspricht etwa 2 Esslöffeln."
+  ]
+ },
+ {
+  "id": "ofengemuese-grundrezept",
+  "title": "Ofengemüse (Grundrezept)",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 40,
+  "servings": 4,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Paprika",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 220 °C Umluft vorheizen.",
+   "Gemüse in etwa gleich große Stücke schneiden – feste Sorten wie Karotten etwas kleiner als weiche wie Zucchini.",
+   "Mit Öl, Thymian, Paprika und Salz mischen und mit Abstand auf einem Blech verteilen. Liegt es zu dicht, dämpft es statt zu rösten.",
+   "25–30 Minuten rösten, nach 15 Minuten einmal wenden, bis die Ränder gebräunt sind."
+  ],
+  "tips": [
+   "Funktioniert mit fast allem: Kürbis, Rote Bete, Blumenkohl, Brokkoli, Pastinaken, Süßkartoffeln.",
+   "Heißluftfritteuse: 200 °C, 15–18 Minuten, zweimal schütteln.",
+   "Mit Feta, Halloumi, Kichererbsen oder Hähnchen wird daraus ein Hauptgericht."
+  ]
+ },
+ {
+  "id": "eier-kochen",
+  "title": "Eier kochen – weich, wachsweich, hart",
+  "chapter": "grundrezepte",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 15,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Eier",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "milch",
+    "note": "Größe M, zimmerwarm"
+   }
+  ],
+  "steps": [
+   "Eier am stumpfen Ende mit einem Eierpiekser oder einer Nadel anstechen, damit sie nicht platzen.",
+   "Wasser in einem Topf sprudelnd aufkochen und die Eier mit einem Löffel vorsichtig hineinlegen.",
+   "Je nach Wunsch garen: 5 Minuten für weiche Eier, 7 Minuten für wachsweiche, 10 Minuten für harte Eier.",
+   "Eier sofort kalt abschrecken – so lassen sie sich besser schälen und garen nicht nach."
+  ],
+  "tips": [
+   "Eier direkt aus dem Kühlschrank brauchen etwa 1 Minute länger.",
+   "Hart gekochte Eier halten sich ungeschält etwa eine Woche im Kühlschrank."
+  ]
+ },
+ {
+  "id": "pommes-airfryer",
+  "title": "Pommes aus der Heißluftfritteuse (Grundrezept)",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 35,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen oder gründlich waschen und in 1 cm dicke Stäbchen schneiden.",
+   "Stäbchen 15 Minuten in kaltem Wasser wässern, damit überschüssige Stärke austritt. Dann sehr gründlich trocken tupfen.",
+   "Mit Öl und Paprika mischen und in den Korb geben – nicht mehr als zwei Lagen.",
+   "Bei 200 °C 18–22 Minuten goldbraun backen, alle 6 Minuten kräftig schütteln. Erst nach dem Backen salzen."
+  ],
+  "tips": [
+   "Trockene Kartoffeln sind das Geheimnis knuspriger Pommes.",
+   "Im Backofen: 220 °C Umluft auf dem Blech, ca. 30 Minuten, einmal wenden."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 22
+  }
+ },
+ {
+  "id": "kraeuterbutter",
+  "title": "Kräuterbutter",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 15,
+  "servings": 10,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Butter",
+    "amount": 125,
+    "unit": "g",
+    "category": "milch",
+    "note": "weich"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "unbehandelt"
+   },
+   {
+    "name": "Salz",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Butter 30 Minuten vorher aus dem Kühlschrank nehmen, damit sie weich ist.",
+   "Kräuter sehr fein hacken, Knoblauch pressen.",
+   "Butter mit Kräutern, Knoblauch, etwas Zitronenschale, Salz und Pfeffer cremig verrühren.",
+   "Auf Frischhaltefolie zu einer Rolle formen und mindestens 1 Stunde kalt stellen."
+  ],
+  "rest_min": 60,
+  "tips": [
+   "In Scheiben geschnitten lässt sich Kräuterbutter portionsweise einfrieren.",
+   "Zu Steak, Fisch, Ofenkartoffeln oder Baguette."
+  ]
+ },
+ {
+  "id": "asia-wok-sauce",
+  "title": "Wok-Sauce (Grundrezept)",
+  "chapter": "grundrezepte",
+  "meal": [],
+  "time_min": 5,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Sojasauce",
+    "amount": 4,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "Reisessig"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "oder Ahornsirup"
+   },
+   {
+    "name": "Sesamöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Knoblauch und Ingwer fein reiben.",
+   "Alle Zutaten mit 4 EL Wasser in einem Glas verrühren, bis sich die Stärke gelöst hat.",
+   "Am Ende des Bratens in den Wok gießen und unter Rühren 1 Minute aufkochen, bis die Sauce glänzt und bindet."
+  ],
+  "tips": [
+   "Reicht für eine Pfanne mit 2–3 Portionen Gemüse, Tofu, Hähnchen oder Nudeln.",
+   "Mit Chili, Erdnussbutter oder Limette variieren."
+  ]
  }
 ]

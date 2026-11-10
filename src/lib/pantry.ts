@@ -41,7 +41,8 @@ export function pantryChoices(recipes: Recipe[]): { name: string; count: number 
 
 /**
  * Rezepte, die zu den vorhandenen Zutaten passen. Mindestens eine Zutat muss vorhanden sein.
- * Sortiert nach: wenigste fehlende Zutaten, dann höchster Anteil vorhandener Zutaten.
+ * Sortiert nach: wenigste fehlende Zutaten, dann die meisten genutzten Zutaten (so steht ein Omelett mit Eiern,
+ * Spinat und Feta vor „Eier kochen“), dann höchster Anteil vorhandener Zutaten.
  */
 export function matchRecipes(recipes: Recipe[], have: string[], opts: PantryOptions): PantryMatch[] {
   const owned = new Set(have)
@@ -52,7 +53,13 @@ export function matchRecipes(recipes: Recipe[], have: string[], opts: PantryOpti
       return { recipe, have: hit, missing: needs.filter((n) => !owned.has(n)), coverage: needs.length ? hit.length / needs.length : 0 }
     })
     .filter((m) => m.have.length > 0)
-    .sort((a, b) => a.missing.length - b.missing.length || b.coverage - a.coverage || a.recipe.title.localeCompare(b.recipe.title, 'de'))
+    .sort(
+      (a, b) =>
+        a.missing.length - b.missing.length ||
+        b.have.length - a.have.length ||
+        b.coverage - a.coverage ||
+        a.recipe.title.localeCompare(b.recipe.title, 'de'),
+    )
 }
 
 /** Die konkreten Zutaten eines Rezepts zu fehlenden Oberbegriffen (für die Einkaufsliste) */

@@ -74,7 +74,8 @@ describe('Rezepte', () => {
   it('lassen sich vollständig berechnen', () => {
     for (const r of RECIPES) {
       expect(unresolvedIngredients(r.ingredients), r.id).toEqual([])
-      expect(r.nutrition.kcal, r.id).toBeGreaterThanOrEqual(40)
+      // Grundrezepte wie Brühe oder eingelegte Zwiebeln dürfen sehr leicht sein
+      expect(r.nutrition.kcal, r.id).toBeGreaterThanOrEqual(r.chapter === 'grundrezepte' ? 5 : 40)
       expect(r.nutrition.kcal, r.id).toBeLessThanOrEqual(950)
     }
   })

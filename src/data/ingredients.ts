@@ -343,6 +343,15 @@ add('Trockenhefe', [325, 40, 13, 7.6, 27], '', { u: { Päckchen: 7, TL: 3 }, bas
 add('Blätterteig', [380, 6.0, 38, 22, 1.5], 'G', { u: { Rolle: 275 } })
 add('Yufka-Teigblätter', [290, 9.0, 60, 1.5, 2.5], 'G', { base: 'Yufka' })
 add('Reispapier', [340, 0.5, 83, 0.5, 1.0], '', { u: { Blatt: 9 } })
+add('Vanillezucker', [400, 0, 100, 0, 0], '', { u: { Päckchen: 8, TL: 4 }, staple: true })
+add('Puderzucker', [400, 0, 100, 0, 0], '', { u: { EL: 8, TL: 3 }, staple: true })
+add('Eiweiß', [48, 11, 0.7, 0.2, 0], 'E', { u: { Stück: 33 }, base: 'Eier' })
+add('Löffelbiskuits', [390, 8.0, 80, 4.0, 1.0], 'GE', { u: { Stück: 6 } })
+add('Espresso', [2, 0.1, 0.3, 0, 0], '', { base: 'Kaffee' })
+add('Rhabarber', [21, 0.6, 1.4, 0.1, 3.2], '', { u: { Stück: 100 }, s: [4, 5, 6] })
+add('Heidelbeeren', [42, 0.6, 7.4, 0.6, 4.9], '', { s: [7, 8, 9] })
+add('Pinienkerne', [675, 14, 4.0, 68, 4.0], '')
+add('Eigelb', [330, 16, 0.3, 29, 0], 'E', { u: { Stück: 18 }, base: 'Eier' })
 
 export const INGREDIENTS: ReadonlyMap<string, IngredientInfo> = new Map(LIST.map((i) => [i.name, i]))
 export const INGREDIENT_LIST: readonly IngredientInfo[] = LIST
