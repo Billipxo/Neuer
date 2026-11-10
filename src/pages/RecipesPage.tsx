@@ -128,7 +128,7 @@ export function RecipesPage() {
         subtitle={
           chapter
             ? `${chapterCounts.get(chapter.id) ?? 0} Rezepte`
-            : `${base.length} Rezepte in ${CHAPTERS.length} Kapiteln · ${airfryerRecipes(base).length} für die Heißluftfritteuse`
+            : `${base.length} Rezepte · ${CHAPTERS.length} Kapitel · ${airfryerRecipes(base).length} für die Heißluftfritteuse`
         }
         actions={
           <div className="flex rounded-full bg-surface-2 p-0.5" role="group" aria-label="Ansicht">

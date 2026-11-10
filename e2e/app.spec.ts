@@ -123,7 +123,7 @@ test('Offline-Hinweis erscheint ohne Verbindung', async ({ page, context }) => {
 
 test('Rezept-Galerie: Heißluftfritteuse, Favoriten und Zubereitungsart', async ({ page }) => {
   await startDemo(page)
-  await page.getByRole('link', { name: 'Rezepte' }).click()
+  await page.getByRole('link', { name: 'Kochbuch', exact: true }).click()
   await expect(page.getByRole('heading', { name: /Aus der Heißluftfritteuse/ })).toBeVisible()
   await page.getByRole('button', { name: 'Süßkartoffel-Pommes mit Kräuterquark als Favorit merken' }).click()
   await expect(page.getByRole('button', { name: 'Süßkartoffel-Pommes mit Kräuterquark aus Favoriten entfernen' })).toHaveAttribute('aria-pressed', 'true')
@@ -165,7 +165,7 @@ test('Kochmodus: Zutaten abhaken, Schritte durchgehen und Timer starten', async 
 
 test('Kochwissen: Übersicht, Anleitung und Verknüpfung mit Rezepten', async ({ page }) => {
   await startDemo(page)
-  await page.getByRole('link', { name: 'Rezepte' }).click()
+  await page.getByRole('link', { name: 'Kochbuch', exact: true }).click()
   await page.getByRole('link', { name: /Kochwissen/ }).click()
   await expect(page.getByRole('heading', { name: 'Kochwissen' })).toBeVisible()
   await page.getByRole('link', { name: /Reis perfekt kochen/ }).click()
@@ -182,7 +182,7 @@ test('Kochwissen: Übersicht, Anleitung und Verknüpfung mit Rezepten', async ({
 
 test('Was habe ich da? findet Rezepte und setzt Fehlendes auf die Einkaufsliste', async ({ page }) => {
   await startDemo(page)
-  await page.getByRole('link', { name: 'Rezepte' }).click()
+  await page.getByRole('link', { name: 'Kochbuch', exact: true }).click()
   await page.getByRole('link', { name: /Was habe ich da/ }).click()
   for (const z of ['Eier', 'Spinat']) {
     await page.getByLabel('Zutat suchen').fill(z)

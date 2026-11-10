@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterRecipes, recommendRecipes, RECIPES, roundAmount, scaleIngredients, recipeVeggies, getRecipe } from './recipes'
+import { filterRecipes, recommendRecipes, RECIPES, roundAmount, scaleIngredients, recipeVeggies, getRecipe, recipeEmoji } from './recipes'
 import { CATEGORY_ORDER } from './shopping'
 import { CHAPTERS } from '../data/chapters'
 import { MEAL_TYPES } from '../types'
@@ -37,6 +37,19 @@ describe('Rezept-Datensatz', () => {
       expect(seen.get(key), `${r.id} doppelt mit ${seen.get(key)}`).toBeUndefined()
       seen.set(key, r.id)
     }
+  })
+  it('wählt passende Symbole – das Hauptgericht zählt vor der Beilage', () => {
+    const e = (title: string) => recipeEmoji({ title })
+    expect(e('Rinderrouladen mit Rotkohl und Kartoffeln')).toBe('🥩')
+    expect(e('Forelle Müllerin mit Mandelbutter und Petersilienkartoffeln')).toBe('🐟')
+    expect(e('Paprikahuhn mit Bandnudeln')).toBe('🍗')
+    // „ß“ zählt nicht als Wortgrenze: „Heißluftfritteuse“ ist kein Ei, „Spieße“ kein Pie
+    expect(e('Kartoffelchips aus der Heißluftfritteuse')).toBe('🥔')
+    expect(e('Hähnchenspieße mit Paprika und Tzatziki')).toBe('🍗')
+    expect(e('Schinkennudeln mit Ei und Salat')).toBe('🍝')
+    expect(e('Gebratener Gemüsereis mit Ei')).toBe('🍚')
+    // Jedes Rezept bekommt ein eigenes Symbol statt des Platzhalters
+    for (const r of RECIPES) expect(recipeEmoji(r), r.id).not.toBe('🍽️')
   })
   it('deckt alle Mahlzeitenarten ab', () => {
     for (const m of MEAL_TYPES) expect(RECIPES.filter((r) => r.meal.includes(m)).length).toBeGreaterThanOrEqual(5)

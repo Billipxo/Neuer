@@ -28,7 +28,7 @@ export function PageHeader({
       )}
       <div className="min-w-0 flex-1">
         <h1 className="truncate text-2xl font-bold tracking-tight">{title}</h1>
-        {subtitle && <p className="truncate text-sm text-muted">{subtitle}</p>}
+        {subtitle && <p className="line-clamp-2 text-sm text-muted">{subtitle}</p>}
       </div>
       {actions}
     </header>

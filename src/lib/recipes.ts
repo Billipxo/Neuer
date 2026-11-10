@@ -96,60 +96,106 @@ export function recipeVeggies(r: Recipe): string[] {
 }
 
 const EMOJI_RULES: [RegExp, string][] = [
+  // Getränke
+  [/lassi/i, '🥭'],
+  [/ayran|haferdrink selbst/i, '🥛'],
+  [/kaffee|espresso/i, '☕'],
+  [/tee\b|chai|goldene milch/i, '🍵'],
+  [/limonade/i, '🍋'],
+  [/^wasser\b/i, '💧'],
   // Gerichte
   [/burger/i, '🍔'],
   [/pizza|flammkuchen/i, '🍕'],
   [/taco/i, '🌮'],
-  [/burrito|wrap/i, '🌯'],
-  [/sushi/i, '🍣'],
-  [/pad thai|nudelsuppe|ramen/i, '🍜'],
-  [/risotto|reis-bowl|reisbowl|gemüsereis|milchreis/i, '🍚'],
-  [/curry|dal\b/i, '🍛'],
-  [/lasagne|spaghetti|pasta|nudel|bolognese|gnocchi|penne|schupfnudel/i, '🍝'],
-  [/spätzle/i, '🧀'],
-  [/pancake|kaiserschmarrn/i, '🥞'],
+  [/pulled chicken/i, '🥪'],
+  [/burrito|enchilada|wrap/i, '🌯'],
+  [/sushi|poke/i, '🍣'],
+  [/paella/i, '🥘'],
+  [/pad thai|nudelsuppe|ramen|suppe mit (faden)?nudeln|gemüsebrühe mit/i, '🍜'],
+  [/risotto|reis-bowl|reisbowl|gemüsereis|milchreis|reispfanne|nasi goreng|biryani|^reis\b/i, '🍚'],
+  [/currywurst|würstchen|bratwurst/i, '🌭'],
+  [/curry|dal\b|butter chicken|masala/i, '🍛'],
+  [/käsespätzle/i, '🧀'],
+  [/lasagne|spaghetti|pasta|nudel|bolognese|gnocchi|penne|cannelloni|tortellini|makkaroni|spätzle/i, '🍝'],
+  [/pfannkuchen|pancake|kaiserschmarrn|okonomiyaki|quarkkeulchen/i, '🥞'],
+  [/reiswaffel/i, '🍘'],
+  [/waffel/i, '🧇'],
+  [/oats|porridge|müsli|granola|grieß/i, '🥣'],
   [/muffin/i, '🧁'],
-  [/bananenbrot/i, '🍞'],
+  [/bananenbrot|^dinkel-vollkornbrot/i, '🍞'],
+  [/kuchen|tiramisu/i, '🍰'],
+  [/brownie/i, '🍫'],
+  [/keks|makrone|kipferl/i, '🍪'],
+  [/zimtschnecke/i, '🥐'],
+  [/quiche|tarte|\bpie\b|börek|strudel/i, '🥧'],
+  [/pudding|grütze/i, '🍮'],
+  [/kirsch/i, '🍒'],
+  [/quarkbällchen/i, '🍩'],
   [/brötchen/i, '🥯'],
   [/pommes/i, '🍟'],
   [/popcorn/i, '🍿'],
   [/studentenfutter/i, '🥜'],
-  [/kugeln|bällchen/i, '🍪'],
-  [/trauben/i, '🍇'],
-  [/reiswaffel/i, '🍘'],
-  [/nicecream|frozen|parfait|bananen-eis/i, '🍨'],
+  [/nicecream|frozen|parfait|bananen-eis|eis am stiel/i, '🍨'],
   [/schoko/i, '🍫'],
+  [/marmelade/i, '🫙'],
   [/chia/i, '🥥'],
   [/shake|smoothie/i, '🥤'],
-  [/oats|porridge|müsli|grieß/i, '🥣'],
-  [/garnele/i, '🦐'],
-  [/lachs|kabeljau|thunfisch|seelachs|fisch/i, '🐟'],
-  [/hähnchen|pute|huhn|hühner|gyros/i, '🍗'],
+  [/tintenfisch/i, '🦑'],
+  [/muschel/i, '🦪'],
+  [/garnele|krabben|gambas/i, '🦐'],
+  [/lachs|kabeljau|thunfisch|seelachs|fisch|fish\b|forelle|matjes|zander|dorade|makrele|rotbarsch/i, '🐟'],
+  [/hähnchen|pute|huhn|hühner|chicken|gyros/i, '🍗'],
+  [/kohlroulade|kohlrabi/i, '🥬'],
+  // vegetarische Gerichte mit „fleischigen“ Namen
+  [/blumenkohl-steak/i, '🥦'],
+  [/kartoffelgulasch/i, '🥔'],
+  [/roulade|steak|schnitzel|rind|schwein|kasseler|lamm/i, '🥩'],
+  [/gemüse-frikadelle/i, '🥕'],
   [/klopse|frikadelle|ćevap|cevap|gulasch|hack/i, '🍖'],
+  [/kugeln|bällchen|riegel/i, '🍪'],
+  [/trauben/i, '🍇'],
   [/falafel/i, '🧆'],
   [/hummus|edamame|kichererbse|linse|bohne|erbse/i, '🫘'],
-  [/ei\b|eier|omelett|frittata|shakshuka|rührei|spiegelei|bauernfrühstück/i, '🍳'],
-  [/tomatensuppe|tomaten-mozzarella/i, '🍅'],
+  [/aubergine|parmigiana|moussaka|baba ganoush/i, '🍆'],
+  [/knödel/i, '🥟'],
+  [/(^|[\s-])ei([\s,.)-]|$)|eier|omelett|frittata|shakshuka|rührei|spiegelei|bauernfrühstück|huevos/i, '🍳'],
+  [/tomatensuppe|tomatensauce|tomatensalsa|tomate-mozzarella|bruschetta|caprese/i, '🍅'],
+  [/guacamole/i, '🥑'],
   [/kürbis/i, '🎃'],
   [/möhre|karotte|gemüsesticks/i, '🥕'],
-  [/suppe|eintopf|chili|pichelsteiner/i, '🍲'],
-  [/salat|tabouleh/i, '🥗'],
+  [/suppe|eintopf|chili|pichelsteiner|brühe|kaltschale/i, '🍲'],
+  [/salat|tabouleh|rucola/i, '🥗'],
+  [/gurke|tzatziki/i, '🥒'],
   [/brokkoli|blumenkohl|rosenkohl/i, '🥦'],
-  [/grünkohl|rotkohl|spitzkohl|sauerkraut|wirsing/i, '🥬'],
+  [/grünkohl|rotkohl|spitzkohl|weißkohl|sauerkraut|wirsing/i, '🥬'],
   [/spargel/i, '🌿'],
   [/champignon|pilz/i, '🍄'],
   [/apfel|beeren|banane|crumble/i, '🍎'],
   [/brot|toast|knäcke/i, '🥪'],
+  [/süßkartoffel/i, '🍠'],
   [/kartoffel/i, '🥔'],
-  [/paprika|gemüse|zucchini|süßkartoffel|ratatouille/i, '🫑'],
+  [/paprika|gemüse|zucchini|ratatouille|antipasti|tian/i, '🫑'],
   [/tofu/i, '🍱'],
+  [/kräuterbutter/i, '🧈'],
   [/quark|skyr|joghurt|hüttenkäse/i, '🥛'],
-  [/feta|halloumi/i, '🧀'],
+  [/feta|halloumi|camembert|obatzda/i, '🧀'],
+  [/pesto/i, '🌿'],
+  [/zwiebel/i, '🧅'],
+  [/sauce|béchamel|hollandaise|vinaigrette|dressing|dip\b/i, '🫙'],
 ]
 
+function matchEmoji(text: string): string | undefined {
+  for (const [re, e] of EMOJI_RULES) if (re.test(text)) return e
+  return undefined
+}
+
+/**
+ * Symbol für eine Rezeptkarte. Zuerst zählt der Hauptteil des Titels („Rinderrouladen“ in „Rinderrouladen mit
+ * Rotkohl“), erst danach der ganze Titel – so bestimmt die Beilage nicht das Bild.
+ */
 export function recipeEmoji(r: Pick<Recipe, 'title'>): string {
-  for (const [re, e] of EMOJI_RULES) if (re.test(r.title)) return e
-  return '🍽️'
+  const head = r.title.split(/\s(?:mit|in|auf)\s/)[0]
+  return matchEmoji(head) ?? matchEmoji(r.title) ?? '🍽️'
 }
 
 export const TAG_LABELS: Record<string, string> = {

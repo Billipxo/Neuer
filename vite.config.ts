@@ -56,6 +56,11 @@ export default defineConfig({
       },
     }),
   ],
+  build: {
+    // Der größte Chunk enthält das Kochbuch (reine Rezeptdaten, ca. 115 kB gzip). Er wird erst beim Öffnen
+    // des Kochbuchs geladen und vom Service Worker für die Offline-Nutzung vorgehalten.
+    chunkSizeWarningLimit: 800,
+  },
   test: {
     environment: 'node',
     include: ['src/**/*.test.ts'],
