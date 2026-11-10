@@ -18707,5 +18707,4342 @@
   "tips": [
    "Pilze portionsweise braten – zu viele auf einmal kochen nur im eigenen Saft."
   ]
+ },
+ {
+  "id": "kartoffelpuffer-apfelmus",
+  "title": "Kartoffelpuffer mit Apfelmus",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 3,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 1,
+    "unit": "kg",
+    "category": "obst_gemuese",
+    "note": "mehligkochend"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "oder Haferflocken"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Apfelmus (ungesüßt)",
+    "amount": 400,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen und auf der feinen Seite der Reibe reiben, die Zwiebel ebenfalls reiben.",
+   "Die Masse in ein sauberes Küchentuch geben und kräftig ausdrücken – je trockener, desto knuspriger werden die Puffer.",
+   "Mit Eiern, Mehl, Salz und Muskat zu einem Teig verrühren.",
+   "Öl portionsweise in einer großen Pfanne erhitzen. Je 2 EL Teig hineingeben, flach drücken und pro Seite 3–4 Minuten goldbraun braten.",
+   "Fertige Puffer auf Küchenpapier abtropfen lassen und im Ofen bei 80 °C warm halten, bis alle gebraten sind. Mit Apfelmus servieren."
+  ],
+  "tips": [
+   "Den Teig zügig verarbeiten, sonst werden die Kartoffeln grau.",
+   "Herzhaft schmecken die Puffer mit Kräuterquark oder Räucherlachs."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 14,
+   "steps": [
+    "Teig wie beschrieben zubereiten.",
+    "Den Korb mit Backpapier auslegen und dünn mit Öl bestreichen. Teig in flachen Talern daraufsetzen und mit wenig Öl bepinseln.",
+    "Bei 200 °C 14 Minuten backen, nach 8 Minuten wenden. In mehreren Durchgängen backen."
+   ]
+  }
+ },
+ {
+  "id": "roesti-raeucherlachs",
+  "title": "Rösti mit Räucherlachs und Meerrettich-Quark",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend, am Vortag als Pellkartoffeln gekocht"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Meerrettich",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat",
+    "note": "aus dem Glas"
+   },
+   {
+    "name": "Dill",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Räucherlachs",
+    "amount": 100,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Feldsalat",
+    "amount": 50,
+    "unit": "g",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Pellkartoffeln pellen und grob raspeln. Mit Salz und Pfeffer würzen.",
+   "1 EL Öl in einer beschichteten Pfanne erhitzen, die Kartoffeln hineingeben, flach drücken und bei mittlerer Hitze 10 Minuten braten, bis die Unterseite goldbraun ist.",
+   "Rösti mit Hilfe eines großen Tellers wenden, restliches Öl in die Pfanne geben und die zweite Seite weitere 8–10 Minuten braten.",
+   "Quark mit Meerrettich, gehacktem Dill, etwas Zitronensaft und Salz glatt rühren.",
+   "Rösti vierteln und mit Räucherlachs, Meerrettich-Quark und Feldsalat anrichten."
+  ],
+  "tips": [
+   "Gekochte Kartoffeln vom Vortag ergeben die knusprigsten Rösti. Rohe geriebene Kartoffeln gehen auch – dann sehr gut ausdrücken."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 16,
+   "steps": [
+    "Kartoffeln wie beschrieben raspeln und würzen.",
+    "Zu vier flachen Rösti-Talern formen, auf Backpapier in den Korb legen und mit dem Öl bepinseln.",
+    "Bei 200 °C 16 Minuten backen, nach 10 Minuten wenden."
+   ]
+  }
+ },
+ {
+  "id": "kartoffelgratin",
+  "title": "Kartoffelgratin mit Bergkäse",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 60,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 1,
+    "unit": "kg",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "TL",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 300,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Sahne",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Bergkäse",
+    "amount": 60,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   },
+   {
+    "name": "Kopfsalat",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Ofen auf 180 °C Umluft vorheizen. Kartoffeln schälen und in 2–3 mm dünne Scheiben hobeln.",
+   "Eine Auflaufform mit der halbierten Knoblauchzehe ausreiben und mit Butter fetten.",
+   "Milch und Sahne mit Salz, Pfeffer, Muskat und Thymian aufkochen. Kartoffelscheiben darin 5 Minuten köcheln – so bindet die Stärke die Sauce und das Gratin gart gleichmäßiger.",
+   "Alles in die Form geben, glatt streichen und mit dem Käse bestreuen. 40–45 Minuten backen, bis die Oberfläche goldbraun ist und ein Messer leicht hineingleitet.",
+   "Gratin 5 Minuten ruhen lassen. Salat mit Essig, Öl, Salz und Pfeffer anmachen und dazu servieren."
+  ],
+  "tips": [
+   "Mit einem Gemüsehobel werden die Scheiben gleichmäßig dünn – dann sind alle Kartoffeln gleichzeitig gar.",
+   "In der Heißluftfritteuse in einer passenden Form: 160 °C, 30–35 Minuten."
+  ]
+ },
+ {
+  "id": "faecherkartoffeln-airfryer",
+  "title": "Fächerkartoffeln mit Kräuterquark",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 700,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "mittelgroß, festkochend"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rosmarin",
+    "amount": 1,
+    "unit": "Zweig",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 4,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln gründlich waschen. Jede Kartoffel zwischen zwei Kochlöffelstiele legen und quer im Abstand von 3 mm einschneiden – die Stiele verhindern, dass du durchschneidest.",
+   "Öl mit Paprika, Salz und fein gehacktem Rosmarin verrühren und die Kartoffeln damit einpinseln, auch zwischen die Fächer.",
+   "Im Korb bei 200 °C 30 Minuten garen. Nach 15 Minuten nochmals mit dem restlichen Öl bepinseln, damit sich die Fächer öffnen.",
+   "Quark mit Milch, gehackten Kräutern, gepresstem Knoblauch, Salz und Pfeffer glatt rühren und zu den Kartoffeln servieren."
+  ],
+  "tips": [
+   "Im Backofen: 200 °C Umluft, 45–50 Minuten.",
+   "Mit etwas geriebenem Bergkäse in den letzten 3 Minuten überbacken."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 30
+  }
+ },
+ {
+  "id": "quetschkartoffeln-airfryer",
+  "title": "Knusprige Quetschkartoffeln mit Avocado-Dip",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 45,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 700,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "klein, festkochend"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauchpulver",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Avocado",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Griechischer Joghurt 2 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Limette",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln mit Schale in Salzwasser 18–20 Minuten kochen, bis sie weich sind. Abgießen und 5 Minuten ausdampfen lassen.",
+   "Kartoffeln auf einem Brett mit dem Boden eines Glases flach drücken, bis sie aufplatzen.",
+   "Mit Öl bepinseln und mit Paprika, Knoblauchpulver und Salz bestreuen.",
+   "Im Korb bei 200 °C 15–18 Minuten backen, bis die Ränder knusprig sind.",
+   "Avocado mit Joghurt und Limettensaft zerdrücken und salzen. Als Dip dazu servieren."
+  ],
+  "tips": [
+   "Die Kartoffeln lassen sich am Vortag kochen – dann sind sie besonders knusprig.",
+   "Im Backofen: 220 °C Umluft auf dem Blech, ca. 25 Minuten."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 18
+  }
+ },
+ {
+  "id": "himmel-und-erde",
+  "title": "Himmel und Erde mit Apfelringen und Röstzwiebeln",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 3,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 900,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "mehligkochend"
+   },
+   {
+    "name": "Apfel",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "säuerlich, z. B. Boskop"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 150,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen, würfeln und in Salzwasser 20 Minuten weich kochen. Zwei Äpfel schälen, würfeln und in den letzten 5 Minuten mitkochen.",
+   "Zwiebeln in Ringe schneiden und im Öl bei mittlerer Hitze 10–12 Minuten goldbraun braten. Salzen.",
+   "Den dritten Apfel entkernen, in Ringe schneiden und in der Hälfte der Butter pro Seite 2 Minuten braten.",
+   "Kartoffeln und Äpfel abgießen, mit heißer Milch und restlicher Butter grob stampfen und mit Salz und Muskat abschmecken.",
+   "Mit Röstzwiebeln, Apfelringen und Schnittlauch servieren."
+  ],
+  "tips": [
+   "Himmel (Äpfel) und Erde (Kartoffeln) – rheinischer Klassiker. Traditionell gibt es gebratene Blutwurst dazu, vegetarisch passt ein Spiegelei."
+  ]
+ },
+ {
+  "id": "kartoffel-erbsen-stampf-ei",
+  "title": "Kartoffel-Erbsen-Stampf mit pochiertem Ei",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "mehligkochend"
+   },
+   {
+    "name": "Erbsen (TK)",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "TL",
+    "category": "milch"
+   },
+   {
+    "name": "Minze",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese",
+    "note": "oder Petersilie"
+   },
+   {
+    "name": "Eier",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Essig",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen, würfeln und 15 Minuten in Salzwasser kochen. Erbsen in den letzten 4 Minuten mitgaren.",
+   "Abgießen, mit warmer Milch und Butter grob stampfen. Gehackte Minze unterheben und mit Salz und Pfeffer abschmecken.",
+   "Für die Eier einen Topf Wasser mit dem Essig aufkochen und die Hitze reduzieren, bis es nur noch leise siedet.",
+   "Eier einzeln in eine Tasse schlagen, ins Wasser gleiten lassen und 4 Minuten garziehen lassen. Mit einem Schaumlöffel herausheben.",
+   "Stampf auf Tellern anrichten, Eier daraufsetzen und mit Pfeffer bestreuen."
+  ],
+  "tips": [
+   "Ganz frische Eier halten beim Pochieren am besten zusammen.",
+   "Statt pochierter Eier passen Spiegeleier genauso."
+  ]
+ },
+ {
+  "id": "kuerbisrisotto",
+  "title": "Kürbisrisotto mit Salbei",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Gemüsebrühe",
+    "amount": 900,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Hokkaido-Kürbis",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Risottoreis",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "TL",
+    "category": "milch"
+   },
+   {
+    "name": "Salbei",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Brühe in einem Topf heiß halten. Zwiebel fein würfeln, Kürbis entkernen und in 1 cm große Würfel schneiden.",
+   "Zwiebel im Öl 3 Minuten glasig dünsten. Kürbis und Reis zugeben und 2 Minuten unter Rühren anschwitzen, bis die Reiskörner glasig sind.",
+   "Eine Kelle Brühe angießen und unter Rühren einkochen lassen. Nach und nach die restliche Brühe zugeben und 18–20 Minuten köcheln, bis der Reis cremig, aber noch bissfest ist.",
+   "Salbeiblätter in der Butter 1–2 Minuten knusprig braten.",
+   "Parmesan unter das Risotto rühren, 2 Minuten ruhen lassen und mit der Salbeibutter servieren."
+  ],
+  "tips": [
+   "Hokkaido muss nicht geschält werden – die Schale wird beim Kochen weich.",
+   "Ein Teil des Kürbisses zerfällt und macht das Risotto schön orange und cremig."
+  ]
+ },
+ {
+  "id": "spargelrisotto",
+  "title": "Spargelrisotto mit Zitrone",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Spargel (weiß)",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 1,
+    "unit": "l",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Risottoreis",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "unbehandelt"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Spargel schälen und die holzigen Enden abschneiden. Schalen und Enden in der Brühe 10 Minuten auskochen, dann abseihen – das gibt dem Risotto ein feines Spargelaroma.",
+   "Spargelstangen in 3 cm lange Stücke schneiden, die Köpfe beiseitelegen. Zwiebel fein würfeln.",
+   "Zwiebel im Öl 3 Minuten glasig dünsten, Reis zugeben und 2 Minuten anschwitzen.",
+   "Heiße Brühe kellenweise angießen und unter Rühren insgesamt 18–20 Minuten köcheln. Nach 10 Minuten die Spargelstücke, nach 15 Minuten die Köpfe zugeben.",
+   "Zitronenschale, einen Schuss Zitronensaft und Parmesan unterrühren und mit Schnittlauch servieren."
+  ],
+  "tips": [
+   "Grüner Spargel muss nicht geschält werden und gart etwas schneller."
+  ]
+ },
+ {
+  "id": "graupotto-pilze",
+  "title": "Graupen-Risotto mit Pilzen und Thymian",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 3,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Perlgraupen",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Champignons",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 800,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Bergkäse",
+    "amount": 40,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Graupen in einem Sieb gründlich abspülen. Pilze in Scheiben schneiden, Zwiebel und Karotte fein würfeln.",
+   "Pilze im Öl bei hoher Hitze 5 Minuten kräftig anbraten und herausnehmen.",
+   "Zwiebel, Karotte und Graupen im selben Topf 2 Minuten anschwitzen. Thymian und die Hälfte der Brühe zugeben.",
+   "Bei kleiner Hitze 30–35 Minuten köcheln, dabei nach und nach die restliche Brühe angießen und gelegentlich umrühren.",
+   "Pilze und Käse unterrühren, abschmecken und mit Petersilie servieren."
+  ],
+  "tips": [
+   "Graupen sind geschälte Gerstenkörner – regional, günstig und sie bleiben schön bissfest.",
+   "Aufgewärmt mit einem Schuss Brühe wieder cremig rühren."
+  ]
+ },
+ {
+  "id": "nasi-goreng",
+  "title": "Nasi Goreng mit Hähnchen und Spiegelei",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "am Vortag gekocht (roh gewogen)"
+   },
+   {
+    "name": "Hähnchenbrust",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Erbsen (TK)",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Hähnchen in kleine Würfel schneiden, Karotten fein würfeln, Knoblauch und Ingwer hacken.",
+   "1 EL Öl im Wok stark erhitzen und das Hähnchen 4 Minuten braten. Karotten, Erbsen, Knoblauch und Ingwer zugeben und 3 Minuten mitbraten.",
+   "Den kalten Reis zugeben und 4–5 Minuten unter Rühren braten, bis er heiß ist und leicht anröstet. Mit Sojasauce und Chili würzen, Frühlingszwiebeln untermischen.",
+   "Im restlichen Öl in einer Pfanne 3 Spiegeleier in 3–4 Minuten braten.",
+   "Reis mit je einem Spiegelei und Gurkenscheiben servieren."
+  ],
+  "tips": [
+   "Gekochter Reis vom Vortag klebt nicht und brät sich am besten.",
+   "Statt Hähnchen passen Garnelen oder Tofu."
+  ]
+ },
+ {
+  "id": "paella-haehnchen-garnelen",
+  "title": "Paella mit Hähnchen und Garnelen",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Hähnchenschenkelfilet",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Risottoreis",
+    "amount": 300,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "oder Paellareis"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kurkuma",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat",
+    "note": "oder ein paar Safranfäden"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 800,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Erbsen (TK)",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Garnelen",
+    "amount": 200,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Hähnchen in Würfel schneiden und in einer großen Pfanne im Öl 5 Minuten rundherum anbraten. Herausnehmen.",
+   "Gewürfelte Zwiebel, Knoblauch und Paprikastreifen in derselben Pfanne 5 Minuten braten.",
+   "Reis, Paprikapulver und Kurkuma zugeben und 1 Minute rühren. Brühe angießen, Hähnchen zurückgeben und einmal umrühren – ab jetzt nicht mehr rühren.",
+   "Bei mittlerer Hitze 15 Minuten köcheln. Erbsen und Garnelen in den Reis drücken und weitere 8–10 Minuten garen, bis die Flüssigkeit aufgesogen ist.",
+   "Zum Schluss die Hitze 1–2 Minuten erhöhen, bis es leise knistert – so entsteht am Boden die begehrte Kruste. Mit Zitronenspalten und Petersilie servieren."
+  ],
+  "tips": [
+   "Nicht rühren: Paella soll locker und körnig bleiben, nicht cremig wie Risotto."
+  ]
+ },
+ {
+  "id": "mexikanische-reispfanne",
+  "title": "Mexikanische Reispfanne mit Bohnen und Mais",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 3,
+  "tags": [
+   "one-pot",
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 400,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kidneybohnen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Mais",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese",
+    "note": "oder Petersilie"
+   }
+  ],
+  "steps": [
+   "Zwiebel und Paprika würfeln und im Öl 4 Minuten anbraten.",
+   "Knoblauch, Reis, Kreuzkümmel und Paprikapulver zugeben und 1 Minute rösten.",
+   "Tomaten und Brühe zugeben, aufkochen und zugedeckt bei kleiner Hitze 15 Minuten garen.",
+   "Bohnen und Mais abspülen, unterheben und weitere 5 Minuten garen, bis der Reis weich ist.",
+   "Mit Limettensaft, Salz und Koriander abschmecken."
+  ],
+  "tips": [
+   "Mit Avocado, Joghurt oder geriebenem Käse servieren.",
+   "Hält sich im Kühlschrank 3 Tage und schmeckt auch in Wraps."
+  ]
+ },
+ {
+  "id": "gemuese-biryani",
+  "title": "Gemüse-Biryani mit Minz-Joghurt",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Reis",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "Basmati"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Garam Masala",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kurkuma",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Blumenkohl",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kichererbsen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 500,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Erbsen (TK)",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cashewkerne",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Minze",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Reis in einem Sieb waschen, bis das Wasser klar bleibt. Zwiebeln in feine Streifen schneiden und im Öl 8–10 Minuten goldbraun braten. Die Hälfte herausnehmen.",
+   "Knoblauch, Ingwer, Garam Masala und Kurkuma zu den übrigen Zwiebeln geben und 1 Minute rösten.",
+   "Blumenkohlröschen, gewürfelte Karotten und abgespülte Kichererbsen 3 Minuten mitbraten. Reis und Brühe zugeben, salzen und aufkochen.",
+   "Zugedeckt bei kleinster Hitze 15 Minuten garen. Erbsen daraufgeben, Herd ausschalten und 5 Minuten zugedeckt ziehen lassen.",
+   "Cashews in einer Pfanne ohne Fett 3 Minuten rösten. Joghurt mit geraspelter Gurke, gehackter Minze und Salz verrühren.",
+   "Biryani mit einer Gabel auflockern und mit Röstzwiebeln, Cashews und Minz-Joghurt servieren."
+  ],
+  "tips": [
+   "Den Deckel während des Garens nicht anheben – der Dampf gart den Reis."
+  ]
+ },
+ {
+  "id": "mujaddara",
+  "title": "Mujaddara – Reis mit Linsen und Röstzwiebeln",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Tellerlinsen",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Reis",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomate",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Linsen in 600 ml Wasser 15 Minuten vorkochen, nicht abgießen.",
+   "Zwiebeln in feine Ringe schneiden und im Öl bei mittlerer Hitze 20 Minuten langsam dunkelgolden braten. Salzen und die Hälfte herausnehmen.",
+   "Reis, Kreuzkümmel und Zimt zu den übrigen Zwiebeln geben und 1 Minute rösten. Linsen mit dem Kochwasser zugeben (es sollten etwa 350 ml Flüssigkeit sein, sonst Wasser ergänzen) und salzen.",
+   "Zugedeckt bei kleiner Hitze 15 Minuten garen und 5 Minuten ruhen lassen.",
+   "Tomaten und Gurke würfeln, mit Petersilie, Zitronensaft und Salz mischen. Mujaddara mit den Röstzwiebeln und dem Salat servieren."
+  ],
+  "tips": [
+   "Die Röstzwiebeln sind das Herzstück – geduldig und nicht zu heiß braten.",
+   "Mit einem Klecks Joghurt wird es vegetarisch statt vegan."
+  ]
+ },
+ {
+  "id": "bulgur-pilaw",
+  "title": "Bulgur-Pilaw mit Tomaten und Kichererbsen",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [
+   "one-pot"
+  ],
+  "ingredients": [
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Bulgur",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomate",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kichererbsen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 400,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Zwiebel und Paprika würfeln und im Öl 5 Minuten anbraten.",
+   "Knoblauch, Tomatenmark und Paprikapulver zugeben und 1 Minute rösten.",
+   "Bulgur, gewürfelte Tomaten, abgespülte Kichererbsen und Brühe zugeben, aufkochen und zugedeckt bei kleinster Hitze 12 Minuten quellen lassen.",
+   "Vom Herd nehmen und 5 Minuten zugedeckt ruhen lassen, dann mit einer Gabel auflockern.",
+   "Mit Petersilie bestreuen und mit Joghurt servieren."
+  ],
+  "tips": [
+   "Groben Bulgur verwenden – feiner wird schnell matschig."
+  ]
+ },
+ {
+  "id": "couscous-haehnchen-pfanne",
+  "title": "Couscous-Pfanne mit Hähnchen, Zucchini und Rosinen",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 25,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Couscous",
+    "amount": 180,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 250,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rosinen",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Hähnchenbrust",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Minze",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese",
+    "note": "oder Petersilie"
+   },
+   {
+    "name": "Griechischer Joghurt 2 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Couscous und Rosinen mit der kochenden Brühe übergießen und zugedeckt 5 Minuten quellen lassen.",
+   "Hähnchen in Streifen schneiden und im Öl mit Kreuzkümmel, Zimt und Paprika 5 Minuten braten.",
+   "Zucchini würfeln, Zwiebel in Spalten schneiden, zugeben und 4 Minuten mitbraten.",
+   "Couscous mit einer Gabel auflockern und untermischen. Mit Zitronensaft, Salz und Minze abschmecken.",
+   "Joghurt mit etwas Zitronenschale verrühren und dazu servieren."
+  ],
+  "tips": [
+   "Die süßen Rosinen und der Zimt geben der Pfanne einen orientalischen Charakter."
+  ]
+ },
+ {
+  "id": "quinoa-gemuese-pfanne-feta",
+  "title": "Quinoa-Gemüse-Pfanne mit Feta",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Quinoa",
+    "amount": 180,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 360,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Feta",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Quinoa in einem Sieb heiß abspülen, damit sie nicht bitter schmeckt. Mit der Brühe aufkochen, 15 Minuten köcheln und 5 Minuten quellen lassen.",
+   "Zucchini, Paprika und Zwiebel würfeln und im Öl 6 Minuten braten.",
+   "Halbierte Tomaten und Spinat zugeben und 2 Minuten mitbraten, bis der Spinat zusammenfällt.",
+   "Quinoa unterheben, mit Oregano, Zitronensaft, Salz und Pfeffer abschmecken.",
+   "Feta darüberbröseln und servieren."
+  ],
+  "tips": [
+   "Schmeckt auch kalt als Salat für die Mittagspause."
+  ]
+ },
+ {
+  "id": "hirse-bratlinge",
+  "title": "Hirse-Karotten-Bratlinge mit Kräuter-Dip",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 50,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hirse",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 350,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Karotten",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Bergkäse",
+    "amount": 50,
+    "unit": "g",
+    "category": "milch",
+    "note": "gerieben"
+   },
+   {
+    "name": "Haferflocken",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Hirse heiß abspülen, mit der Brühe aufkochen, 10 Minuten köcheln und anschließend 10 Minuten quellen lassen. Etwas abkühlen lassen.",
+   "Karotten fein raspeln, Frühlingszwiebeln in feine Ringe schneiden.",
+   "Hirse mit Karotten, Frühlingszwiebeln, Ei, Käse, Haferflocken, Paprika, Salz und Pfeffer verkneten und 10 Minuten ruhen lassen, damit die Haferflocken binden.",
+   "Mit feuchten Händen 9 flache Bratlinge formen und im Öl pro Seite 4 Minuten goldbraun braten.",
+   "Joghurt mit Schnittlauch, gepresstem Knoblauch und Salz verrühren und dazu servieren."
+  ],
+  "tips": [
+   "Die Masse lässt sich gut am Vortag vorbereiten.",
+   "Kalt passen die Bratlinge in die Brotdose."
+  ],
+  "airfryer": {
+   "temp_c": 190,
+   "time_min": 14,
+   "steps": [
+    "Masse wie beschrieben zubereiten und Bratlinge formen.",
+    "Mit wenig Öl bepinseln und mit etwas Abstand auf Backpapier in den Korb legen.",
+    "Bei 190 °C 14 Minuten backen, nach 8 Minuten vorsichtig wenden."
+   ]
+  }
+ },
+ {
+  "id": "polenta-pilzragout",
+  "title": "Cremige Polenta mit Pilzragout",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Milch 1,5 %",
+    "amount": 400,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 350,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Polenta",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "Instant-Maisgrieß"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Champignons",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kochsahne 15 %",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Pilze in Scheiben schneiden, Zwiebel und Knoblauch fein würfeln.",
+   "Öl in einer großen Pfanne erhitzen und die Pilze bei hoher Hitze 6 Minuten braten, bis sie Farbe haben. Zwiebel und Knoblauch 2 Minuten mitbraten.",
+   "Thymian und Kochsahne zugeben und 3 Minuten einköcheln lassen. Mit Salz und Pfeffer abschmecken.",
+   "Milch und Brühe aufkochen, die Polenta unter ständigem Rühren einrieseln lassen und bei kleinster Hitze 5 Minuten quellen lassen, dabei oft rühren.",
+   "Parmesan unter die Polenta rühren. Auf Teller verteilen, das Pilzragout daraufgeben und mit Petersilie bestreuen."
+  ],
+  "tips": [
+   "Polenta dickt beim Stehen nach – bei Bedarf mit etwas heißer Milch wieder cremig rühren.",
+   "Übrige Polenta in einer Form fest werden lassen, in Scheiben schneiden und braten."
+  ]
+ },
+ {
+  "id": "aloo-gobi-kichererbsen",
+  "title": "Kartoffel-Blumenkohl-Curry mit Kichererbsen",
+  "chapter": "kartoffeln-getreide",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 3,
+  "tags": [
+   "one-pot"
+  ],
+  "ingredients": [
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Blumenkohl",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kurkuma",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Garam Masala",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 200,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kichererbsen",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese",
+    "note": "oder Petersilie"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen und in 2 cm große Würfel schneiden, Blumenkohl in kleine Röschen teilen. Zwiebel, Knoblauch und Ingwer fein hacken.",
+   "Öl in einem breiten Topf erhitzen und den Kreuzkümmel 30 Sekunden anrösten, bis er duftet. Zwiebel 4 Minuten mitbraten, dann Knoblauch, Ingwer, Kurkuma, Garam Masala und Chili 1 Minute rösten.",
+   "Kartoffeln und Blumenkohl zugeben und gut mit den Gewürzen vermengen. Tomaten und Brühe angießen und salzen.",
+   "Zugedeckt bei mittlerer Hitze 20 Minuten köcheln, bis die Kartoffeln weich sind. Kichererbsen abspülen und in den letzten 5 Minuten mitgaren.",
+   "Mit Koriander bestreuen und servieren."
+  ],
+  "tips": [
+   "Aloo Gobi ist ein indischer Klassiker – dazu passen Reis oder Fladenbrot.",
+   "Mit einem Klecks Joghurt wird das Curry milder."
+  ]
+ },
+ {
+  "id": "rinderrouladen",
+  "title": "Rinderrouladen mit Rotkohl und Kartoffeln",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 120,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Rinderrouladen",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Senf",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Frühstücksspeck",
+    "amount": 4,
+    "unit": "Scheibe",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Gewürzgurken",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Karotten",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knollensellerie",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rinderbrühe",
+    "amount": 500,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Lorbeerblätter",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rotkohl",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Apfel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Essig",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucker",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 800,
+    "unit": "g",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Rouladen flach ausbreiten, salzen, pfeffern und dünn mit Senf bestreichen. Mit je einer Scheibe Speck, Gurkenstreifen und Streifen einer Zwiebel belegen, fest aufrollen und mit Rouladennadeln oder Küchengarn fixieren.",
+   "Öl in einem Bräter erhitzen und die Rouladen rundherum 6–8 Minuten kräftig anbraten. Herausnehmen.",
+   "Zweite Zwiebel, Karotte und Sellerie würfeln und im Bräter 5 Minuten anrösten. Tomatenmark 1 Minute mitrösten, mit Brühe ablöschen und den Bratensatz lösen.",
+   "Lorbeer und Rouladen zugeben und zugedeckt bei kleiner Hitze 90 Minuten schmoren. Nach der Hälfte der Zeit wenden.",
+   "Inzwischen Rotkohl fein hobeln, mit Apfelwürfeln, Essig, Zucker, Zimt, Salz und 100 ml Wasser zugedeckt 45 Minuten schmoren. Kartoffeln schälen und 20 Minuten in Salzwasser kochen.",
+   "Rouladen herausnehmen, die Sauce pürieren und mit der in wenig kaltem Wasser angerührten Stärke 1 Minute aufkochen. Rouladen mit Sauce, Rotkohl und Kartoffeln servieren."
+  ],
+  "tips": [
+   "Rouladen lassen sich am Vortag schmoren – aufgewärmt schmecken sie noch besser.",
+   "Der Rotkohl lässt sich gut einfrieren."
+  ]
+ },
+ {
+  "id": "schweinefilet-pilzrahm",
+  "title": "Schweinefilet-Medaillons mit Pilz-Rahm-Sauce und Spätzle",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Schweinefilet",
+    "amount": 450,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Champignons",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 100,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kochsahne 15 %",
+    "amount": 150,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Spätzle (frisch)",
+    "amount": 400,
+    "unit": "g",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 80 °C vorheizen. Filet in 3 cm dicke Medaillons schneiden, leicht flach drücken, salzen und pfeffern.",
+   "Öl in einer Pfanne stark erhitzen und die Medaillons pro Seite 3 Minuten braten. Im Ofen 8 Minuten ruhen lassen – so bleiben sie innen zart rosa.",
+   "Pilze in Scheiben schneiden und in derselben Pfanne 5 Minuten kräftig braten. Gewürfelte Zwiebel 2 Minuten mitbraten.",
+   "Mit Brühe ablöschen, Kochsahne und Senf zugeben und 3 Minuten einköcheln. Ausgetretenen Fleischsaft unterrühren und abschmecken.",
+   "Spätzle in einer zweiten Pfanne 4 Minuten erhitzen. Medaillons mit Sauce, Spätzle und Petersilie servieren."
+  ],
+  "tips": [
+   "Schweinefilet darf innen leicht rosa sein (Kerntemperatur 60–65 °C)."
+  ]
+ },
+ {
+  "id": "schnitzel-airfryer",
+  "title": "Schnitzel aus der Heißluftfritteuse mit Petersilienkartoffeln und Gurkensalat",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 2,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Schweineschnitzel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "fleisch_fisch",
+    "note": "à 150 g"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "TL",
+    "category": "milch"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "saure Sahne (10 %)",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Dill",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen und in Salzwasser 20 Minuten kochen. Gurke in dünne Scheiben hobeln, mit saurer Sahne, Dill, etwas Zitronensaft, Salz und Pfeffer mischen.",
+   "Schnitzel zwischen Frischhaltefolie dünn klopfen, salzen und pfeffern. Nacheinander in Mehl, verquirltem Ei und Paniermehl wenden, die Panade nur leicht andrücken.",
+   "Schnitzel von beiden Seiten mit dem Öl bepinseln und nebeneinander in den Korb legen.",
+   "Bei 200 °C 10–12 Minuten backen, nach 6 Minuten wenden, bis die Panade goldbraun ist.",
+   "Kartoffeln abgießen, in Butter und gehackter Petersilie schwenken. Schnitzel mit Zitronenspalten, Kartoffeln und Gurkensalat servieren."
+  ],
+  "tips": [
+   "Das Öl auf der Panade ist wichtig – ohne wird sie in der Heißluftfritteuse trocken und blass.",
+   "Genauso klappt es mit Puten- oder Hähnchenschnitzel."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 12
+  }
+ },
+ {
+  "id": "butter-chicken",
+  "title": "Butter Chicken mit Basmatireis",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 600,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Garam Masala",
+    "amount": 2,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kurkuma",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 3,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 500,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sahne",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Reis",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "Basmati"
+   },
+   {
+    "name": "Koriander",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Hähnchen in Würfel schneiden und mit Joghurt, der Hälfte des Garam Masala, Kurkuma, Paprika und Salz mischen. Mindestens 15 Minuten marinieren.",
+   "Reis nach Packungsangabe garen.",
+   "Butter in einer großen Pfanne erhitzen und die Hähnchenwürfel mit der Marinade 6–8 Minuten braten, bis sie leicht gebräunt sind. Herausnehmen.",
+   "Gehackte Zwiebel 4 Minuten andünsten, Knoblauch, Ingwer und restliches Garam Masala 1 Minute mitrösten. Passierte Tomaten zugeben und 10 Minuten köcheln.",
+   "Sahne einrühren, das Hähnchen zurückgeben und weitere 5 Minuten köcheln. Mit Koriander und Reis servieren."
+  ],
+  "tips": [
+   "Die Joghurt-Marinade macht das Fleisch besonders zart – sie darf auch über Nacht im Kühlschrank ziehen.",
+   "Schmeckt mit Vollkorn-Fladenbrot statt Reis."
+  ]
+ },
+ {
+  "id": "gyros-pfanne-tzatziki",
+  "title": "Gyros-Pfanne mit Tzatziki und Reis",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Putenschnitzel",
+    "amount": 450,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauchpulver",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Griechischer Joghurt 2 %",
+    "amount": 250,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomate",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Fleisch in dünne Streifen schneiden und mit Öl und allen Gewürzen mischen. 10 Minuten ziehen lassen.",
+   "Reis nach Packungsangabe garen.",
+   "Für das Tzatziki die Gurke raspeln, gut ausdrücken und mit Joghurt, gepresstem Knoblauch und Salz verrühren.",
+   "Eine große Pfanne stark erhitzen und das Fleisch portionsweise 4–5 Minuten scharf anbraten. Zwiebeln in Ringe schneiden und 3 Minuten mitbraten.",
+   "Gyros mit Reis, Tzatziki und Tomatenspalten servieren."
+  ],
+  "tips": [
+   "Die Pfanne nicht überladen – sonst kocht das Fleisch im eigenen Saft, statt zu bräunen."
+  ]
+ },
+ {
+  "id": "haehnchen-suess-sauer",
+  "title": "Hähnchen süß-sauer mit Ananas und Paprika",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ananas",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "frisch oder aus der Dose, abgetropft"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Essig",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe garen. Hähnchen in Würfel schneiden und mit der Hälfte der Speisestärke und 1 EL Sojasauce mischen.",
+   "Für die Sauce Tomatenmark, Essig, Honig, restliche Sojasauce und restliche Stärke mit 150 ml Wasser glatt rühren.",
+   "Öl im Wok stark erhitzen und das Hähnchen 5 Minuten goldbraun braten. Herausnehmen.",
+   "Paprika und Zwiebel in Stücke schneiden und 3 Minuten unter Rühren braten. Ananas 1 Minute mitbraten.",
+   "Sauce angießen, aufkochen und 1 Minute köcheln, bis sie glänzt und bindet. Hähnchen untermischen und mit Reis servieren."
+  ],
+  "tips": [
+   "Die Stärke um das Fleisch macht es saftig und hilft der Sauce, gut zu haften."
+  ]
+ },
+ {
+  "id": "kung-pao-haehnchen",
+  "title": "Kung-Pao-Hähnchen mit Erdnüssen",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 450,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 4,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Erdnüsse (geröstet, ungesalzen)",
+    "amount": 40,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Frühlingszwiebel",
+    "amount": 3,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe garen. Hähnchen in 2 cm große Würfel schneiden und mit der Hälfte der Stärke und 1 EL Sojasauce mischen.",
+   "Restliche Sojasauce mit Essig, Honig, restlicher Stärke und 4 EL Wasser verrühren.",
+   "Öl im Wok stark erhitzen und das Hähnchen 4–5 Minuten braten. Chili, Knoblauch und Ingwer 30 Sekunden mitbraten.",
+   "Paprika und Zucchini in Würfeln zugeben und 3 Minuten braten.",
+   "Sauce zugießen und 1 Minute köcheln, bis sie bindet. Erdnüsse und Frühlingszwiebeln unterheben und mit Reis servieren."
+  ],
+  "tips": [
+   "Die Schärfe über die Chiliflocken steuern – für Kinder einfach weglassen."
+  ]
+ },
+ {
+  "id": "pulled-chicken-krautsalat",
+  "title": "Pulled Chicken im Brötchen mit Krautsalat",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenschenkelfilet",
+    "amount": 700,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauchpulver",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 300,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Essig",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Weißkohl",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Karotten",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Vollkornbrötchen",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Hähnchen mit Paprika, Knoblauchpulver und Salz einreiben. Öl in einem Topf erhitzen und das Fleisch rundherum 5 Minuten anbraten.",
+   "Gewürfelte Zwiebel 2 Minuten mitbraten. Passierte Tomaten, 1 EL Essig, Honig und Senf zugeben und zugedeckt bei kleiner Hitze 30 Minuten schmoren.",
+   "Für den Krautsalat Kohl fein hobeln, mit etwas Salz kräftig kneten. Karotte raspeln und mit Joghurt, restlichem Essig und Pfeffer untermischen.",
+   "Fleisch mit zwei Gabeln in der Sauce zerzupfen und noch 5 Minuten offen einköcheln lassen.",
+   "Brötchen aufschneiden, mit Pulled Chicken und Krautsalat füllen."
+  ],
+  "tips": [
+   "Hähnchenschenkel bleiben beim Schmoren saftiger als Brust.",
+   "Reste schmecken auch in Wraps oder auf Ofenkartoffeln."
+  ]
+ },
+ {
+  "id": "rind-brokkoli-wok",
+  "title": "Rindfleisch mit Brokkoli aus dem Wok",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Rinderhüftsteak",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 4,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Brokkoli",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Ingwer",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sesamöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sesam",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe garen. Fleisch quer zur Faser in dünne Streifen schneiden und mit der Hälfte der Stärke und 1 EL Sojasauce mischen.",
+   "Brokkoli in kleine Röschen teilen und 2 Minuten in kochendem Wasser blanchieren, abgießen.",
+   "Öl im Wok sehr stark erhitzen und das Fleisch portionsweise 1–2 Minuten scharf anbraten. Herausnehmen.",
+   "Knoblauch und Ingwer 30 Sekunden braten, Brokkoli zugeben und 2 Minuten schwenken.",
+   "Restliche Sojasauce mit Honig, Stärke und 4 EL Wasser verrühren, zugießen und 1 Minute köcheln. Fleisch untermischen, mit Sesamöl und Sesam verfeinern und mit Reis servieren."
+  ],
+  "tips": [
+   "Quer zur Faser geschnitten und nur kurz gebraten bleibt das Rindfleisch zart."
+  ]
+ },
+ {
+  "id": "rumpsteak-ofenkartoffeln",
+  "title": "Hüftsteak mit Ofenkartoffeln, Bohnen und Kräuterquark",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Rinderhüftsteak",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "fleisch_fisch",
+    "note": "à 180 g"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rosmarin",
+    "amount": 1,
+    "unit": "Zweig",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "grüne Bohnen",
+    "amount": 300,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Magerquark",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 3,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 220 °C Umluft vorheizen. Kartoffeln in Spalten schneiden, mit Olivenöl, Rosmarin und Salz mischen und 30 Minuten auf dem Blech backen.",
+   "Steaks 30 Minuten vor dem Braten aus dem Kühlschrank nehmen und trocken tupfen. Bohnen putzen und 8 Minuten in Salzwasser garen.",
+   "Rapsöl in einer schweren Pfanne sehr stark erhitzen und die Steaks pro Seite 2–3 Minuten braten (medium).",
+   "Steaks in Alufolie 5 Minuten ruhen lassen, erst dann salzen und pfeffern.",
+   "Quark mit Milch, Schnittlauch und Salz verrühren. Steaks mit Kartoffeln, Bohnen und Kräuterquark servieren."
+  ],
+  "tips": [
+   "Die Ruhezeit ist wichtig: Der Fleischsaft verteilt sich und läuft beim Anschneiden nicht aus.",
+   "Garstufen nach Kerntemperatur: rare 50 °C, medium 56 °C, durch 65 °C."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 20,
+   "steps": [
+    "Kartoffeln in Spalten schneiden, mit Öl, Rosmarin und Salz mischen und im Korb bei 200 °C 20 Minuten garen, zwischendurch schütteln.",
+    "Bohnen 8 Minuten in Salzwasser garen, Quark mit Milch, Schnittlauch und Salz verrühren.",
+    "Steaks in einer sehr heißen Pfanne pro Seite 2–3 Minuten braten und 5 Minuten in Alufolie ruhen lassen, dann würzen."
+   ]
+  }
+ },
+ {
+  "id": "puten-saltimbocca",
+  "title": "Puten-Saltimbocca mit Zitronen-Zucchini",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Putenschnitzel",
+    "amount": 320,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "4 dünne Schnitzel"
+   },
+   {
+    "name": "Rohschinken",
+    "amount": 4,
+    "unit": "Scheibe",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Salbei",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese",
+    "note": "8 Blätter"
+   },
+   {
+    "name": "Mehl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 100,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "unbehandelt"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "klein"
+   }
+  ],
+  "steps": [
+   "Kartoffeln mit Schale 20 Minuten in Salzwasser kochen.",
+   "Schnitzel pfeffern, mit je einer Scheibe Schinken und zwei Salbeiblättern belegen und mit einem Zahnstocher feststecken. Die Unterseite leicht in Mehl tupfen.",
+   "Die Hälfte des Öls erhitzen und die Saltimbocca zuerst auf der Schinkenseite 2 Minuten, dann auf der anderen Seite 2 Minuten braten. Herausnehmen.",
+   "Bratensatz mit Brühe und einem Schuss Zitronensaft lösen und 2 Minuten einkochen.",
+   "Zucchini in Scheiben schneiden und im restlichen Öl 4 Minuten braten, mit Zitronenschale, Salz und Pfeffer würzen. Alles mit der Sauce servieren."
+  ],
+  "tips": [
+   "Salz brauchst du kaum – der Schinken würzt mit."
+  ]
+ },
+ {
+  "id": "cordon-bleu-airfryer",
+  "title": "Puten-Cordon-bleu aus der Heißluftfritteuse",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Putenschnitzel",
+    "amount": 300,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "2 Schnitzel à 150 g"
+   },
+   {
+    "name": "Kochschinken (mager)",
+    "amount": 2,
+    "unit": "Scheibe",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Gouda",
+    "amount": 2,
+    "unit": "Scheibe",
+    "category": "milch"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Mehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kopfsalat",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Balsamico",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Schnitzel waagerecht aufschneiden, aber nicht durchschneiden, aufklappen und zwischen Folie flach klopfen. Salzen und pfeffern.",
+   "Je eine Hälfte mit Schinken und Käse belegen, die andere darüberklappen und die Ränder fest andrücken.",
+   "Nacheinander in Mehl, verquirltem Ei und Paniermehl wenden und rundherum mit Öl bepinseln.",
+   "Bei 190 °C 14–16 Minuten backen, nach 8 Minuten wenden, bis die Panade goldbraun und das Fleisch durchgegart ist.",
+   "Salat und Tomaten mit Balsamico, Öl, Salz und Pfeffer anmachen und dazu servieren."
+  ],
+  "tips": [
+   "Mit Zahnstochern verschließen, falls der Käse herauslaufen will.",
+   "In der Pfanne: in 2 EL Öl pro Seite 5–6 Minuten bei mittlerer Hitze braten."
+  ],
+  "airfryer": {
+   "temp_c": 190,
+   "time_min": 16
+  }
+ },
+ {
+  "id": "honig-senf-haehnchen-airfryer",
+  "title": "Honig-Senf-Hähnchen mit Möhren und Kartoffeln",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenschenkelfilet",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "mittelscharf"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat",
+    "note": "körnig"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 400,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Karotten",
+    "amount": 4,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Thymian",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Senf, Honig, die Hälfte des Öls, Paprika und Salz verrühren und das Hähnchen damit einstreichen.",
+   "Kartoffeln in Spalten, Karotten in dicke Stifte schneiden, mit restlichem Öl, Thymian und Salz mischen.",
+   "Kartoffeln und Karotten im Korb bei 200 °C 12 Minuten vorgaren.",
+   "Hähnchen auf das Gemüse legen und weitere 13–15 Minuten bei 200 °C garen, bis es durch und karamellisiert ist.",
+   "Mit Petersilie bestreuen und servieren."
+  ],
+  "tips": [
+   "Im Backofen alles zusammen auf einem Blech: 200 °C Umluft, 35 Minuten."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 27
+  }
+ },
+ {
+  "id": "gefuellte-haehnchenbrust-spinat-feta",
+  "title": "Gefüllte Hähnchenbrust mit Spinat und Feta",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 360,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "2 Filets à 180 g"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 75,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Feta",
+    "amount": 60,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Couscous",
+    "amount": 120,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 150,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Ofen auf 200 °C Umluft vorheizen. In die dickste Seite jeder Hähnchenbrust eine tiefe Tasche schneiden.",
+   "Spinat grob hacken und mit zerbröseltem Feta und gepresstem Knoblauch mischen. In die Taschen füllen und mit Zahnstochern verschließen.",
+   "Fleisch mit Öl, Paprika, Salz und Pfeffer einreiben, mit den Tomaten in eine Form legen und 22–25 Minuten backen.",
+   "Couscous mit der kochenden Brühe übergießen, 5 Minuten quellen lassen und mit Zitronensaft auflockern.",
+   "Hähnchen kurz ruhen lassen, aufschneiden und mit Ofentomaten und Couscous servieren."
+  ],
+  "tips": [
+   "Das Fleisch ist gar, wenn der austretende Saft klar ist (Kerntemperatur 74 °C)."
+  ],
+  "airfryer": {
+   "temp_c": 180,
+   "time_min": 20,
+   "steps": [
+    "Hähnchenbrust wie beschrieben füllen und würzen.",
+    "Mit den Tomaten in den Korb oder in eine passende Form legen und bei 180 °C 18–20 Minuten garen.",
+    "Couscous mit der kochenden Brühe übergießen, 5 Minuten quellen lassen und mit Zitronensaft auflockern."
+   ]
+  }
+ },
+ {
+  "id": "haehnchen-cacciatore-polenta",
+  "title": "Hähnchen nach Jägerart mit Polenta",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 50,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenschenkelfilet",
+    "amount": 600,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 2,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Champignons",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomaten (stückig)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 100,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rosmarin",
+    "amount": 1,
+    "unit": "Zweig",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Oliven",
+    "amount": 30,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Polenta",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 800,
+    "unit": "ml",
+    "category": "milch",
+    "note": "oder halb Wasser"
+   },
+   {
+    "name": "Parmesan",
+    "amount": 30,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Hähnchen in große Stücke schneiden, salzen und im Öl in einem Schmortopf 6 Minuten rundherum anbraten. Herausnehmen.",
+   "Zwiebel, Knoblauch, Paprika und Pilze in Stücke schneiden und 5 Minuten im Topf braten.",
+   "Tomaten, Brühe und Rosmarin zugeben, Hähnchen zurück in den Topf legen und zugedeckt 25 Minuten schmoren. Oliven in den letzten 5 Minuten zugeben.",
+   "Milch aufkochen, salzen und die Polenta unter Rühren einrieseln lassen. Bei kleinster Hitze 5 Minuten quellen lassen und den Parmesan einrühren.",
+   "Hähnchen mit Sauce auf der Polenta anrichten."
+  ],
+  "tips": [
+   "Cacciatore heißt Jäger – ein italienisches Schmorgericht, das am nächsten Tag noch besser schmeckt."
+  ]
+ },
+ {
+  "id": "kohlrouladen",
+  "title": "Kohlrouladen in Tomatensauce mit Kartoffeln",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 75,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Weißkohl",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese",
+    "note": "ca. 1 kg, oder Wirsing"
+   },
+   {
+    "name": "Rinderhack (mager)",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Majoran",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 400,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 200,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 800,
+    "unit": "g",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Strunk aus dem Kohl schneiden und den ganzen Kopf 5 Minuten in kochendes Salzwasser legen. 8 große Blätter ablösen und die dicken Blattrippen flach schneiden.",
+   "Hack mit fein gewürfelter Zwiebel, Ei, Paniermehl, Majoran, Paprika, Salz und Pfeffer verkneten.",
+   "Je zwei Blätter überlappend auslegen, ein Viertel der Füllung daraufgeben, die Seiten einschlagen und fest aufrollen. Mit Küchengarn binden.",
+   "Rouladen im Öl in einem Bräter rundherum 5 Minuten anbraten. Passierte Tomaten und Brühe angießen und zugedeckt bei kleiner Hitze 40 Minuten schmoren.",
+   "Kartoffeln schälen und 20 Minuten in Salzwasser kochen. Kohlrouladen mit Sauce und Kartoffeln servieren."
+  ],
+  "tips": [
+   "Übrigen Kohl in Streifen schneiden und in der Sauce mitschmoren.",
+   "Kohlrouladen lassen sich gut einfrieren."
+  ]
+ },
+ {
+  "id": "thai-curry-gruen-haehnchen",
+  "title": "Grünes Thai-Curry mit Hähnchen und Gemüse",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Currypaste",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "grüne"
+   },
+   {
+    "name": "Kokosmilch (light)",
+    "amount": 1,
+    "unit": "Dose",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 150,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "grüne Bohnen",
+    "amount": 150,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Sojasauce",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Basilikum",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese",
+    "note": "am besten Thai-Basilikum"
+   },
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "Jasmin"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe garen. Hähnchen in dünne Streifen, Gemüse in mundgerechte Stücke schneiden.",
+   "Öl im Topf erhitzen und die Currypaste 1 Minute anrösten, bis sie duftet.",
+   "Kokosmilch und Brühe einrühren, aufkochen. Bohnen 4 Minuten darin garen.",
+   "Hähnchen, Paprika und Zucchini zugeben und 6 Minuten köcheln, bis das Fleisch gar ist.",
+   "Mit Limettensaft und Sojasauce abschmecken, Basilikum unterheben und mit Reis servieren."
+  ],
+  "tips": [
+   "Grüne Currypaste ist meist schärfer als rote – lieber erst wenig nehmen."
+  ]
+ },
+ {
+  "id": "koettbullar-preiselbeeren",
+  "title": "Hackbällchen in Rahmsauce mit Kartoffeln und Preiselbeeren",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Rinderhack (mager)",
+    "amount": 500,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Eier",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "milch"
+   },
+   {
+    "name": "Vollkorn-Paniermehl",
+    "amount": 3,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Piment",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat",
+    "note": "oder Muskat"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rinderbrühe",
+    "amount": 300,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kochsahne 15 %",
+    "amount": 100,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 900,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Preiselbeeren (Glas)",
+    "amount": 4,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Kartoffeln schälen und 20 Minuten in Salzwasser kochen.",
+   "Hack mit sehr fein gewürfelter Zwiebel, Ei, Paniermehl, Piment, Salz und Pfeffer verkneten und mit feuchten Händen walnussgroße Bällchen formen.",
+   "Öl in einer großen Pfanne erhitzen und die Bällchen 8 Minuten rundherum braun braten. Herausnehmen.",
+   "Bratensatz mit Brühe lösen, Kochsahne und Senf zugeben. Stärke in wenig Wasser anrühren, einrühren und 2 Minuten köcheln. Bällchen 3 Minuten in der Sauce ziehen lassen.",
+   "Mit Kartoffeln, Preiselbeeren und Gurkenscheiben servieren."
+  ],
+  "tips": [
+   "Die Kombination aus würziger Sauce und süß-säuerlichen Preiselbeeren ist typisch schwedisch."
+  ]
+ },
+ {
+  "id": "haehnchenspiesse-airfryer",
+  "title": "Hähnchenspieße mit Paprika und Tzatziki",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner",
+   "snack"
+  ],
+  "time_min": 35,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Olivenöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitrone",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Oregano",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauch",
+    "amount": 1,
+    "unit": "Zehe",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zucchini",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Griechischer Joghurt 2 %",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Salatgurke",
+    "amount": 0.25,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Vollkorn-Fladenbrot",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Hähnchen in 3 cm große Würfel schneiden und mit Öl, Zitronensaft, Oregano, Paprika, gepresstem Knoblauch und Salz mindestens 10 Minuten marinieren.",
+   "Paprika, Zwiebel und Zucchini in Stücke schneiden und abwechselnd mit dem Fleisch auf kurze Spieße stecken.",
+   "Spieße in den Korb legen und bei 200 °C 12–14 Minuten garen, nach der Hälfte der Zeit wenden.",
+   "Gurke raspeln, ausdrücken und mit Joghurt, Salz und etwas Knoblauch verrühren.",
+   "Spieße mit Tzatziki und warmem Fladenbrot servieren."
+  ],
+  "tips": [
+   "Holzspieße vorher 15 Minuten in Wasser einweichen, dann verbrennen sie nicht.",
+   "Im Backofen: 220 °C Umluft, ca. 18 Minuten."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 14
+  }
+ },
+ {
+  "id": "kasseler-sauerkraut-pueree",
+  "title": "Kasseler mit Sauerkraut und Kartoffelpüree",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 4,
+  "tags": [
+   "klassiker"
+  ],
+  "ingredients": [
+   {
+    "name": "Kasseler",
+    "amount": 600,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "ohne Knochen"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Sauerkraut",
+    "amount": 500,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Apfel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 200,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Lorbeerblätter",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 1,
+    "unit": "kg",
+    "category": "obst_gemuese",
+    "note": "mehligkochend"
+   },
+   {
+    "name": "Milch 1,5 %",
+    "amount": 200,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Butter",
+    "amount": 1,
+    "unit": "EL",
+    "category": "milch"
+   },
+   {
+    "name": "Muskatnuss",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Zwiebel würfeln und im Öl 3 Minuten andünsten. Sauerkraut, Apfelwürfel, Brühe, Lorbeer und Kümmel zugeben.",
+   "Kasseler in 4 dicke Scheiben schneiden, auf das Sauerkraut legen und zugedeckt bei kleiner Hitze 25 Minuten garen.",
+   "Kartoffeln schälen, würfeln und 20 Minuten in Salzwasser weich kochen.",
+   "Kartoffeln abgießen und mit heißer Milch und Butter zu Püree stampfen. Mit Salz und Muskat abschmecken.",
+   "Kasseler mit Sauerkraut und Püree servieren."
+  ],
+  "tips": [
+   "Kasseler ist bereits gegart und gepökelt – er muss nur heiß werden und braucht kein Salz."
+  ]
+ },
+ {
+  "id": "currywurst-ofenpommes",
+  "title": "Currywurst mit selbstgemachter Sauce und Pommes",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 40,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Bratwurst (Geflügel)",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Kartoffeln",
+    "amount": 600,
+    "unit": "g",
+    "category": "obst_gemuese",
+    "note": "festkochend"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Currypulver",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "passierte Tomaten",
+    "amount": 250,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Honig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Essig",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kartoffeln in Stäbchen schneiden, 10 Minuten in kaltem Wasser wässern und gründlich trocken tupfen. Mit der Hälfte des Öls und Salz mischen.",
+   "Pommes im Korb bei 200 °C 20–22 Minuten goldbraun backen, dabei zweimal schütteln. In den letzten 8 Minuten die Würste dazulegen.",
+   "Für die Sauce die Zwiebel fein würfeln und im restlichen Öl 3 Minuten dünsten. Tomatenmark, Curry und Paprika 1 Minute mitrösten.",
+   "Passierte Tomaten, Honig und Essig zugeben und 8 Minuten köcheln. Fein pürieren und abschmecken.",
+   "Würste in Scheiben schneiden, mit der Sauce übergießen, mit Curry bestäuben und mit den Pommes servieren."
+  ],
+  "tips": [
+   "Die Sauce hält sich im Glas eine Woche im Kühlschrank."
+  ],
+  "airfryer": {
+   "temp_c": 200,
+   "time_min": 22
+  }
+ },
+ {
+  "id": "paprikahuhn",
+  "title": "Paprikahuhn mit Bandnudeln",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 45,
+  "servings": 4,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenschenkelfilet",
+    "amount": 600,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprika",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 2,
+    "unit": "EL",
+    "category": "vorrat",
+    "note": "edelsüß"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 300,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "saure Sahne (10 %)",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Speisestärke",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Bandnudeln",
+    "amount": 300,
+    "unit": "g",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Hähnchen in Stücke schneiden, salzen und im Öl 5 Minuten anbraten. Herausnehmen.",
+   "Zwiebeln würfeln und 5 Minuten goldgelb dünsten. Paprikapulver und Tomatenmark kurz unterrühren – nicht zu lange, sonst wird das Paprikapulver bitter.",
+   "Sofort mit Brühe ablöschen, Paprikastreifen und Hähnchen zugeben und zugedeckt 20 Minuten schmoren.",
+   "Saure Sahne mit Stärke glatt rühren, unter die Sauce rühren und 2 Minuten köcheln. Nudeln währenddessen garen.",
+   "Paprikahuhn mit den Nudeln servieren."
+  ],
+  "tips": [
+   "Ein ungarischer Klassiker (Paprikás csirke) – traditionell mit kleinen Nockerln."
+  ]
+ },
+ {
+  "id": "haehnchen-fajitas",
+  "title": "Hähnchen-Fajitas mit Paprika und Guacamole",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 30,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Hähnchenbrust",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver (geräuchert)",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Knoblauchpulver",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprika",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Avocado",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Limette",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomate",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Vollkorn-Wraps",
+    "amount": 6,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "saure Sahne (10 %)",
+    "amount": 100,
+    "unit": "g",
+    "category": "milch"
+   }
+  ],
+  "steps": [
+   "Hähnchen in dünne Streifen schneiden und mit Gewürzen, Salz und der Hälfte des Öls mischen.",
+   "Paprika in Streifen, Zwiebel in Spalten schneiden.",
+   "Eine große Pfanne stark erhitzen und das Hähnchen 5 Minuten braten. Herausnehmen, restliches Öl, Paprika und Zwiebel 4 Minuten braten, sie sollen noch Biss haben. Fleisch zurückgeben.",
+   "Avocado mit Limettensaft, gewürfelter Tomate und Salz zu Guacamole zerdrücken. Wraps kurz in einer trockenen Pfanne erwärmen.",
+   "Alles auf den Tisch stellen und die Wraps selbst füllen."
+  ],
+  "tips": [
+   "Familienessen zum Selberbauen – jede und jeder nimmt, was schmeckt."
+  ]
+ },
+ {
+  "id": "lamm-koefte-bulgur",
+  "title": "Lamm-Köfte mit Minz-Joghurt und Bulgur",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Lammhackfleisch",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch",
+    "note": "oder halb Rinderhack"
+   },
+   {
+    "name": "rote Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Kreuzkümmel",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zimt",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Bulgur",
+    "amount": 150,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gemüsebrühe",
+    "amount": 300,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomate",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Naturjoghurt 1,5 %",
+    "amount": 200,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Minze",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Bulgur mit der kochenden Brühe übergießen und zugedeckt 10 Minuten quellen lassen.",
+   "Hack mit fein gewürfelter Zwiebel, der Hälfte der gehackten Petersilie, Kreuzkümmel, Paprika, Zimt und Salz verkneten. Zu 12 länglichen Köfte formen.",
+   "Köfte in einer heißen Pfanne ohne Öl 8–10 Minuten rundherum braun braten – das Lammfett reicht.",
+   "Joghurt mit gehackter Minze und Salz verrühren. Tomaten würfeln und mit restlicher Petersilie unter den Bulgur heben.",
+   "Köfte mit Bulgur und Minz-Joghurt servieren."
+  ],
+  "tips": [
+   "In der Heißluftfritteuse: 200 °C, 10 Minuten, nach 6 Minuten wenden."
+  ]
+ },
+ {
+  "id": "rind-stroganoff",
+  "title": "Rinder-Stroganoff mit Gewürzgurken und Reis",
+  "chapter": "fleisch",
+  "meal": [
+   "lunch",
+   "dinner"
+  ],
+  "time_min": 35,
+  "servings": 3,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Rinderhüftsteak",
+    "amount": 400,
+    "unit": "g",
+    "category": "fleisch_fisch"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "EL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zwiebel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Champignons",
+    "amount": 250,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Tomatenmark",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Rinderbrühe",
+    "amount": 200,
+    "unit": "ml",
+    "category": "vorrat"
+   },
+   {
+    "name": "Gewürzgurken",
+    "amount": 2,
+    "unit": "Stück",
+    "category": "vorrat"
+   },
+   {
+    "name": "Senf",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "saure Sahne (10 %)",
+    "amount": 150,
+    "unit": "g",
+    "category": "milch"
+   },
+   {
+    "name": "Reis",
+    "amount": 200,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Petersilie",
+    "amount": 0.5,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Reis nach Packungsangabe garen. Fleisch quer zur Faser in feine Streifen schneiden.",
+   "Öl in einer großen Pfanne sehr stark erhitzen und das Fleisch portionsweise 1–2 Minuten scharf anbraten. Herausnehmen, salzen und pfeffern.",
+   "Zwiebel in Streifen und Pilze in Scheiben 5 Minuten braten. Paprikapulver und Tomatenmark kurz mitrösten.",
+   "Mit Brühe ablöschen, Gurkenstreifen und Senf zugeben und 3 Minuten köcheln. Hitze reduzieren und die saure Sahne einrühren – nicht mehr kochen lassen.",
+   "Fleisch nur noch 1 Minute in der Sauce erwärmen und mit Reis und Petersilie servieren."
+  ],
+  "tips": [
+   "Das Fleisch erst ganz zum Schluss in die Sauce geben, sonst wird es zäh."
+  ]
  }
 ]
