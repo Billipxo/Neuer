@@ -7,7 +7,7 @@ export function defaultDraft(existing?: Profile | null): ProfileDraft {
   if (existing) {
     const { id: _id, created_at: _c, ...rest } = existing
     // Felder älterer Profile ergänzen
-    return { ...rest, has_airfryer: rest.has_airfryer ?? true, favorite_recipes: rest.favorite_recipes ?? [] }
+    return { ...rest, has_airfryer: rest.has_airfryer ?? true, favorite_recipes: rest.favorite_recipes ?? [], diet: rest.diet ?? 'all' }
   }
   return {
     name: '',
@@ -25,6 +25,7 @@ export function defaultDraft(existing?: Profile | null): ProfileDraft {
     water_target_ml: 2000,
     has_airfryer: true,
     favorite_recipes: [],
+    diet: 'all',
     onboarded: false,
   }
 }

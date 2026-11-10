@@ -1,5 +1,6 @@
 import type { MacroPercents, MealType, Nutrients, PlanItem, Recipe } from '../types'
 import { macroShares, roundNutrients, scaleNutrients, sumNutrients, ZERO } from './nutrition'
+import { seasonScore } from './season'
 
 export type NewPlanItem = Omit<PlanItem, 'id' | 'user_id' | 'created_at'>
 
@@ -74,6 +75,8 @@ export interface SuggestOptions {
   includeSnacks?: boolean
   /** Heißluftfritteusen-Rezepte leicht bevorzugen */
   preferAirfryer?: boolean
+  /** Monat (1–12): saisonale Rezepte leicht bevorzugen */
+  month?: number
   random?: () => number
 }
 
@@ -107,7 +110,9 @@ export function suggestWeek(opts: SuggestOptions): NewPlanItem[] {
     const candidates = (fresh.length ? fresh : pool)
       .map((r) => {
         const servings = servingsFor(slotKcal, r.nutrition.kcal)
-        return { r, servings, s: score(r, servings, slotKcal, macros) - (opts.preferAirfryer && r.airfryer ? 0.05 : 0) }
+        const airfryerBonus = opts.preferAirfryer && r.airfryer ? 0.05 : 0
+        const seasonBonus = opts.month ? Math.min(3, Math.max(0, seasonScore(r, opts.month).score)) * 0.02 : 0
+        return { r, servings, s: score(r, servings, slotKcal, macros) - airfryerBonus - seasonBonus }
       })
       .sort((a, b) => a.s - b.s)
       .slice(0, 4)

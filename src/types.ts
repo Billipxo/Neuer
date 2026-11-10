@@ -4,6 +4,8 @@ export const MEAL_TYPES: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack']
 export type Sex = 'female' | 'male'
 export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active'
 export type GoalType = 'lose' | 'maintain' | 'gain' | 'custom'
+/** Ernährungsweise für Rezeptvorschläge */
+export type DietPreference = 'all' | 'vegetarian' | 'vegan'
 export type AmountUnit = 'g' | 'piece' | 'serving'
 
 export interface Nutrients {
@@ -39,6 +41,8 @@ export interface Profile {
   has_airfryer: boolean
   /** IDs der Lieblingsrezepte */
   favorite_recipes: string[]
+  /** Ernährungsweise – Vorschläge und Galerie zeigen dann passende Rezepte */
+  diet: DietPreference
   onboarded: boolean
   created_at?: string
 }

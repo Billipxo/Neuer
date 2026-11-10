@@ -10,6 +10,8 @@ import { inSeasonNow, MONTH_NAMES, seasonalRecipes } from '../lib/season'
 import {
   airfryerRecipes,
   allTags,
+  DIET_LABELS,
+  matchesDiet,
   filterRecipes,
   recommendRecipes,
   RECIPES,
@@ -54,6 +56,7 @@ export function RecipesPage() {
   const [sort, setSort] = useState<RecipeSort>('empfohlen')
   const [showMore, setShowMore] = useState(false)
   const [view, setView] = useState<ViewMode>(loadView)
+  const [dietOnly, setDietOnly] = useState(true)
 
   const { data: profile } = useProfile()
   const { data: log = [] } = useLog(todayISO())
@@ -61,13 +64,16 @@ export function RecipesPage() {
   const cooked = useCookedStats()
   const favorites = profile?.favorite_recipes ?? []
   const hasAirfryer = profile?.has_airfryer ?? true
+  const diet = profile?.diet ?? 'all'
+  // Ernährungsweise aus dem Profil als Standardfilter (abschaltbar)
+  const base = useMemo(() => (dietOnly && diet !== 'all' ? RECIPES.filter((r) => matchesDiet(r, diet)) : RECIPES), [dietOnly, diet])
 
   const results = useMemo(() => {
-    let list = filterRecipes(RECIPES, { meal, maxKcal, maxTime, keyword, tag })
+    let list = filterRecipes(base, { meal, maxKcal, maxTime, keyword, tag })
     if (onlyFav) list = list.filter((r) => favorites.includes(r.id))
     if (onlyAirfryer) list = list.filter((r) => r.airfryer)
     return sortRecipes(list, sort, { favorites, preferAirfryer: hasAirfryer, cooked })
-  }, [meal, maxKcal, maxTime, keyword, tag, onlyFav, onlyAirfryer, sort, favorites, hasAirfryer, cooked])
+  }, [base, meal, maxKcal, maxTime, keyword, tag, onlyFav, onlyAirfryer, sort, favorites, hasAirfryer, cooked])
 
   const filterCount = [meal, maxKcal, maxTime, tag, onlyFav || null, onlyAirfryer || null, keyword || null].filter(Boolean).length
   const filtered = filterCount > 0
@@ -76,10 +82,10 @@ export function RecipesPage() {
   const byMeal = groupByMeal(log)
   const currentMeal = mealForHour(new Date().getHours())
   const openMeals = MEAL_TYPES.filter((m) => m !== 'snack' && byMeal[m].length === 0).length || 1
-  const recommended = recommendRecipes(RECIPES, { remainingKcal: remaining, meal: currentMeal, openMeals })
+  const recommended = recommendRecipes(base, { remainingKcal: remaining, meal: currentMeal, openMeals })
   const favRecipes = RECIPES.filter((r) => favorites.includes(r.id))
   const month = new Date().getMonth() + 1
-  const seasonal = useMemo(() => seasonalRecipes(RECIPES, month, 10), [month])
+  const seasonal = useMemo(() => seasonalRecipes(base, month, 10), [base, month])
   const seasonNames = useMemo(() => inSeasonNow(month).slice(0, 4).join(', '), [month])
   const recentlyCooked = useMemo(
     () =>
@@ -114,7 +120,7 @@ export function RecipesPage() {
     <>
       <PageHeader
         title="Rezepte"
-        subtitle={`${RECIPES.length} Ideen · ${airfryerRecipes(RECIPES).length} für die Heißluftfritteuse`}
+        subtitle={`${base.length} Ideen · ${airfryerRecipes(base).length} für die Heißluftfritteuse`}
         actions={
           <div className="flex rounded-full bg-surface-2 p-0.5" role="group" aria-label="Ansicht">
             <IconButton label="Galerie-Ansicht" aria-pressed={view === 'grid'} onClick={() => setViewMode('grid')} className={`size-10 ${view === 'grid' ? 'bg-surface shadow-sm' : 'text-muted'}`}>
@@ -156,6 +162,11 @@ export function RecipesPage() {
       </div>
 
       <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Schnellfilter">
+        {diet !== 'all' && (
+          <Chip active={dietOnly} onClick={() => setDietOnly((v) => !v)}>
+            Nur {DIET_LABELS[diet].toLowerCase()}
+          </Chip>
+        )}
         {hasAirfryer && (
           <Chip active={onlyAirfryer} onClick={() => setOnlyAirfryer((v) => !v)}>
             <span className="inline-flex items-center gap-1.5">
@@ -240,7 +251,7 @@ export function RecipesPage() {
               title="Aus der Heißluftfritteuse"
               subtitle="Knusprig mit wenig Öl"
               icon={<AirfryerIcon className="size-5 text-brand" />}
-              recipes={sortRecipes(airfryerRecipes(RECIPES), 'zeit')}
+              recipes={sortRecipes(airfryerRecipes(base), 'zeit')}
               onAll={() => setOnlyAirfryer(true)}
             />
           )}

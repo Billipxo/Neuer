@@ -78,3 +78,28 @@ describe('Wochenvorschlag mit Heißluftfritteuse', () => {
     expect(withPref).toBeGreaterThan(without)
   })
 })
+
+describe('Wochenvorschlag mit Ernährungsweise und Saison', () => {
+  it('nutzt nur vegetarische Rezepte, wenn so vorgefiltert', async () => {
+    const { matchesDiet } = await import('./recipes')
+    const veg = RECIPES.filter((r) => matchesDiet(r, 'vegetarian'))
+    const res = suggestWeek({ recipes: veg, days, kcalTarget: 2000, macros, existing: [], random: mulberry32(9) })
+    expect(res.length).toBeGreaterThanOrEqual(21)
+    res.forEach((i) => expect(getRecipe(i.recipe_id)!.diet.vegetarian).toBe(true))
+    const vegan = RECIPES.filter((r) => matchesDiet(r, 'vegan'))
+    suggestWeek({ recipes: vegan, days, kcalTarget: 2000, macros, existing: [], random: mulberry32(9) }).forEach((i) =>
+      expect(getRecipe(i.recipe_id)!.diet.vegan).toBe(true),
+    )
+  })
+  it('bevorzugt im November leicht saisonale Rezepte', async () => {
+    const { seasonScore } = await import('./season')
+    let withSeason = 0
+    let without = 0
+    for (let seed = 1; seed <= 10; seed++) {
+      const base = { recipes: RECIPES, days, kcalTarget: 2000, macros, existing: [] }
+      withSeason += suggestWeek({ ...base, month: 11, random: mulberry32(seed) }).reduce((s, i) => s + Math.max(0, seasonScore(getRecipe(i.recipe_id)!, 11).score), 0)
+      without += suggestWeek({ ...base, random: mulberry32(seed) }).reduce((s, i) => s + Math.max(0, seasonScore(getRecipe(i.recipe_id)!, 11).score), 0)
+    }
+    expect(withSeason).toBeGreaterThan(without)
+  })
+})

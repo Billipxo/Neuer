@@ -219,3 +219,10 @@ create policy "achievements_delete_own" on public.achievements for delete using 
 alter table public.profiles
   add column if not exists has_airfryer boolean not null default true,
   add column if not exists favorite_recipes text[] not null default '{}';
+
+-- ===== 20261110000006_diet.sql =====
+-- Teller – Ernährungsweise im Profil (für Rezeptvorschläge)
+
+alter table public.profiles
+  add column if not exists diet text not null default 'all'
+    check (diet in ('all', 'vegetarian', 'vegan'));

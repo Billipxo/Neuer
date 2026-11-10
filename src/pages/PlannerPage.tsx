@@ -7,7 +7,7 @@ import { MEAL_TYPES } from '../types'
 import { useProfile } from '../hooks/data'
 import { useAddPlanItems, useDeletePlanItems, usePlanRange } from '../hooks/plan'
 import { suggestWeek, weekSummary, type NewPlanItem } from '../lib/planner'
-import { RECIPES } from '../lib/recipes'
+import { matchesDiet, RECIPES } from '../lib/recipes'
 import { MEAL_LABELS } from '../lib/meals'
 import { fmtDayShort, fromISODate, shiftISO, todayISO, weekDaysISO, weekStartISO, fmtDate } from '../lib/dates'
 import { fmtInt } from '../lib/format'
@@ -40,7 +40,8 @@ export function PlannerPage() {
 
   async function suggest() {
     const suggested = suggestWeek({
-      recipes: RECIPES,
+      recipes: RECIPES.filter((r) => matchesDiet(r, profile!.diet)),
+      month: Number(weekStart.slice(5, 7)),
       days,
       kcalTarget: target,
       macros: { protein: profile!.protein_pct, carbs: profile!.carbs_pct, fat: profile!.fat_pct },

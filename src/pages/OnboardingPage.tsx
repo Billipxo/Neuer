@@ -10,6 +10,7 @@ import { defaultDraft, type ProfileDraft } from '../components/profile/types'
 import { sumPercents } from '../lib/nutrition'
 import { Switch } from '../components/ui/Switch'
 import { AirfryerIcon } from '../components/recipes/AirfryerIcon'
+import { DietPicker } from '../components/profile/DietPicker'
 
 const STEPS = ['Name', 'Körperdaten', 'Ziel', 'Makros'] as const
 
@@ -89,7 +90,8 @@ export function OnboardingPage({ existing }: { existing: Profile | null }) {
               Ein Vorschlag als Startpunkt: 25 % Eiweiß, 45 % Kohlenhydrate, 30 % Fett. Passe es an, wie es für dich passt.
             </p>
             <MacroEditor draft={draft} onChange={patch} />
-            <div className="mt-8 rounded-2xl bg-surface p-4 ring-1 ring-line/60">
+            <div className="mt-8 space-y-5 rounded-2xl bg-surface p-4 ring-1 ring-line/60">
+              <DietPicker value={draft.diet} onChange={(diet) => patch({ diet })} />
               <Switch
                 label="Ich habe eine Heißluftfritteuse"
                 description="Dann zeigen Rezepte zuerst die Zubereitung darin."

@@ -10741,5 +10741,257 @@
   "tips": [
    "Das steif geschlagene Eiweiß macht den Schmarrn luftig."
   ]
+ },
+ {
+  "id": "tofu-ruehrei",
+  "title": "Tofu-Rührei mit Spinat auf Vollkorntoast",
+  "meal": [
+   "breakfast",
+   "dinner"
+  ],
+  "time_min": 15,
+  "servings": 2,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Tofu (natur)",
+    "amount": 200,
+    "unit": "g",
+    "category": "sonstiges"
+   },
+   {
+    "name": "Rapsöl",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Currypulver",
+    "amount": 0.5,
+    "unit": "TL",
+    "category": "vorrat",
+    "note": "für die Farbe"
+   },
+   {
+    "name": "Paprikapulver",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   },
+   {
+    "name": "Babyspinat",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Cherrytomaten",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Vollkorntoast",
+    "amount": 4,
+    "unit": "Scheibe",
+    "category": "vorrat"
+   },
+   {
+    "name": "Schnittlauch",
+    "amount": 0.25,
+    "unit": "Bund",
+    "category": "obst_gemuese"
+   }
+  ],
+  "steps": [
+   "Tofu trocken tupfen und mit einer Gabel grob zerbröseln.",
+   "Öl in einer Pfanne erhitzen und den Tofu bei mittlerer Hitze 4–5 Minuten braten. Currypulver, Paprikapulver, Salz und Pfeffer unterrühren – das Curry sorgt für die typische gelbe Farbe.",
+   "Spinat und halbierte Tomaten zugeben und 2 Minuten mitbraten, bis der Spinat zusammenfällt.",
+   "Toast rösten, das Tofu-Rührei darauf verteilen und mit Schnittlauch bestreuen."
+  ],
+  "tips": [
+   "Mit einer Prise Kala Namak (Schwefelsalz) schmeckt es fast wie Ei."
+  ]
+ },
+ {
+  "id": "vegane-overnight-oats",
+  "title": "Vegane Overnight Oats mit Beeren und Erdnussbutter",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 10,
+  "servings": 1,
+  "tags": [
+   "meal-prep"
+  ],
+  "ingredients": [
+   {
+    "name": "Haferflocken",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Haferdrink",
+    "amount": 200,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Chiasamen",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Beeren (TK)",
+    "amount": 100,
+    "unit": "g",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Erdnussbutter",
+    "amount": 15,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ahornsirup",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Haferflocken, Chiasamen und Haferdrink in einem Schraubglas verrühren.",
+   "Beeren darauf geben und das Glas verschlossen über Nacht (mindestens 4 Stunden) in den Kühlschrank stellen.",
+   "Morgens umrühren, Erdnussbutter darauf geben und mit Ahornsirup beträufeln."
+  ],
+  "rest_min": 240,
+  "tips": [
+   "Hält sich im Kühlschrank 2 Tage – gleich zwei Gläser vorbereiten."
+  ]
+ },
+ {
+  "id": "apfel-zimt-porridge-vegan",
+  "title": "Apfel-Zimt-Porridge mit Haferdrink",
+  "meal": [
+   "breakfast"
+  ],
+  "time_min": 10,
+  "servings": 1,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Haferflocken",
+    "amount": 50,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Haferdrink",
+    "amount": 250,
+    "unit": "ml",
+    "category": "milch"
+   },
+   {
+    "name": "Apfel",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Zimt",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Walnüsse",
+    "amount": 10,
+    "unit": "g",
+    "category": "vorrat"
+   },
+   {
+    "name": "Ahornsirup",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Apfel waschen, entkernen und klein würfeln.",
+   "Haferflocken mit Haferdrink, der Hälfte der Apfelwürfel und dem Zimt aufkochen.",
+   "Bei kleiner Hitze 3–5 Minuten unter Rühren köcheln, bis das Porridge cremig ist.",
+   "Mit den restlichen Apfelwürfeln, gehackten Walnüssen und Ahornsirup servieren."
+  ],
+  "tips": [
+   "Mit Wasser statt Haferdrink gekocht wird es leichter, mit Haferdrink cremiger."
+  ]
+ },
+ {
+  "id": "hummus-avocado-toast",
+  "title": "Hummus-Avocado-Toast mit Tomate",
+  "meal": [
+   "breakfast",
+   "snack"
+  ],
+  "time_min": 10,
+  "servings": 1,
+  "tags": [],
+  "ingredients": [
+   {
+    "name": "Vollkornbrot",
+    "amount": 2,
+    "unit": "Scheibe",
+    "category": "vorrat"
+   },
+   {
+    "name": "Kichererbsen",
+    "amount": 40,
+    "unit": "g",
+    "category": "vorrat",
+    "note": "oder 2 EL fertiger Hummus"
+   },
+   {
+    "name": "Tahin",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Zitronensaft",
+    "amount": 1,
+    "unit": "TL",
+    "category": "vorrat"
+   },
+   {
+    "name": "Avocado",
+    "amount": 0.5,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Tomate",
+    "amount": 1,
+    "unit": "Stück",
+    "category": "obst_gemuese"
+   },
+   {
+    "name": "Chiliflocken",
+    "amount": 1,
+    "unit": "Prise",
+    "category": "vorrat"
+   }
+  ],
+  "steps": [
+   "Kichererbsen mit Tahin, Zitronensaft, einer Prise Salz und 1–2 EL Wasser mit einer Gabel oder dem Pürierstab zu einem groben Hummus zerdrücken.",
+   "Brot rösten und mit dem Hummus bestreichen.",
+   "Avocado und Tomate in Scheiben schneiden und darauf legen.",
+   "Mit Chiliflocken, Salz und Pfeffer würzen."
+  ],
+  "tips": [
+   "Reste vom Hummus halten sich im Kühlschrank 3–4 Tage."
+  ]
  }
 ]

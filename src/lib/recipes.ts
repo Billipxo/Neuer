@@ -1,5 +1,5 @@
 import rawRecipes from '../data/recipes.json'
-import type { MealType, Nutrients, RawRecipe, Recipe, RecipeIngredient } from '../types'
+import type { DietPreference, MealType, Nutrients, RawRecipe, Recipe, RecipeIngredient } from '../types'
 import { scaleNutrients } from './nutrition'
 import { detectVeggies } from './veggies'
 import { deriveTags, dietInfo, nutritionPerServing } from './recipeNutrition'
@@ -271,4 +271,17 @@ function formatAmount(amount: number | null, unit: string): string {
   if (amount === null) return ''
   const n = String(Math.round(amount * 100) / 100).replace('.', ',')
   return unit ? `${n} ${unit}` : n
+}
+
+export const DIET_LABELS: Record<DietPreference, string> = {
+  all: 'Alles',
+  vegetarian: 'Vegetarisch',
+  vegan: 'Vegan',
+}
+
+/** Passt das Rezept zur gewählten Ernährungsweise? */
+export function matchesDiet(r: Recipe, diet: DietPreference | undefined): boolean {
+  if (diet === 'vegan') return r.diet.vegan
+  if (diet === 'vegetarian') return r.diet.vegetarian
+  return true
 }
