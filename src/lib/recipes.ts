@@ -1,9 +1,17 @@
 import rawRecipes from '../data/recipes.json'
-import type { MealType, Nutrients, Recipe, RecipeIngredient } from '../types'
+import type { MealType, Nutrients, RawRecipe, Recipe, RecipeIngredient } from '../types'
 import { scaleNutrients } from './nutrition'
 import { detectVeggies } from './veggies'
+import { deriveTags, dietInfo, nutritionPerServing } from './recipeNutrition'
 
-export const RECIPES: Recipe[] = rawRecipes as Recipe[]
+/** Rezept um berechnete Nährwerte, Ernährungsform und abgeleitete Tags ergänzen */
+export function buildRecipe(raw: RawRecipe): Recipe {
+  const { fiber, ...nutrition } = nutritionPerServing(raw.ingredients, raw.servings)
+  const diet = dietInfo(raw.ingredients)
+  return { ...raw, nutrition, fiber, diet, tags: deriveTags(raw, { ...nutrition, fiber }, diet) }
+}
+
+export const RECIPES: Recipe[] = (rawRecipes as RawRecipe[]).map(buildRecipe)
 
 export function getRecipe(id: string | null | undefined): Recipe | undefined {
   return id ? RECIPES.find((r) => r.id === id) : undefined

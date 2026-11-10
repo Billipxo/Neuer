@@ -19,6 +19,7 @@ describe('Einkaufsliste – Zusammenführen', () => {
     expect(normalizeQuantity(1.2, 'l')).toEqual({ amount: 1200, unit: 'ml' })
     expect(normalizeQuantity(1, 'kg')).toEqual({ amount: 1000, unit: 'g' })
     expect(normalizeQuantity(null, 'Prise')).toEqual({ amount: null, unit: 'Prise' })
+    expect(normalizeQuantity(2, 'Scheiben')).toEqual({ amount: 2, unit: 'Scheibe' })
   })
   it('addiert gleiche Zutaten und Einheiten', () => {
     const merged = mergeIngredients([
@@ -86,7 +87,10 @@ describe('Einkaufsliste – Anzeige', () => {
     expect(formatQuantity(250, 'ml')).toBe('250 ml')
     expect(formatQuantity(1.5, 'Stück')).toBe('1½ Stück')
     expect(formatQuantity(0.75, 'EL')).toBe('¾ EL')
-    expect(formatQuantity(2, 'Dose')).toBe('2 Dose')
+    expect(formatQuantity(2, 'Dose')).toBe('2 Dosen')
+    expect(formatQuantity(1, 'Zehe')).toBe('1 Zehe')
+    expect(formatQuantity(1.5, 'Zehe')).toBe('1½ Zehen')
+    expect(formatQuantity(3, 'Scheiben')).toBe('3 Scheiben')
     expect(formatQuantity(1.2, 'TL')).toBe('1,2 TL')
     expect(formatQuantity(12.5, 'g')).toBe('12,5 g')
     expect(formatQuantity(null, '')).toBe('')

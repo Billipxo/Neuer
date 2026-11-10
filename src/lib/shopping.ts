@@ -19,8 +19,28 @@ export interface ShoppingInput {
 }
 
 /** kg → g und l → ml, damit gleiche Zutaten zusammengerechnet werden können */
+/** Einheiten mit eigener Mehrzahl (Anzeige) */
+export const UNIT_PLURALS: Record<string, string> = {
+  Zehe: 'Zehen',
+  Dose: 'Dosen',
+  Scheibe: 'Scheiben',
+  Prise: 'Prisen',
+  Schale: 'Schalen',
+  Zweig: 'Zweige',
+  Packung: 'Packungen',
+  Flasche: 'Flaschen',
+  Glas: 'Gläser',
+}
+const UNIT_SINGULARS = Object.fromEntries(Object.entries(UNIT_PLURALS).map(([s, p]) => [p, s]))
+
+/** Einheit passend zur Menge, z. B. 2 → „Zehen“, 1 → „Zehe“ */
+export function unitLabel(amount: number | null, unit: string): string {
+  const singular = UNIT_SINGULARS[unit] ?? unit
+  return amount !== null && amount > 1 ? (UNIT_PLURALS[singular] ?? singular) : singular
+}
+
 export function normalizeQuantity(amount: number | null, unit: string): { amount: number | null; unit: string } {
-  const u = unit.trim()
+  const u = UNIT_SINGULARS[unit.trim()] ?? unit.trim()
   const lu = u.toLowerCase()
   if (amount === null) return { amount: null, unit: u }
   if (lu === 'kg') return { amount: amount * 1000, unit: 'g' }
@@ -116,7 +136,7 @@ export function formatQuantity(amount: number | null, unit: string | null): stri
   if (u === 'g' && amount >= 1000) return `${fmt1(amount / 1000)} kg`
   if (u === 'ml' && amount >= 1000) return `${fmt1(amount / 1000)} l`
   const num = u === 'g' || u === 'ml' ? fmt1(amount) : fmtFraction(amount)
-  return `${num}${u ? ` ${u}` : ''}`
+  return `${num}${u ? ` ${unitLabel(amount, u)}` : ''}`
 }
 
 const FRACTIONS: [number, string][] = [

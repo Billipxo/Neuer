@@ -8,7 +8,6 @@
   "time_min": 10,
   "servings": 1,
   "tags": [
-   "vegetarisch",
    "meal-prep"
   ],
   "ingredients": [
@@ -53,13 +52,7 @@
    "Haferflocken, Chiasamen, Joghurt und Milch in einem Glas verrühren.",
    "Abgedeckt über Nacht (mind. 4 Stunden) in den Kühlschrank stellen.",
    "Morgens mit Beeren und Honig toppen."
-  ],
-  "nutrition": {
-   "kcal": 430,
-   "protein": 20,
-   "carbs": 60,
-   "fat": 11
-  }
+  ]
  },
  {
   "id": "ruehrei-vollkornbrot",
@@ -69,11 +62,7 @@
   ],
   "time_min": 10,
   "servings": 1,
-  "tags": [
-   "vegetarisch",
-   "schnell",
-   "proteinreich"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Eier",
@@ -116,13 +105,7 @@
    "Eier verquirlen, mit Salz und Pfeffer würzen.",
    "Butter in einer Pfanne schmelzen, Eier bei mittlerer Hitze langsam stocken lassen und dabei mit einem Pfannenwender zusammenschieben.",
    "Mit Schnittlauch bestreuen und mit Brot und Tomatenscheiben servieren."
-  ],
-  "nutrition": {
-   "kcal": 420,
-   "protein": 25,
-   "carbs": 24,
-   "fat": 24
-  }
+  ]
  },
  {
   "id": "skyr-bowl-apfel",
@@ -133,11 +116,7 @@
   ],
   "time_min": 5,
   "servings": 1,
-  "tags": [
-   "vegetarisch",
-   "schnell",
-   "proteinreich"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Skyr",
@@ -174,13 +153,7 @@
    "Apfel waschen und in kleine Würfel schneiden.",
    "Skyr in eine Schüssel geben, Apfel darauf verteilen.",
    "Walnüsse grob hacken, darüberstreuen, mit Honig und Zimt verfeinern."
-  ],
-  "nutrition": {
-   "kcal": 370,
-   "protein": 26,
-   "carbs": 38,
-   "fat": 11
-  }
+  ]
  },
  {
   "id": "frischkaese-gurke-brot",
@@ -191,15 +164,12 @@
   ],
   "time_min": 5,
   "servings": 1,
-  "tags": [
-   "vegetarisch",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Vollkornbrot",
     "amount": 2,
-    "unit": "Scheiben",
+    "unit": "Scheibe",
     "category": "vorrat"
    },
    {
@@ -231,13 +201,7 @@
    "Brot mit Frischkäse bestreichen.",
    "Gurke in dünne Scheiben schneiden und darauflegen.",
    "Mit Kresse, Salz und Pfeffer bestreuen."
-  ],
-  "nutrition": {
-   "kcal": 330,
-   "protein": 14,
-   "carbs": 44,
-   "fat": 9
-  }
+  ]
  },
  {
   "id": "bananen-pancakes",
@@ -247,9 +211,7 @@
   ],
   "time_min": 20,
   "servings": 2,
-  "tags": [
-   "vegetarisch"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Bananen",
@@ -293,13 +255,7 @@
    "5 Minuten quellen lassen.",
    "Öl in einer beschichteten Pfanne erhitzen, kleine Pancakes von beiden Seiten je 2 Minuten goldbraun backen.",
    "Mit Joghurt servieren."
-  ],
-  "nutrition": {
-   "kcal": 450,
-   "protein": 22,
-   "carbs": 55,
-   "fat": 15
-  }
+  ]
  },
  {
   "id": "shakshuka",
@@ -311,10 +267,7 @@
   ],
   "time_min": 25,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "low-carb"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Tomaten (stückig)",
@@ -370,13 +323,7 @@
    "Tomaten und Kreuzkümmel zugeben, 10 Minuten köcheln lassen, mit Salz und Pfeffer abschmecken.",
    "Vier Mulden formen, Eier hineinschlagen und zugedeckt 6–8 Minuten stocken lassen.",
    "Mit gehackter Petersilie bestreuen."
-  ],
-  "nutrition": {
-   "kcal": 360,
-   "protein": 18,
-   "carbs": 24,
-   "fat": 20
-  }
+  ]
  },
  {
   "id": "porridge-birne",
@@ -386,10 +333,7 @@
   ],
   "time_min": 10,
   "servings": 1,
-  "tags": [
-   "vegetarisch",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Haferflocken",
@@ -420,13 +364,7 @@
    "Haferflocken mit Milch aufkochen und unter Rühren 3–5 Minuten köcheln lassen.",
    "Birne würfeln und unterheben oder darauf verteilen.",
    "Mit Zimt bestreuen."
-  ],
-  "nutrition": {
-   "kcal": 440,
-   "protein": 17,
-   "carbs": 72,
-   "fat": 9
-  }
+  ]
  },
  {
   "id": "quark-broetchen-erdbeeren",
@@ -436,11 +374,7 @@
   ],
   "time_min": 5,
   "servings": 1,
-  "tags": [
-   "vegetarisch",
-   "schnell",
-   "proteinreich"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Vollkornbrötchen",
@@ -471,13 +405,7 @@
    "Brötchen aufschneiden.",
    "Quark mit Honig glatt rühren und aufstreichen.",
    "Erdbeeren in Scheiben schneiden und darauflegen."
-  ],
-  "nutrition": {
-   "kcal": 300,
-   "protein": 20,
-   "carbs": 46,
-   "fat": 3
-  }
+  ]
  },
  {
   "id": "gruene-smoothie-bowl",
@@ -487,10 +415,7 @@
   ],
   "time_min": 10,
   "servings": 1,
-  "tags": [
-   "vegan",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Bananen",
@@ -533,13 +458,7 @@
    "Banane, Spinat, Mango und Haferdrink im Mixer cremig pürieren.",
    "In eine Schüssel füllen.",
    "Mit Haferflocken und Kokosraspeln bestreuen."
-  ],
-  "nutrition": {
-   "kcal": 360,
-   "protein": 9,
-   "carbs": 62,
-   "fat": 8
-  }
+  ]
  },
  {
   "id": "huettenkaese-avocado-toast",
@@ -549,15 +468,12 @@
   ],
   "time_min": 10,
   "servings": 1,
-  "tags": [
-   "vegetarisch",
-   "proteinreich"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Vollkorntoast",
     "amount": 2,
-    "unit": "Scheiben",
+    "unit": "Scheibe",
     "category": "vorrat"
    },
    {
@@ -589,13 +505,7 @@
    "Toast rösten.",
    "Avocado mit einer Gabel zerdrücken und auf den Toast streichen.",
    "Hüttenkäse und Tomatenscheiben darauf verteilen, mit Chili, Salz und Pfeffer würzen."
-  ],
-  "nutrition": {
-   "kcal": 430,
-   "protein": 22,
-   "carbs": 34,
-   "fat": 21
-  }
+  ]
  },
  {
   "id": "bircher-muesli",
@@ -606,7 +516,6 @@
   "time_min": 10,
   "servings": 2,
   "tags": [
-   "vegetarisch",
    "meal-prep"
   ],
   "ingredients": [
@@ -651,13 +560,7 @@
    "Haferflocken mit Milch mischen und mindestens 30 Minuten (oder über Nacht) quellen lassen.",
    "Äpfel grob raspeln, mit Zitronensaft beträufeln und mit dem Joghurt unterrühren.",
    "Haselnüsse hacken und darüberstreuen."
-  ],
-  "nutrition": {
-   "kcal": 390,
-   "protein": 15,
-   "carbs": 58,
-   "fat": 11
-  }
+  ]
  },
  {
   "id": "linsen-bolognese",
@@ -669,9 +572,7 @@
   "time_min": 35,
   "servings": 4,
   "tags": [
-   "vegan",
-   "meal-prep",
-   "ballaststoffreich"
+   "meal-prep"
   ],
   "ingredients": [
    {
@@ -734,13 +635,7 @@
    "Tomatenmark kurz mitrösten, Linsen, Tomaten und 300 ml Wasser zugeben.",
    "15 Minuten köcheln lassen, bis die Linsen weich sind. Mit Oregano, Salz und Pfeffer abschmecken.",
    "Spaghetti nach Packungsangabe kochen und mit der Sauce servieren."
-  ],
-  "nutrition": {
-   "kcal": 490,
-   "protein": 23,
-   "carbs": 85,
-   "fat": 6
-  }
+  ]
  },
  {
   "id": "haehnchen-gemuese-pfanne",
@@ -751,10 +646,7 @@
   ],
   "time_min": 25,
   "servings": 2,
-  "tags": [
-   "proteinreich",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Hähnchenbrust",
@@ -804,13 +696,7 @@
    "Hähnchen in Streifen schneiden und im Öl rundum anbraten, herausnehmen.",
    "Zwiebel, Paprika und Zucchini in Stücke schneiden und 5 Minuten braten.",
    "Hähnchen zurück in die Pfanne geben, mit Sojasauce ablöschen und mit dem Reis servieren."
-  ],
-  "nutrition": {
-   "kcal": 520,
-   "protein": 40,
-   "carbs": 60,
-   "fat": 11
-  }
+  ]
  },
  {
   "id": "ofenlachs-kartoffeln",
@@ -821,11 +707,7 @@
   ],
   "time_min": 35,
   "servings": 2,
-  "tags": [
-   "proteinreich",
-   "glutenfrei",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Lachsfilet",
@@ -870,12 +752,6 @@
    "Mit restlichem Öl beträufeln, Zitronenscheiben auf den Lachs legen und weitere 12–15 Minuten garen.",
    "Mit Dill bestreuen."
   ],
-  "nutrition": {
-   "kcal": 590,
-   "protein": 36,
-   "carbs": 45,
-   "fat": 27
-  },
   "airfryer": {
    "temp_c": 200,
    "time_min": 25,
@@ -897,9 +773,7 @@
   "time_min": 35,
   "servings": 4,
   "tags": [
-   "vegan",
-   "meal-prep",
-   "ballaststoffreich"
+   "meal-prep"
   ],
   "ingredients": [
    {
@@ -968,13 +842,7 @@
    "Zwiebel, Knoblauch und Paprika würfeln und im Öl anbraten.",
    "Gewürze kurz mitrösten, Tomaten, abgespülte Bohnen und Mais zugeben.",
    "20 Minuten köcheln lassen, abschmecken und mit Reis servieren."
-  ],
-  "nutrition": {
-   "kcal": 460,
-   "protein": 16,
-   "carbs": 82,
-   "fat": 6
-  }
+  ]
  },
  {
   "id": "griechischer-salat",
@@ -985,11 +853,7 @@
   ],
   "time_min": 15,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "low-carb",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Salatgurke",
@@ -1044,13 +908,7 @@
    "Gurke, Tomaten und Paprika in mundgerechte Stücke schneiden, Zwiebel in feine Ringe.",
    "Alles mit Oliven mischen, mit Olivenöl, Oregano, Salz und Pfeffer anmachen.",
    "Feta in Würfel schneiden oder darüberbröseln."
-  ],
-  "nutrition": {
-   "kcal": 320,
-   "protein": 10,
-   "carbs": 12,
-   "fat": 26
-  }
+  ]
  },
  {
   "id": "kartoffel-lauch-suppe",
@@ -1062,7 +920,6 @@
   "time_min": 35,
   "servings": 4,
   "tags": [
-   "vegetarisch",
    "meal-prep"
   ],
   "ingredients": [
@@ -1107,13 +964,7 @@
    "Kartoffeln schälen und würfeln, Lauch in Ringe schneiden und gründlich waschen.",
    "Lauch im Öl andünsten, Kartoffeln und Brühe zugeben, 20 Minuten köcheln.",
    "Ein Drittel der Suppe pürieren und zurückgeben, Sahne einrühren und mit Muskat, Salz und Pfeffer abschmecken."
-  ],
-  "nutrition": {
-   "kcal": 280,
-   "protein": 6,
-   "carbs": 38,
-   "fat": 11
-  }
+  ]
  },
  {
   "id": "putengeschnetzeltes-champignons",
@@ -1124,9 +975,7 @@
   ],
   "time_min": 30,
   "servings": 2,
-  "tags": [
-   "proteinreich"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Putenbrust",
@@ -1176,13 +1025,7 @@
    "Pute in Streifen schneiden und im Öl scharf anbraten, herausnehmen.",
    "Zwiebel und Champignons in Scheiben schneiden und anbraten, bis sie Farbe haben.",
    "Mit Kochsahne und 100 ml Wasser ablöschen, Fleisch zurückgeben, 3 Minuten köcheln. Mit Petersilie servieren."
-  ],
-  "nutrition": {
-   "kcal": 610,
-   "protein": 45,
-   "carbs": 65,
-   "fat": 15
-  }
+  ]
  },
  {
   "id": "kichererbsen-gemuese-curry",
@@ -1194,7 +1037,6 @@
   "time_min": 35,
   "servings": 4,
   "tags": [
-   "vegan",
    "meal-prep"
   ],
   "ingredients": [
@@ -1252,13 +1094,7 @@
    "Zwiebel würfeln und mit der Currypaste anschwitzen.",
    "Blumenkohlröschen und Karottenscheiben zugeben, mit Kokosmilch und 200 ml Wasser ablöschen, 12 Minuten köcheln.",
    "Abgespülte Kichererbsen und Spinat unterrühren, kurz erhitzen und mit Reis servieren."
-  ],
-  "nutrition": {
-   "kcal": 520,
-   "protein": 15,
-   "carbs": 70,
-   "fat": 18
-  }
+  ]
  },
  {
   "id": "haehnchen-wrap",
@@ -1269,10 +1105,7 @@
   ],
   "time_min": 20,
   "servings": 2,
-  "tags": [
-   "proteinreich",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Vollkorn-Wraps",
@@ -1327,13 +1160,7 @@
    "Hähnchen in Streifen schneiden, mit Paprikapulver würzen und im Öl durchbraten.",
    "Joghurt mit Salz, Pfeffer und etwas geriebener Gurke verrühren.",
    "Wraps kurz erwärmen, mit Salat, Tomate, Gurke und Hähnchen belegen, Sauce darüber und aufrollen."
-  ],
-  "nutrition": {
-   "kcal": 430,
-   "protein": 35,
-   "carbs": 40,
-   "fat": 12
-  }
+  ]
  },
  {
   "id": "spinat-feta-omelett",
@@ -1345,12 +1172,7 @@
   ],
   "time_min": 10,
   "servings": 1,
-  "tags": [
-   "vegetarisch",
-   "low-carb",
-   "schnell",
-   "proteinreich"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Eier",
@@ -1381,13 +1203,7 @@
    "Eier verquirlen und würzen.",
    "Spinat im Öl kurz zusammenfallen lassen, Eier darübergießen.",
    "Bei mittlerer Hitze stocken lassen, Feta darüberbröseln und zusammenklappen."
-  ],
-  "nutrition": {
-   "kcal": 340,
-   "protein": 25,
-   "carbs": 3,
-   "fat": 25
-  }
+  ]
  },
  {
   "id": "ofengemuese-halloumi",
@@ -1398,11 +1214,7 @@
   ],
   "time_min": 40,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "glutenfrei",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Süßkartoffel",
@@ -1452,12 +1264,6 @@
    "Gemüse in mundgerechte Stücke schneiden, mit Öl, Thymian, Salz und Pfeffer mischen und 25 Minuten rösten.",
    "Halloumi in Scheiben schneiden, aufs Blech legen und weitere 10 Minuten backen."
   ],
-  "nutrition": {
-   "kcal": 560,
-   "protein": 23,
-   "carbs": 40,
-   "fat": 33
-  },
   "airfryer": {
    "temp_c": 200,
    "time_min": 22,
@@ -1478,7 +1284,6 @@
   "time_min": 40,
   "servings": 4,
   "tags": [
-   "vegetarisch",
    "meal-prep"
   ],
   "ingredients": [
@@ -1530,13 +1335,7 @@
    "Zwiebel fein würfeln, Gurke in dünne Scheiben hobeln.",
    "Joghurt, Senf, Öl, Salz und Pfeffer verrühren, mit allem mischen.",
    "Mindestens 15 Minuten ziehen lassen, mit Schnittlauch bestreuen."
-  ],
-  "nutrition": {
-   "kcal": 230,
-   "protein": 7,
-   "carbs": 40,
-   "fat": 4
-  }
+  ]
  },
  {
   "id": "spaghetti-tomatensauce",
@@ -1547,10 +1346,7 @@
   ],
   "time_min": 20,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Spaghetti",
@@ -1593,13 +1389,7 @@
    "Spaghetti nach Packungsangabe kochen.",
    "Knoblauch im Olivenöl andünsten, Tomaten zugeben und 10 Minuten köcheln, würzen.",
    "Spaghetti untermischen, mit Basilikum und geriebenem Parmesan servieren."
-  ],
-  "nutrition": {
-   "kcal": 520,
-   "protein": 18,
-   "carbs": 84,
-   "fat": 12
-  }
+  ]
  },
  {
   "id": "hack-bulgur-pfanne",
@@ -1610,9 +1400,7 @@
   ],
   "time_min": 25,
   "servings": 2,
-  "tags": [
-   "proteinreich"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Rinderhack (mager)",
@@ -1662,13 +1450,7 @@
    "Hack krümelig anbraten, gewürfelte Zwiebel zugeben.",
    "Zucchini und Paprika würfeln, mitbraten, Tomatenmark und Paprikapulver einrühren.",
    "Bulgur untermischen und abschmecken."
-  ],
-  "nutrition": {
-   "kcal": 560,
-   "protein": 34,
-   "carbs": 55,
-   "fat": 20
-  }
+  ]
  },
  {
   "id": "linsensuppe",
@@ -1680,9 +1462,7 @@
   "time_min": 45,
   "servings": 4,
   "tags": [
-   "vegan",
-   "meal-prep",
-   "ballaststoffreich"
+   "meal-prep"
   ],
   "ingredients": [
    {
@@ -1732,13 +1512,7 @@
    "Zwiebel würfeln, Karotten, Kartoffeln und Lauch klein schneiden.",
    "Alles mit Linsen und Brühe aufkochen und 30 Minuten köcheln lassen.",
    "Mit Essig, Salz und Pfeffer abschmecken."
-  ],
-  "nutrition": {
-   "kcal": 300,
-   "protein": 17,
-   "carbs": 48,
-   "fat": 2
-  }
+  ]
  },
  {
   "id": "kabeljau-senfsauce",
@@ -1749,9 +1523,7 @@
   ],
   "time_min": 30,
   "servings": 2,
-  "tags": [
-   "proteinreich"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Kabeljaufilet",
@@ -1801,13 +1573,7 @@
    "Butter schmelzen, Mehl einrühren, Milch nach und nach zugießen, Senf zugeben und 3 Minuten köcheln.",
    "Kabeljau würzen und in der Sauce zugedeckt 8 Minuten gar ziehen lassen.",
    "Erbsen 4 Minuten garen und alles zusammen servieren."
-  ],
-  "nutrition": {
-   "kcal": 450,
-   "protein": 38,
-   "carbs": 50,
-   "fat": 8
-  }
+  ]
  },
  {
   "id": "quinoa-avocado-salat",
@@ -1818,10 +1584,7 @@
   ],
   "time_min": 25,
   "servings": 2,
-  "tags": [
-   "vegan",
-   "glutenfrei"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Quinoa",
@@ -1870,13 +1633,7 @@
    "Quinoa heiß abspülen und in der doppelten Menge Wasser 15 Minuten garen, abkühlen lassen.",
    "Avocado, Tomaten und Gurke klein schneiden, Petersilie hacken.",
    "Alles mit Zitronensaft, Olivenöl, Salz und Pfeffer vermengen."
-  ],
-  "nutrition": {
-   "kcal": 480,
-   "protein": 12,
-   "carbs": 50,
-   "fat": 25
-  }
+  ]
  },
  {
   "id": "caesar-salat-leicht",
@@ -1887,10 +1644,7 @@
   ],
   "time_min": 20,
   "servings": 2,
-  "tags": [
-   "proteinreich",
-   "low-carb"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Hähnchenbrust",
@@ -1946,13 +1700,7 @@
    "Brot würfeln und ohne Fett zu Croutons rösten.",
    "Joghurt, Senf, Zitronensaft und die Hälfte des Parmesans zu einem Dressing verrühren.",
    "Salat zupfen, mit Dressing mischen, Hähnchen, Croutons und restlichen Parmesan darauf verteilen."
-  ],
-  "nutrition": {
-   "kcal": 380,
-   "protein": 42,
-   "carbs": 16,
-   "fat": 15
-  }
+  ]
  },
  {
   "id": "gefuellte-paprika-couscous",
@@ -1963,10 +1711,7 @@
   ],
   "time_min": 40,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Paprika",
@@ -2011,12 +1756,6 @@
    "Paprika halbieren, entkernen und füllen.",
    "Passierte Tomaten in eine Form geben, Paprika daraufsetzen und 25 Minuten backen."
   ],
-  "nutrition": {
-   "kcal": 440,
-   "protein": 18,
-   "carbs": 55,
-   "fat": 15
-  },
   "airfryer": {
    "temp_c": 180,
    "time_min": 18,
@@ -2037,10 +1776,7 @@
   ],
   "time_min": 25,
   "servings": 2,
-  "tags": [
-   "vegan",
-   "proteinreich"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Tofu (natur)",
@@ -2090,13 +1826,7 @@
    "Tofu trocken tupfen, würfeln und im Rapsöl knusprig braten.",
    "Brokkoli in Röschen teilen und mit geriebenem Ingwer 5 Minuten mitbraten.",
    "Mit Sojasauce und Sesamöl würzen und mit Reis servieren."
-  ],
-  "nutrition": {
-   "kcal": 480,
-   "protein": 22,
-   "carbs": 58,
-   "fat": 16
-  }
+  ]
  },
  {
   "id": "pellkartoffeln-kraeuterquark",
@@ -2107,10 +1837,7 @@
   ],
   "time_min": 30,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "proteinreich"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Kartoffeln",
@@ -2147,13 +1874,7 @@
    "Kartoffeln in der Schale ca. 20–25 Minuten kochen.",
    "Quark mit etwas Wasser cremig rühren, Schnittlauch schneiden, Gurke fein würfeln und unterheben.",
    "Mit Salz, Pfeffer und Leinöl abschmecken und zu den Kartoffeln servieren."
-  ],
-  "nutrition": {
-   "kcal": 400,
-   "protein": 25,
-   "carbs": 58,
-   "fat": 4
-  }
+  ]
  },
  {
   "id": "zucchini-nudeln-garnelen",
@@ -2164,11 +1885,7 @@
   ],
   "time_min": 20,
   "servings": 2,
-  "tags": [
-   "low-carb",
-   "proteinreich",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Zucchini",
@@ -2211,13 +1928,7 @@
    "Zucchini mit einem Spiralschneider zu Nudeln schneiden.",
    "Knoblauch im Öl andünsten, Garnelen 3 Minuten braten.",
    "Tomaten halbieren und mit den Zucchininudeln 2 Minuten mitschwenken, mit Chili, Salz und Pfeffer würzen."
-  ],
-  "nutrition": {
-   "kcal": 220,
-   "protein": 23,
-   "carbs": 9,
-   "fat": 9
-  }
+  ]
  },
  {
   "id": "kuerbissuppe-ingwer",
@@ -2229,8 +1940,6 @@
   "time_min": 35,
   "servings": 4,
   "tags": [
-   "vegan",
-   "glutenfrei",
    "meal-prep"
   ],
   "ingredients": [
@@ -2275,13 +1984,7 @@
    "Kürbis entkernen und mit Schale würfeln, Zwiebel und Ingwer hacken.",
    "Zwiebel und Ingwer im Öl andünsten, Kürbis und Brühe zugeben, 20 Minuten köcheln.",
    "Kokosmilch zugeben, fein pürieren und abschmecken."
-  ],
-  "nutrition": {
-   "kcal": 200,
-   "protein": 4,
-   "carbs": 22,
-   "fat": 10
-  }
+  ]
  },
  {
   "id": "suesskartoffel-bohnen",
@@ -2292,11 +1995,7 @@
   ],
   "time_min": 45,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "ballaststoffreich",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Süßkartoffel",
@@ -2334,12 +2033,6 @@
    "Bohnen abspülen, mit Paprikapulver, Salz und Pfeffer in einer Pfanne erwärmen.",
    "Süßkartoffeln mit Bohnen füllen, Joghurt und Frühlingszwiebelringe darauf geben."
   ],
-  "nutrition": {
-   "kcal": 480,
-   "protein": 17,
-   "carbs": 88,
-   "fat": 4
-  },
   "airfryer": {
    "temp_c": 200,
    "time_min": 30,
@@ -2360,9 +2053,7 @@
   ],
   "time_min": 25,
   "servings": 2,
-  "tags": [
-   "proteinreich"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Reis",
@@ -2411,13 +2102,7 @@
    "Reis nach Packungsangabe kochen und etwas abkühlen lassen.",
    "Gurke und Avocado in Scheiben schneiden, Karotte raspeln.",
    "Reis auf zwei Schalen verteilen, Thunfisch und Gemüse darauf anrichten, mit Sojasauce und Sesam toppen."
-  ],
-  "nutrition": {
-   "kcal": 520,
-   "protein": 32,
-   "carbs": 55,
-   "fat": 18
-  }
+  ]
  },
  {
   "id": "gnocchi-spinat-pfanne",
@@ -2428,10 +2113,7 @@
   ],
   "time_min": 20,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Gnocchi",
@@ -2474,13 +2156,7 @@
    "Gnocchi im Öl rundherum goldbraun braten.",
    "Knoblauch und halbierte Tomaten zugeben und 2 Minuten mitbraten.",
    "Spinat unterheben, bis er zusammenfällt, mit Parmesan bestreuen."
-  ],
-  "nutrition": {
-   "kcal": 470,
-   "protein": 14,
-   "carbs": 78,
-   "fat": 12
-  }
+  ]
  },
  {
   "id": "ofen-frittata",
@@ -2493,10 +2169,7 @@
   "time_min": 35,
   "servings": 4,
   "tags": [
-   "vegetarisch",
-   "low-carb",
-   "meal-prep",
-   "heissluftfritteuse"
+   "meal-prep"
   ],
   "ingredients": [
    {
@@ -2541,12 +2214,6 @@
    "Eier mit Milch, Salz und Pfeffer verquirlen und über das Gemüse gießen.",
    "Käse darüberreiben und 20 Minuten im Ofen stocken lassen."
   ],
-  "nutrition": {
-   "kcal": 260,
-   "protein": 19,
-   "carbs": 6,
-   "fat": 17
-  },
   "airfryer": {
    "temp_c": 160,
    "time_min": 18,
@@ -2566,11 +2233,7 @@
   ],
   "time_min": 45,
   "servings": 2,
-  "tags": [
-   "proteinreich",
-   "glutenfrei",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Hähnchenbrust",
@@ -2614,12 +2277,6 @@
    "Mit Öl, Rosmarin, Salz und Pfeffer mischen und 20 Minuten backen.",
    "Hähnchen in große Stücke schneiden, würzen, aufs Blech legen und weitere 15–20 Minuten garen."
   ],
-  "nutrition": {
-   "kcal": 520,
-   "protein": 42,
-   "carbs": 52,
-   "fat": 12
-  },
   "airfryer": {
    "temp_c": 200,
    "time_min": 30,
@@ -2639,10 +2296,7 @@
   ],
   "time_min": 25,
   "servings": 2,
-  "tags": [
-   "low-carb",
-   "proteinreich"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Spitzkohl",
@@ -2685,13 +2339,7 @@
    "Kartoffeln klein würfeln und im Öl 10 Minuten braten.",
    "Hack und Zwiebel zugeben und krümelig braten.",
    "Spitzkohl in Streifen schneiden, mit Kümmel zugeben und 5–7 Minuten mitbraten, abschmecken."
-  ],
-  "nutrition": {
-   "kcal": 430,
-   "protein": 27,
-   "carbs": 25,
-   "fat": 23
-  }
+  ]
  },
  {
   "id": "abendbrot-teller",
@@ -2701,14 +2349,12 @@
   ],
   "time_min": 10,
   "servings": 1,
-  "tags": [
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Vollkornbrot",
     "amount": 2,
-    "unit": "Scheiben",
+    "unit": "Scheibe",
     "category": "vorrat"
    },
    {
@@ -2746,13 +2392,7 @@
    "Brot dünn mit Butter bestreichen.",
    "Mit Käse und Putenbrust belegen.",
    "Tomate und Paprika in Spalten bzw. Streifen schneiden und dazu servieren."
-  ],
-  "nutrition": {
-   "kcal": 420,
-   "protein": 26,
-   "carbs": 42,
-   "fat": 15
-  }
+  ]
  },
  {
   "id": "erbseneintopf",
@@ -2764,9 +2404,7 @@
   "time_min": 50,
   "servings": 4,
   "tags": [
-   "vegan",
-   "meal-prep",
-   "ballaststoffreich"
+   "meal-prep"
   ],
   "ingredients": [
    {
@@ -2816,13 +2454,7 @@
    "Zwiebel würfeln, Erbsen abspülen und mit Brühe aufkochen, 20 Minuten köcheln.",
    "Kartoffeln, Karotten und Lauch klein schneiden, zugeben und weitere 20 Minuten garen.",
    "Mit Majoran, Salz und Pfeffer abschmecken, nach Wunsch etwas pürieren."
-  ],
-  "nutrition": {
-   "kcal": 340,
-   "protein": 18,
-   "carbs": 55,
-   "fat": 4
-  }
+  ]
  },
  {
   "id": "rote-bete-salat-ziegenkaese",
@@ -2833,11 +2465,7 @@
   ],
   "time_min": 15,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "glutenfrei",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Rote Bete (vorgegart)",
@@ -2886,13 +2514,7 @@
    "Rote Bete in Spalten schneiden, Feldsalat waschen.",
    "Öl, Balsamico, Honig, Salz und Pfeffer verrühren.",
    "Salat anrichten, Ziegenkäse darüberbröseln und mit gehackten Walnüssen bestreuen."
-  ],
-  "nutrition": {
-   "kcal": 360,
-   "protein": 14,
-   "carbs": 24,
-   "fat": 23
-  }
+  ]
  },
  {
   "id": "gemuese-reispfanne-ei",
@@ -2903,10 +2525,7 @@
   ],
   "time_min": 20,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Reis",
@@ -2956,13 +2575,7 @@
    "Karotten würfeln und mit Erbsen im Öl 4 Minuten braten.",
    "Reis zugeben und anbraten, an den Rand schieben, Eier in die Mitte geben und stocken lassen.",
    "Alles mischen, mit Sojasauce würzen und mit Frühlingszwiebeln bestreuen."
-  ],
-  "nutrition": {
-   "kcal": 480,
-   "protein": 18,
-   "carbs": 66,
-   "fat": 15
-  }
+  ]
  },
  {
   "id": "apfel-erdnussbutter",
@@ -2972,10 +2585,7 @@
   ],
   "time_min": 3,
   "servings": 1,
-  "tags": [
-   "vegan",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Apfel",
@@ -2993,13 +2603,7 @@
   "steps": [
    "Apfel in Spalten schneiden.",
    "Mit Erdnussbutter zum Dippen servieren."
-  ],
-  "nutrition": {
-   "kcal": 180,
-   "protein": 4,
-   "carbs": 23,
-   "fat": 8
-  }
+  ]
  },
  {
   "id": "hummus-gemuesesticks",
@@ -3010,7 +2614,6 @@
   "time_min": 15,
   "servings": 4,
   "tags": [
-   "vegan",
    "meal-prep"
   ],
   "ingredients": [
@@ -3067,13 +2670,7 @@
    "Kichererbsen abgießen (etwas Flüssigkeit auffangen).",
    "Mit Tahin, Zitronensaft, Knoblauch, Öl und 3–4 EL Flüssigkeit cremig pürieren, abschmecken.",
    "Gemüse in Sticks schneiden und zum Hummus servieren."
-  ],
-  "nutrition": {
-   "kcal": 210,
-   "protein": 8,
-   "carbs": 20,
-   "fat": 11
-  }
+  ]
  },
  {
   "id": "dattel-energiekugeln",
@@ -3084,7 +2681,6 @@
   "time_min": 15,
   "servings": 6,
   "tags": [
-   "vegan",
    "meal-prep"
   ],
   "ingredients": [
@@ -3117,13 +2713,7 @@
    "Mandeln im Mixer grob zerkleinern.",
    "Datteln, Haferflocken und Kakao zugeben und zu einer klebrigen Masse mixen.",
    "12 Kugeln formen (2 Kugeln = 1 Portion) und kühl lagern."
-  ],
-  "nutrition": {
-   "kcal": 190,
-   "protein": 4,
-   "carbs": 30,
-   "fat": 6
-  }
+  ]
  },
  {
   "id": "quark-beeren",
@@ -3134,11 +2724,7 @@
   ],
   "time_min": 3,
   "servings": 1,
-  "tags": [
-   "vegetarisch",
-   "proteinreich",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Magerquark",
@@ -3162,13 +2748,7 @@
   "steps": [
    "Quark mit einem Schuss Wasser cremig rühren.",
    "Beeren (aufgetaut) unterheben und mit Honig süßen."
-  ],
-  "nutrition": {
-   "kcal": 170,
-   "protein": 19,
-   "carbs": 20,
-   "fat": 1
-  }
+  ]
  },
  {
   "id": "tzatziki-knaeckebrot",
@@ -3178,10 +2758,7 @@
   ],
   "time_min": 10,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Naturjoghurt 1,5 %",
@@ -3204,7 +2781,7 @@
    {
     "name": "Vollkorn-Knäckebrot",
     "amount": 4,
-    "unit": "Scheiben",
+    "unit": "Scheibe",
     "category": "vorrat"
    }
   ],
@@ -3212,13 +2789,7 @@
    "Gurke raspeln und gut ausdrücken.",
    "Mit Joghurt und gepresstem Knoblauch verrühren, salzen.",
    "Mit Knäckebrot servieren."
-  ],
-  "nutrition": {
-   "kcal": 190,
-   "protein": 9,
-   "carbs": 25,
-   "fat": 4
-  }
+  ]
  },
  {
   "id": "edamame-meersalz",
@@ -3228,11 +2799,7 @@
   ],
   "time_min": 8,
   "servings": 2,
-  "tags": [
-   "vegan",
-   "proteinreich",
-   "glutenfrei"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Edamame (TK, in der Schale)",
@@ -3250,13 +2817,7 @@
   "steps": [
    "Edamame in kochendem Wasser 4–5 Minuten garen.",
    "Abgießen und mit Meersalz bestreuen."
-  ],
-  "nutrition": {
-   "kcal": 180,
-   "protein": 16,
-   "carbs": 10,
-   "fat": 8
-  }
+  ]
  },
  {
   "id": "bananen-joghurt",
@@ -3267,10 +2828,7 @@
   ],
   "time_min": 3,
   "servings": 1,
-  "tags": [
-   "vegetarisch",
-   "schnell"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Naturjoghurt 1,5 %",
@@ -3294,13 +2852,7 @@
   "steps": [
    "Banane in Scheiben schneiden.",
    "Mit Joghurt und Haferflocken in einer Schale mischen."
-  ],
-  "nutrition": {
-   "kcal": 260,
-   "protein": 10,
-   "carbs": 44,
-   "fat": 5
-  }
+  ]
  },
  {
   "id": "knusprige-haehnchenstreifen",
@@ -3311,10 +2863,7 @@
   ],
   "time_min": 25,
   "servings": 2,
-  "tags": [
-   "proteinreich",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Hähnchenbrust",
@@ -3365,12 +2914,6 @@
    "Streifen nebeneinander in den Korb legen, dünn mit Öl besprühen oder bepinseln und bei 190 °C 10–12 Minuten garen. Nach der Hälfte wenden.",
    "Joghurt mit Schnittlauch, Salz und Pfeffer verrühren und als Dip servieren."
   ],
-  "nutrition": {
-   "kcal": 360,
-   "protein": 45,
-   "carbs": 19,
-   "fat": 10
-  },
   "airfryer": {
    "temp_c": 190,
    "time_min": 12
@@ -3385,11 +2928,7 @@
   ],
   "time_min": 30,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "glutenfrei",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Süßkartoffel",
@@ -3434,12 +2973,6 @@
    "In einer Lage in den Korb geben und bei 200 °C 18–20 Minuten knusprig garen, dabei 2–3-mal schütteln. Bei Bedarf in zwei Portionen garen.",
    "Quark mit etwas Wasser glatt rühren, Schnittlauch unterheben und würzen."
   ],
-  "nutrition": {
-   "kcal": 392,
-   "protein": 20,
-   "carbs": 66,
-   "fat": 6
-  },
   "airfryer": {
    "temp_c": 200,
    "time_min": 20
@@ -3454,11 +2987,7 @@
   ],
   "time_min": 25,
   "servings": 2,
-  "tags": [
-   "proteinreich",
-   "glutenfrei",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Lachsfilet",
@@ -3503,12 +3032,6 @@
    "Lachs mit der Hautseite nach unten in den Korb legen und bei 190 °C 8–10 Minuten garen. Bohnen die letzten 4 Minuten danebenlegen.",
    "Mit Zitronensaft und Dill servieren."
   ],
-  "nutrition": {
-   "kcal": 540,
-   "protein": 32,
-   "carbs": 54,
-   "fat": 20
-  },
   "airfryer": {
    "temp_c": 190,
    "time_min": 10
@@ -3523,10 +3046,7 @@
   "time_min": 20,
   "servings": 4,
   "tags": [
-   "vegan",
-   "glutenfrei",
-   "meal-prep",
-   "heissluftfritteuse"
+   "meal-prep"
   ],
   "ingredients": [
    {
@@ -3565,12 +3085,6 @@
    "Mit Öl und Gewürzen mischen.",
    "Bei 200 °C 12–15 Minuten knusprig garen, alle 5 Minuten schütteln. Abkühlen lassen – sie werden dabei noch knuspriger."
   ],
-  "nutrition": {
-   "kcal": 95,
-   "protein": 4,
-   "carbs": 10,
-   "fat": 4
-  },
   "airfryer": {
    "temp_c": 200,
    "time_min": 15
@@ -3586,11 +3100,7 @@
   "time_min": 20,
   "servings": 3,
   "tags": [
-   "vegetarisch",
-   "low-carb",
-   "proteinreich",
-   "meal-prep",
-   "heissluftfritteuse"
+   "meal-prep"
   ],
   "ingredients": [
    {
@@ -3630,12 +3140,6 @@
    "Masse in 6 Silikon-Muffinförmchen füllen und bei 160 °C 10–12 Minuten stocken lassen.",
    "2 Muffins = 1 Portion. Halten sich im Kühlschrank 3 Tage."
   ],
-  "nutrition": {
-   "kcal": 195,
-   "protein": 15,
-   "carbs": 4,
-   "fat": 13
-  },
   "airfryer": {
    "temp_c": 160,
    "time_min": 12
@@ -3650,10 +3154,7 @@
   ],
   "time_min": 35,
   "servings": 3,
-  "tags": [
-   "vegetarisch",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Kichererbsen",
@@ -3728,12 +3229,6 @@
    "Mit Öl bepinseln und bei 190 °C 12–14 Minuten garen, nach der Hälfte wenden.",
    "Joghurt mit Salz und etwas Knoblauch verrühren. Falafel mit Salat, Tomaten, Sauce und Fladenbrot servieren."
   ],
-  "nutrition": {
-   "kcal": 388,
-   "protein": 16,
-   "carbs": 56,
-   "fat": 10
-  },
   "airfryer": {
    "temp_c": 190,
    "time_min": 14
@@ -3749,10 +3244,7 @@
   ],
   "time_min": 30,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Blumenkohl",
@@ -3809,12 +3301,6 @@
    "In einer Lage in den Korb geben, mit Öl besprühen und bei 200 °C 14–16 Minuten knusprig garen. Nach der Hälfte schütteln.",
    "Joghurt mit gehackter Petersilie verrühren und als Dip servieren."
   ],
-  "nutrition": {
-   "kcal": 301,
-   "protein": 13,
-   "carbs": 38,
-   "fat": 10
-  },
   "airfryer": {
    "temp_c": 200,
    "time_min": 16
@@ -3829,10 +3315,7 @@
   ],
   "time_min": 20,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Apfel",
@@ -3877,12 +3360,6 @@
    "Bei 180 °C 12–14 Minuten garen, bis die Äpfel weich sind und der Crumble goldbraun ist.",
    "Mit Joghurt servieren."
   ],
-  "nutrition": {
-   "kcal": 223,
-   "protein": 4,
-   "carbs": 36,
-   "fat": 6
-  },
   "airfryer": {
    "temp_c": 180,
    "time_min": 14
@@ -3897,11 +3374,7 @@
   ],
   "time_min": 30,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "glutenfrei",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Kartoffeln",
@@ -3940,12 +3413,6 @@
    "Bei 200 °C 20–22 Minuten garen, dabei 2–3-mal schütteln.",
    "Quark mit etwas Wasser und Schnittlauch verrühren, würzen und dazu servieren."
   ],
-  "nutrition": {
-   "kcal": 421,
-   "protein": 22,
-   "carbs": 63,
-   "fat": 8
-  },
   "airfryer": {
    "temp_c": 200,
    "time_min": 22
@@ -3960,10 +3427,7 @@
   ],
   "time_min": 25,
   "servings": 2,
-  "tags": [
-   "proteinreich",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Putenhackfleisch",
@@ -4019,12 +3483,6 @@
    "Bei 190 °C 10–12 Minuten garen, nach der Hälfte wenden, bis sie durchgegart sind.",
    "Gurke in dünne Scheiben hobeln, mit Joghurt, Dill, Salz und Pfeffer mischen."
   ],
-  "nutrition": {
-   "kcal": 386,
-   "protein": 38,
-   "carbs": 18,
-   "fat": 16
-  },
   "airfryer": {
    "temp_c": 190,
    "time_min": 12
@@ -4039,10 +3497,7 @@
   ],
   "time_min": 25,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Zucchini",
@@ -4080,12 +3535,6 @@
    "Paniermehl mit geriebenem Parmesan und Oregano mischen. Sticks erst durch das verquirlte Ei ziehen, dann panieren.",
    "In einer Lage in den Korb legen und bei 200 °C 8–10 Minuten goldbraun garen."
   ],
-  "nutrition": {
-   "kcal": 205,
-   "protein": 14,
-   "carbs": 19,
-   "fat": 8
-  },
   "airfryer": {
    "temp_c": 200,
    "time_min": 10
@@ -4100,10 +3549,7 @@
   ],
   "time_min": 25,
   "servings": 2,
-  "tags": [
-   "vegetarisch",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Champignons (groß)",
@@ -4138,7 +3584,7 @@
    {
     "name": "Vollkornbrot",
     "amount": 2,
-    "unit": "Scheiben",
+    "unit": "Scheibe",
     "category": "vorrat"
    }
   ],
@@ -4148,12 +3594,6 @@
    "Pilze füllen und bei 180 °C 8–10 Minuten garen.",
    "Mit Vollkornbrot servieren."
   ],
-  "nutrition": {
-   "kcal": 323,
-   "protein": 20,
-   "carbs": 23,
-   "fat": 15
-  },
   "airfryer": {
    "temp_c": 180,
    "time_min": 10
@@ -4167,11 +3607,7 @@
   ],
   "time_min": 40,
   "servings": 2,
-  "tags": [
-   "vegan",
-   "glutenfrei",
-   "heissluftfritteuse"
-  ],
+  "tags": [],
   "ingredients": [
    {
     "name": "Apfel",
@@ -4191,12 +3627,6 @@
    "Mit Zimt bestreuen und locker in den Korb legen.",
    "Bei 150 °C 25–30 Minuten trocknen, alle 8 Minuten schütteln. Auf einem Gitter auskühlen lassen."
   ],
-  "nutrition": {
-   "kcal": 95,
-   "protein": 1,
-   "carbs": 22,
-   "fat": 0
-  },
   "airfryer": {
    "temp_c": 150,
    "time_min": 30

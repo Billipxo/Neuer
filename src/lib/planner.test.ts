@@ -56,11 +56,13 @@ describe('Portionen und Summen', () => {
       asItem({ ...recipePlanItem(getRecipe('shakshuka')!, days[0], 'lunch', 2) }),
       asItem({ ...recipePlanItem(getRecipe('linsensuppe')!, days[2], 'dinner', 1) }),
     ]
-    expect(dayTotals(items, days[0]).kcal).toBe(360 * 3)
+    const shak = getRecipe('shakshuka')!.nutrition.kcal
+    const suppe = getRecipe('linsensuppe')!.nutrition.kcal
+    expect(dayTotals(items, days[0]).kcal).toBe(shak * 3)
     const s = weekSummary(items, days)
-    expect(s.total.kcal).toBe(360 * 3 + 300)
+    expect(s.total.kcal).toBe(shak * 3 + suppe)
     expect(s.plannedDays).toBe(2)
-    expect(s.avgPerPlannedDay.kcal).toBe((360 * 3 + 300) / 2)
+    expect(s.avgPerPlannedDay.kcal).toBe((shak * 3 + suppe) / 2)
   })
 })
 

@@ -163,6 +163,17 @@ export interface RecipeIngredient {
   amount: number | null
   unit: string
   category: ShoppingCategory
+  /** Hinweis zur Vorbereitung, z. B. „fein gewürfelt“ */
+  note?: string
+}
+
+export interface DietInfo {
+  vegetarian: boolean
+  vegan: boolean
+  /** Ohne glutenhaltige Zutaten (bei Zöliakie trotzdem Packungsangaben prüfen) */
+  glutenFree: boolean
+  /** Enthält Käse mit tierischem Lab (z. B. Parmesan) */
+  animalRennet: boolean
 }
 
 export interface AirfryerInfo {
@@ -181,7 +192,16 @@ export interface Recipe {
   tags: string[]
   ingredients: RecipeIngredient[]
   steps: string[]
-  /** pro Portion */
+  /** pro Portion – aus den Zutaten berechnet */
   nutrition: Nutrients
+  /** Ballaststoffe pro Portion in Gramm – aus den Zutaten berechnet */
+  fiber: number
+  /** aus den Zutaten abgeleitet */
+  diet: DietInfo
   airfryer?: AirfryerInfo
+  /** Tipps, Varianten, Aufbewahrung */
+  tips?: string[]
 }
+
+/** Rezept, wie es in recipes.json steht (ohne berechnete Felder) */
+export type RawRecipe = Omit<Recipe, 'nutrition' | 'fiber' | 'diet'>
