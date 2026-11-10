@@ -76,7 +76,7 @@ export function dietInfo(ingredients: RecipeIngredient[]): DietInfo {
 export const DERIVED_TAGS = ['vegetarisch', 'vegan', 'glutenfrei', 'proteinreich', 'low-carb', 'schnell', 'ballaststoffreich', 'heissluftfritteuse'] as const
 
 export function deriveTags(
-  r: { time_min: number; tags?: string[]; airfryer?: unknown },
+  r: { time_min: number; rest_min?: number; tags?: string[]; airfryer?: unknown },
   n: NutritionWithFiber,
   diet: DietInfo,
 ): string[] {
@@ -91,7 +91,8 @@ export function deriveTags(
   if (proteinShare >= 0.3 || (n.protein >= 25 && proteinShare >= 0.2)) tags.add('proteinreich')
   // Low Carb: höchstens 20 g Kohlenhydrate pro Portion und höchstens 25 % der Energie
   if (n.carbs <= 20 && carbShare <= 0.25) tags.add('low-carb')
-  if (r.time_min <= 15) tags.add('schnell')
+  // Schnell: in höchstens 15 Minuten fertig – inklusive Warte-, Quell- und Kühlzeit
+  if (r.time_min + (r.rest_min ?? 0) <= 15) tags.add('schnell')
   // Ballaststoffreich: mind. 8 g pro Portion – oder mind. 5 g bei hoher Dichte (2,5 g pro 100 kcal)
   if (n.fiber >= 8 || (n.fiber >= 5 && n.kcal > 0 && (n.fiber / n.kcal) * 100 >= 2.5)) tags.add('ballaststoffreich')
   if (r.airfryer) tags.add('heissluftfritteuse')

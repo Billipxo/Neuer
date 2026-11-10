@@ -28,3 +28,12 @@ export function parseDecimal(input: string): number | null {
   const n = Number(normalized)
   return Number.isFinite(n) ? n : null
 }
+
+/** Dauer lesbar, z. B. 45 → „45 Min.“, 90 → „1 Std. 30 Min.“, 240 → „4 Std.“ */
+export function fmtDuration(min: number): string {
+  const m = Math.round(min)
+  if (m < 60) return `${m} Min.`
+  const h = Math.floor(m / 60)
+  const rest = m % 60
+  return rest ? `${h} Std. ${rest} Min.` : `${h} Std.`
+}

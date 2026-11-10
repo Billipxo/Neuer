@@ -151,3 +151,13 @@ describe('Fehlermeldungen', () => {
     expect(friendlyError(new Error('xyz'))).toBe('Speichern fehlgeschlagen: xyz')
   })
 })
+
+describe('Dauer', () => {
+  it('formatiert Minuten und Stunden', async () => {
+    const { fmtDuration } = await import('./format')
+    expect(fmtDuration(45)).toBe('45 Min.')
+    expect(fmtDuration(60)).toBe('1 Std.')
+    expect(fmtDuration(90)).toBe('1 Std. 30 Min.')
+    expect(fmtDuration(240)).toBe('4 Std.')
+  })
+})

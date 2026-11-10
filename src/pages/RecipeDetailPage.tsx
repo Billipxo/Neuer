@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useParams, Navigate } from 'react-router-dom'
-import { Clock, Heart, Minus, Plus, ShoppingBasket, Thermometer, Users, CalendarPlus } from 'lucide-react'
+import { Clock, Heart, Hourglass, Lightbulb, Minus, Plus, ShoppingBasket, Thermometer, Users, CalendarPlus } from 'lucide-react'
 import { getRecipe, hasAirfryerVariant, isAirfryerNative, recipeEmoji, recipeNutrients, recipeSteps, scaleIngredients, TAG_LABELS } from '../lib/recipes'
 import { useProfile, useToggleFavoriteRecipe } from '../hooks/data'
 import { Segmented } from '../components/ui/Segmented'
 import { AirfryerIcon } from '../components/recipes/AirfryerIcon'
 import { recipeGradient } from '../components/recipes/RecipeCard'
 import { formatQuantity } from '../lib/shopping'
-import { fmtInt } from '../lib/format'
+import { fmtDuration, fmtInt } from '../lib/format'
 import { useAddToShopping } from '../hooks/shopping'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Button, IconButton } from '../components/ui/Button'
@@ -60,8 +60,13 @@ export function RecipeDetailPage() {
         <h1 className="mt-4 text-2xl font-bold leading-tight">{recipe.title}</h1>
         <p className="mt-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-sm text-muted">
           <span className="inline-flex items-center gap-1">
-            <Clock className="size-4" aria-hidden /> {recipe.time_min} Minuten
+            <Clock className="size-4" aria-hidden /> {fmtDuration(recipe.time_min)}
           </span>
+          {recipe.rest_min ? (
+            <span className="inline-flex items-center gap-1">
+              <Hourglass className="size-4" aria-hidden /> + {fmtDuration(recipe.rest_min)} Wartezeit
+            </span>
+          ) : null}
           <span className="tabular">{fmtInt(recipe.nutrition.kcal)} kcal pro Portion</span>
         </p>
         {recipe.tags.length > 0 && (
@@ -77,6 +82,16 @@ export function RecipeDetailPage() {
 
       <SectionTitle>Nährwerte pro Portion</SectionTitle>
       <NutrientGrid n={recipe.nutrition} />
+      <p className="mt-2 px-1 text-xs text-muted tabular">
+        Ballaststoffe: {fmtInt(recipe.fiber)} g · aus den Zutaten berechnet
+        {recipe.diet.glutenFree && ' · ohne glutenhaltige Zutaten (bei Zöliakie Packungsangaben prüfen)'}
+      </p>
+      {recipe.diet.vegetarian && recipe.diet.animalRennet && (
+        <p className="mt-1 px-1 text-xs text-muted">
+          Enthält Parmesan, der traditionell mit tierischem Lab hergestellt wird – für eine streng vegetarische Variante
+          Hartkäse ohne tierisches Lab verwenden.
+        </p>
+      )}
 
       <SectionTitle
         action={
@@ -99,7 +114,10 @@ export function RecipeDetailPage() {
         <ul className="divide-y divide-line/70">
           {ingredients.map((i, idx) => (
             <li key={idx} className="flex items-baseline justify-between gap-3 py-2.5">
-              <span>{i.name}</span>
+              <span className="min-w-0">
+                {i.name}
+                {i.note && <span className="text-sm text-muted">, {i.note}</span>}
+              </span>
               <span className="shrink-0 text-sm text-muted tabular">{formatQuantity(i.amount, i.unit)}</span>
             </li>
           ))}
@@ -164,6 +182,19 @@ export function RecipeDetailPage() {
           Tipp: Den Korb nicht zu voll machen und zwischendurch schütteln – dann wird alles gleichmäßig knusprig. Garzeiten
           schwanken je nach Gerät.
         </p>
+      )}
+      {recipe.tips && recipe.tips.length > 0 && (
+        <>
+          <SectionTitle>Tipps & Varianten</SectionTitle>
+          <Card className="space-y-2">
+            {recipe.tips.map((t, i) => (
+              <p key={i} className="flex gap-2 text-[15px] leading-relaxed">
+                <Lightbulb className="mt-1 size-4 shrink-0 text-carbs" aria-hidden />
+                <span>{t}</span>
+              </p>
+            ))}
+          </Card>
+        </>
       )}
       <p className="mt-6 text-xs text-muted">Nährwerte sind gerundete Richtwerte und können je nach Produkt abweichen.</p>
 

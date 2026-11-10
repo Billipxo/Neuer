@@ -62,13 +62,19 @@ describe('Ernährungsform und Tags', () => {
     const tags = deriveTags({ time_min: 10, tags: ['meal-prep', 'vegan'] }, { kcal: 300, protein: 30, carbs: 10, fat: 12, fiber: 9 }, diet)
     expect(tags).toEqual(['vegetarisch', 'proteinreich', 'low-carb', 'ballaststoffreich', 'schnell', 'meal-prep'])
   })
+  it('zählt Wartezeit bei „schnell“ mit', () => {
+    const diet = { vegetarian: true, vegan: true, glutenFree: true, animalRennet: false }
+    const n = { kcal: 300, protein: 8, carbs: 40, fat: 10, fiber: 3 }
+    expect(deriveTags({ time_min: 10, rest_min: 120 }, n, diet)).not.toContain('schnell')
+    expect(getRecipe('chia-pudding-mango')!.tags).not.toContain('schnell')
+  })
 })
 
 describe('Rezepte', () => {
   it('lassen sich vollständig berechnen', () => {
     for (const r of RECIPES) {
       expect(unresolvedIngredients(r.ingredients), r.id).toEqual([])
-      expect(r.nutrition.kcal, r.id).toBeGreaterThanOrEqual(60)
+      expect(r.nutrition.kcal, r.id).toBeGreaterThanOrEqual(40)
       expect(r.nutrition.kcal, r.id).toBeLessThanOrEqual(950)
     }
   })

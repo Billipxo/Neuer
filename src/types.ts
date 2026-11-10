@@ -187,7 +187,10 @@ export interface Recipe {
   id: string
   title: string
   meal: MealType[]
+  /** Aktive Zubereitungszeit in Minuten */
   time_min: number
+  /** Zusätzliche Wartezeit (Quellen, Kühlen, Einfrieren) in Minuten */
+  rest_min?: number
   servings: number
   tags: string[]
   ingredients: RecipeIngredient[]

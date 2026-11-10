@@ -4,8 +4,8 @@ import { CATEGORY_ORDER } from './shopping'
 import { MEAL_TYPES } from '../types'
 
 describe('Rezept-Datensatz', () => {
-  it('enthält mindestens 40 vollständige Rezepte', () => {
-    expect(RECIPES.length).toBeGreaterThanOrEqual(40)
+  it('enthält mindestens 150 vollständige Rezepte', () => {
+    expect(RECIPES.length).toBeGreaterThanOrEqual(150)
     for (const r of RECIPES) {
       expect(r.title).toBeTruthy()
       expect(r.servings).toBeGreaterThan(0)
@@ -14,6 +14,9 @@ describe('Rezept-Datensatz', () => {
       expect(r.meal.length).toBeGreaterThan(0)
       r.meal.forEach((m) => expect(MEAL_TYPES).toContain(m))
       r.ingredients.forEach((i) => expect(CATEGORY_ORDER).toContain(i.category))
+      expect(r.tips?.length, r.id).toBeGreaterThan(0)
+      // Schritte sind ausformuliert (keine Stichworte)
+      r.steps.forEach((s) => expect(s.length, r.id).toBeGreaterThan(12))
       const { kcal, protein, carbs, fat } = r.nutrition
       // Makros sollten grob zu den kcal passen (±20 %)
       const fromMacros = protein * 4 + carbs * 4 + fat * 9

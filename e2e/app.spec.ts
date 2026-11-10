@@ -54,6 +54,8 @@ test('Wasser per Trink-Hinweis hinzufügen', async ({ page }) => {
 test('Rezept eintragen und Zutaten auf die Einkaufsliste', async ({ page }) => {
   await startDemo(page)
   await page.goto('/rezepte/linsen-bolognese')
+  const kcalText = await page.getByText(/\d+ kcal pro Portion/).first().textContent()
+  const kcal = kcalText!.match(/(\d+) kcal/)![1]
   await page.getByRole('button', { name: 'Einkaufsliste' }).click()
   await page.getByRole('button', { name: 'Zum Tagesplan' }).click()
   await page.getByRole('button', { name: 'Als gegessen eintragen' }).click()
@@ -62,7 +64,7 @@ test('Rezept eintragen und Zutaten auf die Einkaufsliste', async ({ page }) => {
   await expect(page.getByText('Vollkornspaghetti')).toBeVisible()
   await expect(page.getByText('320 g')).toBeVisible()
   await page.goto('/')
-  await expect(page.getByRole('img', { name: /490 von 2\.000 kcal/ })).toBeVisible()
+  await expect(page.getByRole('img', { name: new RegExp(`${kcal} von 2\\.000 kcal`) })).toBeVisible()
 })
 
 test('Woche vorschlagen und Einkaufsliste erzeugen', async ({ page }) => {
@@ -135,7 +137,7 @@ test('Rezept-Galerie: Heißluftfritteuse, Favoriten und Zubereitungsart', async 
   await expect(page.getByRole('radio', { name: 'Heißluftfritteuse' })).toHaveAttribute('aria-checked', 'true')
   await expect(page.getByText(/bei 200 °C ca\. 15 Minuten garen/)).toBeVisible()
   await page.getByRole('radio', { name: 'Backofen' }).click()
-  await expect(page.getByText(/Ofen auf 200 °C vorheizen/)).toBeVisible()
+  await expect(page.getByText(/Ofen auf 200 °C Umluft vorheizen/)).toBeVisible()
   // Favorit bleibt nach dem Neuladen erhalten
   await page.goto('/rezepte')
   await expect(page.getByRole('heading', { name: 'Deine Favoriten' })).toBeVisible()
