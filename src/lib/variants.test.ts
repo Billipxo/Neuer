@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { getRecipe } from './recipes'
+import { INGREDIENTS } from '../data/ingredients'
 import {
+  SWAP_RULES,
+  swapSuggestions,
   customIngredient,
   customKindOf,
   draftFromRecipe,
@@ -129,5 +132,25 @@ describe('Rezept abwandeln', () => {
     expect(oven.steps).toEqual(lachs.steps)
     expect(oven.airfryer).toBeNull()
     expect(variantToRecipe({ ...af, id: 'v5' }, lachs).tags).toContain('heissluftfritteuse')
+  })
+
+  it('schlägt leichtere oder vollwertigere Alternativen vor', () => {
+    for (const r of SWAP_RULES) {
+      expect(INGREDIENTS.has(r.from), r.from).toBe(true)
+      expect(INGREDIENTS.has(r.to), r.to).toBe(true)
+    }
+    const gratin = swapSuggestions(draftFromRecipe(getRecipe('kartoffelgratin')!))
+    const sahne = gratin.find((x) => x.from.name === 'Sahne')!
+    expect(sahne.to).toMatchObject({ name: 'Kochsahne 15 %', amount: 100, unit: 'ml' })
+    expect(sahne.kcalDelta).toBeLessThan(0)
+    // größte Ersparnis zuerst
+    for (let i = 1; i < gratin.length; i++) expect(gratin[i].kcalDelta).toBeGreaterThanOrEqual(gratin[i - 1].kcalDelta)
+    const bolognese = swapSuggestions(draftFromRecipe(bolo), 10)
+    const linsen = bolognese.find((x) => x.to.name === 'Tellerlinsen')!
+    expect(linsen.to).toMatchObject({ amount: 160, unit: 'g' })
+    expect(linsen.kcalDelta).toBeLessThan(0)
+    // Vollkornspaghetti sind schon drin → kein Vorschlag dafür
+    expect(bolognese.some((x) => x.to.name === 'Vollkornspaghetti')).toBe(false)
+    expect(swapSuggestions(emptyDraft())).toEqual([])
   })
 })

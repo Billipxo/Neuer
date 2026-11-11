@@ -4,6 +4,7 @@ import { useStore } from '../app/auth'
 import type { AchievementRow } from '../types'
 import { useLogRange, useProfile, useWaterRange } from './data'
 import { usePlanRange } from './plan'
+import { useVariants } from './variants'
 import { evaluate, newlyUnlocked, currentStreak, type AchievementInput } from '../lib/achievements'
 import { shiftISO, todayISO } from '../lib/dates'
 import { totalsByDate } from '../lib/log'
@@ -32,7 +33,8 @@ export function useAchievementInput(): { input: AchievementInput | null; ready: 
   const log = useLogRange(from, today)
   const plan = usePlanRange(from, shiftISO(today, 60))
   const water = useWaterRange(from, today)
-  const ready = Boolean(profile && log.data && plan.data && water.data)
+  const variants = useVariants()
+  const ready = Boolean(profile && log.data && plan.data && water.data && variants.data)
   const input = useMemo(
     () =>
       ready
@@ -44,9 +46,10 @@ export function useAchievementInput(): { input: AchievementInput | null; ready: 
             log: log.data!,
             plan: plan.data!,
             water: water.data!,
+            ownRecipes: variants.data!.length,
           }
         : null,
-    [ready, today, profile, log.data, plan.data, water.data],
+    [ready, today, profile, log.data, plan.data, water.data, variants.data],
   )
   return { input, ready }
 }

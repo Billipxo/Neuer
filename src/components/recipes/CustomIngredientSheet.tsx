@@ -18,6 +18,7 @@ export function CustomIngredientSheet({
   onSave,
   initial,
   onScan,
+  title,
 }: {
   open: boolean
   onClose: () => void
@@ -25,6 +26,7 @@ export function CustomIngredientSheet({
   initial?: Partial<CustomIngredientInput>
   /** Werte per Barcode-Scan füllen */
   onScan?: () => void
+  title?: string
 }) {
   const [name, setName] = useState('')
   const [kcal, setKcal] = useState<number | null>(null)
@@ -57,7 +59,7 @@ export function CustomIngredientSheet({
     <Sheet
       open={open}
       onClose={onClose}
-      title={initial?.name ? 'Eigene Zutat bearbeiten' : 'Eigene Zutat'}
+      title={title ?? 'Eigene Zutat'}
       tall
       footer={
         <Button

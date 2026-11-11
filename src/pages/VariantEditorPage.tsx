@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { Check, Plus, Trash2, Wand2, X } from 'lucide-react'
+import { Check, Leaf, Plus, Trash2, Wand2, X } from 'lucide-react'
 import type { MealType, RecipeIngredient } from '../types'
 import { MEAL_TYPES } from '../types'
 import { CHAPTERS, type ChapterId } from '../data/chapters'
@@ -14,11 +14,13 @@ import {
   draftFromVariant,
   draftProblems,
   emptyDraft,
+  fmtSigned,
   formatDiff,
   ingredientKcal,
   nutritionDiff,
   suggestChapter,
   swapIngredient,
+  swapSuggestions,
   unitOptions,
   variantToRecipe,
   type CustomIngredientInput,
@@ -47,7 +49,7 @@ type Method = 'airfryer' | 'oven'
 type SheetState =
   | { kind: 'search'; replace?: number }
   | { kind: 'foods'; replace?: number }
-  | { kind: 'custom'; replace?: number; initial?: Partial<CustomIngredientInput> }
+  | { kind: 'custom'; replace?: number; initial?: Partial<CustomIngredientInput>; editing?: boolean }
   | { kind: 'scan'; replace?: number }
   | null
 
@@ -104,6 +106,7 @@ export function VariantEditorPage() {
 
   const preview = useMemo(() => (draft ? variantToRecipe({ ...draft, id: existing?.id ?? 'entwurf' }, base) : null), [draft, base, existing?.id])
   const diff = preview && base ? formatDiff(nutritionDiff(preview, base)) : []
+  const suggestions = useMemo(() => (draft ? swapSuggestions(draft) : []), [draft])
 
   if (!draft || !preview) {
     if (id && !resolved.isLoading && !resolved.recipe) return <Navigate to="/rezepte" replace />
@@ -251,7 +254,7 @@ export function VariantEditorPage() {
         Ballaststoffe: {fmtInt(preview.fiber)} g · wird bei jeder Änderung aus den Zutaten neu berechnet
         {base && (diff.length ? ` · gegenüber dem Original: ${diff.join(', ')}` : ' · wie das Original')}
       </p>
-      {preview.tags.some((t) => !OWN_TAGS.includes(t)) && (
+      {draft.ingredients.length > 0 && preview.tags.some((t) => !OWN_TAGS.includes(t)) && (
         <ul className="mt-2 flex flex-wrap gap-1.5 px-1" aria-label="Eigenschaften">
           {preview.tags
             .filter((t) => !OWN_TAGS.includes(t))
@@ -276,7 +279,7 @@ export function VariantEditorPage() {
               <li key={idx} className="flex items-center gap-1.5 px-1 py-2">
                 <button
                   type="button"
-                  onClick={() => setSheet(ing.custom ? { kind: 'custom', replace: idx, initial: customInitial(ing) } : { kind: 'search', replace: idx })}
+                  onClick={() => setSheet(ing.custom ? { kind: 'custom', replace: idx, initial: customInitial(ing), editing: true } : { kind: 'search', replace: idx })}
                   aria-label={`${ing.name} ersetzen`}
                   className="min-w-0 flex-1 rounded-xl py-1 text-left transition hover:bg-surface-2"
                 >
@@ -320,6 +323,31 @@ export function VariantEditorPage() {
         </Button>
       </Card>
       {scanBusy && <Spinner label="Produkt wird gesucht …" />}
+      {suggestions.length > 0 && (
+        <Card className="mt-3 p-3">
+          <p className="flex items-center gap-2 px-1 text-sm font-semibold">
+            <Leaf className="size-4 text-brand" aria-hidden /> Leichter oder vollwertiger
+          </p>
+          <ul className="mt-1 divide-y divide-line/70" aria-label="Tausch-Vorschläge">
+            {suggestions.map((sg) => (
+              <li key={`${sg.index}-${sg.to.name}`} className="flex items-center gap-2 py-2">
+                <div className="min-w-0 flex-1 px-1">
+                  <p className="truncate text-[15px]">
+                    {sg.from.name} → {sg.to.name}
+                  </p>
+                  <p className="truncate text-xs text-muted tabular">
+                    {sg.kcalDelta ? `${fmtSigned(sg.kcalDelta, ' kcal')} pro Portion · ` : ''}
+                    {sg.why}
+                  </p>
+                </div>
+                <Button size="sm" variant="secondary" onClick={() => setIngredients((l) => l.map((x, i) => (i === sg.index ? sg.to : x)))}>
+                  Tauschen
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
       <p className="mt-2 px-1 text-xs text-muted">
         Tipp: Auf den Namen tippen, um eine Zutat zu ersetzen – Menge und Einheit bleiben, wenn sie passen. Produkte lassen sich auch per
         Barcode scannen.
@@ -428,6 +456,7 @@ export function VariantEditorPage() {
         open={sheet?.kind === 'custom'}
         onClose={() => setSheet(null)}
         initial={sheet?.kind === 'custom' ? sheet.initial : undefined}
+        title={sheet?.kind === 'custom' && sheet.editing ? 'Eigene Zutat bearbeiten' : 'Eigene Zutat'}
         onSave={(ing) => placeIngredient(ing, replaceIndex)}
         onScan={() => setSheet({ kind: 'scan', replace: replaceIndex })}
       />

@@ -6,7 +6,7 @@ import { DEFAULT_UNIT_GRAMS, INGREDIENT_LIST, type IngredientInfo } from '../dat
 import { getChapter, type ChapterId } from '../data/chapters'
 import type { RawRecipe, Recipe, RecipeIngredient, RecipeVariant, ShoppingCategory } from '../types'
 import { buildRecipe, getRecipe, isAirfryerNative, RECIPES, recipeSteps, roundAmount } from './recipes'
-import { ingredientFlags, ingredientGrams, ingredientInfo, totalNutrition, unitGrams, unresolvedIngredients } from './recipeNutrition'
+import { ingredientFlags, ingredientGrams, ingredientInfo, nutritionPerServing, totalNutrition, unitGrams, unresolvedIngredients } from './recipeNutrition'
 import { guessCategory } from './shopping'
 import { fmtInt } from './format'
 
@@ -260,9 +260,11 @@ export function nutritionDiff(variant: Recipe, base: Recipe): NutritionDiff {
   }
 }
 
-function signed(n: number, unit: string): string {
+/** Vorzeichenbehaftete Zahl mit echtem Minus, z. B. „−45 kcal“ */
+export function fmtSigned(n: number, unit: string): string {
   return `${n > 0 ? '+' : '−'}${fmtInt(Math.abs(n))}${unit}`
 }
+const signed = fmtSigned
 
 /** Lesbare Unterschiede, z. B. „−120 kcal“, „+4 g Eiweiß“ – nur, was sich geändert hat */
 export function formatDiff(d: NutritionDiff): string[] {
@@ -277,4 +279,60 @@ export function formatDiff(d: NutritionDiff): string[] {
 
 export function isVariantRecipe(r: Recipe): boolean {
   return r.tags.includes('variante') || r.tags.includes('eigen')
+}
+
+export interface SwapRule {
+  from: string
+  to: string
+  why: string
+  /** Mengenfaktor, z. B. 0,4 bei Hack → trockene Linsen */
+  factor?: number
+  /** Auch vorschlagen, wenn es nicht weniger Kalorien sind (z. B. mehr Ballaststoffe, vegetarisch) */
+  always?: boolean
+}
+
+/** Bewährte leichtere oder vollwertigere Alternativen – Namen wie in der Nährwerttabelle */
+export const SWAP_RULES: SwapRule[] = [
+  { from: 'Sahne', to: 'Kochsahne 15 %', why: 'bindet genauso, mit der Hälfte Fett' },
+  { from: 'saure Sahne (10 %)', to: 'Naturjoghurt 1,5 %', why: 'für Dips und kalte Saucen' },
+  { from: 'Butter', to: 'Rapsöl', why: 'zum Braten und Dünsten', factor: 0.75 },
+  { from: 'Gouda', to: 'Mozzarella (light)', why: 'zum Überbacken' },
+  { from: 'Bergkäse', to: 'Mozzarella (light)', why: 'zum Überbacken' },
+  { from: 'Rinderhack (mager)', to: 'Tellerlinsen', why: 'vegetarisch – für Bolognese, Chili und Aufläufe', factor: 0.4, always: true },
+  { from: 'Hähnchenschenkelfilet', to: 'Hähnchenbrust', why: 'magerer – etwas kürzer garen' },
+  { from: 'Schweineschnitzel', to: 'Putenschnitzel', why: 'magerer' },
+  { from: 'Frühstücksspeck', to: 'Kochschinken (mager)', why: 'würzt ähnlich, mit viel weniger Fett' },
+  { from: 'Reis', to: 'Vollkornreis', why: 'mehr Ballaststoffe, sättigt länger', always: true },
+  { from: 'Spaghetti', to: 'Vollkornspaghetti', why: 'mehr Ballaststoffe', always: true },
+  { from: 'Bandnudeln', to: 'Vollkorn-Penne', why: 'mehr Ballaststoffe', always: true },
+  { from: 'Mehl', to: 'Dinkelvollkornmehl', why: 'mehr Ballaststoffe – etwas mehr Flüssigkeit einplanen', always: true },
+]
+
+export interface SwapSuggestion {
+  /** Position der Zutat im Entwurf */
+  index: number
+  from: RecipeIngredient
+  to: RecipeIngredient
+  why: string
+  /** Unterschied in kcal pro Portion nach dem Tausch (negativ = leichter) */
+  kcalDelta: number
+}
+
+/** Leichtere oder vollwertigere Alternativen für Zutaten eines Entwurfs – größte Ersparnis zuerst */
+export function swapSuggestions(d: VariantDraft, limit = 4): SwapSuggestion[] {
+  const before = nutritionPerServing(d.ingredients, d.servings).kcal
+  const out: SwapSuggestion[] = []
+  d.ingredients.forEach((ing, index) => {
+    for (const rule of SWAP_RULES) {
+      if (rule.from !== ing.name) continue
+      const info = ingredientInfo(rule.to)
+      if (!info) continue
+      let to = swapIngredient(ing, ingredientFromTable(info))
+      if (rule.factor && to.amount !== null) to = { ...to, amount: roundAmount(to.amount * rule.factor, to.unit) }
+      const after = nutritionPerServing(d.ingredients.map((x, i) => (i === index ? to : x)), d.servings).kcal
+      const kcalDelta = after - before
+      if (kcalDelta < 0 || rule.always) out.push({ index, from: ing, to, why: rule.why, kcalDelta })
+    }
+  })
+  return out.sort((a, b) => a.kcalDelta - b.kcalDelta).slice(0, limit)
 }

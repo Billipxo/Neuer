@@ -12,6 +12,8 @@ export interface AchievementInput {
   log: LogEntry[]
   plan: PlanItem[]
   water: WaterLog[]
+  /** Anzahl eigener Varianten und Rezepte */
+  ownRecipes?: number
 }
 
 export interface AchievementProgress {
@@ -39,6 +41,7 @@ export interface Derived {
   recipesLogged: number
   maxPlannedDaysInWeek: number
   waterGoalDays: number
+  ownRecipes: number
 }
 
 /** Längste Folge aufeinanderfolgender Tage */
@@ -99,6 +102,7 @@ export function derive(input: AchievementInput): Derived {
     recipesLogged: input.log.filter((e) => e.recipe_id).length,
     maxPlannedDaysInWeek: maxPerWeek(new Set(input.plan.map((p) => p.date))),
     waterGoalDays: input.waterTarget > 0 ? [...water.values()].filter((ml) => ml >= input.waterTarget).length : 0,
+    ownRecipes: input.ownRecipes ?? 0,
   }
 }
 
@@ -160,6 +164,14 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     description: 'Ein Rezept als gegessen eingetragen',
     praise: 'Dein erstes Rezept aus der App – guten Appetit!',
     progress: (d) => cap(d.recipesLogged, 1),
+  },
+  {
+    key: 'first_variant',
+    emoji: '🪄',
+    title: 'Rezept-Tüftler',
+    description: 'Ein Rezept abgewandelt oder ein eigenes angelegt',
+    praise: 'Dein erstes eigenes Rezept – so wird das Kochbuch zu deinem.',
+    progress: (d) => cap(d.ownRecipes, 1),
   },
   {
     key: 'first_week_planned',

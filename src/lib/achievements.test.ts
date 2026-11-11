@@ -40,6 +40,10 @@ describe('Erfolge', () => {
     // bereits gespeicherte werden nicht erneut gemeldet
     expect(newlyUnlocked(base({ log }), ['first_entry', 'streak_3']).map((d) => d.key)).not.toContain('streak_3')
   })
+  it('feiert die erste eigene Variante', () => {
+    expect(newlyUnlocked(base({ ownRecipes: 1 }), []).map((d) => d.key)).toContain('first_variant')
+    expect(newlyUnlocked(base(), []).map((d) => d.key)).not.toContain('first_variant')
+  })
   it('zählt ausgewogene Tage und Gemüsesorten pro Woche', () => {
     const week = weekDaysISO('2026-11-09')
     const veg = ['Tomate', 'Gurke', 'Paprika', 'Zucchini', 'Karotte', 'Brokkoli', 'Spinat', 'Salat', 'Zwiebel', 'Lauch']

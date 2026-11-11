@@ -14,7 +14,7 @@ export function AchievementWatcher() {
   const busy = useRef(false)
   const { pathname } = useLocation()
   // Während man Lebensmittel erfasst, nicht unterbrechen – die Feier folgt danach
-  const quiet = pathname.startsWith('/hinzufuegen') || pathname.startsWith('/gerichte')
+  const quiet = pathname.startsWith('/hinzufuegen') || pathname.startsWith('/gerichte') || pathname === '/rezepte/neu' || pathname.endsWith('/abwandeln')
 
   useEffect(() => {
     if (!input || !isSuccess || !rows || busy.current) return
