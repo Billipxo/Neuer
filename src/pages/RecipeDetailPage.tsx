@@ -1,14 +1,17 @@
-import { useState } from 'react'
-import { useParams, Navigate, Link } from 'react-router-dom'
-import { ChefHat, Clock, Heart, History, Hourglass, Lightbulb, Minus, Plus, Share2, ShoppingBasket, Thermometer, Users, CalendarPlus } from 'lucide-react'
-import { getRecipe, hasAirfryerVariant, isAirfryerNative, recipeEmoji, recipeNutrients, recipeShareText, recipeSteps, scaleIngredients, TAG_LABELS } from '../lib/recipes'
+import { useEffect, useState } from 'react'
+import { useParams, Navigate, Link, useNavigate } from 'react-router-dom'
+import { ChefHat, Clock, Heart, History, Hourglass, Lightbulb, Minus, Pencil, Plus, Share2, ShoppingBasket, Thermometer, Trash2, Users, CalendarPlus, Wand2 } from 'lucide-react'
+import { hasAirfryerVariant, isAirfryerNative, recipeEmoji, recipeNutrients, recipeShareText, recipeSteps, scaleIngredients, TAG_LABELS } from '../lib/recipes'
+import { formatDiff, nutritionDiff } from '../lib/variants'
+import { useDeleteVariant, useResolvedRecipe, useVariantRecipes } from '../hooks/variants'
+import { Spinner } from '../components/ui/EmptyState'
 import { useCookedStats } from '../hooks/cooked'
 import { fmtDate } from '../lib/dates'
 import { useProfile, useToggleFavoriteRecipe } from '../hooks/data'
 import { relatedGuides } from '../lib/guides'
 import { Segmented } from '../components/ui/Segmented'
 import { AirfryerIcon } from '../components/recipes/AirfryerIcon'
-import { recipeGradient } from '../components/recipes/RecipeCard'
+import { recipeGradient, RecipeTile } from '../components/recipes/RecipeCard'
 import { formatQuantity } from '../lib/shopping'
 import { fmtDuration, fmtInt } from '../lib/format'
 import { useAddToShopping } from '../hooks/shopping'
@@ -21,7 +24,10 @@ import { AddRecipeSheet } from '../components/recipes/AddRecipeSheet'
 
 export function RecipeDetailPage() {
   const { id } = useParams()
-  const recipe = getRecipe(id)
+  const navigate = useNavigate()
+  const { recipe, variant: own, base, isLoading } = useResolvedRecipe(id)
+  const { recipes: mine, variants } = useVariantRecipes()
+  const del = useDeleteVariant()
   const [servings, setServings] = useState(recipe?.servings ?? 1)
   const [addOpen, setAddOpen] = useState(false)
   const addToShopping = useAddToShopping()
@@ -32,7 +38,14 @@ export function RecipeDetailPage() {
   const [method, setMethod] = useState<'airfryer' | 'oven' | null>(null)
   const cooked = useCookedStats()
 
-  if (!recipe) return <Navigate to="/rezepte" replace />
+  // Eigene Varianten werden erst geladen – Portionen dann übernehmen
+  useEffect(() => {
+    setServings(recipe?.servings ?? 1)
+  }, [recipe?.id, recipe?.servings])
+
+  if (!recipe) return isLoading ? <Spinner /> : <Navigate to="/rezepte" replace />
+  const ownVariants = variants.map((v, i) => ({ v, r: mine[i] })).filter((x) => x.v.base_recipe_id === recipe.id).map((x) => x.r)
+  const diff = own && base ? formatDiff(nutritionDiff(recipe, base)) : []
   const ingredients = scaleIngredients(recipe, servings)
   const variant = hasAirfryerVariant(recipe)
   const activeMethod = method ?? (hasAirfryer ? 'airfryer' : 'oven')
@@ -62,6 +75,15 @@ export function RecipeDetailPage() {
         back
         actions={
           <div className="flex gap-2">
+          {own && (
+            <Link
+              to={`/rezepte/${recipe.id}/abwandeln`}
+              aria-label={base ? 'Variante bearbeiten' : 'Rezept bearbeiten'}
+              className="flex size-11 items-center justify-center rounded-full bg-surface ring-1 ring-line transition active:scale-90"
+            >
+              <Pencil className="size-5 text-muted" aria-hidden />
+            </Link>
+          )}
           <button
             type="button"
             onClick={share}
@@ -126,6 +148,48 @@ export function RecipeDetailPage() {
           Enthält Parmesan, der traditionell mit tierischem Lab hergestellt wird – für eine streng vegetarische Variante
           Hartkäse ohne tierisches Lab verwenden.
         </p>
+      )}
+      {own ? (
+        <Card className="mt-3 space-y-2 text-sm">
+          <p className="flex items-center gap-2 font-medium">
+            <Wand2 className="size-4 shrink-0 text-brand" aria-hidden />
+            {base ? (
+              <span>
+                Deine Variante von{' '}
+                <Link to={`/rezepte/${base.id}`} className="text-brand">
+                  {base.title}
+                </Link>
+              </span>
+            ) : (
+              'Dein eigenes Rezept'
+            )}
+          </p>
+          {base && <p className="text-muted tabular">{diff.length ? `Gegenüber dem Original pro Portion: ${diff.join(' · ')}` : 'Nährwerte wie das Original.'}</p>}
+          {own.note && <p className="whitespace-pre-line rounded-2xl bg-surface-2 p-3">{own.note}</p>}
+        </Card>
+      ) : (
+        <Link
+          to={`/rezepte/${recipe.id}/abwandeln?methode=${variant ? activeMethod : 'airfryer'}`}
+          className="mt-3 flex min-h-14 items-center gap-3 rounded-2xl bg-surface px-3 ring-1 ring-line/60 transition hover:ring-brand/40"
+        >
+          <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
+            <Wand2 className="size-5" aria-hidden />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-semibold">Rezept abwandeln</span>
+            <span className="block text-xs text-muted">Zutaten tauschen, Mengen ändern – Nährwerte werden neu berechnet</span>
+          </span>
+        </Link>
+      )}
+      {ownVariants.length > 0 && (
+        <>
+          <SectionTitle>Deine Varianten</SectionTitle>
+          <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
+            {ownVariants.map((r) => (
+              <RecipeTile key={r.id} recipe={r} />
+            ))}
+          </div>
+        </>
       )}
 
       <SectionTitle
@@ -263,6 +327,23 @@ export function RecipeDetailPage() {
             ))}
           </ul>
         </>
+      )}
+      {own && (
+        <Button
+          variant="ghost"
+          block
+          className="mt-6 text-danger"
+          icon={<Trash2 className="size-4" aria-hidden />}
+          disabled={del.isPending}
+          onClick={async () => {
+            if (!confirm(`„${recipe.title}“ wirklich löschen?`)) return
+            await del.mutateAsync(own.id)
+            toast(base ? 'Variante gelöscht' : 'Rezept gelöscht')
+            navigate(base ? `/rezepte/${base.id}` : '/rezepte', { replace: true })
+          }}
+        >
+          {base ? 'Variante löschen' : 'Rezept löschen'}
+        </Button>
       )}
       <p className="mt-6 text-xs text-muted">Nährwerte sind gerundete Richtwerte und können je nach Produkt abweichen.</p>
 

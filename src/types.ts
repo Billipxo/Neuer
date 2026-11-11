@@ -162,6 +162,20 @@ export interface AchievementRow {
   unlocked_at: string
 }
 
+/** Nährwerte einer eigenen Zutat, die nicht in der Nährwerttabelle steht (nur in Varianten und eigenen Rezepten) */
+export interface CustomIngredientInfo {
+  /** pro 100 g bzw. 100 ml */
+  kcal: number
+  protein: number
+  carbs: number
+  fat: number
+  fiber: number
+  /** Kennzeichnung wie in der Nährwerttabelle: M Fleisch, F Fisch, D Milch, E Ei, G glutenhaltig */
+  flags: string
+  /** Gramm pro Stück, falls die Zutat nicht in g/ml angegeben wird */
+  unit_g?: number
+}
+
 export interface RecipeIngredient {
   name: string
   amount: number | null
@@ -169,6 +183,8 @@ export interface RecipeIngredient {
   category: ShoppingCategory
   /** Hinweis zur Vorbereitung, z. B. „fein gewürfelt“ */
   note?: string
+  /** Eigene Nährwerte, wenn die Zutat nicht in der Nährwerttabelle steht */
+  custom?: CustomIngredientInfo
 }
 
 export interface DietInfo {
@@ -214,3 +230,28 @@ export interface Recipe {
 
 /** Rezept, wie es in recipes.json steht (ohne berechnete Felder) */
 export type RawRecipe = Omit<Recipe, 'nutrition' | 'fiber' | 'diet'>
+
+/**
+ * Abgewandeltes Kochbuch-Rezept oder eigenes Rezept. Nährwerte werden – wie bei allen Rezepten – aus den Zutaten
+ * berechnet, sobald die Variante geladen wird.
+ */
+export interface RecipeVariant {
+  id: string
+  user_id?: string
+  /** Rezept aus dem Kochbuch, auf dem die Variante beruht; null bei eigenen Rezepten */
+  base_recipe_id: string | null
+  title: string
+  chapter: import('./data/chapters').ChapterId
+  meal: MealType[]
+  time_min: number
+  rest_min: number | null
+  servings: number
+  ingredients: RecipeIngredient[]
+  steps: string[]
+  /** Angaben für die Heißluftfritteuse, wenn die Schritte dafür geschrieben sind */
+  airfryer: { temp_c: number; time_min: number } | null
+  /** Eigene Notiz, z. B. was geändert wurde und warum */
+  note: string | null
+  created_at?: string
+  updated_at?: string
+}

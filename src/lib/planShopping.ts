@@ -1,20 +1,20 @@
-import type { Dish, PlanItem } from '../types'
+import type { Dish, PlanItem, Recipe } from '../types'
 import { getRecipe, scaleIngredients } from './recipes'
 import { guessCategory, mergeIngredients, type ShoppingInput } from './shopping'
 
 /**
  * Zutaten aus dem Wochenplan sammeln:
- * - Rezepte: Zutaten passend zur geplanten Portionszahl
+ * - Rezepte (auch eigene Varianten): Zutaten passend zur geplanten Portionszahl
  * - Eigene Gerichte: Zutaten in Gramm, anteilig zur Portionszahl
  * - Freitext: keine Zutaten
  * Ergebnis ist bereits zusammengeführt.
  */
-export function ingredientsFromPlan(items: PlanItem[], dishes: Dish[]): ShoppingInput[] {
+export function ingredientsFromPlan(items: PlanItem[], dishes: Dish[], ownRecipes: Recipe[] = []): ShoppingInput[] {
   const out: ShoppingInput[] = []
   for (const item of items) {
     const servings = Number(item.servings) || 1
     if (item.kind === 'recipe') {
-      const recipe = getRecipe(item.recipe_id)
+      const recipe = getRecipe(item.recipe_id) ?? ownRecipes.find((r) => r.id === item.recipe_id)
       if (!recipe) continue
       for (const i of scaleIngredients(recipe, servings)) out.push({ name: i.name, amount: i.amount, unit: i.unit, category: i.category })
     } else if (item.kind === 'dish') {

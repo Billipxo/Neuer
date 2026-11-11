@@ -111,7 +111,8 @@ export function useSaveFood() {
         const { id, ...patch } = f
         return store.update<Food>('foods', id, patch)
       }
-      const [created] = await store.insert<Food>('foods', [f])
+      const { id: _none, ...row } = f
+      const [created] = await store.insert<Food>('foods', [row])
       return created
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: qk.foods }),
@@ -187,7 +188,8 @@ export function useSaveDish() {
         const { id, ...patch } = d
         return store.update<Dish>('dishes', id, patch)
       }
-      const [created] = await store.insert<Dish>('dishes', [d])
+      const { id: _none, ...row } = d
+      const [created] = await store.insert<Dish>('dishes', [row])
       return created
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: qk.dishes }),

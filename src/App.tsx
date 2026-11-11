@@ -1,5 +1,5 @@
-import { lazy, Suspense, useRef } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { lazy, Suspense, useEffect, useRef } from 'react'
+import { Navigate, Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from './app/auth'
 import { useProfile } from './hooks/data'
@@ -23,7 +23,18 @@ const PantryPage = lazy(() => import('./pages/PantryPage').then((m) => ({ defaul
 const KnowledgePage = lazy(() => import('./pages/KnowledgePage').then((m) => ({ default: m.KnowledgePage })))
 const GuidePage = lazy(() => import('./pages/GuidePage').then((m) => ({ default: m.GuidePage })))
 const CookModePage = lazy(() => import('./pages/CookModePage').then((m) => ({ default: m.CookModePage })))
+const VariantEditorPage = lazy(() => import('./pages/VariantEditorPage').then((m) => ({ default: m.VariantEditorPage })))
 
+
+/** Beim Wechsel auf eine neue Seite nach oben scrollen – beim Zurückgehen bleibt die Position erhalten */
+function ScrollToTop() {
+  const { key } = useLocation()
+  const type = useNavigationType()
+  useEffect(() => {
+    if (type !== 'POP') window.scrollTo(0, 0)
+  }, [key, type])
+  return null
+}
 
 export function App() {
   const { loading, store, userId } = useAuth()
@@ -51,6 +62,7 @@ function Authed() {
 
   return (
     <Suspense fallback={<Spinner />}>
+    <ScrollToTop />
     <AchievementWatcher />
     <TimerTray />
     <Routes>
@@ -65,8 +77,10 @@ function Authed() {
         <Route path="planer" element={<PlannerPage />} />
         <Route path="verlauf" element={<HistoryPage />} />
       </Route>
+      <Route path="rezepte/neu" element={<VariantEditorPage />} />
       <Route path="rezepte/:id" element={<RecipeDetailPage />} />
       <Route path="rezepte/:id/kochen" element={<CookModePage />} />
+      <Route path="rezepte/:id/abwandeln" element={<VariantEditorPage />} />
       <Route path="hinzufuegen" element={<AddFoodPage />} />
       <Route path="gerichte/neu" element={<DishEditorPage />} />
       <Route path="gerichte/:id" element={<DishEditorPage />} />

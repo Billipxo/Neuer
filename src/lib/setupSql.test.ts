@@ -9,7 +9,7 @@ describe('supabase/setup.sql', () => {
   })
   it('aktiviert RLS für alle Tabellen', () => {
     const sql = readFileSync('supabase/setup.sql', 'utf8')
-    for (const t of ['profiles', 'shopping_items', 'plan_items', 'achievements']) {
+    for (const t of ['profiles', 'shopping_items', 'plan_items', 'achievements', 'recipe_variants']) {
       expect(sql).toContain(`alter table public.${t} enable row level security`)
     }
     expect(sql).toContain("array['foods','dishes','log_entries','water_logs','weight_logs']")

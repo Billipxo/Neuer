@@ -264,7 +264,11 @@ export function createOfflineStore(inner: DataStore, opts: OfflineOptions): Offl
     },
 
     async insert<T>(table: TableName, rows: object[]) {
-      const withIds = rows.map((r) => ({ id: newId(), created_at: now(), ...r })) as Row[]
+      const withIds = rows.map((r) => {
+        const row = { id: newId(), created_at: now(), ...r } as Row
+        if (!row.id) row.id = newId()
+        return row
+      })
       return write<T[]>(
         { kind: 'insert', table, rows: withIds },
         async () => {

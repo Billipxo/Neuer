@@ -8,6 +8,7 @@ import { recipePlanItem, type NewPlanItem } from '../../lib/planner'
 import { fmtDayLong } from '../../lib/dates'
 import { fmtInt } from '../../lib/format'
 import { useDishes, useProfile } from '../../hooks/data'
+import { useVariantRecipes } from '../../hooks/variants'
 import { Sheet } from '../ui/Sheet'
 import { Segmented } from '../ui/Segmented'
 import { Button } from '../ui/Button'
@@ -34,6 +35,7 @@ export function PlanSlotSheet({
   const [kcal, setKcal] = useState<number | null>(null)
   const { data: dishes = [] } = useDishes()
   const { data: profile } = useProfile()
+  const { recipes: ownRecipes } = useVariantRecipes()
 
   useEffect(() => {
     if (slot) {
@@ -47,11 +49,11 @@ export function PlanSlotSheet({
     () =>
       slot
         ? filterRecipes(
-            RECIPES.filter((r) => matchesDiet(r, profile?.diet)),
+            [...ownRecipes, ...RECIPES].filter((r) => matchesDiet(r, profile?.diet)),
             { meal: query ? null : slot.meal, keyword: query },
           )
         : [],
-    [slot, query, profile?.diet],
+    [slot, query, profile?.diet, ownRecipes],
   )
   if (!slot) return null
 

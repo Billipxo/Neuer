@@ -1,4 +1,4 @@
-import { useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from 'react'
+import { useId, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
 
 const inputCls =
   'w-full min-h-12 rounded-2xl bg-surface-2 px-4 text-base text-ink placeholder:text-muted/80 ring-1 ring-transparent focus:ring-brand focus:outline-none transition'
@@ -60,6 +60,31 @@ export function Select({ label, options, className = '', id, ...rest }: SelectPr
           </option>
         ))}
       </select>
+    </div>
+  )
+}
+
+interface TextAreaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label: string
+  hint?: ReactNode
+  hideLabel?: boolean
+}
+
+/** Mehrzeiliges Textfeld im Stil der übrigen Eingabefelder */
+export function TextArea({ label, hint, hideLabel, className = '', id, ...rest }: TextAreaProps) {
+  const autoId = useId()
+  const fid = id ?? autoId
+  return (
+    <div className={className}>
+      <label htmlFor={fid} className={hideLabel ? 'sr-only' : 'mb-1.5 block text-sm font-medium text-ink'}>
+        {label}
+      </label>
+      <textarea id={fid} {...rest} className={`${inputCls} min-h-20 resize-y py-3 leading-relaxed`} aria-describedby={hint ? `${fid}-hint` : undefined} />
+      {hint && (
+        <p id={`${fid}-hint`} className="mt-1 text-xs text-muted">
+          {hint}
+        </p>
+      )}
     </div>
   )
 }

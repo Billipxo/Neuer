@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react'
-import { BookOpen, Heart, History, LayoutGrid, Leaf, List, Refrigerator, Search, SlidersHorizontal, X } from 'lucide-react'
+import { BookOpen, Heart, History, LayoutGrid, Leaf, List, Refrigerator, Search, SlidersHorizontal, Wand2, X } from 'lucide-react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { CHAPTERS, getChapter } from '../data/chapters'
 import { GUIDES } from '../data/guides'
@@ -7,6 +7,8 @@ import type { MealType, Recipe } from '../types'
 import { MEAL_TYPES } from '../types'
 import { useLog, useProfile, useToggleFavoriteRecipe } from '../hooks/data'
 import { useCookedStats } from '../hooks/cooked'
+import { useVariantRecipes } from '../hooks/variants'
+import { isVariantRecipe } from '../lib/variants'
 import { inSeasonNow, MONTH_NAMES, seasonalRecipes } from '../lib/season'
 import {
   airfryerRecipes,
@@ -54,6 +56,7 @@ export function RecipesPage() {
   const [tag, setTag] = useState<string | null>(null)
   const [onlyFav, setOnlyFav] = useState(false)
   const [onlyAirfryer, setOnlyAirfryer] = useState(false)
+  const [onlyMine, setOnlyMine] = useState(false)
   const [sort, setSort] = useState<RecipeSort>('empfohlen')
   const [showMore, setShowMore] = useState(false)
   const [view, setView] = useState<ViewMode>(loadView)
@@ -65,20 +68,24 @@ export function RecipesPage() {
   const { data: log = [] } = useLog(todayISO())
   const toggleFav = useToggleFavoriteRecipe()
   const cooked = useCookedStats()
+  const { recipes: mine } = useVariantRecipes()
   const favorites = profile?.favorite_recipes ?? []
   const hasAirfryer = profile?.has_airfryer ?? true
   const diet = profile?.diet ?? 'all'
+  // Eigene Varianten und Rezepte gehören mit ins Kochbuch
+  const all = useMemo(() => (mine.length ? [...mine, ...RECIPES] : RECIPES), [mine])
   // Ernährungsweise aus dem Profil als Standardfilter (abschaltbar)
-  const base = useMemo(() => (dietOnly && diet !== 'all' ? RECIPES.filter((r) => matchesDiet(r, diet)) : RECIPES), [dietOnly, diet])
+  const base = useMemo(() => (dietOnly && diet !== 'all' ? all.filter((r) => matchesDiet(r, diet)) : all), [all, dietOnly, diet])
 
   const results = useMemo(() => {
     let list = filterRecipes(base, { chapter: chapter?.id, meal, maxKcal, maxTime, keyword, tag })
     if (onlyFav) list = list.filter((r) => favorites.includes(r.id))
     if (onlyAirfryer) list = list.filter((r) => r.airfryer)
+    if (onlyMine) list = list.filter(isVariantRecipe)
     return sortRecipes(list, sort, { favorites, preferAirfryer: hasAirfryer, cooked })
-  }, [base, chapter, meal, maxKcal, maxTime, keyword, tag, onlyFav, onlyAirfryer, sort, favorites, hasAirfryer, cooked])
+  }, [base, chapter, meal, maxKcal, maxTime, keyword, tag, onlyFav, onlyAirfryer, onlyMine, sort, favorites, hasAirfryer, cooked])
 
-  const filterCount = [meal, maxKcal, maxTime, tag, onlyFav || null, onlyAirfryer || null, keyword || null].filter(Boolean).length
+  const filterCount = [meal, maxKcal, maxTime, tag, onlyFav || null, onlyAirfryer || null, onlyMine || null, keyword || null].filter(Boolean).length
   const filtered = filterCount > 0 || Boolean(chapter)
   const chapterCounts = useMemo(() => new Map(CHAPTERS.map((c) => [c.id, base.filter((r) => r.chapter === c.id).length])), [base])
 
@@ -87,7 +94,7 @@ export function RecipesPage() {
   const currentMeal = mealForHour(new Date().getHours())
   const openMeals = MEAL_TYPES.filter((m) => m !== 'snack' && byMeal[m].length === 0).length || 1
   const recommended = recommendRecipes(base, { remainingKcal: remaining, meal: currentMeal, openMeals })
-  const favRecipes = RECIPES.filter((r) => favorites.includes(r.id))
+  const favRecipes = all.filter((r) => favorites.includes(r.id))
   const month = new Date().getMonth() + 1
   const seasonal = useMemo(() => seasonalRecipes(base, month, 10), [base, month])
   const seasonNames = useMemo(() => inSeasonNow(month).slice(0, 4).join(', '), [month])
@@ -95,10 +102,10 @@ export function RecipesPage() {
     () =>
       [...cooked]
         .sort((a, b) => (a[1].last < b[1].last ? 1 : -1))
-        .map(([id]) => RECIPES.find((r) => r.id === id))
+        .map(([id]) => all.find((r) => r.id === id))
         .filter((r): r is Recipe => Boolean(r))
         .slice(0, 10),
-    [cooked],
+    [cooked, all],
   )
 
   const setViewMode = (v: ViewMode) => {
@@ -117,6 +124,7 @@ export function RecipesPage() {
     setTag(null)
     setOnlyFav(false)
     setOnlyAirfryer(false)
+    setOnlyMine(false)
   }
   const fav = (id: string) => toggleFav.mutate(id)
 
@@ -188,6 +196,13 @@ export function RecipesPage() {
             <Heart className={`size-4 ${onlyFav ? 'fill-current' : ''}`} aria-hidden /> Favoriten
           </span>
         </Chip>
+        {mine.length > 0 && (
+          <Chip active={onlyMine} onClick={() => setOnlyMine((v) => !v)}>
+            <span className="inline-flex items-center gap-1.5">
+              <Wand2 className="size-4" aria-hidden /> Meine Rezepte
+            </span>
+          </Chip>
+        )}
         {MEAL_TYPES.map((m) => (
           <Chip key={m} active={meal === m} onClick={() => setMeal(meal === m ? null : m)}>
             {MEAL_LABELS[m]}
@@ -283,6 +298,13 @@ export function RecipesPage() {
           <div className="mt-4 grid grid-cols-2 gap-2">
             <FeatureCard to="/rezepte/zutaten" icon={<Refrigerator className="size-6" aria-hidden />} title="Was habe ich da?" text="Rezepte aus deinen Zutaten" />
             <FeatureCard to="/rezepte/wissen" icon={<BookOpen className="size-6" aria-hidden />} title="Kochwissen" text={`${GUIDES.length} Anleitungen & Garzeiten`} />
+            <FeatureCard
+              to="/rezepte/neu"
+              wide
+              icon={<Wand2 className="size-6" aria-hidden />}
+              title="Eigenes Rezept anlegen"
+              text="Oder ein Kochbuch-Rezept abwandeln – Nährwerte werden aus den Zutaten berechnet"
+            />
           </div>
           {recommended.length > 0 && (
             <Carousel title="Passt zu deinem Tag" subtitle={`${MEAL_LABELS[currentMeal]} · noch ${fmtInt(remaining)} kcal übrig`} recipes={recommended} />
@@ -303,6 +325,9 @@ export function RecipesPage() {
               icon={<Leaf className="size-5 text-brand" aria-hidden />}
               recipes={seasonal}
             />
+          )}
+          {mine.length > 0 && (
+            <Carousel title="Deine Rezepte & Varianten" icon={<Wand2 className="size-5 text-brand" aria-hidden />} recipes={mine} onAll={() => setOnlyMine(true)} />
           )}
           {recentlyCooked.length > 0 && (
             <Carousel title="Zuletzt gekocht" icon={<History className="size-5 text-brand" aria-hidden />} recipes={recentlyCooked} onAll={() => setSort('oft')} />
@@ -348,11 +373,13 @@ export function RecipesPage() {
   )
 }
 
-function FeatureCard({ to, icon, title, text }: { to: string; icon: ReactNode; title: string; text: string }) {
+function FeatureCard({ to, icon, title, text, wide }: { to: string; icon: ReactNode; title: string; text: string; wide?: boolean }) {
   return (
     <Link
       to={to}
-      className="flex flex-col gap-2 rounded-3xl bg-surface p-3 ring-1 ring-line/60 transition active:scale-[0.98] hover:ring-brand/40"
+      className={`flex gap-2 rounded-3xl bg-surface p-3 ring-1 ring-line/60 transition active:scale-[0.98] hover:ring-brand/40 ${
+        wide ? 'col-span-2 flex-row items-center gap-3' : 'flex-col'
+      }`}
     >
       <span className="flex size-11 items-center justify-center rounded-2xl bg-brand-soft text-brand">{icon}</span>
       <span>

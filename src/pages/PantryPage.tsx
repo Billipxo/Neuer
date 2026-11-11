@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PackageCheck, Plus, Search, ShoppingBasket, X } from 'lucide-react'
 import { matchesDiet, RECIPES, recipeEmoji } from '../lib/recipes'
+import { useVariantRecipes } from '../hooks/variants'
 import { useProfile } from '../hooks/data'
 import { choicesFromShopping, matchRecipes, missingIngredients, pantryChoices, type PantryMatch } from '../lib/pantry'
 import { fmtInt } from '../lib/format'
@@ -38,6 +39,7 @@ export function PantryPage() {
   const [showAll, setShowAll] = useState(false)
   const { data: shopping = [] } = useShoppingItems()
   const { data: profile } = useProfile()
+  const { recipes: ownRecipes } = useVariantRecipes()
   const toast = useToast()
 
   const update = (next: Saved) => {
@@ -58,8 +60,8 @@ export function PantryPage() {
   }, [q, state.have, state.assumeBasics])
 
   const matches = useMemo(
-    () => matchRecipes(RECIPES.filter((r) => matchesDiet(r, profile?.diet)), state.have, { assumeBasics: state.assumeBasics }),
-    [state, profile?.diet],
+    () => matchRecipes([...ownRecipes, ...RECIPES].filter((r) => matchesDiet(r, profile?.diet)), state.have, { assumeBasics: state.assumeBasics }),
+    [state, profile?.diet, ownRecipes],
   )
   const complete = matches.filter((m) => m.missing.length === 0)
   const almost = matches.filter((m) => m.missing.length > 0 && m.missing.length <= 2)

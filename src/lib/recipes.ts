@@ -212,6 +212,8 @@ export const TAG_LABELS: Record<string, string> = {
   klassiker: 'Klassiker',
   'one-pot': 'One Pot',
   suess: 'Süßes',
+  variante: 'Meine Variante',
+  eigen: 'Eigenes Rezept',
 }
 
 export type RecipeSort = 'empfohlen' | 'kcal' | 'zeit' | 'eiweiss' | 'oft'

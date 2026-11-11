@@ -16,9 +16,24 @@ export function unitGrams(info: IngredientInfo, unit: string): number | null {
   return info.units[unit] ?? DEFAULT_UNIT_GRAMS[unit] ?? null
 }
 
+/** Nährwerte pro 100 g: aus der Tabelle oder – bei eigenen Zutaten – aus der Zutat selbst */
+export function per100(ing: RecipeIngredient): NutritionWithFiber | undefined {
+  if (ing.custom) return ing.custom
+  return ingredientInfo(ing.name)
+}
+
+/** Kennzeichnung (Fleisch, Fisch, Milch, Ei, Gluten …) einer Zutat */
+export function ingredientFlags(ing: RecipeIngredient): string {
+  return ing.custom?.flags ?? ingredientInfo(ing.name)?.flags ?? ''
+}
+
 /** Menge einer Rezeptzutat in Gramm (Zutaten ohne Mengenangabe zählen als 0 g), null wenn nicht umrechenbar */
 export function ingredientGrams(ing: RecipeIngredient): number | null {
   if (ing.amount === null) return 0
+  if (ing.custom) {
+    const g = ing.unit === 'Stück' ? (ing.custom.unit_g ?? null) : (DEFAULT_UNIT_GRAMS[ing.unit || 'g'] ?? null)
+    return g === null ? null : ing.amount * g
+  }
   const info = ingredientInfo(ing.name)
   if (!info) return null
   const g = unitGrams(info, ing.unit)
@@ -35,7 +50,7 @@ export function totalNutrition(ingredients: RecipeIngredient[]): NutritionWithFi
   const sum: NutritionWithFiber = { kcal: 0, protein: 0, carbs: 0, fat: 0, fiber: 0 }
   for (const ing of ingredients) {
     const grams = ingredientGrams(ing)
-    const info = ingredientInfo(ing.name)
+    const info = per100(ing)
     if (!grams || !info) continue
     const f = grams / 100
     sum.kcal += info.kcal * f
@@ -61,7 +76,7 @@ export function nutritionPerServing(ingredients: RecipeIngredient[], servings: n
 }
 
 export function dietInfo(ingredients: RecipeIngredient[]): DietInfo {
-  const flags = ingredients.map((i) => ingredientInfo(i.name)?.flags ?? '').join('')
+  const flags = ingredients.map(ingredientFlags).join('')
   const has = (f: string) => flags.includes(f)
   const vegetarian = !has('M') && !has('F')
   return {

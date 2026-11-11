@@ -46,7 +46,12 @@ export function createLocalStore(): DataStore {
     async insert<T>(table: TableName, rows: object[]) {
       const db = load()
       const now = new Date().toISOString()
-      const created = rows.map((r) => ({ id: uuid(), created_at: now, user_id: 'local', ...r }) as Row)
+      // Eine mitgegebene ID bleibt erhalten (Offline-Einträge); fehlt sie oder ist sie leer, wird eine erzeugt
+      const created = rows.map((r) => {
+        const row = { id: uuid(), created_at: now, user_id: 'local', ...r } as Row
+        if (!row.id) row.id = uuid()
+        return row
+      })
       db.tables[table].push(...created)
       save(db)
       return created as T[]

@@ -9,6 +9,7 @@ export type TableName =
   | 'plan_items'
   | 'shopping_items'
   | 'achievements'
+  | 'recipe_variants'
 
 export const ALL_TABLES: TableName[] = [
   'foods',
@@ -19,6 +20,7 @@ export const ALL_TABLES: TableName[] = [
   'plan_items',
   'shopping_items',
   'achievements',
+  'recipe_variants',
 ]
 
 export type Primitive = string | number | boolean | null

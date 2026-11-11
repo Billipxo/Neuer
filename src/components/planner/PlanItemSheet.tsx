@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import { CheckCircle2, Trash2 } from 'lucide-react'
 import type { PlanItem } from '../../types'
 import { MEAL_LABELS } from '../../lib/meals'
-import { getRecipe, recipeVeggies } from '../../lib/recipes'
+import { recipeVeggies } from '../../lib/recipes'
+import { useResolvedRecipe } from '../../hooks/variants'
 import { planNutrients } from '../../lib/planner'
 import { roundNutrients, scaleNutrients } from '../../lib/nutrition'
 import { detectVeggies } from '../../lib/veggies'
@@ -22,6 +23,7 @@ export function PlanItemSheet({ item, onClose }: { item: PlanItem | null; onClos
   const del = useDeletePlanItems()
   const addLog = useAddLogEntries()
   const toast = useToast()
+  const { recipe } = useResolvedRecipe(item?.recipe_id)
 
   useEffect(() => {
     if (item) setServings(Number(item.servings))
@@ -30,7 +32,6 @@ export function PlanItemSheet({ item, onClose }: { item: PlanItem | null; onClos
 
   const factor = servings && item.servings ? servings / Number(item.servings) : 1
   const n = scaleNutrients(planNutrients(item), factor)
-  const recipe = getRecipe(item.recipe_id)
 
   return (
     <Sheet

@@ -137,6 +137,7 @@ Dateien aus `supabase/migrations/` im SQL Editor ausführen (die Dateinamen sind
 
 - `20261110000005_kitchen.sql` – Heißluftfritteuse und Lieblingsrezepte
 - `20261110000006_diet.sql` – Ernährungsweise (alles, vegetarisch, vegan)
+- `20261111000007_recipe_variants.sql` – Eigene Rezepte und abgewandelte Varianten
 
 Wer noch gar nichts eingerichtet hat, nimmt wie oben einfach die komplette `supabase/setup.sql` – sie enthält alles.
 

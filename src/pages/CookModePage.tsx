@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Check, ChevronLeft, ChevronRight, PartyPopper, Sun, Timer, X } from 'lucide-react'
-import { getRecipe, hasAirfryerVariant, recipeEmoji, recipeSteps, scaleIngredients } from '../lib/recipes'
+import { hasAirfryerVariant, recipeEmoji, recipeSteps, scaleIngredients } from '../lib/recipes'
+import { useResolvedRecipe } from '../hooks/variants'
+import { Spinner } from '../components/ui/EmptyState'
 import { ingredientsInStep, parseTimers } from '../lib/cooking'
 import { formatQuantity } from '../lib/shopping'
 import { useTimers } from '../app/timers'
@@ -19,7 +21,7 @@ export function CookModePage() {
   const { id } = useParams()
   const [params] = useSearchParams()
   const navigate = useNavigate()
-  const recipe = getRecipe(id)
+  const { recipe, isLoading } = useResolvedRecipe(id)
   const servings = Math.max(1, Number(params.get('portionen')) || recipe?.servings || 1)
   const method: 'airfryer' | 'oven' = params.get('methode') === 'oven' ? 'oven' : 'airfryer'
   const storageKey = `teller-cook-${id}`
@@ -64,7 +66,7 @@ export function CookModePage() {
     return () => window.removeEventListener('keydown', onKey)
   }, [last])
 
-  if (!recipe) return <Navigate to="/rezepte" replace />
+  if (!recipe) return isLoading ? <Spinner /> : <Navigate to="/rezepte" replace />
 
   const step = current >= 1 && current <= steps.length ? steps[current - 1] : null
   const stepTimers = step ? parseTimers(step) : []
