@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { ScanBarcode } from 'lucide-react'
 import type { RecipeIngredient } from '../../types'
 import { CUSTOM_KIND_LABELS, customIngredient, type CustomIngredientInput, type CustomKind } from '../../lib/variants'
 import { Sheet } from '../ui/Sheet'
@@ -16,11 +17,14 @@ export function CustomIngredientSheet({
   onClose,
   onSave,
   initial,
+  onScan,
 }: {
   open: boolean
   onClose: () => void
   onSave: (ing: RecipeIngredient) => void
   initial?: Partial<CustomIngredientInput>
+  /** Werte per Barcode-Scan füllen */
+  onScan?: () => void
 }) {
   const [name, setName] = useState('')
   const [kcal, setKcal] = useState<number | null>(null)
@@ -84,7 +88,14 @@ export function CustomIngredientSheet({
       <div className="space-y-4">
         <Field label="Name" data-autofocus value={name} onChange={(e) => setName(e.target.value)} placeholder="z. B. Schmand 24 %" />
         <div>
-          <p className="mb-1.5 text-sm font-medium">Nährwerte pro 100 g (von der Packung)</p>
+          <div className="mb-1.5 flex items-center justify-between gap-2">
+            <p className="text-sm font-medium">Nährwerte pro 100 g (von der Packung)</p>
+            {onScan && (
+              <Button variant="secondary" size="sm" icon={<ScanBarcode className="size-4" aria-hidden />} onClick={onScan}>
+                Scannen
+              </Button>
+            )}
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <NumberInput label="Kalorien" suffix="kcal" value={kcal} min={0} onChange={setKcal} />
             <NumberInput label="Eiweiß" suffix="g" value={protein} min={0} onChange={setProtein} />

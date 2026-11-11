@@ -37,6 +37,8 @@ import { Spinner } from '../components/ui/EmptyState'
 import { useToast } from '../components/ui/Toast'
 import { NutrientGrid } from '../components/add/NutrientGrid'
 import { IngredientPickerSheet } from '../components/add/IngredientPickerSheet'
+import { BarcodeScannerSheet } from '../components/add/BarcodeScannerSheet'
+import { getProductByBarcode } from '../lib/openFoodFacts'
 import { IngredientSearchSheet } from '../components/recipes/IngredientSearchSheet'
 import { CustomIngredientSheet } from '../components/recipes/CustomIngredientSheet'
 
@@ -46,6 +48,7 @@ type SheetState =
   | { kind: 'search'; replace?: number }
   | { kind: 'foods'; replace?: number }
   | { kind: 'custom'; replace?: number; initial?: Partial<CustomIngredientInput> }
+  | { kind: 'scan'; replace?: number }
   | null
 
 const OWN_TAGS = ['variante', 'eigen']
@@ -77,6 +80,7 @@ export function VariantEditorPage() {
   const [draft, setDraft] = useState<VariantDraft | null>(null)
   const [chapterTouched, setChapterTouched] = useState(false)
   const [sheet, setSheet] = useState<SheetState>(null)
+  const [scanBusy, setScanBusy] = useState(false)
 
   // Entwurf anlegen, sobald klar ist, was bearbeitet wird
   useEffect(() => {
@@ -159,7 +163,34 @@ export function VariantEditorPage() {
   }
 
   const title = existing ? (base ? 'Variante bearbeiten' : 'Rezept bearbeiten') : base ? 'Rezept abwandeln' : 'Eigenes Rezept'
-  const replaceIndex = sheet && sheet.kind !== 'custom' ? sheet.replace : sheet?.replace
+  /** Zutat, die gerade ersetzt wird (undefined = neue Zutat anhängen) */
+  const replaceIndex = sheet?.replace
+
+  /** Gescannten Barcode bei Open Food Facts nachschlagen und die Werte ins Formular übernehmen */
+  async function onBarcode(code: string) {
+    const replace = replaceIndex
+    setSheet(null)
+    setScanBusy(true)
+    try {
+      const p = await getProductByBarcode(code)
+      if (p) {
+        setSheet({
+          kind: 'custom',
+          replace,
+          initial: { name: p.brand ? `${p.name} (${p.brand})` : p.name, kcal: p.kcal_100, protein: p.protein_100, carbs: p.carbs_100, fat: p.fat_100 },
+        })
+        toast('Nährwerte aus Open Food Facts übernommen', '📷')
+      } else {
+        toast(`Barcode ${code} nicht gefunden – bitte die Werte von der Packung eintragen`)
+        setSheet({ kind: 'custom', replace })
+      }
+    } catch {
+      toast('Keine Verbindung zu Open Food Facts – bitte die Werte von der Packung eintragen')
+      setSheet({ kind: 'custom', replace })
+    } finally {
+      setScanBusy(false)
+    }
+  }
 
   return (
     <div className="mx-auto min-h-dvh max-w-lg px-4 pb-44 safe-top">
@@ -288,7 +319,11 @@ export function VariantEditorPage() {
           Zutat hinzufügen
         </Button>
       </Card>
-      <p className="mt-2 px-1 text-xs text-muted">Tipp: Auf den Namen tippen, um eine Zutat zu ersetzen – Menge und Einheit bleiben, wenn sie passen.</p>
+      {scanBusy && <Spinner label="Produkt wird gesucht …" />}
+      <p className="mt-2 px-1 text-xs text-muted">
+        Tipp: Auf den Namen tippen, um eine Zutat zu ersetzen – Menge und Einheit bleiben, wenn sie passen. Produkte lassen sich auch per
+        Barcode scannen.
+      </p>
 
       <SectionTitle>Zubereitung</SectionTitle>
       {methodSwitch && (
@@ -375,7 +410,9 @@ export function VariantEditorPage() {
         }}
         onCustom={() => setSheet({ kind: 'custom', replace: replaceIndex })}
         onFoods={() => setSheet({ kind: 'foods', replace: replaceIndex })}
+        onScan={() => setSheet({ kind: 'scan', replace: replaceIndex })}
       />
+      <BarcodeScannerSheet open={sheet?.kind === 'scan'} onClose={() => setSheet(null)} onDetected={onBarcode} />
       <IngredientPickerSheet
         open={sheet?.kind === 'foods'}
         onClose={() => setSheet((s) => (s?.kind === 'foods' ? null : s))}
@@ -392,6 +429,7 @@ export function VariantEditorPage() {
         onClose={() => setSheet(null)}
         initial={sheet?.kind === 'custom' ? sheet.initial : undefined}
         onSave={(ing) => placeIngredient(ing, replaceIndex)}
+        onScan={() => setSheet({ kind: 'scan', replace: replaceIndex })}
       />
     </div>
   )

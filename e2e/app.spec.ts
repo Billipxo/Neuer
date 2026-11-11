@@ -268,3 +268,34 @@ test('Eigenes Rezept anlegen und im Kochmodus kochen', async ({ page }) => {
   await expect(page.getByText('Schritt 1 von 1')).toBeVisible()
   await expect(page.getByRole('button', { name: /3 Min\. Timer/ })).toBeVisible()
 })
+
+test('Barcode scannen füllt die Nährwerte einer eigenen Zutat automatisch aus', async ({ page }) => {
+  // Open Food Facts wird simuliert – der Scanner nutzt die manuelle Eingabe, da es keine Kamera gibt
+  await page.route('**/world.openfoodfacts.org/api/v2/product/**', (route) =>
+    route.fulfill({
+      json: {
+        status: 1,
+        product: {
+          code: '4000417025005',
+          product_name_de: 'Testjoghurt',
+          brands: 'Molkerei',
+          nutriments: { 'energy-kcal_100g': 72, energy_100g: 301, proteins_100g: 4.5, carbohydrates_100g: 6, fat_100g: 3.2 },
+        },
+      },
+    }),
+  )
+  await startDemo(page)
+  await page.goto('/rezepte/neu')
+  await page.getByRole('button', { name: 'Zutat hinzufügen' }).click()
+  await page.getByRole('button', { name: 'Barcode scannen' }).click()
+  await page.getByLabel('Barcode manuell eingeben').fill('4000417025005')
+  await page.getByRole('button', { name: 'Suchen' }).click()
+  await expect(page.getByRole('heading', { name: 'Eigene Zutat' })).toBeVisible()
+  await expect(page.getByLabel('Name')).toHaveValue('Testjoghurt (Molkerei)')
+  await expect(page.getByLabel('Kalorien')).toHaveValue('72')
+  await expect(page.getByLabel('Eiweiß')).toHaveValue('4,5')
+  await page.getByRole('radio', { name: 'Milch/Ei' }).click()
+  await page.getByRole('button', { name: 'Zutat übernehmen' }).click()
+  await expect(page.getByRole('button', { name: 'Testjoghurt (Molkerei) ersetzen' })).toBeVisible()
+  await expect(page.getByText('72 kcal · eigene Zutat')).toBeVisible()
+})

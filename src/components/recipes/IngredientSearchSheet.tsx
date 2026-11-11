@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { PlusCircle, ScanSearch, Search } from 'lucide-react'
+import { PlusCircle, ScanBarcode, ScanSearch, Search } from 'lucide-react'
 import type { RecipeIngredient } from '../../types'
 import { INGREDIENT_LIST } from '../../data/ingredients'
 import { ingredientFromTable, searchIngredients, unitOptions } from '../../lib/variants'
@@ -17,6 +17,7 @@ export function IngredientSearchSheet({
   onPick,
   onCustom,
   onFoods,
+  onScan,
 }: {
   open: boolean
   onClose: () => void
@@ -26,6 +27,8 @@ export function IngredientSearchSheet({
   onCustom: () => void
   /** In den eigenen Lebensmitteln und bei Open Food Facts suchen */
   onFoods: () => void
+  /** Produkt per Barcode scannen – die Nährwerte werden automatisch übernommen */
+  onScan: () => void
 }) {
   const [query, setQuery] = useState('')
   useEffect(() => {
@@ -40,13 +43,18 @@ export function IngredientSearchSheet({
       title={title}
       tall
       footer={
-        <div className="grid grid-cols-2 gap-2">
-          <Button variant="secondary" icon={<PlusCircle className="size-4" aria-hidden />} onClick={onCustom}>
-            Eigene Zutat
+        <div className="space-y-2">
+          <Button block icon={<ScanBarcode className="size-5" aria-hidden />} onClick={onScan}>
+            Barcode scannen
           </Button>
-          <Button variant="secondary" icon={<ScanSearch className="size-4" aria-hidden />} onClick={onFoods}>
-            Produkt suchen
-          </Button>
+          <div className="grid grid-cols-2 gap-2">
+            <Button variant="secondary" icon={<PlusCircle className="size-4" aria-hidden />} onClick={onCustom}>
+              Eigene Zutat
+            </Button>
+            <Button variant="secondary" icon={<ScanSearch className="size-4" aria-hidden />} onClick={onFoods}>
+              Produkt suchen
+            </Button>
+          </div>
         </div>
       }
     >
@@ -84,14 +92,14 @@ export function IngredientSearchSheet({
       )}
       {query.trim() && results.length === 0 && (
         <p className="mt-4 rounded-2xl bg-surface-2 p-4 text-sm text-muted">
-          „{query.trim()}“ steht nicht in der Nährwerttabelle. Lege die Zutat mit den Werten von der Packung an oder suche das Produkt bei
-          Open Food Facts.
+          „{query.trim()}“ steht nicht in der Nährwerttabelle. Scanne den Barcode des Produkts, suche es bei Open Food Facts oder lege die
+          Zutat mit den Werten von der Packung an.
         </p>
       )}
       {!query.trim() && (
         <p className="mt-4 text-sm text-muted">
-          Die Nährwerttabelle des Kochbuchs kennt {INGREDIENT_LIST.length} Zutaten. Alles andere kannst du als eigene Zutat mit den
-          Werten von der Packung anlegen.
+          Die Nährwerttabelle des Kochbuchs kennt {INGREDIENT_LIST.length} Zutaten. Fertigprodukte scannst du am schnellsten per Barcode –
+          die Nährwerte werden dann automatisch übernommen.
         </p>
       )}
     </Sheet>
