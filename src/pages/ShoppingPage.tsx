@@ -14,11 +14,13 @@ import { Segmented } from '../components/ui/Segmented'
 import { Select } from '../components/ui/Field'
 import { useToast } from '../components/ui/Toast'
 import { useGenerateShopping } from '../components/planner/GenerateShoppingButton'
+import { useUndoToast } from '../hooks/undo'
 
 export function ShoppingPage() {
   const { data: items = [], isLoading } = useShoppingItems()
   const del = useDeleteShoppingItems()
   const toast = useToast()
+  const undo = useUndoToast()
   const [generateOpen, setGenerateOpen] = useState(false)
   const [clearOpen, setClearOpen] = useState(false)
 
@@ -131,8 +133,9 @@ export function ShoppingPage() {
             size="lg"
             disabled={done === 0}
             onClick={async () => {
-              await del.mutateAsync(items.filter((i) => i.checked).map((i) => i.id))
-              toast('Erledigte Artikel entfernt')
+              const removed = items.filter((i) => i.checked)
+              await del.mutateAsync(removed.map((i) => i.id))
+              undo(`${removed.length} erledigte Artikel entfernt`, 'shopping_items', removed)
               setClearOpen(false)
             }}
           >
@@ -143,8 +146,9 @@ export function ShoppingPage() {
             block
             size="lg"
             onClick={async () => {
-              await del.mutateAsync(items.map((i) => i.id))
-              toast('Liste geleert')
+              const removed = [...items]
+              await del.mutateAsync(removed.map((i) => i.id))
+              undo('Liste geleert', 'shopping_items', removed)
               setClearOpen(false)
             }}
           >
@@ -159,6 +163,7 @@ export function ShoppingPage() {
 function ItemRow({ item: i }: { item: ShoppingItem }) {
   const update = useUpdateShoppingItem()
   const del = useDeleteShoppingItems()
+  const undo = useUndoToast()
   return (
     <li className="flex items-center">
       <label className="flex min-h-13 flex-1 cursor-pointer items-center gap-3 rounded-2xl py-2 pl-3 pr-1 hover:bg-surface-2/60">
@@ -189,7 +194,14 @@ function ItemRow({ item: i }: { item: ShoppingItem }) {
         {i.in_stock ? <PackageCheck className="size-4" /> : <Package className="size-4" />}
       </IconButton>
       {i.source === 'manual' && (
-        <IconButton label={`${i.name} löschen`} className="size-10 text-muted" onClick={() => del.mutate([i.id])}>
+        <IconButton
+          label={`${i.name} löschen`}
+          className="size-10 text-muted"
+          onClick={async () => {
+            await del.mutateAsync([i.id])
+            undo(`${i.name} entfernt`, 'shopping_items', [i])
+          }}
+        >
           <X className="size-4" />
         </IconButton>
       )}

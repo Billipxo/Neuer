@@ -84,7 +84,10 @@ export interface Food {
 export interface DishIngredient {
   food_id: string | null
   name: string
+  /** Menge in Gramm – bei Portions-Zutaten stehen 100 „Gramm“ für eine Portion */
   grams: number
+  /** Zutat ohne Grammangabe (Rezept-Portion, Schnell-Eintrag): Menge in Portionen, Werte „pro 100 g“ gelten je Portion */
+  portion?: boolean
   kcal_100: number
   protein_100: number
   carbs_100: number

@@ -89,10 +89,10 @@ export function DishEditorPage() {
                   className="w-28"
                   label={`Menge ${ing.name}`}
                   hideLabel
-                  suffix="g"
-                  value={ing.grams}
+                  suffix={ing.portion ? 'Port.' : 'g'}
+                  value={ing.portion ? ing.grams / 100 : ing.grams}
                   min={0}
-                  onChange={(v) => setIngredients((list) => list.map((x, i) => (i === idx ? { ...x, grams: v ?? 0 } : x)))}
+                  onChange={(v) => setIngredients((list) => list.map((x, i) => (i === idx ? { ...x, grams: (v ?? 0) * (x.portion ? 100 : 1) } : x)))}
                 />
                 <IconButton label={`${ing.name} entfernen`} onClick={() => setIngredients((list) => list.filter((_, i) => i !== idx))}>
                   <X className="size-4" />

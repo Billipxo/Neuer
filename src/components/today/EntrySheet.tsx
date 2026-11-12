@@ -12,6 +12,7 @@ import { Button } from '../ui/Button'
 import { NumberInput } from '../ui/NumberInput'
 import { Segmented } from '../ui/Segmented'
 import { useToast } from '../ui/Toast'
+import { useUndoToast } from '../../hooks/undo'
 
 /** Eintrag bearbeiten (Menge, Mahlzeit) oder löschen */
 export function EntrySheet({ entry, onClose }: { entry: LogEntry | null; onClose: () => void }) {
@@ -19,6 +20,7 @@ export function EntrySheet({ entry, onClose }: { entry: LogEntry | null; onClose
   const update = useUpdateLogEntry()
   const del = useDeleteLogEntry()
   const toast = useToast()
+  const undo = useUndoToast()
 
   // Formular sofort mit dem Eintrag befüllen – ohne die Verzögerung eines Effekts, damit das Feld nie kurz leer ist
   if (entry && form?.id !== entry.id) setForm({ id: entry.id, amount: Number(entry.amount), meal: entry.meal })
@@ -41,7 +43,7 @@ export function EntrySheet({ entry, onClose }: { entry: LogEntry | null; onClose
             icon={<Trash2 className="size-4" aria-hidden />}
             onClick={async () => {
               await del.mutateAsync(entry.id)
-              toast('Eintrag gelöscht')
+              undo('Eintrag gelöscht', 'log_entries', [entry])
               onClose()
             }}
           >

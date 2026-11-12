@@ -19,6 +19,7 @@ import { WaterSheet } from '../components/today/WaterSheet'
 import { WaterReminder } from '../components/today/WaterReminder'
 import { WeekGlance } from '../components/today/WeekGlance'
 import { CopyMealSheet } from '../components/today/CopyMealSheet'
+import { SaveMealAsDishSheet } from '../components/today/SaveMealAsDishSheet'
 import { useToast } from '../components/ui/Toast'
 import { WeightSheet } from '../components/today/WeightSheet'
 
@@ -40,6 +41,7 @@ export function TodayPage() {
   const addLog = useAddLogEntries()
   const toast = useToast()
   const [copying, setCopying] = useState<{ meal: MealType; date: string; entries: LogEntry[] } | null>(null)
+  const [savingDish, setSavingDish] = useState<{ meal: MealType; entries: LogEntry[] } | null>(null)
   const { data: water = [] } = useWater(date)
   const [editing, setEditing] = useState<LogEntry | null>(null)
   const [waterOpen, setWaterOpen] = useState(false)
@@ -119,6 +121,7 @@ export function TodayPage() {
             onEdit={setEditing}
             yesterday={prevByMeal[m]}
             onCopy={() => setCopying({ meal: m, date, entries: byMeal[m] })}
+            onSaveAsDish={() => setSavingDish({ meal: m, entries: byMeal[m] })}
             onTakeYesterday={async () => {
               await addLog.mutateAsync(copyEntries(prevByMeal[m], date, m))
               toast('Vom Vortag übernommen', '📋')
@@ -129,6 +132,7 @@ export function TodayPage() {
 
       <EntrySheet entry={editing} onClose={() => setEditing(null)} />
       <CopyMealSheet source={copying} onClose={() => setCopying(null)} />
+      <SaveMealAsDishSheet source={savingDish} onClose={() => setSavingDish(null)} />
       <WaterSheet open={waterOpen} onClose={() => setWaterOpen(false)} date={date} target={profile.water_target_ml} />
       <WeightSheet open={weightOpen} onClose={() => setWeightOpen(false)} date={date} />
     </>

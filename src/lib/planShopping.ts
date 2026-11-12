@@ -1,6 +1,7 @@
 import type { Dish, PlanItem, Recipe } from '../types'
 import { getRecipe, scaleIngredients } from './recipes'
 import { guessCategory, mergeIngredients, type ShoppingInput } from './shopping'
+import { ingredientAmount } from './dishes'
 
 /**
  * Zutaten aus dem Wochenplan sammeln:
@@ -22,7 +23,9 @@ export function ingredientsFromPlan(items: PlanItem[], dishes: Dish[], ownRecipe
       if (!dish) continue
       const f = servings / (Number(dish.servings) || 1)
       for (const ing of dish.ingredients) {
-        out.push({ name: ing.name, amount: Math.round(ing.grams * f), unit: 'g', category: guessCategory(ing.name) })
+        const { value, unit } = ingredientAmount(ing)
+        const amount = unit === 'g' ? Math.round(value * f) : Math.round(value * f * 100) / 100
+        out.push({ name: ing.name, amount, unit, category: guessCategory(ing.name) })
       }
     }
   }

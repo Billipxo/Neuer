@@ -40,7 +40,7 @@ test('Eigenes Lebensmittel erfassen, mehrere hinzufügen und bearbeiten', async 
   // Menge ändern
   await page.getByRole('button', { name: /Haferflocken/ }).first().click()
   await page.getByLabel('Menge').fill('2')
-  await page.getByRole('button', { name: 'Speichern' }).click()
+  await page.getByRole('button', { name: 'Speichern', exact: true }).click()
   await expect(page.getByRole('img', { name: /444 von 2\.000 kcal/ })).toBeVisible()
 })
 
@@ -383,4 +383,67 @@ test('Über Teller mit Datenschutz und Impressum-Hinweis, ähnliche Rezepte', as
   await page.goto('/rezepte/spaghetti-bolognese')
   await expect(page.getByRole('heading', { name: 'Ähnliche Rezepte' })).toBeVisible()
   await expect(page.getByRole('link', { name: /Lasagne Bolognese/ })).toBeVisible()
+})
+
+test('Schnell-Eintrag, Löschen mit Rückgängig und Mahlzeit als Gericht speichern', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/hinzufuegen?meal=lunch')
+  // Schnell-Eintrag: nur Kalorien
+  await page.getByRole('button', { name: 'Schnell-Eintrag: nur Kalorien' }).click()
+  await page.getByLabel('Kalorien', { exact: true }).fill('650')
+  await page.getByLabel('Was war es? (optional)').fill('Döner beim Imbiss')
+  await page.getByRole('button', { name: 'Zu Mittagessen hinzufügen' }).click()
+  // zweiter Eintrag aus den Grundnahrungsmitteln
+  await page.getByLabel('Lebensmittel suchen').fill('Apfel')
+  await page.getByRole('list', { name: 'Grundnahrungsmittel' }).getByRole('button', { name: /^Apfel 1 Stück/ }).click()
+  await page.getByRole('button', { name: 'Zu Mittagessen hinzufügen' }).click()
+  await expect(page.getByText(/2 Einträge · 731 kcal/)).toBeVisible()
+  await page.getByRole('button', { name: 'Fertig' }).click()
+  await closeBadges(page)
+  await expect(page.getByRole('img', { name: /731 von 2\.000 kcal/ })).toBeVisible()
+  // Löschen und rückgängig machen
+  await page.getByRole('button', { name: /Döner beim Imbiss/ }).click()
+  await page.getByRole('button', { name: 'Löschen' }).click()
+  await expect(page.getByRole('img', { name: /81 von 2\.000 kcal/ })).toBeVisible()
+  await page.getByRole('button', { name: 'Rückgängig' }).click()
+  await expect(page.getByRole('img', { name: /731 von 2\.000 kcal/ })).toBeVisible()
+  await expect(page.getByText('Wiederhergestellt')).toBeVisible()
+  // Mahlzeit als Gericht speichern und wiederverwenden
+  await page.getByRole('button', { name: 'Als Gericht speichern' }).click()
+  await expect(page.getByLabel('Name des Gerichts')).toHaveValue('Mein Mittagessen')
+  await page.getByLabel('Name des Gerichts').fill('Döner-Mittag')
+  await page.getByRole('button', { name: 'Gericht speichern', exact: true }).click()
+  await expect(page.getByText(/Gericht gespeichert/)).toBeVisible()
+  await page.goto('/hinzufuegen?meal=dinner')
+  await page.getByRole('button', { name: 'Gerichte', exact: true }).click()
+  await page.getByRole('button', { name: /Döner-Mittag/ }).click()
+  await page.getByRole('button', { name: 'Zu Abendessen hinzufügen' }).click()
+  await expect(page.getByText(/1 Eintrag · 731 kcal/)).toBeVisible()
+  // Im Editor steht der Schnell-Eintrag als Portion, der Apfel in Gramm
+  await page.goto('/hinzufuegen?meal=dinner')
+  await page.getByRole('button', { name: 'Gerichte', exact: true }).click()
+  await page.getByRole('button', { name: /Döner-Mittag/ }).click()
+  await page.getByRole('link', { name: 'Bearbeiten' }).click()
+  await expect(page.getByLabel('Menge Döner beim Imbiss')).toHaveValue('1')
+  await expect(page.getByLabel('Menge Apfel')).toHaveValue('150')
+})
+
+test('Einkaufsliste: Artikel löschen und Liste leeren lassen sich rückgängig machen', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/einkauf')
+  for (const item of ['Kaffee', '2 l Milch']) {
+    await page.getByLabel('Artikel hinzufügen').fill(item)
+    await page.keyboard.press('Enter')
+  }
+  await expect(page.getByText('Kaffee')).toBeVisible()
+  await page.getByRole('button', { name: 'Kaffee löschen' }).click()
+  await expect(page.getByText('Kaffee', { exact: true })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Rückgängig' }).click()
+  await expect(page.getByText('Kaffee', { exact: true })).toBeVisible()
+  await page.getByRole('button', { name: 'Liste leeren' }).click()
+  await page.getByRole('button', { name: /Alles entfernen/ }).click()
+  await expect(page.getByText('Milch', { exact: true })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Rückgängig' }).click()
+  await expect(page.getByText('Milch', { exact: true })).toBeVisible()
+  await expect(page.getByText('Kaffee', { exact: true })).toBeVisible()
 })

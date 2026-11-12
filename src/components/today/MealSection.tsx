@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Copy, History, Plus } from 'lucide-react'
+import { BookmarkPlus, Copy, History, Plus } from 'lucide-react'
 import type { LogEntry, MealType } from '../../types'
 import { MEAL_LABELS } from '../../lib/meals'
 import { fmtInt } from '../../lib/format'
@@ -17,6 +17,7 @@ export function MealSection({
   yesterday = [],
   onCopy,
   onTakeYesterday,
+  onSaveAsDish,
 }: {
   meal: MealType
   date: string
@@ -26,6 +27,8 @@ export function MealSection({
   yesterday?: LogEntry[]
   onCopy?: () => void
   onTakeYesterday?: () => void
+  /** Ab zwei Einträgen: die Mahlzeit als wiederverwendbares Gericht speichern */
+  onSaveAsDish?: () => void
 }) {
   const total = totalsOf(entries)
   return (
@@ -87,6 +90,18 @@ export function MealSection({
             </li>
           ))}
         </ul>
+      )}
+      {entries.length >= 2 && onSaveAsDish && (
+        <div className="border-t border-line/70 px-2 py-1">
+          <button
+            type="button"
+            onClick={onSaveAsDish}
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-xl px-2 text-sm font-medium text-muted transition hover:bg-surface-2 hover:text-ink"
+          >
+            <BookmarkPlus className="size-4" aria-hidden />
+            Als Gericht speichern
+          </button>
+        </div>
       )}
     </Card>
   )

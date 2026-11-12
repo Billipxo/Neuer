@@ -1,6 +1,7 @@
 import type { LogEntry, MealType, Nutrients } from '../types'
 import { MEAL_TYPES } from '../types'
-import { scaleNutrients, sumNutrients, ZERO } from './nutrition'
+import { roundNutrients, scaleNutrients, sumNutrients, ZERO } from './nutrition'
+import { detectVeggies } from './veggies'
 
 /** Einträge nach Mahlzeit gruppieren (feste Reihenfolge) */
 export function groupByMeal(entries: LogEntry[]): Record<MealType, LogEntry[]> {
@@ -60,4 +61,30 @@ export function copyEntries(entries: LogEntry[], date: string, meal: MealType): 
     recipe_id: e.recipe_id,
     veggies: e.veggies ?? [],
   }))
+}
+
+export interface QuickEntryInput {
+  name?: string
+  kcal: number
+  protein?: number | null
+  carbs?: number | null
+  fat?: number | null
+}
+
+/** Schnell-Eintrag: nur Kalorien (und optional Makros), ohne Lebensmittel dahinter – z. B. Essen im Restaurant */
+export function quickEntry(date: string, meal: MealType, input: QuickEntryInput): Omit<LogEntry, 'id' | 'user_id' | 'created_at'> {
+  const name = input.name?.trim() || 'Schnell-Eintrag'
+  return {
+    date,
+    meal,
+    name,
+    amount: 1,
+    unit: 'serving',
+    grams: null,
+    ...roundNutrients({ kcal: input.kcal, protein: input.protein ?? 0, carbs: input.carbs ?? 0, fat: input.fat ?? 0 }),
+    food_id: null,
+    dish_id: null,
+    recipe_id: null,
+    veggies: detectVeggies(name),
+  }
 }

@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { Check, Plus, ScanBarcode, Search, UtensilsCrossed, WifiOff } from 'lucide-react'
+import { Check, Plus, ScanBarcode, Search, UtensilsCrossed, WifiOff, Zap } from 'lucide-react'
 import { fmtInt } from '../lib/format'
 import type { AmountUnit, Dish, Food, MealType } from '../types'
 import { MEAL_TYPES } from '../types'
-import { MEAL_LABELS } from '../lib/meals'
+import { MEAL_LABELS, mealForHour } from '../lib/meals'
+import { quickEntry, type QuickEntryInput } from '../lib/log'
 import { todayISO } from '../lib/dates'
 import { amountToGrams, dishPerServing, nutrientsForFoodAmount, roundNutrients, scaleNutrients } from '../lib/nutrition'
 import { detectVeggies } from '../lib/veggies'
@@ -33,6 +34,7 @@ import { FoodAmountSheet, type FoodLike } from '../components/add/FoodAmountShee
 import { CustomFoodSheet } from '../components/add/CustomFoodSheet'
 import { BarcodeScannerSheet } from '../components/add/BarcodeScannerSheet'
 import { DishAmountSheet } from '../components/add/DishAmountSheet'
+import { QuickEntrySheet } from '../components/add/QuickEntrySheet'
 
 type Tab = 'recent' | 'favorites' | 'custom' | 'dishes'
 const TABS: { value: Tab; label: string }[] = [
@@ -56,7 +58,11 @@ export function AddFoodPage() {
   const navigate = useNavigate()
   const toast = useToast()
   const date = params.get('date') ?? todayISO()
-  const [meal, setMeal] = useState<MealType>((params.get('meal') as MealType) || 'breakfast')
+  // Ohne Vorgabe (z. B. über eine App-Verknüpfung) passt die Mahlzeit zur Uhrzeit
+  const [meal, setMeal] = useState<MealType>(() => {
+    const wanted = params.get('meal') as MealType | null
+    return wanted && MEAL_TYPES.includes(wanted) ? wanted : mealForHour(new Date().getHours())
+  })
   const [tab, setTab] = useState<Tab>('recent')
   const [query, setQuery] = useState('')
   const debounced = useDebounced(query.trim(), 450)
@@ -74,7 +80,9 @@ export function AddFoodPage() {
   const [selectedDish, setSelectedDish] = useState<Dish | null>(null)
   const [customOpen, setCustomOpen] = useState(false)
   const [editFood, setEditFood] = useState<Food | null>(null)
-  const [scanOpen, setScanOpen] = useState(false)
+  // „?scan=1“ öffnet direkt den Barcode-Scanner, „?schnell=1“ den Schnell-Eintrag (App-Verknüpfungen)
+  const [scanOpen, setScanOpen] = useState(() => params.get('scan') === '1')
+  const [quickOpen, setQuickOpen] = useState(() => params.get('schnell') === '1')
   const [scanMiss, setScanMiss] = useState<string | null>(null)
   const [scanBusy, setScanBusy] = useState(false)
   /** In dieser Sitzung hinzugefügte Einträge – man kann mehrere nacheinander erfassen */
@@ -152,6 +160,14 @@ export function AddFoodPage() {
     setAdded((a) => [...a, { name: stored.name, kcal: n.kcal }])
   }
 
+  async function addQuick(input: QuickEntryInput) {
+    const entry = quickEntry(date, meal, input)
+    await addLog.mutateAsync([entry])
+    toast(`Zu ${MEAL_LABELS[meal]} hinzugefügt`, '✅')
+    setAdded((a) => [...a, { name: entry.name, kcal: entry.kcal }])
+    setQuickOpen(false)
+  }
+
   async function addDish(servings: number) {
     if (!selectedDish) return
     const n = scaleNutrients(dishPerServing(selectedDish), servings)
@@ -226,6 +242,15 @@ export function AddFoodPage() {
               className="min-h-12 w-full rounded-2xl bg-surface pl-11 pr-4 text-base ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-brand"
             />
           </div>
+          <button
+            type="button"
+            onClick={() => setQuickOpen(true)}
+            aria-label="Schnell-Eintrag: nur Kalorien"
+            title="Schnell-Eintrag"
+            className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-surface ring-1 ring-line active:scale-95"
+          >
+            <Zap className="size-5" aria-hidden />
+          </button>
           <button
             type="button"
             onClick={() => setScanOpen(true)}
@@ -310,9 +335,14 @@ export function AddFoodPage() {
                   }
                 />
               )}
-              <Button variant="secondary" block className="mt-2" icon={<Plus className="size-4" aria-hidden />} onClick={() => setCustomOpen(true)}>
-                Eigenes Lebensmittel anlegen
-              </Button>
+              <div className="mt-2 grid grid-cols-2 gap-2">
+                <Button variant="secondary" aria-label="Eigenes Lebensmittel anlegen" icon={<Plus className="size-4" aria-hidden />} onClick={() => setCustomOpen(true)}>
+                  Eigenes Lebensmittel
+                </Button>
+                <Button variant="secondary" icon={<Zap className="size-4" aria-hidden />} onClick={() => setQuickOpen(true)}>
+                  Nur Kalorien
+                </Button>
+              </div>
             </>
           )}
         </>
@@ -378,6 +408,9 @@ export function AddFoodPage() {
           <Button variant="secondary" block className="mt-3" icon={<Plus className="size-4" aria-hidden />} onClick={() => setCustomOpen(true)}>
             „{query.trim()}“ selbst anlegen
           </Button>
+          <Button variant="ghost" block className="mt-1" icon={<Zap className="size-4" aria-hidden />} onClick={() => setQuickOpen(true)}>
+            Nur Kalorien für „{query.trim()}“ eintragen
+          </Button>
         </div>
       )}
 
@@ -409,6 +442,14 @@ export function AddFoodPage() {
         dish={selectedDish}
         onClose={() => setSelectedDish(null)}
         onAdd={addDish}
+        busy={addLog.isPending}
+        confirmLabel={`Zu ${MEAL_LABELS[meal]} hinzufügen`}
+      />
+      <QuickEntrySheet
+        open={quickOpen}
+        onClose={() => setQuickOpen(false)}
+        onAdd={addQuick}
+        initialName={query.trim()}
         busy={addLog.isPending}
         confirmLabel={`Zu ${MEAL_LABELS[meal]} hinzufügen`}
       />

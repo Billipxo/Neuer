@@ -14,6 +14,7 @@ import { Sheet } from '../ui/Sheet'
 import { Button } from '../ui/Button'
 import { NumberInput } from '../ui/NumberInput'
 import { useToast } from '../ui/Toast'
+import { useUndoToast } from '../../hooks/undo'
 import { NutrientGrid } from '../add/NutrientGrid'
 
 /** Geplanten Eintrag bearbeiten, löschen oder als gegessen übernehmen */
@@ -23,6 +24,7 @@ export function PlanItemSheet({ item, onClose }: { item: PlanItem | null; onClos
   const del = useDeletePlanItems()
   const addLog = useAddLogEntries()
   const toast = useToast()
+  const undo = useUndoToast()
   const { recipe } = useResolvedRecipe(item?.recipe_id)
 
   useEffect(() => {
@@ -74,6 +76,7 @@ export function PlanItemSheet({ item, onClose }: { item: PlanItem | null; onClos
               icon={<Trash2 className="size-4" aria-hidden />}
               onClick={async () => {
                 await del.mutateAsync([item.id])
+                undo('Aus dem Plan entfernt', 'plan_items', [item])
                 onClose()
               }}
             >
