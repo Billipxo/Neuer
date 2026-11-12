@@ -96,6 +96,8 @@ export function offToFood(p: OffProduct): NewFood {
     ...p,
     source: 'off',
     piece_g: null,
+    tbsp_g: null,
+    tsp_g: null,
     is_favorite: false,
     last_used_at: null,
     use_count: 0,

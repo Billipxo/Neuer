@@ -2,7 +2,8 @@
  * Rezept-Varianten und eigene Rezepte: Ein Kochbuch-Rezept wird kopiert, Zutaten und Mengen werden geändert,
  * und die Nährwerte werden – wie bei allen Rezepten – aus den Zutaten neu berechnet.
  */
-import { DEFAULT_UNIT_GRAMS, INGREDIENT_LIST, type IngredientInfo } from '../data/ingredients'
+import { DEFAULT_UNIT_GRAMS, type IngredientInfo } from '../data/ingredients'
+import { searchIngredientTable } from './ingredientSearch'
 import { getChapter, type ChapterId } from '../data/chapters'
 import type { RawRecipe, Recipe, RecipeIngredient, RecipeVariant, ShoppingCategory } from '../types'
 import { buildRecipe, getRecipe, isAirfryerNative, RECIPES, recipeSteps, roundAmount } from './recipes'
@@ -105,24 +106,9 @@ export function draftProblems(d: VariantDraft): string[] {
   return out
 }
 
-function norm(s: string): string {
-  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
-}
-
 /** Zutaten der Nährwerttabelle suchen – Treffer am Wortanfang zuerst */
 export function searchIngredients(query: string, limit = 25): IngredientInfo[] {
-  const q = norm(query.trim())
-  if (!q) return []
-  return INGREDIENT_LIST.map((i) => {
-    const name = norm(i.name)
-    const base = norm(i.base)
-    const score = name.startsWith(q) ? 0 : base.startsWith(q) ? 1 : name.includes(q) ? 2 : base.includes(q) ? 3 : -1
-    return { i, score }
-  })
-    .filter((x) => x.score >= 0)
-    .sort((a, b) => a.score - b.score || a.i.name.localeCompare(b.i.name, 'de'))
-    .slice(0, limit)
-    .map((x) => x.i)
+  return searchIngredientTable(query, limit)
 }
 
 let categoryMap: Map<string, ShoppingCategory> | null = null

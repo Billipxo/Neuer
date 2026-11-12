@@ -28,7 +28,7 @@ const food: Food = {
   carbs_100: 58.7,
   fat_100: 7,
   serving_g: 40,
-  piece_g: null,
+  piece_g: null, tbsp_g: null, tsp_g: null,
   image_url: null,
   is_favorite: false,
   last_used_at: null,

@@ -28,10 +28,12 @@ interface Props {
   confirmLabel?: string
 }
 
-export function availableUnits(f: Pick<Food, 'serving_g' | 'piece_g'>): AmountUnit[] {
+export function availableUnits(f: Pick<Food, 'serving_g' | 'piece_g' | 'tbsp_g' | 'tsp_g'>): AmountUnit[] {
   const units: AmountUnit[] = ['g']
   if (f.piece_g) units.push('piece')
   if (f.serving_g) units.push('serving')
+  if (f.tbsp_g) units.push('tbsp')
+  if (f.tsp_g) units.push('tsp')
   return units
 }
 
@@ -46,6 +48,9 @@ export function FoodAmountSheet({ food, onClose, onAdd, onToggleFavorite, onEdit
       setAmount(1)
     } else if (food.piece_g) {
       setUnit('piece')
+      setAmount(1)
+    } else if (food.tbsp_g) {
+      setUnit('tbsp')
       setAmount(1)
     } else {
       setUnit('g')
@@ -78,6 +83,7 @@ export function FoodAmountSheet({ food, onClose, onAdd, onToggleFavorite, onEdit
             {fmt1(food.kcal_100)} kcal pro 100 g
             {food.serving_g ? ` · Portion ${fmt1(food.serving_g)} g` : ''}
             {food.piece_g ? ` · Stück ${fmt1(food.piece_g)} g` : ''}
+            {food.tbsp_g ? ` · EL ${fmt1(food.tbsp_g)} g` : ''}
           </p>
           {onEdit && (
             <Button variant="ghost" size="sm" icon={<Pencil className="size-4" aria-hidden />} onClick={onEdit}>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Trash2 } from 'lucide-react'
 import type { LogEntry, MealType } from '../../types'
 import { MEAL_TYPES } from '../../types'
@@ -15,20 +15,18 @@ import { useToast } from '../ui/Toast'
 
 /** Eintrag bearbeiten (Menge, Mahlzeit) oder löschen */
 export function EntrySheet({ entry, onClose }: { entry: LogEntry | null; onClose: () => void }) {
-  const [amount, setAmount] = useState<number | null>(null)
-  const [meal, setMeal] = useState<MealType>('breakfast')
+  const [form, setForm] = useState<{ id: string; amount: number | null; meal: MealType } | null>(null)
   const update = useUpdateLogEntry()
   const del = useDeleteLogEntry()
   const toast = useToast()
 
-  useEffect(() => {
-    if (entry) {
-      setAmount(Number(entry.amount))
-      setMeal(entry.meal)
-    }
-  }, [entry])
+  // Formular sofort mit dem Eintrag befüllen – ohne die Verzögerung eines Effekts, damit das Feld nie kurz leer ist
+  if (entry && form?.id !== entry.id) setForm({ id: entry.id, amount: Number(entry.amount), meal: entry.meal })
 
-  if (!entry) return null
+  if (!entry || !form || form.id !== entry.id) return null
+  const { amount, meal } = form
+  const setAmount = (v: number | null) => setForm((f) => (f ? { ...f, amount: v } : f))
+  const setMeal = (m: MealType) => setForm((f) => (f ? { ...f, meal: m } : f))
   const preview = amount && amount > 0 ? rescaleEntry({ ...entry, amount: Number(entry.amount) }, amount) : null
 
   return (

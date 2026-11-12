@@ -6,7 +6,8 @@ export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'ver
 export type GoalType = 'lose' | 'maintain' | 'gain' | 'custom'
 /** Ernährungsweise für Rezeptvorschläge */
 export type DietPreference = 'all' | 'vegetarian' | 'vegan'
-export type AmountUnit = 'g' | 'piece' | 'serving'
+/** Mengeneinheit beim Erfassen: Gramm, Stück, Portion, Esslöffel, Teelöffel */
+export type AmountUnit = 'g' | 'piece' | 'serving' | 'tbsp' | 'tsp'
 
 export interface Nutrients {
   kcal: number
@@ -64,6 +65,9 @@ export interface Food {
   serving_g: number | null
   /** Gramm pro Stück (optional) */
   piece_g: number | null
+  /** Gramm pro Esslöffel bzw. Teelöffel (optional), z. B. bei Öl, Honig oder Nussmus */
+  tbsp_g: number | null
+  tsp_g: number | null
   image_url: string | null
   is_favorite: boolean
   last_used_at: string | null

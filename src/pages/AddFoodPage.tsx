@@ -17,9 +17,12 @@ import {
   useEnsureFood,
   useFoods,
   useSaveDish,
+  useSaveFood,
   useToggleFavoriteFood,
   useTouchFood,
+  type NewFood,
 } from '../hooks/data'
+import { basicFoodHint, findStoredBasic, searchBasicFoods } from '../lib/basicFoods'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Segmented, Chip } from '../components/ui/Segmented'
 import { Button } from '../components/ui/Button'
@@ -65,6 +68,7 @@ export function AddFoodPage() {
   const touchFood = useTouchFood()
   const toggleFav = useToggleFavoriteFood()
   const saveDish = useSaveDish()
+  const saveFood = useSaveFood()
 
   const [selected, setSelected] = useState<FoodLike | null>(null)
   const [selectedDish, setSelectedDish] = useState<Dish | null>(null)
@@ -86,7 +90,8 @@ export function AddFoodPage() {
     retry: 0,
   })
 
-  const q = debounced.toLowerCase()
+  // Eigene Lebensmittel und Grundnahrungsmittel reagieren sofort, nur Open Food Facts wartet auf die Eingabepause
+  const q = query.trim().toLowerCase()
   const localFoodHits = useMemo(
     () => (q ? foods.filter((f) => `${f.name} ${f.brand ?? ''}`.toLowerCase().includes(q)).slice(0, 8) : []),
     [foods, q],
@@ -107,10 +112,23 @@ export function AddFoodPage() {
   }, [tab, foods])
 
   const selectedStored = selected?.id ? foods.find((f) => f.id === selected.id) ?? null : null
+  const basicHits = useMemo(
+    () => searchBasicFoods(q).filter((b) => !localFoodHits.some((f) => f.name.trim().toLowerCase() === b.info.name.toLowerCase())),
+    [q, localFoodHits],
+  )
+
+  /** Noch nicht gespeicherte Auswahl (Open Food Facts oder Grundnahrungsmittel) in die eigene Bibliothek übernehmen */
+  async function persist(f: FoodLike): Promise<Food> {
+    if (f.source === 'custom') {
+      const row: NewFood = { ...f, is_favorite: f.is_favorite ?? false, last_used_at: f.last_used_at ?? null, use_count: f.use_count ?? 0 }
+      return saveFood.mutateAsync(row)
+    }
+    return ensureFood.mutateAsync(f as OffProduct)
+  }
 
   async function addFood(amount: number, unit: AmountUnit) {
     if (!selected) return
-    const stored: Food = selected.id ? (selectedStored ?? (selected as Food)) : await ensureFood.mutateAsync(selected as OffProduct)
+    const stored: Food = selected.id ? (selectedStored ?? (selected as Food)) : await persist(selected)
     const n = nutrientsForFoodAmount(stored, amount, unit)
     if (!n) return
     await addLog.mutateAsync([
@@ -315,6 +333,22 @@ export function AddFoodPage() {
               </ul>
             </>
           )}
+          {basicHits.length > 0 && (
+            <>
+              <h2 className="px-1 pt-4 text-sm font-semibold text-muted">Grundnahrungsmittel</h2>
+              <ul className="mt-1 space-y-1" aria-label="Grundnahrungsmittel">
+                {basicHits.map(({ info, food }) => (
+                  <FoodRow
+                    key={info.name}
+                    title={info.name}
+                    subtitle={basicFoodHint(info)}
+                    kcal={info.kcal}
+                    onClick={() => setSelected(findStoredBasic(foods, info.name) ?? food)}
+                  />
+                ))}
+              </ul>
+            </>
+          )}
           <h2 className="px-1 pt-4 text-sm font-semibold text-muted">Open Food Facts</h2>
           {off.isFetching && <Spinner label="Suche läuft …" />}
           {off.error && !off.isFetching && (
@@ -351,12 +385,12 @@ export function AddFoodPage() {
         food={selectedStored ?? selected}
         onClose={() => setSelected(null)}
         onAdd={addFood}
-        busy={addLog.isPending || ensureFood.isPending}
+        busy={addLog.isPending || ensureFood.isPending || saveFood.isPending}
         confirmLabel={`Zu ${MEAL_LABELS[meal]} hinzufügen`}
         onToggleFavorite={
           selected
             ? async () => {
-                const stored = selectedStored ?? (await ensureFood.mutateAsync(selected as OffProduct))
+                const stored = selectedStored ?? (await persist(selected))
                 const updated = await toggleFav.mutateAsync(stored)
                 setSelected(updated)
               }

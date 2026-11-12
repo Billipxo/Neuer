@@ -141,7 +141,7 @@ export function foodPer100(f: Pick<Food, 'kcal_100' | 'protein_100' | 'carbs_100
 export function amountToGrams(
   amount: number,
   unit: AmountUnit,
-  food: Pick<Food, 'serving_g' | 'piece_g'>,
+  food: Pick<Food, 'serving_g' | 'piece_g' | 'tbsp_g' | 'tsp_g'>,
 ): number | null {
   if (!(amount > 0)) return 0
   switch (unit) {
@@ -151,6 +151,10 @@ export function amountToGrams(
       return food.piece_g ? amount * food.piece_g : null
     case 'serving':
       return food.serving_g ? amount * food.serving_g : null
+    case 'tbsp':
+      return food.tbsp_g ? amount * food.tbsp_g : null
+    case 'tsp':
+      return food.tsp_g ? amount * food.tsp_g : null
   }
 }
 

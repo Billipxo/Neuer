@@ -28,6 +28,8 @@ export function CustomFoodSheet({ open, onClose, onSaved, food, initialBarcode, 
   const [values, setValues] = useState<Record<keyof Nutrients, number | null>>({ kcal: null, protein: null, carbs: null, fat: null })
   const [servingG, setServingG] = useState<number | null>(null)
   const [pieceG, setPieceG] = useState<number | null>(null)
+  const [tbspG, setTbspG] = useState<number | null>(null)
+  const [tspG, setTspG] = useState<number | null>(null)
   const save = useSaveFood()
   const del = useDeleteFood()
   const toast = useToast()
@@ -44,6 +46,8 @@ export function CustomFoodSheet({ open, onClose, onSaved, food, initialBarcode, 
     )
     setServingG(food?.serving_g ?? null)
     setPieceG(food?.piece_g ?? null)
+    setTbspG(food?.tbsp_g ?? null)
+    setTspG(food?.tsp_g ?? null)
   }, [open, food, initialName])
 
   const n: Nutrients = {
@@ -69,6 +73,8 @@ export function CustomFoodSheet({ open, onClose, onSaved, food, initialBarcode, 
       fat_100: per100.fat,
       serving_g: servingG,
       piece_g: pieceG,
+      tbsp_g: tbspG,
+      tsp_g: tspG,
       image_url: food?.image_url ?? null,
       is_favorite: food?.is_favorite ?? false,
       last_used_at: food?.last_used_at ?? null,
@@ -144,6 +150,11 @@ export function CustomFoodSheet({ open, onClose, onSaved, food, initialBarcode, 
           <NumberInput label={`Fett ${unitLabel}`} suffix="g" value={values.fat} min={0} onChange={(v) => setValues((s) => ({ ...s, fat: v }))} />
         </div>
         <NumberInput label="Gewicht pro Stück (optional)" suffix="g" value={pieceG} min={0} onChange={setPieceG} hint="Z. B. 60 g für ein Ei – dann kannst du in Stück eintragen." />
+        <div className="grid grid-cols-2 gap-3">
+          <NumberInput label="Gramm pro EL (optional)" suffix="g" value={tbspG} min={0} onChange={setTbspG} />
+          <NumberInput label="Gramm pro TL (optional)" suffix="g" value={tspG} min={0} onChange={setTspG} />
+        </div>
+        <p className="-mt-2 text-xs text-muted">Praktisch für Öl, Honig, Nussmus oder Saucen – dann lässt sich in Löffeln eintragen.</p>
         {save.error && (
           <p role="alert" className="text-sm text-danger">
             {(save.error as Error).message}

@@ -22,7 +22,7 @@ export function logToCsv(entries: LogEntry[]): string {
       MEAL_LABELS[e.meal],
       e.name,
       Number(e.amount),
-      { g: 'g', piece: 'Stück', serving: 'Portion' }[e.unit],
+      { g: 'g', piece: 'Stück', serving: 'Portion', tbsp: 'EL', tsp: 'TL' }[e.unit],
       e.grams === null ? null : Number(e.grams),
       Number(e.kcal),
       Number(e.protein),
