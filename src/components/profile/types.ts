@@ -7,7 +7,14 @@ export function defaultDraft(existing?: Profile | null): ProfileDraft {
   if (existing) {
     const { id: _id, created_at: _c, ...rest } = existing
     // Felder älterer Profile ergänzen
-    return { ...rest, has_airfryer: rest.has_airfryer ?? true, favorite_recipes: rest.favorite_recipes ?? [], diet: rest.diet ?? 'all', avoid: rest.avoid ?? [] }
+    return {
+      ...rest,
+      has_airfryer: rest.has_airfryer ?? true,
+      favorite_recipes: rest.favorite_recipes ?? [],
+      diet: rest.diet ?? 'all',
+      avoid: rest.avoid ?? [],
+      target_weight_kg: rest.target_weight_kg ?? null,
+    }
   }
   return {
     name: '',
@@ -15,6 +22,7 @@ export function defaultDraft(existing?: Profile | null): ProfileDraft {
     sex: null,
     height_cm: null,
     weight_kg: null,
+    target_weight_kg: null,
     activity_level: 'light',
     goal: 'maintain',
     kcal_target: 2000,

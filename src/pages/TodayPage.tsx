@@ -17,6 +17,7 @@ import { MealSection } from '../components/today/MealSection'
 import { EntrySheet } from '../components/today/EntrySheet'
 import { WaterSheet } from '../components/today/WaterSheet'
 import { WaterReminder } from '../components/today/WaterReminder'
+import { WeekGlance } from '../components/today/WeekGlance'
 import { CopyMealSheet } from '../components/today/CopyMealSheet'
 import { useToast } from '../components/ui/Toast'
 import { WeightSheet } from '../components/today/WeightSheet'
@@ -106,6 +107,7 @@ export function TodayPage() {
       </div>
 
       <WaterReminder date={date} ml={waterMl} target={profile.water_target_ml} onOpen={() => setWaterOpen(true)} />
+      <WeekGlance date={date} />
 
       <div className="mt-6 space-y-3">
         {MEAL_TYPES.map((m) => (

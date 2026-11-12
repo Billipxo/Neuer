@@ -23,6 +23,8 @@ import { EntrySheet } from '../components/today/EntrySheet'
 import { WeightSheet } from '../components/today/WeightSheet'
 import { WaterSheet } from '../components/today/WaterSheet'
 import { KcalChart, MacroChart, WaterChart, WeightChart } from '../components/history/Charts'
+import { ProgressCard } from '../components/history/ProgressCard'
+import { WeekReviewCard } from '../components/history/WeekReviewCard'
 
 type View = 'day' | 'week' | 'month'
 
@@ -172,6 +174,7 @@ function PeriodView({ view, anchor, onAnchor }: { view: 'week' | 'month'; anchor
       </dl>
 
       <div className="mt-4 space-y-4">
+        {view === 'week' && <WeekReviewCard days={days} entries={entries} water={water} weights={weights} profile={profile} />}
         {stats.loggedDays === 0 ? (
           <EmptyState title="Noch keine Einträge in diesem Zeitraum" text="Sobald du Mahlzeiten einträgst, erscheinen hier deine Diagramme." />
         ) : (
@@ -180,6 +183,7 @@ function PeriodView({ view, anchor, onAnchor }: { view: 'week' | 'month'; anchor
             <MacroChart data={series} />
           </>
         )}
+        <ProgressCard weights={weights} profile={profile} />
         {weightData.length > 0 ? (
           <WeightChart data={weightData} />
         ) : (

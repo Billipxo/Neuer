@@ -70,7 +70,7 @@ export function OnboardingPage({ existing }: { existing: Profile | null }) {
             <p className="mt-1 mb-6 text-muted">
               Damit kann die App einen Vorschlag für dein Tagesziel berechnen. Du kannst den Schritt auch überspringen.
             </p>
-            <BodyForm draft={draft} onChange={patch} />
+            <BodyForm draft={draft} onChange={patch} showTarget={false} />
           </>
         )}
         {step === 2 && (

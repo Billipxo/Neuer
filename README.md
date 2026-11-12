@@ -20,10 +20,10 @@ läuft danach im Vollbild wie eine native App – ein App Store ist nicht nötig
 | **Was habe ich da?** | Zutaten antippen → passende Rezepte („Alles da“, „Fast alles da“), fehlende Zutaten mit einem Tipp auf die Einkaufsliste, Vorrat aus der Einkaufsliste übernehmen. |
 | **Wochenplaner** | Mo–So mit vier Slots pro Tag, Belegung per Rezept, eigenem Gericht oder Freitext, Tages- und Wochensummen, „Woche vorschlagen“ und „Als gegessen eintragen“. |
 | **Einkaufsliste** | Aus dem Wochenplan erzeugen (Zutaten zusammenführen, Mengen addieren, nach Kategorien sortieren), abhaken, eigene Artikel („2 l Milch“), „bereits im Vorrat“, Liste leeren, Liste teilen (z. B. per Messenger). |
-| **Verlauf** | Tagesprotokoll mit Datumsauswahl, Wochen- und Monatsdiagramme (Recharts) für kcal, Makros, Gewicht und Wasser, jeweils auch als Tabelle. |
+| **Verlauf** | Tagesprotokoll mit Datumsauswahl, Wochen- und Monatsdiagramme (Recharts) für kcal, Makros, Gewicht und Wasser, jeweils auch als Tabelle. **Wochenrückblick** als neutrale Bilanz (Tage, Ø kcal und Eiweiß, Zielbereich, Wasser, Gemüsesorten, Gewicht zur Vorwoche, meistgekochtes Rezept) und **Gewicht & Ziel** mit 7-Tage-Mittel, Trend pro Woche und Weg zum Zielgewicht. Die Heute-Seite zeigt eine Zeile zur laufenden Woche. |
 | **Erfolge** | 10 Abzeichen mit Fortschritt im Profil und kurzer Animation beim Freischalten, Serie ohne Druck. |
 | **Offline** | Ohne Verbindung weiter eintragen: Änderungen landen in einer Warteschlange und werden automatisch übertragen, sobald wieder Netz da ist. |
-| **Einstellungen** | Tagesziel, Makros, Profil, Wasserziel, Ernährungsweise (alles/vegetarisch/vegan), Unverträglichkeiten & Allergien (Gluten, Milch, Ei, Nüsse, Soja, Sesam, Fisch), Heißluftfritteuse vorhanden, Farbschema (System/Hell/Dunkel), Export als CSV oder JSON, Abmelden, Konto löschen (mit Bestätigung). |
+| **Einstellungen** | Tagesziel, Makros, Profil, Wasserziel, Ernährungsweise (alles/vegetarisch/vegan), Unverträglichkeiten & Allergien (Gluten, Milch, Ei, Nüsse, Soja, Sesam, Fisch), optionales Zielgewicht, Heißluftfritteuse vorhanden, Farbschema (System/Hell/Dunkel), Export als CSV oder JSON, Abmelden, Konto löschen (mit Bestätigung). |
 
 ## Technik
 
@@ -161,6 +161,7 @@ Entscheidungen, die ich ohne Rückfrage getroffen habe:
 - **Varianten mit Heißluftfritteuse**: Eine Variante hat genau eine Zubereitungsart. Beim Abwandeln eines Backofen-Rezepts mit Heißluft-Variante wählt man, welche Schritte übernommen werden; die Angaben zu Temperatur und Garzeit lassen sich anpassen.
 - Wird eine Variante gelöscht, bleiben bereits eingetragene Mahlzeiten und Planeinträge mit ihrem Namen und ihren Nährwerten erhalten – nur die Verknüpfung zum Rezept fehlt dann.
 - **„Zum Tagesplan hinzufügen“** bietet zwei Wege: als gegessen ins Tagesprotokoll oder als Eintrag in den Wochenplan.
+- **Gewichtstrend** = Ausgleichsgerade über die Einträge der letzten 28 Tage (ab 3 Einträgen über mindestens 7 Tage), angezeigt als Veränderung pro Woche; der aktuelle Wert ist das Mittel der letzten 7 Tage. Die Hochrechnung zum Zielgewicht (Migration `…0010_target_weight.sql`) erscheint nur, wenn der Trend in Richtung Ziel zeigt, und wird ausdrücklich als Hochrechnung bezeichnet. Der Wochenrückblick nennt Beobachtungen ohne Bewertung.
 - **Motivationszeilen und Erfolge** sind bewusst neutral formuliert. Überschreitungen werden in Orange statt Rot dargestellt, ohne Warnungen.
 
 **Erfassen**

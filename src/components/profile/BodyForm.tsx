@@ -5,7 +5,8 @@ import { Segmented } from '../ui/Segmented'
 import { Select } from '../ui/Field'
 import type { ProfileDraft } from './types'
 
-export function BodyForm({ draft, onChange }: { draft: ProfileDraft; onChange: (patch: Partial<ProfileDraft>) => void }) {
+/** Körperdaten; das optionale Zielgewicht wird im Onboarding ausgeblendet, damit der Einstieg kurz bleibt */
+export function BodyForm({ draft, onChange, showTarget = true }: { draft: ProfileDraft; onChange: (patch: Partial<ProfileDraft>) => void; showTarget?: boolean }) {
   return (
     <div className="space-y-4">
       <div>
@@ -28,6 +29,17 @@ export function BodyForm({ draft, onChange }: { draft: ProfileDraft; onChange: (
         <NumberInput label="Größe" suffix="cm" value={draft.height_cm} min={0} max={260} onChange={(v) => onChange({ height_cm: v })} />
         <NumberInput label="Gewicht" suffix="kg" value={draft.weight_kg} min={0} max={500} onChange={(v) => onChange({ weight_kg: v })} />
       </div>
+      {showTarget && (
+        <NumberInput
+          label="Zielgewicht (optional)"
+          suffix="kg"
+          value={draft.target_weight_kg}
+          min={0}
+          max={500}
+          onChange={(v) => onChange({ target_weight_kg: v })}
+          hint="Zeigt im Verlauf den Weg dorthin – als Orientierung, ohne Druck."
+        />
+      )}
       <Select
         label="Aktivität im Alltag"
         value={draft.activity_level ?? 'light'}

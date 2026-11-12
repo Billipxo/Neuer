@@ -31,6 +31,8 @@ export interface Profile {
   sex: Sex | null
   height_cm: number | null
   weight_kg: number | null
+  /** Optionales Zielgewicht – nur für den Fortschritt im Verlauf */
+  target_weight_kg: number | null
   activity_level: ActivityLevel | null
   goal: GoalType
   kcal_target: number

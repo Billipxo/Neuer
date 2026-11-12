@@ -140,6 +140,7 @@ Dateien aus `supabase/migrations/` im SQL Editor ausführen (die Dateinamen sind
 - `20261111000007_recipe_variants.sql` – Eigene Rezepte und abgewandelte Varianten
 - `20261111000008_units_basics.sql` – Erfassen in Esslöffeln und Teelöffeln
 - `20261111000009_avoid.sql` – Unverträglichkeiten und Allergien im Profil
+- `20261111000010_target_weight.sql` – Optionales Zielgewicht
 
 Wer noch gar nichts eingerichtet hat, nimmt wie oben einfach die komplette `supabase/setup.sql` – sie enthält alles.
 
