@@ -77,6 +77,18 @@ gib ihn nirgends ein.
 4. **Deploy** klicken und 1–2 Minuten warten.
 5. Du bekommst eine Adresse wie **`https://neuer-xyz.vercel.app`**. Das ist deine App.
 
+### Impressum und Kontakt (empfohlen)
+
+Sobald andere Personen die App nutzen, braucht sie ein Impressum. Trage in Vercel unter **Settings → Environment Variables**
+zwei weitere Werte ein und klicke danach auf **Redeploy**:
+
+| Name | Wert |
+|---|---|
+| `VITE_IMPRESSUM` | Name, Anschrift und ggf. weitere Pflichtangaben – Zeilenumbrüche sind erlaubt |
+| `VITE_CONTACT_EMAIL` | eine E-Mail-Adresse für Rückfragen |
+
+Beides erscheint unter **Profil → Über Teller, Datenschutz & Impressum** und auf der Anmeldeseite.
+
 ## Schritt 7 – Supabase sagen, wo die App wohnt
 
 1. In Supabase: **Authentication** → **URL Configuration**.

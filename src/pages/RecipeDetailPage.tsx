@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Navigate, Link, useNavigate } from 'react-router-dom'
 import { ChefHat, Clock, Heart, History, Hourglass, Lightbulb, Minus, Pencil, Plus, Share2, ShoppingBasket, Thermometer, Trash2, Users, CalendarPlus, Wand2 } from 'lucide-react'
-import { hasAirfryerVariant, isAirfryerNative, recipeEmoji, recipeNutrients, recipeShareText, recipeSteps, scaleIngredients, TAG_LABELS } from '../lib/recipes'
+import { hasAirfryerVariant, isAirfryerNative, RECIPES, recipeEmoji, recipeNutrients, recipeShareText, recipeSteps, scaleIngredients, similarRecipes, TAG_LABELS } from '../lib/recipes'
 import { formatDiff, nutritionDiff } from '../lib/variants'
 import { ALLERGEN_LABELS } from '../lib/recipeNutrition'
 import { useDeleteVariant, useResolvedRecipe, useVariantRecipes } from '../hooks/variants'
@@ -48,6 +48,7 @@ export function RecipeDetailPage() {
   const ownVariants = variants.map((v, i) => ({ v, r: mine[i] })).filter((x) => x.v.base_recipe_id === recipe.id).map((x) => x.r)
   const diff = own && base ? formatDiff(nutritionDiff(recipe, base)) : []
   const avoided = recipe.diet.allergens.filter((a) => profile?.avoid?.includes(a))
+  const similar = similarRecipes(base ?? recipe, RECIPES)
   const ingredients = scaleIngredients(recipe, servings)
   const variant = hasAirfryerVariant(recipe)
   const activeMethod = method ?? (hasAirfryer ? 'airfryer' : 'oven')
@@ -340,6 +341,16 @@ export function RecipeDetailPage() {
               </li>
             ))}
           </ul>
+        </>
+      )}
+      {similar.length > 0 && (
+        <>
+          <SectionTitle>Ähnliche Rezepte</SectionTitle>
+          <div className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2">
+            {similar.map((r) => (
+              <RecipeTile key={r.id} recipe={r} />
+            ))}
+          </div>
         </>
       )}
       {own && (

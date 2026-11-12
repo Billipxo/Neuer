@@ -1,4 +1,6 @@
 import { useState, type FormEvent } from 'react'
+import { Sheet } from '../components/ui/Sheet'
+import { AboutContent } from '../components/about/AboutContent'
 import { MailCheck, Sparkles } from 'lucide-react'
 import { useAuth } from '../app/auth'
 import { isSupabaseConfigured } from '../lib/supabase'
@@ -17,6 +19,7 @@ function loginError(msg: string): string {
 }
 
 export function LoginPage() {
+  const [aboutOpen, setAboutOpen] = useState(false)
   const { sendMagicLink, verifyCode, startLocalMode } = useAuth()
   const [code, setCode] = useState('')
   const [verifying, setVerifying] = useState(false)
@@ -131,6 +134,14 @@ export function LoginPage() {
           <p className="mt-1 text-xs text-muted">Demo-Modus: Daten bleiben nur auf diesem Gerät.</p>
         </div>
       )}
+      <p className="mt-10 text-center text-xs text-muted">
+        <button type="button" onClick={() => setAboutOpen(true)} className="min-h-9 rounded-lg px-2 underline-offset-2 hover:underline">
+          Über Teller · Datenschutz · Impressum
+        </button>
+      </p>
+      <Sheet open={aboutOpen} onClose={() => setAboutOpen(false)} title="Über Teller" tall>
+        <AboutContent demo={showDemo} />
+      </Sheet>
     </main>
   )
 }

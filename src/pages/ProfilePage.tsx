@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { LogOut, Moon } from 'lucide-react'
+import { Info, LogOut, Moon } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../app/auth'
 import { applyTheme, getThemePref, type ThemePref } from '../app/theme'
 import { useProfile, useSaveProfile } from '../hooks/data'
@@ -113,6 +114,9 @@ export function ProfilePage() {
         <Button variant="secondary" block icon={<LogOut className="size-4" aria-hidden />} onClick={() => signOut()}>
           {store?.kind === 'local' ? 'Demo-Modus verlassen' : 'Abmelden'}
         </Button>
+        <Link to="/ueber" className="flex min-h-11 items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-brand hover:bg-surface-2">
+          <Info className="size-4" aria-hidden /> Über Teller, Datenschutz & Impressum
+        </Link>
       </Card>
 
       <p className="mt-6 px-1 text-center text-xs text-muted">

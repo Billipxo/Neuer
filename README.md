@@ -23,6 +23,7 @@ läuft danach im Vollbild wie eine native App – ein App Store ist nicht nötig
 | **Verlauf** | Tagesprotokoll mit Datumsauswahl, Wochen- und Monatsdiagramme (Recharts) für kcal, Makros, Gewicht und Wasser, jeweils auch als Tabelle. **Wochenrückblick** als neutrale Bilanz (Tage, Ø kcal und Eiweiß, Zielbereich, Wasser, Gemüsesorten, Gewicht zur Vorwoche, meistgekochtes Rezept) und **Gewicht & Ziel** mit 7-Tage-Mittel, Trend pro Woche und Weg zum Zielgewicht. Die Heute-Seite zeigt eine Zeile zur laufenden Woche. |
 | **Erfolge** | 10 Abzeichen mit Fortschritt im Profil und kurzer Animation beim Freischalten, Serie ohne Druck. |
 | **Offline** | Ohne Verbindung weiter eintragen: Änderungen landen in einer Warteschlange und werden automatisch übertragen, sobald wieder Netz da ist. |
+| **Über & Datenschutz** | Seite „Über Teller“ (auch von der Anmeldeseite aus erreichbar): was wo gespeichert wird, welche Dienste beteiligt sind (nur Open Food Facts), wie man exportiert und löscht, Gesundheitshinweis, Impressum und Kontakt aus `VITE_IMPRESSUM`/`VITE_CONTACT_EMAIL`, Versionsnummer. Rezeptseiten zeigen „Ähnliche Rezepte“. |
 | **Einstellungen** | Tagesziel, Makros, Profil, Wasserziel, Ernährungsweise (alles/vegetarisch/vegan), Unverträglichkeiten & Allergien (Gluten, Milch, Ei, Nüsse, Soja, Sesam, Fisch), optionales Zielgewicht, Heißluftfritteuse vorhanden, Farbschema (System/Hell/Dunkel), Export als CSV oder JSON, Abmelden, Konto löschen (mit Bestätigung). |
 
 ## Technik
@@ -162,6 +163,8 @@ Entscheidungen, die ich ohne Rückfrage getroffen habe:
 - Wird eine Variante gelöscht, bleiben bereits eingetragene Mahlzeiten und Planeinträge mit ihrem Namen und ihren Nährwerten erhalten – nur die Verknüpfung zum Rezept fehlt dann.
 - **„Zum Tagesplan hinzufügen“** bietet zwei Wege: als gegessen ins Tagesprotokoll oder als Eintrag in den Wochenplan.
 - **Gewichtstrend** = Ausgleichsgerade über die Einträge der letzten 28 Tage (ab 3 Einträgen über mindestens 7 Tage), angezeigt als Veränderung pro Woche; der aktuelle Wert ist das Mittel der letzten 7 Tage. Die Hochrechnung zum Zielgewicht (Migration `…0010_target_weight.sql`) erscheint nur, wenn der Trend in Richtung Ziel zeigt, und wird ausdrücklich als Hochrechnung bezeichnet. Der Wochenrückblick nennt Beobachtungen ohne Bewertung.
+- **Impressum und Kontakt** kommen aus Umgebungsvariablen, weil sie je Betreiber verschieden sind; fehlen sie, weist die Seite darauf hin. Die Datenschutz-Angaben beschreiben den tatsächlichen Aufbau (Supabase, Open Food Facts, lokale Kopie) – es gibt keine Analyse- oder Werbedienste, daher auch keine Einwilligungsabfrage.
+- **Ähnliche Rezepte** werden über Kapitel, gemeinsame Hauptzutaten (Oberbegriffe ohne Salz, Öl, Zwiebeln …) und Eigenschaften bestimmt; bei Varianten gilt das Original als Bezug.
 - **Motivationszeilen und Erfolge** sind bewusst neutral formuliert. Überschreitungen werden in Orange statt Rot dargestellt, ohne Warnungen.
 
 **Erfassen**

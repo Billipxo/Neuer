@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterRecipes, recommendRecipes, RECIPES, roundAmount, scaleIngredients, recipeVeggies, getRecipe, recipeEmoji, matchesDiet } from './recipes'
+import { filterRecipes, recommendRecipes, RECIPES, roundAmount, scaleIngredients, recipeVeggies, getRecipe, recipeEmoji, matchesDiet, similarRecipes } from './recipes'
 import { CATEGORY_ORDER } from './shopping'
 import { CHAPTERS } from '../data/chapters'
 import { MEAL_TYPES } from '../types'
@@ -60,6 +60,16 @@ describe('Rezept-Datensatz', () => {
     const erdnuss = getRecipe('erdnuss-nudeln-tofu')!
     expect(matchesDiet(erdnuss, 'vegan', ['nuts'])).toBe(false)
     expect(matchesDiet(erdnuss, 'vegan', ['fish'])).toBe(true)
+  })
+  it('findet ähnliche Rezepte', () => {
+    const bolo = getRecipe('spaghetti-bolognese')!
+    const similar = similarRecipes(bolo, RECIPES)
+    expect(similar.length).toBeGreaterThan(0)
+    expect(similar.length).toBeLessThanOrEqual(6)
+    expect(similar.map((r) => r.id)).not.toContain('spaghetti-bolognese')
+    expect(similar.map((r) => r.id)).toEqual(expect.arrayContaining(['lasagne-bolognese']))
+    // jedes Rezept des Kochbuchs hat Nachbarn oder eben keine – aber nie sich selbst
+    for (const r of RECIPES.slice(0, 40)) expect(similarRecipes(r, RECIPES).map((x) => x.id)).not.toContain(r.id)
   })
   it('deckt alle Mahlzeitenarten ab', () => {
     for (const m of MEAL_TYPES) expect(RECIPES.filter((r) => r.meal.includes(m)).length).toBeGreaterThanOrEqual(5)

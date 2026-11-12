@@ -23,6 +23,7 @@ const PantryPage = lazy(() => import('./pages/PantryPage').then((m) => ({ defaul
 const KnowledgePage = lazy(() => import('./pages/KnowledgePage').then((m) => ({ default: m.KnowledgePage })))
 const GuidePage = lazy(() => import('./pages/GuidePage').then((m) => ({ default: m.GuidePage })))
 const CookModePage = lazy(() => import('./pages/CookModePage').then((m) => ({ default: m.CookModePage })))
+const AboutPage = lazy(() => import('./pages/AboutPage').then((m) => ({ default: m.AboutPage })))
 const VariantEditorPage = lazy(() => import('./pages/VariantEditorPage').then((m) => ({ default: m.VariantEditorPage })))
 
 
@@ -69,6 +70,7 @@ function Authed() {
       <Route element={<AppShell items={NAV_ITEMS} />}>
         <Route index element={<TodayPage />} />
         <Route path="profil" element={<ProfilePage />} />
+        <Route path="ueber" element={<AboutPage />} />
         <Route path="rezepte" element={<RecipesPage />} />
         <Route path="rezepte/wissen" element={<KnowledgePage />} />
         <Route path="rezepte/zutaten" element={<PantryPage />} />

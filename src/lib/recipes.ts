@@ -2,7 +2,7 @@ import rawRecipes from '../data/recipes.json'
 import type { Allergen, DietPreference, MealType, Nutrients, RawRecipe, Recipe, RecipeIngredient } from '../types'
 import { scaleNutrients } from './nutrition'
 import { detectVeggies } from './veggies'
-import { deriveTags, dietInfo, nutritionPerServing } from './recipeNutrition'
+import { deriveTags, dietInfo, ingredientInfo, nutritionPerServing } from './recipeNutrition'
 
 /** Rezept um berechnete Nährwerte, Ernährungsform und abgeleitete Tags ergänzen */
 export function buildRecipe(raw: RawRecipe): Recipe {
@@ -322,6 +322,41 @@ function formatAmount(amount: number | null, unit: string): string {
   if (amount === null) return ''
   const n = String(Math.round(amount * 100) / 100).replace('.', ',')
   return unit ? `${n} ${unit}` : n
+}
+
+/** Tags, die zwei Rezepte wirklich ähnlich machen (Ernährungsform allein reicht nicht) */
+const SIMILAR_TAGS = ['one-pot', 'klassiker', 'suess', 'meal-prep', 'heissluftfritteuse', 'low-carb', 'proteinreich']
+
+function mainBases(r: Recipe): Set<string> {
+  const out = new Set<string>()
+  for (const i of r.ingredients) {
+    const info = ingredientInfo(i.name)
+    if (info?.staple || info?.basic) continue
+    out.add(info?.base ?? i.name)
+  }
+  return out
+}
+
+/**
+ * Ähnliche Rezepte: gleiches Kapitel, gemeinsame Hauptzutaten und Eigenschaften zählen; Ergebnis nach Ähnlichkeit,
+ * bei Gleichstand nach ähnlicher Kalorienzahl.
+ */
+export function similarRecipes(recipe: Recipe, all: Recipe[], limit = 6): Recipe[] {
+  const own = mainBases(recipe)
+  const score = (r: Recipe) => {
+    let s = r.chapter === recipe.chapter ? 2 : 0
+    for (const t of SIMILAR_TAGS) if (recipe.tags.includes(t) && r.tags.includes(t)) s += 1
+    for (const b of mainBases(r)) if (own.has(b)) s += 1
+    if (r.meal.some((m) => recipe.meal.includes(m))) s += 0.5
+    return s
+  }
+  return all
+    .filter((r) => r.id !== recipe.id && r.title !== recipe.title)
+    .map((r) => ({ r, s: score(r) }))
+    .filter((x) => x.s >= 3)
+    .sort((a, b) => b.s - a.s || Math.abs(a.r.nutrition.kcal - recipe.nutrition.kcal) - Math.abs(b.r.nutrition.kcal - recipe.nutrition.kcal))
+    .slice(0, limit)
+    .map((x) => x.r)
 }
 
 export const DIET_LABELS: Record<DietPreference, string> = {
