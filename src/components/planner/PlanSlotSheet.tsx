@@ -49,11 +49,11 @@ export function PlanSlotSheet({
     () =>
       slot
         ? filterRecipes(
-            [...ownRecipes, ...RECIPES].filter((r) => matchesDiet(r, profile?.diet)),
+            [...ownRecipes, ...RECIPES].filter((r) => matchesDiet(r, profile?.diet, profile?.avoid)),
             { meal: query ? null : slot.meal, keyword: query },
           )
         : [],
-    [slot, query, profile?.diet, ownRecipes],
+    [slot, query, profile?.diet, profile?.avoid, ownRecipes],
   )
   if (!slot) return null
 

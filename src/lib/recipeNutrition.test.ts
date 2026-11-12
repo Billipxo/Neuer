@@ -51,19 +51,19 @@ describe('Nährwerte pro Portion', () => {
 
 describe('Ernährungsform und Tags', () => {
   it('erkennt vegetarisch, vegan, glutenfrei und tierisches Lab', () => {
-    expect(dietInfo([ing('Tofu (natur)', 200, 'g'), ing('Reis', 100, 'g')])).toEqual({ vegetarian: true, vegan: true, glutenFree: true, animalRennet: false })
+    expect(dietInfo([ing('Tofu (natur)', 200, 'g'), ing('Reis', 100, 'g')])).toEqual({ vegetarian: true, vegan: true, glutenFree: true, animalRennet: false, allergens: ['soy'] })
     expect(dietInfo([ing('Eier', 2, 'Stück'), ing('Vollkornbrot', 1, 'Scheibe')])).toMatchObject({ vegetarian: true, vegan: false, glutenFree: false })
     expect(dietInfo([ing('Hähnchenbrust', 200, 'g')])).toMatchObject({ vegetarian: false, vegan: false })
     expect(dietInfo([ing('Honig', 1, 'TL')]).vegan).toBe(false)
-    expect(dietInfo([ing('Parmesan', 20, 'g')])).toMatchObject({ vegetarian: true, vegan: false, animalRennet: true })
+    expect(dietInfo([ing('Parmesan', 20, 'g')])).toMatchObject({ vegetarian: true, vegan: false, animalRennet: true, allergens: ['milk'] })
   })
   it('leitet Tags aus Nährwerten ab und ersetzt handgepflegte', () => {
-    const diet = { vegetarian: true, vegan: false, glutenFree: false, animalRennet: false }
+    const diet = { vegetarian: true, vegan: false, glutenFree: false, animalRennet: false, allergens: [] }
     const tags = deriveTags({ time_min: 10, tags: ['meal-prep', 'vegan'] }, { kcal: 300, protein: 30, carbs: 10, fat: 12, fiber: 9 }, diet)
     expect(tags).toEqual(['vegetarisch', 'proteinreich', 'low-carb', 'ballaststoffreich', 'schnell', 'meal-prep'])
   })
   it('zählt Wartezeit bei „schnell“ mit', () => {
-    const diet = { vegetarian: true, vegan: true, glutenFree: true, animalRennet: false }
+    const diet = { vegetarian: true, vegan: true, glutenFree: true, animalRennet: false, allergens: [] }
     const n = { kcal: 300, protein: 8, carbs: 40, fat: 10, fiber: 3 }
     expect(deriveTags({ time_min: 10, rest_min: 120 }, n, diet)).not.toContain('schnell')
     expect(getRecipe('chia-pudding-mango')!.tags).not.toContain('schnell')
@@ -79,6 +79,12 @@ describe('Rezepte', () => {
       expect(r.nutrition.kcal, r.id).toBeGreaterThanOrEqual(light ? 5 : 40)
       expect(r.nutrition.kcal, r.id).toBeLessThanOrEqual(950)
     }
+  })
+  it('leiten Allergene aus den Zutaten ab', () => {
+    expect(getRecipe('erdnuss-nudeln-tofu')!.diet.allergens).toEqual(expect.arrayContaining(['gluten', 'nuts', 'soy']))
+    expect(getRecipe('ofenlachs-kartoffeln')!.diet.allergens).toEqual(['fish'])
+    expect(getRecipe('ratatouille-quinoa')!.diet.allergens).toEqual([])
+    expect(getRecipe('carbonara-leicht')!.diet.allergens).toEqual(expect.arrayContaining(['gluten', 'milk', 'egg']))
   })
   it('kennzeichnen Ernährungsformen korrekt', () => {
     expect(getRecipe('linsensuppe')!.tags).toContain('vegan')

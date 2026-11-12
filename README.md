@@ -23,7 +23,7 @@ läuft danach im Vollbild wie eine native App – ein App Store ist nicht nötig
 | **Verlauf** | Tagesprotokoll mit Datumsauswahl, Wochen- und Monatsdiagramme (Recharts) für kcal, Makros, Gewicht und Wasser, jeweils auch als Tabelle. |
 | **Erfolge** | 10 Abzeichen mit Fortschritt im Profil und kurzer Animation beim Freischalten, Serie ohne Druck. |
 | **Offline** | Ohne Verbindung weiter eintragen: Änderungen landen in einer Warteschlange und werden automatisch übertragen, sobald wieder Netz da ist. |
-| **Einstellungen** | Tagesziel, Makros, Profil, Wasserziel, Ernährungsweise (alles/vegetarisch/vegan), Heißluftfritteuse vorhanden, Farbschema (System/Hell/Dunkel), Export als CSV oder JSON, Abmelden, Konto löschen (mit Bestätigung). |
+| **Einstellungen** | Tagesziel, Makros, Profil, Wasserziel, Ernährungsweise (alles/vegetarisch/vegan), Unverträglichkeiten & Allergien (Gluten, Milch, Ei, Nüsse, Soja, Sesam, Fisch), Heißluftfritteuse vorhanden, Farbschema (System/Hell/Dunkel), Export als CSV oder JSON, Abmelden, Konto löschen (mit Bestätigung). |
 
 ## Technik
 
@@ -155,6 +155,7 @@ Entscheidungen, die ich ohne Rückfrage getroffen habe:
 - **„Was habe ich da?“** vergleicht Oberbegriffe (z. B. „Joghurt“ für alle Joghurtsorten). Salz, Zucker, Öl, Gewürze, Gemüsebrühe, Mehl, Backpulver, Senf, Honig und Sojasauce zählen nie als fehlend; Zwiebeln und Knoblauch optional. Die Auswahl wird nur auf dem Gerät gespeichert.
 - **Ernährungsweise** im Profil (Migration `…0006_diet.sql`) filtert Wochenvorschlag, Planer-Auswahl, Empfehlungen und die Zutaten-Suche; in der Galerie per Chip abschaltbar.
 - **Kochwissen** enthält Richtwerte für den Haushalt (Garzeiten, Kerntemperaturen, Haltbarkeiten) – keine Gewähr für jedes Gerät.
+- **Allergene** werden aus den Kennzeichnungen der Zutatentabelle abgeleitet (Gluten, Milch inkl. Lab-Käse, Ei, Nüsse/Erdnüsse, Soja, Sesam, Fisch/Meeresfrüchte) und auf jeder Rezeptseite genannt. Im Profil gewählte **Unverträglichkeiten** (Migration `…0009_avoid.sql`) wirken wie die Ernährungsweise: Vorschläge, Wochenplan, Planer-Auswahl und Zutaten-Suche lassen betroffene Rezepte weg, das Kochbuch filtert mit dem Chip „Für mich passend“ (abschaltbar). Spuren und Kreuzkontamination kann die App nicht wissen – der Hinweis auf Packungsangaben bleibt bewusst stehen.
 - **Varianten und eigene Rezepte** (Migration `…0007_recipe_variants.sql`) speichern nur Zutaten, Schritte und Angaben – die Nährwerte werden beim Laden wie bei allen Rezepten aus den Zutaten berechnet. Eine Variante kennt ihr Original (`base_recipe_id`), übernimmt Kapitel, Mahlzeiten und Tipps und zeigt den Unterschied pro Portion. Das Original bleibt unverändert; „Klassiker“ gilt für eine Variante nicht mehr.
 - **Eigene Zutaten** in Varianten tragen ihre Nährwerte pro 100 g selbst (von der Packung oder aus Open Food Facts) und eine Art (pflanzlich, Milch/Ei, Fleisch, Fisch) für die Kennzeichnung vegetarisch/vegan. Ohne ausdrückliche Angabe gelten sie vorsichtshalber als glutenhaltig. Beim Wechsel der Einheit wird die Menge umgerechnet (200 g Zwiebeln → 2,5 Stück).
 - **Varianten mit Heißluftfritteuse**: Eine Variante hat genau eine Zubereitungsart. Beim Abwandeln eines Backofen-Rezepts mit Heißluft-Variante wählt man, welche Schritte übernommen werden; die Angaben zu Temperatur und Garzeit lassen sich anpassen.

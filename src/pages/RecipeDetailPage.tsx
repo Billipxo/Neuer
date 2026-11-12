@@ -3,6 +3,7 @@ import { useParams, Navigate, Link, useNavigate } from 'react-router-dom'
 import { ChefHat, Clock, Heart, History, Hourglass, Lightbulb, Minus, Pencil, Plus, Share2, ShoppingBasket, Thermometer, Trash2, Users, CalendarPlus, Wand2 } from 'lucide-react'
 import { hasAirfryerVariant, isAirfryerNative, recipeEmoji, recipeNutrients, recipeShareText, recipeSteps, scaleIngredients, TAG_LABELS } from '../lib/recipes'
 import { formatDiff, nutritionDiff } from '../lib/variants'
+import { ALLERGEN_LABELS } from '../lib/recipeNutrition'
 import { useDeleteVariant, useResolvedRecipe, useVariantRecipes } from '../hooks/variants'
 import { Spinner } from '../components/ui/EmptyState'
 import { useCookedStats } from '../hooks/cooked'
@@ -46,6 +47,7 @@ export function RecipeDetailPage() {
   if (!recipe) return isLoading ? <Spinner /> : <Navigate to="/rezepte" replace />
   const ownVariants = variants.map((v, i) => ({ v, r: mine[i] })).filter((x) => x.v.base_recipe_id === recipe.id).map((x) => x.r)
   const diff = own && base ? formatDiff(nutritionDiff(recipe, base)) : []
+  const avoided = recipe.diet.allergens.filter((a) => profile?.avoid?.includes(a))
   const ingredients = scaleIngredients(recipe, servings)
   const variant = hasAirfryerVariant(recipe)
   const activeMethod = method ?? (hasAirfryer ? 'airfryer' : 'oven')
@@ -142,6 +144,18 @@ export function RecipeDetailPage() {
       <p className="mt-2 px-1 text-xs text-muted tabular">
         Ballaststoffe: {fmtInt(recipe.fiber)} g · aus den Zutaten berechnet
         {recipe.diet.glutenFree && ' · ohne glutenhaltige Zutaten (bei Zöliakie Packungsangaben prüfen)'}
+      </p>
+      <p className="mt-1 px-1 text-xs text-muted">
+        {recipe.diet.allergens.length > 0 ? (
+          <>
+            Enthält: {recipe.diet.allergens.map((a) => ALLERGEN_LABELS[a]).join(', ')}
+            {avoided.length > 0 && (
+              <span className="font-medium text-over"> · {avoided.map((a) => ALLERGEN_LABELS[a]).join(', ')} steht auf deiner Liste</span>
+            )}
+          </>
+        ) : (
+          'Ohne die häufigen Allergene Gluten, Milch, Ei, Nüsse, Soja, Sesam und Fisch – bei Allergien trotzdem Packungsangaben prüfen.'
+        )}
       </p>
       {recipe.diet.vegetarian && recipe.diet.animalRennet && (
         <p className="mt-1 px-1 text-xs text-muted">

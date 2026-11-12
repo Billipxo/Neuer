@@ -267,3 +267,9 @@ alter table public.foods
 alter table public.log_entries drop constraint if exists log_entries_unit_check;
 alter table public.log_entries
   add constraint log_entries_unit_check check (unit in ('g','piece','serving','tbsp','tsp'));
+
+-- ===== 20261111000009_avoid.sql =====
+-- Teller – Unverträglichkeiten und Allergien im Profil (gluten, milk, egg, nuts, soy, sesame, fish)
+
+alter table public.profiles
+  add column if not exists avoid text[] not null default '{}';

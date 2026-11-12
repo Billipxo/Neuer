@@ -17,6 +17,7 @@ import { DataSection } from '../components/profile/DataSection'
 import { Switch } from '../components/ui/Switch'
 import { AirfryerIcon } from '../components/recipes/AirfryerIcon'
 import { DietPicker } from '../components/profile/DietPicker'
+import { AvoidPicker } from '../components/profile/AvoidPicker'
 import { AchievementGrid, StreakCard } from '../components/achievements/AchievementGrid'
 
 export function ProfilePage() {
@@ -68,6 +69,7 @@ export function ProfilePage() {
       <SectionTitle>Küche</SectionTitle>
       <Card className="space-y-5">
         <DietPicker value={draft.diet} onChange={(diet) => patch({ diet })} />
+        <AvoidPicker value={draft.avoid} onChange={(avoid) => patch({ avoid })} />
         <Switch
           label="Heißluftfritteuse vorhanden"
           description="Rezepte zeigen dann zuerst die Zubereitung in der Heißluftfritteuse und werden in der Galerie bevorzugt."

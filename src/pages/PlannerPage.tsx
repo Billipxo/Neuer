@@ -42,7 +42,7 @@ export function PlannerPage() {
 
   async function suggest() {
     const suggested = suggestWeek({
-      recipes: [...RECIPES, ...ownRecipes].filter((r) => matchesDiet(r, profile!.diet)),
+      recipes: [...RECIPES, ...ownRecipes].filter((r) => matchesDiet(r, profile!.diet, profile!.avoid)),
       month: Number(weekStart.slice(5, 7)),
       days,
       kcalTarget: target,

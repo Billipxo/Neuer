@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { filterRecipes, recommendRecipes, RECIPES, roundAmount, scaleIngredients, recipeVeggies, getRecipe, recipeEmoji } from './recipes'
+import { filterRecipes, recommendRecipes, RECIPES, roundAmount, scaleIngredients, recipeVeggies, getRecipe, recipeEmoji, matchesDiet } from './recipes'
 import { CATEGORY_ORDER } from './shopping'
 import { CHAPTERS } from '../data/chapters'
 import { MEAL_TYPES } from '../types'
@@ -50,6 +50,16 @@ describe('Rezept-Datensatz', () => {
     expect(e('Gebratener Gemüsereis mit Ei')).toBe('🍚')
     // Jedes Rezept bekommt ein eigenes Symbol statt des Platzhalters
     for (const r of RECIPES) expect(recipeEmoji(r), r.id).not.toBe('🍽️')
+  })
+  it('berücksichtigt Unverträglichkeiten', () => {
+    const lachs = getRecipe('ofenlachs-kartoffeln')!
+    expect(matchesDiet(lachs, 'all')).toBe(true)
+    expect(matchesDiet(lachs, 'all', ['fish'])).toBe(false)
+    expect(matchesDiet(lachs, 'all', ['nuts', 'milk'])).toBe(true)
+    expect(matchesDiet(lachs, 'vegetarian', [])).toBe(false)
+    const erdnuss = getRecipe('erdnuss-nudeln-tofu')!
+    expect(matchesDiet(erdnuss, 'vegan', ['nuts'])).toBe(false)
+    expect(matchesDiet(erdnuss, 'vegan', ['fish'])).toBe(true)
   })
   it('deckt alle Mahlzeitenarten ab', () => {
     for (const m of MEAL_TYPES) expect(RECIPES.filter((r) => r.meal.includes(m)).length).toBeGreaterThanOrEqual(5)

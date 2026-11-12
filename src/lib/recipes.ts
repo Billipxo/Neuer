@@ -1,5 +1,5 @@
 import rawRecipes from '../data/recipes.json'
-import type { DietPreference, MealType, Nutrients, RawRecipe, Recipe, RecipeIngredient } from '../types'
+import type { Allergen, DietPreference, MealType, Nutrients, RawRecipe, Recipe, RecipeIngredient } from '../types'
 import { scaleNutrients } from './nutrition'
 import { detectVeggies } from './veggies'
 import { deriveTags, dietInfo, nutritionPerServing } from './recipeNutrition'
@@ -331,8 +331,9 @@ export const DIET_LABELS: Record<DietPreference, string> = {
 }
 
 /** Passt das Rezept zur gewählten Ernährungsweise? */
-export function matchesDiet(r: Recipe, diet: DietPreference | undefined): boolean {
-  if (diet === 'vegan') return r.diet.vegan
-  if (diet === 'vegetarian') return r.diet.vegetarian
-  return true
+/** Passt das Rezept zur Ernährungsweise und enthält nichts, was gemieden wird (Unverträglichkeiten)? */
+export function matchesDiet(r: Recipe, diet: DietPreference | undefined, avoid: readonly Allergen[] = []): boolean {
+  if (diet === 'vegan' && !r.diet.vegan) return false
+  if (diet === 'vegetarian' && !r.diet.vegetarian) return false
+  return !avoid.some((a) => r.diet.allergens.includes(a))
 }

@@ -60,8 +60,8 @@ export function PantryPage() {
   }, [q, state.have, state.assumeBasics])
 
   const matches = useMemo(
-    () => matchRecipes([...ownRecipes, ...RECIPES].filter((r) => matchesDiet(r, profile?.diet)), state.have, { assumeBasics: state.assumeBasics }),
-    [state, profile?.diet, ownRecipes],
+    () => matchRecipes([...ownRecipes, ...RECIPES].filter((r) => matchesDiet(r, profile?.diet, profile?.avoid)), state.have, { assumeBasics: state.assumeBasics }),
+    [state, profile?.diet, profile?.avoid, ownRecipes],
   )
   const complete = matches.filter((m) => m.missing.length === 0)
   const almost = matches.filter((m) => m.missing.length > 0 && m.missing.length <= 2)

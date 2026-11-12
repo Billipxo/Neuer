@@ -6,7 +6,8 @@
  * Aus dieser Tabelle werden kcal, Makros und Ballaststoffe aller Rezepte berechnet.
  *
  * Flags: M = Fleisch, F = Fisch/Meeresfrüchte, D = Milchprodukt, E = Ei, H = Honig,
- *        L = Käse mit tierischem Lab (z. B. Parmesan), G = glutenhaltig
+ *        L = Käse mit tierischem Lab (z. B. Parmesan), G = glutenhaltig,
+ *        N = Nüsse/Erdnüsse, Y = Soja, X = Sesam
  */
 
 export interface IngredientInfo {
@@ -101,8 +102,8 @@ add('Cherrytomaten', [20, 0.9, 3.0, 0.2, 1.3], '', { base: 'Tomaten', s: SOMMER 
 add('Chinakohl', [13, 1.1, 1.2, 0.2, 1.2], '', { u: { Stück: 800 }, s: [1, 2, 9, 10, 11, 12] })
 add('Datteln (entsteint)', [282, 2.5, 64, 0.4, 8.0], '', { u: { Stück: 8 }, base: 'Datteln' })
 add('Dill', [43, 3.5, 4.9, 1.1, 2.1], '', { u: { Bund: 20 } })
-add('Edamame (TK, in der Schale)', [66, 6.5, 4.0, 2.9, 2.9], '', { base: 'Edamame' })
-add('Edamame (TK, geschält)', [121, 11.9, 3.7, 5.2, 5.2], '', { base: 'Edamame' })
+add('Edamame (TK, in der Schale)', [66, 6.5, 4.0, 2.9, 2.9], 'Y', { base: 'Edamame' })
+add('Edamame (TK, geschält)', [121, 11.9, 3.7, 5.2, 5.2], 'Y', { base: 'Edamame' })
 add('Erbsen (TK)', [81, 5.4, 9.6, 0.4, 5.1], '', { base: 'Erbsen' })
 add('Erdbeeren', [32, 0.7, 5.5, 0.4, 2.0], '', { s: [5, 6, 7] })
 add('Feldsalat', [14, 1.8, 0.7, 0.4, 1.5], '', { s: HERBST_WINTER })
@@ -235,11 +236,11 @@ add('Kidneybohnen', [105, 7.0, 13.5, 0.6, 6.5], '', { u: { Dose: 250 }, base: 'B
 add('Kokosmilch (light)', [80, 0.8, 1.8, 7.7, 0], '', { u: { Dose: 400 }, base: 'Kokosmilch' })
 add('Mais', [80, 2.8, 14, 1.2, 3.0], '', { u: { Dose: 285 } })
 add('passierte Tomaten', [33, 1.4, 5.3, 0.2, 1.2], '', { base: 'Dosentomaten' })
-add('Räuchertofu', [165, 16.5, 2.0, 10, 1.0], '', { base: 'Tofu' })
+add('Räuchertofu', [165, 16.5, 2.0, 10, 1.0], 'Y', { base: 'Tofu' })
 add('rote Linsen', [340, 25, 50, 1.5, 11], '', { base: 'Linsen' })
 add('Schälerbsen (getrocknet)', [320, 23, 41, 1.4, 17], '', { base: 'Schälerbsen' })
 add('Tellerlinsen', [315, 24, 41, 1.5, 17], '', { base: 'Linsen' })
-add('Tofu (natur)', [125, 13, 1.5, 7.5, 1.0], '', { base: 'Tofu' })
+add('Tofu (natur)', [125, 13, 1.5, 7.5, 1.0], 'Y', { base: 'Tofu' })
 add('Tomaten (stückig)', [21, 1.0, 3.0, 0.2, 1.0], '', { u: { Dose: 400 }, base: 'Dosentomaten' })
 add('Tomatenmark', [85, 4.3, 14, 0.5, 4.0], '', { u: { EL: 15, TL: 5 }, staple: true })
 add('weiße Bohnen', [100, 7.0, 13, 0.5, 6.0], '', { u: { Dose: 250 }, base: 'Bohnen (Dose)' })
@@ -248,22 +249,22 @@ add('weiße Bohnen', [100, 7.0, 13, 0.5, 6.0], '', { u: { Dose: 250 }, base: 'Bo
 add('Ahornsirup', [260, 0, 67, 0.1, 0], '', { u: { EL: 20, TL: 7 } })
 add('Backpulver', [120, 0, 30, 0, 0], '', { u: { TL: 3 }, staple: true })
 add('Speisestärke', [350, 0.3, 86, 0.1, 0], '', { u: { TL: 3, EL: 10 }, staple: true })
-add('Cashewkerne', [575, 18, 27, 46, 3.3])
+add('Cashewkerne', [575, 18, 27, 46, 3.3], 'N')
 add('Chiasamen', [486, 16.5, 7.7, 30.7, 34.4], '', { u: { EL: 10, TL: 4 } })
-add('Erdnussbutter', [600, 25, 13, 50, 6.0], '', { u: { EL: 16, TL: 6 } })
-add('Erdnüsse (geröstet, ungesalzen)', [590, 25, 13, 50, 8.0], '', { base: 'Erdnüsse' })
-add('Haselnüsse', [640, 15, 7.0, 61, 8.0])
+add('Erdnussbutter', [600, 25, 13, 50, 6.0], 'N', { u: { EL: 16, TL: 6 } })
+add('Erdnüsse (geröstet, ungesalzen)', [590, 25, 13, 50, 8.0], 'N', { base: 'Erdnüsse' })
+add('Haselnüsse', [640, 15, 7.0, 61, 8.0], 'N')
 add('Honig', [304, 0.3, 82, 0, 0], 'H', { u: { EL: 20, TL: 7 }, staple: true })
 add('Kakaopulver', [360, 20, 11, 11, 30], '', { u: { EL: 6, TL: 2 } })
 add('Kokosraspeln', [660, 6.9, 7.0, 64, 16], '', { u: { EL: 6 } })
 add('Kürbiskerne', [575, 30, 5.0, 49, 6.0], '', { u: { EL: 10 } })
 add('Leinsamen (geschrotet)', [534, 18, 1.6, 42, 27], '', { u: { EL: 10 }, base: 'Leinsamen' })
-add('Mandeln', [590, 21, 5.7, 52, 11])
+add('Mandeln', [590, 21, 5.7, 52, 11], 'N')
 add('Rosinen', [300, 3.0, 66, 0.5, 3.7])
-add('Sesam', [575, 18, 11.5, 50, 12], '', { u: { TL: 3, EL: 8 } })
+add('Sesam', [575, 18, 11.5, 50, 12], 'X', { u: { TL: 3, EL: 8 } })
 add('Sonnenblumenkerne', [585, 21, 11, 51, 8.6], '', { u: { EL: 10 } })
-add('Tahin', [595, 17, 10, 54, 9.0], '', { u: { EL: 15, TL: 5 } })
-add('Walnüsse', [660, 15, 7.0, 65, 6.5])
+add('Tahin', [595, 17, 10, 54, 9.0], 'X', { u: { EL: 15, TL: 5 } })
+add('Walnüsse', [660, 15, 7.0, 65, 6.5], 'N')
 // Kann Milchbestandteile enthalten – vorsichtshalber nicht als vegan gewertet
 add('Zartbitterschokolade (70 %)', [575, 8.0, 33, 42, 11], 'D', { base: 'Zartbitterschokolade' })
 
@@ -271,12 +272,12 @@ add('Zartbitterschokolade (70 %)', [575, 8.0, 33, 42, 11], 'D', { base: 'Zartbit
 oil('Olivenöl')
 oil('Rapsöl')
 oil('Leinöl')
-oil('Sesamöl')
+add('Sesamöl', OIL, 'X', { u: { EL: 10, TL: 4 }, base: 'Öl', staple: true })
 add('Balsamico', [88, 0.5, 17, 0, 0], '', { u: { EL: 15, TL: 5 }, staple: true })
 add('Currypaste', [120, 2.5, 12, 6.5, 4.0], '', { u: { EL: 15, TL: 5 } })
 add('Essig', [20, 0, 0.6, 0, 0], '', { u: { EL: 15, TL: 5 }, staple: true })
 add('Senf', [80, 5.5, 5.0, 4.5, 2.0], '', { u: { EL: 15, TL: 5 }, staple: true })
-add('Sojasauce', [60, 8.0, 4.9, 0.6, 0.8], 'G', { u: { EL: 15, TL: 5 }, staple: true })
+add('Sojasauce', [60, 8.0, 4.9, 0.6, 0.8], 'GY', { u: { EL: 15, TL: 5 }, staple: true })
 add('Salz', [0, 0, 0, 0, 0], '', { staple: true })
 add('Meersalz', [0, 0, 0, 0, 0], '', { staple: true, base: 'Salz' })
 add('Salz und Pfeffer', [0, 0, 0, 0, 0], '', { staple: true })

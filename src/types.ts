@@ -6,6 +6,8 @@ export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'ver
 export type GoalType = 'lose' | 'maintain' | 'gain' | 'custom'
 /** Ernährungsweise für Rezeptvorschläge */
 export type DietPreference = 'all' | 'vegetarian' | 'vegan'
+/** Häufige Allergene bzw. Unverträglichkeiten, die sich aus den Zutaten ableiten lassen */
+export type Allergen = 'gluten' | 'milk' | 'egg' | 'nuts' | 'soy' | 'sesame' | 'fish'
 /** Mengeneinheit beim Erfassen: Gramm, Stück, Portion, Esslöffel, Teelöffel */
 export type AmountUnit = 'g' | 'piece' | 'serving' | 'tbsp' | 'tsp'
 
@@ -44,6 +46,8 @@ export interface Profile {
   favorite_recipes: string[]
   /** Ernährungsweise – Vorschläge und Galerie zeigen dann passende Rezepte */
   diet: DietPreference
+  /** Unverträglichkeiten und Allergien – Rezepte mit diesen Zutaten werden bei Vorschlägen weggelassen */
+  avoid: Allergen[]
   onboarded: boolean
   created_at?: string
 }
@@ -198,6 +202,8 @@ export interface DietInfo {
   glutenFree: boolean
   /** Enthält Käse mit tierischem Lab (z. B. Parmesan) */
   animalRennet: boolean
+  /** Enthaltene Allergene, aus den Zutaten abgeleitet */
+  allergens: Allergen[]
 }
 
 export interface AirfryerInfo {

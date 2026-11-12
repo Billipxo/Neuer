@@ -1,7 +1,27 @@
 import { DEFAULT_UNIT_GRAMS, INGREDIENTS, type IngredientInfo } from '../data/ingredients'
-import type { DietInfo, Nutrients, RecipeIngredient } from '../types'
+import type { Allergen, DietInfo, Nutrients, RecipeIngredient } from '../types'
 
 export type { DietInfo }
+
+export const ALLERGENS: Allergen[] = ['gluten', 'milk', 'egg', 'nuts', 'soy', 'sesame', 'fish']
+
+export const ALLERGEN_LABELS: Record<Allergen, string> = {
+  gluten: 'Gluten',
+  milk: 'Milch',
+  egg: 'Ei',
+  nuts: 'Nüsse/Erdnüsse',
+  soy: 'Soja',
+  sesame: 'Sesam',
+  fish: 'Fisch/Meeresfrüchte',
+}
+
+const ALLERGEN_FLAGS: Record<Allergen, RegExp> = { gluten: /G/, milk: /[DL]/, egg: /E/, nuts: /N/, soy: /Y/, sesame: /X/, fish: /F/ }
+
+/** Allergene, die in den Zutaten stecken (aus den Kennzeichnungen der Nährwerttabelle bzw. eigener Zutaten) */
+export function allergensOf(ingredients: RecipeIngredient[]): Allergen[] {
+  const flags = ingredients.map(ingredientFlags).join('')
+  return ALLERGENS.filter((a) => ALLERGEN_FLAGS[a].test(flags))
+}
 
 export interface NutritionWithFiber extends Nutrients {
   fiber: number
@@ -84,6 +104,7 @@ export function dietInfo(ingredients: RecipeIngredient[]): DietInfo {
     vegan: vegetarian && !has('D') && !has('E') && !has('H') && !has('L'),
     glutenFree: !has('G'),
     animalRennet: has('L'),
+    allergens: allergensOf(ingredients),
   }
 }
 

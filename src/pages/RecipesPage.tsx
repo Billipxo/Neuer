@@ -13,7 +13,6 @@ import { inSeasonNow, MONTH_NAMES, seasonalRecipes } from '../lib/season'
 import {
   airfryerRecipes,
   allTags,
-  DIET_LABELS,
   matchesDiet,
   filterRecipes,
   recommendRecipes,
@@ -72,10 +71,13 @@ export function RecipesPage() {
   const favorites = profile?.favorite_recipes ?? []
   const hasAirfryer = profile?.has_airfryer ?? true
   const diet = profile?.diet ?? 'all'
+  const avoid = useMemo(() => profile?.avoid ?? [], [profile?.avoid])
+  /** Gibt es persönliche Vorgaben (Ernährungsweise oder Unverträglichkeiten)? */
+  const personal = diet !== 'all' || avoid.length > 0
   // Eigene Varianten und Rezepte gehören mit ins Kochbuch
   const all = useMemo(() => (mine.length ? [...mine, ...RECIPES] : RECIPES), [mine])
-  // Ernährungsweise aus dem Profil als Standardfilter (abschaltbar)
-  const base = useMemo(() => (dietOnly && diet !== 'all' ? all.filter((r) => matchesDiet(r, diet)) : all), [all, dietOnly, diet])
+  // Ernährungsweise und Unverträglichkeiten aus dem Profil als Standardfilter (abschaltbar)
+  const base = useMemo(() => (dietOnly && personal ? all.filter((r) => matchesDiet(r, diet, avoid)) : all), [all, dietOnly, personal, diet, avoid])
 
   const results = useMemo(() => {
     let list = filterRecipes(base, { chapter: chapter?.id, meal, maxKcal, maxTime, keyword, tag })
@@ -179,9 +181,11 @@ export function RecipesPage() {
       </div>
 
       <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Schnellfilter">
-        {diet !== 'all' && (
+        {personal && (
           <Chip active={dietOnly} onClick={() => setDietOnly((v) => !v)}>
-            Nur {DIET_LABELS[diet].toLowerCase()}
+            <span className="inline-flex items-center gap-1.5">
+              <Leaf className="size-4" aria-hidden /> Für mich passend
+            </span>
           </Chip>
         )}
         {hasAirfryer && (

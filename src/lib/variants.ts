@@ -160,6 +160,11 @@ export const CUSTOM_KIND_LABELS: Record<CustomKind, string> = {
 
 const KIND_FLAGS: Record<CustomKind, string> = { plant: '', dairy_egg: 'DE', meat: 'M', fish: 'F' }
 
+/** Weitere Allergene, die eine eigene Zutat enthalten kann */
+export type ExtraAllergen = 'nuts' | 'soy' | 'sesame'
+export const EXTRA_ALLERGEN_LABELS: Record<ExtraAllergen, string> = { nuts: 'Nüsse/Erdnüsse', soy: 'Soja', sesame: 'Sesam' }
+const EXTRA_FLAGS: Record<ExtraAllergen, string> = { nuts: 'N', soy: 'Y', sesame: 'X' }
+
 export interface CustomIngredientInput {
   name: string
   kcal: number
@@ -172,6 +177,8 @@ export interface CustomIngredientInput {
   glutenFree: boolean
   /** Gramm pro Stück – dann wird die Zutat in Stück angegeben */
   unit_g?: number | null
+  /** Enthält Nüsse, Soja oder Sesam */
+  extra?: ExtraAllergen[]
 }
 
 /** Eigene Zutat mit Nährwerten pro 100 g (z. B. ein Produkt, das nicht in der Tabelle steht) */
@@ -190,16 +197,17 @@ export function customIngredient(input: CustomIngredientInput): RecipeIngredient
       carbs: input.carbs,
       fat: input.fat,
       fiber: input.fiber ?? 0,
-      flags: KIND_FLAGS[input.kind] + (input.glutenFree ? '' : 'G'),
+      flags: KIND_FLAGS[input.kind] + (input.glutenFree ? '' : 'G') + (input.extra ?? []).map((e) => EXTRA_FLAGS[e]).join(''),
       unit_g,
     },
   }
 }
 
 /** Art und Gluten-Kennzeichnung aus den Flags einer eigenen Zutat (zum Bearbeiten) */
-export function customKindOf(flags: string): { kind: CustomKind; glutenFree: boolean } {
+export function customKindOf(flags: string): { kind: CustomKind; glutenFree: boolean; extra: ExtraAllergen[] } {
   const kind: CustomKind = flags.includes('F') ? 'fish' : flags.includes('M') ? 'meat' : /[DE]/.test(flags) ? 'dairy_egg' : 'plant'
-  return { kind, glutenFree: !flags.includes('G') }
+  const extra = (Object.keys(EXTRA_FLAGS) as ExtraAllergen[]).filter((e) => flags.includes(EXTRA_FLAGS[e]))
+  return { kind, glutenFree: !flags.includes('G'), extra }
 }
 
 /** Zutat gegen eine andere tauschen – Menge und Einheit bleiben, wenn sie auch zur neuen Zutat passen */

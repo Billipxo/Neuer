@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
 import { ScanBarcode } from 'lucide-react'
 import type { RecipeIngredient } from '../../types'
-import { CUSTOM_KIND_LABELS, customIngredient, type CustomIngredientInput, type CustomKind } from '../../lib/variants'
+import { CUSTOM_KIND_LABELS, EXTRA_ALLERGEN_LABELS, customIngredient, type CustomIngredientInput, type CustomKind, type ExtraAllergen } from '../../lib/variants'
 import { Sheet } from '../ui/Sheet'
 import { Button } from '../ui/Button'
 import { Field } from '../ui/Field'
 import { NumberInput } from '../ui/NumberInput'
-import { Segmented } from '../ui/Segmented'
+import { Chip, Segmented } from '../ui/Segmented'
 import { Switch } from '../ui/Switch'
 
 const KINDS = Object.keys(CUSTOM_KIND_LABELS) as CustomKind[]
+const EXTRAS = Object.keys(EXTRA_ALLERGEN_LABELS) as ExtraAllergen[]
 
 /** Eigene Zutat mit Nährwerten pro 100 g anlegen oder bearbeiten */
 export function CustomIngredientSheet({
@@ -37,6 +38,7 @@ export function CustomIngredientSheet({
   const [unitG, setUnitG] = useState<number | null>(null)
   const [kind, setKind] = useState<CustomKind>('plant')
   const [glutenFree, setGlutenFree] = useState(false)
+  const [extra, setExtra] = useState<ExtraAllergen[]>([])
 
   // Beim Öffnen mit den übergebenen Werten starten (z. B. aus Open Food Facts oder einer bestehenden Zutat)
   useEffect(() => {
@@ -50,6 +52,7 @@ export function CustomIngredientSheet({
     setUnitG(initial?.unit_g ?? null)
     setKind(initial?.kind ?? 'plant')
     setGlutenFree(initial?.glutenFree ?? false)
+    setExtra(initial?.extra ?? [])
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
@@ -77,6 +80,7 @@ export function CustomIngredientSheet({
                 fiber,
                 kind,
                 glutenFree,
+                extra,
                 unit_g: unitG,
               }),
             )
@@ -113,6 +117,16 @@ export function CustomIngredientSheet({
           <p className="mt-1 text-xs text-muted">Damit wird das Rezept als vegetarisch oder vegan gekennzeichnet – oder eben nicht.</p>
         </div>
         <Switch label="Glutenfrei" description="Ohne Angabe gilt die Zutat vorsichtshalber als glutenhaltig." checked={glutenFree} onChange={setGlutenFree} />
+        <div>
+          <p className="mb-1.5 text-sm font-medium">Enthält außerdem</p>
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Weitere Allergene">
+            {EXTRAS.map((e) => (
+              <Chip key={e} active={extra.includes(e)} onClick={() => setExtra((l) => (l.includes(e) ? l.filter((x) => x !== e) : [...l, e]))}>
+                {EXTRA_ALLERGEN_LABELS[e]}
+              </Chip>
+            ))}
+          </div>
+        </div>
       </div>
     </Sheet>
   )

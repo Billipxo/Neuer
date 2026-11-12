@@ -287,7 +287,7 @@ export function useToggleFavoriteRecipe() {
       const { id: _id, created_at: _c, ...rest } = current
       const list = rest.favorite_recipes ?? []
       const favorite_recipes = list.includes(recipeId) ? list.filter((x) => x !== recipeId) : [...list, recipeId]
-      return store.saveProfile({ ...rest, has_airfryer: rest.has_airfryer ?? true, favorite_recipes })
+      return store.saveProfile({ ...rest, has_airfryer: rest.has_airfryer ?? true, avoid: rest.avoid ?? [], favorite_recipes })
     },
     onMutate: async (recipeId) => {
       await qc.cancelQueries({ queryKey: qk.profile })
