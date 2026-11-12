@@ -31,6 +31,35 @@ export default defineConfig({
           { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png' },
           { src: 'maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
+        // Langes Drücken auf das App-Symbol (Android, Desktop): direkt zur häufigsten Aktion
+        shortcuts: [
+          {
+            name: 'Mahlzeit eintragen',
+            short_name: 'Eintragen',
+            description: 'Lebensmittel zur aktuellen Mahlzeit hinzufügen',
+            url: '/hinzufuegen',
+            icons: [{ src: 'shortcut-add.png', sizes: '192x192', type: 'image/png' }],
+          },
+          {
+            name: 'Barcode scannen',
+            short_name: 'Scannen',
+            description: 'Produkt per Barcode eintragen',
+            url: '/hinzufuegen?scan=1',
+            icons: [{ src: 'shortcut-scan.png', sizes: '192x192', type: 'image/png' }],
+          },
+          {
+            name: 'Einkaufsliste',
+            short_name: 'Einkauf',
+            url: '/einkauf',
+            icons: [{ src: 'shortcut-shopping.png', sizes: '192x192', type: 'image/png' }],
+          },
+          {
+            name: 'Wochenplan',
+            short_name: 'Planer',
+            url: '/planer',
+            icons: [{ src: 'shortcut-plan.png', sizes: '192x192', type: 'image/png' }],
+          },
+        ],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,ico,webmanifest}'],
