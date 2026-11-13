@@ -3,6 +3,11 @@ import { expect, type Page } from '@playwright/test'
 /** Demo-Modus starten und Onboarding mit eigenem Tagesziel durchlaufen */
 export async function startDemo(page: Page, kcal = '2000') {
   page.on('dialog', (d) => d.accept())
+  await onboard(page, kcal)
+}
+
+/** Onboarding im Demo-Modus – ohne Dialog-Behandlung, damit es in einem Test mehrfach aufgerufen werden kann */
+export async function onboard(page: Page, kcal = '2000') {
   await page.goto('/')
   await page.getByRole('button', { name: 'Ohne Konto ausprobieren' }).click()
   await page.getByLabel('Wie dürfen wir dich nennen?').fill('Alex')

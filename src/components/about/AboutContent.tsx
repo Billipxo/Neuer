@@ -49,7 +49,10 @@ export function AboutContent({ demo }: { demo?: boolean }) {
       </Block>
 
       <Block title="Deine Kontrolle">
-        <p>Unter „Profil → Deine Daten“ kannst du jederzeit alles als CSV oder JSON herunterladen.</p>
+        <p>
+          Unter „Profil → Deine Daten“ kannst du jederzeit alles als CSV oder JSON herunterladen. Die JSON-Datei ist zugleich eine Sicherung,
+          die sich dort wieder einspielen lässt.
+        </p>
         <p>
           „Konto löschen“ entfernt dein Konto und sämtliche Daten endgültig aus der Datenbank – ohne Rückfrage per E-Mail, ohne Wartefrist.
         </p>

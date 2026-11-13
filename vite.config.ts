@@ -90,8 +90,9 @@ export default defineConfig({
   ],
   define: { __APP_VERSION__: JSON.stringify(pkg.version) },
   build: {
-    // Der größte Chunk enthält das Kochbuch (reine Rezeptdaten, ca. 115 kB gzip). Er wird erst beim Öffnen
+    // Der größte Chunk enthält das Kochbuch (reine Rezeptdaten, ca. 110 kB gzip). Er wird erst beim Öffnen
     // des Kochbuchs geladen und vom Service Worker für die Offline-Nutzung vorgehalten.
+    // src/startBundle.test.ts wacht darüber, dass er nicht wieder in das Start-Paket rutscht.
     chunkSizeWarningLimit: 800,
   },
   test: {

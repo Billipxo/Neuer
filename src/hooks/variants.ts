@@ -1,20 +1,12 @@
 import { useMemo } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '../app/auth'
 import type { Recipe, RecipeVariant } from '../types'
 import { getRecipe } from '../lib/recipes'
 import { variantToRecipe, type VariantDraft } from '../lib/variants'
+import { VARIANTS_KEY, useVariants } from './variantList'
 
-export const VARIANTS_KEY = ['recipe_variants'] as const
-
-/** Eigene Varianten und Rezepte, zuletzt geänderte zuerst */
-export function useVariants() {
-  const store = useStore()
-  return useQuery({
-    queryKey: VARIANTS_KEY,
-    queryFn: () => store.list<RecipeVariant>('recipe_variants', { order: [{ column: 'updated_at', ascending: false }] }),
-  })
-}
+export { VARIANTS_KEY, useVariants }
 
 /** Eigene Varianten und Rezepte als vollwertige Rezepte (mit berechneten Nährwerten) */
 export function useVariantRecipes(): { recipes: Recipe[]; variants: RecipeVariant[]; isLoading: boolean } {

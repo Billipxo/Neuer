@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { closeBadges, startDemo } from './helpers'
+import { closeBadges, onboard, startDemo } from './helpers'
 
 test('Onboarding mit Kalorienvorschlag', async ({ page }) => {
   await page.goto('/')
@@ -462,4 +462,43 @@ test('App-Verknüpfungen: Manifest nennt Direktlinks, die Scanner und passende M
   await expect(page.getByRole('radiogroup', { name: 'Mahlzeit' }).getByRole('radio', { checked: true })).toHaveCount(1)
   await page.goto('/hinzufuegen?schnell=1')
   await expect(page.getByRole('dialog', { name: 'Schnell-Eintrag' })).toBeVisible()
+})
+
+test('Sicherung: exportieren, Konto löschen, wieder einspielen – nichts doppelt', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/hinzufuegen?meal=breakfast')
+  await page.getByLabel('Lebensmittel suchen').fill('Apfel')
+  await page.getByRole('list', { name: 'Grundnahrungsmittel' }).getByRole('button', { name: /^Apfel 1 Stück/ }).click()
+  await page.getByRole('button', { name: 'Zu Frühstück hinzufügen' }).click()
+  await page.getByRole('button', { name: 'Fertig' }).click()
+  await closeBadges(page)
+  await page.goto('/profil')
+  const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Alle Daten (JSON)' }).click()])
+  const file = await download.path()
+  // Alles löschen und neu anfangen
+  await page.getByRole('button', { name: 'Konto löschen' }).click()
+  await page.getByLabel(/LÖSCHEN/).fill('LÖSCHEN')
+  await page.getByRole('button', { name: 'Endgültig löschen' }).click()
+  await onboard(page, '1800')
+  await expect(page.getByRole('img', { name: /0 von 1\.800 kcal/ })).toBeVisible()
+  // Sicherung einspielen – auf dem leeren Konto samt Einstellungen
+  await page.goto('/profil')
+  await page.getByLabel('Sicherungsdatei auswählen').setInputFiles(file)
+  await expect(page.getByRole('heading', { name: 'Sicherung einspielen' })).toBeVisible()
+  await expect(page.getByRole('list', { name: 'Inhalt der Sicherung' })).toContainText('Protokoll-Einträge')
+  await expect(page.getByRole('switch', { name: 'Profil und Einstellungen übernehmen' })).toHaveAttribute('aria-checked', 'true')
+  await page.getByRole('button', { name: 'Einspielen', exact: true }).click()
+  await expect(page.getByText(/Sicherung eingespielt/)).toBeVisible()
+  await page.goto('/')
+  await closeBadges(page)
+  await expect(page.getByRole('img', { name: /81 von 2\.000 kcal/ })).toBeVisible()
+  await expect(page.getByText('Apfel', { exact: true })).toBeVisible()
+  // Zweites Einspielen legt nichts doppelt an
+  await page.goto('/profil')
+  await page.getByLabel('Sicherungsdatei auswählen').setInputFiles(file)
+  await expect(page.getByText('Alles aus dieser Sicherung ist schon vorhanden.')).toBeVisible()
+  await page.getByRole('button', { name: 'Schließen' }).click()
+  // Keine Sicherung → verständliche Meldung
+  await page.getByLabel('Sicherungsdatei auswählen').setInputFiles({ name: 'falsch.json', mimeType: 'application/json', buffer: Buffer.from('{"etwas":1}') })
+  await expect(page.getByText('Das ist keine Teller-Sicherung.')).toBeVisible()
 })
