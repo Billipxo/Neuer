@@ -146,10 +146,21 @@ Auf einem zweiten Gerät meldest du dich mit derselben E-Mail an und siehst dies
 ## Eigener Mail-Dienst und deutsche Anmelde-Mail
 
 Nötig, sobald **weitere Personen** die App nutzen sollen oder du sie auf einem **iPhone installierst** (dort meldest du
-dich mit dem Code aus der Mail an). Einmalig etwa 15 Minuten. Das Beispiel nutzt Brevo (kostenlos bis 300 Mails am Tag);
-jeder andere Dienst mit SMTP-Zugang geht genauso. Die Bezeichnungen bei Brevo können leicht abweichen.
+dich mit dem Code aus der Mail an). Ohne eigenen Mail-Dienst verschickt Supabase außerdem nur sehr wenige Mails pro
+Stunde. Einmalig etwa 15 Minuten. Die Bezeichnungen bei Google und Brevo können leicht abweichen.
 
-**A. Mail-Dienst vorbereiten (Brevo)**
+**A. Mail-Dienst vorbereiten**
+
+*Variante 1 – das eigene Gmail-Konto (am schnellsten, bis 500 Mails am Tag).* Die Anmelde-Mails kommen dann von deiner
+Gmail-Adresse mit dem Absendernamen „Teller“.
+
+1. Unter [myaccount.google.com/security](https://myaccount.google.com/security) muss die **Bestätigung in zwei Schritten**
+   eingeschaltet sein (sonst dort einschalten).
+2. [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords) öffnen, als Namen `Teller` eintragen und
+   **Erstellen** klicken. Google zeigt ein 16-stelliges **App-Passwort** – kopieren, es wird nur einmal angezeigt.
+   (Es gilt nur für diesen Zweck und lässt sich dort jederzeit wieder löschen.)
+
+*Variante 2 – Brevo (kostenlos bis 300 Mails am Tag, ohne Gmail).*
 
 1. Auf [brevo.com](https://www.brevo.com) ein kostenloses Konto anlegen.
 2. Einen Absender bestätigen: in den Einstellungen unter **Senders, Domains & Dedicated IPs** → **Senders** →
@@ -162,16 +173,16 @@ jeder andere Dienst mit SMTP-Zugang geht genauso. Die Bezeichnungen bei Brevo k�
 1. **Authentication** → **Emails** → **Set up SMTP** (bzw. Reiter **SMTP Settings**) → **Enable custom SMTP**.
 2. Ausfüllen und speichern:
 
-   | Feld | Wert |
-   |---|---|
-   | Sender email address | die bei Brevo bestätigte Adresse |
-   | Sender name | `Teller` |
-   | Host | `smtp-relay.brevo.com` |
-   | Port number | `587` |
-   | Username | der **Login** aus Brevo |
-   | Password | der **SMTP key** aus Brevo |
+   | Feld | Gmail | Brevo |
+   |---|---|---|
+   | Sender email address | deine Gmail-Adresse | die bei Brevo bestätigte Adresse |
+   | Sender name | `Teller` | `Teller` |
+   | Host | `smtp.gmail.com` | `smtp-relay.brevo.com` |
+   | Port number | `465` | `587` |
+   | Username | deine Gmail-Adresse | der **Login** aus Brevo |
+   | Password | das App-Passwort (ohne Leerzeichen) | der **SMTP key** aus Brevo |
 
-Der Schlüssel gehört nur in dieses Feld bei Supabase – nicht in die App und nicht in Vercel.
+Passwort bzw. Schlüssel gehören nur in dieses Feld bei Supabase – nicht in die App, nicht in Vercel und in keinen Chat.
 
 **C. Anmelde-Mail auf Deutsch, mit Code**
 
