@@ -37,7 +37,8 @@ läuft danach im Vollbild wie eine native App – ein App Store ist nicht nötig
 - Recharts für Diagramme, html5-qrcode für den Barcode-Scan, lucide-react für Icons
 - Vitest für die reinen Funktionen (`src/**/*.test.ts`), Playwright für Oberflächen-Tests (`e2e/`)
 - **Datenbank-Tests** (`supabase/tests/`, `npm run test:db`): Alle Migrationen werden in eine leere PostgreSQL eingespielt und die
-  Zugriffsregeln mit den Rechten der App geprüft („sieht Ben Annas Plan?“).
+  Zugriffsregeln mit den Rechten der App geprüft („sieht Ben Annas Plan?“). Geprüft wird auch die Einrichtung von Hand: Jede Datei
+  ist wiederholbar, die drei Teile ergeben denselben Stand wie die Migrationen, und kein Teil lässt eine Tabelle ohne Schutzregeln zurück.
 - **Oberflächen-Tests mit Konto** (`npm run test:e2e:konto`): Ein kleines Test-Backend (`e2e/backend/`) bildet Anmeldung, Tabellen-Zugriff
   und Funktionen von Supabase nach – dahinter dieselbe PostgreSQL mit allen Migrationen. So laufen alle Abläufe zusätzlich gegen echte
   Spalten, Regeln und Funktionen, auch mit zwei Personen in einem Haushalt.
@@ -71,11 +72,14 @@ e2e/                   Oberflächen-Tests; e2e/backend/ = Test-Backend für die 
 
 ### 2. Migrationen ausführen
 
-Die Dateien in `supabase/migrations/` legen alle Tabellen, RLS-Regeln und die Funktion zum Löschen des Kontos an.
-`supabase/setup.sql` enthält alle Migrationen in einer Datei (erzeugt mit `npm run db:bundle`; ein Test prüft, dass sie aktuell ist).
+Die Dateien in `supabase/migrations/` legen alle Tabellen, RLS-Regeln und Funktionen an. Jede lässt sich gefahrlos
+erneut ausführen. `npm run db:bundle` erzeugt daraus `supabase/setup.sql` (alles in einer Datei) und
+`supabase/setup-teil-1.sql` bis `-3.sql` (dasselbe in drei kleineren Teilen); Tests prüfen, dass sie aktuell sind.
 
-**Variante A – SQL Editor (am einfachsten):** Im Supabase-Dashboard **SQL Editor** öffnen, den Inhalt von
-`supabase/setup.sql` einfügen und ausführen.
+**Variante A – SQL Editor (am einfachsten):** Im Supabase-Dashboard **SQL Editor** öffnen und die drei Teile
+`setup-teil-1.sql`, `-2.sql`, `-3.sql` nacheinander einfügen und ausführen. Die Teile gibt es, weil manche Geräte lange
+Texte beim Einfügen nach 20.000 Zeichen abschneiden (Fehlermeldung „syntax error“); wo das nicht passiert, genügt
+`supabase/setup.sql`.
 
 **E-Mail-Vorlage:** Unter **Authentication → Emails → Magic Link** den Inhalt von
 `supabase/email-template-magic-link.html` einfügen. Sie enthält Link **und** Code (`{{ .Token }}`).

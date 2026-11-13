@@ -141,6 +141,7 @@ drop trigger if exists household_members_after_delete on public.household_member
 create trigger household_members_after_delete after delete on public.household_members
   for each row execute function public.household_after_member_left();
 
+-- [Teilgrenze] Hier darf die Einrichtung in einen neuen Teil wechseln (siehe scripts/bundle-sql.mjs)
 -- Hilfsfunktionen (nicht für die App freigegeben) ---------------------------------
 
 -- Einladungscode aus 10 zufälligen Zeichen (0-9, A-F), in der Mitte getrennt
@@ -224,6 +225,7 @@ end;
 $$;
 revoke all on function public.household_detach_member(uuid, uuid, boolean) from public, anon, authenticated;
 
+-- [Teilgrenze] Hier darf die Einrichtung in einen neuen Teil wechseln (siehe scripts/bundle-sql.mjs)
 -- Funktionen für die App ----------------------------------------------------------
 
 -- Eigener Haushalt mit Mitgliedern (oder NULL)

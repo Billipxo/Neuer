@@ -32,12 +32,22 @@ Jetzt ist alles im Zweig `main`.
    - Region: **Central EU (Frankfurt)**
 3. **Create new project** – kurz warten, bis das Projekt bereit ist (1–2 Minuten).
 
-## Schritt 3 – Datenbank einrichten (einmal kopieren und einfügen)
+## Schritt 3 – Datenbank einrichten (dreimal kopieren und einfügen)
 
-1. Öffne in GitHub die Datei **`supabase/setup.sql`** → rechts oben auf das Symbol **„Copy raw file“** klicken.
+Die Einrichtung besteht aus drei kleinen Dateien. Führe sie **der Reihe nach** aus – für jede dasselbe:
+
+1. In GitHub die Datei öffnen und rechts oben über dem Text auf das Symbol **„Copy raw file“** klicken:
+   erst **`supabase/setup-teil-1.sql`**, dann **`supabase/setup-teil-2.sql`**, dann **`supabase/setup-teil-3.sql`**.
 2. In Supabase links auf **SQL Editor** → **New query**.
-3. Alles einfügen → unten rechts **Run** klicken.
-4. Es sollte **„Success. No rows returned“** erscheinen. Fertig – alle Tabellen und Schutzregeln sind angelegt.
+3. Alles einfügen → unten rechts **Run** klicken. Fragt Supabase wegen einer „destructive operation“ nach, mit
+   **Run this query** bestätigen – die Dateien räumen nur ihre eigenen Regeln auf, bevor sie sie neu anlegen.
+4. Es sollte **„Success. No rows returned“** erscheinen. Dann die nächste Datei.
+
+Nach der dritten Datei sind alle Tabellen und Schutzregeln angelegt (zur Kontrolle: links **Table Editor** zeigt 13 Tabellen).
+Jede Datei lässt sich gefahrlos wiederholen – wenn du unsicher bist, ob eine durchgelaufen ist, führe sie einfach noch einmal aus.
+
+> Warum drei Dateien? Manche Geräte schneiden lange Texte beim Einfügen nach 20.000 Zeichen ab; dann meldet Supabase
+> einen „syntax error“. Die komplette Einrichtung in einer Datei gibt es weiterhin als `supabase/setup.sql`.
 
 ## Schritt 4 – Anmelde-E-Mail auf Deutsch (mit Code fürs iPhone)
 
@@ -166,6 +176,7 @@ Verschickt wird ein lesbarer Text; wer selbst deine App nutzt, übernimmt den Pl
 | Auf dem iPhone nach Klick auf den Link nicht angemeldet | In der installierten App den **Code** aus der Mail eingeben (Schritt 4 + 8). |
 | Kein Code in der Mail | E-Mail-Vorlage aus Schritt 4 einfügen und speichern. |
 | Meldung „Die Datenbank ist noch nicht eingerichtet“ | Schritt 3 wiederholen. |
+| „syntax error at or near …“ beim Einrichten der Datenbank | Der Text wurde beim Einfügen abgeschnitten (manche Geräte kürzen nach 20.000 Zeichen). Die drei kleinen Dateien aus Schritt 3 nacheinander ausführen. Es wurde dabei noch nichts angelegt – du kannst einfach neu beginnen. |
 | „Die Datenbank kennt den gemeinsamen Haushalt noch nicht“ | Die Datei `20261113000011_household.sql` im SQL Editor ausführen (siehe „Später: Updates der Datenbank“). |
 | Änderungen der anderen im Haushalt erscheinen erst nach einigen Sekunden | Normal: Spätestens alle 15 Sekunden wird neu geladen. Sofort geht es, wenn in Supabase unter **Database → Publications** bei `supabase_realtime` die Tabellen `plan_items` und `shopping_items` aktiv sind (das erledigt die Migration). |
 | „Keine Verbindung zu Open Food Facts“ | Der freie Lebensmitteldienst ist kurz nicht erreichbar – später erneut versuchen oder das Lebensmittel selbst anlegen. |
@@ -173,8 +184,12 @@ Verschickt wird ein lesbarer Text; wer selbst deine App nutzt, übernimmt den Pl
 
 ## Später: Updates der Datenbank
 
-Wenn du die Datenbank **schon einmal** eingerichtet hast und eine neue Version der App kommt, musst du nur die **neuen**
-Dateien aus `supabase/migrations/` im SQL Editor ausführen (die Dateinamen sind nach Datum sortiert). Aktuell sind das:
+Wenn du die Datenbank **schon einmal** eingerichtet hast und eine neue Version der App kommt, gibt es zwei Wege:
+
+- **Am einfachsten:** die drei Dateien aus Schritt 3 noch einmal der Reihe nach ausführen. Vorhandenes bleibt, wie es ist
+  (auch deine Daten), Neues kommt dazu.
+- **Gezielt:** nur die **neuen** Dateien aus `supabase/migrations/` im SQL Editor ausführen (die Dateinamen sind nach
+  Datum sortiert). Aktuell sind das:
 
 - `20261110000005_kitchen.sql` – Heißluftfritteuse und Lieblingsrezepte
 - `20261110000006_diet.sql` – Ernährungsweise (alles, vegetarisch, vegan)
@@ -184,7 +199,7 @@ Dateien aus `supabase/migrations/` im SQL Editor ausführen (die Dateinamen sind
 - `20261111000010_target_weight.sql` – Optionales Zielgewicht
 - `20261113000011_household.sql` – Gemeinsamer Haushalt (geteilter Wochenplan und geteilte Einkaufsliste)
 
-Wer noch gar nichts eingerichtet hat, nimmt wie oben einfach die komplette `supabase/setup.sql` – sie enthält alles.
+Wer noch gar nichts eingerichtet hat, nimmt wie oben die drei Dateien aus Schritt 3 – sie enthalten alles.
 
 ## Optional: Ausprobieren ohne Konto
 

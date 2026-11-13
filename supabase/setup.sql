@@ -1,6 +1,7 @@
 -- Teller – komplette Datenbank-Einrichtung
 -- Diese Datei wird automatisch aus supabase/migrations/ erzeugt (npm run db:bundle).
 -- In Supabase: SQL Editor → New query → gesamten Inhalt einfügen → Run.
+-- Bricht das Einfügen ab („syntax error“), stattdessen setup-teil-1.sql, -2 und -3 nacheinander ausführen.
 
 -- ===== 20261109000001_core.sql =====
 -- Teller – Phase 1: Profil, Lebensmittel, Gerichte, Tagesprotokoll, Wasser, Gewicht
@@ -30,9 +31,13 @@ create table if not exists public.profiles (
 
 alter table public.profiles enable row level security;
 
+drop policy if exists "profiles_select_own" on public.profiles;
 create policy "profiles_select_own" on public.profiles for select using (auth.uid() = id);
+drop policy if exists "profiles_insert_own" on public.profiles;
 create policy "profiles_insert_own" on public.profiles for insert with check (auth.uid() = id);
+drop policy if exists "profiles_update_own" on public.profiles;
 create policy "profiles_update_own" on public.profiles for update using (auth.uid() = id) with check (auth.uid() = id);
+drop policy if exists "profiles_delete_own" on public.profiles;
 create policy "profiles_delete_own" on public.profiles for delete using (auth.uid() = id);
 
 -- Lebensmittel-Bibliothek (eigene + übernommene Open-Food-Facts-Produkte) ----
@@ -119,6 +124,10 @@ declare t text;
 begin
   foreach t in array array['foods','dishes','log_entries','water_logs','weight_logs'] loop
     execute format('alter table public.%I enable row level security', t);
+    execute format('drop policy if exists "%1$s_select_own" on public.%1$I', t);
+    execute format('drop policy if exists "%1$s_insert_own" on public.%1$I', t);
+    execute format('drop policy if exists "%1$s_update_own" on public.%1$I', t);
+    execute format('drop policy if exists "%1$s_delete_own" on public.%1$I', t);
     execute format('create policy "%1$s_select_own" on public.%1$I for select using (auth.uid() = user_id)', t);
     execute format('create policy "%1$s_insert_own" on public.%1$I for insert with check (auth.uid() = user_id)', t);
     execute format('create policy "%1$s_update_own" on public.%1$I for update using (auth.uid() = user_id) with check (auth.uid() = user_id)', t);
@@ -127,19 +136,26 @@ begin
 end $$;
 
 -- Konto löschen: entfernt den eigenen Auth-Nutzer, alle Daten werden per Cascade gelöscht.
-create or replace function public.delete_my_account()
-returns void
-language plpgsql
-security definer
-set search_path = public, auth
-as $$
+-- Nur anlegen, wenn es die Funktion noch nicht gibt: Die Haushalts-Migration ersetzt sie durch eine erweiterte
+-- Fassung, und ein erneutes Ausführen dieser Datei soll das nicht zurückdrehen.
+do $do$
 begin
-  if auth.uid() is null then
-    raise exception 'Nicht angemeldet';
+  if to_regprocedure('public.delete_my_account()') is null then
+    create function public.delete_my_account()
+    returns void
+    language plpgsql
+    security definer
+    set search_path = public, auth
+    as $fn$
+    begin
+      if auth.uid() is null then
+        raise exception 'Nicht angemeldet';
+      end if;
+      delete from auth.users where id = auth.uid();
+    end;
+    $fn$;
   end if;
-  delete from auth.users where id = auth.uid();
-end;
-$$;
+end $do$;
 
 revoke all on function public.delete_my_account() from public, anon;
 grant execute on function public.delete_my_account() to authenticated;
@@ -163,10 +179,21 @@ create table if not exists public.shopping_items (
 create index if not exists shopping_items_user_idx on public.shopping_items (user_id);
 
 alter table public.shopping_items enable row level security;
-create policy "shopping_items_select_own" on public.shopping_items for select using (auth.uid() = user_id);
-create policy "shopping_items_insert_own" on public.shopping_items for insert with check (auth.uid() = user_id);
-create policy "shopping_items_update_own" on public.shopping_items for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
-create policy "shopping_items_delete_own" on public.shopping_items for delete using (auth.uid() = user_id);
+-- Die einfachen Regeln nur anlegen, solange es die Regeln für den gemeinsamen Haushalt (spätere Migration) noch
+-- nicht gibt – so lässt sich diese Datei gefahrlos erneut ausführen.
+do $$
+begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'shopping_items' and policyname = 'shopping_items_select') then
+    drop policy if exists "shopping_items_select_own" on public.shopping_items;
+    drop policy if exists "shopping_items_insert_own" on public.shopping_items;
+    drop policy if exists "shopping_items_update_own" on public.shopping_items;
+    drop policy if exists "shopping_items_delete_own" on public.shopping_items;
+    create policy "shopping_items_select_own" on public.shopping_items for select using (auth.uid() = user_id);
+    create policy "shopping_items_insert_own" on public.shopping_items for insert with check (auth.uid() = user_id);
+    create policy "shopping_items_update_own" on public.shopping_items for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
+    create policy "shopping_items_delete_own" on public.shopping_items for delete using (auth.uid() = user_id);
+  end if;
+end $$;
 
 -- ===== 20261109000003_meal_plan.sql =====
 -- Teller – Wochenplaner
@@ -190,10 +217,21 @@ create table if not exists public.plan_items (
 create index if not exists plan_items_user_date_idx on public.plan_items (user_id, date);
 
 alter table public.plan_items enable row level security;
-create policy "plan_items_select_own" on public.plan_items for select using (auth.uid() = user_id);
-create policy "plan_items_insert_own" on public.plan_items for insert with check (auth.uid() = user_id);
-create policy "plan_items_update_own" on public.plan_items for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
-create policy "plan_items_delete_own" on public.plan_items for delete using (auth.uid() = user_id);
+-- Die einfachen Regeln nur anlegen, solange es die Regeln für den gemeinsamen Haushalt (spätere Migration) noch
+-- nicht gibt – so lässt sich diese Datei gefahrlos erneut ausführen.
+do $$
+begin
+  if not exists (select 1 from pg_policies where schemaname = 'public' and tablename = 'plan_items' and policyname = 'plan_items_select') then
+    drop policy if exists "plan_items_select_own" on public.plan_items;
+    drop policy if exists "plan_items_insert_own" on public.plan_items;
+    drop policy if exists "plan_items_update_own" on public.plan_items;
+    drop policy if exists "plan_items_delete_own" on public.plan_items;
+    create policy "plan_items_select_own" on public.plan_items for select using (auth.uid() = user_id);
+    create policy "plan_items_insert_own" on public.plan_items for insert with check (auth.uid() = user_id);
+    create policy "plan_items_update_own" on public.plan_items for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
+    create policy "plan_items_delete_own" on public.plan_items for delete using (auth.uid() = user_id);
+  end if;
+end $$;
 
 -- ===== 20261109000004_achievements.sql =====
 -- Teller – Erfolge
@@ -208,9 +246,13 @@ create table if not exists public.achievements (
 );
 
 alter table public.achievements enable row level security;
+drop policy if exists "achievements_select_own" on public.achievements;
 create policy "achievements_select_own" on public.achievements for select using (auth.uid() = user_id);
+drop policy if exists "achievements_insert_own" on public.achievements;
 create policy "achievements_insert_own" on public.achievements for insert with check (auth.uid() = user_id);
+drop policy if exists "achievements_update_own" on public.achievements;
 create policy "achievements_update_own" on public.achievements for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "achievements_delete_own" on public.achievements;
 create policy "achievements_delete_own" on public.achievements for delete using (auth.uid() = user_id);
 
 -- ===== 20261110000005_kitchen.sql =====
@@ -252,9 +294,13 @@ create table if not exists public.recipe_variants (
 create index if not exists recipe_variants_user_idx on public.recipe_variants (user_id);
 
 alter table public.recipe_variants enable row level security;
+drop policy if exists "recipe_variants_select_own" on public.recipe_variants;
 create policy "recipe_variants_select_own" on public.recipe_variants for select using (auth.uid() = user_id);
+drop policy if exists "recipe_variants_insert_own" on public.recipe_variants;
 create policy "recipe_variants_insert_own" on public.recipe_variants for insert with check (auth.uid() = user_id);
+drop policy if exists "recipe_variants_update_own" on public.recipe_variants;
 create policy "recipe_variants_update_own" on public.recipe_variants for update using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "recipe_variants_delete_own" on public.recipe_variants;
 create policy "recipe_variants_delete_own" on public.recipe_variants for delete using (auth.uid() = user_id);
 
 -- ===== 20261111000008_units_basics.sql =====
@@ -424,6 +470,7 @@ drop trigger if exists household_members_after_delete on public.household_member
 create trigger household_members_after_delete after delete on public.household_members
   for each row execute function public.household_after_member_left();
 
+-- [Teilgrenze] Hier darf die Einrichtung in einen neuen Teil wechseln (siehe scripts/bundle-sql.mjs)
 -- Hilfsfunktionen (nicht für die App freigegeben) ---------------------------------
 
 -- Einladungscode aus 10 zufälligen Zeichen (0-9, A-F), in der Mitte getrennt
@@ -507,6 +554,7 @@ end;
 $$;
 revoke all on function public.household_detach_member(uuid, uuid, boolean) from public, anon, authenticated;
 
+-- [Teilgrenze] Hier darf die Einrichtung in einen neuen Teil wechseln (siehe scripts/bundle-sql.mjs)
 -- Funktionen für die App ----------------------------------------------------------
 
 -- Eigener Haushalt mit Mitgliedern (oder NULL)
