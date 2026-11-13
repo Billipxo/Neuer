@@ -132,8 +132,8 @@ Ohne diesen Schritt führt der Link in der Mail ins Leere.
 3. Öffne **Teller** vom Startbildschirm, gib deine E-Mail-Adresse ein und tippe auf **Anmeldelink senden**.
    Ohne eigenen Mail-Dienst muss es die Adresse deines Supabase-Kontos sein (siehe Schritt 4).
 4. In der Mail:
-   - **Android/Computer:** auf den Link tippen (**Sign in** bzw. **Bei Teller anmelden**) – auf demselben Gerät, auf dem
-     du die Mail angefordert hast.
+   - **Android/Computer:** auf den Link tippen (**Sign in**, **Confirm your mail** bzw. **Bei Teller anmelden**). Du wirst
+     dort angemeldet, wo sich der Link öffnet. Jeder Link gilt nur einmal und nur kurze Zeit.
    - **iPhone:** den **6-stelligen Code** in der App eingeben. Den Code enthält die Mail erst mit eigener Vorlage
      (siehe „Eigener Mail-Dienst und deutsche Anmelde-Mail“). Bis dahin kannst du Teller auf dem iPhone in Safari nutzen,
      ohne es zu installieren – dort funktioniert der Link.
@@ -233,6 +233,7 @@ Verschickt wird ein lesbarer Text; wer selbst deine App nutzt, übernimmt den Pl
 |---|---|
 | Die App zeigt eine leere Seite oder „Die Verbindung zur Datenbank ist falsch eingestellt“ | Einer der beiden Werte bei Vercel stimmt nicht. In Vercel **Environment Variables** öffnen: `VITE_SUPABASE_URL` muss die Adresse sein (`https://….supabase.co`), `VITE_SUPABASE_ANON_KEY` der öffentliche Schlüssel (`sb_publishable_…` oder `eyJ…`). Danach **Deployments** → **⋯** → **Redeploy**. |
 | Die App zeigt „Supabase ist noch nicht eingerichtet“ | Umgebungsvariablen in Vercel prüfen (Schritt 6, genaue Namen!) → in Vercel **Deployments** → **⋯** → **Redeploy**. |
+| Nach dem Klick auf den Link steht wieder die Anmeldeseite da | Der Link war abgelaufen oder schon benutzt (jeder gilt nur einmal; manche Mail-Programme rufen Links vorab ab). Einen neuen anfordern. Meldet die App eine Grenze pro Stunde: Der eingebaute Mail-Versand von Supabase erlaubt nur wenige Mails pro Stunde – später erneut versuchen oder den eigenen Mail-Dienst einrichten. |
 | Keine Mail angekommen | Spam-Ordner prüfen. Zu viele Versuche? Ein paar Minuten warten. Siehe „E-Mail-Versand“ oben. |
 | Link in der Mail öffnet eine Fehlerseite / „localhost“ | Schritt 7 prüfen (Site URL und Redirect URL). |
 | Auf dem iPhone nach Klick auf den Link nicht angemeldet | In der installierten App den **Code** aus der Mail eingeben (Schritt 4 + 8). |

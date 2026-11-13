@@ -1,22 +1,15 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Sheet } from '../components/ui/Sheet'
 import { AboutContent } from '../components/about/AboutContent'
 import { MailCheck, Sparkles } from 'lucide-react'
 import { useAuth } from '../app/auth'
-import { isSupabaseConfigured, supabaseConfigProblem } from '../lib/supabase'
+import { authLinkProblem, isSupabaseConfigured, supabaseConfigProblem } from '../lib/supabase'
+import { loginError, withoutLinkProblem } from '../lib/authMessages'
 import { Button } from '../components/ui/Button'
 import { Field } from '../components/ui/Field'
 
 /** Demo-Modus anzeigen? Ohne Supabase immer; mit Supabase nur, wenn VITE_ENABLE_DEMO=true gesetzt ist */
 const showDemo = !isSupabaseConfigured || import.meta.env.VITE_ENABLE_DEMO === 'true'
-
-function loginError(msg: string): string {
-  if (/rate limit|security purposes|seconds/i.test(msg)) return 'Bitte warte kurz, bevor du einen neuen Link anforderst.'
-  if (/invalid.*email|unable to validate email/i.test(msg)) return 'Diese E-Mail-Adresse sieht ungültig aus.'
-  if (/signups not allowed/i.test(msg)) return 'Neue Registrierungen sind in Supabase deaktiviert (Authentication → Sign In / Providers).'
-  if (/failed to fetch|network/i.test(msg)) return 'Keine Verbindung zum Server. Prüfe deine Internetverbindung und die Supabase-URL.'
-  return `Der Link konnte nicht gesendet werden: ${msg}`
-}
 
 export function LoginPage() {
   const [aboutOpen, setAboutOpen] = useState(false)
@@ -26,6 +19,11 @@ export function LoginPage() {
   const [email, setEmail] = useState('')
   const [state, setState] = useState<'idle' | 'sending' | 'sent'>('idle')
   const [error, setError] = useState<string | null>(null)
+
+  // Hinweis auf einen abgelaufenen Link nur einmal zeigen: Angaben aus der Adresszeile nehmen
+  useEffect(() => {
+    if (authLinkProblem) window.history.replaceState(null, '', withoutLinkProblem(window.location.href))
+  }, [])
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
@@ -48,14 +46,20 @@ export function LoginPage() {
         <p className="mt-2 text-muted">Kalorien im Blick, ausgewogen essen, entspannt planen.</p>
       </div>
 
+      {authLinkProblem && state !== 'sent' && (
+        <p role="alert" className="mb-4 rounded-2xl bg-over/15 p-4 text-sm">
+          {authLinkProblem}
+        </p>
+      )}
+
       {state === 'sent' ? (
         <div className="animate-fade-up rounded-3xl bg-surface p-6 text-center ring-1 ring-line" role="status">
           <MailCheck className="mx-auto mb-3 size-10 text-brand" aria-hidden />
           <h2 className="text-lg font-semibold">Schau in dein Postfach</h2>
           <p className="mt-1 text-sm text-muted">
-            Wir haben einen Anmeldelink an <strong className="text-ink">{email}</strong> geschickt. Tippe auf den Link,
-            um dich anzumelden. Öffne ihn am besten auf demselben Gerät und im selben Browser. Kein Mail da? Schau auch
-            im Spam-Ordner nach.
+            Wir haben einen Anmeldelink an <strong className="text-ink">{email}</strong> geschickt. Tippe auf den Link
+            in der Mail – du wirst dort angemeldet, wo du ihn öffnest. Jeder Link gilt nur einmal. Keine Mail da? Schau
+            auch im Spam-Ordner nach.
           </p>
           <form
             className="mt-5 space-y-3 text-left"

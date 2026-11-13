@@ -1,5 +1,12 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import { checkSupabaseConfig } from './supabaseConfig'
+import { linkProblemFromUrl } from './authMessages'
+
+/**
+ * Hat ein Link aus der Anmelde-Mail nicht funktioniert (abgelaufen, schon benutzt), steht der Grund in der Adresse.
+ * Er wird hier festgehalten, bevor die Verbindung die Adresse auswertet und aufräumt – die Anmeldeseite zeigt ihn an.
+ */
+export const authLinkProblem: string | null = typeof window === 'undefined' ? null : linkProblemFromUrl(window.location.href)
 
 // Öffentlicher Schlüssel für den Browser. Supabase nennt ihn inzwischen „Publishable key“ – beide Namen gelten.
 const rawKey = (import.meta.env.VITE_SUPABASE_ANON_KEY ||
@@ -13,7 +20,10 @@ let problem: string | null = config.status === 'invalid' ? config.problem : null
 if (config.status === 'ok') {
   try {
     client = createClient(config.url, config.key, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' },
+      // „implicit“: Der Link aus der Mail meldet dort an, wo er geöffnet wird – auch in einem anderen Browser oder
+      // auf einem anderen Gerät als dem, auf dem er angefordert wurde. (Mit „pkce“ ginge er nur im selben Browser;
+      // Mail-Programme öffnen Links aber oft woanders.)
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'implicit' },
     })
   } catch (e) {
     // Falsche Zugangswerte dürfen die App nicht mit einer leeren Seite stehen lassen
