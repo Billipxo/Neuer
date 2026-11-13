@@ -11,20 +11,22 @@ läuft danach im Vollbild wie eine native App – ein App Store ist nicht nötig
 | Bereich | Inhalt |
 |---|---|
 | **Konto & Onboarding** | Login per Magic Link oder 6-stelligem Code aus derselben E-Mail (wichtig für installierte Apps auf dem iPhone), Name, optionale Körperdaten, frei wählbares Ziel (Abnehmen, Halten, Zunehmen, eigene Zahl). Tagesziel frei einstellbar, optionaler Vorschlag per Mifflin-St Jeor × Aktivitätsfaktor ± Zu-/Abschlag. Makro-Vorschlag 25/45/30 %, frei anpassbar. |
-| **Heute** | Fortschrittsring (gegessen / Ziel / übrig), Balken für Eiweiß, Kohlenhydrate, Fett, Mahlzeiten getrennt nach Frühstück, Mittag, Abend, Snacks, Schnellaktionen für Mahlzeit, Wasser, Gewicht, eine sachliche Motivationszeile und ein Trink-Hinweis mit „+250 ml“. Mahlzeiten lassen sich kopieren oder „wie am Vortag“ übernehmen. |
-| **Mahlzeiten erfassen** | **Grundnahrungsmittel sofort und offline** (die 256 Zutaten der Nährwerttabelle: Apfel, Haferflocken, Hähnchenbrust, Öl …) mit passenden Maßen – 1 Stück, 1 Scheibe, 1 EL, 1 TL –, Suche in Open Food Facts, Barcode-Scan per Kamera (html5-qrcode, mit manueller Eingabe als Ausweichmöglichkeit), eigene Lebensmittel (pro 100 g oder pro Portion), Mengen in Gramm, Stück oder Portionen, Zuletzt verwendet und Favoriten, eigene Gerichte aus mehreren Zutaten, Bearbeiten und Löschen. Mehrere Lebensmittel nacheinander erfassen, ohne die Seite zu verlassen. |
+| **Heute** | Fortschrittsring (gegessen / Ziel / übrig), Balken für Eiweiß, Kohlenhydrate, Fett, Mahlzeiten getrennt nach Frühstück, Mittag, Abend, Snacks, Schnellaktionen für Mahlzeit, Wasser, Gewicht, eine sachliche Motivationszeile und ein Trink-Hinweis mit „+250 ml“. Mahlzeiten lassen sich kopieren, „wie am Vortag“ übernehmen oder mit einem Tipp **als eigenes Gericht speichern**. Nach dem Löschen eines Eintrags erscheint „Rückgängig“. |
+| **Mahlzeiten erfassen** | **Grundnahrungsmittel sofort und offline** (die 256 Zutaten der Nährwerttabelle: Apfel, Haferflocken, Hähnchenbrust, Öl …) mit passenden Maßen – 1 Stück, 1 Scheibe, 1 EL, 1 TL –, Suche in Open Food Facts, Barcode-Scan per Kamera (html5-qrcode, mit manueller Eingabe als Ausweichmöglichkeit), eigene Lebensmittel (pro 100 g oder pro Portion), Mengen in Gramm, Stück oder Portionen, Zuletzt verwendet und Favoriten, eigene Gerichte aus mehreren Zutaten, Bearbeiten und Löschen. Mehrere Lebensmittel nacheinander erfassen, ohne die Seite zu verlassen. **Schnell-Eintrag**: nur Kalorien (auf Wunsch mit Makros) eintragen, wenn es schnell gehen soll – etwa im Restaurant. |
 | **Kochbuch** | 443 deutsche Rezepte (lokales JSON) in 13 Kapiteln mit Inhaltsverzeichnis: Frühstück & Brotzeit (56), Suppen & Eintöpfe (38), Salate & Bowls (42), Pasta & Nudeln (38), Kartoffeln, Reis & Getreide (31), Fleisch & Geflügel (40), Fisch & Meeresfrüchte (29), Vegetarisch & vegan (42), Aus dem Ofen & Aufläufe (23), Snacks & Fingerfood (34), Süßes & Backen (30), Grundrezepte, Saucen & Dips (24), Smoothies & Getränke (16). Alle mit ausführlichen Schritt-für-Schritt-Anleitungen, Zutaten-Hinweisen und Tipps & Varianten; 82 Klassiker, 309 vegetarisch, davon 80 vegan, 91 für die Heißluftfritteuse (60 eigene Rezepte, 31 mit Variante zu Ofen/Pfanne). kcal, Makros und Ballaststoffe werden aus den Zutaten berechnet; vegetarisch, vegan, glutenfrei, proteinreich, low carb, schnell und ballaststoffreich werden automatisch erkannt. Galerie- oder Listenansicht, Favoriten (geräteübergreifend), Sortierung nach Empfehlung, kcal, Zeit, Eiweiß oder „Oft gekocht“, Karussells „Passt zu deinem Tag“, „Aus der Heißluftfritteuse“, „Saison im &lt;Monat&gt;“, „Zuletzt gekocht“ und „Deine Favoriten“. Filter nach Kapitel, Mahlzeit, max. kcal, Zubereitungszeit, Stichwort und Eigenschaften, Detailansicht mit Portionsskalierung, „Zum Tagesplan“, „Zutaten auf die Einkaufsliste“, „Schon X× gekocht“ und Rezept teilen. |
 | **Eigene Rezepte & Varianten** | Jedes Kochbuch-Rezept lässt sich abwandeln: Mengen ändern, Zutaten tauschen oder entfernen, neue Zutaten aus der Nährwerttabelle (256 Einträge), per **Barcode-Scan** (Nährwerte kommen automatisch aus Open Food Facts), aus der Produktsuche oder mit eigenen Werten von der Packung hinzufügen, Schritte und Portionen anpassen, Notiz dazu. Die Nährwerte werden bei jeder Änderung neu berechnet und mit dem Original verglichen („−120 kcal, +4 g Eiweiß“). Eine Vorschlagskarte „Leichter oder vollwertiger“ nennt bewährte Alternativen (Sahne → Kochsahne, Hack → Putenhack oder Linsen, Reis → Vollkornreis …) mit der Ersparnis pro Portion und tauscht auf Tipp. Eigene Rezepte von Grund auf gehen genauso. Varianten und eigene Rezepte stehen im Kochbuch (Chip „Meine Rezepte“), lassen sich eintragen, einplanen, kochen, teilen, auf die Einkaufsliste setzen und werden bei „Woche vorschlagen“ und „Was habe ich da?“ berücksichtigt. Gespeichert werden sie im Konto (Tabelle `recipe_variants`), damit sie auf allen Geräten gleich sind. |
 | **Kochmodus** | Ein Schritt pro Bildschirm in großer Schrift, Zutaten zum Abhaken, Zeitangaben im Text werden zu Timer-Knöpfen, app-weite Timer-Leiste mit Ton und Vibration, Display bleibt an. |
 | **Kochwissen** | 27 Anleitungen: Heißluftfritteuse mit Garzeiten-Tabelle, Backofen (Ober-/Unterhitze, Umluft, Grill), Küchen-Grundausstattung, Schneiden, Reis, Nudeln, Getreide (Quinoa, Bulgur, Couscous …), Kartoffeln, Eier, Gemüse, Hülsenfrüchte, Fleisch (braten, schmoren, garziehen), Fisch, Saucen binden & abschmecken, Salatdressings, Brühe selbst kochen, Backen (Teige, Vollkorn, weniger Zucker), Kerntemperaturen & Küchenhygiene, Meal Prep, Einfrieren & Auftauen, Reste verwerten, Grundvorrat, Messen ohne Waage, Würzen, Gewürzmischungen, Saisonkalender, Lagerung. Rezepte verlinken passendes Kochwissen. |
 | **Was habe ich da?** | Zutaten antippen → passende Rezepte („Alles da“, „Fast alles da“), fehlende Zutaten mit einem Tipp auf die Einkaufsliste, Vorrat aus der Einkaufsliste übernehmen. |
-| **Wochenplaner** | Mo–So mit vier Slots pro Tag, Belegung per Rezept, eigenem Gericht oder Freitext, Tages- und Wochensummen, „Woche vorschlagen“ und „Als gegessen eintragen“. |
-| **Einkaufsliste** | Aus dem Wochenplan erzeugen (Zutaten zusammenführen, Mengen addieren, nach Kategorien sortieren), abhaken, eigene Artikel („2 l Milch“), „bereits im Vorrat“, Liste leeren, Liste teilen (z. B. per Messenger). |
+| **Wochenplaner** | Mo–So mit vier Slots pro Tag, Belegung per Rezept, eigenem Gericht oder Freitext, Tages- und Wochensummen, „Woche vorschlagen“ und „Als gegessen eintragen“. **Plan teilen**: als lesbarer Text über das Teilen-Menü – mit einem Link, über den andere den Plan mit einem Tipp in ihren eigenen übernehmen. |
+| **Einkaufsliste** | Aus dem Wochenplan erzeugen (Zutaten zusammenführen, Mengen addieren, nach Kategorien sortieren), abhaken, eigene Artikel („2 l Milch“), „bereits im Vorrat“, Liste leeren (mit „Rückgängig“), Liste teilen (z. B. per Messenger). |
+| **Gemeinsamer Haushalt** | Mehrere Konten führen **einen Wochenplan und eine Einkaufsliste gemeinsam**: Haushalt gründen, per Einladungslink oder Code beitreten (bis zu acht Mitglieder), Änderungen der anderen erscheinen ohne Neuladen. Portionen im Plan gelten pro Person, die Einkaufsliste rechnet für alle „Personen am Tisch“. Eigene Rezepte und Gerichte sind für Mitglieder lesbar (kochen, einplanen, eintragen). Protokoll, Gewicht, Wasser, Ziele und Erfolge bleiben privat. Wer geht, kann eine Kopie mitnehmen. |
 | **Verlauf** | Tagesprotokoll mit Datumsauswahl, Wochen- und Monatsdiagramme (Recharts) für kcal, Makros, Gewicht und Wasser, jeweils auch als Tabelle. **Wochenrückblick** als neutrale Bilanz (Tage, Ø kcal und Eiweiß, Zielbereich, Wasser, Gemüsesorten, Gewicht zur Vorwoche, meistgekochtes Rezept) und **Gewicht & Ziel** mit 7-Tage-Mittel, Trend pro Woche und Weg zum Zielgewicht. Die Heute-Seite zeigt eine Zeile zur laufenden Woche. |
 | **Erfolge** | 10 Abzeichen mit Fortschritt im Profil und kurzer Animation beim Freischalten, Serie ohne Druck. |
 | **Offline** | Ohne Verbindung weiter eintragen: Änderungen landen in einer Warteschlange und werden automatisch übertragen, sobald wieder Netz da ist. |
+| **App-Verknüpfungen** | Langes Drücken auf das App-Symbol (Android, Desktop) führt direkt zu „Mahlzeit eintragen“, „Barcode scannen“, Einkaufsliste oder Wochenplan. |
 | **Über & Datenschutz** | Seite „Über Teller“ (auch von der Anmeldeseite aus erreichbar): was wo gespeichert wird, welche Dienste beteiligt sind (nur Open Food Facts), wie man exportiert und löscht, Gesundheitshinweis, Impressum und Kontakt aus `VITE_IMPRESSUM`/`VITE_CONTACT_EMAIL`, Versionsnummer. Rezeptseiten zeigen „Ähnliche Rezepte“. |
-| **Einstellungen** | Tagesziel, Makros, Profil, Wasserziel, Ernährungsweise (alles/vegetarisch/vegan), Unverträglichkeiten & Allergien (Gluten, Milch, Ei, Nüsse, Soja, Sesam, Fisch), optionales Zielgewicht, Heißluftfritteuse vorhanden, Farbschema (System/Hell/Dunkel), Export als CSV oder JSON, Abmelden, Konto löschen (mit Bestätigung). |
+| **Einstellungen** | Tagesziel, Makros, Profil, Wasserziel, Ernährungsweise (alles/vegetarisch/vegan), Unverträglichkeiten & Allergien (Gluten, Milch, Ei, Nüsse, Soja, Sesam, Fisch), optionales Zielgewicht, Heißluftfritteuse vorhanden, Farbschema (System/Hell/Dunkel), Export als CSV oder JSON, **Sicherung einspielen** (die JSON-Datei wieder einlesen – auch in ein anderes Konto, ohne Doppelte), gemeinsamer Haushalt, Abmelden, Konto löschen (mit Bestätigung). |
 
 ## Technik
 
@@ -34,7 +36,12 @@ läuft danach im Vollbild wie eine native App – ein App Store ist nicht nötig
 - TanStack Query (Cache wird im Browser gespeichert → zuletzt geladene Daten sind offline lesbar)
 - Recharts für Diagramme, html5-qrcode für den Barcode-Scan, lucide-react für Icons
 - Vitest für die reinen Funktionen (`src/**/*.test.ts`), Playwright für Oberflächen-Tests (`e2e/`)
-- GitHub Actions (`.github/workflows/ci.yml`): Typprüfung, Unit-Tests, Build und Oberflächen-Tests bei jedem Push
+- **Datenbank-Tests** (`supabase/tests/`, `npm run test:db`): Alle Migrationen werden in eine leere PostgreSQL eingespielt und die
+  Zugriffsregeln mit den Rechten der App geprüft („sieht Ben Annas Plan?“).
+- **Oberflächen-Tests mit Konto** (`npm run test:e2e:konto`): Ein kleines Test-Backend (`e2e/backend/`) bildet Anmeldung, Tabellen-Zugriff
+  und Funktionen von Supabase nach – dahinter dieselbe PostgreSQL mit allen Migrationen. So laufen alle Abläufe zusätzlich gegen echte
+  Spalten, Regeln und Funktionen, auch mit zwei Personen in einem Haushalt.
+- GitHub Actions (`.github/workflows/ci.yml`): Typprüfung, Unit-Tests, Build, Datenbank-Tests und Oberflächen-Tests (Demo und Konto) bei jedem Push
 
 ```
 src/
@@ -46,6 +53,8 @@ src/
   components/   UI-Bausteine und Feature-Komponenten
   pages/        Seiten
 supabase/migrations/   SQL-Migrationen
+supabase/tests/        Datenbank-Tests (Zugriffsregeln) und Supabase-Nachbau für leere Test-Datenbanken
+e2e/                   Oberflächen-Tests; e2e/backend/ = Test-Backend für die Tests mit Konto
 ```
 
 ## Setup
@@ -92,6 +101,8 @@ Weitere Befehle:
 ```bash
 npm test          # Vitest (Rechenlogik, Einkaufsliste, Planer, Erfolge, Offline-Speicher …)
 npm run test:e2e  # Playwright-Oberflächentests im Demo-Modus (baut und startet die App selbst)
+npm run test:db   # Migrationen + Zugriffsregeln in einer echten PostgreSQL prüfen (braucht psql und PGHOST/PGUSER/PGPASSWORD)
+npm run test:e2e:konto  # zusätzlich alle Abläufe mit Anmeldung gegen das Test-Backend (braucht dieselbe PostgreSQL)
 npm run db:bundle # supabase/setup.sql aus den Migrationen neu erzeugen
 npm run build     # Typprüfung + Produktions-Build nach dist/
 npm run preview   # Build lokal ansehen (inkl. Service Worker)
@@ -126,6 +137,10 @@ Der Barcode-Scanner benötigt HTTPS (auf Vercel/Netlify automatisch) und die Kam
 ## Datenschutz und Sicherheit
 
 - Jede Tabelle hat Row Level Security: Nutzer können nur Zeilen mit ihrer eigenen `user_id` lesen und schreiben.
+- **Gemeinsamer Haushalt**: Zeilen von Wochenplan und Einkaufsliste mit `household_id` dürfen alle Mitglieder dieses Haushalts lesen und
+  ändern; eigene Rezepte und Gerichte dürfen Mitglieder lesen. Mitgliedschaften entstehen nur über geprüfte Funktionen (gründen, mit
+  Einladungscode beitreten, verlassen, entfernen) – nie durch direktes Schreiben. Zehn Fehlversuche beim Code sperren das Beitreten für
+  eine Stunde. Alles andere (Protokoll, Lebensmittel, Gewicht, Wasser, Profil, Erfolge) bleibt strikt privat.
 - `delete_my_account()` ist eine `security definer`-Funktion, die nur den aufrufenden Nutzer aus `auth.users` löscht.
   Alle Daten hängen per `on delete cascade` daran und werden mit entfernt.
 - Im Browser wird nur der öffentliche `anon`-Key verwendet.
@@ -183,6 +198,25 @@ Entscheidungen, die ich ohne Rückfrage getroffen habe:
 - Zutaten eigener Gerichte erscheinen in Gramm; die Kategorie wird anhand von Stichwörtern erraten.
 - Rezept-Zutaten auf der Einkaufsliste landen als „eigene Artikel“ und werden beim Neu-Erzeugen aus dem Plan nicht überschrieben.
 
+**Gemeinsamer Haushalt & Teilen**
+- **Ein Haushalt je Konto**, höchstens acht Mitglieder. Im Haushalt *sind* Wochenplan und Einkaufsliste die gemeinsamen – private Einträge von vorher bleiben gespeichert, sind aber ausgeblendet und erscheinen nach dem Verlassen wieder. Beim Gründen oder Beitreten lässt sich der eigene Plan ab heute samt Einkaufsliste mitnehmen (Vorgabe: ja).
+- **Portionen gelten pro Person**: Die Bedeutung von „Portionen“ im Plan ändert sich nicht (so viel esse ich), dadurch bleiben Tages- und Wochensummen mit dem eigenen Tagesziel vergleichbar. Nur die Einkaufsliste aus dem Plan multipliziert mit den „Personen am Tisch“ (Vorgabe 2, wächst mit den Mitgliedern, frei einstellbar – z. B. für Kinder ohne eigenes Konto). „Als gegessen eintragen“ trägt die eigene Portion ins eigene, private Protokoll ein.
+- **Eigene Rezepte und Gerichte** der Mitglieder sind für die anderen lesbar, damit ein gemeinsamer Plan vollständig funktioniert (Rezept öffnen, kochen, Zutaten auf die Liste). Ändern kann sie nur, wem sie gehören; „Als eigene Variante speichern“ legt eine eigene Kopie an. Eigene Lebensmittel werden nicht geteilt – Gerichte tragen ihre Nährwerte ohnehin selbst.
+- **Verlassen**: Gemeinsame Einträge bleiben dem Haushalt erhalten (auch die selbst eingetragenen, sie gehen an ein verbleibendes Mitglied über). Wer geht oder entfernt wird, behält auf Wunsch eine Kopie von Plan ab heute und offenen Einkäufen. Verlässt das letzte Mitglied den Haushalt, wird er aufgelöst und der gemeinsame Bestand wieder zum eigenen. Wer gegründet hat, kann Mitglieder entfernen; geht diese Person, rückt das dienstälteste Mitglied nach. „Konto löschen“ lässt den gemeinsamen Bestand ebenfalls stehen.
+- **Einladung**: Code aus 10 Zeichen (0–9, A–F; beim Eintippen werden O/0 und I/L/1 gleich behandelt) oder Link `/beitreten/CODE`. Der Code wird über Anmeldung und Einrichtung hinweg gemerkt. Jedes Mitglied kann einen neuen Code erzeugen – alte Einladungen gelten dann nicht mehr.
+- **Aktualisierung**: Änderungen der anderen kommen über Supabase Realtime sofort an; zusätzlich lädt die App im Haushalt alle 15 Sekunden und beim Zurückkehren in die App neu, falls die Live-Verbindung fehlt. Die Live-Verbindung selbst konnte ich nur gegen das Test-Backend ohne Realtime prüfen – getestet ist also der Weg über das Nachladen.
+- **Ohne Haushalt ändert sich nichts**: Die Anfragen der App kennen `household_id` dann nicht. Die App läuft deshalb auch weiter, wenn die Migration `…0011_household.sql` noch nicht eingespielt ist; nur der Haushalt selbst meldet dann, dass die Datenbank aktualisiert werden muss.
+- **Im Demo-Modus** gibt es keinen Haushalt (alles liegt nur auf dem Gerät); Teilen als Text und als Link funktioniert.
+- **Plan als Link**: Der Link enthält den Plan selbst (keine Speicherung auf einem Server). Kochbuch-Rezepte reisen als Kennung, eigene Rezepte, Gerichte und Freitext als Titel mit Nährwerten. Eingefügt wird in die Woche des Plans – liegt sie zurück, in die laufende; Vorhandenes bleibt erhalten.
+- **Erfolge** rechnen im Haushalt mit dem gemeinsamen Plan („Erste Woche geplant“ gilt für alle Mitglieder).
+
+**Sicherung & Komfort**
+- **Sicherung einspielen**: Alle Zeilen bekommen neue IDs, Verweise (Eintrag → Lebensmittel/Gericht/Variante, Favoriten) werden umgeschrieben – so funktioniert es auch in ein anderes Konto. Was inhaltlich schon vorhanden ist, wird übersprungen (Lebensmittel mit Barcode gelten am Barcode als vorhanden); dieselbe Datei lässt sich gefahrlos mehrfach einspielen. Profil und Einstellungen werden nur auf Wunsch übernommen (vorgewählt, wenn das Konto noch leer ist). Mit Konto braucht das Einspielen Netz. Im Haushalt landen Plan und Einkaufsliste im gemeinsamen Bestand; exportiert werden nur eigene Rezepte und Gerichte.
+- **Rückgängig** legt gelöschte Zeilen mit gleichem Inhalt neu an (neue ID); der Hinweis bleibt sechs Sekunden stehen.
+- **Schnell-Eintrag** speichert einen Protokolleintrag ohne Lebensmittel („Portion“ mit den eingegebenen Werten).
+- **Mahlzeit als Gericht**: Einträge mit Grammangabe werden zu Zutaten in Gramm, alle anderen (Portionen, Schnell-Einträge) zu Portions-Zutaten.
+- **App-Verknüpfungen** stehen im Web-App-Manifest; iOS unterstützt sie nicht.
+
 **Erfolge**
 - **„Im Ziel“** = Tages-kcal innerhalb ±10 % des Tagesziels.
 - **„Ausgewogener Tag“** = kcal innerhalb ±15 % des Ziels **und** jeder Makro-Anteil höchstens 10 Prozentpunkte von der eingestellten Verteilung entfernt.
@@ -194,6 +228,9 @@ Entscheidungen, die ich ohne Rückfrage getroffen habe:
 - Erfolge werden aus den Daten der letzten 365 Tage berechnet und einmalig gespeichert (sie verschwinden nicht wieder).
 
 **Technik**
+- **Mehr als 1000 Zeilen**: Supabase liefert pro Anfrage höchstens 1000 Zeilen. Der Supabase-Speicher lädt deshalb seitenweise (Gesamtzahl aus der ersten Antwort, feste Reihenfolge nach Anlage-Zeitpunkt und ID), damit bei langem Protokoll nichts stillschweigend fehlt.
+- **Start-Paket**: Das Kochbuch (rund 600 kB) wird erst beim Öffnen geladen. `src/startBundle.test.ts` folgt den Importen ab `main.tsx` und schlägt an, wenn Kochbuch, Kochwissen, Diagramm- oder Scanner-Bibliothek wieder in das Start-Paket geraten.
+- **Test-Backend statt echtem Supabase**: Die Tests mit Konto laufen gegen einen Nachbau der Supabase-Schnittstellen über einer echten PostgreSQL (alle Migrationen, echte Zugriffsregeln). Das prüft Datenbank und App zusammen, ersetzt aber keinen Test gegen ein echtes Supabase-Projekt – Realtime und der E-Mail-Versand sind darin nicht enthalten.
 - **Offline-Schreiben**: Eine Schicht über Supabase (`src/data/offlineStore.ts`) spiegelt geladene Daten im Browser und
   legt Änderungen ohne Verbindung in eine Warteschlange, die der Reihe nach übertragen wird. IDs werden dafür im Client
   erzeugt (UUID). Konflikte werden nicht zusammengeführt – „letzter Schreibvorgang gewinnt“. Doppelte Einfügungen nach
@@ -223,7 +260,6 @@ deren Einheit nicht umgerechnet werden kann, und prüft, dass Titel eindeutig si
 
 - **Push-Benachrichtigungen** (z. B. Trink-Erinnerung): bräuchten einen Server-Dienst (Supabase Edge Function + Web-Push-Schlüssel) und funktionieren auf dem iPhone nur in installierten Apps. Stattdessen gibt es den Trink-Hinweis auf der Startseite.
 - **Rezeptfotos**: wegen Bildrechten Emoji-Kacheln.
-- **Geteilte Einkaufslisten mit anderen Konten**: stattdessen „Liste teilen“ als Text.
 
 ## Hinweis
 

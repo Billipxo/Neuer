@@ -527,6 +527,22 @@ test('Wochenplan als Text teilen; gemeinsamer Haushalt braucht ein Konto', async
   expect(text).toMatch(/Montag, .*:\n• Frühstück: .+\n• Mittagessen: .+/)
   expect(text.split('\n').filter((l) => l.startsWith('• ')).length).toBeGreaterThanOrEqual(21)
 
+  // Der Text endet mit einem Link: Damit lässt sich der Plan in der App mit einem Tipp übernehmen
+  const link = text.match(/In Teller übernehmen:\n(\S+)$/)![1]
+  expect(link.length).toBeLessThan(2000)
+  await page.getByRole('button', { name: 'Woche leeren' }).click()
+  await expect(page.getByText('0/7')).toBeVisible()
+  await page.goto(new URL(link).pathname + new URL(link).search)
+  await expect(page.getByRole('heading', { name: 'Geteilter Wochenplan' })).toBeVisible()
+  await expect(page.getByRole('list', { name: 'Inhalt des geteilten Plans' })).toContainText('Frühstück:')
+  await page.getByRole('button', { name: 'In meinen Plan übernehmen' }).click()
+  await expect(page.getByText(/\d+ Mahlzeiten übernommen/)).toBeVisible()
+  await expect(page.getByText('7/7')).toBeVisible()
+  await expect(page).not.toHaveURL(/plan=/)
+  // Ein kaputter Link wird freundlich abgelehnt
+  await page.goto('/planer?plan=kaputt')
+  await expect(page.getByText('Der Link enthält keinen gültigen Wochenplan')).toBeVisible()
+
   await page.goto('/profil')
   await expect(page.getByRole('heading', { name: 'Gemeinsamer Haushalt' })).toBeVisible()
   if (withAccount()) {

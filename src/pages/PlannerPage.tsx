@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getISOWeek } from 'date-fns'
 import { ChevronLeft, ChevronRight, Plus, Share2, Sparkles, Trash2 } from 'lucide-react'
@@ -7,7 +7,7 @@ import { MEAL_TYPES } from '../types'
 import { useProfile } from '../hooks/data'
 import { useAddPlanItems, useDeletePlanItems, usePlanRange } from '../hooks/plan'
 import { suggestWeek, weekSummary, type NewPlanItem } from '../lib/planner'
-import { matchesDiet, RECIPES } from '../lib/recipes'
+import { getRecipe, matchesDiet, RECIPES } from '../lib/recipes'
 import { useVariantRecipes } from '../hooks/variants'
 import { MEAL_LABELS } from '../lib/meals'
 import { fmtDayShort, fromISODate, shiftISO, todayISO, weekDaysISO, weekStartISO, fmtDate } from '../lib/dates'
@@ -21,7 +21,8 @@ import { PlanItemSheet } from '../components/planner/PlanItemSheet'
 import { GenerateShoppingButton } from '../components/planner/GenerateShoppingButton'
 import { SharedBanner } from '../components/household/SharedBanner'
 import { useHousehold } from '../app/household'
-import { weekPlanText } from '../lib/planShare'
+import { decodePlan, encodePlan, planLink, weekPlanShareText } from '../lib/planShare'
+import { SharedPlanSheet } from '../components/planner/SharedPlanSheet'
 import { shareText } from '../lib/share'
 
 export function PlannerPage() {
@@ -40,6 +41,18 @@ export function PlannerPage() {
 
   const { recipes: ownRecipes } = useVariantRecipes()
   const { household } = useHousehold()
+
+  // Per Link empfangener Plan (?plan=…): prüfen und zum Übernehmen anbieten
+  const sharedToken = params.get('plan')
+  const sharedPlan = useMemo(() => (sharedToken ? decodePlan(sharedToken) : null), [sharedToken])
+  useEffect(() => {
+    if (sharedToken && !sharedPlan) {
+      toast('Der Link enthält keinen gültigen Wochenplan', '⚠️')
+      setParams({ woche: weekStart }, { replace: true })
+    }
+    // nur auf den Link reagieren
+  }, [sharedToken, sharedPlan])
+
   if (!profile) return null
   const target = profile.kcal_target
   const summary = weekSummary(items, days)
@@ -78,7 +91,9 @@ export function PlannerPage() {
             <IconButton
               label="Wochenplan teilen"
               onClick={async () => {
-                const outcome = await shareText({ title: 'Wochenplan', text: weekPlanText(items, days) })
+                // Lesbarer Text plus Link: Wer Teller nutzt, übernimmt den Plan mit einem Tipp
+                const link = planLink(window.location.origin, encodePlan(items, days, (id) => Boolean(getRecipe(id))))
+                const outcome = await shareText({ title: 'Wochenplan', text: weekPlanShareText(items, days, link) })
                 if (outcome === 'copied') toast('Wochenplan in die Zwischenablage kopiert', '📋')
                 if (outcome === 'failed') toast('Teilen nicht möglich')
               }}
@@ -228,6 +243,11 @@ export function PlannerPage() {
 
       <PlanSlotSheet slot={slot} onClose={() => setSlot(null)} onAdd={addItem} />
       <PlanItemSheet item={editing} onClose={() => setEditing(null)} />
+      <SharedPlanSheet
+        plan={sharedPlan}
+        onClose={() => setParams({ woche: weekStart }, { replace: true })}
+        onImported={(week) => setParams({ woche: week }, { replace: true })}
+      />
     </>
   )
 }

@@ -126,8 +126,35 @@ Auf einem zweiten Gerät meldest du dich mit derselben E-Mail an und siehst dies
   Mails pro Stunde; je nach Projekt nur an Mitglieder deines Supabase-Teams). Für dich allein reicht das. Sollen
   **weitere Personen** die App nutzen, richte unter **Authentication → Emails → SMTP Settings** einen eigenen
   Mail-Dienst ein (z. B. Brevo oder Resend, beide mit Gratis-Kontingent).
+- **Sicherung:** Unter **Profil → Deine Daten → Alle Daten (JSON)** lädst du eine Sicherung herunter. Mit
+  **Sicherung einspielen** liest du sie wieder ein – auch in einem neuen Konto oder nach einem Neuanfang. Vorhandenes
+  wird nicht überschrieben und nichts doppelt angelegt.
 - **Kosten:** Supabase und Vercel sind für eine private Nutzung kostenlos. Ein Supabase-Gratisprojekt wird nach
   längerer Inaktivität (ca. 1 Woche ohne Nutzung) pausiert – im Dashboard mit einem Klick wieder starten.
+
+## Gemeinsam planen und einkaufen (Haushalt)
+
+Wenn mehrere Personen zusammen planen wollen, braucht **jede ein eigenes Konto** in deiner App (einfach mit der eigenen
+E-Mail-Adresse anmelden).
+
+1. Eine Person öffnet **Profil → Gemeinsamer Haushalt → Haushalt gründen** und gibt dem Haushalt einen Namen.
+2. Über **Einladung teilen** geht ein Link an die anderen (oder den Code vorlesen).
+3. Die anderen tippen auf den Link – oder geben den Code unter **Profil → Gemeinsamer Haushalt → Mit Code beitreten** ein.
+
+Ab dann sehen alle denselben **Wochenplan** und dieselbe **Einkaufsliste**; wer etwas einplant oder abhakt, sehen die
+anderen nach wenigen Sekunden. Portionen im Plan gelten pro Person, die Einkaufsliste rechnet für alle am Tisch
+(einstellbar unter „Personen am Tisch“). **Privat** bleiben: was du isst (Protokoll), Gewicht, Wasser, Ziele und Erfolge.
+
+Zwei Dinge, die du dafür einmal prüfen solltest:
+
+- **Datenbank-Update:** Die Migration `20261113000011_household.sql` muss eingespielt sein (siehe „Später: Updates der
+  Datenbank“). Fehlt sie, läuft die App normal weiter – nur der Haushalt meldet, dass die Datenbank aktualisiert werden muss.
+- **E-Mail-Versand für weitere Personen:** Der eingebaute Mail-Versand von Supabase verschickt je nach Projekt nur an
+  dich selbst und nur wenige Mails pro Stunde. Damit sich Partner, Familie oder Mitbewohner anmelden können, richte einen
+  eigenen Mail-Dienst ein (siehe „E-Mail-Versand“ unter „Gut zu wissen“).
+
+Ohne Haushalt kannst du deinen **Wochenplan** trotzdem **teilen**: im Planer oben rechts auf das Teilen-Symbol tippen.
+Verschickt wird ein lesbarer Text; wer selbst deine App nutzt, übernimmt den Plan über den Link am Ende mit einem Tipp.
 
 ## Wenn etwas nicht klappt
 
@@ -139,6 +166,8 @@ Auf einem zweiten Gerät meldest du dich mit derselben E-Mail an und siehst dies
 | Auf dem iPhone nach Klick auf den Link nicht angemeldet | In der installierten App den **Code** aus der Mail eingeben (Schritt 4 + 8). |
 | Kein Code in der Mail | E-Mail-Vorlage aus Schritt 4 einfügen und speichern. |
 | Meldung „Die Datenbank ist noch nicht eingerichtet“ | Schritt 3 wiederholen. |
+| „Die Datenbank kennt den gemeinsamen Haushalt noch nicht“ | Die Datei `20261113000011_household.sql` im SQL Editor ausführen (siehe „Später: Updates der Datenbank“). |
+| Änderungen der anderen im Haushalt erscheinen erst nach einigen Sekunden | Normal: Spätestens alle 15 Sekunden wird neu geladen. Sofort geht es, wenn in Supabase unter **Database → Publications** bei `supabase_realtime` die Tabellen `plan_items` und `shopping_items` aktiv sind (das erledigt die Migration). |
 | „Keine Verbindung zu Open Food Facts“ | Der freie Lebensmitteldienst ist kurz nicht erreichbar – später erneut versuchen oder das Lebensmittel selbst anlegen. |
 | Barcode-Scan startet nicht | Kamera in den Handy-Einstellungen für den Browser bzw. die App erlauben. Alternativ die Nummer unter dem Barcode eintippen. |
 
@@ -153,6 +182,7 @@ Dateien aus `supabase/migrations/` im SQL Editor ausführen (die Dateinamen sind
 - `20261111000008_units_basics.sql` – Erfassen in Esslöffeln und Teelöffeln
 - `20261111000009_avoid.sql` – Unverträglichkeiten und Allergien im Profil
 - `20261111000010_target_weight.sql` – Optionales Zielgewicht
+- `20261113000011_household.sql` – Gemeinsamer Haushalt (geteilter Wochenplan und geteilte Einkaufsliste)
 
 Wer noch gar nichts eingerichtet hat, nimmt wie oben einfach die komplette `supabase/setup.sql` – sie enthält alles.
 
