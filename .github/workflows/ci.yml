@@ -25,3 +25,30 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Oberflächen-Tests (Demo-Modus)
         run: npm run test:e2e
+
+  datenbank:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Migrationen und Zugriffsregeln in PostgreSQL prüfen
+        run: npm run test:db
