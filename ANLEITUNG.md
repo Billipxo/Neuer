@@ -252,6 +252,7 @@ Verschickt wird ein lesbarer Text; wer selbst deine App nutzt, übernimmt den Pl
 | Vorlage der Mail lässt sich nicht bearbeiten („Set up custom SMTP to edit templates“) | Supabase gibt die Vorlagen erst mit eigenem Mail-Dienst frei – siehe derselbe Abschnitt. |
 | „Email address … is not authorized“ beim Anmelden | Ohne eigenen Mail-Dienst verschickt Supabase nur an die Adresse deines Supabase-Kontos. Mit dieser Adresse anmelden oder den Mail-Dienst einrichten. |
 | Meldung „Die Datenbank ist noch nicht eingerichtet“ | Schritt 3 wiederholen. |
+| „permission denied for table …“ nach dem Anmelden | Der Datenbank fehlen die Zugriffsrechte für angemeldete Nutzer (neuere Supabase-Projekte vergeben sie nicht mehr von selbst). Die Datei `supabase/setup-teil-3.sql` noch einmal im SQL Editor ausführen – oder nur `supabase/migrations/20261113000012_grants.sql`. Danach die App neu laden. |
 | „syntax error at or near …“ beim Einrichten der Datenbank | Der Text wurde beim Einfügen abgeschnitten (manche Geräte kürzen nach 20.000 Zeichen). Die drei kleinen Dateien aus Schritt 3 nacheinander ausführen. Es wurde dabei noch nichts angelegt – du kannst einfach neu beginnen. |
 | „Die Datenbank kennt den gemeinsamen Haushalt noch nicht“ | Die Datei `20261113000011_household.sql` im SQL Editor ausführen (siehe „Später: Updates der Datenbank“). |
 | Änderungen der anderen im Haushalt erscheinen erst nach einigen Sekunden | Normal: Spätestens alle 15 Sekunden wird neu geladen. Sofort geht es, wenn in Supabase unter **Database → Publications** bei `supabase_realtime` die Tabellen `plan_items` und `shopping_items` aktiv sind (das erledigt die Migration). |
@@ -274,6 +275,7 @@ Wenn du die Datenbank **schon einmal** eingerichtet hast und eine neue Version d
 - `20261111000009_avoid.sql` – Unverträglichkeiten und Allergien im Profil
 - `20261111000010_target_weight.sql` – Optionales Zielgewicht
 - `20261113000011_household.sql` – Gemeinsamer Haushalt (geteilter Wochenplan und geteilte Einkaufsliste)
+- `20261113000012_grants.sql` – Zugriffsrechte ausdrücklich vergeben (behebt „permission denied for table …“)
 
 Wer noch gar nichts eingerichtet hat, nimmt wie oben die drei Dateien aus Schritt 3 – sie enthalten alles.
 

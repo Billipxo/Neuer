@@ -141,6 +141,9 @@ Der Barcode-Scanner benötigt HTTPS (auf Vercel/Netlify automatisch) und die Kam
 ## Datenschutz und Sicherheit
 
 - Jede Tabelle hat Row Level Security: Nutzer können nur Zeilen mit ihrer eigenen `user_id` lesen und schreiben.
+- Zugriffsrechte werden ausdrücklich vergeben (`…0012_grants.sql`): angemeldete Nutzer dürfen die App-Tabellen
+  benutzen, Haushalt und Mitglieder nur lesen; ohne Anmeldung gibt es keinen Zugriff. Neuere Supabase-Projekte geben
+  nichts mehr von selbst frei – die Test-Datenbank ist deshalb genauso streng eingestellt.
 - **Gemeinsamer Haushalt**: Zeilen von Wochenplan und Einkaufsliste mit `household_id` dürfen alle Mitglieder dieses Haushalts lesen und
   ändern; eigene Rezepte und Gerichte dürfen Mitglieder lesen. Mitgliedschaften entstehen nur über geprüfte Funktionen (gründen, mit
   Einladungscode beitreten, verlassen, entfernen) – nie durch direktes Schreiben. Zehn Fehlversuche beim Code sperren das Beitreten für

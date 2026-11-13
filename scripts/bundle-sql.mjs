@@ -5,7 +5,7 @@ import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 /** Höchstlänge eines Teils in Zeichen – mit deutlichem Abstand unter der beobachteten Grenze von 20.000 */
-export const PART_LIMIT = 14000
+export const PART_LIMIT = 15000
 
 /**
  * Getrennt wird zwischen zwei Migrationen oder innerhalb einer Migration an einer Zeile mit dieser Markierung.

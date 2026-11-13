@@ -42,7 +42,8 @@ select test.fails(format('insert into public.plan_items (date, meal, kind, title
 select test.ok(test.affected('update public.shopping_items set checked = true') = 0, 'Cem kann fremde Einkäufe nicht abhaken');
 select test.ok(test.affected('delete from public.plan_items') = 0, 'Cem kann den fremden Plan nicht löschen');
 select test.fails(format('insert into public.household_members (household_id, user_id) values (%L, %L)', :'hid', test.id('cem')), '42501', 'Niemand kann sich selbst als Mitglied eintragen');
-select test.ok(test.affected('update public.households set name = ''Gekapert''') = 0, 'Haushalte lassen sich nicht direkt ändern');
+select test.fails($$update public.households set name = 'Gekapert'$$, '42501', 'Haushalte lassen sich nicht direkt ändern');
+select test.fails('delete from public.household_members', '42501', 'Mitglieder lassen sich nicht direkt entfernen');
 select test.ok((public.join_household('AAAAA-00000', 'Cem') ->> 'status') = 'not_found', 'Ein falscher Code führt nicht in den Haushalt');
 
 -- Beitreten -------------------------------------------------------------------------------------------
@@ -92,7 +93,7 @@ select test.fails($$select public.update_household(p_name => 'x')$$, 'P0001', 'O
 -- Zu viele Fehlversuche ---------------------------------------------------------------------------------
 select public.join_household('00000-0000' || g, 'Cem') from generate_series(1, 8) g;
 select test.ok((public.join_household(:'code2', 'Cem') ->> 'status') = 'too_many_attempts', 'Nach zehn Fehlversuchen ist für eine Stunde Schluss – auch mit richtigem Code');
-select test.ok(test.rows('select * from public.household_join_attempts') = 0, 'Die Liste der Fehlversuche ist für die App nicht lesbar');
+select test.fails('select * from public.household_join_attempts', '42501', 'Die Liste der Fehlversuche ist für die App nicht lesbar');
 select test.admin();
 delete from public.household_join_attempts;
 
@@ -171,4 +172,6 @@ select test.ok((public.my_household() ->> 'eaters')::int = 8, 'Die Personenzahl 
 select test.anonymous();
 select test.fails($$select public.my_household()$$, '42501', 'Ohne Anmeldung ist der Haushalt nicht abrufbar');
 select test.fails($$select public.join_household('AAAAA-00000')$$, '42501', 'Ohne Anmeldung kann niemand beitreten');
-select test.ok(test.rows('select * from public.plan_items') + test.rows('select * from public.shopping_items') + test.rows('select * from public.households') = 0, 'Ohne Anmeldung ist nichts lesbar');
+select test.fails('select * from public.plan_items', '42501', 'Ohne Anmeldung ist der Plan nicht lesbar');
+select test.fails('select * from public.shopping_items', '42501', 'Ohne Anmeldung ist die Einkaufsliste nicht lesbar');
+select test.fails('select * from public.households', '42501', 'Ohne Anmeldung sind Haushalte nicht lesbar');
