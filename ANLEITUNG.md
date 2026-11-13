@@ -49,23 +49,23 @@ Jede Datei lässt sich gefahrlos wiederholen – wenn du unsicher bist, ob eine 
 > Warum drei Dateien? Manche Geräte schneiden lange Texte beim Einfügen nach 20.000 Zeichen ab; dann meldet Supabase
 > einen „syntax error“. Die komplette Einrichtung in einer Datei gibt es weiterhin als `supabase/setup.sql`.
 
-## Schritt 4 – Anmelde-E-Mail auf Deutsch (mit Code fürs iPhone)
+## Schritt 4 – Anmelde-Mail (zum Start nichts zu tun)
 
-Die App kommt ohne Passwort aus: Zum Anmelden gibst du später in der App deine E-Mail-Adresse ein und bekommst eine Mail
-mit einem Link und einem 6-stelligen Code. Hier stellst du nur ein, wie diese Mail aussieht – angemeldet wird dabei noch
-nichts.
+Die App kommt ohne Passwort aus: Zum Anmelden gibst du in der App deine E-Mail-Adresse ein und bekommst eine Mail mit
+einem Anmeldelink.
 
-1. In Supabase links **Authentication** → **Emails** (bzw. **Email Templates**) → **Magic Link**.
-2. **Subject**: `Dein Anmeldelink für Teller`
-3. Im Feld **Message body** alles löschen und den Inhalt der Datei **`supabase/email-template-magic-link.html`**
-   (aus GitHub, wie in Schritt 3 kopieren) einfügen.
-4. **Save**.
-5. Dasselbe noch einmal in der Vorlage **Confirm signup** (gleicher Betreff, gleicher Inhalt, **Save**). Supabase nutzt
-   sie für die allererste Mail an eine neue Adresse, **Magic Link** für jede weitere.
+Zum Start verschickt Supabase diese Mail selbst. Das genügt zum Ausprobieren, hat aber drei Grenzen:
 
-> Warum? Auf dem Handy hat eine installierte Web-App einen eigenen Speicher. Ein Link aus der Mail öffnet den Browser,
-> nicht die App. Mit dem **6-stelligen Code** aus derselben Mail meldest du dich direkt in der installierten App an.
-> Ohne die Vorlage steht in der Mail nur ein Link, kein Code.
+- Die Mail geht nur an die E-Mail-Adresse deines Supabase-Kontos (und an weitere Mitglieder deines Supabase-Teams).
+- Es sind nur wenige Mails pro Stunde möglich.
+- Der Text ist englisch und enthält nur einen Link (**Sign in**), keinen Code. Der Link meldet dich in dem Browser an,
+  in dem er sich öffnet. Für eine auf dem **iPhone** installierte App reicht das nicht – sie hat einen eigenen Speicher
+  und braucht den 6-stelligen Code.
+
+Ändern lässt sich die Mail erst mit einem eigenen Mail-Dienst: Supabase zeigt bei den Vorlagen sonst den Hinweis
+**„Set up custom SMTP to edit templates“**, und die Felder sind gesperrt. Sobald du die App auf einem iPhone
+installieren willst oder weitere Personen dazukommen, richte ihn ein – siehe **„Eigener Mail-Dienst und deutsche
+Anmelde-Mail“** weiter unten.
 
 ## Schritt 5 – Zugangsdaten kopieren
 
@@ -123,14 +123,61 @@ Ohne diesen Schritt führt der Link in der Mail ins Leere.
    - **iPhone (Safari):** Teilen-Symbol □↑ → **Zum Home-Bildschirm** → **Hinzufügen**.
    - **Android (Chrome):** Menü ⋮ → **App installieren** (oder **Zum Startbildschirm hinzufügen**).
 3. Öffne **Teller** vom Startbildschirm, gib deine E-Mail-Adresse ein und tippe auf **Anmeldelink senden**.
+   Ohne eigenen Mail-Dienst muss es die Adresse deines Supabase-Kontos sein (siehe Schritt 4).
 4. In der Mail:
-   - **iPhone:** den **6-stelligen Code** in der App eingeben.
-   - **Android/Computer:** einfach auf **Bei Teller anmelden** tippen (oder ebenfalls den Code nutzen).
+   - **Android/Computer:** auf den Link tippen (**Sign in** bzw. **Bei Teller anmelden**) – auf demselben Gerät, auf dem
+     du die Mail angefordert hast.
+   - **iPhone:** den **6-stelligen Code** in der App eingeben. Den Code enthält die Mail erst mit eigener Vorlage
+     (siehe „Eigener Mail-Dienst und deutsche Anmelde-Mail“). Bis dahin kannst du Teller auf dem iPhone in Safari nutzen,
+     ohne es zu installieren – dort funktioniert der Link.
 5. Kurzes Onboarding ausfüllen – fertig! 🎉
 
 Auf einem zweiten Gerät meldest du dich mit derselben E-Mail an und siehst dieselben Daten.
 
 ---
+
+## Eigener Mail-Dienst und deutsche Anmelde-Mail
+
+Nötig, sobald **weitere Personen** die App nutzen sollen oder du sie auf einem **iPhone installierst** (dort meldest du
+dich mit dem Code aus der Mail an). Einmalig etwa 15 Minuten. Das Beispiel nutzt Brevo (kostenlos bis 300 Mails am Tag);
+jeder andere Dienst mit SMTP-Zugang geht genauso. Die Bezeichnungen bei Brevo können leicht abweichen.
+
+**A. Mail-Dienst vorbereiten (Brevo)**
+
+1. Auf [brevo.com](https://www.brevo.com) ein kostenloses Konto anlegen.
+2. Einen Absender bestätigen: in den Einstellungen unter **Senders, Domains & Dedicated IPs** → **Senders** →
+   **Add a sender** (Name `Teller`, deine E-Mail-Adresse) und den Bestätigungslink in der Mail anklicken.
+3. Im Konto-Menü oben rechts **SMTP & API** öffnen. Dort stehen **SMTP server**, **Port** und **Login**. Mit
+   **Generate a new SMTP key** einen Schlüssel erzeugen und kopieren – er wird nur einmal angezeigt.
+
+**B. In Supabase eintragen**
+
+1. **Authentication** → **Emails** → **Set up SMTP** (bzw. Reiter **SMTP Settings**) → **Enable custom SMTP**.
+2. Ausfüllen und speichern:
+
+   | Feld | Wert |
+   |---|---|
+   | Sender email address | die bei Brevo bestätigte Adresse |
+   | Sender name | `Teller` |
+   | Host | `smtp-relay.brevo.com` |
+   | Port number | `587` |
+   | Username | der **Login** aus Brevo |
+   | Password | der **SMTP key** aus Brevo |
+
+Der Schlüssel gehört nur in dieses Feld bei Supabase – nicht in die App und nicht in Vercel.
+
+**C. Anmelde-Mail auf Deutsch, mit Code**
+
+Jetzt sind die Vorlagen nicht mehr gesperrt.
+
+1. **Authentication** → **Emails** → Vorlage **Magic link or OTP** öffnen.
+2. **Subject**: `Dein Anmeldelink für Teller`
+3. Bei **Body** auf **Source** klicken, alles löschen und den Inhalt der Datei
+   **`supabase/email-template-magic-link.html`** (aus GitHub, wie in Schritt 3 kopieren) einfügen.
+4. **Save changes**.
+5. Dasselbe in der Vorlage **Confirm sign up** – Supabase nutzt sie für die allererste Mail an eine neue Adresse.
+
+Danach enthält jede Anmelde-Mail den Link und den 6-stelligen Code, und Mails gehen an jede Adresse.
 
 ## Gut zu wissen
 
@@ -140,9 +187,9 @@ Auf einem zweiten Gerät meldest du dich mit derselben E-Mail an und siehst dies
 - **Updates:** Jede Änderung im Zweig `main` stellt Vercel automatisch neu online. Die App lädt die neue Version beim
   nächsten Öffnen.
 - **E-Mail-Versand:** Der eingebaute Mail-Versand von Supabase ist für den Start gedacht und streng begrenzt (wenige
-  Mails pro Stunde; je nach Projekt nur an Mitglieder deines Supabase-Teams). Für dich allein reicht das. Sollen
-  **weitere Personen** die App nutzen, richte unter **Authentication → Emails → SMTP Settings** einen eigenen
-  Mail-Dienst ein (z. B. Brevo oder Resend, beide mit Gratis-Kontingent).
+  Mails pro Stunde, nur an die Adresse deines Supabase-Kontos, englischer Text ohne Code). Für dich allein am Computer
+  oder Android-Handy reicht das. Für **weitere Personen** oder eine auf dem **iPhone** installierte App richte einen
+  eigenen Mail-Dienst ein – siehe „Eigener Mail-Dienst und deutsche Anmelde-Mail“.
 - **Sicherung:** Unter **Profil → Deine Daten → Alle Daten (JSON)** lädst du eine Sicherung herunter. Mit
   **Sicherung einspielen** liest du sie wieder ein – auch in einem neuen Konto oder nach einem Neuanfang. Vorhandenes
   wird nicht überschrieben und nichts doppelt angelegt.
@@ -168,7 +215,7 @@ Zwei Dinge, die du dafür einmal prüfen solltest:
   Datenbank“). Fehlt sie, läuft die App normal weiter – nur der Haushalt meldet, dass die Datenbank aktualisiert werden muss.
 - **E-Mail-Versand für weitere Personen:** Der eingebaute Mail-Versand von Supabase verschickt je nach Projekt nur an
   dich selbst und nur wenige Mails pro Stunde. Damit sich Partner, Familie oder Mitbewohner anmelden können, richte einen
-  eigenen Mail-Dienst ein (siehe „E-Mail-Versand“ unter „Gut zu wissen“).
+  eigenen Mail-Dienst ein (siehe „Eigener Mail-Dienst und deutsche Anmelde-Mail“).
 
 Ohne Haushalt kannst du deinen **Wochenplan** trotzdem **teilen**: im Planer oben rechts auf das Teilen-Symbol tippen.
 Verschickt wird ein lesbarer Text; wer selbst deine App nutzt, übernimmt den Plan über den Link am Ende mit einem Tipp.
@@ -181,7 +228,9 @@ Verschickt wird ein lesbarer Text; wer selbst deine App nutzt, übernimmt den Pl
 | Keine Mail angekommen | Spam-Ordner prüfen. Zu viele Versuche? Ein paar Minuten warten. Siehe „E-Mail-Versand“ oben. |
 | Link in der Mail öffnet eine Fehlerseite / „localhost“ | Schritt 7 prüfen (Site URL und Redirect URL). |
 | Auf dem iPhone nach Klick auf den Link nicht angemeldet | In der installierten App den **Code** aus der Mail eingeben (Schritt 4 + 8). |
-| Kein Code in der Mail | E-Mail-Vorlage aus Schritt 4 einfügen und speichern. |
+| Kein Code in der Mail | Der Code steht erst mit eigener Vorlage in der Mail – siehe „Eigener Mail-Dienst und deutsche Anmelde-Mail“. |
+| Vorlage der Mail lässt sich nicht bearbeiten („Set up custom SMTP to edit templates“) | Supabase gibt die Vorlagen erst mit eigenem Mail-Dienst frei – siehe derselbe Abschnitt. |
+| „Email address … is not authorized“ beim Anmelden | Ohne eigenen Mail-Dienst verschickt Supabase nur an die Adresse deines Supabase-Kontos. Mit dieser Adresse anmelden oder den Mail-Dienst einrichten. |
 | Meldung „Die Datenbank ist noch nicht eingerichtet“ | Schritt 3 wiederholen. |
 | „syntax error at or near …“ beim Einrichten der Datenbank | Der Text wurde beim Einfügen abgeschnitten (manche Geräte kürzen nach 20.000 Zeichen). Die drei kleinen Dateien aus Schritt 3 nacheinander ausführen. Es wurde dabei noch nichts angelegt – du kannst einfach neu beginnen. |
 | „Die Datenbank kennt den gemeinsamen Haushalt noch nicht“ | Die Datei `20261113000011_household.sql` im SQL Editor ausführen (siehe „Später: Updates der Datenbank“). |
