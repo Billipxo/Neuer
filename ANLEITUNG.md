@@ -51,14 +51,21 @@ Jede Datei lässt sich gefahrlos wiederholen – wenn du unsicher bist, ob eine 
 
 ## Schritt 4 – Anmelde-E-Mail auf Deutsch (mit Code fürs iPhone)
 
+Die App kommt ohne Passwort aus: Zum Anmelden gibst du später in der App deine E-Mail-Adresse ein und bekommst eine Mail
+mit einem Link und einem 6-stelligen Code. Hier stellst du nur ein, wie diese Mail aussieht – angemeldet wird dabei noch
+nichts.
+
 1. In Supabase links **Authentication** → **Emails** (bzw. **Email Templates**) → **Magic Link**.
 2. **Subject**: `Dein Anmeldelink für Teller`
 3. Im Feld **Message body** alles löschen und den Inhalt der Datei **`supabase/email-template-magic-link.html`**
    (aus GitHub, wie in Schritt 3 kopieren) einfügen.
 4. **Save**.
+5. Dasselbe noch einmal in der Vorlage **Confirm signup** (gleicher Betreff, gleicher Inhalt, **Save**). Supabase nutzt
+   sie für die allererste Mail an eine neue Adresse, **Magic Link** für jede weitere.
 
-> Warum? Auf dem iPhone hat eine installierte Web-App einen eigenen Speicher. Ein Link aus der Mail öffnet Safari,
+> Warum? Auf dem Handy hat eine installierte Web-App einen eigenen Speicher. Ein Link aus der Mail öffnet den Browser,
 > nicht die App. Mit dem **6-stelligen Code** aus derselben Mail meldest du dich direkt in der installierten App an.
+> Ohne die Vorlage steht in der Mail nur ein Link, kein Code.
 
 ## Schritt 5 – Zugangsdaten kopieren
 
