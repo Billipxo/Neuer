@@ -563,3 +563,11 @@ test('Einladungslink im Demo-Modus: Hinweis statt Beitritt, keine Umleitung bei 
   await page.goto('/profil')
   await expect(page.getByRole('status').filter({ hasText: 'Du hast eine Einladung geöffnet (Code A1B2C-3D4E5)' })).toBeVisible()
 })
+
+test('Startet die App nicht, steht dort eine Meldung statt einer leeren Seite', async ({ page }) => {
+  // Das Hauptpaket der App lässt sich nicht laden (z. B. Netzabbruch mitten im Laden)
+  await page.route(/\/assets\/index-[^/]+\.js$/, (route) => route.abort())
+  await page.goto('/')
+  await expect(page.getByRole('alert')).toContainText('Teller konnte nicht starten')
+  await expect(page.getByRole('alert')).toContainText('Bitte die Seite neu laden')
+})

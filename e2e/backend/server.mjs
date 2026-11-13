@@ -340,12 +340,44 @@ async function ensureUser(email) {
   return res.lines[0]
 }
 
+/** Anmeldelinks „aus der Mail“: Token → Konto. Jeder Link gilt einmal; Tests holen ihn über /__link ab. */
+const links = new Map()
+const lastLink = new Map()
+
+function linkUrl(token) {
+  const { redirect } = links.get(token)
+  return `http://127.0.0.1:${PORT}/auth/v1/verify?token=${token}&type=magiclink&redirect_to=${encodeURIComponent(redirect)}`
+}
+
 async function auth(req, path, url, body) {
   const bearer = String(req.headers.authorization ?? '').replace(/^Bearer\s+/i, '')
   if (req.method === 'POST' && path === '/otp') {
     if (!/^\S+@\S+$/.test(body.email ?? '')) throw new ApiError(400, { code: 400, error_code: 'validation_failed', msg: 'Unable to validate email address: invalid format' })
-    await ensureUser(body.email.toLowerCase())
+    const email = body.email.toLowerCase()
+    const id = await ensureUser(email)
+    const token = randomUUID()
+    links.set(token, { id, email, redirect: url.searchParams.get('redirect_to') ?? 'http://localhost:4174' })
+    lastLink.set(email, token)
     return { status: 200, body: {} }
+  }
+  // Klick auf den Link in der Mail: zurück zur App, die Sitzung hängt an der Adresse (wie bei Supabase ohne PKCE)
+  if (req.method === 'GET' && path === '/verify') {
+    const link = links.get(url.searchParams.get('token'))
+    const target = link?.redirect ?? url.searchParams.get('redirect_to') ?? 'http://localhost:4174'
+    if (!link) {
+      return { status: 303, body: null, headers: { Location: `${target}#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired` } }
+    }
+    links.delete(url.searchParams.get('token'))
+    const s = session(link.id, link.email)
+    const fragment = new URLSearchParams({
+      access_token: s.access_token,
+      expires_in: String(s.expires_in),
+      expires_at: String(s.expires_at),
+      refresh_token: s.refresh_token,
+      token_type: 'bearer',
+      type: 'magiclink',
+    })
+    return { status: 303, body: null, headers: { Location: `${target}#${fragment}` } }
   }
   if (req.method === 'POST' && path === '/verify') {
     if (body.token !== OTP) throw new ApiError(403, { code: 403, error_code: 'otp_expired', msg: 'Token has expired or is invalid' })
@@ -392,6 +424,12 @@ async function handle(req) {
   const url = new URL(req.url, `http://${req.headers.host}`)
   const path = url.pathname
   if (path === '/__health') return { status: 200, body: { ok: true, tables: Object.keys(schema.columns).length } }
+  // Nur für Tests: der Link, der in der letzten Anmelde-Mail an diese Adresse stünde
+  if (path === '/__link') {
+    const token = lastLink.get(String(url.searchParams.get('email') ?? '').toLowerCase())
+    if (!token || !links.has(token)) throw new ApiError(404, { message: 'Für diese Adresse wurde kein Link angefordert.' })
+    return { status: 200, body: { url: linkUrl(token) } }
+  }
   const body = ['POST', 'PATCH', 'PUT'].includes(req.method) ? await readBody(req) : null
 
   if (path.startsWith('/auth/v1/')) return auth(req, path.slice('/auth/v1'.length), url, body ?? {})

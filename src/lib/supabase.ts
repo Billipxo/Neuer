@@ -1,12 +1,37 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
+import { checkSupabaseConfig } from './supabaseConfig'
+import { linkProblemFromUrl } from './authMessages'
 
-const url = import.meta.env.VITE_SUPABASE_URL as string | undefined
-const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined
+/**
+ * Hat ein Link aus der Anmelde-Mail nicht funktioniert (abgelaufen, schon benutzt), steht der Grund in der Adresse.
+ * Er wird hier festgehalten, bevor die Verbindung die Adresse auswertet und aufräumt – die Anmeldeseite zeigt ihn an.
+ */
+export const authLinkProblem: string | null = typeof window === 'undefined' ? null : linkProblemFromUrl(window.location.href)
 
-export const isSupabaseConfigured = Boolean(url && anonKey && !url.includes('dein-projekt'))
+// Öffentlicher Schlüssel für den Browser. Supabase nennt ihn inzwischen „Publishable key“ – beide Namen gelten.
+const rawKey = (import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY) as string | undefined
 
-export const supabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(url!, anonKey!, {
-      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'pkce' },
+const config = checkSupabaseConfig(import.meta.env.VITE_SUPABASE_URL as string | undefined, rawKey)
+
+let client: SupabaseClient | null = null
+let problem: string | null = config.status === 'invalid' ? config.problem : null
+if (config.status === 'ok') {
+  try {
+    client = createClient(config.url, config.key, {
+      // „implicit“: Der Link aus der Mail meldet dort an, wo er geöffnet wird – auch in einem anderen Browser oder
+      // auf einem anderen Gerät als dem, auf dem er angefordert wurde. (Mit „pkce“ ginge er nur im selben Browser;
+      // Mail-Programme öffnen Links aber oft woanders.)
+      auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, flowType: 'implicit' },
     })
-  : null
+  } catch (e) {
+    // Falsche Zugangswerte dürfen die App nicht mit einer leeren Seite stehen lassen
+    problem = `Die Verbindung zu Supabase ließ sich nicht aufbauen: ${(e as Error).message}`
+  }
+}
+
+export const supabase: SupabaseClient | null = client
+export const isSupabaseConfigured = client !== null
+/** Zugangswerte sind eingetragen, aber falsch – Text für die Anmeldeseite (sonst null) */
+export const supabaseConfigProblem: string | null = problem

@@ -25,9 +25,13 @@ create table if not exists public.profiles (
 
 alter table public.profiles enable row level security;
 
+drop policy if exists "profiles_select_own" on public.profiles;
 create policy "profiles_select_own" on public.profiles for select using (auth.uid() = id);
+drop policy if exists "profiles_insert_own" on public.profiles;
 create policy "profiles_insert_own" on public.profiles for insert with check (auth.uid() = id);
+drop policy if exists "profiles_update_own" on public.profiles;
 create policy "profiles_update_own" on public.profiles for update using (auth.uid() = id) with check (auth.uid() = id);
+drop policy if exists "profiles_delete_own" on public.profiles;
 create policy "profiles_delete_own" on public.profiles for delete using (auth.uid() = id);
 
 -- Lebensmittel-Bibliothek (eigene + übernommene Open-Food-Facts-Produkte) ----
@@ -114,6 +118,10 @@ declare t text;
 begin
   foreach t in array array['foods','dishes','log_entries','water_logs','weight_logs'] loop
     execute format('alter table public.%I enable row level security', t);
+    execute format('drop policy if exists "%1$s_select_own" on public.%1$I', t);
+    execute format('drop policy if exists "%1$s_insert_own" on public.%1$I', t);
+    execute format('drop policy if exists "%1$s_update_own" on public.%1$I', t);
+    execute format('drop policy if exists "%1$s_delete_own" on public.%1$I', t);
     execute format('create policy "%1$s_select_own" on public.%1$I for select using (auth.uid() = user_id)', t);
     execute format('create policy "%1$s_insert_own" on public.%1$I for insert with check (auth.uid() = user_id)', t);
     execute format('create policy "%1$s_update_own" on public.%1$I for update using (auth.uid() = user_id) with check (auth.uid() = user_id)', t);
@@ -122,19 +130,26 @@ begin
 end $$;
 
 -- Konto löschen: entfernt den eigenen Auth-Nutzer, alle Daten werden per Cascade gelöscht.
-create or replace function public.delete_my_account()
-returns void
-language plpgsql
-security definer
-set search_path = public, auth
-as $$
+-- Nur anlegen, wenn es die Funktion noch nicht gibt: Die Haushalts-Migration ersetzt sie durch eine erweiterte
+-- Fassung, und ein erneutes Ausführen dieser Datei soll das nicht zurückdrehen.
+do $do$
 begin
-  if auth.uid() is null then
-    raise exception 'Nicht angemeldet';
+  if to_regprocedure('public.delete_my_account()') is null then
+    create function public.delete_my_account()
+    returns void
+    language plpgsql
+    security definer
+    set search_path = public, auth
+    as $fn$
+    begin
+      if auth.uid() is null then
+        raise exception 'Nicht angemeldet';
+      end if;
+      delete from auth.users where id = auth.uid();
+    end;
+    $fn$;
   end if;
-  delete from auth.users where id = auth.uid();
-end;
-$$;
+end $do$;
 
 revoke all on function public.delete_my_account() from public, anon;
 grant execute on function public.delete_my_account() to authenticated;

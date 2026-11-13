@@ -158,3 +158,29 @@ test('Falscher Einladungscode: verständliche Meldung, kein Beitritt', async ({ 
   await page.getByRole('button', { name: 'Schließen' }).click()
   await expect(page.getByRole('button', { name: 'Haushalt gründen' })).toBeVisible()
 })
+
+test('Link aus der Mail: meldet auch in einem anderen Browser an; ein benutzter Link wird erklärt', async ({ page, browser, request }) => {
+  const email = testEmail('link')
+  await page.goto('/')
+  await page.getByLabel('E-Mail-Adresse').fill(email)
+  await page.getByRole('button', { name: 'Anmeldelink senden' }).click()
+  await expect(page.getByRole('heading', { name: 'Schau in dein Postfach' })).toBeVisible()
+  const { url } = await (await request.get(`http://127.0.0.1:54321/__link?email=${encodeURIComponent(email)}`)).json()
+
+  // Mail-Programme öffnen Links oft in einem anderen Browser als dem, in dem die Anmeldung begonnen wurde
+  const elsewhere = await browser.newContext()
+  const second = await elsewhere.newPage()
+  await second.goto(url)
+  await expect(second.getByLabel('Wie dürfen wir dich nennen?')).toBeVisible()
+  await expect(second).not.toHaveURL(/access_token/)
+  await elsewhere.close()
+
+  // Jeder Link gilt nur einmal: beim zweiten Klick erklärt die Anmeldeseite, was los ist
+  const again = await browser.newContext()
+  const third = await again.newPage()
+  await third.goto(url)
+  await expect(third.getByRole('alert')).toContainText('abgelaufen oder wurde schon benutzt')
+  await expect(third.getByLabel('E-Mail-Adresse')).toBeVisible()
+  await expect(third).not.toHaveURL(/error/)
+  await again.close()
+})
