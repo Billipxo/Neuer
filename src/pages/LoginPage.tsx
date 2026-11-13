@@ -3,7 +3,7 @@ import { Sheet } from '../components/ui/Sheet'
 import { AboutContent } from '../components/about/AboutContent'
 import { MailCheck, Sparkles } from 'lucide-react'
 import { useAuth } from '../app/auth'
-import { isSupabaseConfigured } from '../lib/supabase'
+import { isSupabaseConfigured, supabaseConfigProblem } from '../lib/supabase'
 import { Button } from '../components/ui/Button'
 import { Field } from '../components/ui/Field'
 
@@ -116,6 +116,15 @@ export function LoginPage() {
             {state === 'sending' ? 'Wird gesendet …' : 'Anmeldelink senden'}
           </Button>
         </form>
+      ) : supabaseConfigProblem ? (
+        <div role="alert" className="rounded-3xl bg-surface p-5 text-sm ring-1 ring-line">
+          <p className="font-semibold">Die Verbindung zur Datenbank ist falsch eingestellt.</p>
+          <p className="mt-1">{supabaseConfigProblem}</p>
+          <p className="mt-2 text-muted">
+            Bei Vercel unter <strong>Environment Variables</strong> korrigieren und die App danach neu ausliefern
+            (<strong>Deployments</strong> → <strong>Redeploy</strong>).
+          </p>
+        </div>
       ) : (
         <div className="rounded-3xl bg-surface p-5 text-sm ring-1 ring-line">
           <p className="font-semibold">Supabase ist noch nicht eingerichtet.</p>

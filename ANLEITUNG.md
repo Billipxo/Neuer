@@ -231,6 +231,7 @@ Verschickt wird ein lesbarer Text; wer selbst deine App nutzt, übernimmt den Pl
 
 | Problem | Lösung |
 |---|---|
+| Die App zeigt eine leere Seite oder „Die Verbindung zur Datenbank ist falsch eingestellt“ | Einer der beiden Werte bei Vercel stimmt nicht. In Vercel **Environment Variables** öffnen: `VITE_SUPABASE_URL` muss die Adresse sein (`https://….supabase.co`), `VITE_SUPABASE_ANON_KEY` der öffentliche Schlüssel (`sb_publishable_…` oder `eyJ…`). Danach **Deployments** → **⋯** → **Redeploy**. |
 | Die App zeigt „Supabase ist noch nicht eingerichtet“ | Umgebungsvariablen in Vercel prüfen (Schritt 6, genaue Namen!) → in Vercel **Deployments** → **⋯** → **Redeploy**. |
 | Keine Mail angekommen | Spam-Ordner prüfen. Zu viele Versuche? Ein paar Minuten warten. Siehe „E-Mail-Versand“ oben. |
 | Link in der Mail öffnet eine Fehlerseite / „localhost“ | Schritt 7 prüfen (Site URL und Redirect URL). |
