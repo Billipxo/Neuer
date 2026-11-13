@@ -1,0 +1,1246 @@
+/**
+ * Kochwissen: kurze, praktische Anleitungen. Zeiten und Temperaturen sind Richtwerte für den Haushalt.
+ */
+
+export type GuideBlock =
+  | { type: 'text'; text: string }
+  | { type: 'list'; title?: string; items: string[] }
+  | { type: 'steps'; title?: string; items: string[] }
+  | { type: 'table'; title?: string; head: string[]; rows: string[][] }
+  | { type: 'tip'; text: string }
+  /** Aus Daten erzeugte Inhalte (Saisonkalender, Gewichtstabelle) */
+  | { type: 'generated'; kind: 'season' | 'weights' }
+
+export type GuideCategory = 'geraete' | 'grundlagen' | 'planen' | 'wissen'
+
+export const GUIDE_CATEGORY_LABELS: Record<GuideCategory, string> = {
+  geraete: 'Geräte & Techniken',
+  grundlagen: 'Grundlagen',
+  planen: 'Planen & Vorrat',
+  wissen: 'Gut zu wissen',
+}
+
+export interface Guide {
+  id: string
+  title: string
+  emoji: string
+  summary: string
+  category: GuideCategory
+  /** Lesezeit in Minuten */
+  minutes: number
+  blocks: GuideBlock[]
+  /** Passende Rezepte zum Ausprobieren */
+  recipeIds?: string[]
+}
+
+export const GUIDES: Guide[] = [
+  {
+    id: 'heissluftfritteuse',
+    title: 'Heißluftfritteuse: Grundlagen & Garzeiten',
+    emoji: '💨',
+    summary: 'So wird es knusprig mit wenig Öl – plus Garzeiten-Tabelle und Umrechnung von Backofen-Rezepten.',
+    category: 'geraete',
+    minutes: 4,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Eine Heißluftfritteuse ist im Grunde ein kleiner, sehr kräftiger Umluftofen. Heiße Luft strömt schnell um das Gargut – dadurch wird es mit wenig Öl außen knusprig und bleibt innen saftig.',
+      },
+      {
+        type: 'list',
+        title: 'Die wichtigsten Regeln',
+        items: [
+          'Korb nicht überfüllen: höchstens ein bis zwei Lagen – sonst wird das Gargut eher gedämpft als knusprig.',
+          'Nach etwa der Hälfte der Zeit schütteln oder wenden.',
+          'Wenig Öl genügt: 1 TL bis 1 EL pro Portion, am besten mit dem Gargut vermischen oder aufsprühen.',
+          'Lebensmittel trocken tupfen – Feuchtigkeit verhindert das Bräunen.',
+          'Vorheizen (2–3 Minuten) sorgt für gleichmäßigere Ergebnisse, ist bei vielen Geräten aber nicht zwingend.',
+          'Backpapier nur zusammen mit Gargut einlegen oder gelochtes Papier nutzen – loses Papier kann zum Heizelement gewirbelt werden.',
+          'Kleine ofenfeste Formen und Silikonförmchen eignen sich für Aufläufe, Muffins und Kuchen.',
+        ],
+      },
+      {
+        type: 'table',
+        title: 'Garzeiten (Richtwerte)',
+        head: ['Lebensmittel', 'Temperatur', 'Zeit', 'Hinweis'],
+        rows: [
+          ['Pommes, frisch geschnitten', '200 °C', '18–25 Min.', '30 Min. wässern, trocknen, 1 TL Öl'],
+          ['Pommes, tiefgekühlt', '200 °C', '12–16 Min.', 'ohne zusätzliches Öl'],
+          ['Süßkartoffel-Pommes', '200 °C', '15–20 Min.', 'mit etwas Stärke bestäuben'],
+          ['Kartoffelspalten', '200 °C', '20–25 Min.', '2–3-mal schütteln'],
+          ['Hähnchenbrust (ca. 200 g)', '190 °C', '12–16 Min.', 'Kerntemperatur mind. 75 °C'],
+          ['Hähnchenschenkel mit Knochen', '200 °C', '22–28 Min.', 'Hautseite nach oben'],
+          ['Lachsfilet', '190 °C', '8–10 Min.', 'Hautseite nach unten'],
+          ['Frikadellen, Burger-Patties', '190–200 °C', '10–12 Min.', 'nach der Hälfte wenden'],
+          ['Gemüse in Stücken', '190 °C', '8–12 Min.', 'z. B. Paprika, Zucchini, Brokkoli'],
+          ['Rosenkohl, halbiert', '200 °C', '13–15 Min.', 'nach der Hälfte schütteln'],
+          ['Tofu-Würfel', '200 °C', '12–15 Min.', 'vorher pressen, mit Stärke bestäuben'],
+          ['Kichererbsen aus der Dose', '200 °C', '12–15 Min.', 'sehr gut trocken tupfen'],
+          ['Eier, hart', '150 °C', '14–16 Min.', 'danach kalt abschrecken'],
+          ['Brötchen aufbacken', '180 °C', '3–5 Min.', ''],
+          ['Tiefkühlgemüse', '200 °C', '10–14 Min.', 'nicht auftauen'],
+        ],
+      },
+      {
+        type: 'text',
+        text: 'Backofen-Rezepte umrechnen: Als Faustregel die Temperatur um etwa 20 °C senken und die Garzeit um rund 20 % verkürzen. Bei Kuchen und Aufläufen lieber früher nachsehen.',
+      },
+      {
+        type: 'list',
+        title: 'Reinigen',
+        items: [
+          'Korb und Einsatz nach dem Abkühlen mit warmem Spülwasser reinigen – keine Scheuermittel auf der Antihaft-Beschichtung.',
+          'Fett aus der Schublade regelmäßig entfernen, sonst kann es beim nächsten Garen rauchen.',
+        ],
+      },
+      { type: 'tip', text: 'Garzeiten schwanken je nach Gerät, Korbgröße und Menge. Beim ersten Mal lieber ein paar Minuten früher kontrollieren.' },
+    ],
+    recipeIds: ['suesskartoffel-pommes', 'knusprige-haehnchenstreifen', 'rosenkohl-kartoffeln-airfryer', 'gemuese-ei-muffins', 'knuspermuesli'],
+  },
+  {
+    id: 'reis-kochen',
+    title: 'Reis perfekt kochen',
+    emoji: '🍚',
+    summary: 'Die Quellmethode Schritt für Schritt – mit Wassermengen und Garzeiten für jede Sorte.',
+    category: 'grundlagen',
+    minutes: 3,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Reis lässt sich auf zwei Arten garen: mit der Quellmethode, bei der er das gesamte Wasser aufnimmt, oder wie Nudeln in viel Wasser. Für lockeren, aromatischen Reis ist die Quellmethode ideal.',
+      },
+      {
+        type: 'steps',
+        title: 'Quellmethode',
+        items: [
+          'Reis in einem Sieb unter kaltem Wasser waschen, bis das Wasser fast klar abläuft – so wird er weniger klebrig.',
+          'Reis mit der passenden Menge Wasser (siehe Tabelle) und einer Prise Salz in einen Topf geben und aufkochen.',
+          'Hitze auf die kleinste Stufe stellen, Deckel auflegen und quellen lassen. Nicht umrühren und den Deckel möglichst geschlossen lassen.',
+          'Nach der Garzeit vom Herd nehmen, 5–10 Minuten mit Deckel ruhen lassen und mit einer Gabel auflockern.',
+        ],
+      },
+      {
+        type: 'table',
+        title: 'Wassermenge und Garzeit',
+        head: ['Sorte', 'Wasser pro Tasse Reis', 'Garzeit'],
+        rows: [
+          ['Basmati, Jasmin', '1,5 Tassen', '10–12 Min.'],
+          ['Langkornreis', '2 Tassen', '15–18 Min.'],
+          ['Vollkornreis', '2,5 Tassen', '35–40 Min.'],
+          ['Risottoreis', 'nach und nach 3–4 Tassen Brühe', '18–20 Min. unter Rühren'],
+          ['Milchreis', 'ca. 6 Tassen Milch', '25–30 Min.'],
+        ],
+      },
+      { type: 'text', text: 'Menge: Als Beilage rechnet man etwa 60–75 g ungekochten Reis pro Person.' },
+      {
+        type: 'tip',
+        text: 'Reste schnell abkühlen lassen und im Kühlschrank aufbewahren (höchstens 1–2 Tage). Steht gekochter Reis lange warm, können sich Keime vermehren, deren Gifte beim Aufwärmen nicht zerstört werden.',
+      },
+    ],
+    recipeIds: ['thunfisch-reis-bowl', 'pilzrisotto', 'gemuese-reispfanne-ei', 'milchreis-apfelmus'],
+  },
+  {
+    id: 'nudeln-kochen',
+    title: 'Nudeln al dente',
+    emoji: '🍝',
+    summary: 'Wasser, Salz, Garpunkt und warum man das Nudelwasser aufheben sollte.',
+    category: 'grundlagen',
+    minutes: 2,
+    blocks: [
+      {
+        type: 'list',
+        title: 'So gelingen Nudeln',
+        items: [
+          'Pro 100 g Nudeln etwa 1 Liter Wasser verwenden.',
+          'Salz erst ins kochende Wasser geben – etwa 10 g (2 TL) pro Liter.',
+          'Nudeln ins sprudelnd kochende Wasser geben und in den ersten 2 Minuten umrühren, damit nichts zusammenklebt.',
+          '1–2 Minuten vor Ende der Packungsangabe probieren: Al dente heißt, der Kern hat noch leichten Biss.',
+          'Vor dem Abgießen eine Tasse Nudelwasser abnehmen – die Stärke darin bindet Saucen.',
+          'Nudeln nicht kalt abspülen (außer für Salat) – sonst haftet die Sauce schlechter.',
+          'Kein Öl ins Kochwasser – es sorgt nur dafür, dass die Sauce weniger gut haftet.',
+        ],
+      },
+      {
+        type: 'table',
+        title: 'Mengen pro Person (ungekocht)',
+        head: ['Verwendung', 'Menge'],
+        rows: [
+          ['Hauptgericht', '100–125 g'],
+          ['Beilage oder Suppe', '50–80 g'],
+          ['Vollkornnudeln', 'sättigen stärker – 80–100 g reichen meist'],
+        ],
+      },
+      { type: 'tip', text: 'Vollkornnudeln enthalten deutlich mehr Ballaststoffe und brauchen oft 1–2 Minuten länger.' },
+    ],
+    recipeIds: ['pasta-brokkoli-zitrone', 'spaghetti-tomatensauce', 'linsen-bolognese', 'kuerbis-pasta-salbei'],
+  },
+  {
+    id: 'kartoffeln',
+    title: 'Kartoffeln: Sorten & Garzeiten',
+    emoji: '🥔',
+    summary: 'Festkochend oder mehlig? Welche Sorte wofür passt, wie lange sie brauchen und wie man sie lagert.',
+    category: 'grundlagen',
+    minutes: 3,
+    blocks: [
+      {
+        type: 'table',
+        title: 'Welche Sorte wofür?',
+        head: ['Kochtyp', 'Ideal für'],
+        rows: [
+          ['festkochend', 'Kartoffelsalat, Bratkartoffeln, Gratin, Pellkartoffeln'],
+          ['vorwiegend festkochend', 'Salzkartoffeln, Ofenkartoffeln, Eintöpfe'],
+          ['mehligkochend', 'Püree, Suppe, Klöße, Reibekuchen'],
+        ],
+      },
+      {
+        type: 'steps',
+        title: 'Salzkartoffeln',
+        items: [
+          'Kartoffeln schälen und in gleich große Stücke schneiden.',
+          'Mit kaltem Wasser knapp bedecken, salzen (ca. 1 TL pro Liter) und aufkochen.',
+          'Zugedeckt bei mittlerer Hitze 15–20 Minuten garen – sie sind fertig, wenn ein Messer leicht hineingleitet.',
+          'Abgießen und im offenen Topf kurz ausdampfen lassen.',
+        ],
+      },
+      {
+        type: 'table',
+        title: 'Garzeiten',
+        head: ['Zubereitung', 'Zeit'],
+        rows: [
+          ['Pellkartoffeln, mittelgroß', '20–25 Min.'],
+          ['Salzkartoffeln in Stücken', '15–20 Min.'],
+          ['Für Püree, gewürfelt', 'ca. 15 Min.'],
+          ['Ofenkartoffeln (200 °C Umluft)', '50–60 Min.'],
+          ['Ganze Kartoffeln in der Heißluftfritteuse (200 °C)', '35–40 Min.'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Lagerung',
+        items: [
+          'Kühl, dunkel und trocken lagern (ideal 4–8 °C) – nicht im Kühlschrank.',
+          'Grüne Stellen und Keime großzügig entfernen, sie enthalten Solanin.',
+          'Nicht neben Äpfeln lagern – sie lassen Kartoffeln schneller keimen.',
+        ],
+      },
+      { type: 'tip', text: 'Für Kartoffelsalat und Bratkartoffeln die Kartoffeln am Vortag kochen – abgekühlt zerfallen sie nicht.' },
+    ],
+    recipeIds: ['bratkartoffeln-spiegelei', 'kartoffelsalat-joghurt', 'pellkartoffeln-kraeuterquark', 'fischstaebchen-pueree'],
+  },
+  {
+    id: 'eier',
+    title: 'Eier kochen & braten',
+    emoji: '🥚',
+    summary: 'Von weich bis hart, dazu Rührei, Spiegelei und der Frischetest im Wasserglas.',
+    category: 'grundlagen',
+    minutes: 2,
+    blocks: [
+      { type: 'text', text: 'Die Zeiten gelten für Eier der Größe M direkt aus dem Kühlschrank, die in sprudelnd kochendes Wasser gelegt werden.' },
+      {
+        type: 'table',
+        title: 'Kochzeiten',
+        head: ['Ergebnis', 'Zeit'],
+        rows: [
+          ['weich (Eiweiß fest, Eigelb flüssig)', '5–6 Min.'],
+          ['wachsweich', '7–8 Min.'],
+          ['hart', '9–10 Min.'],
+          ['Größe L', 'jeweils ca. 1 Minute länger'],
+        ],
+      },
+      {
+        type: 'steps',
+        title: 'So geht’s',
+        items: [
+          'Eier am stumpfen Ende anstechen – so platzen sie seltener.',
+          'Mit einem Löffel vorsichtig ins kochende Wasser legen und den Timer stellen.',
+          'Nach der Garzeit sofort kalt abschrecken. Das stoppt den Garprozess und die Eier lassen sich leichter pellen.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'In der Pfanne',
+        items: [
+          'Rührei: bei kleiner Hitze langsam stocken lassen und vom Herd nehmen, solange es noch glänzt.',
+          'Spiegelei: mittlere Hitze, 3–4 Minuten. Mit Deckel wird das Eigelb oben fester.',
+          'Omelett: Eier verquirlen, in die mittelheiße Pfanne geben und die gestockten Ränder zur Mitte schieben.',
+        ],
+      },
+      { type: 'tip', text: 'Frischetest: Ein frisches Ei bleibt im Wasserglas am Boden liegen, ein älteres stellt sich auf, ein sehr altes schwimmt oben.' },
+    ],
+    recipeIds: ['ruehrei-raeucherlachs', 'herzhaftes-porridge', 'senfeier', 'avocado-spiegelei-brot'],
+  },
+  {
+    id: 'gemuese-garen',
+    title: 'Gemüse richtig garen',
+    emoji: '🥦',
+    summary: 'Dämpfen, dünsten, blanchieren oder rösten – damit Gemüse knackig und aromatisch bleibt.',
+    category: 'grundlagen',
+    minutes: 3,
+    blocks: [
+      { type: 'text', text: 'Kurz und schonend gegart bleibt Gemüse knackig, farbintensiv und aromatisch. Welche Methode passt, hängt vom Gemüse und vom Gericht ab.' },
+      {
+        type: 'table',
+        title: 'Garmethoden',
+        head: ['Methode', 'So geht’s'],
+        rows: [
+          ['Dämpfen', 'im Siebeinsatz über wenig kochendem Wasser – sehr schonend'],
+          ['Dünsten', 'mit wenig Fett und etwas Flüssigkeit im geschlossenen Topf'],
+          ['Blanchieren', '1–3 Minuten in sprudelndem Salzwasser, dann in Eiswasser – für Salate oder vor dem Einfrieren'],
+          ['Braten', 'in der heißen Pfanne, nicht zu viel auf einmal'],
+          ['Rösten', 'im Ofen oder in der Heißluftfritteuse bei 200–220 °C – Röstaromen, süßlicher Geschmack'],
+        ],
+      },
+      {
+        type: 'table',
+        title: 'Garzeiten beim Dämpfen',
+        head: ['Gemüse', 'Zeit'],
+        rows: [
+          ['Brokkoli-Röschen', '5–7 Min.'],
+          ['Blumenkohl-Röschen', '8–10 Min.'],
+          ['Karotten in Scheiben', '8–10 Min.'],
+          ['Grüne Bohnen', '8–10 Min.'],
+          ['Erbsen (TK)', '3–4 Min.'],
+          ['Spinat', '1–2 Min.'],
+          ['Weißer Spargel', '12–15 Min.'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Tipps',
+        items: [
+          'Gleich große Stücke schneiden – dann ist alles gleichzeitig gar.',
+          'Beim Braten erst salzen, wenn das Gemüse Farbe hat – sonst zieht es Wasser.',
+          'Ein Spritzer Zitrone oder Essig zum Schluss hebt den Geschmack.',
+        ],
+      },
+    ],
+    recipeIds: ['ofengemuese-halloumi', 'ratatouille-quinoa', 'blechgemuese-feta-kichererbsen', 'brokkoli-kartoffel-suppe'],
+  },
+  {
+    id: 'huelsenfruechte',
+    title: 'Hülsenfrüchte: Linsen, Bohnen, Kichererbsen',
+    emoji: '🫘',
+    summary: 'Einweichen oder nicht? Kochzeiten, Umrechnung von Dose zu getrocknet und Tipps für Bekömmlichkeit.',
+    category: 'grundlagen',
+    minutes: 3,
+    blocks: [
+      { type: 'text', text: 'Hülsenfrüchte sind günstig, sättigend und reich an Eiweiß und Ballaststoffen. Viele Sorten gibt es auch fertig gegart in der Dose.' },
+      {
+        type: 'table',
+        title: 'Einweichen und Kochzeit',
+        head: ['Sorte', 'Einweichen', 'Kochzeit'],
+        rows: [
+          ['rote Linsen', 'nein', '10–15 Min. (zerfallen)'],
+          ['gelbe Linsen', 'nein', '15–20 Min.'],
+          ['Teller- oder braune Linsen', 'nein', '25–35 Min.'],
+          ['Belugalinsen', 'nein', '20–25 Min.'],
+          ['Schälerbsen', 'nein', '40–60 Min.'],
+          ['Kichererbsen, getrocknet', 'über Nacht (ca. 12 Std.)', '60–90 Min.'],
+          ['Kidney- und weiße Bohnen, getrocknet', 'über Nacht (ca. 12 Std.)', '60–90 Min.'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Gut zu wissen',
+        items: [
+          'Getrocknete Bohnen und Kichererbsen immer vollständig durchgaren – roh oder halbgar sind sie unverträglich.',
+          'Einweichwasser wegschütten und in frischem Wasser kochen.',
+          'Erst nach dem Garen salzen, sonst werden sie langsamer weich.',
+          'Dosenware in einem Sieb abspülen – das entfernt überschüssiges Salz.',
+        ],
+      },
+      { type: 'text', text: 'Umrechnung: Eine Dose (400 g) enthält etwa 240–250 g abgetropfte Hülsenfrüchte – das entspricht rund 100 g getrockneter Ware.' },
+    ],
+    recipeIds: ['dal-rote-linsen', 'linsensuppe', 'hummus-gemuesesticks', 'chili-sin-carne', 'linsensalat-feta'],
+  },
+  {
+    id: 'kerntemperaturen',
+    title: 'Fleisch & Fisch sicher garen',
+    emoji: '🌡️',
+    summary: 'Kerntemperaturen als Richtwerte und die wichtigsten Regeln für eine saubere Küche.',
+    category: 'wissen',
+    minutes: 3,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Mit einem Bratenthermometer gelingt der Garpunkt zuverlässig. Gemessen wird an der dicksten Stelle, ohne den Knochen zu berühren. Die Werte sind Richtwerte für den Haushalt.',
+      },
+      {
+        type: 'table',
+        title: 'Kerntemperaturen',
+        head: ['Lebensmittel', 'Kerntemperatur', 'Erkennungszeichen'],
+        rows: [
+          ['Geflügel (Hähnchen, Pute)', 'mind. 75 °C', 'Saft klar, Fleisch nicht mehr rosa'],
+          ['Hackfleisch (Frikadellen, Burger)', 'mind. 70 °C', 'innen durchgehend gegart'],
+          ['Schweinefilet', '60–65 °C', 'zart rosa'],
+          ['Schweinebraten', '70–75 °C', 'durchgegart'],
+          ['Rindersteak medium', '54–57 °C', 'rosa, saftig'],
+          ['Lachs, glasig', '45–50 °C', 'innen noch leicht glasig'],
+          ['Lachs und weißer Fisch, durch', '55–60 °C', 'lässt sich in Lamellen teilen'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Küchenhygiene',
+        items: [
+          'Rohes Geflügel nicht waschen – Spritzwasser verteilt Keime in der Küche. Trocken tupfen genügt.',
+          'Für rohes Fleisch ein eigenes Schneidebrett verwenden und danach heiß spülen.',
+          'Hände nach dem Kontakt mit rohem Fleisch, Fisch oder Ei gründlich waschen.',
+          'Tiefgekühltes Fleisch im Kühlschrank auftauen und das Auftauwasser wegschütten.',
+        ],
+      },
+      { type: 'tip', text: 'Nach dem Braten 3–5 Minuten ruhen lassen – die Temperatur steigt noch etwas an und der Saft verteilt sich.' },
+    ],
+    recipeIds: ['haehnchen-kartoffel-blech', 'koenigsberger-klopse', 'ofenlachs-kartoffeln', 'burger-leicht'],
+  },
+  {
+    id: 'meal-prep',
+    title: 'Meal Prep: Vorkochen für die Woche',
+    emoji: '📦',
+    summary: 'In fünf Schritten zur vorbereiteten Woche – mit Haltbarkeiten und was sich einfrieren lässt.',
+    category: 'planen',
+    minutes: 4,
+    blocks: [
+      {
+        type: 'steps',
+        title: 'In fünf Schritten',
+        items: [
+          'Plane 2–3 Gerichte für die Woche – zum Beispiel mit „Woche vorschlagen“ im Planer.',
+          'Erzeuge daraus die Einkaufsliste und kaufe einmal gebündelt ein.',
+          'Koche Grundzutaten in größerer Menge: Reis, Quinoa, Linsen, Ofengemüse, Hähnchen, gekochte Eier.',
+          'Bewahre Saucen und Dressings getrennt auf, damit nichts durchweicht.',
+          'Fülle alles portionsweise in Dosen, beschrifte sie mit Datum und lass sie schnell abkühlen.',
+        ],
+      },
+      {
+        type: 'table',
+        title: 'Haltbarkeit im Kühlschrank (Richtwerte, bei max. 5 °C)',
+        head: ['Lebensmittel', 'Haltbarkeit'],
+        rows: [
+          ['Gekochter Reis', '1–2 Tage'],
+          ['Gekochte Nudeln', '2–3 Tage'],
+          ['Eintöpfe, Currys, Suppen', '3 Tage'],
+          ['Gegartes Fleisch und Geflügel', '2–3 Tage'],
+          ['Gegarter Fisch', '1–2 Tage'],
+          ['Ofengemüse', '3–4 Tage'],
+          ['Hart gekochte Eier (ungeschält)', 'bis zu 1 Woche'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Gut einfrierbar',
+        items: [
+          'Suppen, Eintöpfe, Currys und Chili',
+          'Bolognese und Tomatensaucen',
+          'Frikadellen, Muffins und Bananenbrot',
+          'Weniger gut: Salate, Kartoffeln in Sauce (werden mehlig) und Joghurtsaucen',
+        ],
+      },
+      { type: 'tip', text: 'Warme Speisen zum Abkühlen in flache Dosen verteilen und innerhalb von etwa 2 Stunden in den Kühlschrank stellen.' },
+    ],
+    recipeIds: ['chili-con-carne', 'dal-rote-linsen', 'linsensalat-feta', 'gemuese-ei-muffins', 'overnight-oats-beeren'],
+  },
+  {
+    id: 'messen-ohne-waage',
+    title: 'Messen ohne Waage',
+    emoji: '🥄',
+    summary: 'Löffel, Tassen, Handvoll – und was ein Stück Gemüse durchschnittlich wiegt.',
+    category: 'wissen',
+    minutes: 2,
+    blocks: [
+      {
+        type: 'table',
+        title: 'Löffelmaße (gestrichen)',
+        head: ['Zutat', '1 EL', '1 TL'],
+        rows: [
+          ['Öl', 'ca. 10 g', 'ca. 4 g'],
+          ['Mehl, Haferflocken', 'ca. 10 g', 'ca. 3 g'],
+          ['Zucker', 'ca. 15 g', 'ca. 5 g'],
+          ['Honig, Ahornsirup', 'ca. 20 g', 'ca. 7 g'],
+          ['Salz', 'ca. 15 g', 'ca. 5 g'],
+          ['Gemahlene Gewürze', 'ca. 7 g', 'ca. 2–3 g'],
+        ],
+      },
+      {
+        type: 'table',
+        title: 'Tassen und Hände',
+        head: ['Maß', 'entspricht etwa'],
+        rows: [
+          ['1 Tasse', '200–250 ml'],
+          ['1 Becher Sahne oder Joghurt', '200 g'],
+          ['1 Handvoll Nüsse', '25–30 g'],
+          ['1 Handvoll Babyspinat', '20–30 g'],
+          ['1 Portion Nudeln (ungekocht)', '100 g'],
+        ],
+      },
+      { type: 'generated', kind: 'weights' },
+      { type: 'tip', text: 'Mit der Zeit bekommt man ein gutes Augenmaß. Beim Backen lohnt sich trotzdem eine günstige Küchenwaage.' },
+    ],
+  },
+  {
+    id: 'wuerzen',
+    title: 'Würzen mit Kräutern & Gewürzen',
+    emoji: '🌿',
+    summary: 'Grundregeln, was wozu passt und wie man mit weniger Salz kräftig würzt.',
+    category: 'wissen',
+    minutes: 3,
+    blocks: [
+      {
+        type: 'list',
+        title: 'Grundregeln',
+        items: [
+          'Salz verstärkt Aromen – lieber mehrmals wenig salzen und zwischendurch probieren.',
+          'Säure (Zitrone, Essig) macht Gerichte frischer und wirkt ähnlich wie Salz.',
+          'Getrocknete Kräuter früh mitgaren, frische Kräuter erst zum Schluss zugeben.',
+          'Gewürze wie Kreuzkümmel, Curry oder Paprika kurz in Fett anrösten – so entfalten sie ihr Aroma.',
+          'Paprikapulver nicht zu heiß anbraten, es wird schnell bitter.',
+        ],
+      },
+      {
+        type: 'table',
+        title: 'Was passt wozu?',
+        head: ['Kraut / Gewürz', 'Passt zu'],
+        rows: [
+          ['Basilikum', 'Tomaten, Mozzarella, Pasta'],
+          ['Petersilie', 'fast allem: Kartoffeln, Salaten, Fisch, Suppen'],
+          ['Dill', 'Fisch, Gurke, Kartoffelsalat, Quark'],
+          ['Schnittlauch', 'Quark, Eiern, Kartoffeln'],
+          ['Rosmarin, Thymian', 'Ofengemüse, Kartoffeln, Fleisch'],
+          ['Majoran', 'Kartoffeln, Eintöpfen, Hülsenfrüchten'],
+          ['Kreuzkümmel', 'Chili, Currys, Hummus, Linsen'],
+          ['Zimt', 'Porridge, Äpfeln, Quark'],
+          ['Muskat', 'Kartoffelpüree, Béchamel, Spinat'],
+          ['Ingwer', 'asiatischen Gerichten, Suppen, Currys'],
+        ],
+      },
+      { type: 'text', text: 'Frisch oder getrocknet: 1 TL getrocknete Kräuter ersetzen etwa 1 EL frische.' },
+      { type: 'tip', text: 'Weniger Salz? Mit Kräutern, Zitrone, Knoblauch und Gewürzen schmeckt es trotzdem kräftig.' },
+    ],
+  },
+  {
+    id: 'schneiden',
+    title: 'Schneiden wie die Profis',
+    emoji: '🔪',
+    summary: 'Sicher schneiden mit dem Krallengriff, Zwiebeln würfeln und Knoblauch vorbereiten.',
+    category: 'geraete',
+    minutes: 2,
+    blocks: [
+      {
+        type: 'list',
+        title: 'Sicher schneiden',
+        items: [
+          'Ein scharfes Messer ist sicherer als ein stumpfes – es rutscht weniger ab.',
+          'Krallengriff: Die Fingerkuppen der Haltehand leicht einziehen, die Klinge gleitet an den Fingerknöcheln entlang.',
+          'Ein feuchtes Tuch unter dem Brett verhindert, dass es verrutscht.',
+          'Runde Lebensmittel zuerst halbieren und auf die flache Seite legen.',
+        ],
+      },
+      {
+        type: 'steps',
+        title: 'Zwiebel würfeln',
+        items: [
+          'Zwiebel halbieren und schälen. Den Wurzelansatz dranlassen – er hält die Schichten zusammen.',
+          'Die Hälfte flach hinlegen und längs in dünnen Abständen bis kurz vor die Wurzel einschneiden.',
+          'Dann quer in Scheiben schneiden – dabei fallen gleichmäßige Würfel heraus.',
+        ],
+      },
+      {
+        type: 'steps',
+        title: 'Knoblauch',
+        items: [
+          'Die Zehe mit der flachen Messerseite andrücken – so löst sich die Schale leicht.',
+          'Fein hacken oder mit einer Prise Salz auf dem Brett zu einer Paste zerreiben.',
+        ],
+      },
+      {
+        type: 'table',
+        title: 'Schnittarten',
+        head: ['Schnitt', 'Wofür'],
+        rows: [
+          ['Würfel', 'Saucen, Suppen, Pfannengerichte'],
+          ['Streifen', 'Wok-Gerichte, Salate'],
+          ['Scheiben', 'Aufläufe, zum Braten'],
+          ['Grob gehackt', 'Kräuter, Nüsse'],
+        ],
+      },
+      { type: 'tip', text: 'Zwiebeln tränen weniger, wenn das Messer scharf ist und die Zwiebel vorher kurz im Kühlschrank lag.' },
+    ],
+  },
+  {
+    id: 'saisonkalender',
+    title: 'Saisonkalender: Obst & Gemüse',
+    emoji: '📅',
+    summary: 'Was gerade regional Saison hat – Monat für Monat.',
+    category: 'planen',
+    minutes: 2,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Regional und saisonal einkaufen schmeckt oft besser und ist meist günstiger. Markiert sind die Monate, in denen es Freilandware oder Lagerware aus heimischem Anbau gibt.',
+      },
+      { type: 'generated', kind: 'season' },
+      { type: 'tip', text: 'Außerhalb der Saison sind Tiefkühlgemüse und -obst eine gute Wahl – sie werden erntefrisch eingefroren.' },
+    ],
+  },
+  {
+    id: 'vorrat',
+    title: 'Grundvorrat für die schnelle Küche',
+    emoji: '🧺',
+    summary: 'Mit diesen Basics lassen sich viele Rezepte ohne großen Einkauf kochen.',
+    category: 'planen',
+    minutes: 2,
+    blocks: [
+      {
+        type: 'table',
+        title: 'Was in den Vorrat gehört',
+        head: ['Bereich', 'Beispiele'],
+        rows: [
+          ['Trockenwaren', 'Haferflocken, Reis, Vollkornnudeln, rote Linsen, Bulgur oder Couscous, Mehl'],
+          ['Konserven', 'Tomaten (stückig, passiert), Kichererbsen, Kidneybohnen, Mais, Thunfisch, Kokosmilch'],
+          ['Würzen', 'Gemüsebrühe, Senf, Sojasauce, Tomatenmark, Essig, Olivenöl, Rapsöl'],
+          ['Gewürze', 'Salz, Pfeffer, Paprikapulver, Kreuzkümmel, Curry, Oregano, Zimt, Chiliflocken'],
+          ['Tiefkühler', 'Erbsen, Spinat, Beeren, Gemüsemischungen, Fischfilet'],
+          ['Kühlschrank', 'Eier, Joghurt, Quark, Käse, Zitronen'],
+          ['Lange frisch', 'Zwiebeln, Knoblauch, Kartoffeln, Karotten, Äpfel'],
+        ],
+      },
+      {
+        type: 'text',
+        text: 'Tipp in der App: Unter „Was habe ich da?“ bei den Rezepten findest du Gerichte, die zu deinen vorhandenen Zutaten passen.',
+      },
+      { type: 'tip', text: 'Neues nach hinten, Älteres nach vorne räumen – so wird nichts vergessen.' },
+    ],
+  },
+  {
+    id: 'lagerung',
+    title: 'Lebensmittel richtig lagern',
+    emoji: '🧊',
+    summary: 'Kühlschrank-Zonen, was nicht hineingehört und was das Mindesthaltbarkeitsdatum bedeutet.',
+    category: 'wissen',
+    minutes: 3,
+    blocks: [
+      {
+        type: 'table',
+        title: 'Kühlschrank-Zonen',
+        head: ['Bereich', 'Temperatur', 'Was gehört hinein'],
+        rows: [
+          ['Oben', 'ca. 8 °C', 'Käse, Geräuchertes, Reste'],
+          ['Mitte', 'ca. 5 °C', 'Milchprodukte, Joghurt, Quark'],
+          ['Unten auf der Glasplatte', 'ca. 2 °C', 'Fleisch, Fisch, Wurst – die kälteste Zone'],
+          ['Gemüsefach', 'ca. 8–10 °C', 'Gemüse, Salat, Obst'],
+          ['Tür', 'ca. 10 °C', 'Butter, Eier, Getränke, Saucen'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Nicht in den Kühlschrank',
+        items: [
+          'Tomaten – sie verlieren Aroma.',
+          'Kartoffeln, Zwiebeln und Knoblauch – kühl, dunkel und trocken lagern.',
+          'Bananen, Ananas und Mangos – sie werden braun.',
+          'Brot – es wird schneller altbacken.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Mindesthaltbarkeit',
+        items: [
+          'Das Mindesthaltbarkeitsdatum ist kein Wegwerfdatum: Viele Lebensmittel sind danach noch einwandfrei – anschauen, riechen, probieren.',
+          'Anders beim Verbrauchsdatum („zu verbrauchen bis“) bei leicht verderblichem Fleisch und Fisch – dieses Datum einhalten.',
+        ],
+      },
+      { type: 'tip', text: 'Äpfel und Tomaten geben Reifegas ab – getrennt von empfindlichem Obst und Gemüse lagern.' },
+    ],
+  },
+  {
+    id: 'backofen',
+    title: 'Backofen: Ober-/Unterhitze, Umluft & Grill',
+    emoji: '🔥',
+    summary: 'Welche Einstellung wofür passt, wie man Temperaturen umrechnet und wann sich Vorheizen lohnt.',
+    category: 'geraete',
+    minutes: 3,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Die meisten Rezepte nennen eine Temperatur für Ober-/Unterhitze oder für Umluft. Wer weiß, wofür welche Einstellung gedacht ist, bekommt gleichmäßigere Ergebnisse.',
+      },
+      {
+        type: 'table',
+        title: 'Die Einstellungen',
+        head: ['Einstellung', 'Geeignet für', 'Hinweis'],
+        rows: [
+          ['Ober-/Unterhitze', 'Kuchen in Formen, Brot, Pizza, Aufläufe', 'Nur eine Schiene; Pizza und Brot weiter unten'],
+          ['Umluft', 'Mehrere Bleche, Ofengemüse, Kekse, Hähnchen', 'Etwa 20 °C niedriger als Ober-/Unterhitze'],
+          ['Grill', 'Überbacken, Gratinieren, Bräunen', 'Nur wenige Minuten – nicht aus den Augen lassen'],
+          ['Umluft mit Grill', 'Hähnchen, Braten, knusprige Haut', 'Gargut auf den Rost, Blech darunter'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Umrechnen',
+        items: [
+          'Umluft = Ober-/Unterhitze minus etwa 20 °C, z. B. 200 °C Ober-/Unterhitze → 180 °C Umluft.',
+          'Heißluftfritteuse = Umluft minus etwa 20 °C, die Garzeit wird meist um 20–30 % kürzer.',
+          'Jeder Ofen heizt etwas anders – beim ersten Mal ein paar Minuten früher nachsehen.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Gut zu wissen',
+        items: [
+          'Vorheizen lohnt sich bei Kuchen, Brot, Pizza und Blätterteig. Bei Aufläufen, Ofengemüse und Schmorgerichten geht es meist auch ohne – dann ein paar Minuten länger garen.',
+          'Die Ofentür bei Kuchen und Brot in den ersten zwei Dritteln der Backzeit geschlossen lassen, sonst fallen sie zusammen.',
+          'Bleche nicht überladen: Liegt Gemüse dicht an dicht, dämpft es, statt zu rösten.',
+          'Ein Ofenthermometer zeigt, ob die eingestellte Temperatur stimmt – Abweichungen von 10–20 °C sind nicht selten.',
+          'Restwärme nutzen: Den Ofen 5–10 Minuten vor Ende ausschalten, die Hitze reicht zum Fertiggaren.',
+        ],
+      },
+      { type: 'tip', text: 'Ofengemüse wird am knusprigsten bei 200–220 °C Umluft – mit Abstand zwischen den Stücken und einmal gewendet.' },
+    ],
+    recipeIds: ['ofengemuese-grundrezept', 'pizza-vollkorn-gemuese', 'kartoffelgratin', 'moussaka', 'apfelkuchen-versunken'],
+  },
+  {
+    id: 'saucen-binden',
+    title: 'Saucen binden & abschmecken',
+    emoji: '🥄',
+    summary: 'Mehlschwitze, Stärke, Einkochen – so bekommt jede Sauce die richtige Konsistenz und einen runden Geschmack.',
+    category: 'grundlagen',
+    minutes: 3,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Eine gute Sauce hat die passende Konsistenz und einen ausgewogenen Geschmack. Zum Binden gibt es mehrere Wege – je nach Gericht.',
+      },
+      {
+        type: 'table',
+        title: 'Bindemittel im Überblick',
+        head: ['Methode', 'So geht’s', 'Passt zu'],
+        rows: [
+          ['Mehlschwitze', 'Butter schmelzen, gleich viel Mehl 1–2 Min. anschwitzen, Flüssigkeit nach und nach einrühren, 5 Min. köcheln', 'Béchamel, Frikassee, helle Saucen'],
+          ['Speisestärke', '1 TL Stärke in 2 EL kaltem Wasser anrühren, in die kochende Sauce rühren, 1 Min. köcheln', 'Asia-Saucen, Bratensauce, Rote Grütze'],
+          ['Einkochen', 'Offen bei mittlerer Hitze köcheln lassen, bis die Sauce dicker wird', 'Tomatensauce, Ragouts'],
+          ['Pürieren', 'Einen Teil des Gemüses oder der Hülsenfrüchte mitpürieren', 'Gulasch, Currys, Suppen'],
+          ['Milchprodukte', 'Saure Sahne, Frischkäse oder Joghurt zum Schluss einrühren', 'Stroganoff, Rahmsaucen, Currys'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Keine Klümpchen',
+        items: [
+          'Stärke und Mehl nie trocken in heiße Flüssigkeit streuen.',
+          'In eine heiße Mehlschwitze kalte Flüssigkeit rühren – nie heiß zu heiß.',
+          'Mit dem Schneebesen arbeiten.',
+          'Doch Klümpchen? Kurz mit dem Pürierstab durchmixen oder durch ein Sieb gießen.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Abschmecken: die fünf Stellschrauben',
+        items: [
+          'Salz macht Aromen deutlicher – in kleinen Prisen zugeben und probieren.',
+          'Säure (Zitrone, Essig) macht schwere Saucen frischer.',
+          'Eine Prise Zucker oder Honig gleicht zu viel Säure aus, z. B. bei Tomatensauce.',
+          'Fett (Butter, Sahne, Öl) rundet ab und trägt die Aromen.',
+          'Tomatenmark, Sojasauce, Parmesan oder Pilze geben Tiefe.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Wenn es schiefgeht',
+        items: [
+          'Zu dünn: weiter einkochen oder mit etwas angerührter Stärke binden.',
+          'Zu dick: mit Brühe, Milch oder Nudelwasser verdünnen.',
+          'Zu salzig: mit ungesalzener Flüssigkeit strecken; etwas Sahne oder Säure gleicht aus.',
+          'Geronnen: Joghurtsaucen nicht mehr kochen lassen und Joghurt vorher mit etwas Stärke verrühren.',
+        ],
+      },
+      { type: 'tip', text: 'Saure Sahne, Joghurt und Frischkäse erst zum Schluss und nicht mehr sprudelnd kochend einrühren – so flocken sie nicht aus.' },
+    ],
+    recipeIds: ['bechamel-grundrezept', 'tomatensauce-grundrezept', 'pilz-stroganoff', 'huehnerfrikassee', 'asia-wok-sauce'],
+  },
+  {
+    id: 'dressings',
+    title: 'Salatdressings: das Grundprinzip',
+    emoji: '🥗',
+    summary: 'Säure, Fett, Würze, Verbinder – mit diesem Baukasten gelingt jedes Dressing ohne Fertigprodukt.',
+    category: 'grundlagen',
+    minutes: 2,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Fast jedes Dressing folgt einer einfachen Formel: etwas Saures, etwas Fettes, Würze und eine Zutat, die alles verbindet.',
+      },
+      {
+        type: 'table',
+        title: 'Der Baukasten',
+        head: ['Baustein', 'Beispiele'],
+        rows: [
+          ['Säure', 'Weißwein-, Apfel- oder Balsamessig, Zitronen- oder Limettensaft'],
+          ['Fett', 'Oliven-, Raps-, Lein- oder Sesamöl, Joghurt, Tahin, Avocado'],
+          ['Verbinder', 'Senf, Honig, ein Löffel Joghurt oder Tahin'],
+          ['Würze', 'Salz, Pfeffer, Knoblauch, Schalotte, Kräuter, Sojasauce'],
+          ['Süße', 'Honig, Ahornsirup, ein Schuss Orangensaft'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Bewährte Kombinationen',
+        items: [
+          'Vinaigrette: 1 EL Essig, 1 TL Senf, 1 TL Honig, 3 EL Öl, Salz und Pfeffer.',
+          'Joghurt-Dressing: 150 g Joghurt, 1 EL Öl, Zitronensaft und Kräuter.',
+          'Asia-Dressing: 2 EL Sojasauce, 1 EL Reisessig, 1 TL Sesamöl, 1 TL Honig, geriebener Ingwer.',
+          'Tahin-Dressing: 2 EL Tahin, Zitronensaft, Knoblauch und Wasser nach Bedarf.',
+          'Balsamico-Honig: 2 EL Balsamico, 1 TL Honig, 3 EL Olivenöl – passt zu Feldsalat und Rucola.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Tipps',
+        items: [
+          'Salz zuerst in der Säure auflösen, dann das Öl einrühren.',
+          'Im Schraubglas schütteln – das geht schnell und verbindet gut.',
+          'Blattsalate erst kurz vor dem Essen anmachen, sonst fallen sie zusammen.',
+          'Kartoffel-, Linsen- und Krautsalat dürfen durchziehen – sie werden dadurch besser.',
+          'Dressings halten sich im Glas 3–5 Tage im Kühlschrank, mit frischen Kräutern etwas kürzer.',
+        ],
+      },
+      { type: 'tip', text: 'Für ein leichteres Dressing einen Teil des Öls durch Joghurt oder einen Schuss Wasser ersetzen.' },
+    ],
+    recipeIds: ['vinaigrette-grundrezept', 'joghurt-kraeuter-dressing', 'griechischer-salat', 'kartoffelsalat-joghurt'],
+  },
+  {
+    id: 'bruehe-fond',
+    title: 'Brühe selbst kochen',
+    emoji: '🍲',
+    summary: 'Gemüse-, Hühner- oder Rinderbrühe: die Basis für Suppen, Risotto und Saucen – und eine gute Resteverwertung.',
+    category: 'grundlagen',
+    minutes: 3,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Selbst gekochte Brühe ist die Grundlage vieler Suppen, Risottos, Saucen und Eintöpfe. Sie braucht Zeit, aber kaum Arbeit – und verwertet Gemüsereste.',
+      },
+      {
+        type: 'table',
+        title: 'Grundrezepte für etwa 2 Liter',
+        head: ['Brühe', 'Zutaten', 'Kochzeit'],
+        rows: [
+          ['Gemüsebrühe', 'Karotten, Sellerie, Lauch, Zwiebeln, Petersilienstiele, Lorbeer, Pfefferkörner', '45–60 Min.'],
+          ['Hühnerbrühe', '1 kg Hähnchenteile mit Knochen, Suppengemüse, Lorbeer', '2–3 Std.'],
+          ['Rinderbrühe', '1 kg Suppenfleisch und Markknochen, Suppengemüse, geröstete Zwiebel', '3 Std.'],
+          ['Pilzbrühe', 'Pilzreste, getrocknete Pilze, Zwiebel, Thymian, ein Schuss Sojasauce', '45 Min.'],
+        ],
+      },
+      {
+        type: 'steps',
+        title: 'So geht’s',
+        items: [
+          'Zwiebeln halbieren und mit der Schnittfläche ohne Fett dunkel anrösten – das gibt Farbe und Aroma.',
+          'Alle Zutaten mit kaltem Wasser bedecken: Kalt aufgesetzt geben sie mehr Geschmack ab.',
+          'Langsam aufkochen und nur leise köcheln lassen. Bei Fleischbrühen den Schaum abschöpfen.',
+          'Erst zum Schluss salzen, wenn die Brühe ihre endgültige Stärke hat.',
+          'Durch ein Sieb gießen, schnell abkühlen lassen und portionieren.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Aufbewahren',
+        items: [
+          'Im Kühlschrank 3–4 Tage.',
+          'Eingefroren etwa 3 Monate – portionsweise in Dosen oder als Würfel aus der Eiswürfelform.',
+          'Fett, das sich nach dem Abkühlen oben absetzt, lässt sich einfach abheben.',
+        ],
+      },
+      { type: 'tip', text: 'Gemüseabschnitte wie Schalen, Stiele und Enden in einem Gefrierbeutel sammeln. Ist er voll, wird daraus eine Brühe.' },
+    ],
+    recipeIds: ['gemuesebruehe-selbstgemacht', 'kuerbisrisotto', 'spargelrisotto', 'minestrone'],
+  },
+  {
+    id: 'einfrieren',
+    title: 'Einfrieren & Auftauen',
+    emoji: '❄️',
+    summary: 'Was sich wie lange einfrieren lässt, was lieber nicht – und wie man sicher auftaut.',
+    category: 'planen',
+    minutes: 3,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Der Gefrierschrank ist der beste Freund der schnellen Küche: Vorgekochtes, Brot, Obst und Reste bleiben lange gut, wenn man ein paar Regeln beachtet.',
+      },
+      {
+        type: 'list',
+        title: 'Richtig einfrieren',
+        items: [
+          'Speisen abkühlen lassen und dann zügig einfrieren.',
+          'Suppen und Saucen flach im Beutel einfrieren – das spart Platz und taut schneller auf.',
+          'Luft aus den Beuteln drücken, damit kein Gefrierbrand entsteht.',
+          'Alles mit Inhalt und Datum beschriften.',
+          'In Portionen einfrieren, die man später wirklich braucht.',
+          'Beeren, Obststücke und gehackte Kräuter erst einzeln auf einem Blech vorfrieren, dann in einen Beutel geben – so kleben sie nicht zusammen.',
+        ],
+      },
+      {
+        type: 'table',
+        title: 'Lagerzeiten bei –18 °C (Richtwerte)',
+        head: ['Lebensmittel', 'Haltbarkeit'],
+        rows: [
+          ['Brot und Brötchen', '1–3 Monate'],
+          ['Kuchen, Muffins, Kekse', '2–3 Monate'],
+          ['Suppen, Eintöpfe, Saucen', 'etwa 3 Monate'],
+          ['Gekochte Hülsenfrüchte und Getreide', '2–3 Monate'],
+          ['Rohes Hackfleisch', '1–3 Monate'],
+          ['Rohes Fleisch und Geflügel', '6–10 Monate'],
+          ['Fetter Fisch, z. B. Lachs', '2–3 Monate'],
+          ['Magerer Fisch, z. B. Kabeljau', 'etwa 6 Monate'],
+          ['Gemüse, blanchiert', '8–12 Monate'],
+          ['Beeren und Obst', '8–12 Monate'],
+          ['Kräuter', 'etwa 6 Monate'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Weniger gut geeignet',
+        items: [
+          'Blattsalat, Gurke und Radieschen – sie werden matschig.',
+          'Rohe Kartoffeln – sie werden süßlich und weich. Gekocht in Suppen und Eintöpfen klappt es aber gut.',
+          'Saucen mit Joghurt, saurer Sahne oder Mayonnaise – sie können sich trennen.',
+          'Hart gekochte Eier – das Eiweiß wird gummiartig.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Sicher auftauen',
+        items: [
+          'Am besten langsam über Nacht im Kühlschrank, auf einem Teller oder in einer Schale.',
+          'Schneller: im verschlossenen Beutel in kaltem Wasser, das Wasser alle 30 Minuten wechseln.',
+          'Suppen, Saucen und Gemüse direkt gefroren im Topf erhitzen.',
+          'Brot bei Zimmertemperatur auftauen oder Scheiben direkt toasten.',
+          'Aufgetautes Fleisch und aufgetauten Fisch zügig verarbeiten und vollständig durchgaren.',
+        ],
+      },
+      { type: 'tip', text: 'Aufgetautes rohes Fleisch nicht roh wieder einfrieren – zu einem fertigen Gericht gegart, lässt es sich dagegen erneut einfrieren.' },
+    ],
+    recipeIds: ['tomatensauce-grundrezept', 'chili-con-carne', 'kohlrouladen', 'zucchini-feta-muffins', 'dinkel-vollkornbrot-saaten'],
+  },
+  {
+    id: 'reste',
+    title: 'Reste clever verwerten',
+    emoji: '♻️',
+    summary: 'Aus Reis, Nudeln, Brot und Gemüseresten werden neue Gerichte – mit Ideen für jeden Rest.',
+    category: 'planen',
+    minutes: 2,
+    blocks: [
+      { type: 'text', text: 'Aus Resten entstehen oft die besten Gerichte. Ein paar Ideen, was aus übrig gebliebenen Zutaten werden kann.' },
+      {
+        type: 'table',
+        title: 'Was tun mit …?',
+        head: ['Rest', 'Idee'],
+        rows: [
+          ['Gekochter Reis', 'Gebratener Reis, Nasi Goreng, Reissalat'],
+          ['Gekochte Nudeln', 'Schinkennudeln, Nudelauflauf, Nudelsalat'],
+          ['Gekochte Kartoffeln', 'Bratkartoffeln, Rösti, Bauernfrühstück, Kartoffelsalat'],
+          ['Altbackenes Brot', 'Semmelknödel, Brotsalat, Croûtons, French Toast'],
+          ['Gemüsereste', 'Frittata, Suppe, Ofengemüse, Gemüsebrühe'],
+          ['Überreife Bananen', 'Bananenbrot, Pancakes, Nicecream, Smoothie'],
+          ['Joghurt und Quark', 'Dips, Dressing, Muffins, Quarkbällchen'],
+          ['Frische Kräuter', 'Pesto, Kräuterbutter, Kräuterquark – oder einfrieren'],
+          ['Gegartes Hähnchen', 'Wraps, Salat, Fajitas, Pulled-Chicken-Brötchen'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'So bleibt weniger übrig',
+        items: [
+          'Vor dem Einkauf in Kühlschrank und Vorrat schauen – die Zutaten-Suche „Was habe ich da?“ hilft dabei.',
+          'Mit dem Wochenplan einkaufen und die Portionen anpassen.',
+          'Ältere Lebensmittel im Kühlschrank nach vorn räumen.',
+          'Reste in durchsichtige Dosen füllen – was man sieht, wird gegessen.',
+        ],
+      },
+      { type: 'tip', text: 'Ein Resteessen pro Woche einplanen, zum Beispiel freitags eine Pfanne, Frittata oder Suppe aus allem, was übrig ist.' },
+    ],
+    recipeIds: ['nasi-goreng', 'schinkennudeln', 'bauernfruehstueck', 'semmelknoedel-pilzrahm', 'bananenbrot', 'ofen-frittata'],
+  },
+  {
+    id: 'gewuerzmischungen',
+    title: 'Gewürzmischungen selbst mischen',
+    emoji: '🧂',
+    summary: 'Gyros-, Taco-, Curry- und Ofengemüse-Gewürz aus dem Vorrat – frisch gemischt und ohne Zusätze.',
+    category: 'wissen',
+    minutes: 2,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Fertige Gewürzmischungen enthalten oft viel Salz oder Zucker. Selbst gemischt schmecken sie frischer und lassen sich genau nach Geschmack anpassen. Die Mengen ergeben jeweils ein kleines Glas.',
+      },
+      {
+        type: 'table',
+        title: 'Mischungen',
+        head: ['Mischung', 'Zutaten', 'Passt zu'],
+        rows: [
+          ['Gyros-Gewürz', '2 TL Oregano, 2 TL Paprika, 1 TL Kreuzkümmel, 1 TL Knoblauchpulver, ½ TL Thymian, ½ TL Pfeffer', 'Gyros-Pfanne, Hähnchen, Ofengemüse'],
+          ['Taco-Gewürz', '2 TL Paprika geräuchert, 2 TL Kreuzkümmel, 1 TL Oregano, 1 TL Knoblauchpulver, ½ TL Chiliflocken', 'Chili, Fajitas, Bohnen, Reispfanne'],
+          ['Curry-Mischung', '2 TL Kurkuma, 2 TL Kreuzkümmel, 2 TL gemahlener Koriander, 1 TL Ingwerpulver, ½ TL Zimt, Chili nach Wunsch', 'Dal, Gemüsecurry, Blumenkohl'],
+          ['Kräuter der Provence', 'je 2 TL Thymian, Rosmarin, Oregano und Majoran, 1 TL Bohnenkraut', 'Ratatouille, Ofenkartoffeln, Fisch'],
+          ['Ofengemüse-Mix', '2 TL Paprika, 1 TL Knoblauchpulver, 1 TL Thymian, 1 TL Oregano, ½ TL Pfeffer', 'Ofengemüse, Kartoffelspalten, Pommes'],
+          ['Lebkuchengewürz', '4 TL Zimt, 1 TL Ingwerpulver, 1 TL Nelken, ½ TL Muskat, ½ TL Kardamom', 'Porridge, Bratapfel, Weihnachtsgebäck'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Tipps',
+        items: [
+          'Ganze Gewürze kurz ohne Fett anrösten und dann mahlen – das intensiviert das Aroma.',
+          'Gewürze kurz in heißem Öl anschwitzen, bevor Flüssigkeit dazukommt.',
+          'Salz erst beim Kochen dosieren statt in die Mischung zu geben – so lässt es sich besser steuern.',
+          'Kühl, dunkel und luftdicht lagern. Gemahlene Gewürze verlieren nach etwa einem Jahr deutlich an Aroma.',
+        ],
+      },
+      { type: 'tip', text: 'Kleine Gläser mit Etikett und Datum versehen – so behältst du den Überblick im Gewürzregal.' },
+    ],
+    recipeIds: ['gyros-pfanne-tzatziki', 'haehnchen-fajitas', 'chana-masala', 'ofengemuese-grundrezept'],
+  },
+  {
+    id: 'backen-grundlagen',
+    title: 'Backen: Teige & Tricks',
+    emoji: '🧁',
+    summary: 'Rührteig, Mürbeteig, Hefeteig und Quark-Öl-Teig – mit Grundverhältnissen, Stäbchenprobe und Tipps für Vollkorn.',
+    category: 'grundlagen',
+    minutes: 4,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Backen folgt festeren Regeln als Kochen – aber wer die Grundteige kennt, kann fast jedes Rezept nachbacken und abwandeln.',
+      },
+      {
+        type: 'table',
+        title: 'Die wichtigsten Teige',
+        head: ['Teig', 'Grundverhältnis', 'Typisch für'],
+        rows: [
+          ['Rührteig', 'Butter, Zucker, Eier und Mehl etwa zu gleichen Teilen, dazu Backpulver', 'Marmorkuchen, Apfelkuchen, Muffins'],
+          ['Mürbeteig', '3 Teile Mehl, 2 Teile Butter, 1 Teil Zucker, 1 Ei', 'Tartes, Plätzchen, Kuchenböden'],
+          ['Hefeteig', '500 g Mehl, 1 Päckchen Trockenhefe, 250–300 ml lauwarme Flüssigkeit', 'Pizza, Zimtschnecken, Blechkuchen, Brot'],
+          ['Quark-Öl-Teig', '300 g Mehl, 150 g Quark, 6 EL Öl, 6 EL Milch, 2 TL Backpulver', 'Schnelle Quiche, Pizza, Brötchen'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Damit es gelingt',
+        items: [
+          'Zutaten auf Zimmertemperatur bringen – besonders Butter und Eier für Rührteig.',
+          'Abwiegen statt schätzen: Beim Backen kommt es auf die Mengen an.',
+          'Mehl und Backpulver nur kurz unterrühren, bis alles verbunden ist – zu langes Rühren macht Kuchen zäh.',
+          'Für Hefeteig die Flüssigkeit nur lauwarm verwenden, etwa handwarm. Zu heiß schadet der Hefe.',
+          'Bei Kuchen und Brot den Ofen vorheizen und die Tür anfangs geschlossen halten.',
+          'Stäbchenprobe: Ein Holzstäbchen in die Mitte stecken – bleibt kein Teig daran haften, ist der Kuchen fertig.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Mit Vollkornmehl backen',
+        items: [
+          'Vollkornmehl nimmt mehr Flüssigkeit auf: etwa 10 % mehr Milch oder Wasser einplanen.',
+          'Den Teig 10–15 Minuten quellen lassen, bevor er in die Form kommt.',
+          'Für den Anfang die Hälfte des Weizenmehls durch Dinkelvollkornmehl ersetzen – das schmeckt mild und nussig.',
+          'Teige mit Vollkorn werden etwas kompakter; ein zusätzliches Ei oder etwas mehr Backpulver lockert sie auf.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Weniger süß backen',
+        items: [
+          'In vielen Rührkuchen lässt sich der Zucker um etwa ein Viertel reduzieren, ohne dass der Kuchen misslingt.',
+          'Reife Bananen, Apfelmus oder Datteln bringen eigene Süße mit.',
+          'Zimt, Vanille und Zitronenschale lassen Gebäck aromatischer und runder schmecken.',
+        ],
+      },
+      { type: 'tip', text: 'Kuchen in der Form auf einem Gitter auskühlen lassen – so bleibt der Boden trocken.' },
+    ],
+    recipeIds: ['marmorkuchen', 'apfelkuchen-versunken', 'zimtschnecken', 'heidelbeer-muffins', 'lauch-quiche'],
+  },
+  {
+    id: 'fleisch-garmethoden',
+    title: 'Fleisch: braten, schmoren, garziehen',
+    emoji: '🥩',
+    summary: 'Welche Garmethode zu welchem Stück passt – und die wichtigsten Regeln für zartes Fleisch.',
+    category: 'grundlagen',
+    minutes: 3,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Ob Fleisch zart wird, hängt vor allem von der passenden Garmethode ab. Magere, zarte Stücke mögen es kurz und heiß, Stücke mit viel Bindegewebe lang und sanft.',
+      },
+      {
+        type: 'table',
+        title: 'Welche Methode für welches Stück?',
+        head: ['Methode', 'So geht’s', 'Geeignet für'],
+        rows: [
+          ['Kurzbraten', 'Sehr heiße Pfanne, wenig Fett, wenige Minuten pro Seite, danach ruhen lassen', 'Steak, Schnitzel, Filet, Hähnchenbrust'],
+          ['Schmoren', 'Scharf anbraten, ablöschen, zugedeckt bei kleiner Hitze 1,5–3 Std. garen', 'Gulasch, Rouladen, Hähnchenschenkel'],
+          ['Garziehen', 'Knapp unter dem Siedepunkt in Brühe oder Sauce garen', 'Klopse, Tafelspitz, Hähnchen für Salate'],
+          ['Im Ofen', 'Bei 140–180 °C bis zur gewünschten Kerntemperatur garen', 'Hackbraten, Braten, gefülltes Fleisch'],
+          ['Pfannenrühren', 'Dünne Streifen portionsweise bei höchster Hitze 1–3 Min. braten', 'Wok-Gerichte, Gyros, Geschnetzeltes'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Die wichtigsten Regeln',
+        items: [
+          'Steaks und Braten 20–30 Minuten vor dem Garen aus dem Kühlschrank nehmen. Hackfleisch und Geflügel bleiben bis kurz vorher gekühlt.',
+          'Fleisch trocken tupfen – sonst kocht es, statt anzubraten.',
+          'Die Pfanne nicht überladen und lieber in Portionen braten.',
+          'Nicht ständig wenden: Hat sich eine Kruste gebildet, löst sich das Fleisch von selbst.',
+          'Kurzgebratenes 3–5 Minuten ruhen lassen, damit sich der Saft verteilt.',
+          'Quer zur Faser schneiden – so wird jedes Stück zarter.',
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Bratensatz nutzen',
+        items: [
+          'Die braunen Röststoffe in der Pfanne sind Geschmack pur.',
+          'Mit Brühe, Wasser oder Sahne ablöschen, den Satz mit dem Kochlöffel lösen und kurz einkochen – fertig ist eine schnelle Sauce.',
+        ],
+      },
+      { type: 'tip', text: 'Ob Fleisch gar ist, zeigt ein Bratenthermometer am zuverlässigsten – die Werte stehen in der Anleitung „Fleisch & Fisch sicher garen“.' },
+    ],
+    recipeIds: ['rinderrouladen', 'rumpsteak-ofenkartoffeln', 'schweinefilet-pilzrahm', 'rind-brokkoli-wok', 'koenigsberger-klopse'],
+  },
+  {
+    id: 'fisch-zubereiten',
+    title: 'Fisch zubereiten: braten, backen, garziehen',
+    emoji: '🐟',
+    summary: 'Frische erkennen, die passende Garmethode wählen und den Garpunkt treffen – damit Fisch saftig bleibt.',
+    category: 'grundlagen',
+    minutes: 3,
+    blocks: [
+      { type: 'text', text: 'Fisch ist schnell gar und wird bei zu langer Garzeit trocken. Mit der passenden Methode bleibt er saftig und zart.' },
+      {
+        type: 'list',
+        title: 'Frische erkennen',
+        items: [
+          'Festes, glänzendes Fleisch, das auf leichten Druck zurückfedert.',
+          'Ein frischer Geruch nach Meer oder See – nicht unangenehm „fischig“.',
+          'Bei ganzen Fischen: klare, gewölbte Augen und rote Kiemen.',
+          'Tiefkühlfisch über Nacht im Kühlschrank auftauen und gut trocken tupfen.',
+        ],
+      },
+      {
+        type: 'table',
+        title: 'Garmethoden',
+        head: ['Methode', 'So geht’s', 'Geeignet für'],
+        rows: [
+          ['Auf der Haut braten', 'Haut einritzen, trocken tupfen, 3–4 Min. auf der Haut braten, dann 1 Min. wenden', 'Lachs, Zander, Dorade, Forelle'],
+          ['Im Ofen', 'Bei 180–200 °C je nach Dicke 10–15 Min. garen', 'Lachs, Kabeljau, Seelachs'],
+          ['Garziehen', 'In Sud oder Sauce bei kleiner Hitze 5–8 Min. ziehen lassen', 'Kabeljau, Seelachs, Fisch-Curry'],
+          ['Panieren', 'Mehl, Ei, Paniermehl – in der Pfanne oder Heißluftfritteuse', 'Seelachs, Kabeljau, Tintenfisch'],
+          ['Kurz anbraten', 'Sehr heiß, 1–2 Min. pro Seite, innen rosa', 'Thunfischsteak, Garnelen'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Woran erkennt man, dass Fisch gar ist?',
+        items: [
+          'Das Fleisch ist nicht mehr glasig, sondern undurchsichtig.',
+          'Es lässt sich mit einer Gabel leicht in Lamellen zerteilen.',
+          'Die Kerntemperatur liegt je nach Fisch bei etwa 50–60 °C.',
+        ],
+      },
+      { type: 'tip', text: 'Fisch lieber eine Minute zu früh aus der Pfanne nehmen – er gart in der Restwärme nach.' },
+    ],
+    recipeIds: ['forelle-muellerin', 'kabeljau-tomaten-kichererbsen', 'fish-and-chips-airfryer', 'zander-rahmlinsen', 'seelachs-kokos-curry'],
+  },
+  {
+    id: 'getreide',
+    title: 'Getreide kochen: Quinoa, Bulgur, Couscous & Co.',
+    emoji: '🌾',
+    summary: 'Wassermengen und Garzeiten für Quinoa, Bulgur, Couscous, Hirse, Graupen und Polenta auf einen Blick.',
+    category: 'grundlagen',
+    minutes: 2,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Getreide und Pseudogetreide sind schnelle, sättigende Beilagen und eine gute Basis für Bowls und Salate. Die meisten Sorten werden wie Reis nach der Quellmethode gegart.',
+      },
+      {
+        type: 'table',
+        title: 'Wassermenge und Garzeit',
+        head: ['Sorte', 'Flüssigkeit pro 100 g', 'Garzeit'],
+        rows: [
+          ['Couscous', '125 ml kochend darübergießen', '5 Min. quellen'],
+          ['Bulgur', '200 ml', '10–12 Min. quellen'],
+          ['Quinoa', '200 ml', '15 Min. köcheln, 5 Min. quellen'],
+          ['Hirse', '250 ml', '10 Min. köcheln, 10 Min. quellen'],
+          ['Perlgraupen', '300–400 ml', '30–40 Min. köcheln'],
+          ['Polenta (Instant)', '400–500 ml', '5 Min. unter Rühren'],
+          ['Buchweizen', '200 ml', '15 Min. köcheln'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Tipps',
+        items: [
+          'Quinoa und Hirse vor dem Kochen heiß abspülen – das nimmt Bitterstoffe.',
+          'In Gemüsebrühe statt Wasser gegart schmeckt Getreide deutlich würziger.',
+          'Nach dem Garen mit einer Gabel auflockern, damit es körnig bleibt.',
+          'Als Beilage rechnet man 60–80 g ungekocht pro Person.',
+          'Gekochtes Getreide hält sich 3 Tage im Kühlschrank und eignet sich gut zum Vorkochen.',
+        ],
+      },
+      { type: 'tip', text: 'Couscous und Bulgur brauchen nur heißes Wasser und einen Deckel – ideal, wenn es schnell gehen muss.' },
+    ],
+    recipeIds: ['bulgur-pilaw', 'quinoa-gemuese-pfanne-feta', 'couscous-haehnchen-pfanne', 'hirse-bratlinge', 'graupotto-pilze', 'polenta-pilzragout'],
+  },
+  {
+    id: 'kuechenausstattung',
+    title: 'Grundausstattung: Töpfe, Pfannen & Messer',
+    emoji: '🍳',
+    summary: 'Was man für die Rezepte in diesem Kochbuch wirklich braucht – und welche Pfanne wofür taugt.',
+    category: 'geraete',
+    minutes: 3,
+    blocks: [
+      {
+        type: 'text',
+        text: 'Für gutes Essen braucht es keine Profiküche. Mit einer überschaubaren Grundausstattung lassen sich fast alle Rezepte in diesem Kochbuch kochen.',
+      },
+      {
+        type: 'list',
+        title: 'Das Wichtigste',
+        items: [
+          'Ein großes Kochmesser (etwa 20 cm) und ein kleines Gemüsemesser – beide scharf.',
+          'Ein großes Schneidebrett, mit einem feuchten Tuch rutschfest unterlegt.',
+          'Ein großer Topf (4–5 l) für Nudeln, Suppen und Eintöpfe.',
+          'Ein mittlerer Topf mit Deckel (etwa 2 l) für Reis, Kartoffeln und Saucen.',
+          'Eine beschichtete Pfanne (24–28 cm) für Eier, Fisch und Pfannkuchen.',
+          'Eine Edelstahl- oder Gusseisenpfanne zum scharfen Anbraten.',
+          'Eine Auflaufform und ein Backblech.',
+          'Sieb, Schneebesen, Pfannenwender, Kochlöffel und Sparschäler.',
+          'Eine Küchenwaage und ein Messbecher.',
+        ],
+      },
+      {
+        type: 'table',
+        title: 'Welche Pfanne wofür?',
+        head: ['Pfanne', 'Stärken', 'Pflege'],
+        rows: [
+          ['Beschichtet', 'Eier, Fisch, Pfannkuchen, Braten mit wenig Fett', 'Nicht überhitzen, keine Metallwender'],
+          ['Edelstahl', 'Scharfes Anbraten, Saucen aus dem Bratensatz', 'Erst heiß werden lassen, dann Fett und Bratgut'],
+          ['Gusseisen', 'Steaks, Bratkartoffeln – darf auch in den Ofen', 'Nach dem Spülen trocknen und dünn einölen'],
+          ['Wok', 'Pfannengerichte bei hoher Hitze', 'Je nach Material wie Edelstahl oder Gusseisen'],
+        ],
+      },
+      {
+        type: 'list',
+        title: 'Praktische Extras',
+        items: [
+          'Pürierstab – für Suppen, Saucen und Smoothies.',
+          'Gemüsehobel – für gleichmäßige Scheiben bei Gratin und Salat.',
+          'Bratenthermometer – für den richtigen Garpunkt bei Fleisch und Fisch.',
+          'Heißluftfritteuse – für knusprige Ergebnisse mit wenig Öl.',
+          'Schraubgläser und Dosen – für Dressings, Reste und Meal Prep.',
+        ],
+      },
+      { type: 'tip', text: 'Ein scharfes Messer ist sicherer als ein stumpfes, weil es weniger abrutscht. Ein Wetzstahl oder Schleifstein alle paar Wochen hält es in Form.' },
+    ],
+  },
+]
