@@ -99,8 +99,9 @@ export interface ImportPlan {
   total: number
 }
 
+/** Ohne ID, Besitzer und Haushalt: Eingespielt wird immer in das aktuelle Konto (und dessen Haushalt, falls vorhanden) */
 function strip(row: Row): Row {
-  const { id: _id, user_id: _user, ...rest } = row
+  const { id: _id, user_id: _user, household_id: _household, ...rest } = row
   return rest
 }
 

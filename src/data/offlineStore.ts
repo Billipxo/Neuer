@@ -1,5 +1,5 @@
 import type { Profile } from '../types'
-import { applyOrder, matches, type DataStore, type ListQuery, type Primitive, type TableName } from './store'
+import { applyOrder, matches, type DataStore, type HouseholdApi, type ListQuery, type Primitive, type TableName } from './store'
 
 /**
  * Offline-Schicht über dem Supabase-Speicher.
@@ -243,8 +243,33 @@ export function createOfflineStore(inner: DataStore, opts: OfflineOptions): Offl
     return optimistic()
   }
 
+  /**
+   * Gemeinsamer Haushalt: nur mit Verbindung. Vor einem Wechsel (gründen, beitreten, verlassen) wird die Warteschlange
+   * übertragen, damit vorgemerkte Einträge noch dort landen, wo sie angelegt wurden.
+   */
+  function householdApi(api: HouseholdApi): HouseholdApi {
+    const online = async <R>(run: () => Promise<R>): Promise<R> => {
+      if (!isOnline()) throw new Error('Für den gemeinsamen Haushalt wird eine Internetverbindung benötigt.')
+      await flush()
+      return run()
+    }
+    return {
+      get: () => {
+        if (!isOnline()) return Promise.reject(new Error('offline'))
+        return api.get()
+      },
+      create: (input) => online(() => api.create(input)),
+      join: (input) => online(() => api.join(input)),
+      leave: (takeCopy) => online(() => api.leave(takeCopy)),
+      removeMember: (id) => online(() => api.removeMember(id)),
+      update: (patch) => online(() => api.update(patch)),
+      watch: api.watch ? (onChange) => api.watch!(onChange) : undefined,
+    }
+  }
+
   return {
     kind: 'supabase',
+    household: inner.household ? householdApi(inner.household) : undefined,
 
     async list<T>(table: TableName, q: ListQuery = {}) {
       if (!isOnline()) return fromMirror<T>(table, q)

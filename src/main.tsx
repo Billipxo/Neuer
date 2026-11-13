@@ -11,6 +11,7 @@ import { ErrorBoundary } from './components/layout/ErrorBoundary'
 import { TimerProvider } from './app/timers'
 import './index.css'
 import { friendlyError } from './lib/errors'
+import { inviteCodeFromPath, PENDING_INVITE_KEY } from './lib/household'
 
 const queryClient = new QueryClient({
   // Fehler beim Speichern verständlich anzeigen (siehe ToastProvider)
@@ -27,6 +28,16 @@ const queryClient = new QueryClient({
     mutations: { networkMode: 'offlineFirst' },
   },
 })
+
+// Einladungslink zum gemeinsamen Haushalt: Code merken, bis Anmeldung und Einrichtung durch sind
+const invited = inviteCodeFromPath(window.location.pathname)
+if (invited) {
+  try {
+    localStorage.setItem(PENDING_INVITE_KEY, invited)
+  } catch {
+    /* ohne Speicher lässt sich der Code später im Profil eintippen */
+  }
+}
 
 // Zwischengespeicherte Daten bleiben offline lesbar
 const persister = createSyncStoragePersister({ storage: window.localStorage, key: 'teller-query-cache' })

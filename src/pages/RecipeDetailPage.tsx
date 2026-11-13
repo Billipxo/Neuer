@@ -164,6 +164,14 @@ export function RecipeDetailPage() {
           Hartkäse ohne tierisches Lab verwenden.
         </p>
       )}
+      {recipe.shared_by && (
+        <p className="mt-3 flex items-center gap-2 rounded-2xl bg-surface-2 px-3 py-2 text-sm">
+          <Users className="size-4 shrink-0 text-brand" aria-hidden />
+          <span>
+            Rezept von <strong>{recipe.shared_by}</strong> aus eurem Haushalt – du kannst es kochen, einplanen und eintragen.
+          </span>
+        </p>
+      )}
       {own ? (
         <Card className="mt-3 space-y-2 text-sm">
           <p className="flex items-center gap-2 font-medium">
@@ -191,7 +199,7 @@ export function RecipeDetailPage() {
             <Wand2 className="size-5" aria-hidden />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block font-semibold">Rezept abwandeln</span>
+            <span className="block font-semibold">{recipe.shared_by ? 'Als eigene Variante speichern' : 'Rezept abwandeln'}</span>
             <span className="block text-xs text-muted">Zutaten tauschen, Mengen ändern – Nährwerte werden neu berechnet</span>
           </span>
         </Link>

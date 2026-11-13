@@ -15,6 +15,7 @@ import { Select } from '../components/ui/Field'
 import { useToast } from '../components/ui/Toast'
 import { useGenerateShopping } from '../components/planner/GenerateShoppingButton'
 import { useUndoToast } from '../hooks/undo'
+import { SharedBanner } from '../components/household/SharedBanner'
 
 export function ShoppingPage() {
   const { data: items = [], isLoading } = useShoppingItems()
@@ -63,6 +64,7 @@ export function ShoppingPage() {
         }
       />
 
+      <SharedBanner />
       {toBuy.length > 0 && (
         <div
           className="mb-3 h-2 overflow-hidden rounded-full bg-surface-2"

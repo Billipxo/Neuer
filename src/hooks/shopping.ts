@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '../app/auth'
+import { useSharedRefresh } from '../app/household'
 import type { ShoppingItem } from '../types'
 import { planAddToList, planRegenerate, type ShoppingInput } from '../lib/shopping'
 
@@ -7,7 +8,8 @@ const KEY = ['shopping'] as const
 
 export function useShoppingItems() {
   const store = useStore()
-  return useQuery({ queryKey: KEY, queryFn: () => store.list<ShoppingItem>('shopping_items', { order: [{ column: 'created_at' }] }) })
+  const refresh = useSharedRefresh()
+  return useQuery({ queryKey: KEY, queryFn: () => store.list<ShoppingItem>('shopping_items', { order: [{ column: 'created_at' }] }), ...refresh })
 }
 
 /** Zutaten hinzufügen und mit vorhandenen offenen Artikeln zusammenführen */

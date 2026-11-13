@@ -37,6 +37,10 @@ interface AuthState {
 
 const AuthContext = createContext<AuthState | null>(null)
 
+/** Sicht auf den Speicher für die Seiten der App – im gemeinsamen Haushalt mit geteiltem Plan und Einkaufsliste */
+const StoreScopeContext = createContext<DataStore | null>(null)
+export const StoreScopeProvider = StoreScopeContext.Provider
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(isSupabaseConfigured)
@@ -106,9 +110,13 @@ export function useAuth(): AuthState {
   return ctx
 }
 
-/** Datenspeicher des angemeldeten Nutzers (nur innerhalb geschützter Seiten verwenden). */
+/**
+ * Datenspeicher des angemeldeten Nutzers (nur innerhalb geschützter Seiten verwenden).
+ * Im gemeinsamen Haushalt liefert er für Wochenplan und Einkaufsliste den geteilten Bestand (siehe app/household).
+ */
 export function useStore(): DataStore {
   const { store } = useAuth()
+  const scoped = useContext(StoreScopeContext)
   if (!store) throw new Error('Nicht angemeldet')
-  return store
+  return scoped ?? store
 }

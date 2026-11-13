@@ -13,10 +13,13 @@ import { Switch } from '../ui/Switch'
 import { IMPORT_ORDER, TABLE_LABELS, parseBackup, type Backup } from '../../lib/backup'
 import { previewImport, useImportBackup, type ImportPreview } from '../../hooks/backup'
 import { fmtDate } from '../../lib/dates'
+import { useHousehold } from '../../app/household'
 
 export function DataSection() {
   const store = useStore()
-  const { signOut } = useAuth()
+  // Für den Export der ungefilterte Speicher: im Haushalt sollen auch die privaten Plan-Einträge in die Sicherung
+  const { signOut, userId, store: ownStore } = useAuth()
+  const { household } = useHousehold()
   const toast = useToast()
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [confirmText, setConfirmText] = useState('')
@@ -33,7 +36,7 @@ export function DataSection() {
     if (!file) return
     try {
       const backup = parseBackup(await file.text())
-      const preview = await previewImport(store, backup)
+      const preview = await previewImport(store, backup, userId)
       // Auf einem leeren Konto ist es vermutlich eine Wiederherstellung: Einstellungen gleich mit übernehmen
       setWithProfile(Boolean(preview.plan.profile) && preview.accountEmpty)
       setImportError(null)
@@ -52,8 +55,13 @@ export function DataSection() {
   }
 
   async function exportJson() {
-    const data: Record<string, unknown> = { exportiert_am: new Date().toISOString(), profil: await store.getProfile() }
-    for (const t of ALL_TABLES) data[t] = await store.list(t)
+    const source = ownStore ?? store
+    const data: Record<string, unknown> = { exportiert_am: new Date().toISOString(), profil: await source.getProfile() }
+    for (const t of ALL_TABLES) {
+      const rows = await source.list<{ user_id?: string | null }>(t)
+      // Rezepte und Gerichte anderer Haushalts-Mitglieder gehören nicht in die eigene Sicherung
+      data[t] = t === 'dishes' || t === 'recipe_variants' ? rows.filter((r) => !r.user_id || r.user_id === userId) : rows
+    }
     download(`teller-daten-${todayISO()}.json`, JSON.stringify(data, null, 2), 'application/json')
     toast('JSON exportiert', '📦')
   }
@@ -128,6 +136,7 @@ export function DataSection() {
             <p className="text-sm text-muted">
               {restore.backup.exportedAt ? `Sicherung vom ${fmtDate(restore.backup.exportedAt.slice(0, 10))}. ` : ''}
               Vorhandenes wird nicht überschrieben und nichts doppelt angelegt – du kannst dieselbe Sicherung gefahrlos mehrfach einspielen.
+              {household ? ' Wochenplan und Einkaufsliste landen im gemeinsamen Haushalt.' : ''}
             </p>
             {restore.preview.plan.total === 0 ? (
               <p className="rounded-2xl bg-surface-2 p-3 text-sm" role="status">

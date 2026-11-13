@@ -512,3 +512,38 @@ test('Sicherung: exportieren, Konto löschen, wieder einspielen – nichts doppe
   await page.getByLabel('Sicherungsdatei auswählen').setInputFiles({ name: 'falsch.json', mimeType: 'application/json', buffer: Buffer.from('{"etwas":1}') })
   await expect(page.getByText('Das ist keine Teller-Sicherung.')).toBeVisible()
 })
+
+test('Wochenplan als Text teilen; gemeinsamer Haushalt braucht ein Konto', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write'])
+  await startDemo(page)
+  await page.getByRole('link', { name: 'Planer' }).click()
+  await page.getByRole('button', { name: 'Woche vorschlagen' }).click()
+  await expect(page.getByText('7/7')).toBeVisible()
+  await closeBadges(page)
+  await page.getByRole('button', { name: 'Wochenplan teilen' }).click()
+  await expect(page.getByText('Wochenplan in die Zwischenablage kopiert')).toBeVisible()
+  const text = await page.evaluate(() => navigator.clipboard.readText())
+  expect(text).toContain('🍽️ Wochenplan')
+  expect(text).toMatch(/Montag, .*:\n• Frühstück: .+\n• Mittagessen: .+/)
+  expect(text.split('\n').filter((l) => l.startsWith('• ')).length).toBeGreaterThanOrEqual(21)
+
+  await page.goto('/profil')
+  await expect(page.getByRole('heading', { name: 'Gemeinsamer Haushalt' })).toBeVisible()
+  if (withAccount()) {
+    await expect(page.getByRole('button', { name: 'Haushalt gründen' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Mit Code beitreten' })).toBeVisible()
+  } else {
+    await expect(page.getByText(/Im Demo-Modus bleiben alle Daten auf diesem Gerät/)).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Haushalt gründen' })).toHaveCount(0)
+  }
+})
+
+test('Einladungslink im Demo-Modus: Hinweis statt Beitritt, keine Umleitung bei jedem Start', async ({ page }) => {
+  test.skip(withAccount(), 'Der Beitritt mit Konto wird in konto.spec.ts geprüft')
+  await page.goto('/beitreten/a1b2c-3d4e5')
+  await startDemo(page)
+  // Im Demo-Modus geht es normal zur Tagesübersicht; die Einladung bleibt gemerkt
+  await expect(page.getByRole('img', { name: /0 von 2\.000 kcal/ })).toBeVisible()
+  await page.goto('/profil')
+  await expect(page.getByRole('status').filter({ hasText: 'Du hast eine Einladung geöffnet (Code A1B2C-3D4E5)' })).toBeVisible()
+})

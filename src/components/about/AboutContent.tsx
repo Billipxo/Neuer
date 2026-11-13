@@ -32,6 +32,10 @@ export function AboutContent({ demo }: { demo?: boolean }) {
           offene Änderungen, bis wieder Netz da ist.{demo ? ' Im Demo-Modus bleibt alles ausschließlich hier.' : ''}
         </p>
         <p>
+          <strong>Gemeinsamer Haushalt:</strong> Wer einem Haushalt beitritt, teilt mit dessen Mitgliedern Wochenplan, Einkaufsliste, eigene
+          Rezepte und Gerichte sowie den dort gewählten Namen. Protokoll, Gewicht, Wasser, Ziele und Erfolge sehen die anderen nicht.
+        </p>
+        <p>
           <strong>Anmeldung:</strong> per E-Mail-Link oder Code. Es gibt kein Passwort, das verloren gehen könnte.
         </p>
       </Block>

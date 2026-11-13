@@ -7,7 +7,8 @@ import { dishPerServing, roundNutrients, scaleNutrients } from '../../lib/nutrit
 import { recipePlanItem, type NewPlanItem } from '../../lib/planner'
 import { fmtDayLong } from '../../lib/dates'
 import { fmtInt } from '../../lib/format'
-import { useDishes, useProfile } from '../../hooks/data'
+import { useDishes, useProfile, useSharedDishes } from '../../hooks/data'
+import { useHousehold } from '../../app/household'
 import { useVariantRecipes } from '../../hooks/variants'
 import { Sheet } from '../ui/Sheet'
 import { Segmented } from '../ui/Segmented'
@@ -33,9 +34,12 @@ export function PlanSlotSheet({
   const [query, setQuery] = useState('')
   const [text, setText] = useState('')
   const [kcal, setKcal] = useState<number | null>(null)
-  const { data: dishes = [] } = useDishes()
+  const { data: ownDishes = [] } = useDishes()
+  const { data: sharedDishes = [] } = useSharedDishes()
   const { data: profile } = useProfile()
-  const { recipes: ownRecipes } = useVariantRecipes()
+  const { recipes: ownRecipes, shared } = useVariantRecipes()
+  const { authorOf } = useHousehold()
+  const dishes = useMemo(() => [...ownDishes, ...sharedDishes], [ownDishes, sharedDishes])
 
   useEffect(() => {
     if (slot) {
@@ -49,11 +53,11 @@ export function PlanSlotSheet({
     () =>
       slot
         ? filterRecipes(
-            [...ownRecipes, ...RECIPES].filter((r) => matchesDiet(r, profile?.diet, profile?.avoid)),
+            [...ownRecipes, ...shared, ...RECIPES].filter((r) => matchesDiet(r, profile?.diet, profile?.avoid)),
             { meal: query ? null : slot.meal, keyword: query },
           )
         : [],
-    [slot, query, profile?.diet, profile?.avoid, ownRecipes],
+    [slot, query, profile?.diet, profile?.avoid, ownRecipes, shared],
   )
   if (!slot) return null
 
@@ -90,7 +94,7 @@ export function PlanSlotSheet({
               <FoodRow
                 key={r.id}
                 title={`${recipeEmoji(r)} ${r.title}`}
-                subtitle={`${r.time_min} Min.`}
+                subtitle={r.shared_by ? `${r.time_min} Min. · von ${r.shared_by}` : `${r.time_min} Min.`}
                 kcal={r.nutrition.kcal}
                 kcalLabel="kcal/Portion"
                 onClick={() => onAdd(recipePlanItem(r, slot.date, slot.meal, 1))}
@@ -107,6 +111,7 @@ export function PlanSlotSheet({
               <FoodRow
                 key={d.id}
                 title={d.name}
+                subtitle={authorOf(d.user_id)}
                 kcal={dishPerServing(d).kcal}
                 kcalLabel="kcal/Portion"
                 onClick={() =>

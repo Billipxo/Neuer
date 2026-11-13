@@ -1,5 +1,6 @@
+import { useCallback } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useStore } from '../app/auth'
+import { useAuth, useStore } from '../app/auth'
 import type { Dish, Food, LogEntry, Profile, WaterLog, WeightLog } from '../types'
 import type { OffProduct } from '../lib/openFoodFacts'
 
@@ -171,12 +172,26 @@ export function useDeleteFood() {
 
 // Eigene Gerichte -------------------------------------------------------------------------
 
-export function useDishes() {
+/** Im gemeinsamen Haushalt liefert die Datenbank auch die Gerichte der anderen (nur lesbar) – hier nach Besitz getrennt */
+function useDishRows(mine: boolean) {
   const store = useStore()
+  const { userId } = useAuth()
+  const select = useCallback((rows: Dish[]) => rows.filter((d) => (!d.user_id || d.user_id === userId) === mine), [userId, mine])
   return useQuery({
     queryKey: qk.dishes,
     queryFn: () => store.list<Dish>('dishes', { order: [{ column: 'name' }] }),
+    select,
   })
+}
+
+/** Eigene Gerichte */
+export function useDishes() {
+  return useDishRows(true)
+}
+
+/** Gerichte der anderen Haushalts-Mitglieder */
+export function useSharedDishes() {
+  return useDishRows(false)
 }
 
 export type NewDish = Omit<Dish, 'id' | 'user_id' | 'created_at'>

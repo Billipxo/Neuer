@@ -1,14 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '../app/auth'
+import { useSharedRefresh } from '../app/household'
 import type { PlanItem } from '../types'
 import type { NewPlanItem } from '../lib/planner'
 
-export function usePlanRange(from: string, to: string) {
+/**
+ * Plan-Einträge eines Zeitraums. Im gemeinsamen Haushalt wird häufiger nachgeladen, damit Änderungen der anderen
+ * schnell ankommen – mit `live: false` nicht (z. B. für die Erfolge, die ein ganzes Jahr auswerten).
+ */
+export function usePlanRange(from: string, to: string, { live = true }: { live?: boolean } = {}) {
   const store = useStore()
+  const shared = useSharedRefresh()
+  const refresh = live ? shared : {}
   return useQuery({
     queryKey: ['plan', from, to],
     queryFn: () =>
       store.list<PlanItem>('plan_items', { gte: { date: from }, lte: { date: to }, order: [{ column: 'date' }, { column: 'created_at' }] }),
+    ...refresh,
   })
 }
 

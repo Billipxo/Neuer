@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useStore } from '../app/auth'
+import { useAuth, useStore } from '../app/auth'
 import { ALL_TABLES, type DataStore, type TableName } from '../data/store'
 import { defaultId, isDuplicate } from '../data/offlineStore'
 import { chunk, planImport, type Backup, type ImportPlan, type Row } from '../lib/backup'
@@ -19,22 +19,29 @@ function requireOnline(store: DataStore) {
   }
 }
 
+/** Im gemeinsamen Haushalt sind auch Rezepte und Gerichte der anderen lesbar – verglichen wird nur mit den eigenen */
+const OWNED: TableName[] = ['dishes', 'recipe_variants']
+
 /** Vorschau: Was würde eingespielt, was ist schon vorhanden? Ändert nichts. */
-export async function previewImport(store: DataStore, backup: Backup): Promise<ImportPreview> {
+export async function previewImport(store: DataStore, backup: Backup, userId: string | null): Promise<ImportPreview> {
   requireOnline(store)
   const existing: Partial<Record<TableName, Row[]>> = {}
-  for (const t of ALL_TABLES) existing[t] = await store.list<Row>(t)
+  for (const t of ALL_TABLES) {
+    const rows = await store.list<Row>(t)
+    existing[t] = OWNED.includes(t) ? rows.filter((r) => !r.user_id || r.user_id === userId) : rows
+  }
   return { plan: planImport(backup, existing, defaultId), accountEmpty: (existing.log_entries?.length ?? 0) === 0 }
 }
 
 /** Sicherung einspielen: neue Zeilen anlegen, Vorhandenes überspringen, auf Wunsch das Profil übernehmen */
 export function useImportBackup() {
   const store = useStore()
+  const { userId } = useAuth()
   const qc = useQueryClient()
   return useMutation({
     mutationFn: async ({ backup, withProfile }: { backup: Backup; withProfile: boolean }): Promise<ImportPlan> => {
       // Frisch planen – seit der Vorschau kann sich etwas geändert haben
-      const { plan } = await previewImport(store, backup)
+      const { plan } = await previewImport(store, backup, userId)
       for (const { table, rows } of plan.inserts) {
         if (table === 'achievements') {
           // Abzeichen kann die App inzwischen selbst vergeben haben – ein doppeltes ist kein Fehler

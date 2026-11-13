@@ -77,7 +77,7 @@ export function RecipeGalleryTile({ recipe, favorite, onToggleFavorite }: CardPr
           <span className="absolute bottom-2 left-2 flex gap-1">
             <span className="inline-flex items-center gap-1 rounded-full bg-surface/90 px-2 py-1 text-[11px] font-semibold shadow-sm backdrop-blur tabular">
               <Clock className="size-3" aria-hidden />
-              {recipe.time_min} Min.
+              {recipe.time_min} Min.{recipe.shared_by ? ` · von ${recipe.shared_by}` : ''}
             </span>
             <AirfryerBadge recipe={recipe} compact />
           </span>

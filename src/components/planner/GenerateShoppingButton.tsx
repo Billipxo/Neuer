@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom'
 import { ShoppingBasket } from 'lucide-react'
 import type { PlanItem } from '../../types'
-import { useDishes } from '../../hooks/data'
+import { useDishes, useSharedDishes } from '../../hooks/data'
+import { useHousehold } from '../../app/household'
+import { forAllEaters } from '../../lib/household'
 import { useVariantRecipes } from '../../hooks/variants'
 import { useRegenerateShopping } from '../../hooks/shopping'
 import { ingredientsFromPlan } from '../../lib/planShopping'
@@ -11,13 +13,17 @@ import { useToast } from '../ui/Toast'
 /** Erzeugt die Einkaufsliste aus den übergebenen Plan-Einträgen */
 export function useGenerateShopping() {
   const { data: dishes = [] } = useDishes()
-  const { recipes: ownRecipes } = useVariantRecipes()
+  const { data: sharedDishes = [] } = useSharedDishes()
+  const { recipes: ownRecipes, shared } = useVariantRecipes()
+  const { household } = useHousehold()
   const regenerate = useRegenerateShopping()
   const toast = useToast()
   return {
     pending: regenerate.isPending,
     async run(items: PlanItem[]) {
-      const ingredients = ingredientsFromPlan(items, dishes, ownRecipes)
+      // Im gemeinsamen Plan gelten Portionen pro Person – eingekauft wird für alle am Tisch
+      const planned = household ? forAllEaters(items, household.eaters) : items
+      const ingredients = ingredientsFromPlan(planned, [...dishes, ...sharedDishes], [...ownRecipes, ...shared])
       if (!ingredients.length) {
         toast('Im Plan sind keine Rezepte mit Zutaten')
         return false

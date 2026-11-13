@@ -16,6 +16,7 @@ import { NumberInput } from '../ui/NumberInput'
 import { useToast } from '../ui/Toast'
 import { useUndoToast } from '../../hooks/undo'
 import { NutrientGrid } from '../add/NutrientGrid'
+import { useHousehold } from '../../app/household'
 
 /** Geplanten Eintrag bearbeiten, löschen oder als gegessen übernehmen */
 export function PlanItemSheet({ item, onClose }: { item: PlanItem | null; onClose: () => void }) {
@@ -26,6 +27,7 @@ export function PlanItemSheet({ item, onClose }: { item: PlanItem | null; onClos
   const toast = useToast()
   const undo = useUndoToast()
   const { recipe } = useResolvedRecipe(item?.recipe_id)
+  const { authorOf } = useHousehold()
 
   useEffect(() => {
     if (item) setServings(Number(item.servings))
@@ -99,6 +101,7 @@ export function PlanItemSheet({ item, onClose }: { item: PlanItem | null; onClos
       }
     >
       <div className="space-y-4">
+        {authorOf(item.user_id) && <p className="text-sm text-muted">Eingeplant {authorOf(item.user_id)}</p>}
         {recipe && (
           <Link to={`/rezepte/${recipe.id}`} className="inline-flex min-h-9 items-center text-sm font-semibold text-brand underline-offset-2 hover:underline">
             Rezept ansehen

@@ -99,7 +99,9 @@ export function VariantEditorPage() {
     if (resolved.recipe) {
       const wanted = params.get('methode')
       const method: Method = wanted === 'oven' ? 'oven' : wanted === 'airfryer' ? 'airfryer' : (profile?.has_airfryer ?? true) ? 'airfryer' : 'oven'
-      setDraft(draftFromRecipe(resolved.recipe, method))
+      const fresh = draftFromRecipe(resolved.recipe, method)
+      // Rezept eines anderen Haushalts-Mitglieds: Die eigene Kopie beruht auf demselben Kochbuch-Rezept (oder auf keinem)
+      setDraft(resolved.sharedVariant ? { ...fresh, base_recipe_id: resolved.sharedVariant.base_recipe_id } : fresh)
       setChapterTouched(true)
     }
   }, [draft, id, existing, resolved.recipe, params, profile?.has_airfryer])

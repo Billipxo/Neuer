@@ -15,6 +15,7 @@ import { BodyForm } from '../components/profile/BodyForm'
 import { GoalPicker, KcalTargetEditor, MacroEditor, WaterTargetEditor } from '../components/profile/TargetEditor'
 import { defaultDraft, type ProfileDraft } from '../components/profile/types'
 import { DataSection } from '../components/profile/DataSection'
+import { HouseholdSection } from '../components/profile/HouseholdSection'
 import { Switch } from '../components/ui/Switch'
 import { AirfryerIcon } from '../components/recipes/AirfryerIcon'
 import { DietPicker } from '../components/profile/DietPicker'
@@ -102,6 +103,11 @@ export function ProfilePage() {
             { value: 'dark', label: 'Dunkel' },
           ]}
         />
+      </Card>
+
+      <SectionTitle>Gemeinsamer Haushalt</SectionTitle>
+      <Card>
+        <HouseholdSection />
       </Card>
 
       <SectionTitle>Deine Daten</SectionTitle>

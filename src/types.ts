@@ -143,6 +143,8 @@ export type PlanKind = 'recipe' | 'dish' | 'text'
 export interface PlanItem extends Nutrients {
   id: string
   user_id?: string
+  /** Gesetzt, wenn der Eintrag zum gemeinsamen Plan eines Haushalts gehört */
+  household_id?: string | null
   date: string
   meal: MealType
   kind: PlanKind
@@ -158,6 +160,8 @@ export type ShoppingCategory = 'obst_gemuese' | 'milch' | 'fleisch_fisch' | 'vor
 export interface ShoppingItem {
   id: string
   user_id?: string
+  /** Gesetzt, wenn der Artikel auf der gemeinsamen Einkaufsliste eines Haushalts steht */
+  household_id?: string | null
   name: string
   amount: number | null
   unit: string | null
@@ -220,6 +224,8 @@ export interface AirfryerInfo {
 
 export interface Recipe {
   id: string
+  /** Name des Haushalts-Mitglieds, von dem das Rezept stammt – nur bei Rezepten anderer (lesbar, nicht änderbar) */
+  shared_by?: string
   title: string
   /** Kapitel im Kochbuch */
   chapter: import('./data/chapters').ChapterId
@@ -270,3 +276,26 @@ export interface RecipeVariant {
   created_at?: string
   updated_at?: string
 }
+
+// Gemeinsamer Haushalt ----------------------------------------------------------------------
+
+export interface HouseholdMember {
+  user_id: string
+  display_name: string
+  role: 'owner' | 'member'
+  joined_at: string
+}
+
+/** Mehrere Konten teilen sich Wochenplan und Einkaufsliste */
+export interface Household {
+  id: string
+  name: string
+  /** Einladungscode in der Form XXXXX-XXXXX */
+  invite_code: string
+  /** Personen am Tisch: Portionen im Plan gelten pro Person, die Einkaufsliste rechnet für alle */
+  eaters: number
+  created_at: string
+  members: HouseholdMember[]
+}
+
+export type JoinStatus = 'joined' | 'not_found' | 'too_many_attempts' | 'already_member' | 'full'

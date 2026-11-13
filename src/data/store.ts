@@ -1,4 +1,4 @@
-import type { Profile } from '../types'
+import type { Household, JoinStatus, Profile } from '../types'
 
 export type TableName =
   | 'foods'
@@ -34,9 +34,31 @@ export interface ListQuery {
   limit?: number
 }
 
+/** Die Datenbank kennt den gemeinsamen Haushalt noch nicht (Migration fehlt) */
+export class HouseholdUnavailableError extends Error {
+  constructor() {
+    super('Der gemeinsame Haushalt ist in der Datenbank noch nicht eingerichtet.')
+    this.name = 'HouseholdUnavailableError'
+  }
+}
+
+/** Gemeinsamer Haushalt – gibt es nur mit Konto */
+export interface HouseholdApi {
+  /** Eigener Haushalt oder null. Wirft HouseholdUnavailableError, wenn die Datenbank ihn noch nicht kennt. */
+  get(): Promise<Household | null>
+  create(input: { name: string; displayName: string; bring: boolean }): Promise<Household>
+  join(input: { code: string; displayName: string; bring: boolean }): Promise<{ status: JoinStatus; household?: Household }>
+  leave(takeCopy: boolean): Promise<void>
+  removeMember(userId: string): Promise<void>
+  update(patch: { name?: string; displayName?: string; eaters?: number; newCode?: boolean }): Promise<Household>
+  /** Änderungen der anderen live beobachten; liefert eine Funktion zum Beenden */
+  watch?(onChange: (table: string) => void): () => void
+}
+
 /** Einheitliche Datenschnittstelle – Supabase (Konto) oder lokal (Demo-Modus). */
 export interface DataStore {
   readonly kind: 'supabase' | 'local'
+  readonly household?: HouseholdApi
   list<T>(table: TableName, q?: ListQuery): Promise<T[]>
   insert<T>(table: TableName, rows: object[]): Promise<T[]>
   update<T>(table: TableName, id: string, patch: object): Promise<T>

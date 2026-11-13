@@ -39,7 +39,7 @@ export function PantryPage() {
   const [showAll, setShowAll] = useState(false)
   const { data: shopping = [] } = useShoppingItems()
   const { data: profile } = useProfile()
-  const { recipes: ownRecipes } = useVariantRecipes()
+  const { recipes: ownRecipes, shared } = useVariantRecipes()
   const toast = useToast()
 
   const update = (next: Saved) => {
@@ -60,8 +60,8 @@ export function PantryPage() {
   }, [q, state.have, state.assumeBasics])
 
   const matches = useMemo(
-    () => matchRecipes([...ownRecipes, ...RECIPES].filter((r) => matchesDiet(r, profile?.diet, profile?.avoid)), state.have, { assumeBasics: state.assumeBasics }),
-    [state, profile?.diet, profile?.avoid, ownRecipes],
+    () => matchRecipes([...ownRecipes, ...shared, ...RECIPES].filter((r) => matchesDiet(r, profile?.diet, profile?.avoid)), state.have, { assumeBasics: state.assumeBasics }),
+    [state, profile?.diet, profile?.avoid, ownRecipes, shared],
   )
   const complete = matches.filter((m) => m.missing.length === 0)
   const almost = matches.filter((m) => m.missing.length > 0 && m.missing.length <= 2)

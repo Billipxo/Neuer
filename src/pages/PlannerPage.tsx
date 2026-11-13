@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getISOWeek } from 'date-fns'
-import { ChevronLeft, ChevronRight, Plus, Sparkles, Trash2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Plus, Share2, Sparkles, Trash2 } from 'lucide-react'
 import type { MealType, PlanItem } from '../types'
 import { MEAL_TYPES } from '../types'
 import { useProfile } from '../hooks/data'
@@ -19,6 +19,10 @@ import { useToast } from '../components/ui/Toast'
 import { PlanSlotSheet } from '../components/planner/PlanSlotSheet'
 import { PlanItemSheet } from '../components/planner/PlanItemSheet'
 import { GenerateShoppingButton } from '../components/planner/GenerateShoppingButton'
+import { SharedBanner } from '../components/household/SharedBanner'
+import { useHousehold } from '../app/household'
+import { weekPlanText } from '../lib/planShare'
+import { shareText } from '../lib/share'
 
 export function PlannerPage() {
   const [params, setParams] = useSearchParams()
@@ -35,6 +39,7 @@ export function PlannerPage() {
   const [editing, setEditing] = useState<PlanItem | null>(null)
 
   const { recipes: ownRecipes } = useVariantRecipes()
+  const { household } = useHousehold()
   if (!profile) return null
   const target = profile.kcal_target
   const summary = weekSummary(items, days)
@@ -66,7 +71,26 @@ export function PlannerPage() {
 
   return (
     <>
-      <PageHeader title="Wochenplan" />
+      <PageHeader
+        title="Wochenplan"
+        actions={
+          items.length > 0 && (
+            <IconButton
+              label="Wochenplan teilen"
+              onClick={async () => {
+                const outcome = await shareText({ title: 'Wochenplan', text: weekPlanText(items, days) })
+                if (outcome === 'copied') toast('Wochenplan in die Zwischenablage kopiert', '📋')
+                if (outcome === 'failed') toast('Teilen nicht möglich')
+              }}
+            >
+              <Share2 className="size-5" />
+            </IconButton>
+          )
+        }
+      />
+      <SharedBanner>
+        {household && ` · Portionen gelten pro Person, eingekauft wird für ${household.eaters} ${household.eaters === 1 ? 'Person' : 'Personen'}.`}
+      </SharedBanner>
       <div className="flex items-center gap-1">
         <IconButton label="Vorherige Woche" onClick={() => setWeek(shiftISO(weekStart, -7))}>
           <ChevronLeft className="size-5" />
@@ -138,7 +162,7 @@ export function PlannerPage() {
           const kcal = summary.perDay[d].kcal
           const pct = target > 0 ? Math.min(100, (kcal / target) * 100) : 0
           return (
-            <Card key={d} className={`p-0 ${d === today ? 'ring-2 ring-brand/60' : ''}`}>
+            <Card key={d} aria-current={d === today ? 'date' : undefined} className={`p-0 ${d === today ? 'ring-2 ring-brand/60' : ''}`}>
               <div className="flex items-center justify-between px-4 pt-3">
                 <h2 className="font-semibold">
                   {fmtDayShort(d)}

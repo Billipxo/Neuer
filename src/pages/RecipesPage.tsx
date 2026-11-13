@@ -67,15 +67,15 @@ export function RecipesPage() {
   const { data: log = [] } = useLog(todayISO())
   const toggleFav = useToggleFavoriteRecipe()
   const cooked = useCookedStats()
-  const { recipes: mine } = useVariantRecipes()
+  const { recipes: mine, shared } = useVariantRecipes()
   const favorites = profile?.favorite_recipes ?? []
   const hasAirfryer = profile?.has_airfryer ?? true
   const diet = profile?.diet ?? 'all'
   const avoid = useMemo(() => profile?.avoid ?? [], [profile?.avoid])
   /** Gibt es persönliche Vorgaben (Ernährungsweise oder Unverträglichkeiten)? */
   const personal = diet !== 'all' || avoid.length > 0
-  // Eigene Varianten und Rezepte gehören mit ins Kochbuch
-  const all = useMemo(() => (mine.length ? [...mine, ...RECIPES] : RECIPES), [mine])
+  // Eigene Varianten und Rezepte gehören mit ins Kochbuch – im gemeinsamen Haushalt auch die der anderen
+  const all = useMemo(() => (mine.length || shared.length ? [...mine, ...shared, ...RECIPES] : RECIPES), [mine, shared])
   // Ernährungsweise und Unverträglichkeiten aus dem Profil als Standardfilter (abschaltbar)
   const base = useMemo(() => (dietOnly && personal ? all.filter((r) => matchesDiet(r, diet, avoid)) : all), [all, dietOnly, personal, diet, avoid])
 

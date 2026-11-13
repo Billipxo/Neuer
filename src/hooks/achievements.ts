@@ -31,7 +31,7 @@ export function useAchievementInput(): { input: AchievementInput | null; ready: 
   const from = shiftISO(today, -365)
   const { data: profile } = useProfile()
   const log = useLogRange(from, today)
-  const plan = usePlanRange(from, shiftISO(today, 60))
+  const plan = usePlanRange(from, shiftISO(today, 60), { live: false })
   const water = useWaterRange(from, today)
   const variants = useVariants()
   const ready = Boolean(profile && log.data && plan.data && water.data && variants.data)

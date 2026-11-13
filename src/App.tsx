@@ -1,7 +1,9 @@
 import { lazy, Suspense, useEffect, useRef } from 'react'
-import { Navigate, Route, Routes, useLocation, useNavigationType } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation, useNavigate, useNavigationType, useParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { useAuth } from './app/auth'
+import { HouseholdProvider, useHousehold } from './app/household'
+import { PENDING_INVITE_KEY, normalizeInviteCode } from './lib/household'
 import { useProfile } from './hooks/data'
 import { AppShell, NAV_ITEMS } from './components/layout/AppShell'
 import { Spinner } from './components/ui/EmptyState'
@@ -37,6 +39,38 @@ function ScrollToTop() {
   return null
 }
 
+/** Einladungslink (/beitreten/CODE): Code merken und zum Profil, wo sich der Beitritt öffnet */
+function InviteRoute() {
+  const { code } = useParams()
+  if (code) {
+    try {
+      localStorage.setItem(PENDING_INVITE_KEY, normalizeInviteCode(code))
+    } catch {
+      /* ohne Speicher lässt sich der Code im Profil eintippen */
+    }
+  }
+  return <Navigate to="/profil" replace />
+}
+
+/** Wurde vor Anmeldung und Einrichtung ein Einladungslink geöffnet, geht es danach direkt zum Beitritt */
+function PendingInvite() {
+  const navigate = useNavigate()
+  const { supported, available, loadFailed } = useHousehold()
+  useEffect(() => {
+    // Im Demo-Modus bleibt die Einladung gemerkt, bis ein Konto da ist (Hinweis steht im Profil)
+    if (!supported || loadFailed) return
+    try {
+      if (!localStorage.getItem(PENDING_INVITE_KEY)) return
+      // Kennt die Datenbank den Haushalt nicht, lässt sich der Einladung nicht folgen
+      if (!available) localStorage.removeItem(PENDING_INVITE_KEY)
+      else if (window.location.pathname !== '/profil') navigate('/profil', { replace: true })
+    } catch {
+      /* kein Speicher – nichts zu tun */
+    }
+  }, [navigate, supported, available, loadFailed])
+  return null
+}
+
 export function App() {
   const { loading, store, userId } = useAuth()
   const qc = useQueryClient()
@@ -62,8 +96,10 @@ function Authed() {
   if (!profile?.onboarded) return <OnboardingPage existing={profile ?? null} />
 
   return (
+    <HouseholdProvider>
     <Suspense fallback={<Spinner />}>
     <ScrollToTop />
+    <PendingInvite />
     <AchievementWatcher />
     <TimerTray />
     <Routes>
@@ -86,8 +122,10 @@ function Authed() {
       <Route path="hinzufuegen" element={<AddFoodPage />} />
       <Route path="gerichte/neu" element={<DishEditorPage />} />
       <Route path="gerichte/:id" element={<DishEditorPage />} />
+      <Route path="beitreten/:code" element={<InviteRoute />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
     </Suspense>
+    </HouseholdProvider>
   )
 }
