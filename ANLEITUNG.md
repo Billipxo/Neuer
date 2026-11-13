@@ -69,13 +69,18 @@ Anmelde-Mail“** weiter unten.
 
 ## Schritt 5 – Zugangsdaten kopieren
 
-1. In Supabase oben auf **Connect** klicken (oder links **Project Settings** → **API**).
-2. Notiere dir zwei Werte:
-   - **Project URL** – sieht aus wie `https://abcdefgh.supabase.co`
-   - **anon public** Key – ein langer Text, beginnt meist mit `eyJ…` (oder `sb_publishable_…`)
+1. In Supabase oben auf den grünen Knopf **Connect** klicken.
+2. Im Fenster steht unter **Add files** ein Kasten (`.env.local`) mit zwei Zeilen. Wichtig ist jeweils der Teil **nach**
+   dem Gleichheitszeichen:
+   - `…SUPABASE_URL=` – die **Project URL**, sieht aus wie `https://abcdefgh.supabase.co`
+   - `…SUPABASE_PUBLISHABLE_KEY=` – der öffentliche **Schlüssel**, beginnt mit `sb_publishable_…` (bei älteren Projekten
+     heißt er **anon public** und beginnt mit `eyJ…`)
 
-Der anon-Key ist für den Browser gedacht und darf in der App stehen. Den **service_role**-Key brauchst du **nicht** –
-gib ihn nirgends ein.
+   Die Zeilen sind länger als der Kasten: Mit dem Kopier-Symbol am Kasten (oder Zeile markieren und kopieren) bekommst du
+   sie vollständig. Lege beide Werte kurz in einer Notiz ab.
+
+Der Schlüssel ist für den Browser gedacht und darf in der App stehen. Alles, was **secret** oder **service_role** heißt,
+brauchst du **nicht** – gib es nirgends ein.
 
 ---
 
@@ -89,7 +94,9 @@ gib ihn nirgends ein.
    | Name | Wert |
    |---|---|
    | `VITE_SUPABASE_URL` | deine Project URL aus Schritt 5 |
-   | `VITE_SUPABASE_ANON_KEY` | dein anon-Key aus Schritt 5 |
+   | `VITE_SUPABASE_ANON_KEY` | dein Schlüssel aus Schritt 5 |
+
+   Die Namen müssen genau so lauten (nicht `NEXT_PUBLIC_…`, wie Supabase sie anzeigt).
 
 4. **Deploy** klicken und 1–2 Minuten warten.
 5. Du bekommst eine Adresse wie **`https://neuer-xyz.vercel.app`**. Das ist deine App.
