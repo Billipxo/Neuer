@@ -103,6 +103,34 @@ describe('Sicherung einspielen', () => {
     expect(log[0].food_id).toBe('f-da')
   })
 
+  it('erkennt Lebensmittel am Barcode – auch wenn Name oder Werte inzwischen anders sind', () => {
+    const existing = { foods: [{ id: 'f-da', name: 'Skyr Natur (bearbeitet)', brand: 'Molkerei', barcode: '123', kcal_100: 66 }] }
+    const withTwin: Backup = {
+      exportedAt: null,
+      profile: null,
+      tables: {
+        foods: [
+          { id: 'f-alt2', name: 'Skyr', brand: 'Molkerei', barcode: '123', kcal_100: 63 },
+          // im lokalen Speicher kann derselbe Barcode doppelt vorkommen – in der Datenbank nicht
+          { id: 'f-alt3', name: 'Skyr (zweiter Scan)', brand: null, barcode: '123', kcal_100: 64 },
+          { id: 'f-alt4', name: 'Quark', brand: null, barcode: '999', kcal_100: 70 },
+          { id: 'f-alt5', name: 'Quark mager', brand: null, barcode: '999', kcal_100: 68 },
+        ],
+        log_entries: [
+          { id: 'l1', date: '2026-11-10', meal: 'snack', name: 'Skyr', amount: 150, unit: 'g', kcal: 95, food_id: 'f-alt3', dish_id: null, recipe_id: null },
+          { id: 'l2', date: '2026-11-10', meal: 'snack', name: 'Quark', amount: 100, unit: 'g', kcal: 68, food_id: 'f-alt5', dish_id: null, recipe_id: null },
+        ],
+      },
+    }
+    const plan = planImport(withTwin, existing, ids())
+    expect(plan.counts.foods).toEqual({ added: 1, skipped: 3 })
+    const foods = plan.inserts.find((i) => i.table === 'foods')!.rows
+    expect(foods.map((f) => f.name)).toEqual(['Quark'])
+    const log = plan.inserts.find((i) => i.table === 'log_entries')!.rows
+    expect(log[0].food_id).toBe('f-da')
+    expect(log[1].food_id).toBe(foods[0].id)
+  })
+
   it('setzt unbekannte Verweise auf leer und teilt in Päckchen', () => {
     const plan = planImport({ exportedAt: null, profile: null, tables: { log_entries: [{ id: 'l', date: '2026-11-10', meal: 'lunch', name: 'x', amount: 1, unit: 'g', kcal: 1, food_id: 'gibt-es-nicht', dish_id: 'auch-nicht', recipe_id: null }] } }, {}, ids())
     expect(plan.inserts[0].rows[0]).toMatchObject({ food_id: null, dish_id: null, recipe_id: null })

@@ -122,21 +122,26 @@ export function planImport(backup: Backup, existing: Partial<Record<TableName, R
     const out: Row[] = []
 
     if (REFERENCED.includes(table)) {
-      // Fingerabdruck → ID der vorhandenen bzw. neu geplanten Zeile
+      // Fingerabdruck → ID der vorhandenen bzw. neu geplanten Zeile. Ein Barcode darf je Konto nur einmal vorkommen:
+      // Lebensmittel mit Barcode gelten deshalb schon bei gleichem Barcode als vorhanden.
+      const keysOf = (r: Row) => (table === 'foods' && str(r.barcode) ? [`barcode:${str(r.barcode)}`, sig(r)] : [sig(r)])
       const known = new Map<string, string>()
-      for (const r of existing[table] ?? []) if (typeof r.id === 'string' && !known.has(sig(r))) known.set(sig(r), r.id)
+      for (const r of existing[table] ?? []) {
+        if (typeof r.id !== 'string') continue
+        for (const k of keysOf(r)) if (!known.has(k)) known.set(k, r.id)
+      }
       const map = new Map<string, string>()
       idMaps[table] = map
       for (const r of rows) {
-        const s = sig(r)
-        const hit = known.get(s)
+        const keys = keysOf(r)
+        const hit = keys.map((k) => known.get(k)).find(Boolean)
         if (hit) {
           if (typeof r.id === 'string') map.set(r.id, hit)
           counts[table].skipped++
           continue
         }
         const id = newId()
-        known.set(s, id)
+        for (const k of keys) known.set(k, id)
         if (typeof r.id === 'string') map.set(r.id, id)
         const row: Row = { ...strip(r), id }
         if (table === 'dishes' && Array.isArray(row.ingredients)) {

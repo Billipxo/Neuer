@@ -58,7 +58,8 @@ export function isNetworkError(e: unknown): boolean {
   return /failed to fetch|networkerror|network request failed|load failed|fetch failed|network error|offline/i.test(msg)
 }
 
-function isDuplicate(e: unknown): boolean {
+/** Fehler „gibt es schon“ (Verstoß gegen eine Eindeutigkeitsregel der Datenbank) */
+export function isDuplicate(e: unknown): boolean {
   const msg = e instanceof Error ? e.message : String(e)
   return /duplicate key|23505|already exists/i.test(msg)
 }

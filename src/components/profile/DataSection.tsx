@@ -25,6 +25,7 @@ export function DataSection() {
   const fileRef = useRef<HTMLInputElement>(null)
   const [restore, setRestore] = useState<{ backup: Backup; preview: ImportPreview } | null>(null)
   const [withProfile, setWithProfile] = useState(false)
+  const [importError, setImportError] = useState<string | null>(null)
   const importBackup = useImportBackup()
 
   /** Gewählte Sicherungsdatei prüfen und eine Vorschau zeigen – eingespielt wird erst nach Bestätigung */
@@ -35,6 +36,7 @@ export function DataSection() {
       const preview = await previewImport(store, backup)
       // Auf einem leeren Konto ist es vermutlich eine Wiederherstellung: Einstellungen gleich mit übernehmen
       setWithProfile(Boolean(preview.plan.profile) && preview.accountEmpty)
+      setImportError(null)
       setRestore({ backup, preview })
     } catch (e) {
       toast((e as Error).message || 'Die Datei konnte nicht gelesen werden.', '⚠️')
@@ -107,9 +109,14 @@ export function DataSection() {
             disabled={importBackup.isPending || !restore || (restore.preview.plan.total === 0 && !withProfile)}
             onClick={async () => {
               if (!restore) return
-              const plan = await importBackup.mutateAsync({ backup: restore.backup, withProfile })
-              toast(plan.total ? `Sicherung eingespielt: ${plan.total} Einträge übernommen` : 'Einstellungen übernommen', '📦')
-              setRestore(null)
+              setImportError(null)
+              try {
+                const plan = await importBackup.mutateAsync({ backup: restore.backup, withProfile })
+                toast(plan.total ? `Sicherung eingespielt: ${plan.total} Einträge übernommen` : 'Einstellungen übernommen', '📦')
+                setRestore(null)
+              } catch (e) {
+                setImportError((e as Error).message || 'Unbekannter Fehler')
+              }
             }}
           >
             {importBackup.isPending ? 'Wird eingespielt …' : 'Einspielen'}
@@ -148,6 +155,12 @@ export function DataSection() {
                 checked={withProfile}
                 onChange={setWithProfile}
               />
+            )}
+            {importError && (
+              <p role="alert" className="text-sm text-danger">
+                Einspielen nicht abgeschlossen: {importError} Du kannst es einfach noch einmal versuchen – bereits Übernommenes wird
+                übersprungen.
+              </p>
             )}
           </div>
         )}
