@@ -13,7 +13,8 @@
     "generate-icons": "pwa-assets-generator",
     "db:bundle": "node scripts/bundle-sql.mjs",
     "test:db": "node scripts/db-test.mjs",
-    "test:e2e": "playwright test --trace off"
+    "test:e2e": "playwright test --trace off",
+    "test:e2e:konto": "E2E_KONTO=1 playwright test --trace off"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.119.0",
