@@ -1,15 +1,39 @@
-import { expect, type Page } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
+import { signIn, testEmail } from './konto-helpers'
 
-/** Demo-Modus starten und Onboarding mit eigenem Tagesziel durchlaufen */
+/** Läuft der Test in der Reihe „konto“ (mit Anmeldung gegen das Test-Backend) statt im Demo-Modus? */
+export function withAccount(): boolean {
+  return test.info().project.name === 'konto'
+}
+
+/**
+ * App starten und Onboarding mit eigenem Tagesziel durchlaufen: im Demo-Modus ohne Konto, in der Reihe „konto“
+ * mit einem frischen Konto. Dieselben Abläufe prüfen so auch Spalten und Zugriffsregeln der Datenbank.
+ */
 export async function startDemo(page: Page, kcal = '2000') {
   page.on('dialog', (d) => d.accept())
   await onboard(page, kcal)
 }
 
-/** Onboarding im Demo-Modus – ohne Dialog-Behandlung, damit es in einem Test mehrfach aufgerufen werden kann */
+/** Bis zum Onboarding: im Demo-Modus „Ohne Konto ausprobieren“, sonst mit einem frischen Konto anmelden */
+export async function enterApp(page: Page) {
+  if (withAccount()) {
+    await signIn(page, testEmail('alex'))
+  } else {
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Ohne Konto ausprobieren' }).click()
+  }
+}
+
+/** Nach dem Löschen des Kontos steht wieder die Anmeldeseite da */
+export async function expectSignedOut(page: Page) {
+  if (withAccount()) await expect(page.getByLabel('E-Mail-Adresse')).toBeVisible()
+  else await expect(page.getByRole('button', { name: 'Ohne Konto ausprobieren' })).toBeVisible()
+}
+
+/** Onboarding – ohne Dialog-Behandlung, damit es in einem Test mehrfach aufgerufen werden kann */
 export async function onboard(page: Page, kcal = '2000') {
-  await page.goto('/')
-  await page.getByRole('button', { name: 'Ohne Konto ausprobieren' }).click()
+  await enterApp(page)
   await page.getByLabel('Wie dürfen wir dich nennen?').fill('Alex')
   await page.getByRole('button', { name: 'Weiter' }).click()
   await page.getByRole('button', { name: 'Überspringen' }).click()

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { Check, ListRestart, Package, PackageCheck, Plus, Share2, ShoppingBasket, Trash2, X } from 'lucide-react'
 import type { ShoppingCategory, ShoppingItem } from '../types'
 import { useShoppingItems, useAddToShopping, useDeleteShoppingItems, useUpdateShoppingItem } from '../hooks/shopping'
@@ -214,16 +214,24 @@ function AddItemForm() {
   const [text, setText] = useState('')
   const [category, setCategory] = useState<ShoppingCategory | 'auto'>('auto')
   const add = useAddToShopping()
+  // Mehrere Artikel kurz hintereinander: nacheinander speichern, damit Zusammenführen und Reihenfolge stimmen
+  const queue = useRef<Promise<void>>(Promise.resolve())
 
-  async function onSubmit(e: FormEvent) {
+  function onSubmit(e: FormEvent) {
     e.preventDefault()
     const parsed = parseItemText(text)
     if (!parsed) return
-    await add.mutateAsync({
-      items: [{ ...parsed, category: category === 'auto' ? guessCategory(parsed.name) : category }],
-      source: 'manual',
-    })
+    const entered = text
+    const item = { ...parsed, category: category === 'auto' ? guessCategory(parsed.name) : category }
+    // Feld sofort leeren: Der nächste Artikel lässt sich eintippen, während der vorige noch gespeichert wird
     setText('')
+    queue.current = queue.current
+      .then(() => add.mutateAsync({ items: [item], source: 'manual' }))
+      .then(
+        () => undefined,
+        // Speichern fehlgeschlagen (Hinweis erscheint automatisch): Eingabe zurückgeben, wenn das Feld noch leer ist
+        () => setText((current) => current || entered),
+      )
   }
 
   return (
@@ -240,7 +248,7 @@ function AddItemForm() {
           enterKeyHint="done"
           className="min-h-12 min-w-0 flex-1 rounded-2xl bg-surface-2 px-4 text-base focus:outline-none focus:ring-2 focus:ring-brand"
         />
-        <Button type="submit" size="lg" className="px-4" disabled={!text.trim() || add.isPending} aria-label="Hinzufügen">
+        <Button type="submit" size="lg" className="px-4" disabled={!text.trim()} aria-label="Hinzufügen">
           <Plus className="size-5" aria-hidden />
         </Button>
       </div>

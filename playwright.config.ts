@@ -23,7 +23,8 @@ export default defineConfig({
   },
   projects: [
     { name: 'demo', testMatch: /app\.spec\.ts/, use: { baseURL: 'http://localhost:4173' } },
-    ...(withAccount ? [{ name: 'konto', testMatch: /konto\.spec\.ts/, use: { baseURL: 'http://localhost:4174' } }] : []),
+    // Mit Konto laufen zusätzlich alle Abläufe aus dem Demo-Modus – dann gegen die Datenbank
+    ...(withAccount ? [{ name: 'konto', testMatch: /(app|konto)\.spec\.ts/, use: { baseURL: 'http://localhost:4174' } }] : []),
   ],
   webServer: [
     {

@@ -1,9 +1,8 @@
 import { expect, test } from '@playwright/test'
-import { closeBadges, onboard, startDemo } from './helpers'
+import { closeBadges, enterApp, expectSignedOut, onboard, startDemo, withAccount } from './helpers'
 
 test('Onboarding mit Kalorienvorschlag', async ({ page }) => {
-  await page.goto('/')
-  await page.getByRole('button', { name: 'Ohne Konto ausprobieren' }).click()
+  await enterApp(page)
   await page.getByLabel('Wie dürfen wir dich nennen?').fill('Sam')
   await page.getByRole('button', { name: 'Weiter' }).click()
   await page.getByRole('radio', { name: 'Männlich' }).click()
@@ -108,17 +107,25 @@ test('Verlauf und Profil sind erreichbar, Konto löschen setzt zurück', async (
   await page.getByRole('button', { name: 'Konto löschen' }).click()
   await page.getByLabel(/LÖSCHEN/).fill('LÖSCHEN')
   await page.getByRole('button', { name: 'Endgültig löschen' }).click()
-  await expect(page.getByRole('button', { name: 'Ohne Konto ausprobieren' })).toBeVisible()
+  await expectSignedOut(page)
 })
 
 test('Offline-Hinweis erscheint ohne Verbindung', async ({ page, context }) => {
   await startDemo(page)
   await context.setOffline(true)
-  await expect(page.getByText(/Offline – du kannst die App weiter nutzen/)).toBeVisible()
+  // Mit Konto werden Einträge vorgemerkt und später übertragen, im Demo-Modus liegen sie ohnehin auf dem Gerät
+  await expect(page.getByText(withAccount() ? /Offline – Einträge werden gespeichert und später übertragen/ : /Offline – du kannst die App weiter nutzen/)).toBeVisible()
   await page.getByRole('button', { name: /Ein Glas Wasser/ }).click()
   await expect(page.getByText('250 / 2.000 ml')).toBeVisible()
+  if (withAccount()) await expect(page.getByText(/1 ausstehend/)).toBeVisible()
   await context.setOffline(false)
   await expect(page.getByText(/Offline/)).toBeHidden()
+  if (withAccount()) {
+    // Der vorgemerkte Eintrag ist im Konto angekommen: auch nach dem Neuladen noch da
+    await expect(page.getByText(/ausstehend|Synchronisiere/)).toHaveCount(0)
+    await page.reload()
+    await expect(page.getByText('250 / 2.000 ml')).toBeVisible()
+  }
 })
 
 test('Rezept-Galerie: Heißluftfritteuse, Favoriten und Zubereitungsart', async ({ page }) => {
@@ -174,7 +181,8 @@ test('Kochwissen: Übersicht, Anleitung und Verknüpfung mit Rezepten', async ({
   // Rezept → passendes Kochwissen
   await page.goto('/rezepte/haehnchen-curry-joghurt')
   await page.getByRole('link', { name: /Fleisch & Fisch sicher garen/ }).click()
-  await expect(page.getByText('Kerntemperaturen')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Fleisch & Fisch sicher garen' })).toBeVisible()
+  await expect(page.getByText('Kerntemperaturen').first()).toBeVisible()
   // Saisonkalender zeigt den aktuellen Monat
   await page.goto('/rezepte/wissen/saisonkalender')
   await expect(page.getByText(/Jetzt im \w+: \d+ Sorten mit Saison/)).toBeVisible()
@@ -192,6 +200,7 @@ test('Was habe ich da? findet Rezepte und setzt Fehlendes auf die Einkaufsliste'
   const omelett = page.getByRole('listitem').filter({ hasText: 'Spinat-Feta-Omelett' })
   await expect(omelett).toContainText('Fehlt: Feta')
   await omelett.getByRole('button', { name: /Einkaufsliste/ }).click()
+  await expect(page.getByText(/Zutaten auf der Einkaufsliste/)).toBeVisible()
   await page.goto('/einkauf')
   await expect(page.getByText('Feta')).toBeVisible()
   // Auswahl bleibt gespeichert
@@ -479,6 +488,7 @@ test('Sicherung: exportieren, Konto löschen, wieder einspielen – nichts doppe
   await page.getByRole('button', { name: 'Konto löschen' }).click()
   await page.getByLabel(/LÖSCHEN/).fill('LÖSCHEN')
   await page.getByRole('button', { name: 'Endgültig löschen' }).click()
+  await expectSignedOut(page)
   await onboard(page, '1800')
   await expect(page.getByRole('img', { name: /0 von 1\.800 kcal/ })).toBeVisible()
   // Sicherung einspielen – auf dem leeren Konto samt Einstellungen
