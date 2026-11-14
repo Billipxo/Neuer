@@ -9,11 +9,12 @@ begin
   if not exists (select from pg_roles where rolname = 'service_role') then create role service_role nologin bypassrls; end if;
 end $$;
 
--- Supabase gibt den API-Rollen Zugriff auf alles im Schema public; geschützt wird über Row Level Security
+-- Neuere Supabase-Projekte geben den API-Rollen auf neue Tabellen und Funktionen im Schema public NICHTS von selbst
+-- frei („permission denied for table …“, wenn eine Migration die Rechte nicht ausdrücklich vergibt). Der Nachbau ist
+-- deshalb bewusst streng: keine automatischen Rechte – was die App braucht, müssen die Migrationen selbst vergeben.
+-- Ältere Projekte geben automatisch alles frei; dort schützt wie hier die Row Level Security.
 grant usage on schema public to anon, authenticated, service_role;
-alter default privileges in schema public grant all on tables to anon, authenticated, service_role;
-alter default privileges in schema public grant all on functions to anon, authenticated, service_role;
-alter default privileges in schema public grant all on sequences to anon, authenticated, service_role;
+alter default privileges in schema public revoke execute on functions from public;
 
 -- Anmeldung: Nutzertabelle und die Funktion, die das angemeldete Konto aus dem Zugriffstoken liest
 create schema auth;

@@ -146,10 +146,21 @@ Auf einem zweiten Gerät meldest du dich mit derselben E-Mail an und siehst dies
 ## Eigener Mail-Dienst und deutsche Anmelde-Mail
 
 Nötig, sobald **weitere Personen** die App nutzen sollen oder du sie auf einem **iPhone installierst** (dort meldest du
-dich mit dem Code aus der Mail an). Einmalig etwa 15 Minuten. Das Beispiel nutzt Brevo (kostenlos bis 300 Mails am Tag);
-jeder andere Dienst mit SMTP-Zugang geht genauso. Die Bezeichnungen bei Brevo können leicht abweichen.
+dich mit dem Code aus der Mail an). Ohne eigenen Mail-Dienst verschickt Supabase außerdem nur sehr wenige Mails pro
+Stunde. Einmalig etwa 15 Minuten. Die Bezeichnungen bei Google und Brevo können leicht abweichen.
 
-**A. Mail-Dienst vorbereiten (Brevo)**
+**A. Mail-Dienst vorbereiten**
+
+*Variante 1 – das eigene Gmail-Konto (am schnellsten, bis 500 Mails am Tag).* Die Anmelde-Mails kommen dann von deiner
+Gmail-Adresse mit dem Absendernamen „Teller“.
+
+1. Unter [myaccount.google.com/security](https://myaccount.google.com/security) muss die **Bestätigung in zwei Schritten**
+   eingeschaltet sein (sonst dort einschalten).
+2. [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords) öffnen, als Namen `Teller` eintragen und
+   **Erstellen** klicken. Google zeigt ein 16-stelliges **App-Passwort** – kopieren, es wird nur einmal angezeigt.
+   (Es gilt nur für diesen Zweck und lässt sich dort jederzeit wieder löschen.)
+
+*Variante 2 – Brevo (kostenlos bis 300 Mails am Tag, ohne Gmail).*
 
 1. Auf [brevo.com](https://www.brevo.com) ein kostenloses Konto anlegen.
 2. Einen Absender bestätigen: in den Einstellungen unter **Senders, Domains & Dedicated IPs** → **Senders** →
@@ -162,16 +173,16 @@ jeder andere Dienst mit SMTP-Zugang geht genauso. Die Bezeichnungen bei Brevo k�
 1. **Authentication** → **Emails** → **Set up SMTP** (bzw. Reiter **SMTP Settings**) → **Enable custom SMTP**.
 2. Ausfüllen und speichern:
 
-   | Feld | Wert |
-   |---|---|
-   | Sender email address | die bei Brevo bestätigte Adresse |
-   | Sender name | `Teller` |
-   | Host | `smtp-relay.brevo.com` |
-   | Port number | `587` |
-   | Username | der **Login** aus Brevo |
-   | Password | der **SMTP key** aus Brevo |
+   | Feld | Gmail | Brevo |
+   |---|---|---|
+   | Sender email address | deine Gmail-Adresse | die bei Brevo bestätigte Adresse |
+   | Sender name | `Teller` | `Teller` |
+   | Host | `smtp.gmail.com` | `smtp-relay.brevo.com` |
+   | Port number | `465` | `587` |
+   | Username | deine Gmail-Adresse | der **Login** aus Brevo |
+   | Password | das App-Passwort (ohne Leerzeichen) | der **SMTP key** aus Brevo |
 
-Der Schlüssel gehört nur in dieses Feld bei Supabase – nicht in die App und nicht in Vercel.
+Passwort bzw. Schlüssel gehören nur in dieses Feld bei Supabase – nicht in die App, nicht in Vercel und in keinen Chat.
 
 **C. Anmelde-Mail auf Deutsch, mit Code**
 
@@ -241,6 +252,7 @@ Verschickt wird ein lesbarer Text; wer selbst deine App nutzt, übernimmt den Pl
 | Vorlage der Mail lässt sich nicht bearbeiten („Set up custom SMTP to edit templates“) | Supabase gibt die Vorlagen erst mit eigenem Mail-Dienst frei – siehe derselbe Abschnitt. |
 | „Email address … is not authorized“ beim Anmelden | Ohne eigenen Mail-Dienst verschickt Supabase nur an die Adresse deines Supabase-Kontos. Mit dieser Adresse anmelden oder den Mail-Dienst einrichten. |
 | Meldung „Die Datenbank ist noch nicht eingerichtet“ | Schritt 3 wiederholen. |
+| „permission denied for table …“ nach dem Anmelden | Der Datenbank fehlen die Zugriffsrechte für angemeldete Nutzer (neuere Supabase-Projekte vergeben sie nicht mehr von selbst). Die Datei `supabase/setup-teil-3.sql` noch einmal im SQL Editor ausführen – oder nur `supabase/migrations/20261113000012_grants.sql`. Danach die App neu laden. |
 | „syntax error at or near …“ beim Einrichten der Datenbank | Der Text wurde beim Einfügen abgeschnitten (manche Geräte kürzen nach 20.000 Zeichen). Die drei kleinen Dateien aus Schritt 3 nacheinander ausführen. Es wurde dabei noch nichts angelegt – du kannst einfach neu beginnen. |
 | „Die Datenbank kennt den gemeinsamen Haushalt noch nicht“ | Die Datei `20261113000011_household.sql` im SQL Editor ausführen (siehe „Später: Updates der Datenbank“). |
 | Änderungen der anderen im Haushalt erscheinen erst nach einigen Sekunden | Normal: Spätestens alle 15 Sekunden wird neu geladen. Sofort geht es, wenn in Supabase unter **Database → Publications** bei `supabase_realtime` die Tabellen `plan_items` und `shopping_items` aktiv sind (das erledigt die Migration). |
@@ -263,6 +275,7 @@ Wenn du die Datenbank **schon einmal** eingerichtet hast und eine neue Version d
 - `20261111000009_avoid.sql` – Unverträglichkeiten und Allergien im Profil
 - `20261111000010_target_weight.sql` – Optionales Zielgewicht
 - `20261113000011_household.sql` – Gemeinsamer Haushalt (geteilter Wochenplan und geteilte Einkaufsliste)
+- `20261113000012_grants.sql` – Zugriffsrechte ausdrücklich vergeben (behebt „permission denied for table …“)
 
 Wer noch gar nichts eingerichtet hat, nimmt wie oben die drei Dateien aus Schritt 3 – sie enthalten alles.
 

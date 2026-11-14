@@ -151,7 +151,8 @@ describe('Heißluftfritteuse', async () => {
   it('sortiert nach kcal, Zeit, Eiweiß und Empfehlung', () => {
     const kcal = sortRecipes(RECIPES, 'kcal').map((r) => r.nutrition.kcal)
     expect(kcal).toEqual([...kcal].sort((a, b) => a - b))
-    const zeit = sortRecipes(RECIPES, 'zeit').map((r) => r.time_min)
+    // „Schnell fertig zuerst“: Gesamtzeit inklusive Warte-, Quell- und Kühlzeit
+    const zeit = sortRecipes(RECIPES, 'zeit').map((r) => r.time_min + (r.rest_min ?? 0))
     expect(zeit).toEqual([...zeit].sort((a, b) => a - b))
     const prot = sortRecipes(RECIPES, 'eiweiss').map(proteinDensity)
     expect(prot).toEqual([...prot].sort((a, b) => b - a))

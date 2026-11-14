@@ -36,7 +36,10 @@ insert into public.foods (name, barcode) values ('Skyr', '123');
 select test.ok(test.rows('select * from public.foods') = 1, 'Derselbe Barcode ist in einem anderen Konto erlaubt');
 
 select test.anonymous();
-select test.ok(test.rows('select 1 from public.foods union all select 1 from public.log_entries union all select 1 from public.profiles') = 0, 'Ohne Anmeldung ist nichts lesbar');
+select test.fails('select 1 from public.foods', '42501', 'Ohne Anmeldung sind Lebensmittel nicht lesbar');
+select test.fails('select 1 from public.log_entries', '42501', 'Ohne Anmeldung ist das Protokoll nicht lesbar');
+select test.fails('select 1 from public.profiles', '42501', 'Ohne Anmeldung sind Profile nicht lesbar');
+select test.fails($$insert into public.shopping_items (name) values ('x')$$, '42501', 'Ohne Anmeldung lässt sich nichts anlegen');
 select test.fails('select public.delete_my_account()', '42501', 'Ohne Anmeldung lässt sich kein Konto löschen');
 
 -- Konto löschen entfernt alles
