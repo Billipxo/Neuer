@@ -571,3 +571,70 @@ test('Startet die App nicht, steht dort eine Meldung statt einer leeren Seite', 
   await expect(page.getByRole('alert')).toContainText('Teller konnte nicht starten')
   await expect(page.getByRole('alert')).toContainText('Bitte die Seite neu laden')
 })
+
+test('Kochbuch: nach Zeit, Fleisch und Aufwand filtern, Zufallsvorschlag, Auswahl bleibt beim Zurückkehren', async ({ page }) => {
+  await startDemo(page)
+  await page.getByRole('link', { name: 'Kochbuch', exact: true }).click()
+  await page.getByRole('button', { name: 'Filtern und sortieren' }).click()
+  const sheet = page.getByRole('dialog', { name: 'Filtern & sortieren' })
+  await sheet.getByRole('button', { name: /^bis 30 Min\./ }).click()
+  await sheet.getByRole('button', { name: /^Wenig Fleisch/ }).click()
+  await expect(sheet.getByRole('button', { name: /^Wenig Fleisch/ })).toHaveAttribute('aria-pressed', 'true')
+  const show = sheet.getByRole('button', { name: /^\d+ Rezepte? anzeigen$/ })
+  const hits = Number((await show.textContent())!.match(/\d+/)![0])
+  expect(hits).toBeGreaterThan(0)
+  await show.click()
+  await expect(page.getByRole('heading', { name: `${hits} Treffer` })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Filtern und sortieren, 2 aktiv' })).toBeVisible()
+
+  // Unentschlossen: Vorschlag aus genau diesen Treffern
+  await page.getByRole('button', { name: /Zufallsvorschlag/ }).click()
+  const proposal = page.getByRole('dialog', { name: "Wie wär's damit?" })
+  await expect(proposal).toContainText('Wenig Fleisch')
+  await expect(proposal).toContainText(/fertig in ([1-9]|[12]\d|30) Min\./)
+  const title = (await proposal.getByRole('heading', { level: 3 }).textContent())!
+  await proposal.getByRole('button', { name: 'Rezept ansehen' }).click()
+  await expect(page).toHaveURL(/\/rezepte\/[a-z0-9-]+$/)
+  await expect(page.getByRole('heading', { name: title, level: 1 })).toBeVisible()
+
+  // Zurück im Kochbuch: dieselbe Auswahl
+  await page.goBack()
+  await expect(page.getByRole('heading', { name: `${hits} Treffer` })).toBeVisible()
+  await page.getByRole('button', { name: 'Fertig in 30 Min. entfernen' }).click()
+  await expect(page.getByRole('button', { name: 'Fertig in 30 Min. entfernen' })).toHaveCount(0)
+  const more = Number((await page.getByRole('heading', { name: /^\d+ Treffer$/ }).textContent())!.match(/\d+/)![0])
+  expect(more).toBeGreaterThan(hits)
+
+  // Mehrere Eigenschaften zugleich; was dann nichts mehr ergibt, ist nicht wählbar
+  await page.getByRole('button', { name: /^Filtern und sortieren/ }).click()
+  await sheet.getByRole('button', { name: /^Vegetarisch/ }).click()
+  await expect(sheet.getByRole('button', { name: /^Wenig Fleisch/ })).toHaveAttribute('aria-pressed', 'false')
+  await sheet.getByRole('button', { name: /^Vegan/ }).click()
+  await sheet.getByRole('button', { name: /^Glutenfrei/ }).click()
+  await expect(sheet.getByRole('button', { name: /^Viel Fleisch, 0 Rezepte$/ })).toBeDisabled()
+  await sheet.getByLabel('Sortieren nach').selectOption({ label: 'Wenige Zutaten zuerst' })
+  await sheet.getByRole('button', { name: /Rezepte? anzeigen$/ }).click()
+  await expect(page.getByRole('group', { name: 'Aktive Filter' })).toContainText('Vegan')
+  await expect(page.getByRole('group', { name: 'Aktive Filter' })).toContainText('Glutenfrei')
+  await expect(page.getByRole('group', { name: 'Aktive Filter' })).toContainText('Wenige Zutaten zuerst')
+
+  // Zurücksetzen im Dialog lässt Suche und Schnellfilter stehen
+  await page.getByRole('button', { name: /^Filtern und sortieren/ }).click()
+  await sheet.getByRole('button', { name: 'Zurücksetzen' }).click()
+  await sheet.getByRole('button', { name: /Rezepte? anzeigen$/ }).click()
+  await expect(page.getByRole('group', { name: 'Aktive Filter' })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'Filtern und sortieren' })).toBeVisible()
+
+  // Ein neuer Aufruf über die Navigation beginnt ohne Filter
+  await page.getByRole('button', { name: 'Filtern und sortieren' }).click()
+  await sheet.getByRole('button', { name: /^bis 15 Min\./ }).click()
+  await sheet.getByRole('button', { name: /Rezepte? anzeigen$/ }).click()
+  await page.getByRole('link', { name: 'Heute' }).click()
+  await page.getByRole('link', { name: 'Kochbuch', exact: true }).click()
+  await expect(page.getByRole('heading', { name: 'Alle Rezepte' })).toBeVisible()
+  await expect(page.getByRole('group', { name: 'Aktive Filter' })).toHaveCount(0)
+  // … „Zurück“ dagegen landet wieder in der gefilterten Auswahl
+  await page.goBack()
+  await page.goBack()
+  await expect(page.getByRole('button', { name: 'Fertig in 15 Min. entfernen' })).toBeVisible()
+})

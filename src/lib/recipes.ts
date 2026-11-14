@@ -2,7 +2,8 @@ import rawRecipes from '../data/recipes.json'
 import type { Allergen, DietPreference, MealType, Nutrients, RawRecipe, Recipe, RecipeIngredient } from '../types'
 import { scaleNutrients } from './nutrition'
 import { detectVeggies } from './veggies'
-import { deriveTags, dietInfo, ingredientInfo, nutritionPerServing } from './recipeNutrition'
+import { deriveTags, dietInfo, ingredientFlags, ingredientGrams, ingredientInfo, nutritionPerServing } from './recipeNutrition'
+import { recipeNeeds } from './pantry'
 
 /** Rezept um berechnete Nährwerte, Ernährungsform und abgeleitete Tags ergänzen */
 export function buildRecipe(raw: RawRecipe): Recipe {
@@ -17,13 +18,121 @@ export function getRecipe(id: string | null | undefined): Recipe | undefined {
   return id ? RECIPES.find((r) => r.id === id) : undefined
 }
 
+/** Kennzahlen eines Rezepts für Filter und Sortierung – aus den Zutaten berechnet */
+export interface RecipeFacts {
+  /** Enthält Fleisch (auch ohne Mengenangabe) */
+  hasMeat: boolean
+  /** Enthält Fisch oder Meeresfrüchte */
+  hasFish: boolean
+  /** Fleisch pro Portion in Gramm */
+  meat: number
+  /** Fisch und Meeresfrüchte pro Portion in Gramm */
+  fish: number
+  /** Anzahl der Zutaten ohne Grundvorrat (Salz, Öl, Gewürze …) */
+  ingredients: number
+  /** Minuten, bis das Gericht fertig ist – Zubereitung plus Warte-, Quell- und Kühlzeit */
+  totalTime: number
+}
+
+const FACTS = new WeakMap<Recipe, RecipeFacts>()
+
+export function recipeFacts(r: Recipe): RecipeFacts {
+  const cached = FACTS.get(r)
+  if (cached) return cached
+  let meat = 0
+  let fish = 0
+  let hasMeat = false
+  let hasFish = false
+  for (const ing of r.ingredients) {
+    const flags = ingredientFlags(ing)
+    const grams = ingredientGrams(ing) ?? 0
+    if (flags.includes('M')) {
+      hasMeat = true
+      meat += grams
+    }
+    if (flags.includes('F')) {
+      hasFish = true
+      fish += grams
+    }
+  }
+  const servings = r.servings > 0 ? r.servings : 1
+  const facts: RecipeFacts = {
+    hasMeat,
+    hasFish,
+    meat: Math.round(meat / servings),
+    fish: Math.round(fish / servings),
+    ingredients: recipeNeeds(r, { assumeBasics: false }).length,
+    totalTime: r.time_min + (r.rest_min ?? 0),
+  }
+  FACTS.set(r, facts)
+  return facts
+}
+
+/** Fleisch & Fisch: vegetarisch (ohne beides), wenig Fleisch, viel Fleisch oder mit Fisch */
+export type MeatFilter = 'none' | 'little' | 'much' | 'fish'
+/** Ab so vielen Gramm Fleisch pro Portion gilt ein Gericht als „viel Fleisch“ – darunter als „wenig“ (Schinken, Speck, Würstchen als Beigabe) */
+export const MEAT_MUCH_FROM = 100
+
+export const MEAT_LABELS: Record<MeatFilter, string> = {
+  none: 'Vegetarisch',
+  little: 'Wenig Fleisch',
+  much: 'Viel Fleisch',
+  fish: 'Mit Fisch',
+}
+
+export function matchesMeat(r: Recipe, filter: MeatFilter): boolean {
+  const { hasMeat, hasFish, meat } = recipeFacts(r)
+  switch (filter) {
+    case 'none':
+      return !hasMeat && !hasFish
+    case 'little':
+      return hasMeat && meat < MEAT_MUCH_FROM
+    case 'much':
+      return hasMeat && meat >= MEAT_MUCH_FROM
+    case 'fish':
+      return hasFish
+  }
+}
+
+/** Kalorien pro Portion in drei Stufen */
+export type KcalFilter = 'light' | 'medium' | 'hearty'
+export const KCAL_LIGHT_MAX = 350
+export const KCAL_HEARTY_FROM = 550
+
+export const KCAL_LABELS: Record<KcalFilter, string> = {
+  light: `Leicht · bis ${KCAL_LIGHT_MAX} kcal`,
+  medium: `Mittel · ${KCAL_LIGHT_MAX}–${KCAL_HEARTY_FROM} kcal`,
+  hearty: `Deftig · ab ${KCAL_HEARTY_FROM} kcal`,
+}
+
+export function matchesKcal(r: Recipe, filter: KcalFilter): boolean {
+  const kcal = r.nutrition.kcal
+  if (filter === 'light') return kcal <= KCAL_LIGHT_MAX
+  if (filter === 'hearty') return kcal >= KCAL_HEARTY_FROM
+  return kcal > KCAL_LIGHT_MAX && kcal < KCAL_HEARTY_FROM
+}
+
+/** „Fertig in“: Auswahl in Minuten */
+export const TIME_OPTIONS = [15, 30, 45] as const
+/** „Wenige Zutaten“: höchstens so viele, ohne Grundvorrat */
+export const FEW_INGREDIENTS_MAX = 5
+
 export interface RecipeFilter {
   chapter?: string | null
   meal?: MealType | null
   maxKcal?: number | null
+  /** Höchstens so viele Minuten aktive Zubereitung */
   maxTime?: number | null
+  /** Fertig in höchstens so vielen Minuten – inklusive Warte-, Quell- und Kühlzeit */
+  maxTotalTime?: number | null
+  meat?: MeatFilter | null
+  kcal?: KcalFilter | null
+  /** Höchstens so viele Zutaten (ohne Grundvorrat) */
+  maxIngredients?: number | null
   keyword?: string
   tag?: string | null
+  /** Eigenschaften, die alle zutreffen müssen */
+  tags?: string[]
 }
 
 function normalize(s: string) {
@@ -41,7 +150,12 @@ export function filterRecipes(recipes: Recipe[], f: RecipeFilter): Recipe[] {
     if (f.meal && !r.meal.includes(f.meal)) return false
     if (f.maxKcal && r.nutrition.kcal > f.maxKcal) return false
     if (f.maxTime && r.time_min > f.maxTime) return false
+    if (f.maxTotalTime && recipeFacts(r).totalTime > f.maxTotalTime) return false
+    if (f.meat && !matchesMeat(r, f.meat)) return false
+    if (f.kcal && !matchesKcal(r, f.kcal)) return false
+    if (f.maxIngredients && recipeFacts(r).ingredients > f.maxIngredients) return false
     if (f.tag && !r.tags.includes(f.tag)) return false
+    if (f.tags?.length && !f.tags.every((t) => r.tags.includes(t))) return false
     if (kw) {
       const hay = normalize([r.title, ...r.tags, ...r.ingredients.map((i) => i.name)].join(' '))
       if (!kw.split(/\s+/).every((w) => hay.includes(w))) return false
@@ -216,12 +330,13 @@ export const TAG_LABELS: Record<string, string> = {
   eigen: 'Eigenes Rezept',
 }
 
-export type RecipeSort = 'empfohlen' | 'kcal' | 'zeit' | 'eiweiss' | 'oft'
+export type RecipeSort = 'empfohlen' | 'zeit' | 'zutaten' | 'kcal' | 'eiweiss' | 'oft'
 
 export const SORT_LABELS: Record<RecipeSort, string> = {
   empfohlen: 'Empfohlen',
+  zeit: 'Schnell fertig zuerst',
+  zutaten: 'Wenige Zutaten zuerst',
   kcal: 'Wenig kcal zuerst',
-  zeit: 'Schnell zuerst',
   eiweiss: 'Viel Eiweiß zuerst',
   oft: 'Oft gekocht',
 }
@@ -265,7 +380,10 @@ export function sortRecipes(
     case 'kcal':
       return list.sort((a, b) => a.nutrition.kcal - b.nutrition.kcal || byIndex(a, b))
     case 'zeit':
-      return list.sort((a, b) => a.time_min - b.time_min || byIndex(a, b))
+      // fertig auf dem Tisch: Wartezeiten zählen mit; bei Gleichstand das mit weniger Arbeit zuerst
+      return list.sort((a, b) => recipeFacts(a).totalTime - recipeFacts(b).totalTime || a.time_min - b.time_min || byIndex(a, b))
+    case 'zutaten':
+      return list.sort((a, b) => recipeFacts(a).ingredients - recipeFacts(b).ingredients || a.time_min - b.time_min || byIndex(a, b))
     case 'eiweiss':
       return list.sort((a, b) => proteinDensity(b) - proteinDensity(a) || byIndex(a, b))
     case 'oft': {
@@ -371,4 +489,10 @@ export function matchesDiet(r: Recipe, diet: DietPreference | undefined, avoid: 
   if (diet === 'vegan' && !r.diet.vegan) return false
   if (diet === 'vegetarian' && !r.diet.vegetarian) return false
   return !avoid.some((a) => r.diet.allergens.includes(a))
+}
+
+/** Zufälliger Vorschlag aus einer Auswahl – möglichst ein anderer als der zuletzt gezeigte */
+export function pickRandom(recipes: Recipe[], exclude?: string | null, random: () => number = Math.random): Recipe | undefined {
+  const pool = recipes.length > 1 && exclude ? recipes.filter((r) => r.id !== exclude) : recipes
+  return pool.length ? pool[Math.min(pool.length - 1, Math.floor(random() * pool.length))] : undefined
 }

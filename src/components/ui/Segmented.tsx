@@ -44,17 +44,24 @@ export function Chip({
   active,
   children,
   onClick,
+  label,
+  disabled,
 }: {
   active?: boolean
   children: React.ReactNode
   onClick?: () => void
+  /** Beschriftung für Screenreader, wenn der sichtbare Text nicht ausreicht (z. B. mit Anzahl) */
+  label?: string
+  disabled?: boolean
 }) {
   return (
     <button
       type="button"
       aria-pressed={active}
+      aria-label={label}
+      disabled={disabled}
       onClick={onClick}
-      className={`min-h-9 shrink-0 rounded-full px-3.5 text-sm font-medium transition ${
+      className={`min-h-9 shrink-0 rounded-full px-3.5 text-sm font-medium transition disabled:pointer-events-none disabled:opacity-40 ${
         active ? 'bg-brand text-brand-ink' : 'bg-surface-2 text-ink hover:bg-line/70'
       }`}
     >
