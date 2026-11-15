@@ -330,6 +330,34 @@ test('Eigenes Rezept anlegen und im Kochmodus kochen', async ({ page }) => {
   await expect(page.getByRole('button', { name: /3 Min\. Timer/ })).toBeVisible()
 })
 
+test('Rezept aus Text übernehmen: Zutatenliste und Zubereitung einfügen', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/rezepte')
+  await page.getByRole('link', { name: /Eigenes Rezept anlegen/ }).click()
+  await page.getByLabel('Titel').fill('Tomatensoße von Oma')
+  await page.getByRole('button', { name: 'Aus Text einfügen' }).click()
+  const ingredients = page.getByRole('dialog', { name: 'Zutaten aus Text' })
+  await ingredients
+    .getByLabel('Zutatenliste')
+    .fill('Zutaten:\n- 2 EL Olivenöl\n- 1 Zwiebel, fein gewürfelt\n- 2 Knoblauchzehen\n- 800 g passierte Tomaten\n- 1 Prise Zucker\n- 1 Becher Schmand')
+  await expect(ingredients.getByRole('list', { name: 'Erkannte Zutaten' }).getByRole('listitem')).toHaveCount(5)
+  await expect(ingredients).toContainText('Nicht erkannt: „1 Becher Schmand“')
+  await ingredients.getByRole('button', { name: '5 Zutaten übernehmen' }).click()
+  await expect(page.getByLabel('Menge passierte Tomaten')).toHaveValue('800')
+  await expect(page.getByLabel('Menge Zwiebel')).toHaveValue('1')
+
+  await page.getByRole('button', { name: 'Schritte aus Text' }).click()
+  const steps = page.getByRole('dialog', { name: 'Zubereitung aus Text' })
+  await steps
+    .getByLabel('Zubereitung')
+    .fill('1. Zwiebel und Knoblauch in Öl glasig dünsten.\n2. Tomaten und Zucker zugeben\nund 20 Minuten köcheln lassen.')
+  await steps.getByRole('button', { name: '2 Schritte übernehmen' }).click()
+  await expect(page.getByRole('textbox', { name: 'Schritt 2' })).toHaveValue('Tomaten und Zucker zugeben und 20 Minuten köcheln lassen.')
+  await expect(page.getByText(/\d+ kcal · .* pro Portion/)).toBeVisible()
+  await page.getByRole('button', { name: 'Rezept speichern' }).click()
+  await expect(page.getByRole('heading', { name: 'Tomatensoße von Oma' })).toBeVisible()
+})
+
 test('Barcode scannen füllt die Nährwerte einer eigenen Zutat automatisch aus', async ({ page }) => {
   // Open Food Facts wird simuliert – der Scanner nutzt die manuelle Eingabe, da es keine Kamera gibt
   await page.route('**/world.openfoodfacts.org/api/v2/product/**', (route) =>
