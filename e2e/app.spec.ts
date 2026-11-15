@@ -435,6 +435,24 @@ test('Schnell-Eintrag, Löschen mit Rückgängig und Mahlzeit als Gericht speich
   await page.getByRole('link', { name: 'Bearbeiten' }).click()
   await expect(page.getByLabel('Menge Döner beim Imbiss')).toHaveValue('1')
   await expect(page.getByLabel('Menge Apfel')).toHaveValue('150')
+
+  // Auch die Texteingabe kennt eigene Gerichte – in Portionen, zusammen mit Größen wie „große Cola“
+  await page.goto('/hinzufuegen?meal=snack')
+  await page.getByLabel('Lebensmittel suchen').fill('Döner-Mittag und eine große Cola')
+  const card = page.getByRole('region', { name: 'Erkannt für Snacks' })
+  const items = card.getByRole('list', { name: 'Erkannte Einträge' }).getByRole('listitem')
+  await expect(items).toHaveCount(2)
+  await expect(items.nth(0)).toContainText('Döner-Mittag')
+  await expect(items.nth(0)).toContainText('1 Portion')
+  await expect(items.nth(1)).toContainText('1 Dose, groß · 495 ml')
+  await card.getByRole('button', { name: /^Döner-Mittag, 1 Portion/ }).click()
+  const portions = page.getByRole('dialog', { name: 'Döner-Mittag' })
+  await portions.getByLabel('Portionen').fill('2')
+  await portions.getByRole('button', { name: 'Menge übernehmen' }).click()
+  await expect(items.nth(0)).toContainText('2 Portionen')
+  // 2 × 731 + 208 kcal
+  await card.getByRole('button', { name: 'Alle 2 hinzufügen · 1.670 kcal' }).click()
+  await expect(page.getByText(/^2 Einträge · 1\.670 kcal$/)).toBeVisible()
 })
 
 test('Einkaufsliste: Artikel löschen und Liste leeren lassen sich rückgängig machen', async ({ page }) => {

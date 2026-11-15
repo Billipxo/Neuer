@@ -15,17 +15,20 @@ export function DishAmountSheet({
   onAdd,
   busy,
   confirmLabel = 'Hinzufügen',
+  initialServings,
 }: {
   dish: Dish | null
   onClose: () => void
   onAdd: (servings: number) => void
   busy?: boolean
   confirmLabel?: string
+  /** Vorbelegte Portionen (sonst 1) */
+  initialServings?: number
 }) {
   const [servings, setServings] = useState<number | null>(1)
   useEffect(() => {
-    if (dish) setServings(1)
-  }, [dish])
+    if (dish) setServings(initialServings ?? 1)
+  }, [dish, initialServings])
   if (!dish) return null
   const n = scaleNutrients(dishPerServing(dish), servings ?? 0)
   return (
