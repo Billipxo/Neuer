@@ -1,9 +1,9 @@
-import { useRef, useState, type FormEvent } from 'react'
+import { useRef, useState, type ClipboardEvent, type FormEvent } from 'react'
 import { Check, ListRestart, Package, PackageCheck, Plus, Share2, ShoppingBasket, Trash2, X } from 'lucide-react'
 import type { ShoppingCategory, ShoppingItem } from '../types'
 import { useShoppingItems, useAddToShopping, useDeleteShoppingItems, useUpdateShoppingItem } from '../hooks/shopping'
 import { usePlanRange } from '../hooks/plan'
-import { CATEGORY_LABELS, CATEGORY_ORDER, formatQuantity, groupByCategory, guessCategory, parseItemText, shoppingListText } from '../lib/shopping'
+import { CATEGORY_LABELS, CATEGORY_ORDER, formatQuantity, groupByCategory, guessCategory, listToLine, parseItemList, shoppingListText } from '../lib/shopping'
 import { shiftISO, todayISO, weekDaysISO, weekStartISO, fmtDayShort } from '../lib/dates'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Button, IconButton } from '../components/ui/Button'
@@ -216,24 +216,37 @@ function AddItemForm() {
   const [text, setText] = useState('')
   const [category, setCategory] = useState<ShoppingCategory | 'auto'>('auto')
   const add = useAddToShopping()
+  const toast = useToast()
   // Mehrere Artikel kurz hintereinander: nacheinander speichern, damit Zusammenführen und Reihenfolge stimmen
   const queue = useRef<Promise<void>>(Promise.resolve())
 
   function onSubmit(e: FormEvent) {
     e.preventDefault()
-    const parsed = parseItemText(text)
-    if (!parsed) return
+    // Auch mehrere auf einmal: „Milch, 6 Eier, Brot“
+    const parsed = parseItemList(text)
+    if (!parsed.length) return
     const entered = text
-    const item = { ...parsed, category: category === 'auto' ? guessCategory(parsed.name) : category }
+    const items = parsed.map((p) => ({ ...p, category: category === 'auto' ? guessCategory(p.name) : category }))
     // Feld sofort leeren: Der nächste Artikel lässt sich eintippen, während der vorige noch gespeichert wird
     setText('')
     queue.current = queue.current
-      .then(() => add.mutateAsync({ items: [item], source: 'manual' }))
+      .then(() => add.mutateAsync({ items, source: 'manual' }))
       .then(
-        () => undefined,
+        () => {
+          if (items.length > 1) toast(`${items.length} Artikel hinzugefügt`, '🛒')
+        },
         // Speichern fehlgeschlagen (Hinweis erscheint automatisch): Eingabe zurückgeben, wenn das Feld noch leer ist
         () => setText((current) => current || entered),
       )
+  }
+
+  /** Kopierte Liste (eine Zeile je Artikel) einfügen: wird zu „Milch, 6 Eier, Brot“ – prüfen und hinzufügen */
+  function onPaste(e: ClipboardEvent<HTMLInputElement>) {
+    const pasted = e.clipboardData.getData('text')
+    if (!/\r?\n/.test(pasted.trim())) return
+    e.preventDefault()
+    const line = listToLine(pasted)
+    setText((current) => [current.trim().replace(/,$/, ''), line].filter(Boolean).join(', '))
   }
 
   return (
@@ -246,7 +259,8 @@ function AddItemForm() {
           id="new-item"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Artikel, z. B. „2 l Milch“ oder „Kaffee“"
+          onPaste={onPaste}
+          placeholder="Artikel, z. B. „2 l Milch, 6 Eier“"
           enterKeyHint="done"
           className="min-h-12 min-w-0 flex-1 rounded-2xl bg-surface-2 px-4 text-base focus:outline-none focus:ring-2 focus:ring-brand"
         />

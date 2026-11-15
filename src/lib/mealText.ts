@@ -4,16 +4,18 @@
  * den eigenen Gerichten. Klappt auch mit diktiertem Text („zwei Brötchen und einen Kaffee“) und mit Größen
  * („große Pommes“, „ein kleines Bier“).
  */
-import type { AmountUnit, Dish, Food } from '../types'
+import type { AmountUnit, Dish, Food, Nutrients } from '../types'
 import type { NewFood } from '../hooks/data'
 import { nameScore, norm, scoredQuickFoods, type QuickFoodHit } from './basicFoods'
-import { amountToGrams, dishPerServing, nutrientsForFoodAmount } from './nutrition'
+import { amountToGrams, dishPerServing, nutrientsForFoodAmount, roundNutrients } from './nutrition'
 import { fmtAmount } from './units'
 import { fmt1, fmtInt } from './format'
 
 export interface MealPart {
   /** Teil der Eingabe, aus dem der Eintrag stammt */
   text: string
+  /** Wonach gesucht wurde, z. B. „Käse“ – für andere Treffer und zum Merken der Wahl */
+  query: string
   name: string
   /** Gespeichertes Lebensmittel der eigenen Bibliothek oder Vorlage, die beim Eintragen gespeichert wird */
   food: Food | NewFood
@@ -28,6 +30,10 @@ export interface MealPart {
   amountLabel: string
   /** Getränk: Menge in ml */
   liquid: boolean
+  /** Nährwerte dieser Menge (gerundet) */
+  nutrients: Nutrients
+  /** Andere passende Lebensmittel mit derselben Menge – zum Tauschen, wenn die App danebenlag */
+  alternatives: MealPart[]
 }
 
 export interface MealParse {
@@ -227,10 +233,17 @@ function parseQty(text: string): Qty {
 
 // --- Lebensmittel finden ----------------------------------------------------------------------------------------
 
-/** Was die Nutzerin bzw. der Nutzer selbst angelegt hat */
+/** Was die Nutzerin bzw. der Nutzer selbst angelegt und gewählt hat */
 interface Library {
   foods: readonly Food[]
   dishes: readonly Dish[]
+  /** Gemerkte Wahl: Suchwort (normalisiert) → Name, z. B. „kase“ → „Gouda“ */
+  remembered: Readonly<Record<string, string>>
+}
+
+/** Schlüssel für eine gemerkte Wahl – „Käse“, „käse“ und „Kaese“ sind dasselbe */
+export function rememberKey(query: string): string {
+  return norm(query.trim())
 }
 
 interface Match {
@@ -242,6 +255,8 @@ interface Match {
   measure: string | null
   liquid: boolean
   dish?: Dish
+  /** Wonach gesucht wurde */
+  query: string
 }
 
 /** Gramm je Portion eines eigenen Gerichts – unbekannt, wenn Zutaten nur als Portion angegeben sind */
@@ -284,35 +299,80 @@ function measureOf(hit: QuickFoodHit): string | null {
   return hit.typicalLabel ? hit.typicalLabel.replace(/^1\s+/, '') : null
 }
 
-function fromHit(hit: QuickFoodHit, score: number): Match {
-  return { name: hit.name, food: hit.food, stored: false, score, measure: measureOf(hit), liquid: hit.liquid }
+function fromHit(hit: QuickFoodHit, score: number, query: string): Match {
+  return { name: hit.name, food: hit.food, stored: false, score, measure: measureOf(hit), liquid: hit.liquid, query }
 }
 
-/** Bester Treffer; mit Einheit („Scheiben Käse“) gewinnt ein fast so guter Treffer mit genau dieser Einheit */
-function findMatch(text: string, unitWord: string | null, lib: Library): Match | null {
-  if (norm(text).length < 2) return null
-  const quick = scoredQuickFoods(text, 8).map((s) => fromHit(s.hit, s.score))
-  let best: Match | null = quick[0] ?? null
-  let mine: Match | null = null
+function dishMatch(d: Dish, score: number, query: string): Match {
+  return { name: d.name, food: dishAsFood(d), stored: true, score, measure: 'Portion', liquid: false, dish: d, query }
+}
+
+function foodMatch(f: Food, score: number, query: string): Match {
+  return { name: f.name, food: f, stored: true, score, measure: null, liquid: false, query }
+}
+
+/** Eigene Lebensmittel und Gerichte, die zum Text passen – beste zuerst */
+function ownMatches(text: string, lib: Library): Match[] {
+  const out: Match[] = []
   for (const f of lib.foods) {
     const score = nameScore(text, f.name)
-    if (score >= 0 && (!mine || score < mine.score)) {
-      mine = { name: f.name, food: f, stored: true, score, measure: null, liquid: false }
-    }
+    if (score >= 0) out.push(foodMatch(f, score, text))
   }
   for (const d of lib.dishes) {
     const score = nameScore(text, d.name)
-    if (score >= 0 && (!mine || score < mine.score)) {
-      mine = { name: d.name, food: dishAsFood(d), stored: true, score, measure: 'Portion', liquid: false, dish: d }
-    }
+    if (score >= 0) out.push(dishMatch(d, score, text))
   }
-  // Eigenes zuerst, wenn es mindestens so gut passt
-  if (mine && (!best || mine.score <= best.score)) best = mine
-  if (best && unitWord) {
-    const fit = quick.find((m) => m.measure && norm(m.measure.split(' ')[0]) === unitWord && m.score <= best!.score + 3)
-    if (fit && !(best.stored && best.score < fit.score)) best = fit
+  return out.sort((a, b) => a.score - b.score)
+}
+
+/** Gemerkte Wahl („Käse“ → Gouda) als Treffer – aus der eigenen Bibliothek oder den Richtwerten */
+function rememberedMatch(text: string, lib: Library): Match | null {
+  const name = lib.remembered[rememberKey(text)]
+  if (!name) return null
+  const n = norm(name)
+  const food = lib.foods.find((f) => norm(f.name) === n)
+  if (food) return foodMatch(food, 0, text)
+  const dish = lib.dishes.find((d) => norm(d.name) === n)
+  if (dish) return dishMatch(dish, 0, text)
+  const hit = scoredQuickFoods(name, 5).find((h) => norm(h.hit.name) === n)
+  return hit ? fromHit(hit.hit, 0, text) : null
+}
+
+/**
+ * Passende Lebensmittel, bester zuerst: Eigenes vor Richtwerten bei gleich gutem Treffer; mit Einheit („Scheiben
+ * Käse“) ein fast so guter Treffer mit genau dieser Einheit; eine gemerkte Wahl immer vorn.
+ */
+function candidates(text: string, unitWord: string | null, lib: Library, limit = 6): Match[] {
+  if (norm(text).length < 2) return []
+  const quick = scoredQuickFoods(text, 8).map((s) => fromHit(s.hit, s.score, text))
+  // Stabile Sortierung: Bei gleicher Güte bleibt Eigenes vor den Richtwerten
+  const all = [...ownMatches(text, lib).slice(0, 3), ...quick].sort((a, b) => a.score - b.score)
+  const toFront = (m: Match) => {
+    const i = all.indexOf(m)
+    if (i > 0) all.splice(i, 1)
+    if (i !== 0) all.unshift(m)
   }
-  return best
+  if (all.length && unitWord) {
+    const best = all[0]
+    const fit = quick.find((m) => m.measure && norm(m.measure.split(' ')[0]) === unitWord && m.score <= best.score + 3)
+    if (fit && !(best.stored && best.score < fit.score)) toFront(fit)
+  }
+  const remembered = rememberedMatch(text, lib)
+  if (remembered) toFront(remembered)
+  // Doppeltes (gespeichertes Grundnahrungsmittel und Vorlage gleichen Namens) nur einmal
+  const seen = new Set<string>()
+  return all
+    .filter((m) => {
+      const key = norm(m.name)
+      if (seen.has(key)) return false
+      seen.add(key)
+      return true
+    })
+    .slice(0, limit)
+}
+
+function findMatch(text: string, unitWord: string | null, lib: Library): Match | null {
+  return candidates(text, unitWord, lib, 1)[0] ?? null
 }
 
 /** Füllwörter, die nichts über das Lebensmittel sagen */
@@ -463,13 +523,21 @@ export function withAmount(part: MealPart, amount: number, unit: AmountUnit): Me
     if (unit !== 'serving' || !(amount > 0)) return null
     const n = nutrientsForFoodAmount(part.food as Food, amount, 'serving')
     if (!n) return null
-    return { ...part, amount, unit, grams: amount * 100, kcal: Math.round(n.kcal), amountLabel: dishLabel(part.dish, amount) }
+    return { ...part, amount, unit, grams: amount * 100, kcal: Math.round(n.kcal), nutrients: roundNutrients(n), amountLabel: dishLabel(part.dish, amount) }
   }
   const n = nutrientsForFoodAmount(part.food as Food, amount, unit)
   const grams = amountToGrams(amount, unit, part.food)
   if (!n || !grams) return null
   const a: Amount = { amount, unit, grams, typical: false }
-  return { ...part, amount, unit, grams, kcal: Math.round(n.kcal), amountLabel: amountLabel({ measure: null, liquid: part.liquid }, a) }
+  return {
+    ...part,
+    amount,
+    unit,
+    grams,
+    kcal: Math.round(n.kcal),
+    nutrients: roundNutrients(n),
+    amountLabel: amountLabel({ measure: null, liquid: part.liquid }, a),
+  }
 }
 
 // --- Zerlegen ---------------------------------------------------------------------------------------------------
@@ -496,15 +564,13 @@ interface Out {
   explicit: boolean
 }
 
-function addPart(out: Out, m: Match, q: Qty, text: string) {
+function buildPart(m: Match, q: Qty, text: string): MealPart | null {
   const a = amountFor(m, q)
   const n = nutrientsForFoodAmount(m.food as Food, a.amount, a.unit)
-  if (!n || !(a.grams > 0)) {
-    out.unknown.push(text)
-    return
-  }
-  out.parts.push({
+  if (!n || !(a.grams > 0)) return null
+  return {
     text,
+    query: m.query,
     name: m.name,
     food: m.food,
     stored: m.stored,
@@ -515,7 +581,24 @@ function addPart(out: Out, m: Match, q: Qty, text: string) {
     kcal: Math.round(n.kcal),
     amountLabel: amountLabel(m, a),
     liquid: m.liquid,
-  })
+    nutrients: roundNutrients(n),
+    alternatives: [],
+  }
+}
+
+/** Eintrag mit bis zu fünf anderen Treffern derselben Suche – gleiche Menge, zum Tauschen */
+function addPart(out: Out, m: Match, q: Qty, text: string, lib: Library) {
+  const part = buildPart(m, q, text)
+  if (!part) {
+    out.unknown.push(text)
+    return
+  }
+  part.alternatives = candidates(m.query, q.unit?.word ?? null, lib, 7)
+    .filter((c) => norm(c.name) !== norm(m.name))
+    .map((c) => buildPart(c, q, text))
+    .filter((p): p is MealPart => !!p)
+    .slice(0, 5)
+  out.parts.push(part)
 }
 
 /** Ein Teil ist als Ganzes ein bekannter Name („Halbes Hähnchen“, „Kaffee mit Milch“, „Quark 20 %“) */
@@ -535,14 +618,14 @@ function parseSegment(segment: string, lib: Library, out: Out, nested = false) {
   if (!text || FILLERS.has(norm(text))) return
   const whole = wholeName(text, lib)
   if (whole) {
-    addPart(out, whole, NO_QTY(text), text)
+    addPart(out, whole, NO_QTY(text), text, lib)
     return
   }
   const q = parseQty(text)
   if (q.explicit) out.explicit = true
   const m = q.rest ? findMatch(q.rest, q.unit?.word ?? null, lib) : null
   if (m && m.score <= 2) {
-    addPart(out, m, q, text)
+    addPart(out, m, q, text, lib)
     return
   }
   // „und“: mehrere Lebensmittel, jedes mit eigener Menge
@@ -560,17 +643,17 @@ function parseSegment(segment: string, lib: Library, out: Out, nested = false) {
     const rq = parseQty(clean(withParts[1]))
     const right = rq.rest ? (findMatch(rq.rest, rq.unit?.word ?? null, lib) ?? wordMatch(rq.rest, rq.unit?.word ?? null, lib)) : null
     if (left || right) {
-      if (left) addPart(out, left, q, withParts[0])
+      if (left) addPart(out, left, q, withParts[0], lib)
       else out.unknown.push(withParts[0])
       const perPiece = !q.unit || ['count', 'serving', 'container'].includes(q.unit.kind)
       const sideQty: Qty = rq.explicit ? rq : { ...NO_QTY(rq.rest), n: perPiece && q.n <= 12 ? q.n : 1 }
-      if (right) addPart(out, right, sideQty, withParts[1])
+      if (right) addPart(out, right, sideQty, withParts[1], lib)
       else out.unknown.push(withParts[1])
       return
     }
   }
   const fallback = m ?? (q.rest ? wordMatch(q.rest, q.unit?.word ?? null, lib) : null)
-  if (fallback) addPart(out, fallback, q, text)
+  if (fallback) addPart(out, fallback, q, text, lib)
   else out.unknown.push(text)
 }
 
@@ -578,8 +661,13 @@ function parseSegment(segment: string, lib: Library, out: Out, nested = false) {
  * Zerlegt eine Eingabe in Einträge. Gibt `null` zurück, wenn es nichts zu zerlegen gibt – ein einzelnes Lebensmittel
  * ohne Mengenangabe findet die normale Suche.
  */
-export function parseMealText(input: string, foods: readonly Food[] = [], dishes: readonly Dish[] = []): MealParse | null {
-  const lib: Library = { foods, dishes }
+export function parseMealText(
+  input: string,
+  foods: readonly Food[] = [],
+  dishes: readonly Dish[] = [],
+  remembered: Readonly<Record<string, string>> = {},
+): MealParse | null {
+  const lib: Library = { foods, dishes, remembered }
   let text = input.trim()
   if (text.length < 3) return null
   // „Frühstück: 2 Brötchen …“ – die Bezeichnung davor zählt nicht

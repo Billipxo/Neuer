@@ -24,7 +24,8 @@ import {
   type NewFood,
 } from '../hooks/data'
 import { browseFoods, findStoredBasic, suggestFoods } from '../lib/basicFoods'
-import { parseMealText, type MealPart } from '../lib/mealText'
+import { parseMealText, rememberKey, type MealPart } from '../lib/mealText'
+import { loadMealMemory, rememberChoices, saveMealMemory } from '../lib/mealMemory'
 import { FOOD_GROUPS, type FoodGroupId } from '../data/everydayFoods'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Segmented, Chip } from '../components/ui/Segmented'
@@ -37,7 +38,8 @@ import { CustomFoodSheet } from '../components/add/CustomFoodSheet'
 import { BarcodeScannerSheet } from '../components/add/BarcodeScannerSheet'
 import { DishAmountSheet } from '../components/add/DishAmountSheet'
 import { QuickEntrySheet } from '../components/add/QuickEntrySheet'
-import { MealTextCard, effectiveParts, type MealTextEdits } from '../components/add/MealTextCard'
+import { MealTextCard, NO_EDITS, effectiveParts, type MealTextEdits } from '../components/add/MealTextCard'
+import { MealPartSwapSheet } from '../components/add/MealPartSwapSheet'
 
 /** Merkt sich, dass der Tipp „Mehreres auf einmal“ verstanden wurde */
 const MULTI_HINT_KEY = 'teller-tipp-mehreres'
@@ -99,10 +101,14 @@ export function AddFoodPage() {
   /** In dieser Sitzung hinzugefügte Einträge – man kann mehrere nacheinander erfassen */
   const [added, setAdded] = useState<{ name: string; kcal: number }[]>([])
   // Erkannte Einträge aus dem Suchtext, mit Änderungen (entfernt, Menge geändert) – gelten nur für diesen Text
-  const mealParse = useMemo(() => parseMealText(query, foods, dishes), [query, foods, dishes])
-  const [editsState, setEdits] = useState<MealTextEdits>({ text: '', removed: [], amounts: {} })
-  const mealEdits: MealTextEdits = editsState.text === query ? editsState : { text: query, removed: [], amounts: {} }
+  // Gemerkte Wahl („Käse“ → Gouda) aus früheren Einträgen auf diesem Gerät
+  const [memory, setMemory] = useState(loadMealMemory)
+  const mealParse = useMemo(() => parseMealText(query, foods, dishes, memory), [query, foods, dishes, memory])
+  const [editsState, setEdits] = useState<MealTextEdits>(NO_EDITS(''))
+  const mealEdits: MealTextEdits = editsState.text === query ? editsState : NO_EDITS(query)
   const [editIndex, setEditIndex] = useState<number | null>(null)
+  const [swapIndex, setSwapIndex] = useState<number | null>(null)
+  const swapOriginal = swapIndex !== null ? (mealParse?.parts[swapIndex] ?? null) : null
   const editingPart =
     editIndex !== null && mealParse ? (effectiveParts(mealParse, mealEdits).find((r) => r.index === editIndex)?.part ?? null) : null
   const [bulkBusy, setBulkBusy] = useState(false)
@@ -247,7 +253,17 @@ export function AddFoodPage() {
         if (!used.some((f) => f.id === stored.id)) used.push(stored)
       }
       if (!rows.length) return
+      // Getauschte Treffer merken, damit es beim nächsten Mal gleich passt
+      const learned: Record<string, string> = {}
+      for (const r of mealParse ? effectiveParts(mealParse, mealEdits) : []) {
+        if (mealEdits.swaps[r.index] !== undefined) learned[rememberKey(r.original.query)] = r.part.name
+      }
       await addLog.mutateAsync(rows)
+      if (Object.keys(learned).length) {
+        const next = rememberChoices(memory, learned)
+        setMemory(next)
+        saveMealMemory(next)
+      }
       for (const f of used) touchFood.mutate(f)
       for (const d of usedDishes) saveDish.mutate({ ...d, last_used_at: new Date().toISOString() })
       toast(rows.length === 1 ? `Zu ${MEAL_LABELS[meal]} hinzugefügt` : `${rows.length} Einträge zu ${MEAL_LABELS[meal]} hinzugefügt`, '✅')
@@ -265,6 +281,18 @@ export function AddFoodPage() {
     } finally {
       setBulkBusy(false)
     }
+  }
+
+  /** Anderen Treffer wählen (-1 = wieder den ursprünglichen); eine geänderte Menge gilt dann nicht mehr */
+  function swapPart(choice: number) {
+    if (swapIndex === null) return
+    const swaps = { ...mealEdits.swaps }
+    const amounts = { ...mealEdits.amounts }
+    if (choice < 0) delete swaps[swapIndex]
+    else swaps[swapIndex] = choice
+    delete amounts[swapIndex]
+    setEdits({ ...mealEdits, swaps, amounts })
+    setSwapIndex(null)
   }
 
   /** Menge eines erkannten Eintrags ändern (gilt, solange der Text gleich bleibt) */
@@ -498,6 +526,7 @@ export function AddFoodPage() {
               busy={bulkBusy}
               onRemove={(i) => setEdits({ ...mealEdits, removed: [...mealEdits.removed, i] })}
               onEdit={setEditIndex}
+              onSwap={setSwapIndex}
               onAddAll={addParts}
             />
           )}
@@ -597,6 +626,12 @@ export function AddFoodPage() {
         onClose={() => setEditIndex(null)}
         onAdd={(amount, unit) => changePartAmount(amount, unit)}
         confirmLabel="Menge übernehmen"
+      />
+      <MealPartSwapSheet
+        original={swapOriginal}
+        selected={swapIndex !== null ? (mealEdits.swaps[swapIndex] ?? -1) : -1}
+        onSelect={swapPart}
+        onClose={() => setSwapIndex(null)}
       />
       <DishAmountSheet
         dish={editingPart?.dish ?? null}

@@ -162,6 +162,31 @@ describe('Mehreres auf einmal eintragen', () => {
     expect(withAmount(part, 100, 'g')).toBeNull()
   })
 
+  it('bietet andere Treffer mit derselben Menge an', () => {
+    const [kaese] = parseMealText('2 Scheiben Käse, Kaffee')!.parts
+    expect(kaese.query).toBe('Käse')
+    expect(kaese.alternatives.length).toBeGreaterThanOrEqual(3)
+    expect(kaese.alternatives.map((a) => a.name)).not.toContain(kaese.name)
+    // gleiche Menge: zwei Scheiben
+    expect(kaese.alternatives.filter((a) => a.amountLabel.startsWith('2 Scheiben')).length).toBeGreaterThanOrEqual(2)
+    const [wein] = parseMealText('Wein, Brot')!.parts
+    expect(wein.alternatives.slice(0, 2).map((a) => a.name)).toEqual(['Weißwein', 'Roséwein'])
+    // Nährwerte je Eintrag
+    expect(kaese.nutrients.protein).toBeGreaterThan(10)
+    expect(Object.keys(kaese.nutrients).sort()).toEqual(['carbs', 'fat', 'kcal', 'protein'])
+  })
+
+  it('nimmt eine gemerkte Wahl zuerst – aus Richtwerten, eigenen Lebensmitteln und Gerichten', () => {
+    expect(summary('2 Scheiben Käse, Kaffee', [], [])?.[0]).toMatch(/^Emmentaler/)
+    const remembered = parseMealText('2 Scheiben Käse, Kaffee', [], [], { kase: 'Gouda' })!.parts
+    expect(remembered[0]).toMatchObject({ name: 'Gouda', amountLabel: '2 Scheiben · 40 g', kcal: 142 })
+    expect(remembered[0].alternatives.map((a) => a.name)).toContain('Emmentaler')
+    const lasagneFor = parseMealText('Nudeln, Kaffee', [], [lasagne], { nudeln: 'Omas Lasagne' })!.parts
+    expect(lasagneFor[0]).toMatchObject({ name: 'Omas Lasagne', dish: lasagne, amountLabel: '1 Portion · 388 g' })
+    // Unbekannt gewordene Wahl (Lebensmittel gelöscht) stört nicht
+    expect(parseMealText('Käse, Kaffee', [], [], { kase: 'Gibt es nicht' })!.parts[0].name).toBe('Emmentaler')
+  })
+
   it('bildet die Mehrzahl der Mengen', () => {
     expect(['Kugel', 'Scheibe', 'Glas', 'Döner', 'Portion', 'Wrap', 'Packung', 'Stück', 'Becher', 'Ei'].map(pluralMeasure)).toEqual([
       'Kugeln',

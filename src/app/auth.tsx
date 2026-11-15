@@ -5,6 +5,7 @@ import { createSupabaseStore } from '../data/supabaseStore'
 import { createLocalStore } from '../data/localStore'
 import type { DataStore } from '../data/store'
 import { createOfflineStore, type OfflineDataStore } from '../data/offlineStore'
+import { MEAL_MEMORY_KEY } from '../lib/mealMemory'
 
 const LOCAL_FLAG = 'teller-local-mode'
 
@@ -91,6 +92,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async signOut() {
         localStorage.removeItem(LOCAL_FLAG)
         localStorage.removeItem('teller-query-cache')
+        // Gemerkte Wahl bei „Mehreres auf einmal“ gehört zum Konto, nicht zum nächsten auf diesem Gerät
+        localStorage.removeItem(MEAL_MEMORY_KEY)
         // Zwischengespeicherte Kopien der Daten entfernen (noch nicht übertragene Änderungen bleiben erhalten)
         Object.keys(localStorage)
           .filter((k) => k.startsWith('teller-mirror-'))

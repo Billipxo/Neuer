@@ -180,6 +180,31 @@ export function parseItemText(text: string): { name: string; amount: number | nu
   return { name: m[3].trim(), amount, unit }
 }
 
+/** Aufzählungszeichen am Zeilenanfang: „- “, „• “, „* “, „[ ] “, „☐ “, „1. “, „2) “ (nicht „2 Eier“ oder „1.5 l“) */
+const LIST_MARK = /^\s*(?:[-–—•*·◦▪]+|\[[ xX✓]?\]|[☐☑✓✔]|\d+[.)](?=\s))\s*/
+
+/**
+ * Mehrere Artikel auf einmal: „Milch, 6 Eier; Brot“ oder eine Liste mit einem Artikel je Zeile. Dezimalkommas
+ * („1,5 l Milch“) trennen nicht.
+ */
+export function parseItemList(text: string): { name: string; amount: number | null; unit: string }[] {
+  const KEEP = '\u0001'
+  return text
+    .replace(/(\d),(\d)/g, `$1${KEEP}$2`)
+    .split(/[\n;,]+/)
+    .map((s) => parseItemText(s.split(KEEP).join(',').replace(LIST_MARK, '')))
+    .filter((item): item is { name: string; amount: number | null; unit: string } => !!item)
+}
+
+/** Eingefügte Liste (eine Zeile je Artikel) als eine Zeile fürs Eingabefeld: „Milch, 6 Eier, Brot“ */
+export function listToLine(text: string): string {
+  return text
+    .split(/\r?\n/)
+    .map((l) => l.replace(LIST_MARK, '').trim())
+    .filter(Boolean)
+    .join(', ')
+}
+
 /** Einkaufsliste als Text zum Teilen (z. B. per Messenger) – nur offene Artikel, nach Kategorien */
 export function shoppingListText(items: ShoppingItem[]): string {
   const open = items.filter((i) => !i.checked && !i.in_stock)
