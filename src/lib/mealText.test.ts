@@ -187,6 +187,36 @@ describe('Mehreres auf einmal eintragen', () => {
     expect(parseMealText('Käse, Kaffee', [], [], { kase: 'Gibt es nicht' })!.parts[0].name).toBe('Emmentaler')
   })
 
+  it('teilt einen ganzen Tag nach Mahlzeiten auf', () => {
+    const day = parseMealText('Frühstück: Müsli mit Milch; Mittag: Döner und Cola; abends 2 Scheiben Brot mit Käse')!
+    expect(day.parts.map((x) => `${x.meal}: ${x.name}`)).toEqual([
+      'breakfast: Müsli',
+      'breakfast: Milch 3,5 %',
+      'lunch: Döner Kebab',
+      'lunch: Cola',
+      'dinner: Mischbrot',
+      'dinner: Emmentaler',
+    ])
+    // Die Mahlzeit darf auch hinten stehen
+    expect(parseMealText('2 Brötchen und Kaffee zum Frühstück, Döner zum Mittagessen')!.parts.map((x) => x.meal)).toEqual([
+      'breakfast',
+      'breakfast',
+      'lunch',
+    ])
+    expect(parseMealText('morgens Kaffee, mittags Pizza und nachmittags ein Stück Kuchen')!.parts.map((x) => x.meal)).toEqual([
+      'breakfast',
+      'lunch',
+      'snack',
+    ])
+    // Eine genannte Mahlzeit reicht für die Karte; die anderen Treffer gehören zur selben Mahlzeit
+    const coffee = parseMealText('Kaffee zum Frühstück')!.parts
+    expect(coffee).toMatchObject([{ name: 'Kaffee (schwarz)', meal: 'breakfast' }])
+    expect(coffee[0].alternatives.every((a) => a.meal === 'breakfast')).toBe(true)
+    // Ohne Mahlzeit gilt die gewählte; „Frühstücksei“ und „Montag:“ sind keine Mahlzeiten
+    expect(parseMealText('Montag: 2 Brötchen, Kaffee')!.parts.map((x) => x.meal)).toEqual([undefined, undefined])
+    expect(parseMealText('Frühstücksei und Toast')!.parts.map((x) => x.meal)).toEqual([undefined, undefined])
+  })
+
   it('bildet die Mehrzahl der Mengen', () => {
     expect(['Kugel', 'Scheibe', 'Glas', 'Döner', 'Portion', 'Wrap', 'Packung', 'Stück', 'Becher', 'Ei'].map(pluralMeasure)).toEqual([
       'Kugeln',

@@ -232,6 +232,10 @@ test('Was habe ich da? findet Rezepte und setzt Fehlendes auf die Einkaufsliste'
 test('Rezept abwandeln: Mengen ändern, Zutat tauschen, Nährwerte neu berechnet, Variante eintragen', async ({ page }) => {
   await startDemo(page)
   await page.goto('/rezepte/spaghetti-bolognese')
+  // Auch oben über den Stift erreichbar – als eigene Version, das Original bleibt
+  await page.getByRole('link', { name: 'Rezept ändern (als eigene Version)' }).click()
+  await expect(page.getByRole('heading', { name: 'Rezept abwandeln' })).toBeVisible()
+  await page.goBack()
   await page.getByRole('link', { name: /Rezept abwandeln/ }).click()
   await expect(page.getByRole('heading', { name: 'Rezept abwandeln' })).toBeVisible()
   await expect(page.getByText(/wie das Original/)).toBeVisible()
@@ -800,6 +804,34 @@ test('Mehreres auf einmal: anderen Treffer wählen – beim nächsten Mal passt 
   // Die App hat sich die Wahl gemerkt
   await search.fill('Käse, Kaffee')
   await expect(items.nth(0)).toContainText('Edamer')
+})
+
+test('Ganzer Tag auf einmal: Mahlzeiten im Text werden jeweils dort eingetragen', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/hinzufuegen?meal=lunch')
+  await page.getByLabel('Lebensmittel suchen').fill('Frühstück: 2 Brötchen und ein Cappuccino; Mittag: Döner; abends eine Banane')
+  const card = page.getByRole('region', { name: 'Erkannt für Frühstück, Mittagessen und Abendessen' })
+  await expect(card.getByRole('list', { name: 'Erkannte Einträge: Frühstück' }).getByRole('listitem')).toHaveCount(2)
+  await expect(card.getByRole('list', { name: 'Erkannte Einträge: Mittagessen' })).toContainText('Döner Kebab')
+  await expect(card.getByRole('list', { name: 'Erkannte Einträge: Abendessen' })).toContainText('Bananen')
+  // 324 + 80 + 753 + 107 kcal
+  await card.getByRole('button', { name: 'Alle 4 hinzufügen · 1.264 kcal' }).click()
+  await expect(page.getByText(/^4 Einträge · 1\.264 kcal$/)).toBeVisible()
+  await page.getByRole('button', { name: 'Fertig' }).click()
+  await closeBadges(page)
+  await expect(page.getByRole('img', { name: /1\.264 von 2\.000 kcal/ })).toBeVisible()
+  // Jeweils bei der richtigen Mahlzeit (die Karte einer Mahlzeit ist der innerste Block mit Überschrift und Liste)
+  const mealCard = (meal: string) =>
+    page
+      .locator('div')
+      .filter({ has: page.getByRole('heading', { name: meal, exact: true }) })
+      .filter({ has: page.getByRole('list') })
+      .last()
+  await expect(mealCard('Frühstück')).toContainText('Brötchen')
+  await expect(mealCard('Frühstück')).toContainText('Cappuccino')
+  await expect(mealCard('Mittagessen')).toContainText('Döner Kebab')
+  await expect(mealCard('Mittagessen')).not.toContainText('Cappuccino')
+  await expect(mealCard('Abendessen')).toContainText('Bananen')
 })
 
 test('Stöbern: Werte nach Kategorien finden, ohne zu tippen', async ({ page }) => {

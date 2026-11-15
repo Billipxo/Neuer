@@ -78,10 +78,20 @@ export function RecipeDetailPage() {
         back
         actions={
           <div className="flex gap-2">
-          {own && (
+          {own ? (
             <Link
               to={`/rezepte/${recipe.id}/abwandeln`}
               aria-label={base ? 'Variante bearbeiten' : 'Rezept bearbeiten'}
+              className="flex size-11 items-center justify-center rounded-full bg-surface ring-1 ring-line transition active:scale-90"
+            >
+              <Pencil className="size-5 text-muted" aria-hidden />
+            </Link>
+          ) : (
+            // Kochbuch-Rezepte ändert man als eigene Version – das Original bleibt
+            <Link
+              to={`/rezepte/${recipe.id}/abwandeln?methode=${variant ? activeMethod : 'airfryer'}`}
+              aria-label="Rezept ändern (als eigene Version)"
+              title="Rezept ändern"
               className="flex size-11 items-center justify-center rounded-full bg-surface ring-1 ring-line transition active:scale-90"
             >
               <Pencil className="size-5 text-muted" aria-hidden />
@@ -200,7 +210,10 @@ export function RecipeDetailPage() {
           </span>
           <span className="min-w-0 flex-1">
             <span className="block font-semibold">{recipe.shared_by ? 'Als eigene Variante speichern' : 'Rezept abwandeln'}</span>
-            <span className="block text-xs text-muted">Zutaten tauschen, Mengen ändern – Nährwerte werden neu berechnet</span>
+            <span className="block text-xs text-muted">
+              Als deine eigene Version: Zutaten, Mengen, Schritte und Titel ändern – Nährwerte werden neu berechnet, das Original
+              bleibt im Kochbuch
+            </span>
           </span>
         </Link>
       )}

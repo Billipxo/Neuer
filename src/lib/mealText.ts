@@ -4,7 +4,7 @@
  * den eigenen Gerichten. Klappt auch mit diktiertem Text („zwei Brötchen und einen Kaffee“) und mit Größen
  * („große Pommes“, „ein kleines Bier“).
  */
-import type { AmountUnit, Dish, Food, Nutrients } from '../types'
+import type { AmountUnit, Dish, Food, MealType, Nutrients } from '../types'
 import type { NewFood } from '../hooks/data'
 import { nameScore, norm, scoredQuickFoods, type QuickFoodHit } from './basicFoods'
 import { amountToGrams, dishPerServing, nutrientsForFoodAmount, roundNutrients } from './nutrition'
@@ -34,12 +34,64 @@ export interface MealPart {
   nutrients: Nutrients
   /** Andere passende Lebensmittel mit derselben Menge – zum Tauschen, wenn die App danebenlag */
   alternatives: MealPart[]
+  /** Mahlzeit aus dem Text („Frühstück: …“, „mittags …“); sonst gilt die gewählte */
+  meal?: MealType
 }
 
 export interface MealParse {
   parts: MealPart[]
   /** Teile, zu denen nichts Passendes gefunden wurde */
   unknown: string[]
+}
+
+// --- Mahlzeiten im Text ---------------------------------------------------------------------------------------
+
+/**
+ * „Frühstück: …“, „Mittag: …“, „zum Abendessen …“, „mittags …“ – alles danach gehört zu dieser Mahlzeit, bis die
+ * nächste genannt wird. Mit Doppelpunkt zählen die Namen der Mahlzeiten, ohne nur eindeutige Wendungen.
+ */
+const MEAL_MARK = new RegExp(
+  String.raw`(^|[\s,;.])(?:(frühstück|fruehstueck|mittagessen|mittag|abendessen|abendbrot|abend|snacks?|zwischenmahlzeit)\s*:|(zum\s+(?:frühstück|fruehstueck|mittagessen|mittag|abendessen|abendbrot|kaffee)|als\s+snack|morgens|mittags|abends|nachmittags|zwischendurch)(?=[\s,;:.]|$))`,
+  'gi',
+)
+
+function mealOf(word: string): MealType {
+  const w = norm(word)
+  if (w.includes('nachmittag') || w.includes('kaffee')) return 'snack'
+  if (w.includes('fruhstuck') || w.includes('morgens')) return 'breakfast'
+  if (w.includes('mittag')) return 'lunch'
+  if (w.includes('abend')) return 'dinner'
+  return 'snack'
+}
+
+/**
+ * Text in Abschnitte je Mahlzeit. Meist steht die Mahlzeit vorn („Frühstück: Müsli, mittags Döner“); endet der Text mit
+ * einer Mahlzeit, gilt jede für das, was davor steht („Müsli zum Frühstück, Döner zum Mittagessen“).
+ */
+export function splitByMeals(text: string): { meal?: MealType; text: string }[] {
+  const marks = [...text.matchAll(MEAL_MARK)].map((m) => ({
+    start: (m.index ?? 0) + m[1].length,
+    end: (m.index ?? 0) + m[0].length,
+    meal: mealOf(m[2] ?? m[3]),
+  }))
+  const out: { meal?: MealType; text: string }[] = []
+  const trailing = marks.length > 0 && !/[a-zäöüß\d]/i.test(text.slice(marks[marks.length - 1].end))
+  let last = 0
+  if (trailing) {
+    for (const m of marks) {
+      out.push({ meal: m.meal, text: text.slice(last, m.start) })
+      last = m.end
+    }
+  } else {
+    let meal: MealType | undefined
+    for (const m of marks) {
+      out.push({ meal, text: text.slice(last, m.start) })
+      meal = m.meal
+      last = m.end
+    }
+    out.push({ meal, text: text.slice(last) })
+  }
+  return out.filter((c) => /[a-zäöüß\d]/i.test(c.text))
 }
 
 // --- Mengen ---------------------------------------------------------------------------------------------------
@@ -668,20 +720,34 @@ export function parseMealText(
   remembered: Readonly<Record<string, string>> = {},
 ): MealParse | null {
   const lib: Library = { foods, dishes, remembered }
-  let text = input.trim()
-  if (text.length < 3) return null
-  // „Frühstück: 2 Brötchen …“ – die Bezeichnung davor zählt nicht
-  if (text.includes(':')) text = text.slice(text.lastIndexOf(':') + 1)
-  // Dezimalkomma schützen („0,5 l“), damit nur Kommas zwischen Lebensmitteln trennen
-  const KEEP = '\u0001'
-  const segments = text
-    .replace(/(\d),(\d)/g, `$1${KEEP}$2`)
-    .split(HARD)
-    .map((s) => s.split(KEEP).join(',').trim())
-    .filter(Boolean)
-    .slice(0, 15)
+  const input2 = input.trim()
+  if (input2.length < 3) return null
   const out: Out = { parts: [], unknown: [], explicit: false }
-  for (const s of segments) parseSegment(s, lib, out)
+  let segmentCount = 0
+  // Je Mahlzeit („Frühstück: … Mittag: …“) für sich zerlegen
+  for (const chunk of splitByMeals(input2)) {
+    let text = chunk.text
+    // Andere Bezeichnungen davor („Montag: 2 Brötchen“) zählen nicht
+    if (text.includes(':')) text = text.slice(text.lastIndexOf(':') + 1)
+    // Dezimalkomma schützen („0,5 l“), damit nur Kommas zwischen Lebensmitteln trennen
+    const KEEP = '\u0001'
+    const segments = text
+      .replace(/(\d),(\d)/g, `$1${KEEP}$2`)
+      .split(HARD)
+      .map((s) => s.split(KEEP).join(',').trim())
+      .filter(Boolean)
+      .slice(0, Math.max(0, 20 - segmentCount))
+    segmentCount += segments.length
+    const before = out.parts.length
+    for (const s of segments) parseSegment(s, lib, out)
+    if (chunk.meal) {
+      out.explicit = true
+      for (const p of out.parts.slice(before)) {
+        p.meal = chunk.meal
+        for (const a of p.alternatives) a.meal = chunk.meal
+      }
+    }
+  }
   if (!out.parts.length) return null
   if (out.parts.length + out.unknown.length < 2 && !out.explicit) return null
   return { parts: out.parts, unknown: out.unknown }
