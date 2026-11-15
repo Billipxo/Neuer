@@ -23,7 +23,8 @@ import {
   useTouchFood,
   type NewFood,
 } from '../hooks/data'
-import { findStoredBasic, suggestFoods } from '../lib/basicFoods'
+import { browseFoods, findStoredBasic, suggestFoods } from '../lib/basicFoods'
+import { FOOD_GROUPS, type FoodGroupId } from '../data/everydayFoods'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Segmented, Chip } from '../components/ui/Segmented'
 import { Button } from '../components/ui/Button'
@@ -36,9 +37,10 @@ import { BarcodeScannerSheet } from '../components/add/BarcodeScannerSheet'
 import { DishAmountSheet } from '../components/add/DishAmountSheet'
 import { QuickEntrySheet } from '../components/add/QuickEntrySheet'
 
-type Tab = 'recent' | 'favorites' | 'custom' | 'dishes'
+type Tab = 'recent' | 'browse' | 'favorites' | 'custom' | 'dishes'
 const TABS: { value: Tab; label: string }[] = [
   { value: 'recent', label: 'Zuletzt' },
+  { value: 'browse', label: 'Stöbern' },
   { value: 'favorites', label: 'Favoriten' },
   { value: 'custom', label: 'Eigene' },
   { value: 'dishes', label: 'Gerichte' },
@@ -64,6 +66,8 @@ export function AddFoodPage() {
     return wanted && MEAL_TYPES.includes(wanted) ? wanted : mealForHour(new Date().getHours())
   })
   const [tab, setTab] = useState<Tab>('recent')
+  const [browseGroup, setBrowseGroup] = useState<FoodGroupId>('baeckerei')
+  const browseHits = useMemo(() => (tab === 'browse' ? browseFoods(browseGroup) : []), [tab, browseGroup])
   const [query, setQuery] = useState('')
   const debounced = useDebounced(query.trim(), 450)
 
@@ -276,7 +280,29 @@ export function AddFoodPage() {
             ))}
           </div>
 
-          {tab === 'dishes' ? (
+          {tab === 'browse' ? (
+            <>
+              <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Kategorien">
+                {FOOD_GROUPS.map((g) => (
+                  <Chip key={g.id} active={browseGroup === g.id} onClick={() => setBrowseGroup(g.id)}>
+                    <span aria-hidden>{g.emoji}</span> {g.label}
+                  </Chip>
+                ))}
+              </div>
+              <ul className="mt-2 space-y-1" aria-label={FOOD_GROUPS.find((g) => g.id === browseGroup)?.label}>
+                {browseHits.map((h) => (
+                  <FoodRow
+                    key={h.key}
+                    title={h.name}
+                    subtitle={h.subtitle}
+                    kcal={h.kcal}
+                    kcalLabel={h.kcalLabel}
+                    onClick={() => setSelected(findStoredBasic(foods, h.name) ?? h.food)}
+                  />
+                ))}
+              </ul>
+            </>
+          ) : tab === 'dishes' ? (
             <>
               <ul className="mt-3 space-y-1">
                 {dishes.map((d) => (
