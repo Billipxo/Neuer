@@ -1,9 +1,36 @@
 import { describe, expect, it } from 'vitest'
-import type { Food } from '../types'
+import type { Dish, Food } from '../types'
 import { parseMealText, pluralMeasure, withAmount } from './mealText'
 
 /** Kurzfassung: „Name | Menge | kcal“ je erkanntem Eintrag */
-const summary = (text: string, own?: Food[]) => parseMealText(text, own)?.parts.map((p) => `${p.name} | ${p.amountLabel} | ${p.kcal}`)
+const summary = (text: string, own?: Food[], dishes?: Dish[]) =>
+  parseMealText(text, own, dishes)?.parts.map((p) => `${p.name} | ${p.amountLabel} | ${p.kcal}`)
+
+/** Eigenes Gericht: 4 Portionen, zusammen 2.285 kcal und 1.550 g */
+const lasagne: Dish = {
+  id: 'd1',
+  name: 'Omas Lasagne',
+  servings: 4,
+  is_favorite: false,
+  last_used_at: null,
+  ingredients: [
+    { food_id: null, name: 'Lasagneplatten', grams: 250, kcal_100: 350, protein_100: 12.5, carbs_100: 70, fat_100: 1.5 },
+    { food_id: null, name: 'Rinderhack', grams: 500, kcal_100: 250, protein_100: 18, carbs_100: 0, fat_100: 20 },
+    { food_id: null, name: 'Tomaten', grams: 800, kcal_100: 20, protein_100: 1, carbs_100: 3, fat_100: 0.2 },
+  ],
+}
+/** Gericht mit einer Zutat „als Portion“ – Gramm sind dann unbekannt */
+const muesli: Dish = {
+  id: 'd2',
+  name: 'Mein Müsli',
+  servings: 1,
+  is_favorite: true,
+  last_used_at: null,
+  ingredients: [
+    { food_id: null, name: 'Haferflocken', grams: 50, kcal_100: 372, protein_100: 13.5, carbs_100: 58.7, fat_100: 7 },
+    { food_id: null, name: 'Schnell-Eintrag', grams: 100, portion: true, kcal_100: 120, protein_100: 3, carbs_100: 10, fat_100: 5 },
+  ],
+}
 
 describe('Mehreres auf einmal eintragen', () => {
   it('trennt bei Komma und „und“ und versteht Zahlwörter', () => {
@@ -103,6 +130,61 @@ describe('Mehreres auf einmal eintragen', () => {
     expect(withAmount(part, 1, 'serving')).toMatchObject({ grams: 350, kcal: 753, amountLabel: '1 Portion · 350 g' })
     expect(withAmount(part, 200, 'g')).toMatchObject({ grams: 200, kcal: 430, amountLabel: '200 g' })
     expect(withAmount(part, 1, 'tbsp')).toBeNull()
+  })
+
+  it('versteht Größen', () => {
+    expect(summary('große Pommes')).toEqual(['Pommes frites | 1 Portion, groß · 225 g | 653'])
+    expect(summary('kleine Pommes und eine große Cola')).toEqual([
+      'Pommes frites | 1 Portion, klein · 105 g | 305',
+      'Cola | 1 Dose, groß · 495 ml | 208',
+    ])
+    expect(summary('ein kleines Bier')).toEqual(['Bier | 1 Flasche, klein · 350 ml | 147'])
+    expect(summary('XXL-Döner')).toEqual(['Döner Kebab | 1 Döner, XXL · 700 g | 1505'])
+    expect(summary('2 große Brötchen')).toEqual(['Brötchen | 2 Stück, groß · 180 g | 486'])
+    expect(summary('ein großes Glas Cola')).toEqual(['Cola | 1 Glas, groß · 300 ml | 126'])
+    expect(summary('doppelter Espresso')).toEqual(['Espresso | 1 Tasse, doppelt · 60 ml | 1'])
+    expect(summary('mittlere Pommes')).toEqual(['Pommes frites | 1 Portion · 150 g | 435'])
+    // Gramm bleiben Gramm, und ein Name mit Größe bleibt ein Name
+    expect(summary('200 g große Kartoffeln')).toEqual(['Kartoffeln | 200 g | 144'])
+    expect(parseMealText('Großer Burger')).toBeNull()
+  })
+
+  it('erkennt eigene Gerichte und trägt sie in Portionen ein', () => {
+    expect(summary('Omas Lasagne und ein Glas Rotwein', [], [lasagne])).toEqual([
+      'Omas Lasagne | 1 Portion · 388 g | 571',
+      'Rotwein | 1 Glas · 200 ml | 140',
+    ])
+    expect(summary('große Portion Omas Lasagne', [], [lasagne])).toEqual(['Omas Lasagne | 1,5 Portionen · 581 g | 857'])
+    expect(summary('Mein Müsli, Kaffee', [], [muesli])).toEqual(['Mein Müsli | 1 Portion | 306', 'Kaffee (schwarz) | 1 Tasse · 200 ml | 4'])
+    const [part] = parseMealText('2 Portionen Omas Lasagne', [], [lasagne])!.parts
+    expect(part).toMatchObject({ dish: lasagne, stored: true, amount: 2, unit: 'serving', kcal: 1143, amountLabel: '2 Portionen · 775 g' })
+    expect(withAmount(part, 1, 'serving')).toMatchObject({ amount: 1, kcal: 571, amountLabel: '1 Portion · 388 g' })
+    expect(withAmount(part, 100, 'g')).toBeNull()
+  })
+
+  it('bietet andere Treffer mit derselben Menge an', () => {
+    const [kaese] = parseMealText('2 Scheiben Käse, Kaffee')!.parts
+    expect(kaese.query).toBe('Käse')
+    expect(kaese.alternatives.length).toBeGreaterThanOrEqual(3)
+    expect(kaese.alternatives.map((a) => a.name)).not.toContain(kaese.name)
+    // gleiche Menge: zwei Scheiben
+    expect(kaese.alternatives.filter((a) => a.amountLabel.startsWith('2 Scheiben')).length).toBeGreaterThanOrEqual(2)
+    const [wein] = parseMealText('Wein, Brot')!.parts
+    expect(wein.alternatives.slice(0, 2).map((a) => a.name)).toEqual(['Weißwein', 'Roséwein'])
+    // Nährwerte je Eintrag
+    expect(kaese.nutrients.protein).toBeGreaterThan(10)
+    expect(Object.keys(kaese.nutrients).sort()).toEqual(['carbs', 'fat', 'kcal', 'protein'])
+  })
+
+  it('nimmt eine gemerkte Wahl zuerst – aus Richtwerten, eigenen Lebensmitteln und Gerichten', () => {
+    expect(summary('2 Scheiben Käse, Kaffee', [], [])?.[0]).toMatch(/^Emmentaler/)
+    const remembered = parseMealText('2 Scheiben Käse, Kaffee', [], [], { kase: 'Gouda' })!.parts
+    expect(remembered[0]).toMatchObject({ name: 'Gouda', amountLabel: '2 Scheiben · 40 g', kcal: 142 })
+    expect(remembered[0].alternatives.map((a) => a.name)).toContain('Emmentaler')
+    const lasagneFor = parseMealText('Nudeln, Kaffee', [], [lasagne], { nudeln: 'Omas Lasagne' })!.parts
+    expect(lasagneFor[0]).toMatchObject({ name: 'Omas Lasagne', dish: lasagne, amountLabel: '1 Portion · 388 g' })
+    // Unbekannt gewordene Wahl (Lebensmittel gelöscht) stört nicht
+    expect(parseMealText('Käse, Kaffee', [], [], { kase: 'Gibt es nicht' })!.parts[0].name).toBe('Emmentaler')
   })
 
   it('bildet die Mehrzahl der Mengen', () => {

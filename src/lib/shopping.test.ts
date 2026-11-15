@@ -113,6 +113,24 @@ describe('Eigene Artikel – Eingabe', () => {
     expect(parseItemText('Kaffee')).toEqual({ name: 'Kaffee', amount: null, unit: '' })
     expect(parseItemText('  ')).toBeNull()
   })
+
+  it('nimmt mehrere Artikel auf einmal – Dezimalkommas trennen nicht', async () => {
+    const { parseItemList } = await import('./shopping')
+    expect(parseItemList('Brot, 6 Eier; 1,5 l Milch')).toEqual([
+      { name: 'Brot', amount: null, unit: '' },
+      { name: 'Eier', amount: 6, unit: 'Stück' },
+      { name: 'Milch', amount: 1.5, unit: 'l' },
+    ])
+    expect(parseItemList('2 l Milch')).toEqual([{ name: 'Milch', amount: 2, unit: 'l' }])
+    expect(parseItemList(' , ;')).toEqual([])
+  })
+
+  it('macht aus einer eingefügten Liste eine Zeile – ohne Aufzählungszeichen', async () => {
+    const { listToLine, parseItemList } = await import('./shopping')
+    const pasted = '- Milch\n• 6 Eier\n[ ] Brot\n☐ Butter\n1. 500 g Mehl\n2) Zucker\n1.5 l Saft\n\n'
+    expect(listToLine(pasted)).toBe('Milch, 6 Eier, Brot, Butter, 500 g Mehl, Zucker, 1.5 l Saft')
+    expect(parseItemList(listToLine(pasted)).map((i) => i.name)).toEqual(['Milch', 'Eier', 'Brot', 'Butter', 'Mehl', 'Zucker', 'Saft'])
+  })
 })
 
 describe('Einkaufsliste teilen', () => {

@@ -151,6 +151,13 @@ function isDry(info: IngredientInfo): boolean {
   return ['Nudeln', 'Asia-Nudeln', 'Reis'].includes(info.base) || DRY.has(info.name)
 }
 
+/** Getränke der Nährwerttabelle mit üblicher Menge – sonst hieße „ein doppelter Espresso“ 200 ml */
+const TABLE_SERVINGS: Readonly<Record<string, { measure: string; ml: number }>> = {
+  Espresso: { measure: 'Tasse', ml: 30 },
+  'Milch 1,5 %': { measure: 'Glas', ml: 200 },
+  Haferdrink: { measure: 'Glas', ml: 200 },
+}
+
 /** Flüssiges aus der Nährwerttabelle – Mengen in ml */
 const TABLE_LIQUIDS = new Set(['Milch 1,5 %', 'Haferdrink', 'Gemüsebrühe', 'Rinderbrühe', 'Espresso', 'Schwarzer Tee', 'Zitronensaft', 'Kokosmilch (light)', 'Sahne', 'Kochsahne 15 %', 'Sojasauce', 'Essig', 'Balsamico'])
 
@@ -237,6 +244,20 @@ function tableHit(info: IngredientInfo): QuickFoodHit {
   const food = basicFoodFromIngredient(info)
   const piece = pieceUnitOf(info)
   const per = (g: number) => Math.round((info.kcal * g) / 100)
+  const serving = TABLE_SERVINGS[info.name]
+  if (serving) {
+    return {
+      key: `t:${info.name}`,
+      name: info.name,
+      subtitle: `1 ${serving.measure} = ${fmtInt(serving.ml)} ml`,
+      kcal: per(serving.ml),
+      kcalLabel: 'kcal',
+      food: { ...food, serving_g: serving.ml },
+      typicalGrams: serving.ml,
+      typicalLabel: `1 ${serving.measure}`,
+      liquid: true,
+    }
+  }
   if (piece) {
     return { key: `t:${info.name}`, name: info.name, subtitle: basicFoodHint(info), kcal: per(piece.grams), kcalLabel: 'kcal', food, typicalGrams: piece.grams, typicalLabel: `1 ${piece.unit}`, liquid: false }
   }

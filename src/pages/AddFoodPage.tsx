@@ -24,7 +24,8 @@ import {
   type NewFood,
 } from '../hooks/data'
 import { browseFoods, findStoredBasic, suggestFoods } from '../lib/basicFoods'
-import { parseMealText, type MealPart } from '../lib/mealText'
+import { parseMealText, rememberKey, type MealPart } from '../lib/mealText'
+import { loadMealMemory, rememberChoices, saveMealMemory } from '../lib/mealMemory'
 import { FOOD_GROUPS, type FoodGroupId } from '../data/everydayFoods'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Segmented, Chip } from '../components/ui/Segmented'
@@ -37,7 +38,8 @@ import { CustomFoodSheet } from '../components/add/CustomFoodSheet'
 import { BarcodeScannerSheet } from '../components/add/BarcodeScannerSheet'
 import { DishAmountSheet } from '../components/add/DishAmountSheet'
 import { QuickEntrySheet } from '../components/add/QuickEntrySheet'
-import { MealTextCard, effectiveParts, type MealTextEdits } from '../components/add/MealTextCard'
+import { MealTextCard, NO_EDITS, effectiveParts, type MealTextEdits } from '../components/add/MealTextCard'
+import { MealPartSwapSheet } from '../components/add/MealPartSwapSheet'
 
 /** Merkt sich, dass der Tipp „Mehreres auf einmal“ verstanden wurde */
 const MULTI_HINT_KEY = 'teller-tipp-mehreres'
@@ -99,10 +101,14 @@ export function AddFoodPage() {
   /** In dieser Sitzung hinzugefügte Einträge – man kann mehrere nacheinander erfassen */
   const [added, setAdded] = useState<{ name: string; kcal: number }[]>([])
   // Erkannte Einträge aus dem Suchtext, mit Änderungen (entfernt, Menge geändert) – gelten nur für diesen Text
-  const mealParse = useMemo(() => parseMealText(query, foods), [query, foods])
-  const [editsState, setEdits] = useState<MealTextEdits>({ text: '', removed: [], amounts: {} })
-  const mealEdits: MealTextEdits = editsState.text === query ? editsState : { text: query, removed: [], amounts: {} }
+  // Gemerkte Wahl („Käse“ → Gouda) aus früheren Einträgen auf diesem Gerät
+  const [memory, setMemory] = useState(loadMealMemory)
+  const mealParse = useMemo(() => parseMealText(query, foods, dishes, memory), [query, foods, dishes, memory])
+  const [editsState, setEdits] = useState<MealTextEdits>(NO_EDITS(''))
+  const mealEdits: MealTextEdits = editsState.text === query ? editsState : NO_EDITS(query)
   const [editIndex, setEditIndex] = useState<number | null>(null)
+  const [swapIndex, setSwapIndex] = useState<number | null>(null)
+  const swapOriginal = swapIndex !== null ? (mealParse?.parts[swapIndex] ?? null) : null
   const editingPart =
     editIndex !== null && mealParse ? (effectiveParts(mealParse, mealEdits).find((r) => r.index === editIndex)?.part ?? null) : null
   const [bulkBusy, setBulkBusy] = useState(false)
@@ -196,7 +202,28 @@ export function AddFoodPage() {
       const saved = new Map<string, Food>()
       const rows: Parameters<typeof addLog.mutateAsync>[0] = []
       const used: Food[] = []
+      const usedDishes: Dish[] = []
       for (const p of parts) {
+        // Eigenes Gericht: in Portionen, wie beim Eintragen über „Gerichte“
+        if (p.dish) {
+          const dish = p.dish
+          const servings = p.unit === 'serving' ? p.amount : p.grams / 100
+          rows.push({
+            date,
+            meal,
+            name: dish.name,
+            amount: servings,
+            unit: 'serving',
+            grams: null,
+            ...roundNutrients(scaleNutrients(dishPerServing(dish), servings)),
+            food_id: null,
+            dish_id: dish.id,
+            recipe_id: null,
+            veggies: detectVeggies(...dish.ingredients.map((i) => i.name)),
+          })
+          if (!usedDishes.some((d) => d.id === dish.id)) usedDishes.push(dish)
+          continue
+        }
         const key = p.name.trim().toLowerCase()
         const stored = p.stored ? (p.food as Food) : (saved.get(key) ?? findStoredBasic(foods, p.name) ?? (await persist(p.food)))
         saved.set(key, stored)
@@ -226,8 +253,19 @@ export function AddFoodPage() {
         if (!used.some((f) => f.id === stored.id)) used.push(stored)
       }
       if (!rows.length) return
+      // Getauschte Treffer merken, damit es beim nächsten Mal gleich passt
+      const learned: Record<string, string> = {}
+      for (const r of mealParse ? effectiveParts(mealParse, mealEdits) : []) {
+        if (mealEdits.swaps[r.index] !== undefined) learned[rememberKey(r.original.query)] = r.part.name
+      }
       await addLog.mutateAsync(rows)
+      if (Object.keys(learned).length) {
+        const next = rememberChoices(memory, learned)
+        setMemory(next)
+        saveMealMemory(next)
+      }
       for (const f of used) touchFood.mutate(f)
+      for (const d of usedDishes) saveDish.mutate({ ...d, last_used_at: new Date().toISOString() })
       toast(rows.length === 1 ? `Zu ${MEAL_LABELS[meal]} hinzugefügt` : `${rows.length} Einträge zu ${MEAL_LABELS[meal]} hinzugefügt`, '✅')
       setAdded((a) => [...a, ...rows.map((r) => ({ name: r.name, kcal: r.kcal }))])
       setQuery('')
@@ -243,6 +281,24 @@ export function AddFoodPage() {
     } finally {
       setBulkBusy(false)
     }
+  }
+
+  /** Anderen Treffer wählen (-1 = wieder den ursprünglichen); eine geänderte Menge gilt dann nicht mehr */
+  function swapPart(choice: number) {
+    if (swapIndex === null) return
+    const swaps = { ...mealEdits.swaps }
+    const amounts = { ...mealEdits.amounts }
+    if (choice < 0) delete swaps[swapIndex]
+    else swaps[swapIndex] = choice
+    delete amounts[swapIndex]
+    setEdits({ ...mealEdits, swaps, amounts })
+    setSwapIndex(null)
+  }
+
+  /** Menge eines erkannten Eintrags ändern (gilt, solange der Text gleich bleibt) */
+  function changePartAmount(amount: number, unit: AmountUnit) {
+    if (editIndex !== null) setEdits({ ...mealEdits, amounts: { ...mealEdits.amounts, [editIndex]: { amount, unit } } })
+    setEditIndex(null)
   }
 
   async function addQuick(input: QuickEntryInput) {
@@ -470,6 +526,7 @@ export function AddFoodPage() {
               busy={bulkBusy}
               onRemove={(i) => setEdits({ ...mealEdits, removed: [...mealEdits.removed, i] })}
               onEdit={setEditIndex}
+              onSwap={setSwapIndex}
               onAddAll={addParts}
             />
           )}
@@ -563,14 +620,24 @@ export function AddFoodPage() {
         }
       />
       <FoodAmountSheet
-        food={editingPart?.food ?? null}
+        food={editingPart && !editingPart.dish ? editingPart.food : null}
         initialAmount={editingPart?.amount}
         initialUnit={editingPart?.unit}
         onClose={() => setEditIndex(null)}
-        onAdd={(amount, unit) => {
-          if (editIndex !== null) setEdits({ ...mealEdits, amounts: { ...mealEdits.amounts, [editIndex]: { amount, unit } } })
-          setEditIndex(null)
-        }}
+        onAdd={(amount, unit) => changePartAmount(amount, unit)}
+        confirmLabel="Menge übernehmen"
+      />
+      <MealPartSwapSheet
+        original={swapOriginal}
+        selected={swapIndex !== null ? (mealEdits.swaps[swapIndex] ?? -1) : -1}
+        onSelect={swapPart}
+        onClose={() => setSwapIndex(null)}
+      />
+      <DishAmountSheet
+        dish={editingPart?.dish ?? null}
+        initialServings={editingPart?.amount}
+        onClose={() => setEditIndex(null)}
+        onAdd={(servings) => changePartAmount(servings, 'serving')}
         confirmLabel="Menge übernehmen"
       />
       <DishAmountSheet

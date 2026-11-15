@@ -78,6 +78,27 @@ test('Woche vorschlagen und Einkaufsliste erzeugen', async ({ page }) => {
   await page.getByLabel('Artikel hinzufügen').fill('2 l Milch')
   await page.keyboard.press('Enter')
   await expect(page.getByText('2 l')).toBeVisible()
+  // Mehrere auf einmal – Dezimalkomma bleibt eine Zahl
+  await page.getByLabel('Artikel hinzufügen').fill('Spülmittel, 6 Kerzen; 1,5 l Apfelschorle')
+  await page.keyboard.press('Enter')
+  await expect(page.getByText('3 Artikel hinzugefügt')).toBeVisible()
+  await expect(page.getByLabel('Artikel hinzufügen')).toHaveValue('')
+  const other = page.getByRole('region', { name: 'Sonstiges' })
+  await expect(other.getByText('Spülmittel')).toBeVisible()
+  await expect(other.getByText('Kerzen')).toBeVisible()
+  await expect(page.getByText('Apfelschorle')).toBeVisible()
+  await expect(page.getByText('1,5 l')).toBeVisible()
+  // Eine kopierte Liste (eine Zeile je Artikel) wird beim Einfügen zu einer Zeile
+  const input = page.getByLabel('Artikel hinzufügen')
+  await input.evaluate((el, text) => {
+    const data = new DataTransfer()
+    data.setData('text/plain', text)
+    el.dispatchEvent(new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true }))
+  }, '- Alufolie\n- Servietten\n')
+  await expect(input).toHaveValue('Alufolie, Servietten')
+  await page.keyboard.press('Enter')
+  await expect(page.getByText('2 Artikel hinzugefügt')).toBeVisible()
+  await expect(other.getByText('Servietten')).toBeVisible()
 })
 
 test('Mahlzeit vom Vortag übernehmen', async ({ page }) => {
@@ -435,6 +456,24 @@ test('Schnell-Eintrag, Löschen mit Rückgängig und Mahlzeit als Gericht speich
   await page.getByRole('link', { name: 'Bearbeiten' }).click()
   await expect(page.getByLabel('Menge Döner beim Imbiss')).toHaveValue('1')
   await expect(page.getByLabel('Menge Apfel')).toHaveValue('150')
+
+  // Auch die Texteingabe kennt eigene Gerichte – in Portionen, zusammen mit Größen wie „große Cola“
+  await page.goto('/hinzufuegen?meal=snack')
+  await page.getByLabel('Lebensmittel suchen').fill('Döner-Mittag und eine große Cola')
+  const card = page.getByRole('region', { name: 'Erkannt für Snacks' })
+  const items = card.getByRole('list', { name: 'Erkannte Einträge' }).getByRole('listitem')
+  await expect(items).toHaveCount(2)
+  await expect(items.nth(0)).toContainText('Döner-Mittag')
+  await expect(items.nth(0)).toContainText('1 Portion')
+  await expect(items.nth(1)).toContainText('1 Dose, groß · 495 ml')
+  await card.getByRole('button', { name: /^Döner-Mittag, 1 Portion/ }).click()
+  const portions = page.getByRole('dialog', { name: 'Döner-Mittag' })
+  await portions.getByLabel('Portionen').fill('2')
+  await portions.getByRole('button', { name: 'Menge übernehmen' }).click()
+  await expect(items.nth(0)).toContainText('2 Portionen')
+  // 2 × 731 + 208 kcal
+  await card.getByRole('button', { name: 'Alle 2 hinzufügen · 1.670 kcal' }).click()
+  await expect(page.getByText(/^2 Einträge · 1\.670 kcal$/)).toBeVisible()
 })
 
 test('Einkaufsliste: Artikel löschen und Liste leeren lassen sich rückgängig machen', async ({ page }) => {
@@ -737,6 +776,30 @@ test('Mehreres auf einmal: Text erkennen, anpassen und mit einem Tipp eintragen'
   await page.getByRole('button', { name: 'Fertig' }).click()
   await closeBadges(page)
   await expect(page.getByRole('img', { name: /349 von 2\.000 kcal/ })).toBeVisible()
+})
+
+test('Mehreres auf einmal: anderen Treffer wählen – beim nächsten Mal passt es gleich', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/hinzufuegen?meal=dinner')
+  const search = page.getByLabel('Lebensmittel suchen')
+  await search.fill('2 Scheiben Käse und ein Kaffee')
+  const card = page.getByRole('region', { name: 'Erkannt für Abendessen' })
+  const items = card.getByRole('list', { name: 'Erkannte Einträge' }).getByRole('listitem')
+  await expect(items.nth(0)).toContainText('Emmentaler')
+  await expect(card).toContainText(/Zusammen \d+ g Eiweiß · \d+ g KH · \d+ g Fett/)
+
+  await card.getByRole('button', { name: 'Andere Treffer für „Käse“' }).click()
+  const choices = page.getByRole('dialog', { name: 'Andere Treffer für „Käse“' })
+  await choices.getByRole('button', { name: /^Edamer/ }).click()
+  await expect(choices).toBeHidden()
+  await expect(items.nth(0)).toContainText('Edamer')
+  await expect(items.nth(0)).toContainText('2 Scheiben')
+  await card.getByRole('button', { name: /^Alle 2 hinzufügen/ }).click()
+  await expect(page.getByText(/^2 Einträge · \d+ kcal$/)).toBeVisible()
+
+  // Die App hat sich die Wahl gemerkt
+  await search.fill('Käse, Kaffee')
+  await expect(items.nth(0)).toContainText('Edamer')
 })
 
 test('Stöbern: Werte nach Kategorien finden, ohne zu tippen', async ({ page }) => {
