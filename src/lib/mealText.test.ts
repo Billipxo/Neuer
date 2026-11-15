@@ -1,6 +1,32 @@
 import { describe, expect, it } from 'vitest'
 import type { Dish, Food } from '../types'
+import type { CookbookEntry } from './cookbookIndex'
+import { searchCookbook } from './cookbookIndex'
 import { parseMealText, pluralMeasure, withAmount } from './mealText'
+
+const dal: CookbookEntry = {
+  id: 'dal',
+  title: 'Dal mit roten Linsen und Spinat',
+  nutrition: { kcal: 420, protein: 20, carbs: 55, fat: 12 },
+  veggies: ['Spinat'],
+  own: false,
+}
+const bolognese: CookbookEntry = {
+  id: 'spaghetti-bolognese',
+  title: 'Spaghetti Bolognese',
+  nutrition: { kcal: 545, protein: 38, carbs: 62, fat: 13 },
+  veggies: [],
+  own: false,
+}
+const mine: CookbookEntry = {
+  id: 'v1',
+  title: 'Meine Linsen-Bolognese',
+  nutrition: { kcal: 480, protein: 30, carbs: 60, fat: 10 },
+  veggies: [],
+  own: true,
+}
+const book = [dal, bolognese, mine]
+const withBook = (text: string) => parseMealText(text, [], [], {}, book)?.parts.map((p) => `${p.name} | ${p.amountLabel} | ${p.kcal}`)
 
 /** Kurzfassung: „Name | Menge | kcal“ je erkanntem Eintrag */
 const summary = (text: string, own?: Food[], dishes?: Dish[]) =>
@@ -215,6 +241,38 @@ describe('Mehreres auf einmal eintragen', () => {
     // Ohne Mahlzeit gilt die gewählte; „Frühstücksei“ und „Montag:“ sind keine Mahlzeiten
     expect(parseMealText('Montag: 2 Brötchen, Kaffee')!.parts.map((x) => x.meal)).toEqual([undefined, undefined])
     expect(parseMealText('Frühstücksei und Toast')!.parts.map((x) => x.meal)).toEqual([undefined, undefined])
+  })
+
+  it('kennt Rezepte aus dem Kochbuch und eigene Rezepte – in Portionen', () => {
+    expect(withBook('Dal mit roten Linsen und Spinat, ein Glas Wasser')).toEqual([
+      'Dal mit roten Linsen und Spinat | 1 Portion · aus dem Kochbuch | 420',
+      'Wasser | 1 Glas · 250 ml | 0',
+    ])
+    // Ein „und“ im Namen trennt nicht – auch ohne Komma
+    expect(withBook('Dal mit roten Linsen und Spinat und ein Glas Wasser')).toEqual(withBook('Dal mit roten Linsen und Spinat, ein Glas Wasser'))
+    expect(withBook('2 Portionen Meine Linsen-Bolognese')).toEqual(['Meine Linsen-Bolognese | 2 Portionen · dein Rezept | 960'])
+    // Gleicher Name wie ein Alltags-Gericht: das Alltägliche zuerst, das Rezept als anderer Treffer
+    const [spaghetti] = parseMealText('Spaghetti Bolognese, Cola', [], [], {}, book)!.parts
+    expect(spaghetti).toMatchObject({ name: 'Spaghetti Bolognese', amountLabel: '1 Teller · 400 g' })
+    expect(spaghetti.alternatives.find((a) => a.recipe)).toMatchObject({ recipe: bolognese, amountLabel: '1 Portion · aus dem Kochbuch', kcal: 545 })
+    const [part] = parseMealText('Dal mit roten Linsen und Spinat, Kaffee', [], [], {}, book)!.parts
+    expect(withAmount(part, 1.5, 'serving')).toMatchObject({ kcal: 630, amountLabel: '1,5 Portionen · aus dem Kochbuch' })
+    expect(withAmount(part, 100, 'g')).toBeNull()
+    // Beim Tippen eines Titels mit „mit“ entsteht keine Liste
+    expect(parseMealText('Dal mit roten', [], [], {}, book)).toBeNull()
+  })
+
+  it('hält bekannte Namen mit „und“ zusammen', () => {
+    expect(summary('Hähnchen mit Reis und Gemüse und eine Cola')).toEqual([
+      'Hähnchen mit Reis und Gemüse | 1 Teller · 450 g | 495',
+      'Cola | 1 Dose · 330 ml | 139',
+    ])
+  })
+
+  it('sucht im Kochbuch nach Titeln, eigene Rezepte bei Gleichstand zuerst', () => {
+    expect(searchCookbook(book, 'Linsen').map((r) => r.id)).toEqual(['v1', 'dal'])
+    expect(searchCookbook(book, 'Spaghetti').map((r) => r.id)).toEqual(['spaghetti-bolognese'])
+    expect(searchCookbook(book, 'xy')).toEqual([])
   })
 
   it('bildet die Mehrzahl der Mengen', () => {

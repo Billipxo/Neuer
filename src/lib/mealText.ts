@@ -7,6 +7,7 @@
 import type { AmountUnit, Dish, Food, MealType, Nutrients } from '../types'
 import type { NewFood } from '../hooks/data'
 import { nameScore, norm, scoredQuickFoods, type QuickFoodHit } from './basicFoods'
+import type { CookbookEntry } from './cookbookIndex'
 import { amountToGrams, dishPerServing, nutrientsForFoodAmount, roundNutrients } from './nutrition'
 import { fmtAmount } from './units'
 import { fmt1, fmtInt } from './format'
@@ -22,6 +23,8 @@ export interface MealPart {
   stored: boolean
   /** Eigenes Gericht – wird in Portionen eingetragen (`food` rechnet dann je Portion) */
   dish?: Dish
+  /** Rezept aus dem Kochbuch oder eigenes Rezept – ebenfalls in Portionen */
+  recipe?: CookbookEntry
   amount: number
   unit: AmountUnit
   grams: number
@@ -291,6 +294,8 @@ interface Library {
   dishes: readonly Dish[]
   /** Gemerkte Wahl: Suchwort (normalisiert) → Name, z. B. „kase“ → „Gouda“ */
   remembered: Readonly<Record<string, string>>
+  /** Kochbuch und eigene Rezepte (leer, solange das Kochbuch nicht geladen ist) */
+  recipes: readonly CookbookEntry[]
 }
 
 /** Schlüssel für eine gemerkte Wahl – „Käse“, „käse“ und „Kaese“ sind dasselbe */
@@ -307,8 +312,49 @@ interface Match {
   measure: string | null
   liquid: boolean
   dish?: Dish
+  recipe?: CookbookEntry
   /** Wonach gesucht wurde */
   query: string
+}
+
+/** Rezept als Lebensmittel „je Portion“: 1 Portion zählt als 100 Rechen-Gramm */
+function recipeAsFood(r: CookbookEntry): NewFood {
+  return {
+    name: r.title,
+    brand: null,
+    barcode: null,
+    source: 'custom',
+    kcal_100: r.nutrition.kcal,
+    protein_100: r.nutrition.protein,
+    carbs_100: r.nutrition.carbs,
+    fat_100: r.nutrition.fat,
+    serving_g: 100,
+    piece_g: null,
+    tbsp_g: null,
+    tsp_g: null,
+    image_url: null,
+    is_favorite: false,
+    last_used_at: null,
+    use_count: 0,
+  }
+}
+
+function recipeLabel(r: CookbookEntry, servings: number): string {
+  return `${fmt1(servings)} ${servings > 1 ? 'Portionen' : 'Portion'} · ${r.own ? 'dein Rezept' : 'aus dem Kochbuch'}`
+}
+
+function recipeMatch(r: CookbookEntry, score: number, query: string): Match {
+  return { name: r.title, food: recipeAsFood(r), stored: false, score, measure: 'Portion', liquid: false, recipe: r, query }
+}
+
+/** Rezepte, deren Titel passt – eine Stufe schwächer als Alltägliches, außer bei genau diesem Titel */
+function recipeMatches(text: string, lib: Library): Match[] {
+  const out: Match[] = []
+  for (const r of lib.recipes) {
+    const score = nameScore(text, r.title)
+    if (score >= 0 && score <= 4) out.push(recipeMatch(r, score === 0 ? 0 : score + 1, text))
+  }
+  return out.sort((a, b) => a.score - b.score || Number(!!b.recipe?.own) - Number(!!a.recipe?.own)).slice(0, 3)
 }
 
 /** Gramm je Portion eines eigenen Gerichts – unbekannt, wenn Zutaten nur als Portion angegeben sind */
@@ -387,7 +433,9 @@ function rememberedMatch(text: string, lib: Library): Match | null {
   const dish = lib.dishes.find((d) => norm(d.name) === n)
   if (dish) return dishMatch(dish, 0, text)
   const hit = scoredQuickFoods(name, 5).find((h) => norm(h.hit.name) === n)
-  return hit ? fromHit(hit.hit, 0, text) : null
+  if (hit) return fromHit(hit.hit, 0, text)
+  const recipe = lib.recipes.find((r) => norm(r.title) === n)
+  return recipe ? recipeMatch(recipe, 0, text) : null
 }
 
 /**
@@ -397,8 +445,8 @@ function rememberedMatch(text: string, lib: Library): Match | null {
 function candidates(text: string, unitWord: string | null, lib: Library, limit = 6): Match[] {
   if (norm(text).length < 2) return []
   const quick = scoredQuickFoods(text, 8).map((s) => fromHit(s.hit, s.score, text))
-  // Stabile Sortierung: Bei gleicher Güte bleibt Eigenes vor den Richtwerten
-  const all = [...ownMatches(text, lib).slice(0, 3), ...quick].sort((a, b) => a.score - b.score)
+  // Stabile Sortierung: Bei gleicher Güte bleibt Eigenes vor den Richtwerten, Rezepte kommen danach
+  const all = [...ownMatches(text, lib).slice(0, 3), ...quick, ...recipeMatches(text, lib)].sort((a, b) => a.score - b.score)
   const toFront = (m: Match) => {
     const i = all.indexOf(m)
     if (i > 0) all.splice(i, 1)
@@ -411,11 +459,12 @@ function candidates(text: string, unitWord: string | null, lib: Library, limit =
   }
   const remembered = rememberedMatch(text, lib)
   if (remembered) toFront(remembered)
-  // Doppeltes (gespeichertes Grundnahrungsmittel und Vorlage gleichen Namens) nur einmal
+  // Doppeltes (gespeichertes Grundnahrungsmittel und Vorlage gleichen Namens) nur einmal – ein Rezept gleichen
+  // Namens („Spaghetti Bolognese“) ist aber etwas anderes
   const seen = new Set<string>()
   return all
     .filter((m) => {
-      const key = norm(m.name)
+      const key = `${m.recipe ? 'r:' : ''}${norm(m.name)}`
       if (seen.has(key)) return false
       seen.add(key)
       return true
@@ -469,6 +518,12 @@ function typicalUnit(m: Match): { unit: AmountUnit; grams: number } {
 const WINE = /wein|sekt|prosecco|champagner|cava|cremant/
 
 function amountFor(m: Match, q: Qty): Amount {
+  if (m.recipe) {
+    // Rezepte in Portionen; Gramm kennt das Rezept nicht – dann 1 Portion
+    const massOrVolume = q.unit && (q.unit.kind === 'mass' || q.unit.kind === 'volume')
+    const servings = massOrVolume ? 1 : q.n * (q.size?.factor ?? 1)
+    return { amount: servings, unit: 'serving', grams: servings * 100, typical: true, fixedLabel: recipeLabel(m.recipe, servings) }
+  }
   if (m.dish) {
     const servings = dishServings(m.dish, q)
     return { amount: servings, unit: 'serving', grams: servings * 100, typical: true, fixedLabel: dishLabel(m.dish, servings) }
@@ -571,6 +626,12 @@ function amountLabel(m: Pick<Match, 'measure' | 'liquid'>, a: Amount): string {
 
 /** Menge eines erkannten Eintrags ändern – Gramm, kcal und Anzeige werden neu berechnet */
 export function withAmount(part: MealPart, amount: number, unit: AmountUnit): MealPart | null {
+  if (part.recipe) {
+    if (unit !== 'serving' || !(amount > 0)) return null
+    const n = nutrientsForFoodAmount(part.food as Food, amount, 'serving')
+    if (!n) return null
+    return { ...part, amount, unit, grams: amount * 100, kcal: Math.round(n.kcal), nutrients: roundNutrients(n), amountLabel: recipeLabel(part.recipe, amount) }
+  }
   if (part.dish) {
     if (unit !== 'serving' || !(amount > 0)) return null
     const n = nutrientsForFoodAmount(part.food as Food, amount, 'serving')
@@ -596,8 +657,11 @@ export function withAmount(part: MealPart, amount: number, unit: AmountUnit): Me
 
 /** Trennt Lebensmittel sicher: Komma, Semikolon, Zeilenumbruch, Plus, Schrägstrich oder Gedankenstrich */
 const HARD = /\s*(?:[,;\n+]|\s[/–-]\s)\s*/
-/** Trennt, wenn der Teil als Ganzes kein bekanntes Gericht ist („Hähnchen mit Reis und Gemüse“ bleibt zusammen) */
-const SOFT = /\s+(?:und|&|sowie|dazu|plus|außerdem|ausserdem)\s+/i
+/**
+ * Trennt, wenn der Teil als Ganzes kein bekanntes Gericht ist („Hähnchen mit Reis und Gemüse“ bleibt zusammen).
+ * Die Trennwörter bleiben erhalten, damit sich Namen mit „und“ wieder zusammensetzen lassen.
+ */
+const SOFT_KEEP = /(\s+(?:und|&|sowie|dazu|plus|außerdem|ausserdem)\s+)/i
 const WITH = /\s+mit\s+/i
 /** Wörter vor der Menge, die nichts zählen („noch ein Bier“, „dazu 2 Brötchen“, „zum Frühstück …“) */
 const LEADING =
@@ -627,6 +691,7 @@ function buildPart(m: Match, q: Qty, text: string): MealPart | null {
     food: m.food,
     stored: m.stored,
     dish: m.dish,
+    recipe: m.recipe,
     amount: a.amount,
     unit: a.unit,
     grams: a.grams,
@@ -645,8 +710,9 @@ function addPart(out: Out, m: Match, q: Qty, text: string, lib: Library) {
     out.unknown.push(text)
     return
   }
+  const key = (x: Match) => `${x.recipe ? 'r:' : ''}${norm(x.name)}`
   part.alternatives = candidates(m.query, q.unit?.word ?? null, lib, 7)
-    .filter((c) => norm(c.name) !== norm(m.name))
+    .filter((c) => key(c) !== key(m))
     .map((c) => buildPart(c, q, text))
     .filter((p): p is MealPart => !!p)
     .slice(0, 5)
@@ -656,7 +722,8 @@ function addPart(out: Out, m: Match, q: Qty, text: string, lib: Library) {
 /** Ein Teil ist als Ganzes ein bekannter Name („Halbes Hähnchen“, „Kaffee mit Milch“, „Quark 20 %“) */
 function wholeName(s: string, lib: Library): Match | null {
   const direct = findMatch(s, null, lib)
-  if (direct && direct.score <= 2) return direct
+  // Auch der Anfang eines Rezepttitels („Dal mit roten …“ beim Tippen) ist ein Name, keine Liste
+  if (direct && (direct.score <= 2 || (direct.recipe && direct.score <= 3))) return direct
   const words = s.split(/\s+/)
   if (words.length > 1 && ARTICLES.has(norm(words[0]))) {
     const rest = findMatch(words.slice(1).join(' '), null, lib)
@@ -680,11 +747,27 @@ function parseSegment(segment: string, lib: Library, out: Out, nested = false) {
     addPart(out, m, q, text, lib)
     return
   }
-  // „und“: mehrere Lebensmittel, jedes mit eigener Menge
+  // „und“: mehrere Lebensmittel, jedes mit eigener Menge – außer ein Name enthält selbst ein „und“
+  // („Hähnchen mit Reis und Gemüse und eine Cola“, „Dal mit roten Linsen und Spinat und Wasser“)
   if (!nested) {
-    const pieces = text.split(SOFT)
-    if (pieces.length > 1) {
-      for (const p of pieces) parseSegment(p, lib, out, true)
+    const tokens = text.split(SOFT_KEEP)
+    if (tokens.length > 1) {
+      const pieces = tokens.filter((_, i) => i % 2 === 0)
+      const seps = tokens.filter((_, i) => i % 2 === 1)
+      const joined = (from: number, to: number) => pieces.slice(from, to + 1).reduce((acc, piece, k) => (k === 0 ? piece : acc + seps[from + k - 1] + piece), '')
+      let i = 0
+      while (i < pieces.length) {
+        let end = i
+        for (let j = pieces.length - 1; j > i; j--) {
+          const name = wholeName(clean(joined(i, j)), lib)
+          if (name && name.score <= 1) {
+            end = j
+            break
+          }
+        }
+        parseSegment(joined(i, end), lib, out, true)
+        i = end + 1
+      }
       return
     }
   }
@@ -718,8 +801,9 @@ export function parseMealText(
   foods: readonly Food[] = [],
   dishes: readonly Dish[] = [],
   remembered: Readonly<Record<string, string>> = {},
+  recipes: readonly CookbookEntry[] = [],
 ): MealParse | null {
-  const lib: Library = { foods, dishes, remembered }
+  const lib: Library = { foods, dishes, remembered, recipes }
   const input2 = input.trim()
   if (input2.length < 3) return null
   const out: Out = { parts: [], unknown: [], explicit: false }

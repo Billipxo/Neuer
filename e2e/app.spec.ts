@@ -855,6 +855,31 @@ test('Ganzer Tag auf einmal: Mahlzeiten im Text werden jeweils dort eingetragen'
   await expect(mealCard('Abendessen')).toContainText('Bananen')
 })
 
+test('Kochbuch-Rezepte beim Hinzufügen finden und in Portionen eintragen', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/hinzufuegen?meal=lunch')
+  await page.getByLabel('Lebensmittel suchen').fill('Dal mit roten')
+  const book = page.getByRole('list', { name: 'Rezepte aus dem Kochbuch' })
+  await book.getByRole('button', { name: /^Dal mit roten Linsen und Spinat/ }).click()
+  const sheet = page.getByRole('dialog', { name: 'Dal mit roten Linsen und Spinat' })
+  await expect(sheet).toContainText('Aus dem Kochbuch')
+  await sheet.getByRole('button', { name: '1,5', exact: true }).click()
+  await sheet.getByRole('button', { name: 'Zu Mittagessen hinzufügen' }).click()
+  await expect(page.getByText(/^1 Eintrag · \d+ kcal$/)).toBeVisible()
+
+  // Die Texterkennung kennt Kochbuch-Rezepte auch – ein „und“ im Titel trennt nicht
+  await page.getByLabel('Lebensmittel suchen').fill('Dal mit roten Linsen und Spinat und ein Glas Wasser')
+  const items = page.getByRole('region', { name: 'Erkannt für Mittagessen' }).getByRole('listitem')
+  await expect(items).toHaveCount(2)
+  await expect(items.nth(0)).toContainText('1 Portion · aus dem Kochbuch')
+  await expect(items.nth(1)).toContainText('Wasser')
+  await page.getByRole('button', { name: /^Alle 2 hinzufügen/ }).click()
+  await expect(page.getByText(/^3 Einträge · [\d.]+ kcal$/)).toBeVisible()
+  await page.getByRole('button', { name: 'Fertig' }).click()
+  await closeBadges(page)
+  await expect(page.getByRole('button', { name: /^Dal mit roten Linsen und Spinat 1,5 Portionen/ })).toBeVisible()
+})
+
 test('Stöbern: Werte nach Kategorien finden, ohne zu tippen', async ({ page }) => {
   await startDemo(page)
   await page.goto('/hinzufuegen?meal=breakfast')
