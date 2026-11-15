@@ -38,7 +38,7 @@ import { CustomFoodSheet } from '../components/add/CustomFoodSheet'
 import { BarcodeScannerSheet } from '../components/add/BarcodeScannerSheet'
 import { DishAmountSheet } from '../components/add/DishAmountSheet'
 import { QuickEntrySheet } from '../components/add/QuickEntrySheet'
-import { MealTextCard, NO_EDITS, effectiveParts, type MealTextEdits } from '../components/add/MealTextCard'
+import { MealTextCard, NO_EDITS, effectiveParts, mealList, type MealTextEdits } from '../components/add/MealTextCard'
 import { MealPartSwapSheet } from '../components/add/MealPartSwapSheet'
 
 /** Merkt sich, dass der Tipp „Mehreres auf einmal“ verstanden wurde */
@@ -210,7 +210,7 @@ export function AddFoodPage() {
           const servings = p.unit === 'serving' ? p.amount : p.grams / 100
           rows.push({
             date,
-            meal,
+            meal: p.meal ?? meal,
             name: dish.name,
             amount: servings,
             unit: 'serving',
@@ -239,7 +239,7 @@ export function AddFoodPage() {
         if (!n) continue
         rows.push({
           date,
-          meal,
+          meal: p.meal ?? meal,
           name: stored.brand ? `${stored.name} (${stored.brand})` : stored.name,
           amount,
           unit,
@@ -266,7 +266,8 @@ export function AddFoodPage() {
       }
       for (const f of used) touchFood.mutate(f)
       for (const d of usedDishes) saveDish.mutate({ ...d, last_used_at: new Date().toISOString() })
-      toast(rows.length === 1 ? `Zu ${MEAL_LABELS[meal]} hinzugefügt` : `${rows.length} Einträge zu ${MEAL_LABELS[meal]} hinzugefügt`, '✅')
+      const meals = MEAL_TYPES.filter((m) => rows.some((r) => r.meal === m))
+      toast(rows.length === 1 ? `Zu ${mealList(meals)} hinzugefügt` : `${rows.length} Einträge zu ${mealList(meals)} hinzugefügt`, '✅')
       setAdded((a) => [...a, ...rows.map((r) => ({ name: r.name, kcal: r.kcal }))])
       setQuery('')
       setEditIndex(null)
@@ -522,7 +523,7 @@ export function AddFoodPage() {
             <MealTextCard
               parse={mealParse}
               edits={mealEdits}
-              mealLabel={MEAL_LABELS[meal]}
+              meal={meal}
               busy={bulkBusy}
               onRemove={(i) => setEdits({ ...mealEdits, removed: [...mealEdits.removed, i] })}
               onEdit={setEditIndex}
