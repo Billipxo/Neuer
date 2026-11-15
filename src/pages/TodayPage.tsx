@@ -25,6 +25,7 @@ import { CopyMealSheet } from '../components/today/CopyMealSheet'
 import { SaveMealAsDishSheet } from '../components/today/SaveMealAsDishSheet'
 import { useToast } from '../components/ui/Toast'
 import { WeightSheet } from '../components/today/WeightSheet'
+import { InstallHint } from '../components/today/InstallHint'
 
 function greeting(hour: number) {
   if (hour < 11) return 'Guten Morgen'
@@ -136,6 +137,7 @@ export function TodayPage() {
       </div>
 
       <WaterReminder date={date} ml={waterMl} target={profile.water_target_ml} onOpen={() => setWaterOpen(true)} />
+      <InstallHint />
       <WeekGlance date={date} />
 
       <div className="mt-6 space-y-3">

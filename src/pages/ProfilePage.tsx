@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Info, LogOut, Moon } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../app/auth'
 import { applyTheme, getThemePref, type ThemePref } from '../app/theme'
 import { useProfile, useSaveProfile } from '../hooks/data'
@@ -16,6 +16,7 @@ import { GoalPicker, KcalTargetEditor, MacroEditor, WaterTargetEditor } from '..
 import { defaultDraft, type ProfileDraft } from '../components/profile/types'
 import { DataSection } from '../components/profile/DataSection'
 import { HouseholdSection } from '../components/profile/HouseholdSection'
+import { InstallSection } from '../components/profile/InstallSection'
 import { Switch } from '../components/ui/Switch'
 import { AirfryerIcon } from '../components/recipes/AirfryerIcon'
 import { DietPicker } from '../components/profile/DietPicker'
@@ -23,7 +24,13 @@ import { AvoidPicker } from '../components/profile/AvoidPicker'
 import { AchievementGrid, StreakCard } from '../components/achievements/AchievementGrid'
 
 export function ProfilePage() {
+  const location = useLocation()
   const { data: profile } = useProfile()
+  // „/profil#app“ (Hinweis „So geht’s“) springt zur Installations-Anleitung, sobald die Seite steht
+  const ready = !!profile
+  useEffect(() => {
+    if (ready && location.hash === '#app') document.getElementById('app')?.scrollIntoView({ block: 'start' })
+  }, [location.hash, ready])
   const { signOut, email, store } = useAuth()
   const save = useSaveProfile()
   const toast = useToast()
@@ -103,6 +110,13 @@ export function ProfilePage() {
             { value: 'dark', label: 'Dunkel' },
           ]}
         />
+      </Card>
+
+      <div id="app" className="scroll-mt-4">
+        <SectionTitle>App auf dem Handy</SectionTitle>
+      </div>
+      <Card>
+        <InstallSection />
       </Card>
 
       <SectionTitle>Gemeinsamer Haushalt</SectionTitle>

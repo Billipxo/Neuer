@@ -880,6 +880,31 @@ test('Kochbuch-Rezepte beim Hinzufügen finden und in Portionen eintragen', asyn
   await expect(page.getByRole('button', { name: /^Dal mit roten Linsen und Spinat 1,5 Portionen/ })).toBeVisible()
 })
 
+test.describe('App installieren auf dem iPhone', () => {
+  test.use({
+    userAgent:
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+    viewport: { width: 390, height: 844 },
+    hasTouch: true,
+    isMobile: true,
+  })
+
+  test('Hinweis auf der Tagesseite führt zur Anleitung und lässt sich ausblenden', async ({ page }) => {
+    await startDemo(page)
+    const hint = page.getByRole('note').filter({ hasText: 'Startbildschirm' })
+    await expect(hint).toBeVisible()
+    await hint.getByRole('link', { name: 'So geht’s' }).click()
+    await expect(page.getByRole('list', { name: 'So geht’s auf dem iPhone' })).toBeVisible()
+    await expect(page.getByRole('list', { name: 'So geht’s auf dem iPhone' })).toContainText('Zum Home-Bildschirm')
+    await page.goBack()
+    await hint.getByRole('button', { name: 'Hinweis ausblenden' }).click()
+    await expect(hint).toBeHidden()
+    await page.reload()
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    await expect(page.getByText('Teller als App auf den Startbildschirm?')).toBeHidden()
+  })
+})
+
 test('Stöbern: Werte nach Kategorien finden, ohne zu tippen', async ({ page }) => {
   await startDemo(page)
   await page.goto('/hinzufuegen?meal=breakfast')
