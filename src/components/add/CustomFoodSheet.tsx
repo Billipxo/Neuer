@@ -9,6 +9,7 @@ import { Field } from '../ui/Field'
 import { NumberInput } from '../ui/NumberInput'
 import { Segmented } from '../ui/Segmented'
 import { useToast } from '../ui/Toast'
+import { ValueSuggestions, type SuggestedValues } from './ValueSuggestions'
 
 interface Props {
   open: boolean
@@ -30,6 +31,8 @@ export function CustomFoodSheet({ open, onClose, onSaved, food, initialBarcode, 
   const [pieceG, setPieceG] = useState<number | null>(null)
   const [tbspG, setTbspG] = useState<number | null>(null)
   const [tspG, setTspG] = useState<number | null>(null)
+  /** Aus welchem Vorschlag die Werte stammen */
+  const [filledFrom, setFilledFrom] = useState<string | null>(null)
   const save = useSaveFood()
   const del = useDeleteFood()
   const toast = useToast()
@@ -48,7 +51,18 @@ export function CustomFoodSheet({ open, onClose, onSaved, food, initialBarcode, 
     setPieceG(food?.piece_g ?? null)
     setTbspG(food?.tbsp_g ?? null)
     setTspG(food?.tsp_g ?? null)
+    setFilledFrom(null)
   }, [open, food, initialName])
+
+  function applySuggestion(v: SuggestedValues, from: string) {
+    setBasis('100g')
+    setValues({ kcal: v.kcal_100, protein: v.protein_100, carbs: v.carbs_100, fat: v.fat_100 })
+    setServingG(v.serving_g ?? null)
+    setPieceG(v.piece_g ?? null)
+    setTbspG(v.tbsp_g ?? null)
+    setTspG(v.tsp_g ?? null)
+    setFilledFrom(from)
+  }
 
   const n: Nutrients = {
     kcal: values.kcal ?? 0,
@@ -122,6 +136,12 @@ export function CustomFoodSheet({ open, onClose, onSaved, food, initialBarcode, 
           </p>
         )}
         <Field label="Name" value={name} onChange={(e) => setName(e.target.value)} placeholder="z. B. Omas Apfelkuchen" />
+        {!food && <ValueSuggestions name={name} onPick={applySuggestion} />}
+        {filledFrom && (
+          <p role="status" className="rounded-2xl bg-brand-soft px-3 py-2 text-sm">
+            Werte von „{filledFrom}“ übernommen – pass sie an, wenn du es genauer weißt.
+          </p>
+        )}
         <Field label="Marke (optional)" value={brand} onChange={(e) => setBrand(e.target.value)} />
         <div>
           <p className="mb-1.5 text-sm font-medium">Nährwerte angeben</p>

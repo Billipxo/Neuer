@@ -23,7 +23,7 @@ import {
   useTouchFood,
   type NewFood,
 } from '../hooks/data'
-import { basicFoodHint, findStoredBasic, searchBasicFoods } from '../lib/basicFoods'
+import { findStoredBasic, suggestFoods } from '../lib/basicFoods'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Segmented, Chip } from '../components/ui/Segmented'
 import { Button } from '../components/ui/Button'
@@ -120,8 +120,10 @@ export function AddFoodPage() {
   }, [tab, foods])
 
   const selectedStored = selected?.id ? foods.find((f) => f.id === selected.id) ?? null : null
-  const basicHits = useMemo(
-    () => searchBasicFoods(q).filter((b) => !localFoodHits.some((f) => f.name.trim().toLowerCase() === b.info.name.toLowerCase())),
+  // Grundnahrungsmittel und Alltägliches (Brötchen, Döner, Cappuccino …) – sofort und ohne Internet.
+  // Passt der ganze Begriff nicht („Döner vom Imbiss“), helfen die einzelnen Wörter.
+  const quickHits = useMemo(
+    () => suggestFoods(q, 10).filter((h) => !localFoodHits.some((f) => f.name.trim().toLowerCase() === h.name.toLowerCase())),
     [q, localFoodHits],
   )
 
@@ -238,7 +240,7 @@ export function AddFoodPage() {
               autoComplete="off"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Lebensmittel suchen …"
+              placeholder="Suchen, z. B. Apfel, Döner, Cappuccino"
               className="min-h-12 w-full rounded-2xl bg-surface pl-11 pr-4 text-base ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-brand"
             />
           </div>
@@ -363,17 +365,18 @@ export function AddFoodPage() {
               </ul>
             </>
           )}
-          {basicHits.length > 0 && (
+          {quickHits.length > 0 && (
             <>
-              <h2 className="px-1 pt-4 text-sm font-semibold text-muted">Grundnahrungsmittel</h2>
-              <ul className="mt-1 space-y-1" aria-label="Grundnahrungsmittel">
-                {basicHits.map(({ info, food }) => (
+              <h2 className="px-1 pt-4 text-sm font-semibold text-muted">Lebensmittel & Gerichte</h2>
+              <ul className="mt-1 space-y-1" aria-label="Lebensmittel und Gerichte">
+                {quickHits.map((h) => (
                   <FoodRow
-                    key={info.name}
-                    title={info.name}
-                    subtitle={basicFoodHint(info)}
-                    kcal={info.kcal}
-                    onClick={() => setSelected(findStoredBasic(foods, info.name) ?? food)}
+                    key={h.key}
+                    title={h.name}
+                    subtitle={h.subtitle}
+                    kcal={h.kcal}
+                    kcalLabel={h.kcalLabel}
+                    onClick={() => setSelected(findStoredBasic(foods, h.name) ?? h.food)}
                   />
                 ))}
               </ul>
