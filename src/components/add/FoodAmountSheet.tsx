@@ -26,6 +26,9 @@ interface Props {
   onEdit?: () => void
   busy?: boolean
   confirmLabel?: string
+  /** Vorbelegte Menge (sonst 1 Portion, 1 Stück, 1 EL oder 100 g) */
+  initialAmount?: number
+  initialUnit?: AmountUnit
 }
 
 export function availableUnits(f: Pick<Food, 'serving_g' | 'piece_g' | 'tbsp_g' | 'tsp_g'>): AmountUnit[] {
@@ -37,13 +40,26 @@ export function availableUnits(f: Pick<Food, 'serving_g' | 'piece_g' | 'tbsp_g' 
   return units
 }
 
-export function FoodAmountSheet({ food, onClose, onAdd, onToggleFavorite, onEdit, busy, confirmLabel = 'Hinzufügen' }: Props) {
+export function FoodAmountSheet({
+  food,
+  onClose,
+  onAdd,
+  onToggleFavorite,
+  onEdit,
+  busy,
+  confirmLabel = 'Hinzufügen',
+  initialAmount,
+  initialUnit,
+}: Props) {
   const [unit, setUnit] = useState<AmountUnit>('g')
   const [amount, setAmount] = useState<number | null>(100)
 
   useEffect(() => {
     if (!food) return
-    if (food.serving_g) {
+    if (initialAmount && initialUnit) {
+      setUnit(initialUnit)
+      setAmount(initialAmount)
+    } else if (food.serving_g) {
       setUnit('serving')
       setAmount(1)
     } else if (food.piece_g) {
@@ -56,7 +72,7 @@ export function FoodAmountSheet({ food, onClose, onAdd, onToggleFavorite, onEdit
       setUnit('g')
       setAmount(100)
     }
-  }, [food])
+  }, [food, initialAmount, initialUnit])
 
   const n = useMemo(
     () => (food && amount ? nutrientsForFoodAmount({ ...(food as Food) }, amount, unit) : null),

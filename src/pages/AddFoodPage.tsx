@@ -24,6 +24,7 @@ import {
   type NewFood,
 } from '../hooks/data'
 import { browseFoods, findStoredBasic, suggestFoods } from '../lib/basicFoods'
+import { parseMealText, type MealPart } from '../lib/mealText'
 import { FOOD_GROUPS, type FoodGroupId } from '../data/everydayFoods'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Segmented, Chip } from '../components/ui/Segmented'
@@ -36,6 +37,10 @@ import { CustomFoodSheet } from '../components/add/CustomFoodSheet'
 import { BarcodeScannerSheet } from '../components/add/BarcodeScannerSheet'
 import { DishAmountSheet } from '../components/add/DishAmountSheet'
 import { QuickEntrySheet } from '../components/add/QuickEntrySheet'
+import { MealTextCard, effectiveParts, type MealTextEdits } from '../components/add/MealTextCard'
+
+/** Merkt sich, dass der Tipp „Mehreres auf einmal“ verstanden wurde */
+const MULTI_HINT_KEY = 'teller-tipp-mehreres'
 
 type Tab = 'recent' | 'browse' | 'favorites' | 'custom' | 'dishes'
 const TABS: { value: Tab; label: string }[] = [
@@ -70,6 +75,8 @@ export function AddFoodPage() {
   const browseHits = useMemo(() => (tab === 'browse' ? browseFoods(browseGroup) : []), [tab, browseGroup])
   const [query, setQuery] = useState('')
   const debounced = useDebounced(query.trim(), 450)
+  // Mehreres auf einmal („2 Brötchen, 1 Cappuccino und eine Banane“) – braucht keine Produktsuche im Netz
+  const debouncedIsList = useMemo(() => (parseMealText(debounced)?.parts.length ?? 0) > 1, [debounced])
 
   const { data: foods = [] } = useFoods()
   const { data: dishes = [] } = useDishes()
@@ -91,12 +98,28 @@ export function AddFoodPage() {
   const [scanBusy, setScanBusy] = useState(false)
   /** In dieser Sitzung hinzugefügte Einträge – man kann mehrere nacheinander erfassen */
   const [added, setAdded] = useState<{ name: string; kcal: number }[]>([])
+  // Erkannte Einträge aus dem Suchtext, mit Änderungen (entfernt, Menge geändert) – gelten nur für diesen Text
+  const mealParse = useMemo(() => parseMealText(query, foods), [query, foods])
+  const [editsState, setEdits] = useState<MealTextEdits>({ text: '', removed: [], amounts: {} })
+  const mealEdits: MealTextEdits = editsState.text === query ? editsState : { text: query, removed: [], amounts: {} }
+  const [editIndex, setEditIndex] = useState<number | null>(null)
+  const editingPart =
+    editIndex !== null && mealParse ? (effectiveParts(mealParse, mealEdits).find((r) => r.index === editIndex)?.part ?? null) : null
+  const [bulkBusy, setBulkBusy] = useState(false)
+  const [multiHint, setMultiHint] = useState(() => {
+    try {
+      return localStorage.getItem(MULTI_HINT_KEY) !== '1'
+    } catch {
+      return true
+    }
+  })
+  const isList = (mealParse?.parts.length ?? 0) > 1
   const done = () => navigate(date === todayISO() ? '/' : `/?datum=${date}`)
 
   const off = useQuery({
     queryKey: ['off-search', debounced],
     queryFn: ({ signal }) => searchProducts(debounced, signal),
-    enabled: debounced.length >= 2,
+    enabled: debounced.length >= 2 && !debouncedIsList,
     staleTime: 1000 * 60 * 10,
     gcTime: 1000 * 60 * 30,
     retry: 0,
@@ -164,6 +187,62 @@ export function AddFoodPage() {
     toast(`Zu ${MEAL_LABELS[meal]} hinzugefügt`, '✅')
     setSelected(null)
     setAdded((a) => [...a, { name: stored.name, kcal: n.kcal }])
+  }
+
+  /** Alles Erkannte auf einmal eintragen; Vorlagen landen dabei in der eigenen Bibliothek (wie beim einzelnen Eintragen) */
+  async function addParts(parts: MealPart[]) {
+    setBulkBusy(true)
+    try {
+      const saved = new Map<string, Food>()
+      const rows: Parameters<typeof addLog.mutateAsync>[0] = []
+      const used: Food[] = []
+      for (const p of parts) {
+        const key = p.name.trim().toLowerCase()
+        const stored = p.stored ? (p.food as Food) : (saved.get(key) ?? findStoredBasic(foods, p.name) ?? (await persist(p.food)))
+        saved.set(key, stored)
+        // Passt die Einheit nicht mehr zum gespeicherten Lebensmittel, zählen die Gramm
+        let amount = p.amount
+        let unit = p.unit
+        let n = nutrientsForFoodAmount(stored, amount, unit)
+        if (!n) {
+          amount = p.grams
+          unit = 'g'
+          n = nutrientsForFoodAmount(stored, amount, unit)
+        }
+        if (!n) continue
+        rows.push({
+          date,
+          meal,
+          name: stored.brand ? `${stored.name} (${stored.brand})` : stored.name,
+          amount,
+          unit,
+          grams: amountToGrams(amount, unit, stored),
+          ...roundNutrients(n),
+          food_id: stored.id,
+          dish_id: null,
+          recipe_id: null,
+          veggies: detectVeggies(stored.name),
+        })
+        if (!used.some((f) => f.id === stored.id)) used.push(stored)
+      }
+      if (!rows.length) return
+      await addLog.mutateAsync(rows)
+      for (const f of used) touchFood.mutate(f)
+      toast(rows.length === 1 ? `Zu ${MEAL_LABELS[meal]} hinzugefügt` : `${rows.length} Einträge zu ${MEAL_LABELS[meal]} hinzugefügt`, '✅')
+      setAdded((a) => [...a, ...rows.map((r) => ({ name: r.name, kcal: r.kcal }))])
+      setQuery('')
+      setEditIndex(null)
+      setMultiHint(false)
+      try {
+        localStorage.setItem(MULTI_HINT_KEY, '1')
+      } catch {
+        // ohne Speicher erscheint der Tipp eben wieder
+      }
+    } catch {
+      toast('Eintragen hat nicht geklappt – bitte noch einmal versuchen')
+    } finally {
+      setBulkBusy(false)
+    }
   }
 
   async function addQuick(input: QuickEntryInput) {
@@ -266,6 +345,11 @@ export function AddFoodPage() {
             <ScanBarcode className="size-6" aria-hidden />
           </button>
         </div>
+        {multiHint && !searching && (
+          <p className="mt-1.5 px-1 text-xs text-muted">
+            Tipp: Mehreres auf einmal, z. B. „2 Brötchen, 1 Kaffee“
+          </p>
+        )}
       </div>
 
       {scanBusy && <Spinner label="Produkt wird gesucht …" />}
@@ -378,6 +462,17 @@ export function AddFoodPage() {
 
       {searching && (
         <div className="mt-2">
+          {mealParse && (
+            <MealTextCard
+              parse={mealParse}
+              edits={mealEdits}
+              mealLabel={MEAL_LABELS[meal]}
+              busy={bulkBusy}
+              onRemove={(i) => setEdits({ ...mealEdits, removed: [...mealEdits.removed, i] })}
+              onEdit={setEditIndex}
+              onAddAll={addParts}
+            />
+          )}
           {(localFoodHits.length > 0 || localDishHits.length > 0) && (
             <>
               <h2 className="px-1 pt-2 text-sm font-semibold text-muted">Meine Lebensmittel</h2>
@@ -408,16 +503,16 @@ export function AddFoodPage() {
               </ul>
             </>
           )}
-          <h2 className="px-1 pt-4 text-sm font-semibold text-muted">Open Food Facts</h2>
-          {off.isFetching && <Spinner label="Suche läuft …" />}
-          {off.error && !off.isFetching && (
+          {!isList && <h2 className="px-1 pt-4 text-sm font-semibold text-muted">Open Food Facts</h2>}
+          {!isList && off.isFetching && <Spinner label="Suche läuft …" />}
+          {!isList && off.error && !off.isFetching && (
             <EmptyState
               icon={<WifiOff className="size-8" />}
               title="Suche gerade nicht möglich"
               text="Open Food Facts ist nicht erreichbar. Du kannst ein eigenes Lebensmittel anlegen."
             />
           )}
-          {off.data && !off.isFetching && (
+          {!isList && off.data && !off.isFetching && (
             <ul className="mt-1 space-y-1">
               {off.data.map((p) => (
                 <FoodRow
@@ -431,7 +526,7 @@ export function AddFoodPage() {
               ))}
             </ul>
           )}
-          {off.data?.length === 0 && !off.isFetching && (
+          {!isList && off.data?.length === 0 && !off.isFetching && (
             <EmptyState title="Keine Treffer" text="Probiere einen anderen Begriff oder lege das Lebensmittel selbst an." />
           )}
           <Button variant="secondary" block className="mt-3" icon={<Plus className="size-4" aria-hidden />} onClick={() => setCustomOpen(true)}>
@@ -466,6 +561,17 @@ export function AddFoodPage() {
               }
             : undefined
         }
+      />
+      <FoodAmountSheet
+        food={editingPart?.food ?? null}
+        initialAmount={editingPart?.amount}
+        initialUnit={editingPart?.unit}
+        onClose={() => setEditIndex(null)}
+        onAdd={(amount, unit) => {
+          if (editIndex !== null) setEdits({ ...mealEdits, amounts: { ...mealEdits.amounts, [editIndex]: { amount, unit } } })
+          setEditIndex(null)
+        }}
+        confirmLabel="Menge übernehmen"
       />
       <DishAmountSheet
         dish={selectedDish}
