@@ -117,10 +117,12 @@ export interface QuickFoodHit {
   typicalGrams: number | null
   /** Bezeichnung der typischen Menge, z. B. „1 Döner“ */
   typicalLabel: string | null
+  /** Getränk: Mengen in ml statt g */
+  liquid: boolean
 }
 
 /** Für den Vergleich: klein, ohne Akzente; ß = ss, und ae/oe/ue gelten wie ä/ö/ü („Doener“ findet „Döner“) */
-function norm(s: string): string {
+export function norm(s: string): string {
   return s
     .toLowerCase()
     .normalize('NFD')
@@ -135,8 +137,7 @@ function norm(s: string): string {
  * Ist die Suche das erste Wort des Namens – auch in der Mehrzahl? „Döner“ passt so zu „Döner Kebab“ (nicht zu
  * „Dönerbox“), „Banane“ zu „Bananen“ (nicht zu „Bananenchips“).
  */
-function wholeFirstWord(q: string, name: string): boolean {
-  const first = norm(name).split(/[\s\-(]+/)[0]
+function wholeFirstWord(q: string, first: string): boolean {
   if (first === q) return true
   return first.startsWith(q) && ['n', 'en', 'e', 'er', 'r'].includes(first.slice(q.length))
 }
@@ -149,6 +150,9 @@ const DRY = new Set(['Couscous', 'Quinoa', 'Bulgur', 'Hirse', 'Polenta', 'Grieß
 function isDry(info: IngredientInfo): boolean {
   return ['Nudeln', 'Asia-Nudeln', 'Reis'].includes(info.base) || DRY.has(info.name)
 }
+
+/** Flüssiges aus der Nährwerttabelle – Mengen in ml */
+const TABLE_LIQUIDS = new Set(['Milch 1,5 %', 'Haferdrink', 'Gemüsebrühe', 'Rinderbrühe', 'Espresso', 'Schwarzer Tee', 'Zitronensaft', 'Kokosmilch (light)', 'Sahne', 'Kochsahne 15 %', 'Sojasauce', 'Essig', 'Balsamico'])
 
 /** Andere gebräuchliche Namen für Einträge der Nährwerttabelle – auch aus Österreich und der Schweiz */
 const TABLE_ALIASES: Readonly<Record<string, readonly string[]>> = {
@@ -198,21 +202,34 @@ const TABLE_ALIASES: Readonly<Record<string, readonly string[]>> = {
   Erdnussbutter: ['Erdnussmus'],
 }
 
-/**
- * Wie gut passt ein Name zur Suche? Kleiner ist besser, -1 heißt gar nicht.
- * `aliases` sind gleichwertige Namen (Semmel = Brötchen), `bases` nur Oberbegriffe (Spaghetti → Nudeln).
- */
-function matchScore(q: string, name: string, aliases: string[], bases: string[] = []): number {
+/** Ein Name, für den Vergleich vorbereitet: einmal normalisiert statt bei jedem Tastendruck */
+interface Prepared {
+  /** Name, normalisiert */
+  n: string
+  /** Wörter des Namens */
+  words: string[]
+  /** Erstes Wort des Namens */
+  first: string
+  /** Gleichwertige Namen (Semmel = Brötchen), normalisiert */
+  a: string[]
+  /** Oberbegriffe (Spaghetti → Nudeln), normalisiert */
+  b: string[]
+}
+
+function prepare(name: string, aliases: readonly string[] = [], bases: readonly string[] = []): Prepared {
   const n = norm(name)
-  const a = aliases.map(norm)
-  const b = bases.map(norm)
-  if (n === q) return 0
-  if (a.some((x) => x === q)) return 1
-  if (n.startsWith(q)) return 2
-  if (a.some((x) => x.startsWith(q)) || b.some((x) => x === q)) return 3
-  if (n.split(/[\s\-(),/]+/).some((w) => w.startsWith(q)) || b.some((x) => x.startsWith(q))) return 4
-  if (n.includes(q)) return 5
-  if ([...a, ...b].some((x) => x.includes(q))) return 6
+  return { n, words: n.split(/[\s\-(),/]+/), first: n.split(/[\s\-(]+/)[0], a: aliases.map(norm), b: bases.map(norm) }
+}
+
+/** Wie gut passt ein Name zur Suche? Kleiner ist besser, -1 heißt gar nicht. */
+function matchScore(q: string, p: Prepared): number {
+  if (p.n === q) return 0
+  if (p.a.some((x) => x === q)) return 1
+  if (p.n.startsWith(q)) return 2
+  if (p.a.some((x) => x.startsWith(q)) || p.b.some((x) => x === q)) return 3
+  if (p.words.some((w) => w.startsWith(q)) || p.b.some((x) => x.startsWith(q))) return 4
+  if (p.n.includes(q)) return 5
+  if (p.a.some((x) => x.includes(q)) || p.b.some((x) => x.includes(q))) return 6
   return -1
 }
 
@@ -221,10 +238,10 @@ function tableHit(info: IngredientInfo): QuickFoodHit {
   const piece = pieceUnitOf(info)
   const per = (g: number) => Math.round((info.kcal * g) / 100)
   if (piece) {
-    return { key: `t:${info.name}`, name: info.name, subtitle: basicFoodHint(info), kcal: per(piece.grams), kcalLabel: 'kcal', food, typicalGrams: piece.grams, typicalLabel: `1 ${piece.unit}` }
+    return { key: `t:${info.name}`, name: info.name, subtitle: basicFoodHint(info), kcal: per(piece.grams), kcalLabel: 'kcal', food, typicalGrams: piece.grams, typicalLabel: `1 ${piece.unit}`, liquid: false }
   }
   if (info.units.EL) {
-    return { key: `t:${info.name}`, name: info.name, subtitle: basicFoodHint(info), kcal: per(info.units.EL), kcalLabel: 'kcal', food, typicalGrams: info.units.EL, typicalLabel: '1 EL' }
+    return { key: `t:${info.name}`, name: info.name, subtitle: basicFoodHint(info), kcal: per(info.units.EL), kcalLabel: 'kcal', food, typicalGrams: info.units.EL, typicalLabel: '1 EL', liquid: TABLE_LIQUIDS.has(info.name) }
   }
   return {
     key: `t:${info.name}`,
@@ -235,6 +252,7 @@ function tableHit(info: IngredientInfo): QuickFoodHit {
     food,
     typicalGrams: null,
     typicalLabel: null,
+    liquid: TABLE_LIQUIDS.has(info.name),
   }
 }
 
@@ -249,13 +267,10 @@ function everydayHit(e: EverydayFood): QuickFoodHit {
     food: everydayFoodToNew(e),
     typicalGrams: grams,
     typicalLabel: grams ? `1 ${e.measure.replace(/\s*\(.*\)$/, '')}` : null,
+    liquid: e.liquid,
   }
 }
 
-/**
- * Sofort-Treffer beim Erfassen – ohne Internet: Grundnahrungsmittel aus der Nährwerttabelle und Alltägliches
- * (Brötchen, Döner, Cappuccino …) mit typischer Menge. Genaue Namenstreffer zuerst, dann Wortanfänge, dann der Rest.
- */
 /**
  * Grundformen ohne Mehrzahl-Endung, damit „Kartoffeln“ auch Kartoffelsalat findet und „Erdbeeren“ den Erdbeerkuchen.
  * Kürzer als vier Buchstaben wird nichts („Eis“ bleibt Eis und wird nicht zu „Ei“).
@@ -268,42 +283,90 @@ function stems(q: string): string[] {
   return [...out]
 }
 
-export function searchQuickFoods(query: string, limit = 10): QuickFoodHit[] {
+/** Güte mit Grundformen: Treffer über die Grundform zählen eine Stufe schwächer als über das eingetippte Wort */
+function scoreWithStems(q: string, qStems: string[], p: Prepared): number {
+  let best = matchScore(q, p)
+  for (const s of qStems) {
+    const viaStem = matchScore(s, p)
+    if (viaStem >= 0 && (best < 0 || viaStem + 1 < best)) best = viaStem + 1
+  }
+  return best
+}
+
+interface Entry extends Prepared {
+  name: string
+  /** Aufschlag auf die Güte (Trockengewichte stehen hinter der gekochten Portion) */
+  penalty: number
+  /** Reihenfolge bei Gleichstand: Alltägliches vor der Nährwerttabelle, Gängiges zuerst */
+  order: number
+  hit: () => QuickFoodHit
+}
+
+let ENTRIES: Entry[] | null = null
+/** Alle durchsuchbaren Einträge, beim ersten Gebrauch einmal vorbereitet */
+function entries(): Entry[] {
+  if (ENTRIES) return ENTRIES
+  const out: Entry[] = []
+  INGREDIENT_LIST.forEach((info, i) => {
+    if (EXCLUDED.has(info.name)) return
+    out.push({
+      ...prepare(info.name, TABLE_ALIASES[info.name] ?? [], info.base !== info.name ? [info.base] : []),
+      name: info.name,
+      penalty: isDry(info) ? 1 : 0,
+      order: 1000 + i,
+      hit: () => tableHit(info),
+    })
+  })
+  EVERYDAY_FOODS.forEach((e, i) => {
+    out.push({ ...prepare(e.name, e.aliases), name: e.name, penalty: 0, order: i, hit: () => everydayHit(e) })
+  })
+  ENTRIES = out
+  return out
+}
+
+/** Treffer mit Güte, beste zuerst */
+function rank(query: string): { entry: Entry; score: number }[] {
   const q = norm(query.trim())
   if (q.length < 2) return []
   const qStems = stems(q)
-  /** Treffer über die Grundform zählen eine Stufe schwächer als über das eingetippte Wort */
-  const score = (name: string, aliases: string[], bases: string[] = []) => {
-    let best = matchScore(q, name, aliases, bases)
-    for (const s of qStems) {
-      const viaStem = matchScore(s, name, aliases, bases)
-      if (viaStem >= 0 && (best < 0 || viaStem + 1 < best)) best = viaStem + 1
-    }
-    return best
+  const found: { entry: Entry; score: number }[] = []
+  for (const entry of entries()) {
+    const s = scoreWithStems(q, qStems, entry)
+    if (s >= 0) found.push({ entry, score: s + entry.penalty })
   }
-  const candidates: { hit: () => QuickFoodHit; name: string; score: number; order: number }[] = []
-  INGREDIENT_LIST.forEach((info, i) => {
-    if (EXCLUDED.has(info.name)) return
-    const s = score(info.name, [...(TABLE_ALIASES[info.name] ?? [])], info.base !== info.name ? [info.base] : [])
-    // Trockenes (Reis, Nudeln …) hinter die gekochte Portion stellen
-    if (s >= 0) candidates.push({ hit: () => tableHit(info), name: info.name, score: s + (isDry(info) ? 1 : 0), order: 1000 + i })
-  })
-  EVERYDAY_FOODS.forEach((e, i) => {
-    const s = score(e.name, e.aliases)
-    if (s >= 0) candidates.push({ hit: () => everydayHit(e), name: e.name, score: s, order: i })
-  })
-  return candidates
-    .sort(
-      (a, b) =>
-        a.score - b.score ||
-        // gleich gut: Suche als ganzes erstes Wort vor Wortanfängen, Namensanfang vor anderen Begriffen,
-        // danach die Reihenfolge der Listen (Gängiges zuerst)
-        Number(!wholeFirstWord(q, a.name)) - Number(!wholeFirstWord(q, b.name)) ||
-        Number(!norm(a.name).startsWith(q)) - Number(!norm(b.name).startsWith(q)) ||
-        a.order - b.order,
-    )
+  return found.sort(
+    (a, b) =>
+      a.score - b.score ||
+      // gleich gut: Suche als ganzes erstes Wort vor Wortanfängen, Namensanfang vor anderen Begriffen,
+      // danach die Reihenfolge der Listen (Gängiges zuerst)
+      Number(!wholeFirstWord(q, a.entry.first)) - Number(!wholeFirstWord(q, b.entry.first)) ||
+      Number(!a.entry.n.startsWith(q)) - Number(!b.entry.n.startsWith(q)) ||
+      a.entry.order - b.entry.order,
+  )
+}
+
+/**
+ * Sofort-Treffer beim Erfassen – ohne Internet: Grundnahrungsmittel aus der Nährwerttabelle und Alltägliches
+ * (Brötchen, Döner, Cappuccino …) mit typischer Menge. Genaue Namenstreffer zuerst, dann Wortanfänge, dann der Rest.
+ */
+export function searchQuickFoods(query: string, limit = 10): QuickFoodHit[] {
+  return rank(query)
     .slice(0, limit)
-    .map((c) => c.hit())
+    .map((r) => r.entry.hit())
+}
+
+/** Wie `searchQuickFoods`, mit der Güte jedes Treffers (0 = genau dieser Name; kleiner ist besser) */
+export function scoredQuickFoods(query: string, limit = 8): { hit: QuickFoodHit; score: number }[] {
+  return rank(query)
+    .slice(0, limit)
+    .map((r) => ({ hit: r.entry.hit(), score: r.score }))
+}
+
+/** Güte eines beliebigen Namens (z. B. eines eigenen Lebensmittels) für eine Suche, -1 = passt nicht */
+export function nameScore(query: string, name: string): number {
+  const q = norm(query.trim())
+  if (q.length < 2) return -1
+  return scoreWithStems(q, stems(q), prepare(name))
 }
 
 /** Füllwörter, die bei Vorschlägen nichts bedeuten („Döner beim Imbiss“ → „Döner“) */

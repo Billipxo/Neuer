@@ -701,6 +701,44 @@ test('Werte automatisch: Alltägliches sofort finden, Vorschläge beim eigenen L
   await expect(page.getByRole('button', { name: /^Döner Kebab/ })).toBeVisible()
 })
 
+test('Mehreres auf einmal: Text erkennen, anpassen und mit einem Tipp eintragen', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/hinzufuegen?meal=breakfast')
+  const tip = page.getByText(/^Tipp: Mehreres auf einmal/)
+  await expect(tip).toBeVisible()
+  await page.getByLabel('Lebensmittel suchen').fill('2 Brötchen mit Butter, 1 Cappuccino und eine Banane, Blablubb')
+
+  const card = page.getByRole('region', { name: 'Erkannt für Frühstück' })
+  const items = card.getByRole('list', { name: 'Erkannte Einträge' }).getByRole('listitem')
+  await expect(items).toHaveCount(4)
+  await expect(items.nth(0)).toContainText('Brötchen')
+  await expect(items.nth(0)).toContainText('2 Stück · 120 g')
+  await expect(items.nth(1)).toContainText('2 EL · 24 g')
+  await expect(items.nth(2)).toContainText('1 Tasse · 200 ml')
+  await expect(items.nth(3)).toContainText('Bananen')
+  await expect(card).toContainText('Nicht erkannt: „Blablubb“')
+
+  // Butter weglassen und nur ein Brötchen nehmen
+  await card.getByRole('button', { name: '„Butter“ entfernen' }).click()
+  await expect(items).toHaveCount(3)
+  await card.getByRole('button', { name: /^Brötchen, 2 Stück/ }).click()
+  const sheet = page.getByRole('dialog', { name: 'Brötchen' })
+  await sheet.getByLabel('Menge').fill('1')
+  await sheet.getByRole('button', { name: 'Menge übernehmen' }).click()
+  await expect(items.nth(0)).toContainText('1 Stück · 60 g')
+
+  // 162 + 80 + 107 kcal
+  await card.getByRole('button', { name: 'Alle 3 hinzufügen · 349 kcal' }).click()
+  await expect(page.getByText(/^3 Einträge · 349 kcal$/)).toBeVisible()
+  await expect(page.getByLabel('Lebensmittel suchen')).toHaveValue('')
+  // Der Tipp hat seinen Zweck erfüllt
+  await expect(tip).toBeHidden()
+
+  await page.getByRole('button', { name: 'Fertig' }).click()
+  await closeBadges(page)
+  await expect(page.getByRole('img', { name: /349 von 2\.000 kcal/ })).toBeVisible()
+})
+
 test('Stöbern: Werte nach Kategorien finden, ohne zu tippen', async ({ page }) => {
   await startDemo(page)
   await page.goto('/hinzufuegen?meal=breakfast')
