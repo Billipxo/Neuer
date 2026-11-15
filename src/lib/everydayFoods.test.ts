@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { EVERYDAY_FOODS } from '../data/everydayFoods'
+import { EVERYDAY_FOODS, FOOD_GROUPS } from '../data/everydayFoods'
 import { INGREDIENT_LIST } from '../data/ingredients'
 import type { Food } from '../types'
-import { everydayFoodToNew, everydayHint, searchQuickFoods, suggestFoods } from './basicFoods'
+import { browseFoods, everydayFoodToNew, everydayHint, searchQuickFoods, suggestFoods, TABLE_IN_GROUP } from './basicFoods'
 import { nutrientsForFoodAmount } from './nutrition'
 
 describe('Alltägliches: Werte und Mengen', () => {
@@ -17,7 +17,7 @@ describe('Alltägliches: Werte und Mengen', () => {
 
   it('kennt für alles eine typische Menge', () => {
     for (const f of EVERYDAY_FOODS) {
-      const grams = f.piece ?? f.portion
+      const grams = f.piece ?? f.portion ?? f.spoon
       expect(grams, f.name).toBeGreaterThan(0)
       expect(grams!, f.name).toBeLessThanOrEqual(600)
       expect(f.measure.trim(), f.name).not.toBe('')
@@ -32,9 +32,10 @@ describe('Alltägliches: Werte und Mengen', () => {
     for (const n of names) expect(table.has(n), n).toBe(false)
   })
 
-  it('deckt den Alltag ab: Backwaren, Imbiss, Süßes und Getränke', () => {
-    expect(EVERYDAY_FOODS.length).toBeGreaterThanOrEqual(140)
-    expect(EVERYDAY_FOODS.filter((f) => f.liquid).length).toBeGreaterThanOrEqual(25)
+  it('deckt den Alltag ab: von der Bäckerei bis zum Cocktail', () => {
+    expect(EVERYDAY_FOODS.length).toBeGreaterThanOrEqual(430)
+    expect(EVERYDAY_FOODS.filter((f) => f.liquid).length).toBeGreaterThanOrEqual(70)
+    expect(EVERYDAY_FOODS.filter((f) => f.spoon).length).toBeGreaterThanOrEqual(10)
   })
 })
 
@@ -101,3 +102,76 @@ describe('Vorschläge zu frei eingetippten Namen', () => {
     expect(new Set(hits.map((h) => h.key)).size).toBe(3)
   })
 })
+
+describe('Stöbern nach Kategorien', () => {
+  it('hat in jeder Kategorie eine brauchbare Auswahl', () => {
+    for (const g of FOOD_GROUPS) expect(browseFoods(g.id).length, g.label).toBeGreaterThanOrEqual(8)
+    // Alltägliches steht genau in einer Kategorie, Grundnahrungsmittel kommen dazu
+    const all = FOOD_GROUPS.flatMap((g) => browseFoods(g.id).filter((h) => h.key.startsWith('a:')))
+    expect(all).toHaveLength(EVERYDAY_FOODS.length)
+  })
+
+  it('nimmt nur Grundnahrungsmittel, die es in der Nährwerttabelle gibt', () => {
+    const table = new Set(INGREDIENT_LIST.map((i) => i.name))
+    for (const [group, names] of Object.entries(TABLE_IN_GROUP)) {
+      for (const n of names ?? []) expect(table.has(n), `${group}: ${n}`).toBe(true)
+    }
+  })
+
+  it('zeigt bei Obst und Gemüse die Grundnahrungsmittel zuerst', () => {
+    expect(browseFoods('obst')[0].name).toBe('Apfel')
+    expect(browseFoods('gemuese')[0].name).toBe('Salatgurke')
+    expect(browseFoods('baeckerei')[0].name).toBe('Brötchen')
+  })
+
+  it('trägt Soßen und Dips in Esslöffeln ein', () => {
+    const ketchup = searchQuickFoods('Ketchup')[0]
+    expect(ketchup).toMatchObject({ name: 'Ketchup', subtitle: '1 EL ≈ 15 g', kcal: 17, typicalLabel: '1 EL' })
+    expect(ketchup.food).toMatchObject({ tbsp_g: 15, serving_g: null, piece_g: null })
+  })
+
+  it('findet Neues aus allen Ecken', () => {
+    expect(first('Mandarine').subtitle).toBe('1 Stück ≈ 70 g')
+    expect(first('Salami').name).toBe('Salami')
+    expect(first('Banane').name).toBe('Bananen')
+    expect(first('Hugo').subtitle).toBe('1 Glas = 250 ml')
+    expect(first('Knödel').name).toBe('Semmelknödel')
+    expect(first('Pizza').name).toBe('Pizza Margherita')
+    expect(first('Eis').name).toBe('Speiseeis')
+    expect(searchQuickFoods('Wein').slice(0, 3).map((h) => h.name)).toEqual(['Rotwein', 'Weißwein', 'Roséwein'])
+    expect(searchQuickFoods('Ei').slice(0, 2).map((h) => h.name)).toEqual(['Ei (gekocht)', 'Eier'])
+  })
+
+  it('findet auch Mehrzahl, Wortteile und regionale Namen', () => {
+    const names = (q: string, n = 6) => searchQuickFoods(q, n).map((h) => h.name)
+    expect(names('Kartoffeln')).toEqual(expect.arrayContaining(['Kartoffeln', 'Kartoffelpuffer', 'Kartoffelsuppe']))
+    expect(names('Zwiebeln')[0]).toBe('Zwiebel')
+    expect(names('Zwiebeln')).toContain('Zwiebelkuchen')
+    expect(names('Kekse')).toContain('Butterkekse')
+    expect(names('Muffins')[0]).toBe('Muffin')
+    expect(first('Äpfel').name).toBe('Apfel')
+    expect(first('Erdäpfel').name).toBe('Kartoffeln')
+    expect(first('Paradeiser').name).toBe('Tomate')
+    expect(first('Möhren').name).toBe('Karotten')
+    expect(first('Pilze').name).toBe('Champignons')
+    expect(first('Topfen').name).toBe('Quark 20 %')
+    expect(first('Faschiertes').name).toBe('Hackfleisch (gemischt)')
+    expect(first('Krapfen').name).toBe('Berliner')
+    // kurze Wörter werden nicht gekürzt: „Eis“ bleibt Eis
+    expect(names('Eis', 3)).not.toContain('Eier')
+  })
+
+  it('stellt bei Reis und Nudeln die gekochte Portion vor den ungekochten Wert', () => {
+    const reis = searchQuickFoods('Reis')
+    expect(reis[0]).toMatchObject({ name: 'Reis (gekocht)', subtitle: '1 Portion ≈ 180 g' })
+    expect(reis.find((h) => h.name === 'Reis')).toMatchObject({ subtitle: 'ungekocht', kcalLabel: 'kcal/100 g' })
+    expect(first('Nudeln').name).toBe('Nudeln (gekocht)')
+    expect(first('Spaghetti').name).toBe('Spaghetti')
+    expect(first('Spaghetti').subtitle).toBe('ungekocht')
+    expect(searchQuickFoods('Couscous').map((h) => h.name)).toEqual(['Couscous (gekocht)', 'Couscous'])
+    expect(searchQuickFoods('Quinoa')[1].subtitle).toBe('ungekocht')
+    expect(first('Haferflocken').subtitle).toBe('1 EL ≈ 10 g')
+  })
+})
+
+const first = (q: string) => searchQuickFoods(q)[0]

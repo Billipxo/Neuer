@@ -3,7 +3,7 @@
  * liefert sofort und offline Treffer – mit den passenden Maßen (Stück, Scheibe, EL, TL).
  */
 import { INGREDIENT_LIST, type IngredientInfo } from '../data/ingredients'
-import { EVERYDAY_FOODS, type EverydayFood } from '../data/everydayFoods'
+import { EVERYDAY_FOODS, type EverydayFood, type FoodGroupId } from '../data/everydayFoods'
 import type { Food } from '../types'
 import type { NewFood } from '../hooks/data'
 import { searchIngredientTable } from './ingredientSearch'
@@ -88,7 +88,7 @@ export function everydayFoodToNew(e: EverydayFood): NewFood {
     fat_100: e.fat,
     serving_g: e.portion,
     piece_g: e.piece,
-    tbsp_g: null,
+    tbsp_g: e.spoon,
     tsp_g: null,
     image_url: null,
     is_favorite: false,
@@ -97,9 +97,9 @@ export function everydayFoodToNew(e: EverydayFood): NewFood {
   }
 }
 
-/** Typische Menge, z. B. „1 Döner ≈ 350 g“ oder „1 Dose = 330 ml“ */
+/** Typische Menge, z. B. „1 Döner ≈ 350 g“, „1 Dose = 330 ml“ oder „1 EL ≈ 15 g“ */
 export function everydayHint(e: EverydayFood): string {
-  const grams = e.piece ?? e.portion ?? 100
+  const grams = e.piece ?? e.portion ?? e.spoon ?? 100
   if (e.liquid) return /\(/.test(e.measure) ? `1 ${e.measure}` : `1 ${e.measure} = ${fmtInt(grams)} ml`
   return `1 ${e.measure} ≈ ${fmtInt(grams)} g`
 }
@@ -131,17 +131,88 @@ function norm(s: string): string {
     .replace(/ue/g, 'u')
 }
 
-/** Wie gut passt ein Name zur Suche? Kleiner ist besser, -1 heißt gar nicht */
-function matchScore(q: string, name: string, others: string[]): number {
+/**
+ * Ist die Suche das erste Wort des Namens – auch in der Mehrzahl? „Döner“ passt so zu „Döner Kebab“ (nicht zu
+ * „Dönerbox“), „Banane“ zu „Bananen“ (nicht zu „Bananenchips“).
+ */
+function wholeFirstWord(q: string, name: string): boolean {
+  const first = norm(name).split(/[\s\-(]+/)[0]
+  if (first === q) return true
+  return first.startsWith(q) && ['n', 'en', 'e', 'er', 'r'].includes(first.slice(q.length))
+}
+
+/**
+ * Trockene Grundzutaten der Nährwerttabelle (Reis, Nudeln, Couscous …): Ihre Werte gelten ungekocht – auf dem Teller
+ * wiegen sie zwei- bis dreimal so viel. Sie werden gekennzeichnet und stehen hinter der gekochten Portion.
+ */
+const DRY = new Set(['Couscous', 'Quinoa', 'Bulgur', 'Hirse', 'Polenta', 'Grieß', 'Perlgraupen', 'rote Linsen', 'Tellerlinsen', 'Schälerbsen (getrocknet)', 'Lasagneplatten'])
+function isDry(info: IngredientInfo): boolean {
+  return ['Nudeln', 'Asia-Nudeln', 'Reis'].includes(info.base) || DRY.has(info.name)
+}
+
+/** Andere gebräuchliche Namen für Einträge der Nährwerttabelle – auch aus Österreich und der Schweiz */
+const TABLE_ALIASES: Readonly<Record<string, readonly string[]>> = {
+  Kartoffeln: ['Erdäpfel'],
+  Tomate: ['Paradeiser'],
+  Karotten: ['Möhren', 'Mohrrüben', 'Gelbe Rüben', 'Rüebli'],
+  Blumenkohl: ['Karfiol'],
+  Aubergine: ['Melanzani'],
+  Zucchini: ['Zucchetti'],
+  Paprika: ['Paprikaschote'],
+  'grüne Bohnen': ['Fisolen', 'Brechbohnen', 'Prinzessbohnen'],
+  Mais: ['Kukuruz', 'Zuckermais'],
+  Champignons: ['Pilze', 'Schwammerl', 'Egerlinge'],
+  Lauch: ['Porree'],
+  Frühlingszwiebel: ['Lauchzwiebel'],
+  'Rote Bete (vorgegart)': ['Rote Rüben', 'Rote Beete', 'Randen'],
+  Rotkohl: ['Rotkraut', 'Blaukraut'],
+  Weißkohl: ['Weißkraut'],
+  Grünkohl: ['Braunkohl'],
+  Feldsalat: ['Rapunzel', 'Vogerlsalat', 'Nüsslisalat'],
+  Rucola: ['Rauke'],
+  Kopfsalat: ['Blattsalat', 'grüner Salat'],
+  Meerrettich: ['Kren'],
+  Gewürzgurken: ['Essiggurken', 'saure Gurken', 'Cornichons'],
+  Orange: ['Apfelsine'],
+  Weintrauben: ['Trauben'],
+  Pflaumen: ['Zwetschgen', 'Zwetschken'],
+  Heidelbeeren: ['Blaubeeren'],
+  Rosinen: ['Sultaninen'],
+  Magerquark: ['Magertopfen'],
+  Sahne: ['Schlagsahne', 'Schlagobers', 'Obers', 'Rahm'],
+  'saure Sahne (10 %)': ['Sauerrahm'],
+  Hähnchenbrust: ['Hühnerbrust', 'Pouletbrust'],
+  Putenbrust: ['Truthahnbrust'],
+  Rinderhüftsteak: ['Steak', 'Rindersteak'],
+  Frühstücksspeck: ['Bacon', 'Speck'],
+  'Kochschinken (mager)': ['Schinken', 'gekochter Schinken'],
+  Rohschinken: ['Serranoschinken', 'Parmaschinken', 'Prosciutto'],
+  Garnelen: ['Shrimps', 'Crevetten', 'Scampi', 'Gambas'],
+  Kabeljaufilet: ['Dorsch'],
+  Seelachsfilet: ['Köhler'],
+  'Spätzle (frisch)': ['Knöpfle'],
+  'Vollkorn-Paniermehl': ['Semmelbrösel', 'Paniermehl'],
+  Mehl: ['Weizenmehl'],
+  Puderzucker: ['Staubzucker'],
+  Speisestärke: ['Maisstärke'],
+  Erdnussbutter: ['Erdnussmus'],
+}
+
+/**
+ * Wie gut passt ein Name zur Suche? Kleiner ist besser, -1 heißt gar nicht.
+ * `aliases` sind gleichwertige Namen (Semmel = Brötchen), `bases` nur Oberbegriffe (Spaghetti → Nudeln).
+ */
+function matchScore(q: string, name: string, aliases: string[], bases: string[] = []): number {
   const n = norm(name)
-  const o = others.map(norm)
+  const a = aliases.map(norm)
+  const b = bases.map(norm)
   if (n === q) return 0
-  if (o.some((x) => x === q)) return 1
+  if (a.some((x) => x === q)) return 1
   if (n.startsWith(q)) return 2
-  if (o.some((x) => x.startsWith(q))) return 3
-  if (n.split(/[\s\-(),/]+/).some((w) => w.startsWith(q))) return 4
+  if (a.some((x) => x.startsWith(q)) || b.some((x) => x === q)) return 3
+  if (n.split(/[\s\-(),/]+/).some((w) => w.startsWith(q)) || b.some((x) => x.startsWith(q))) return 4
   if (n.includes(q)) return 5
-  if (o.some((x) => x.includes(q))) return 6
+  if ([...a, ...b].some((x) => x.includes(q))) return 6
   return -1
 }
 
@@ -155,11 +226,20 @@ function tableHit(info: IngredientInfo): QuickFoodHit {
   if (info.units.EL) {
     return { key: `t:${info.name}`, name: info.name, subtitle: basicFoodHint(info), kcal: per(info.units.EL), kcalLabel: 'kcal', food, typicalGrams: info.units.EL, typicalLabel: '1 EL' }
   }
-  return { key: `t:${info.name}`, name: info.name, subtitle: 'Grundnahrungsmittel', kcal: info.kcal, kcalLabel: 'kcal/100 g', food, typicalGrams: null, typicalLabel: null }
+  return {
+    key: `t:${info.name}`,
+    name: info.name,
+    subtitle: isDry(info) ? 'ungekocht' : 'Grundnahrungsmittel',
+    kcal: info.kcal,
+    kcalLabel: 'kcal/100 g',
+    food,
+    typicalGrams: null,
+    typicalLabel: null,
+  }
 }
 
 function everydayHit(e: EverydayFood): QuickFoodHit {
-  const grams = e.piece ?? e.portion
+  const grams = e.piece ?? e.portion ?? e.spoon
   return {
     key: `a:${e.name}`,
     name: e.name,
@@ -176,26 +256,50 @@ function everydayHit(e: EverydayFood): QuickFoodHit {
  * Sofort-Treffer beim Erfassen – ohne Internet: Grundnahrungsmittel aus der Nährwerttabelle und Alltägliches
  * (Brötchen, Döner, Cappuccino …) mit typischer Menge. Genaue Namenstreffer zuerst, dann Wortanfänge, dann der Rest.
  */
+/**
+ * Grundformen ohne Mehrzahl-Endung, damit „Kartoffeln“ auch Kartoffelsalat findet und „Erdbeeren“ den Erdbeerkuchen.
+ * Kürzer als vier Buchstaben wird nichts („Eis“ bleibt Eis und wird nicht zu „Ei“).
+ */
+function stems(q: string): string[] {
+  const out = new Set<string>()
+  for (const end of ['n', 'en', 'e', 's']) {
+    if (q.endsWith(end) && q.length - end.length >= 4) out.add(q.slice(0, -end.length))
+  }
+  return [...out]
+}
+
 export function searchQuickFoods(query: string, limit = 10): QuickFoodHit[] {
   const q = norm(query.trim())
   if (q.length < 2) return []
+  const qStems = stems(q)
+  /** Treffer über die Grundform zählen eine Stufe schwächer als über das eingetippte Wort */
+  const score = (name: string, aliases: string[], bases: string[] = []) => {
+    let best = matchScore(q, name, aliases, bases)
+    for (const s of qStems) {
+      const viaStem = matchScore(s, name, aliases, bases)
+      if (viaStem >= 0 && (best < 0 || viaStem + 1 < best)) best = viaStem + 1
+    }
+    return best
+  }
   const candidates: { hit: () => QuickFoodHit; name: string; score: number; order: number }[] = []
   INGREDIENT_LIST.forEach((info, i) => {
     if (EXCLUDED.has(info.name)) return
-    const score = matchScore(q, info.name, info.base !== info.name ? [info.base] : [])
-    if (score >= 0) candidates.push({ hit: () => tableHit(info), name: info.name, score, order: 1000 + i })
+    const s = score(info.name, [...(TABLE_ALIASES[info.name] ?? [])], info.base !== info.name ? [info.base] : [])
+    // Trockenes (Reis, Nudeln …) hinter die gekochte Portion stellen
+    if (s >= 0) candidates.push({ hit: () => tableHit(info), name: info.name, score: s + (isDry(info) ? 1 : 0), order: 1000 + i })
   })
   EVERYDAY_FOODS.forEach((e, i) => {
-    const score = matchScore(q, e.name, e.aliases)
-    if (score >= 0) candidates.push({ hit: () => everydayHit(e), name: e.name, score, order: i })
+    const s = score(e.name, e.aliases)
+    if (s >= 0) candidates.push({ hit: () => everydayHit(e), name: e.name, score: s, order: i })
   })
   return candidates
     .sort(
       (a, b) =>
         a.score - b.score ||
-        // gleich gut: Treffer am Namensanfang vor Treffern über andere Begriffe, kurze Namen vor langen
+        // gleich gut: Suche als ganzes erstes Wort vor Wortanfängen, Namensanfang vor anderen Begriffen,
+        // danach die Reihenfolge der Listen (Gängiges zuerst)
+        Number(!wholeFirstWord(q, a.name)) - Number(!wholeFirstWord(q, b.name)) ||
         Number(!norm(a.name).startsWith(q)) - Number(!norm(b.name).startsWith(q)) ||
-        a.name.length - b.name.length ||
         a.order - b.order,
     )
     .slice(0, limit)
@@ -227,4 +331,86 @@ export function suggestFoods(name: string, limit = 4): QuickFoodHit[] {
     }
   }
   return out
+}
+
+// --- Stöbern nach Kategorien -----------------------------------------------------------------------------------
+
+/** Grundnahrungsmittel aus der Nährwerttabelle, die beim Stöbern in eine Kategorie gehören */
+export const TABLE_IN_GROUP: Partial<Record<FoodGroupId, readonly string[]>> = {
+  baeckerei: ['Vollkornbrot', 'Vollkornbrötchen', 'Vollkorntoast', 'Baguette', 'Vollkorn-Knäckebrot', 'Haferflocken', 'Honig', 'Erdnussbutter'],
+  milch: [
+    'Eier',
+    'Butter',
+    'Milch 1,5 %',
+    'Naturjoghurt 1,5 %',
+    'Griechischer Joghurt 2 %',
+    'Skyr',
+    'Magerquark',
+    'Hüttenkäse',
+    'Frischkäse (leicht)',
+    'Gouda',
+    'Bergkäse',
+    'Camembert',
+    'Feta',
+    'Mozzarella (light)',
+    'Parmesan',
+    'Halloumi',
+    'Haferdrink',
+  ],
+  wurst: [
+    'Kochschinken (mager)',
+    'Putenbrust-Aufschnitt',
+    'Rohschinken',
+    'Frühstücksspeck',
+    'Geflügelwürstchen',
+    'Räucherlachs',
+    'Hähnchenbrust',
+    'Putenschnitzel',
+    'Lachsfilet',
+    'Thunfisch (naturell)',
+    'Garnelen',
+    'Matjesfilet',
+    'Makrele (geräuchert)',
+  ],
+  obst: ['Apfel', 'Bananen', 'Birne', 'Orange', 'Kiwi', 'Weintrauben', 'Erdbeeren', 'Heidelbeeren', 'Ananas', 'Pflaumen', 'Mango (TK)', 'Avocado', 'Datteln (entsteint)', 'Rosinen'],
+  gemuese: [
+    'Salatgurke',
+    'Tomate',
+    'Cherrytomaten',
+    'Karotten',
+    'Paprika',
+    'Kohlrabi',
+    'Radieschen',
+    'Brokkoli',
+    'Blumenkohl',
+    'Zucchini',
+    'Champignons',
+    'Mais',
+    'Erbsen (TK)',
+    'grüne Bohnen',
+    'Spargel (weiß)',
+    'Feldsalat',
+    'Kopfsalat',
+    'Rucola',
+    'Kartoffeln',
+    'Süßkartoffel',
+    'Oliven',
+    'Gewürzgurken',
+  ],
+  snacks: ['Mandeln', 'Walnüsse', 'Cashewkerne', 'Haselnüsse', 'Erdnüsse (geröstet, ungesalzen)', 'Reiswaffeln', 'Kürbiskerne', 'Sonnenblumenkerne'],
+  suesses: ['Zartbitterschokolade (70 %)'],
+  getraenke: ['Espresso', 'Schwarzer Tee'],
+}
+
+/** Bei Obst und Gemüse stehen die Grundnahrungsmittel (Apfel, Gurke …) vorn, sonst das Alltägliche */
+const TABLE_FIRST: ReadonlySet<FoodGroupId> = new Set(['obst', 'gemuese'])
+
+/** Alles aus einer Kategorie zum Stöbern beim Erfassen */
+export function browseFoods(group: FoodGroupId): QuickFoodHit[] {
+  const everyday = EVERYDAY_FOODS.filter((e) => e.group === group).map(everydayHit)
+  const table = (TABLE_IN_GROUP[group] ?? [])
+    .map((name) => INGREDIENT_LIST.find((i) => i.name === name))
+    .filter((i): i is IngredientInfo => Boolean(i))
+    .map(tableHit)
+  return TABLE_FIRST.has(group) ? [...table, ...everyday] : [...everyday, ...table]
 }

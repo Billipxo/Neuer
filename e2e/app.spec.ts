@@ -700,3 +700,24 @@ test('Werte automatisch: Alltägliches sofort finden, Vorschläge beim eigenen L
   await page.goto('/hinzufuegen?meal=dinner')
   await expect(page.getByRole('button', { name: /^Döner Kebab/ })).toBeVisible()
 })
+
+test('Stöbern: Werte nach Kategorien finden, ohne zu tippen', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/hinzufuegen?meal=breakfast')
+  await page.getByRole('group', { name: 'Schnellauswahl' }).getByRole('button', { name: 'Stöbern' }).click()
+  const categories = page.getByRole('group', { name: 'Kategorien' })
+  // Bäckerei zuerst, das Brötchen vorn
+  await expect(categories.getByRole('button', { name: 'Bäckerei & Frühstück' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByRole('list', { name: 'Bäckerei & Frühstück' }).getByRole('button').first()).toContainText('Brötchen')
+  // Obst: die Grundnahrungsmittel aus der Nährwerttabelle stehen vorn
+  await categories.getByRole('button', { name: 'Obst', exact: true }).click()
+  await expect(page.getByRole('list', { name: 'Obst' }).getByRole('button').first()).toContainText('Apfel')
+  // Getränke: einen Cappuccino eintragen – 1 Tasse ist schon vorausgewählt
+  await categories.getByRole('button', { name: 'Getränke', exact: true }).click()
+  await page
+    .getByRole('list', { name: 'Getränke' })
+    .getByRole('button', { name: /^Cappuccino 1 Tasse = 200 ml · 80 kcal/ })
+    .click()
+  await page.getByRole('button', { name: 'Zu Frühstück hinzufügen' }).click()
+  await expect(page.getByText(/^1 Eintrag · 80 kcal$/)).toBeVisible()
+})
