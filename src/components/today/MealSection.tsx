@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { BookmarkPlus, Copy, History, Plus } from 'lucide-react'
-import type { LogEntry, MealType } from '../../types'
+import { BookmarkPlus, CalendarCheck, Copy, History, Plus } from 'lucide-react'
+import type { LogEntry, MealType, PlanItem } from '../../types'
 import { MEAL_LABELS } from '../../lib/meals'
 import { fmtInt } from '../../lib/format'
 import { totalsOf } from '../../lib/log'
@@ -18,6 +18,8 @@ export function MealSection({
   onCopy,
   onTakeYesterday,
   onSaveAsDish,
+  planned = [],
+  onLogPlanned,
 }: {
   meal: MealType
   date: string
@@ -29,6 +31,9 @@ export function MealSection({
   onTakeYesterday?: () => void
   /** Ab zwei Einträgen: die Mahlzeit als wiederverwendbares Gericht speichern */
   onSaveAsDish?: () => void
+  /** Laut Wochenplan geplant und noch nicht eingetragen */
+  planned?: PlanItem[]
+  onLogPlanned?: (item: PlanItem) => void
 }) {
   const total = totalsOf(entries)
   return (
@@ -86,6 +91,30 @@ export function MealSection({
                   <p className="text-xs text-muted">{fmtAmount(Number(e.amount), e.unit)}</p>
                 </div>
                 <span className="text-sm font-medium tabular">{fmtInt(Number(e.kcal))} kcal</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {planned.length > 0 && onLogPlanned && (
+        <ul className="border-t border-dashed border-line" aria-label={`Geplant zum ${MEAL_LABELS[meal]}`}>
+          {planned.map((p) => (
+            <li key={p.id} className="flex min-h-14 items-center gap-3 px-4 py-2">
+              <CalendarCheck className="size-4 shrink-0 text-muted" aria-hidden />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[15px] text-muted">{p.title}</p>
+                <p className="text-xs text-muted">
+                  Geplant · {fmtAmount(Number(p.servings) || 1, 'serving')}
+                  {Number(p.kcal) > 0 ? ` · ${fmtInt(Number(p.kcal))} kcal` : ''}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => onLogPlanned(p)}
+                aria-label={`${p.title} als gegessen eintragen`}
+                className="inline-flex min-h-9 shrink-0 items-center rounded-full bg-brand-soft px-3 text-sm font-semibold text-brand transition active:scale-95"
+              >
+                Gegessen
               </button>
             </li>
           ))}

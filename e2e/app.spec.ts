@@ -101,6 +101,27 @@ test('Woche vorschlagen und Einkaufsliste erzeugen', async ({ page }) => {
   await expect(other.getByText('Servietten')).toBeVisible()
 })
 
+test('Tagesseite: Geplantes mit einem Tipp eintragen und rückgängig machen', async ({ page }) => {
+  await startDemo(page)
+  await page.getByRole('link', { name: 'Planer' }).click()
+  await page.getByRole('button', { name: 'Woche vorschlagen' }).click()
+  await expect(page.getByText('7/7')).toBeVisible()
+  await closeBadges(page)
+  await page.getByRole('link', { name: 'Heute' }).click()
+  const plannedButton = page.getByRole('button', { name: / als gegessen eintragen$/ }).first()
+  await expect(plannedButton).toBeVisible()
+  const title = (await plannedButton.getAttribute('aria-label'))!.replace(/ als gegessen eintragen$/, '')
+  await plannedButton.click()
+  await expect(page.getByText(`${title} eingetragen`)).toBeVisible()
+  // Jetzt ein Eintrag, nicht mehr „geplant“
+  await expect(page.getByRole('button', { name: `${title} als gegessen eintragen` })).toHaveCount(0)
+  await expect(page.getByRole('img', { name: /^[1-9][\d.]* von 2\.000 kcal/ })).toBeVisible()
+  await closeBadges(page)
+  await page.getByRole('button', { name: 'Rückgängig' }).click()
+  await expect(page.getByRole('button', { name: `${title} als gegessen eintragen` })).toBeVisible()
+  await expect(page.getByRole('img', { name: /^0 von 2\.000 kcal/ })).toBeVisible()
+})
+
 test('Mahlzeit vom Vortag übernehmen', async ({ page }) => {
   await startDemo(page)
   // gestern etwas eintragen

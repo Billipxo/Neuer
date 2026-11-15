@@ -75,7 +75,8 @@ export function AddFoodPage() {
   const [tab, setTab] = useState<Tab>('recent')
   const [browseGroup, setBrowseGroup] = useState<FoodGroupId>('baeckerei')
   const browseHits = useMemo(() => (tab === 'browse' ? browseFoods(browseGroup) : []), [tab, browseGroup])
-  const [query, setQuery] = useState('')
+  // „?suche=…“ füllt das Suchfeld vor (z. B. aus einem geplanten Eintrag ohne Nährwerte)
+  const [query, setQuery] = useState(() => params.get('suche') ?? '')
   const debounced = useDebounced(query.trim(), 450)
   // Mehreres auf einmal („2 Brötchen, 1 Cappuccino und eine Banane“) – braucht keine Produktsuche im Netz
   const debouncedIsList = useMemo(() => (parseMealText(debounced)?.parts.length ?? 0) > 1, [debounced])
