@@ -10,7 +10,7 @@ test('Anmelden mit Code: Daten liegen im Konto und sind für andere unsichtbar',
   await signUp(page, anna, 'Anna', '1900')
   await page.goto('/hinzufuegen?meal=breakfast')
   await page.getByLabel('Lebensmittel suchen').fill('Apfel')
-  await page.getByRole('list', { name: 'Grundnahrungsmittel' }).getByRole('button', { name: /^Apfel 1 Stück/ }).click()
+  await page.getByRole('list', { name: 'Lebensmittel und Gerichte' }).getByRole('button', { name: /^Apfel 1 Stück/ }).click()
   await page.getByRole('button', { name: 'Zu Frühstück hinzufügen' }).click()
   await page.getByRole('button', { name: 'Fertig' }).click()
   await closeBadges(page)

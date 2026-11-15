@@ -319,11 +319,11 @@ test('Grundnahrungsmittel sofort eintragen: 1 Stück Apfel und 1 EL Olivenöl', 
   await startDemo(page)
   await page.goto('/hinzufuegen?meal=breakfast')
   await page.getByLabel('Lebensmittel suchen').fill('Apfel')
-  await page.getByRole('list', { name: 'Grundnahrungsmittel' }).getByRole('button', { name: /^Apfel 1 Stück/ }).click()
+  await page.getByRole('list', { name: 'Lebensmittel und Gerichte' }).getByRole('button', { name: /^Apfel 1 Stück/ }).click()
   await expect(page.getByRole('radio', { name: 'Stück', exact: true })).toHaveAttribute('aria-checked', 'true')
   await page.getByRole('button', { name: 'Zu Frühstück hinzufügen' }).click()
   await page.getByLabel('Lebensmittel suchen').fill('Olivenöl')
-  await page.getByRole('list', { name: 'Grundnahrungsmittel' }).getByRole('button', { name: /^Olivenöl/ }).click()
+  await page.getByRole('list', { name: 'Lebensmittel und Gerichte' }).getByRole('button', { name: /^Olivenöl/ }).click()
   await expect(page.getByRole('radio', { name: 'EL', exact: true })).toHaveAttribute('aria-checked', 'true')
   await page.getByRole('button', { name: 'Zu Frühstück hinzufügen' }).click()
   await expect(page.getByText(/2 Einträge · 171 kcal/)).toBeVisible()
@@ -404,7 +404,7 @@ test('Schnell-Eintrag, Löschen mit Rückgängig und Mahlzeit als Gericht speich
   await page.getByRole('button', { name: 'Zu Mittagessen hinzufügen' }).click()
   // zweiter Eintrag aus den Grundnahrungsmitteln
   await page.getByLabel('Lebensmittel suchen').fill('Apfel')
-  await page.getByRole('list', { name: 'Grundnahrungsmittel' }).getByRole('button', { name: /^Apfel 1 Stück/ }).click()
+  await page.getByRole('list', { name: 'Lebensmittel und Gerichte' }).getByRole('button', { name: /^Apfel 1 Stück/ }).click()
   await page.getByRole('button', { name: 'Zu Mittagessen hinzufügen' }).click()
   await expect(page.getByText(/2 Einträge · 731 kcal/)).toBeVisible()
   await page.getByRole('button', { name: 'Fertig' }).click()
@@ -477,7 +477,7 @@ test('Sicherung: exportieren, Konto löschen, wieder einspielen – nichts doppe
   await startDemo(page)
   await page.goto('/hinzufuegen?meal=breakfast')
   await page.getByLabel('Lebensmittel suchen').fill('Apfel')
-  await page.getByRole('list', { name: 'Grundnahrungsmittel' }).getByRole('button', { name: /^Apfel 1 Stück/ }).click()
+  await page.getByRole('list', { name: 'Lebensmittel und Gerichte' }).getByRole('button', { name: /^Apfel 1 Stück/ }).click()
   await page.getByRole('button', { name: 'Zu Frühstück hinzufügen' }).click()
   await page.getByRole('button', { name: 'Fertig' }).click()
   await closeBadges(page)
@@ -637,4 +637,66 @@ test('Kochbuch: nach Zeit, Fleisch und Aufwand filtern, Zufallsvorschlag, Auswah
   await page.goBack()
   await page.goBack()
   await expect(page.getByRole('button', { name: 'Fertig in 15 Min. entfernen' })).toBeVisible()
+})
+
+test('Werte automatisch: Alltägliches sofort finden, Vorschläge beim eigenen Lebensmittel und beim Schnell-Eintrag', async ({ page }) => {
+  // Produktsuche fest vorgeben – unabhängig vom Netz
+  await page.route('**/search.openfoodfacts.org/search**', (route) =>
+    route.fulfill({
+      json: {
+        hits: [
+          {
+            code: '4000000000017',
+            product_name: 'Steinofenpizza Margherita',
+            brands: 'Testmarke',
+            nutriments: { 'energy-kcal_100g': 230, proteins_100g: 9, carbohydrates_100g: 30, fat_100g: 8 },
+          },
+        ],
+      },
+    }),
+  )
+  await startDemo(page)
+  await page.goto('/hinzufuegen?meal=lunch')
+
+  // Döner: sofort in der Liste, mit typischer Menge und den kcal dafür
+  await page.getByLabel('Lebensmittel suchen').fill('Döner')
+  await page
+    .getByRole('list', { name: 'Lebensmittel und Gerichte' })
+    .getByRole('button', { name: /^Döner Kebab 1 Döner ≈ 350 g · 753 kcal/ })
+    .click()
+  await expect(page.getByRole('radio', { name: 'Portionen' })).toHaveAttribute('aria-checked', 'true')
+  await page.getByRole('button', { name: 'Zu Mittagessen hinzufügen' }).click()
+  await expect(page.getByText(/^1 Eintrag · 75[23] kcal$/)).toBeVisible()
+
+  // Eigenes Lebensmittel: Werte per Vorschlag statt abtippen
+  await page.getByLabel('Lebensmittel suchen').fill('Pizza vom Italiener')
+  await page.getByRole('button', { name: '„Pizza vom Italiener“ selbst anlegen' }).click()
+  const sheet = page.getByRole('dialog', { name: 'Eigenes Lebensmittel' })
+  const suggest = sheet.getByRole('region', { name: 'Werte vorschlagen' })
+  await expect(suggest.getByRole('button', { name: /Steinofenpizza Margherita/ })).toBeVisible()
+  await suggest.getByRole('button', { name: /^Pizza Margherita/ }).click()
+  await expect(sheet.getByRole('status')).toContainText('Werte von „Pizza Margherita“ übernommen')
+  await expect(sheet.getByLabel('Kalorien pro 100 g')).toHaveValue('245')
+  await expect(sheet.getByLabel('Portionsgröße')).toHaveValue('380')
+  await expect(sheet.getByLabel('Name', { exact: true })).toHaveValue('Pizza vom Italiener')
+  await sheet.getByRole('button', { name: 'Speichern' }).click()
+  // gleich eintragen: 1 Portion = 1 Pizza
+  await page.getByRole('button', { name: 'Zu Mittagessen hinzufügen' }).click()
+  await expect(page.getByText(/^2 Einträge · 1\.68\d kcal$/)).toBeVisible()
+
+  // Schnell-Eintrag: Kalorien per Vorschlag
+  await page.getByLabel('Lebensmittel suchen').fill('Cappuccino')
+  await page.getByRole('button', { name: 'Nur Kalorien für „Cappuccino“ eintragen' }).click()
+  const quick = page.getByRole('dialog', { name: 'Schnell-Eintrag' })
+  await quick.getByRole('group', { name: 'Vorschläge für die Kalorien' }).getByRole('button', { name: 'Cappuccino · 1 Tasse ≈ 80 kcal' }).click()
+  await expect(quick.getByLabel('Kalorien', { exact: true })).toHaveValue('80')
+  await quick.getByRole('button', { name: 'Zu Mittagessen hinzufügen' }).click()
+  await expect(page.getByText(/^3 Einträge · 1\.76\d kcal$/)).toBeVisible()
+
+  await page.getByRole('button', { name: 'Fertig' }).click()
+  await closeBadges(page)
+  await expect(page.getByRole('img', { name: /1\.76\d von 2\.000 kcal/ })).toBeVisible()
+  // Der Döner steht beim nächsten Mal unter „Zuletzt“
+  await page.goto('/hinzufuegen?meal=dinner')
+  await expect(page.getByRole('button', { name: /^Döner Kebab/ })).toBeVisible()
 })
