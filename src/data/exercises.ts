@@ -261,5 +261,44 @@ ex({ key: 'crosstrainer', name: 'Crosstrainer', muscles: ['ausdauer'], equipment
 export const EXERCISES: readonly Exercise[] = L
 
 export function exercise(key: string): Exercise | undefined {
-  return L.find((e) => e.key === key)
+  return L.find((e) => e.key === key) ?? MORE_EXERCISES.find((e) => e.key === key)
 }
+
+const more = (key: string, name: string, muscles: Muscle[], equipment: Equipment[], o: Partial<Exercise> = {}): Exercise => ({
+  key,
+  name,
+  muscles,
+  equipment,
+  kind: 'kraft',
+  level: 2,
+  cues: [],
+  ...o,
+})
+
+/** Weitere gängige Übungen aus dem Studio – zum Eintragen des eigenen Trainings (nicht in den Vorschlägen) */
+export const MORE_EXERCISES: readonly Exercise[] = [
+  more('schraegbankdruecken', 'Schrägbankdrücken', ['brust', 'schultern'], ['langhantel', 'bank']),
+  more('kh-bankdruecken', 'Bankdrücken mit Kurzhanteln', ['brust', 'arme'], ['kurzhanteln', 'bank']),
+  more('butterfly', 'Butterfly (Maschine)', ['brust'], ['maschine']),
+  more('dips-barren', 'Dips am Barren', ['brust', 'arme'], ['koerper']),
+  more('klimmzuege', 'Klimmzüge', ['ruecken', 'arme'], ['koerper'], { level: 3 }),
+  more('lh-rudern', 'Langhantel-Rudern', ['ruecken'], ['langhantel']),
+  more('kh-rudern-einarmig', 'Einarmiges Kurzhantel-Rudern', ['ruecken', 'arme'], ['kurzhanteln', 'bank'], { perSide: true }),
+  more('face-pulls', 'Face Pulls', ['schultern', 'ruecken'], ['kabelzug']),
+  more('reverse-butterfly', 'Reverse Butterfly', ['schultern', 'ruecken'], ['maschine']),
+  more('kh-frontheben', 'Frontheben', ['schultern'], ['kurzhanteln']),
+  more('lh-schulterdruecken', 'Schulterdrücken mit Langhantel', ['schultern', 'arme'], ['langhantel']),
+  more('hammercurls', 'Hammercurls', ['arme'], ['kurzhanteln']),
+  more('sz-curls', 'SZ-Curls', ['arme'], ['langhantel']),
+  more('french-press', 'French Press', ['arme'], ['langhantel', 'bank']),
+  more('bulgarische-kniebeuge', 'Bulgarische Kniebeugen', ['beine', 'po'], ['kurzhanteln', 'bank'], { perSide: true }),
+  more('frontkniebeuge', 'Frontkniebeugen', ['beine', 'rumpf'], ['langhantel'], { level: 3 }),
+  more('hackenschmidt', 'Hackenschmidt-Kniebeugen', ['beine', 'po'], ['maschine']),
+  more('adduktoren', 'Adduktorenmaschine', ['beine'], ['maschine'], { level: 1 }),
+  more('abduktoren', 'Abduktorenmaschine', ['po'], ['maschine'], { level: 1 }),
+  more('wadenheben-maschine', 'Wadenheben an der Maschine', ['beine'], ['maschine'], { level: 1 }),
+  more('haengendes-beinheben', 'Hängendes Beinheben', ['rumpf'], ['koerper'], { level: 3 }),
+  more('farmers-walk', "Farmer's Walk", ['rumpf', 'arme'], ['kurzhanteln'], { timed: true }),
+  more('stepper', 'Stepper', ['ausdauer', 'beine'], ['cardio'], { kind: 'cardio', level: 1, timed: true }),
+  more('seilspringen', 'Seilspringen', ['ausdauer'], ['koerper'], { kind: 'cardio', timed: true }),
+]

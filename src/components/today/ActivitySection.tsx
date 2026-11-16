@@ -1,18 +1,21 @@
 import { Link } from 'react-router-dom'
-import { Lightbulb, Plus } from 'lucide-react'
+import { Lightbulb, NotebookPen, Plus } from 'lucide-react'
 import type { ActivityLog } from '../../types'
 import { activityDetail, activityEmoji, summarizeActivities } from '../../lib/activity'
 import { fmtInt } from '../../lib/format'
+import { trainingSummary } from '../../lib/trainingLog'
 import { Card } from '../ui/Card'
 
 /** Sport & Bewegung des Tages – wie eine Mahlzeit: Kopf mit Summe, Einträge zum Antippen */
 export function ActivitySection({
+  date,
   activities,
   inBudget,
   unavailable,
   onAdd,
   onEdit,
 }: {
+  date: string
   activities: ActivityLog[]
   /** Verbrauch wird aufs Tagesziel angerechnet */
   inBudget: boolean
@@ -55,7 +58,15 @@ export function ActivitySection({
           <strong> setup-teil-4.sql</strong> ausführen (Anleitung: ANLEITUNG.md, „Update: Sport“).
         </p>
       )}
-      <div className="border-t border-line/70 px-2 py-1">
+      <div className="flex flex-col border-t border-line/70 px-2 py-1">
+        {!unavailable && (
+          <Link
+            to={`/training/eintragen?datum=${date}`}
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-xl px-2 text-sm font-medium text-muted transition hover:bg-surface-2 hover:text-ink"
+          >
+            <NotebookPen className="size-4" aria-hidden /> Training eintragen – Übungen, Sätze, Gewichte
+          </Link>
+        )}
         <Link
           to="/training"
           className="inline-flex min-h-10 items-center gap-1.5 rounded-xl px-2 text-sm font-medium text-muted transition hover:bg-surface-2 hover:text-ink"
@@ -77,7 +88,9 @@ export function ActivitySection({
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-[15px]">{a.name}</p>
-                  <p className="text-xs text-muted">{activityDetail(a)}</p>
+                  <p className="text-xs text-muted">
+                    {a.details?.exercises?.length ? [activityDetail(a), trainingSummary(a.details)].filter(Boolean).join(' · ') : activityDetail(a)}
+                  </p>
                 </div>
                 <span className="text-sm font-medium tabular">≈ {fmtInt(Number(a.kcal))} kcal</span>
               </button>

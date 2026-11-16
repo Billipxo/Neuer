@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Trash2 } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { NotebookPen, Trash2 } from 'lucide-react'
 import type { ActivityLog } from '../../types'
 import { ACTIVITY_TYPES, QUICK_ACTIVITY_KEYS, activityType } from '../../data/activities'
 import { DEFAULT_WEIGHT_KG, estimateKcal } from '../../lib/activity'
@@ -15,6 +16,8 @@ import { Switch } from '../ui/Switch'
 import { useToast } from '../ui/Toast'
 
 const MINUTE_CHIPS = [15, 30, 45, 60, 90]
+/** Hier passt das Trainingstagebuch mit Übungen, Sätzen und Gewichten */
+const WITH_EXERCISES = ['krafttraining', 'hiit', 'crosstrainer', 'rudern', 'indoor-cycling', 'pilates', 'kampfsport']
 const STEP_CHIPS = [5000, 8000, 10000, 12000]
 
 /** Sporteinheit eintragen oder ändern: Sportart, Dauer (bzw. Schritte) – der Verbrauch wird geschätzt oder selbst eingetragen */
@@ -128,6 +131,16 @@ export function ActivitySheet({
           onChange={(e) => setKind(e.target.value)}
           options={[...ACTIVITY_TYPES].sort((a, b) => a.name.localeCompare(b.name, 'de')).map((t) => ({ value: t.key, label: `${t.emoji} ${t.name}` }))}
         />
+
+        {!editing && WITH_EXERCISES.includes(type.key) && (
+          <Link
+            to={`/training/eintragen?datum=${date}`}
+            onClick={onClose}
+            className="flex min-h-11 items-center gap-2 rounded-2xl bg-brand-soft px-3 text-sm font-medium text-brand"
+          >
+            <NotebookPen className="size-4 shrink-0" aria-hidden /> Mit Übungen, Sätzen und Gewichten eintragen
+          </Link>
+        )}
 
         {type.custom && <Field label="Was hast du gemacht?" value={customName} onChange={(e) => setCustomName(e.target.value)} placeholder="z. B. Umzug, Kinderwagen schieben" />}
 

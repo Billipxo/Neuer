@@ -272,6 +272,19 @@ fehlt nur **ein** Schritt:
 Bis dahin zeigt die App bei „Sport & Bewegung“ den Hinweis „Noch nicht eingerichtet“; alles andere funktioniert wie
 gewohnt. Deine Daten bleiben unverändert, und die Datei lässt sich gefahrlos wiederholen.
 
+## Update: Eigenes Training (November 2026)
+
+Für das Trainingstagebuch (Übungen mit Sätzen, Wiederholungen und Gewicht) braucht die Sport-Tabelle eine zusätzliche
+Spalte. Auch wenn du `setup-teil-4.sql` schon einmal ausgeführt hast:
+
+1. In GitHub **`supabase/setup-teil-4.sql`** öffnen → **„Copy raw file“** (die Datei enthält jetzt auch dieses Update).
+2. In Supabase **SQL Editor** → **New query** → einfügen → **Run** (eine Nachfrage zur „destructive operation“ mit
+   **Run this query** bestätigen).
+3. **„Success. No rows returned“** – fertig. Die App einmal neu laden.
+
+Vorhandene Sport-Einträge bleiben unverändert. Bis dahin lässt sich ein Training nur ohne die Übungen speichern – die App
+sagt Bescheid und bietet das an.
+
 ## Später: Updates der Datenbank
 
 Wenn du die Datenbank **schon einmal** eingerichtet hast und eine neue Version der App kommt, gibt es zwei Wege:
@@ -289,7 +302,8 @@ Wenn du die Datenbank **schon einmal** eingerichtet hast und eine neue Version d
 - `20261111000010_target_weight.sql` – Optionales Zielgewicht
 - `20261113000011_household.sql` – Gemeinsamer Haushalt (geteilter Wochenplan und geteilte Einkaufsliste)
 - `20261113000012_grants.sql` – Zugriffsrechte ausdrücklich vergeben (behebt „permission denied for table …“)
-- `20261116000013_activity.sql` – Sport & Bewegung (dasselbe wie `setup-teil-4.sql`)
+- `20261116000013_activity.sql` – Sport & Bewegung (in `setup-teil-4.sql` enthalten)
+- `20261116000014_training_log.sql` – Eigenes Training: Übungen mit Sätzen (in `setup-teil-4.sql` enthalten)
 
 Wer noch gar nichts eingerichtet hat, nimmt wie oben die vier Dateien aus Schritt 3 – sie enthalten alles.
 
