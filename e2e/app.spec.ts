@@ -1100,3 +1100,36 @@ test('Stöbern: Werte nach Kategorien finden, ohne zu tippen', async ({ page }) 
   await page.getByRole('button', { name: 'Zu Frühstück hinzufügen' }).click()
   await expect(page.getByText(/^1 Eintrag · 80 kcal$/)).toBeVisible()
 })
+
+test('Lieblingszutaten: Rezepte daraus finden und ein eigenes Gericht zusammenstellen', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/rezepte')
+  await page.getByRole('link', { name: /^Lieblingszutaten/ }).click()
+  await expect(page.getByRole('heading', { name: 'Lieblingszutaten', exact: true })).toBeVisible()
+  for (const name of ['Lachs', 'Spinat']) {
+    await page.getByLabel('Lieblingszutat suchen').fill(name)
+    await page.getByRole('list', { name: 'Passende Zutaten' }).getByRole('button', { name, exact: true }).click()
+  }
+  const chosen = page.getByRole('list', { name: 'Ausgewählte Lieblingszutaten' }).getByRole('button')
+  await expect(chosen).toHaveCount(2)
+  // Rezepte mit beiden Lieblingszutaten stehen oben
+  const first = page.getByRole('region', { name: 'Mit mehreren Lieblingszutaten' }).getByRole('link').first()
+  await expect(first).toContainText('Lachs')
+  await expect(first).toContainText('Spinat')
+  // Die Auswahl bleibt auf dem Gerät gespeichert
+  await page.reload()
+  await expect(chosen).toHaveCount(2)
+  // Eigenes Gericht aus Lieblingszutaten, ergänzt um gekochten Reis aus den eingebauten Richtwerten
+  const forDish = page.getByRole('list', { name: 'Zutaten für das Gericht' })
+  await forDish.getByRole('button', { name: 'Lachs' }).click()
+  await forDish.getByRole('button', { name: 'Spinat' }).click()
+  await page.getByRole('button', { name: 'Gericht aus 2 Zutaten anlegen' }).click()
+  await expect(page.getByLabel('Name des Gerichts')).toHaveValue('Lachs & Spinat')
+  await expect(page.getByLabel('Menge Lachsfilet')).toHaveValue('125')
+  await page.getByRole('button', { name: 'Zutat hinzufügen' }).click()
+  await page.getByLabel('Zutat suchen').fill('Reis (gekocht)')
+  await page.getByRole('list', { name: 'Grundnahrungsmittel & Alltägliches' }).getByRole('button', { name: /^Reis \(gekocht\)/ }).click()
+  await expect(page.getByLabel('Menge Reis (gekocht)')).toHaveValue('180')
+  await page.getByRole('button', { name: 'Speichern' }).click()
+  await expect(page.getByText('Gericht angelegt')).toBeVisible()
+})
