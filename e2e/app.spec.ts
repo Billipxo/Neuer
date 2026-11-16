@@ -1052,16 +1052,21 @@ test('Stöbern: Werte nach Kategorien finden, ohne zu tippen', async ({ page }) 
   await page.goto('/hinzufuegen?meal=breakfast')
   await page.getByRole('group', { name: 'Schnellauswahl' }).getByRole('button', { name: 'Stöbern' }).click()
   const categories = page.getByRole('group', { name: 'Kategorien' })
-  // Bäckerei zuerst, das Brötchen vorn
-  await expect(categories.getByRole('button', { name: 'Bäckerei & Frühstück' })).toHaveAttribute('aria-pressed', 'true')
-  await expect(page.getByRole('list', { name: 'Bäckerei & Frühstück' }).getByRole('button').first()).toContainText('Brötchen')
+  // Brot & Brötchen zuerst, das Brötchen vorn
+  await expect(categories.getByRole('button', { name: 'Brot & Brötchen' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByRole('list', { name: 'Brot & Brötchen' }).getByRole('button').first()).toContainText('Brötchen')
   // Obst: die Grundnahrungsmittel aus der Nährwerttabelle stehen vorn
   await categories.getByRole('button', { name: 'Obst', exact: true }).click()
   await expect(page.getByRole('list', { name: 'Obst' }).getByRole('button').first()).toContainText('Apfel')
-  // Getränke: einen Cappuccino eintragen – 1 Tasse ist schon vorausgewählt
-  await categories.getByRole('button', { name: 'Getränke', exact: true }).click()
+  // Käse: Gouda vorn, die große Erweiterung (Maasdamer …) weiter hinten
+  await categories.getByRole('button', { name: 'Käse', exact: true }).click()
+  const kaese = page.getByRole('list', { name: 'Käse' })
+  await expect(kaese.getByRole('button').first()).toContainText('Gouda')
+  await expect(kaese.getByRole('button', { name: /^Maasdamer 1 Scheibe ≈ 25 g/ })).toBeVisible()
+  // Kaffee, Tee & Kakao: einen Cappuccino eintragen – 1 Tasse ist schon vorausgewählt
+  await categories.getByRole('button', { name: 'Kaffee, Tee & Kakao', exact: true }).click()
   await page
-    .getByRole('list', { name: 'Getränke' })
+    .getByRole('list', { name: 'Kaffee, Tee & Kakao' })
     .getByRole('button', { name: /^Cappuccino 1 Tasse = 200 ml · 80 kcal/ })
     .click()
   await page.getByRole('button', { name: 'Zu Frühstück hinzufügen' }).click()

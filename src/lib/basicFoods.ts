@@ -119,6 +119,8 @@ export interface QuickFoodHit {
   typicalLabel: string | null
   /** Getränk: Mengen in ml statt g */
   liquid: boolean
+  /** Aus der großen Erweiterung (seltener gesucht) – zieht bei der Texterkennung nicht am Gängigen vorbei */
+  extension?: boolean
 }
 
 /** Für den Vergleich: klein, ohne Akzente; ß = ss, und ae/oe/ue gelten wie ä/ö/ü („Doener“ findet „Döner“) */
@@ -164,7 +166,7 @@ const TABLE_LIQUIDS = new Set(['Milch 1,5 %', 'Haferdrink', 'Gemüsebrühe', 'Ri
 /** Andere gebräuchliche Namen für Einträge der Nährwerttabelle – auch aus Österreich und der Schweiz */
 const TABLE_ALIASES: Readonly<Record<string, readonly string[]>> = {
   Kartoffeln: ['Erdäpfel'],
-  Tomate: ['Paradeiser'],
+  Tomate: ['Paradeiser', 'Strauchtomaten', 'Fleischtomate'],
   Karotten: ['Möhren', 'Mohrrüben', 'Gelbe Rüben', 'Rüebli'],
   Blumenkohl: ['Karfiol'],
   Aubergine: ['Melanzani'],
@@ -207,6 +209,15 @@ const TABLE_ALIASES: Readonly<Record<string, readonly string[]>> = {
   Puderzucker: ['Staubzucker'],
   Speisestärke: ['Maisstärke'],
   Erdnussbutter: ['Erdnussmus'],
+  Haferdrink: ['Hafermilch'],
+  Feta: ['Schafskäse'],
+  Hüttenkäse: ['körniger Frischkäse', 'Cottage Cheese'],
+  Salatgurke: ['Gurke', 'Snackgurken'],
+  Kasseler: ['Kassler'],
+  Matjesfilet: ['Matjes'],
+  Rapsöl: ['Öl', 'Pflanzenöl', 'Speiseöl'],
+  Sojasauce: ['Sojasoße', 'Soja-Soße'],
+  Lachsfilet: ['Lachs (roh)'],
 }
 
 /** Ein Name, für den Vergleich vorbereitet: einmal normalisiert statt bei jedem Tastendruck */
@@ -289,6 +300,7 @@ function everydayHit(e: EverydayFood): QuickFoodHit {
     typicalGrams: grams,
     typicalLabel: grams ? `1 ${e.measure.replace(/\s*\(.*\)$/, '')}` : null,
     liquid: e.liquid,
+    extension: e.more,
   }
 }
 
@@ -318,10 +330,16 @@ interface Entry extends Prepared {
   name: string
   /** Aufschlag auf die Güte (Trockengewichte stehen hinter der gekochten Portion) */
   penalty: number
-  /** Reihenfolge bei Gleichstand: Alltägliches vor der Nährwerttabelle, Gängiges zuerst */
+  /**
+   * Reihenfolge bei Gleichstand: gängiges Alltägliches, dann die Nährwerttabelle, dann die große Erweiterung – so
+   * verdrängen die vielen seltener gesuchten Einträge nicht die gewohnten ersten Treffer
+   */
   order: number
   hit: () => QuickFoodHit
 }
+
+const TABLE_ORDER = 100_000
+const MORE_ORDER = 200_000
 
 let ENTRIES: Entry[] | null = null
 /** Alle durchsuchbaren Einträge, beim ersten Gebrauch einmal vorbereitet */
@@ -334,12 +352,12 @@ function entries(): Entry[] {
       ...prepare(info.name, TABLE_ALIASES[info.name] ?? [], info.base !== info.name ? [info.base] : []),
       name: info.name,
       penalty: isDry(info) ? 1 : 0,
-      order: 1000 + i,
+      order: TABLE_ORDER + i,
       hit: () => tableHit(info),
     })
   })
   EVERYDAY_FOODS.forEach((e, i) => {
-    out.push({ ...prepare(e.name, e.aliases), name: e.name, penalty: 0, order: i, hit: () => everydayHit(e) })
+    out.push({ ...prepare(e.name, e.aliases), name: e.name, penalty: 0, order: (e.more ? MORE_ORDER : 0) + i, hit: () => everydayHit(e) })
   })
   ENTRIES = out
   return out
@@ -358,8 +376,9 @@ function rank(query: string): { entry: Entry; score: number }[] {
   return found.sort(
     (a, b) =>
       a.score - b.score ||
-      // gleich gut: Suche als ganzes erstes Wort vor Wortanfängen, Namensanfang vor anderen Begriffen,
-      // danach die Reihenfolge der Listen (Gängiges zuerst)
+      // gleich gut: das Gewohnte vor der großen Erweiterung, dann die Suche als ganzes erstes Wort vor Wortanfängen,
+      // Namensanfang vor anderen Begriffen und zuletzt die Reihenfolge der Listen (Gängiges zuerst)
+      Number(a.entry.order >= MORE_ORDER) - Number(b.entry.order >= MORE_ORDER) ||
       Number(!wholeFirstWord(q, a.entry.first)) - Number(!wholeFirstWord(q, b.entry.first)) ||
       Number(!a.entry.n.startsWith(q)) - Number(!b.entry.n.startsWith(q)) ||
       a.entry.order - b.entry.order,
@@ -430,7 +449,9 @@ export function suggestFoods(name: string, limit = 4): QuickFoodHit[] {
 
 /** Grundnahrungsmittel aus der Nährwerttabelle, die beim Stöbern in eine Kategorie gehören */
 export const TABLE_IN_GROUP: Partial<Record<FoodGroupId, readonly string[]>> = {
-  baeckerei: ['Vollkornbrot', 'Vollkornbrötchen', 'Vollkorntoast', 'Baguette', 'Vollkorn-Knäckebrot', 'Haferflocken', 'Honig', 'Erdnussbutter'],
+  baeckerei: ['Vollkornbrot', 'Vollkornbrötchen', 'Vollkorntoast', 'Baguette', 'Vollkorn-Knäckebrot', 'Vollkorn-Fladenbrot', 'Vollkorn-Wraps'],
+  fruehstueck: ['Haferflocken'],
+  aufstriche: ['Honig', 'Erdnussbutter'],
   milch: [
     'Eier',
     'Butter',
@@ -439,33 +460,68 @@ export const TABLE_IN_GROUP: Partial<Record<FoodGroupId, readonly string[]>> = {
     'Griechischer Joghurt 2 %',
     'Skyr',
     'Magerquark',
-    'Hüttenkäse',
-    'Frischkäse (leicht)',
-    'Gouda',
-    'Bergkäse',
-    'Camembert',
-    'Feta',
-    'Mozzarella (light)',
-    'Parmesan',
-    'Halloumi',
     'Haferdrink',
+    'Sahne',
+    'saure Sahne (10 %)',
+    'Kochsahne 15 %',
   ],
-  wurst: [
-    'Kochschinken (mager)',
-    'Putenbrust-Aufschnitt',
-    'Rohschinken',
-    'Frühstücksspeck',
-    'Geflügelwürstchen',
-    'Räucherlachs',
+  kaese: ['Gouda', 'Bergkäse', 'Camembert', 'Feta', 'Mozzarella (light)', 'Parmesan', 'Halloumi', 'Hüttenkäse', 'Frischkäse (leicht)', 'Ziegenkäse', 'Ricotta'],
+  wurst: ['Kochschinken (mager)', 'Putenbrust-Aufschnitt', 'Rohschinken', 'Frühstücksspeck', 'Geflügelwürstchen'],
+  fleisch: [
     'Hähnchenbrust',
+    'Hähnchenschenkelfilet',
+    'Putenbrust',
     'Putenschnitzel',
+    'Putenhackfleisch',
+    'Rinderhack (mager)',
+    'Rinderhüftsteak',
+    'Rindergulasch',
+    'Rinderrouladen',
+    'Schweinefilet',
+    'Schweineschnitzel',
+    'Kasseler',
+    'Lammhackfleisch',
+    'Bratwurst (Geflügel)',
+  ],
+  fisch: [
+    'Räucherlachs',
     'Lachsfilet',
     'Thunfisch (naturell)',
     'Garnelen',
     'Matjesfilet',
     'Makrele (geräuchert)',
+    'Kabeljaufilet',
+    'Seelachsfilet',
+    'Forellenfilet',
+    'Zanderfilet',
+    'Rotbarschfilet',
+    'Doradenfilet',
+    'Thunfischsteak',
+    'Tintenfischringe',
+    'Miesmuscheln (mit Schale)',
+    'Nordseekrabben',
   ],
-  obst: ['Apfel', 'Bananen', 'Birne', 'Orange', 'Kiwi', 'Weintrauben', 'Erdbeeren', 'Heidelbeeren', 'Ananas', 'Pflaumen', 'Mango (TK)', 'Avocado', 'Datteln (entsteint)', 'Rosinen'],
+  vegetarisch: ['Tofu (natur)', 'Räuchertofu', 'Edamame (TK, geschält)'],
+  obst: [
+    'Apfel',
+    'Bananen',
+    'Birne',
+    'Orange',
+    'Kiwi',
+    'Weintrauben',
+    'Erdbeeren',
+    'Heidelbeeren',
+    'Ananas',
+    'Pflaumen',
+    'Mango (TK)',
+    'Avocado',
+    'Zitrone',
+    'Rhabarber',
+    'Beeren (TK)',
+    'Apfelmus (ungesüßt)',
+    'Datteln (entsteint)',
+    'Rosinen',
+  ],
   gemuese: [
     'Salatgurke',
     'Tomate',
@@ -477,6 +533,7 @@ export const TABLE_IN_GROUP: Partial<Record<FoodGroupId, readonly string[]>> = {
     'Brokkoli',
     'Blumenkohl',
     'Zucchini',
+    'Aubergine',
     'Champignons',
     'Mais',
     'Erbsen (TK)',
@@ -484,26 +541,79 @@ export const TABLE_IN_GROUP: Partial<Record<FoodGroupId, readonly string[]>> = {
     'Spargel (weiß)',
     'Feldsalat',
     'Kopfsalat',
+    'Römersalat',
     'Rucola',
+    'Babyspinat',
     'Kartoffeln',
     'Süßkartoffel',
+    'Hokkaido-Kürbis',
+    'Zwiebel',
+    'Lauch',
+    'Fenchel',
+    'Rosenkohl',
+    'Rotkohl',
+    'Weißkohl',
+    'Wirsing',
+    'Spitzkohl',
+    'Chinakohl',
+    'Pak Choi',
+    'Grünkohl',
+    'Sauerkraut',
+    'Rote Bete (vorgegart)',
     'Oliven',
     'Gewürzgurken',
   ],
+  sossen: ['Senf', 'Ajvar', 'Meerrettich', 'Sojasauce', 'Currypaste'],
   snacks: ['Mandeln', 'Walnüsse', 'Cashewkerne', 'Haselnüsse', 'Erdnüsse (geröstet, ungesalzen)', 'Reiswaffeln', 'Kürbiskerne', 'Sonnenblumenkerne'],
   suesses: ['Zartbitterschokolade (70 %)'],
-  getraenke: ['Espresso', 'Schwarzer Tee'],
+  vorrat: [
+    'Mehl',
+    'Dinkelvollkornmehl',
+    'Zucker',
+    'Puderzucker',
+    'Ahornsirup',
+    'Olivenöl',
+    'Rapsöl',
+    'Leinöl',
+    'Reis',
+    'Vollkornreis',
+    'Spaghetti',
+    'Vollkornspaghetti',
+    'Bandnudeln',
+    'Couscous',
+    'Bulgur',
+    'Quinoa',
+    'Hirse',
+    'Polenta',
+    'Grieß',
+    'rote Linsen',
+    'Tellerlinsen',
+    'Kichererbsen',
+    'Kidneybohnen',
+    'weiße Bohnen',
+    'Tomaten (stückig)',
+    'passierte Tomaten',
+    'Kokosmilch (light)',
+    'Chiasamen',
+    'Leinsamen (geschrotet)',
+    'Kokosraspeln',
+    'Kakaopulver',
+    'Tahin',
+  ],
+  kaffee: ['Espresso', 'Schwarzer Tee'],
 }
 
-/** Bei Obst und Gemüse stehen die Grundnahrungsmittel (Apfel, Gurke …) vorn, sonst das Alltägliche */
-const TABLE_FIRST: ReadonlySet<FoodGroupId> = new Set(['obst', 'gemuese'])
+/** Bei Obst, Gemüse und Käse stehen die Grundnahrungsmittel (Apfel, Gurke, Gouda …) vorn, sonst das Alltägliche */
+const TABLE_FIRST: ReadonlySet<FoodGroupId> = new Set(['obst', 'gemuese', 'kaese'])
 
-/** Alles aus einer Kategorie zum Stöbern beim Erfassen */
+/** Alles aus einer Kategorie zum Stöbern beim Erfassen – Gängiges zuerst, die große Erweiterung danach */
 export function browseFoods(group: FoodGroupId): QuickFoodHit[] {
-  const everyday = EVERYDAY_FOODS.filter((e) => e.group === group).map(everydayHit)
+  const inGroup = EVERYDAY_FOODS.filter((e) => e.group === group)
+  const common = inGroup.filter((e) => !e.more).map(everydayHit)
+  const more = inGroup.filter((e) => e.more).map(everydayHit)
   const table = (TABLE_IN_GROUP[group] ?? [])
     .map((name) => INGREDIENT_LIST.find((i) => i.name === name))
     .filter((i): i is IngredientInfo => Boolean(i))
     .map(tableHit)
-  return TABLE_FIRST.has(group) ? [...table, ...everyday] : [...everyday, ...table]
+  return TABLE_FIRST.has(group) ? [...table, ...common, ...more] : [...common, ...table, ...more]
 }

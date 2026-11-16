@@ -315,6 +315,8 @@ interface Match {
   recipe?: CookbookEntry
   /** Wonach gesucht wurde */
   query: string
+  /** Aus der großen Erweiterung der Richtwerte */
+  extension?: boolean
 }
 
 /** Rezept als Lebensmittel „je Portion“: 1 Portion zählt als 100 Rechen-Gramm */
@@ -398,7 +400,7 @@ function measureOf(hit: QuickFoodHit): string | null {
 }
 
 function fromHit(hit: QuickFoodHit, score: number, query: string): Match {
-  return { name: hit.name, food: hit.food, stored: false, score, measure: measureOf(hit), liquid: hit.liquid, query }
+  return { name: hit.name, food: hit.food, stored: false, score, measure: measureOf(hit), liquid: hit.liquid, query, extension: hit.extension }
 }
 
 function dishMatch(d: Dish, score: number, query: string): Match {
@@ -444,7 +446,7 @@ function rememberedMatch(text: string, lib: Library): Match | null {
  */
 function candidates(text: string, unitWord: string | null, lib: Library, limit = 6): Match[] {
   if (norm(text).length < 2) return []
-  const quick = scoredQuickFoods(text, 8).map((s) => fromHit(s.hit, s.score, text))
+  const quick = scoredQuickFoods(text, 12).map((s) => fromHit(s.hit, s.score, text))
   // Stabile Sortierung: Bei gleicher Güte bleibt Eigenes vor den Richtwerten, Rezepte kommen danach
   const all = [...ownMatches(text, lib).slice(0, 3), ...quick, ...recipeMatches(text, lib)].sort((a, b) => a.score - b.score)
   const toFront = (m: Match) => {
@@ -454,7 +456,8 @@ function candidates(text: string, unitWord: string | null, lib: Library, limit =
   }
   if (all.length && unitWord) {
     const best = all[0]
-    const fit = quick.find((m) => m.measure && norm(m.measure.split(' ')[0]) === unitWord && m.score <= best.score + 3)
+    // Seltener Gesuchtes aus der Erweiterung („Colabier“ im Glas) zieht so nicht am Gängigen („Cola“) vorbei
+    const fit = quick.find((m) => m.measure && norm(m.measure.split(' ')[0]) === unitWord && m.score <= best.score + 3 && (!m.extension || !!best.extension))
     if (fit && !(best.stored && best.score < fit.score)) toFront(fit)
   }
   const remembered = rememberedMatch(text, lib)

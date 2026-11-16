@@ -465,7 +465,12 @@ export function AddFoodPage() {
 
           {tab === 'browse' ? (
             <>
-              <div className="-mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Kategorien">
+              {/* Zwei Zeilen zum Wischen: alle Kategorien auf einen Blick, ohne eine endlose Reihe */}
+              <div
+                className="-mx-4 mt-3 grid auto-cols-max grid-flow-col grid-rows-2 justify-items-start gap-2 overflow-x-auto px-4 pb-1"
+                role="group"
+                aria-label="Kategorien"
+              >
                 {FOOD_GROUPS.map((g) => (
                   <Chip key={g.id} active={browseGroup === g.id} onClick={() => setBrowseGroup(g.id)}>
                     <span aria-hidden>{g.emoji}</span> {g.label}
