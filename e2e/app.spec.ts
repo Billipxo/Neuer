@@ -1008,6 +1008,45 @@ test('Sport ohne Datenbank-Update: Hinweis statt Fehler, Rest der App läuft', a
   await expect(page.getByText('JSON exportiert')).toBeVisible()
 })
 
+test('Training vorschlagen: zu Hause oder im Studio, geführt durchgehen und als Sport eintragen', async ({ page }) => {
+  await startDemo(page)
+  await page.getByRole('link', { name: /Training vorschlagen/ }).click()
+  await expect(page.getByRole('heading', { name: 'Training', exact: true })).toBeVisible()
+  // Fitnessstudio, 45 Minuten, Ganzkörper, Fortgeschritten: Sätze mit Geräten
+  await page.getByRole('radiogroup', { name: 'Ort' }).getByRole('radio', { name: 'Fitnessstudio' }).click()
+  await page.getByRole('group', { name: 'Dauer' }).getByRole('button', { name: '45 Min.' }).click()
+  await page.getByRole('radiogroup', { name: 'Level' }).getByRole('radio', { name: 'Fortgeschritten' }).click()
+  await expect(page.getByRole('heading', { name: 'Ganzkörper im Studio' })).toBeVisible()
+  await expect(page.getByRole('list', { name: 'Krafttraining' }).getByRole('listitem').first()).toContainText(/3 × 8–12|4 × 8–12|× \d+ s/)
+
+  // Zu Hause, 15 Minuten, Einsteiger: Zirkel ohne Geräte
+  await page.getByRole('radiogroup', { name: 'Ort' }).getByRole('radio', { name: 'Zuhause' }).click()
+  await page.getByRole('group', { name: 'Dauer' }).getByRole('button', { name: '15 Min.' }).click()
+  await page.getByRole('radiogroup', { name: 'Level' }).getByRole('radio', { name: 'Einsteiger' }).click()
+  await expect(page.getByRole('heading', { name: 'Ganzkörper zu Hause' })).toBeVisible()
+  for (const block of ['Aufwärmen', 'Zirkel', 'Abkühlen']) await expect(page.getByRole('list', { name: block })).toBeVisible()
+  // Ausführung aufklappen
+  const first = page.getByRole('list', { name: 'Zirkel' }).getByRole('button').first()
+  await first.click()
+  await expect(first).toHaveAttribute('aria-expanded', 'true')
+  await page.getByRole('button', { name: 'Neuer Vorschlag' }).click()
+  await expect(page.getByRole('list', { name: 'Zirkel' })).toBeVisible()
+
+  // Geführt durchgehen – „Weiter“ springt zur nächsten Übung bzw. Pause
+  await page.getByRole('button', { name: 'Training starten' }).click()
+  const player = page.getByRole('dialog', { name: 'Ganzkörper zu Hause' })
+  await expect(player.getByText(/Schritt 1 von \d+/)).toBeVisible()
+  await expect(player.getByLabel(/Noch \d+ Sekunden/)).toBeVisible()
+  for (let i = 0; i < 120 && !(await player.getByRole('heading', { name: 'Geschafft!' }).isVisible()); i++) {
+    await player.getByRole('button', { name: 'Weiter', exact: true }).click()
+  }
+  await expect(player.getByRole('heading', { name: 'Geschafft!' })).toBeVisible()
+  await player.getByRole('button', { name: 'Als Sport eintragen' }).click()
+  await expect(page.getByText('Training als Sport eingetragen')).toBeVisible()
+  await closeBadges(page)
+  await expect(page.getByRole('list', { name: 'Sport an diesem Tag' }).getByRole('button', { name: /^Training: Ganzkörper zu Hause 1 Min\./ })).toBeVisible()
+})
+
 test('Stöbern: Werte nach Kategorien finden, ohne zu tippen', async ({ page }) => {
   await startDemo(page)
   await page.goto('/hinzufuegen?meal=breakfast')

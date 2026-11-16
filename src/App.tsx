@@ -27,6 +27,7 @@ const GuidePage = lazy(() => import('./pages/GuidePage').then((m) => ({ default:
 const CookModePage = lazy(() => import('./pages/CookModePage').then((m) => ({ default: m.CookModePage })))
 const AboutPage = lazy(() => import('./pages/AboutPage').then((m) => ({ default: m.AboutPage })))
 const VariantEditorPage = lazy(() => import('./pages/VariantEditorPage').then((m) => ({ default: m.VariantEditorPage })))
+const TrainingPage = lazy(() => import('./pages/TrainingPage').then((m) => ({ default: m.TrainingPage })))
 
 
 /** Beim Wechsel auf eine neue Seite nach oben scrollen – beim Zurückgehen bleibt die Position erhalten */
@@ -120,6 +121,7 @@ function Authed() {
       <Route path="rezepte/:id/kochen" element={<CookModePage />} />
       <Route path="rezepte/:id/abwandeln" element={<VariantEditorPage />} />
       <Route path="hinzufuegen" element={<AddFoodPage />} />
+      <Route path="training" element={<TrainingPage />} />
       <Route path="gerichte/neu" element={<DishEditorPage />} />
       <Route path="gerichte/:id" element={<DishEditorPage />} />
       <Route path="beitreten/:code" element={<InviteRoute />} />
