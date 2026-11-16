@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Search } from 'lucide-react'
 import type { DishIngredient, Food } from '../../types'
 import { searchProducts } from '../../lib/openFoodFacts'
+import { searchQuickFoods, type QuickFoodHit } from '../../lib/basicFoods'
 import { useFoods } from '../../hooks/data'
 import { Sheet } from '../ui/Sheet'
 import { Spinner } from '../ui/EmptyState'
@@ -12,15 +13,18 @@ type Candidate = Pick<Food, 'name' | 'brand' | 'kcal_100' | 'protein_100' | 'car
   id?: string
 }
 
-/** Zutat für ein eigenes Gericht suchen (eigene Lebensmittel + Open Food Facts) */
+/** Zutat für ein eigenes Gericht suchen (eigene Lebensmittel, auf Wunsch die eingebauten Richtwerte, Open Food Facts) */
 export function IngredientPickerSheet({
   open,
   onClose,
   onPick,
+  basics = false,
 }: {
   open: boolean
   onClose: () => void
   onPick: (i: DishIngredient) => void
+  /** Auch Grundnahrungsmittel und Alltägliches anbieten – sofort und ohne Internet, mit üblicher Menge */
+  basics?: boolean
 }) {
   const [query, setQuery] = useState('')
   const [debounced, setDebounced] = useState('')
@@ -46,6 +50,21 @@ export function IngredientPickerSheet({
     const q = debounced.toLowerCase()
     return (q ? foods.filter((f) => f.name.toLowerCase().includes(q)) : foods.slice(0, 15)).slice(0, 15)
   }, [foods, debounced])
+
+  const quick = useMemo(() => (basics && query.trim().length >= 2 ? searchQuickFoods(query.trim(), 8) : []), [basics, query])
+
+  function pickQuick(h: QuickFoodHit) {
+    onPick({
+      food_id: null,
+      name: h.name,
+      grams: h.typicalGrams ?? 100,
+      kcal_100: h.food.kcal_100,
+      protein_100: h.food.protein_100,
+      carbs_100: h.food.carbs_100,
+      fat_100: h.food.fat_100,
+    })
+    onClose()
+  }
 
   function pick(c: Candidate) {
     onPick({
@@ -83,6 +102,16 @@ export function IngredientPickerSheet({
           <ul className="mt-1 space-y-1">
             {local.map((f) => (
               <FoodRow key={f.id} title={f.name} subtitle={f.brand} kcal={f.kcal_100} image={f.image_url} onClick={() => pick(f)} />
+            ))}
+          </ul>
+        </>
+      )}
+      {quick.length > 0 && (
+        <>
+          <h3 className="px-1 pt-4 text-sm font-semibold text-muted">Grundnahrungsmittel & Alltägliches</h3>
+          <ul className="mt-1 space-y-1" aria-label="Grundnahrungsmittel & Alltägliches">
+            {quick.map((h) => (
+              <FoodRow key={h.key} title={h.name} subtitle={h.subtitle} kcal={h.kcal} kcalLabel={h.kcalLabel} onClick={() => pickQuick(h)} />
             ))}
           </ul>
         </>

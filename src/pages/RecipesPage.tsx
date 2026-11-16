@@ -325,7 +325,8 @@ export function RecipesPage() {
           </section>
           <div className="mt-4 grid grid-cols-2 gap-2">
             <FeatureCard to="/rezepte/zutaten" icon={<Refrigerator className="size-6" aria-hidden />} title="Was habe ich da?" text="Rezepte aus deinen Zutaten" />
-            <FeatureCard to="/rezepte/wissen" icon={<BookOpen className="size-6" aria-hidden />} title="Kochwissen" text={`${GUIDES.length} Anleitungen & Garzeiten`} />
+            <FeatureCard to="/rezepte/lieblingszutaten" icon={<Heart className="size-6" aria-hidden />} title="Lieblingszutaten" text="Gerichte aus dem, was du gern isst" />
+            <FeatureCard to="/rezepte/wissen" wide icon={<BookOpen className="size-6" aria-hidden />} title="Kochwissen" text={`${GUIDES.length} Anleitungen & Garzeiten`} />
             <FeatureCard
               to="/rezepte/neu"
               wide

@@ -7,6 +7,7 @@ import { MEAL_TYPES } from '../types'
 import { useProfile } from '../hooks/data'
 import { useAddPlanItems, useDeletePlanItems, usePlanRange } from '../hooks/plan'
 import { suggestWeek, weekSummary, type NewPlanItem } from '../lib/planner'
+import { loadFavorites } from '../lib/favorites'
 import { getRecipe, matchesDiet, RECIPES } from '../lib/recipes'
 import { useVariantRecipes } from '../hooks/variants'
 import { MEAL_LABELS } from '../lib/meals'
@@ -67,6 +68,7 @@ export function PlannerPage() {
       macros: { protein: profile!.protein_pct, carbs: profile!.carbs_pct, fat: profile!.fat_pct },
       existing: items,
       preferAirfryer: profile!.has_airfryer ?? true,
+      favorites: loadFavorites(),
     })
     if (!suggested.length) {
       toast('Alle Slots sind schon belegt')

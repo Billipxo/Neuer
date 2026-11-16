@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Plus, Star, Trash2, X } from 'lucide-react'
 import type { DishIngredient } from '../types'
 import { useDeleteDish, useDishes, useSaveDish } from '../hooks/data'
@@ -13,19 +13,23 @@ import { NumberInput } from '../components/ui/NumberInput'
 import { useToast } from '../components/ui/Toast'
 import { NutrientGrid } from '../components/add/NutrientGrid'
 import { IngredientPickerSheet } from '../components/add/IngredientPickerSheet'
+import type { DishPrefill } from './FavoriteIngredientsPage'
 
 export function DishEditorPage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const location = useLocation()
+  // Vorbelegt z. B. aus den Lieblingszutaten – nur bei einem neuen Gericht
+  const prefill = id ? undefined : (location.state as { prefill?: DishPrefill } | null)?.prefill
   const toast = useToast()
   const { data: dishes = [], isLoading } = useDishes()
   const existing = id ? dishes.find((d) => d.id === id) : undefined
   const save = useSaveDish()
   const del = useDeleteDish()
 
-  const [name, setName] = useState('')
+  const [name, setName] = useState(prefill?.name ?? '')
   const [servings, setServings] = useState<number | null>(1)
-  const [ingredients, setIngredients] = useState<DishIngredient[]>([])
+  const [ingredients, setIngredients] = useState<DishIngredient[]>(prefill?.ingredients ?? [])
   const [favorite, setFavorite] = useState(false)
   const [pickerOpen, setPickerOpen] = useState(false)
 
@@ -136,7 +140,7 @@ export function DishEditorPage() {
         </div>
       </div>
 
-      <IngredientPickerSheet open={pickerOpen} onClose={() => setPickerOpen(false)} onPick={(i) => setIngredients((l) => [...l, i])} />
+      <IngredientPickerSheet basics open={pickerOpen} onClose={() => setPickerOpen(false)} onPick={(i) => setIngredients((l) => [...l, i])} />
     </div>
   )
 }
