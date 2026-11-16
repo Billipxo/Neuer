@@ -33,9 +33,11 @@ describe('Alltägliches: Werte und Mengen', () => {
   })
 
   it('deckt den Alltag ab: von der Bäckerei bis zum Cocktail', () => {
-    expect(EVERYDAY_FOODS.length).toBeGreaterThanOrEqual(430)
-    expect(EVERYDAY_FOODS.filter((f) => f.liquid).length).toBeGreaterThanOrEqual(70)
-    expect(EVERYDAY_FOODS.filter((f) => f.spoon).length).toBeGreaterThanOrEqual(10)
+    expect(EVERYDAY_FOODS.length).toBeGreaterThanOrEqual(1200)
+    expect(EVERYDAY_FOODS.filter((f) => f.liquid).length).toBeGreaterThanOrEqual(170)
+    expect(EVERYDAY_FOODS.filter((f) => f.spoon).length).toBeGreaterThanOrEqual(80)
+    // die große Erweiterung kommt zu den gängigen Einträgen dazu
+    expect(EVERYDAY_FOODS.filter((f) => f.more).length).toBeGreaterThanOrEqual(750)
   })
 })
 
@@ -168,10 +170,56 @@ describe('Stöbern nach Kategorien', () => {
     expect(first('Nudeln').name).toBe('Nudeln (gekocht)')
     expect(first('Spaghetti').name).toBe('Spaghetti')
     expect(first('Spaghetti').subtitle).toBe('ungekocht')
-    expect(searchQuickFoods('Couscous').map((h) => h.name)).toEqual(['Couscous (gekocht)', 'Couscous'])
+    expect(searchQuickFoods('Couscous').slice(0, 2).map((h) => h.name)).toEqual(['Couscous (gekocht)', 'Couscous'])
     expect(searchQuickFoods('Quinoa')[1].subtitle).toBe('ungekocht')
     expect(first('Haferflocken').subtitle).toBe('1 EL ≈ 10 g')
   })
 })
 
 const first = (q: string) => searchQuickFoods(q)[0]
+
+describe('Große Erweiterung', () => {
+  it('findet Neues aus allen Kategorien – mit typischer Menge und gebräuchlichen Namen', () => {
+    expect(first('Leerdammer')).toMatchObject({ name: 'Maasdamer', subtitle: '1 Scheibe ≈ 25 g' })
+    expect(first('Germknödel').name).toBe('Germknödel')
+    expect(first('Ghee').name).toBe('Butterschmalz')
+    expect(first('Hafermilch').name).toBe('Haferdrink')
+    expect(first('Matjes').name).toBe('Matjesfilet')
+    expect(first('Gurke').name).toBe('Salatgurke')
+    expect(first('Riesling').name).toBe('Weißwein')
+    expect(first('Hard Seltzer')).toMatchObject({ subtitle: '1 Dose = 330 ml', liquid: true })
+    expect(first('Kaiserschote')?.name).toBe('Zuckerschoten')
+    expect(first('Wurst').name).toBe('Aufschnitt (gemischt)')
+    expect(first('Gemüse').name).toBe('Gemüse (gedünstet)')
+  })
+
+  it('verdrängt die gewohnten ersten Treffer nicht', () => {
+    // Bei gleich guter Übereinstimmung steht das Gängige vor der Erweiterung …
+    expect(first('Lachs').name).toBe('Lachsfilet')
+    expect(searchQuickFoods('Käse').slice(0, 3).map((h) => h.name)).toEqual(['Emmentaler', 'Edamer', 'Butterkäse'])
+    expect(first('Pudding').name).toBe('Schokopudding')
+    expect(first('Torte').name).toBe('Schwarzwälder Kirschtorte')
+    expect(first('Salzgebäck').name).toBe('Salzstangen')
+    // … ein genau passender Name gewinnt aber: Maki sind Maki, nicht Sushi allgemein
+    expect(first('Maki').name).toBe('Maki')
+    expect(searchQuickFoods('Maki').map((h) => h.name)).toContain('Sushi')
+  })
+
+  it('stellt auch bei Hirse, Polenta & Co. die gekochte Portion vor den ungekochten Wert', () => {
+    expect(searchQuickFoods('Hirse').slice(0, 2).map((h) => [h.name, h.subtitle])).toEqual([
+      ['Hirse (gekocht)', '1 Portion ≈ 180 g'],
+      ['Hirse', 'ungekocht'],
+    ])
+    expect(first('Vollkornreis').name).toBe('Vollkornreis (gekocht)')
+    expect(first('Polenta').name).toBe('Polenta (zubereitet)')
+  })
+
+  it('zeigt beim Stöbern erst das Gängige, dann die Erweiterung', () => {
+    const kaese = browseFoods('kaese').map((h) => h.name)
+    expect(kaese[0]).toBe('Gouda')
+    expect(kaese.indexOf('Emmentaler')).toBeLessThan(kaese.indexOf('Maasdamer'))
+    const kaffee = browseFoods('kaffee').map((h) => h.name)
+    expect(kaffee.slice(0, 3)).toEqual(['Kakao', 'Kaffee (schwarz)', 'Kaffee mit Milch'])
+    expect(kaffee.indexOf('Espresso')).toBeLessThan(kaffee.indexOf('Americano'))
+  })
+})

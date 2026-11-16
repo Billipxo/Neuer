@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest'
 
 /**
  * Wächter für die Startzeit: Was `src/main.tsx` statisch importiert, landet im ersten Paket, das beim Öffnen der App
- * geladen und ausgeführt wird. Das Kochbuch (rund 600 kB), das Kochwissen und die großen Bibliotheken für Diagramme
+ * geladen und ausgeführt wird. Das Kochbuch (rund 600 kB), das Kochwissen, die Lebensmittel-Tabellen und die großen Bibliotheken für Diagramme
  * und Barcode-Scan dürfen dort nicht hineinrutschen – sie werden erst geladen, wenn die jeweilige Seite geöffnet wird.
  */
 const SRC = path.dirname(fileURLToPath(import.meta.url))
@@ -69,7 +69,7 @@ describe('Start-Paket', () => {
     expect(graph.modules.has('pages/RecipesPage.tsx')).toBe(false)
   })
 
-  it.each(['data/recipes.json', 'lib/recipes.ts', 'data/guides.ts', 'data/ingredients.ts'])('lädt %s nicht schon beim Start', (file) => {
+  it.each(['data/recipes.json', 'lib/recipes.ts', 'data/guides.ts', 'data/ingredients.ts', 'data/everydayFoods.ts'])('lädt %s nicht schon beim Start', (file) => {
     // Bei einem Fehler zeigt die Meldung die Import-Kette, über die die Datei hineingeraten ist
     expect(graph.modules.get(file) ?? 'nicht im Start-Paket').toBe('nicht im Start-Paket')
   })

@@ -69,6 +69,14 @@ describe('Mehreres auf einmal eintragen', () => {
     expect(summary('Currywurst + Pommes')).toEqual(['Currywurst | 1 Portion · 200 g | 400', 'Pommes frites | 1 Portion · 150 g | 435'])
   })
 
+  it('nutzt die große Erweiterung, ohne Gängiges zu verdrängen', () => {
+    expect(summary('Brot mit Wurst')).toEqual(['Mischbrot | 1 Scheibe · 50 g | 118', 'Aufschnitt (gemischt) | 1 Scheibe · 20 g | 56'])
+    expect(summary('Tee mit Milch, Brötchen')?.[0]).toBe('Tee mit Milch | 1 Tasse · 250 ml | 25')
+    expect(summary('Reis mit Gemüse')?.[1]).toBe('Gemüse (gedünstet) | 1 Portion · 200 g | 70')
+    // „Colabier“ kommt im Glas – „ein Glas Cola“ bleibt trotzdem Cola, „2 Glas Limo“ Limonade
+    expect(summary('1 Glas Cola, 2 Glas Limo')).toEqual(['Cola | 1 Glas · 200 ml | 84', 'Limonade | 2 Gläser · 400 ml | 160'])
+  })
+
   it('versteht Gramm, Liter, Löffel und Gefäße', () => {
     expect(summary('150g Reis')).toEqual(['Reis (gekocht) | 150 g | 195'])
     expect(summary('150 Reis')).toEqual(['Reis (gekocht) | 150 g | 195'])
