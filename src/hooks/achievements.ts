@@ -2,12 +2,11 @@ import { useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useStore } from '../app/auth'
 import type { AchievementRow } from '../types'
-import { useLogRange, useProfile, useWaterRange } from './data'
+import { useActivityRange, useLogRange, useProfile, useWaterRange } from './data'
 import { usePlanRange } from './plan'
 import { useVariants } from './variantList'
-import { evaluate, newlyUnlocked, currentStreak, type AchievementInput } from '../lib/achievements'
+import { computeStreaks, evaluate, newlyUnlocked, type AchievementInput } from '../lib/achievements'
 import { shiftISO, todayISO } from '../lib/dates'
-import { totalsByDate } from '../lib/log'
 
 const KEY = ['achievements'] as const
 
@@ -25,7 +24,7 @@ export function useSaveAchievements() {
   })
 }
 
-/** Alle Daten der letzten 365 Tage, aus denen Erfolge berechnet werden */
+/** Alle Daten der letzten 365 Tage, aus denen Erfolge und Serien berechnet werden */
 export function useAchievementInput(): { input: AchievementInput | null; ready: boolean } {
   const today = todayISO()
   const from = shiftISO(today, -365)
@@ -34,7 +33,10 @@ export function useAchievementInput(): { input: AchievementInput | null; ready: 
   const plan = usePlanRange(from, shiftISO(today, 60), { live: false })
   const water = useWaterRange(from, today)
   const variants = useVariants()
-  const ready = Boolean(profile && log.data && plan.data && water.data && variants.data)
+  // Sport: Fehlt die Tabelle (Datenbank-Update) oder klappt das Laden nicht, zählt einfach kein Sport mit
+  const activities = useActivityRange(from, today)
+  const activitiesDone = activities.isSuccess || activities.isError
+  const ready = Boolean(profile && log.data && plan.data && water.data && variants.data && activitiesDone)
   const input = useMemo(
     () =>
       ready
@@ -47,9 +49,10 @@ export function useAchievementInput(): { input: AchievementInput | null; ready: 
             plan: plan.data!,
             water: water.data!,
             ownRecipes: variants.data!.length,
+            activities: activities.data ?? [],
           }
         : null,
-    [ready, today, profile, log.data, plan.data, water.data, variants.data],
+    [ready, today, profile, log.data, plan.data, water.data, variants.data, activities.data],
   )
   return { input, ready }
 }
@@ -62,7 +65,7 @@ export function useAchievementOverview() {
     const unlocked = new Map(rows.map((r) => [r.key, r.unlocked_at]))
     return {
       items: evaluate(input).map((r) => ({ ...r, unlockedAt: unlocked.get(r.def.key) ?? null })),
-      streak: currentStreak([...totalsByDate(input.log).keys()], input.today),
+      streaks: computeStreaks(input),
     }
   }, [input, rows])
 }

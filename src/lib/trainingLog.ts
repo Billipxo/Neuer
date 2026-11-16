@@ -161,6 +161,13 @@ function setRank(s: TrainingSet): [number, number] {
   return [s.kg ?? 0, s.reps ?? s.seconds ?? 0]
 }
 
+/** Ist Satz a besser als b? Mehr Gewicht, bei Gleichstand mehr Wiederholungen bzw. längere Zeit */
+export function isBetterSet(a: TrainingSet, b: TrainingSet): boolean {
+  const [ak, aa] = setRank(a)
+  const [bk, ba] = setRank(b)
+  return ak > bk || (ak === bk && aa > ba)
+}
+
 /** Bester Satz einer Übung in allen Trainings */
 export function bestSet(logs: readonly ActivityLog[], ex: Pick<TrainingExercise, 'key' | 'name'>, excludeId?: string): { set: TrainingSet; date: string } | null {
   let best: { set: TrainingSet; date: string } | null = null

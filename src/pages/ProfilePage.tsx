@@ -23,7 +23,7 @@ import { Switch } from '../components/ui/Switch'
 import { AirfryerIcon } from '../components/recipes/AirfryerIcon'
 import { DietPicker } from '../components/profile/DietPicker'
 import { AvoidPicker } from '../components/profile/AvoidPicker'
-import { AchievementGrid, StreakCard } from '../components/achievements/AchievementGrid'
+import { AchievementSummaryCard } from '../components/achievements/AchievementGrid'
 
 export function ProfilePage() {
   const location = useLocation()
@@ -55,12 +55,8 @@ export function ProfilePage() {
     <>
       <PageHeader title="Profil & Einstellungen" subtitle={store?.kind === 'local' ? 'Demo-Modus – Daten nur auf diesem Gerät' : email} back="/" />
 
-      <div className="mt-2">
-        <StreakCard />
-      </div>
-
       <SectionTitle>Erfolge</SectionTitle>
-      <AchievementGrid />
+      <AchievementSummaryCard />
 
       <SectionTitle>Tagesziel</SectionTitle>
       <Card className="space-y-5">

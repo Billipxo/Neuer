@@ -7,6 +7,7 @@ import { useActivities, useAddLogEntries, useDeleteLogEntry, useLog, useProfile,
 import { isMissingTableError } from '../data/store'
 import { summarizeActivities, targetWithActivity, weightOn } from '../lib/activity'
 import { ActivitySection } from '../components/today/ActivitySection'
+import { StreakChip } from '../components/achievements/AchievementGrid'
 import { ActivitySheet } from '../components/today/ActivitySheet'
 import { usePlanRange } from '../hooks/plan'
 import { canLogDirectly, openPlanItems, planItemEntry } from '../lib/plannedToday'
@@ -109,13 +110,16 @@ export function TodayPage() {
           <p className="text-sm text-muted">{greeting(hour)},</p>
           <h1 className="text-2xl font-bold tracking-tight">{profile.name || 'du'}</h1>
         </div>
-        <Link
-          to="/profil"
-          aria-label="Profil und Einstellungen"
-          className="flex size-11 items-center justify-center rounded-full bg-surface ring-1 ring-line"
-        >
-          <UserRound className="size-5" aria-hidden />
-        </Link>
+        <div className="flex items-center gap-2">
+          <StreakChip />
+          <Link
+            to="/profil"
+            aria-label="Profil und Einstellungen"
+            className="flex size-11 items-center justify-center rounded-full bg-surface ring-1 ring-line"
+          >
+            <UserRound className="size-5" aria-hidden />
+          </Link>
+        </div>
       </header>
 
       <div className="mt-3">
