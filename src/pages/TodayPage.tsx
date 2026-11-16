@@ -190,11 +190,12 @@ export function TodayPage() {
 
       <div id="sport" className="mt-3 scroll-mt-4">
         <ActivitySection
+          date={date}
           activities={activities}
           inBudget={inBudget}
           unavailable={activityUnavailable}
           onAdd={() => setActivitySheet('neu')}
-          onEdit={(a) => setActivitySheet(a)}
+          onEdit={(a) => (a.details?.exercises?.length ? navigate(`/training/eintragen/${a.id}`) : setActivitySheet(a))}
         />
       </div>
 

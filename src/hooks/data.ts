@@ -16,6 +16,8 @@ export const qk = {
   weights: ['weights'] as const,
   activities: (date: string) => ['activities', date] as const,
   activityRange: (from: string, to: string) => ['activities', 'range', from, to] as const,
+  activityHistory: ['activities', 'history'] as const,
+  activity: (id: string) => ['activities', 'one', id] as const,
 }
 
 // Profil ----------------------------------------------------------------------
@@ -280,6 +282,27 @@ export function useActivityRange(from: string, to: string) {
   return useQuery({
     queryKey: qk.activityRange(from, to),
     queryFn: () => store.list<ActivityLog>('activity_logs', { gte: { date: from }, lte: { date: to } }),
+    retry: activityRetry,
+  })
+}
+
+/** Die letzten Sporteinheiten (für das Trainingstagebuch: Verlauf, „Letztes Mal“ und Bestwerte) */
+export function useActivityHistory() {
+  const store = useStore()
+  return useQuery({
+    queryKey: qk.activityHistory,
+    queryFn: () => store.list<ActivityLog>('activity_logs', { order: [{ column: 'date', ascending: false }], limit: 500 }),
+    retry: activityRetry,
+  })
+}
+
+/** Eine Sporteinheit (zum Bearbeiten) */
+export function useActivity(id: string | undefined) {
+  const store = useStore()
+  return useQuery({
+    queryKey: qk.activity(id ?? ''),
+    enabled: !!id,
+    queryFn: async () => (await store.list<ActivityLog>('activity_logs', { eq: { id: id! } }))[0] ?? null,
     retry: activityRetry,
   })
 }

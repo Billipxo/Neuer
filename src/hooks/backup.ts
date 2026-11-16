@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth, useStore } from '../app/auth'
 import { ALL_TABLES, OPTIONAL_TABLES, isMissingTableError, listTolerant, type DataStore, type TableName } from '../data/store'
+import { isMissingDetailsColumn, sanitizeDetails } from '../lib/trainingLog'
 import { defaultId, isDuplicate } from '../data/offlineStore'
 import { chunk, planImport, type Backup, type ImportPlan, type Row } from '../lib/backup'
 import { defaultDraft } from '../components/profile/types'
@@ -54,8 +55,18 @@ export function useImportBackup() {
           }
           continue
         }
+        // Übungen aus dem Trainingstagebuch nur in sauberer Form einspielen
+        const clean = table === 'activity_logs' ? rows.map((r) => ('details' in r ? { ...r, details: sanitizeDetails(r.details) } : r)) : rows
         try {
-          for (const part of chunk(rows)) await store.insert(table, part)
+          for (const part of chunk(clean)) {
+            try {
+              await store.insert(table, part)
+            } catch (e) {
+              // Die Sicherung enthält Übungen, aber hier fehlt das Datenbank-Update dafür noch: ohne sie einspielen
+              if (table !== 'activity_logs' || !isMissingDetailsColumn(e)) throw e
+              await store.insert(table, part.map(({ details: _details, ...r }) => r))
+            }
+          }
         } catch (e) {
           // Tabelle aus einem Datenbank-Update, das hier noch fehlt (z. B. Sport): den Rest trotzdem einspielen
           if (!(OPTIONAL_TABLES.includes(table) && isMissingTableError(e))) throw e

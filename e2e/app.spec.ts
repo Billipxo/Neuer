@@ -1158,3 +1158,60 @@ test('Mit Fleisch abwandeln: Hähnchen statt Tofu mit einem Tipp, mehr Fleisch, 
   // Eigene Varianten bekommen keine Fleisch-Knöpfe mehr
   await expect(page.getByRole('list', { name: 'Fleisch-Ideen' })).toHaveCount(0)
 })
+
+test('Eigenes Training eintragen: Übungen mit Sätzen, letztes Mal, Bestwerte, wiederholen und bearbeiten', async ({ page }) => {
+  await startDemo(page)
+  await page.getByRole('link', { name: /Training eintragen – Übungen, Sätze, Gewichte/ }).click()
+  await expect(page.getByRole('heading', { name: 'Training eintragen' })).toBeVisible()
+
+  // Übung aus dem Katalog: drei Sätze, ein neuer Satz übernimmt den vorigen
+  await page.getByRole('button', { name: 'Übung hinzufügen' }).click()
+  await page.getByLabel('Übung suchen').fill('Bankdr')
+  await page.getByRole('list', { name: 'Suchergebnisse' }).getByRole('button', { name: /^Bankdrücken/ }).first().click()
+  await page.getByLabel('Bankdrücken, Satz 1: Wiederholungen').fill('10')
+  await page.getByLabel('Bankdrücken, Satz 1: Gewicht in kg').fill('60')
+  await page.getByRole('button', { name: 'Satz zu Bankdrücken hinzufügen' }).click()
+  await page.getByRole('button', { name: 'Satz zu Bankdrücken hinzufügen' }).click()
+  await expect(page.getByLabel('Bankdrücken, Satz 3: Gewicht in kg')).toHaveValue('60')
+  await page.getByLabel('Bankdrücken, Satz 3: Wiederholungen').fill('8')
+  // Eigene Übung, die es im Katalog nicht gibt
+  await page.getByRole('button', { name: 'Übung hinzufügen' }).click()
+  await page.getByLabel('Übung suchen').fill('Seilklettern')
+  await page.getByRole('button', { name: '„Seilklettern“ als eigene Übung' }).click()
+  await page.getByLabel('Seilklettern, Satz 1: Wiederholungen').fill('3')
+  await expect(page.getByText('2 Übungen · 4 Sätze · 1.680 kg bewegt')).toBeVisible()
+  await page.getByLabel('Name (optional)').fill('Oberkörper')
+  await page.getByRole('button', { name: /^Training speichern/ }).click()
+  await closeBadges(page)
+
+  // Auf der Tagesseite mit Zusammenfassung
+  const list = page.getByRole('list', { name: 'Sport an diesem Tag' })
+  await expect(list.getByRole('button', { name: /Oberkörper/ })).toContainText('2 Übungen · 4 Sätze · 1.680 kg bewegt')
+
+  // Trainingsseite: Verlauf und Bestwerte
+  await page.goto('/training')
+  const recent = page.getByRole('region', { name: 'Deine Trainings' })
+  await expect(recent).toContainText('Oberkörper')
+  await expect(recent).toContainText('Bankdrücken')
+  await expect(page.getByRole('list', { name: 'Bestwerte je Übung' })).toContainText('10 × 60 kg')
+
+  // Wiederholen: dieselben Übungen und Sätze, „Letztes Mal“ steht dabei
+  await recent.getByRole('link', { name: 'Oberkörper wiederholen' }).click()
+  await expect(page.getByRole('heading', { name: 'Training eintragen' })).toBeVisible()
+  await expect(page.getByLabel('Bankdrücken, Satz 3: Wiederholungen')).toHaveValue('8')
+  await expect(page.getByText(/Letztes Mal \(.+\): 10 × 60 kg · 10 × 60 kg · 8 × 60 kg/)).toBeVisible()
+  await page.getByLabel('Bankdrücken, Satz 1: Gewicht in kg').fill('62,5')
+  await page.getByRole('button', { name: /^Training speichern/ }).click()
+  await closeBadges(page)
+  await expect(page.getByRole('list', { name: 'Bestwerte je Übung' })).toContainText('10 × 62,5 kg')
+
+  // Bearbeiten über die Tagesseite: der Eintrag öffnet das Trainingstagebuch
+  await page.goto('/')
+  await closeBadges(page)
+  await page.getByRole('list', { name: 'Sport an diesem Tag' }).getByRole('button', { name: /Oberkörper/ }).first().click()
+  await expect(page.getByRole('heading', { name: 'Training bearbeiten' })).toBeVisible()
+  await expect(page.getByLabel('Name (optional)')).toHaveValue('Oberkörper')
+  await page.getByRole('button', { name: 'Seilklettern entfernen' }).click()
+  await page.getByRole('button', { name: /^Training speichern/ }).click()
+  await expect(page.getByRole('list', { name: 'Sport an diesem Tag' }).getByRole('button', { name: /Oberkörper/ }).first()).toContainText('1 Übung · 3 Sätze')
+})
