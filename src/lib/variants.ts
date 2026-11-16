@@ -296,7 +296,7 @@ export const SWAP_RULES: SwapRule[] = [
   { from: 'Hähnchenschenkelfilet', to: 'Hähnchenbrust', why: 'magerer – etwas kürzer garen' },
   { from: 'Schweineschnitzel', to: 'Putenschnitzel', why: 'magerer' },
   { from: 'Frühstücksspeck', to: 'Kochschinken (mager)', why: 'würzt ähnlich, mit viel weniger Fett' },
-  { from: 'Reis', to: 'Vollkornreis', why: 'mehr Ballaststoffe, sättigt länger', always: true },
+  { from: 'Reis', to: 'Vollkornreis', why: 'mehr Ballaststoffe', always: true },
   { from: 'Spaghetti', to: 'Vollkornspaghetti', why: 'mehr Ballaststoffe', always: true },
   { from: 'Bandnudeln', to: 'Vollkorn-Penne', why: 'mehr Ballaststoffe', always: true },
   { from: 'Mehl', to: 'Dinkelvollkornmehl', why: 'mehr Ballaststoffe – etwas mehr Flüssigkeit einplanen', always: true },

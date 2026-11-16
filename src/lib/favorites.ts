@@ -81,7 +81,9 @@ export function favoriteInfo(name: string): IngredientInfo | undefined {
   const exact = INGREDIENT_LIST.find((i) => i.name === name)
   if (exact) return exact
   const kinds = INGREDIENT_LIST.filter((i) => i.base === name)
-  return kinds.find(hasPieceUnit) ?? kinds[0]
+  // Käse & Co.: am liebsten eine Sorte mit Scheiben- oder Stückmaß (Käse → Gouda). Bei Fleisch das klassische, zuerst
+  // aufgeführte Stück – „Hähnchen“ ist Hähnchenbrust, nicht die Keule mit Stückgewicht
+  return kinds.find((i) => hasPieceUnit(i) && !i.flags.includes('M')) ?? kinds[0]
 }
 
 /** Übliche Menge einer Zutat für ein Gericht in Gramm: ein Stück, ein Esslöffel, eine Portion ungekocht oder 100 g */

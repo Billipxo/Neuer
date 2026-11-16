@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { Check, ClipboardPaste, Leaf, Plus, Trash2, Wand2, X } from 'lucide-react'
+import { Check, ClipboardPaste, Drumstick, Leaf, Plus, Trash2, Wand2, X } from 'lucide-react'
 import type { MealType, RecipeIngredient } from '../types'
 import { MEAL_TYPES } from '../types'
 import { CHAPTERS, type ChapterId } from '../data/chapters'
@@ -26,6 +26,7 @@ import {
   type CustomIngredientInput,
   type VariantDraft,
 } from '../lib/variants'
+import { applyMeatIdea, meatIdeas, type MeatIdea } from '../lib/meatIdeas'
 import { useProfile } from '../hooks/data'
 import { useDeleteVariant, useResolvedRecipe, useSaveVariant } from '../hooks/variants'
 import { PageHeader } from '../components/layout/PageHeader'
@@ -102,16 +103,24 @@ export function VariantEditorPage() {
     if (resolved.recipe) {
       const wanted = params.get('methode')
       const method: Method = wanted === 'oven' ? 'oven' : wanted === 'airfryer' ? 'airfryer' : (profile?.has_airfryer ?? true) ? 'airfryer' : 'oven'
-      const fresh = draftFromRecipe(resolved.recipe, method)
+      let fresh = draftFromRecipe(resolved.recipe, method)
+      // Von der Rezeptseite aus „Mit Fleisch“ gewählt: diese Idee gleich übernehmen
+      const meatKey = params.get('fleisch')
+      const idea = meatKey ? meatIdeas(fresh, 10).find((i) => i.key === meatKey) : undefined
+      if (idea) {
+        fresh = applyMeatIdea(fresh, idea)
+        toast(`${idea.label}: Zutaten, Titel und ein Schritt sind angepasst`, '🍗')
+      }
       // Rezept eines anderen Haushalts-Mitglieds: Die eigene Kopie beruht auf demselben Kochbuch-Rezept (oder auf keinem)
       setDraft(resolved.sharedVariant ? { ...fresh, base_recipe_id: resolved.sharedVariant.base_recipe_id } : fresh)
       setChapterTouched(true)
     }
-  }, [draft, id, existing, resolved.recipe, params, profile?.has_airfryer])
+  }, [draft, id, existing, resolved.recipe, resolved.sharedVariant, params, profile?.has_airfryer, toast])
 
   const preview = useMemo(() => (draft ? variantToRecipe({ ...draft, id: existing?.id ?? 'entwurf' }, base) : null), [draft, base, existing?.id])
   const diff = preview && base ? formatDiff(nutritionDiff(preview, base)) : []
   const suggestions = useMemo(() => (draft ? swapSuggestions(draft) : []), [draft])
+  const meat = useMemo(() => (draft ? meatIdeas(draft) : []), [draft])
 
   if (!draft || !preview) {
     if (id && !resolved.isLoading && !resolved.recipe) return <Navigate to="/rezepte" replace />
@@ -130,6 +139,10 @@ export function VariantEditorPage() {
   const updateIngredient = (idx: number, p: Partial<RecipeIngredient>) => setIngredients((l) => l.map((x, i) => (i === idx ? { ...x, ...p } : x)))
   const placeIngredient = (ing: RecipeIngredient, replace?: number) =>
     setIngredients((l) => (replace === undefined ? [...l, ing] : l.map((x, i) => (i === replace ? swapIngredient(x, ing) : x))))
+  function applyMeat(idea: MeatIdea) {
+    setDraft((d) => (d ? applyMeatIdea(d, idea) : d))
+    toast(idea.kind === 'more' ? `${idea.why}` : `${idea.label}: Titel und ein Schritt sind angepasst`, '🍗')
+  }
   const toggleMeal = (m: MealType) => patch({ meal: draft.meal.includes(m) ? draft.meal.filter((x) => x !== m) : [...draft.meal, m] })
 
   const methodSwitch = Boolean(base && hasAirfryerVariant(base))
@@ -352,6 +365,28 @@ export function VariantEditorPage() {
                 </div>
                 <Button size="sm" variant="secondary" onClick={() => setIngredients((l) => l.map((x, i) => (i === sg.index ? sg.to : x)))}>
                   Tauschen
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      )}
+      {meat.length > 0 && (
+        <Card className="mt-3 p-3">
+          <p className="flex items-center gap-2 px-1 text-sm font-semibold">
+            <Drumstick className="size-4 text-brand" aria-hidden /> Mit Fleisch
+          </p>
+          <ul className="mt-1 divide-y divide-line/70" aria-label="Fleisch-Ideen">
+            {meat.map((idea) => (
+              <li key={idea.key} className="flex items-center gap-2 py-2">
+                <div className="min-w-0 flex-1 px-1">
+                  <p className="text-[15px] leading-snug">{idea.label}</p>
+                  <p className="text-xs text-muted tabular">
+                    {fmtSigned(idea.kcalDelta, ' kcal')} pro Portion · {fmtSigned(idea.proteinDelta, ' g')} Eiweiß · {idea.why}
+                  </p>
+                </div>
+                <Button size="sm" variant="secondary" onClick={() => applyMeat(idea)} aria-label={`${idea.label} übernehmen`}>
+                  {idea.kind === 'add' ? 'Dazu' : idea.kind === 'more' ? 'Mehr' : 'Tauschen'}
                 </Button>
               </li>
             ))}

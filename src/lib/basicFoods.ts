@@ -161,7 +161,7 @@ const TABLE_SERVINGS: Readonly<Record<string, { measure: string; ml: number }>> 
 }
 
 /** Flüssiges aus der Nährwerttabelle – Mengen in ml */
-const TABLE_LIQUIDS = new Set(['Milch 1,5 %', 'Haferdrink', 'Gemüsebrühe', 'Rinderbrühe', 'Espresso', 'Schwarzer Tee', 'Zitronensaft', 'Kokosmilch (light)', 'Sahne', 'Kochsahne 15 %', 'Sojasauce', 'Essig', 'Balsamico'])
+const TABLE_LIQUIDS = new Set(['Milch 1,5 %', 'Haferdrink', 'Gemüsebrühe', 'Rinderbrühe', 'Hühnerbrühe', 'Espresso', 'Schwarzer Tee', 'Zitronensaft', 'Kokosmilch (light)', 'Sahne', 'Kochsahne 15 %', 'Sojasauce', 'Essig', 'Balsamico'])
 
 /** Andere gebräuchliche Namen für Einträge der Nährwerttabelle – auch aus Österreich und der Schweiz */
 const TABLE_ALIASES: Readonly<Record<string, readonly string[]>> = {
@@ -197,6 +197,23 @@ const TABLE_ALIASES: Readonly<Record<string, readonly string[]>> = {
   Hähnchenbrust: ['Hühnerbrust', 'Pouletbrust'],
   Putenbrust: ['Truthahnbrust'],
   Rinderhüftsteak: ['Steak', 'Rindersteak'],
+  Rinderhackfleisch: ['Rinderhack', 'Rindergehacktes'],
+  Rumpsteak: ['Roastbeef', 'Lendensteak'],
+  Entrecôte: ['Rib-Eye-Steak', 'Ribeye'],
+  'Rindfleisch (Tafelspitz)': ['Tafelspitz', 'Suppenfleisch'],
+  Rinderbeinscheibe: ['Beinscheibe', 'Ossobuco'],
+  'Rinderbraten (Schulter)': ['Schmorbraten', 'Rinderschulter'],
+  Schweinenacken: ['Schweinekamm', 'Nackensteak', 'Halssteak'],
+  Schweineschulter: ['Schweinebraten', 'Schäufele'],
+  Hähnchenkeule: ['Hühnerkeule', 'Hähnchenschenkel', 'Hendlhaxe'],
+  Hähnchenunterschenkel: ['Drumsticks', 'Hähnchenunterkeulen'],
+  Hähnchenflügel: ['Chicken Wings', 'Hühnerflügel'],
+  'Hähnchen (ganz)': ['Brathähnchen', 'Hendl', 'Poulet'],
+  Lammlachse: ['Lammfilet', 'Lammrücken'],
+  Lammkoteletts: ['Lammkotelett', 'Lammkarree'],
+  Kalbsschnitzel: ['Kalbfleisch'],
+  Hirschfleisch: ['Hirschgulasch', 'Wildfleisch'],
+  Hühnerbrühe: ['Geflügelbrühe', 'Hühnersuppe'],
   Frühstücksspeck: ['Bacon', 'Speck'],
   'Kochschinken (mager)': ['Schinken', 'gekochter Schinken'],
   Rohschinken: ['Serranoschinken', 'Parmaschinken', 'Prosciutto'],
@@ -347,7 +364,7 @@ function entries(): Entry[] {
   if (ENTRIES) return ENTRIES
   const out: Entry[] = []
   INGREDIENT_LIST.forEach((info, i) => {
-    if (EXCLUDED.has(info.name)) return
+    if (EXCLUDED.has(info.name) || info.recipeOnly) return
     out.push({
       ...prepare(info.name, TABLE_ALIASES[info.name] ?? [], info.base !== info.name ? [info.base] : []),
       name: info.name,
@@ -482,6 +499,29 @@ export const TABLE_IN_GROUP: Partial<Record<FoodGroupId, readonly string[]>> = {
     'Kasseler',
     'Lammhackfleisch',
     'Bratwurst (Geflügel)',
+    'Rinderhackfleisch',
+    'Rinderfilet',
+    'Rumpsteak',
+    'Entrecôte',
+    'Rinderbraten (Schulter)',
+    'Rindfleisch (Tafelspitz)',
+    'Rinderbeinscheibe',
+    'Schweinenacken',
+    'Schweineschulter',
+    'Schweinebauch',
+    'Schweinekotelett',
+    'Hähnchenkeule',
+    'Hähnchenunterschenkel',
+    'Hähnchenflügel',
+    'Hähnchen (ganz)',
+    'Entenbrust',
+    'Entenkeule',
+    'Lammlachse',
+    'Lammkoteletts',
+    'Lammkeule',
+    'Kalbsschnitzel',
+    'Kalbsleber',
+    'Hirschfleisch',
   ],
   fisch: [
     'Räucherlachs',

@@ -28,6 +28,11 @@ export interface IngredientInfo {
   basic: boolean
   /** Monate (1–12), in denen es regional Saison hat bzw. aus heimischem Lager kommt */
   season?: number[]
+  /**
+   * Nur für Rezepte: Beim Eintragen gibt es einen gleichnamigen Alltags-Eintrag (mit Portionen und anderen Namen),
+   * deshalb erscheint die Zutat dort nicht noch einmal
+   */
+  recipeOnly?: boolean
 }
 
 /** Gramm pro Einheit, wenn die Zutat nichts Eigenes festlegt */
@@ -51,6 +56,8 @@ interface Opts {
   staple?: boolean
   basic?: boolean
   s?: number[]
+  /** nur für Rezepte – siehe IngredientInfo.recipeOnly */
+  only?: boolean
 }
 
 type Values = [kcal: number, protein: number, carbs: number, fat: number, fiber: number]
@@ -71,6 +78,7 @@ function add(name: string, [kcal, protein, carbs, fat, fiber]: Values, flags = '
     staple: o.staple ?? false,
     basic: o.basic ?? false,
     season: o.s,
+    ...(o.only ? { recipeOnly: true } : {}),
   })
 }
 
@@ -355,6 +363,44 @@ add('Pinienkerne', [675, 14, 4.0, 68, 4.0], '')
 add('Eigelb', [330, 16, 0.3, 29, 0], 'E', { u: { Stück: 18 }, base: 'Eier' })
 add('Schwarzer Tee', [1, 0, 0.3, 0, 0], '', { u: { Beutel: 2 }, base: 'Tee' })
 spice('Kardamom', [311, 11, 40, 6.7, 28])
+
+// --- Fleisch-Ausbau: Stücke vom Rind, Schwein, Geflügel, Lamm, Kalb und Wild (roh) ----------------------------------
+add('Rinderhackfleisch', [205, 19.5, 0, 14, 0], 'M', { base: 'Hackfleisch' })
+add('Rinderfilet', [120, 21, 0, 4.0, 0], 'M', { u: { Stück: 180 }, base: 'Rindfleisch' })
+add('Rumpsteak', [135, 22, 0, 5.0, 0], 'M', { u: { Stück: 200 }, base: 'Rindfleisch' })
+add('Entrecôte', [190, 20, 0, 12, 0], 'M', { u: { Stück: 250 }, base: 'Rindfleisch' })
+add('Rinderbraten (Schulter)', [135, 21, 0, 5.5, 0], 'M', { base: 'Rindfleisch' })
+add('Rindfleisch (Tafelspitz)', [125, 21, 0, 4.5, 0], 'M', { base: 'Rindfleisch' })
+add('Rinderbeinscheibe', [125, 21, 0, 4.5, 0], 'M', { u: { Stück: 250 }, base: 'Rindfleisch' })
+add('Schweinenacken', [195, 18, 0, 13.5, 0], 'M', { u: { Stück: 180 }, base: 'Schweinefleisch' })
+add('Schweineschulter', [160, 19.5, 0, 9.0, 0], 'M', { base: 'Schweinefleisch' })
+add('Schweinebauch', [260, 17, 0, 21.5, 0], 'M', { base: 'Schweinefleisch' })
+add('Schweinekotelett', [155, 21, 0, 8.0, 0], 'M', { u: { Stück: 180 }, base: 'Schweinefleisch' })
+// Keulen, Flügel und ganze Hähnchen: Stück = essbarer Anteil ohne Knochen
+add('Hähnchenkeule', [205, 17, 0, 15, 0], 'M', { u: { Stück: 200 }, base: 'Hähnchen' })
+add('Hähnchenunterschenkel', [170, 18.5, 0, 10.5, 0], 'M', { u: { Stück: 80 }, base: 'Hähnchen' })
+add('Hähnchenflügel', [205, 18, 0, 14.5, 0], 'M', { u: { Stück: 35 }, base: 'Hähnchen' })
+add('Hähnchen (ganz)', [215, 18.5, 0, 15.5, 0], 'M', { u: { Stück: 850 }, base: 'Hähnchen' })
+add('Entenbrust', [225, 19, 0, 16.5, 0], 'M', { u: { Stück: 300 }, base: 'Ente' })
+add('Entenkeule', [235, 17, 0, 18.5, 0], 'M', { u: { Stück: 220 }, base: 'Ente' })
+add('Lammlachse', [125, 20.5, 0, 4.8, 0], 'M', { base: 'Lamm' })
+add('Lammkoteletts', [235, 17, 0, 18.5, 0], 'M', { u: { Stück: 60 }, base: 'Lamm' })
+add('Lammkeule', [165, 19.5, 0, 9.5, 0], 'M', { base: 'Lamm' })
+add('Kalbsschnitzel', [105, 22, 0, 1.8, 0], 'M', { u: { Stück: 150 }, base: 'Kalb' })
+add('Kalbsleber', [130, 20, 4.0, 4.0, 0], 'M', { u: { Scheibe: 120 }, base: 'Leber' })
+add('Hirschfleisch', [115, 22, 0, 3.0, 0], 'M', { base: 'Wild' })
+add('Hühnerbrühe', [5, 0.5, 0.3, 0.2, 0], 'M', { base: 'Brühe' })
+spice('Wacholderbeeren', [330, 4.0, 40, 12, 30], { Stück: 0.1 })
+spice('Nelken', [275, 6.0, 31, 13, 34], { Stück: 0.1 })
+// Wie die gleichnamigen Alltags-Einträge (gleiche Werte) – beim Eintragen findet man diese dort
+add('Hackfleisch (gemischt)', [250, 18, 0, 20, 0], 'M', { base: 'Hackfleisch', only: true })
+add('Wiener Würstchen', [270, 13, 1.0, 24, 0], 'M', { u: { Stück: 50 }, base: 'Würstchen', only: true })
+add('Bratwurst', [300, 13, 1.0, 27, 0], 'M', { u: { Stück: 100 }, base: 'Bratwurst', only: true })
+add('Leberkäse', [300, 12, 1.0, 27.5, 0], 'M', { u: { Scheibe: 100 }, only: true })
+add('Chorizo', [420, 24, 2.0, 35, 0], 'M', { u: { Scheibe: 8 }, only: true })
+add('Salami', [400, 21, 1.0, 35, 0], 'M', { u: { Scheibe: 10 }, only: true })
+add('Kartoffelknödel', [110, 2.0, 23, 0.5, 1.5], 'G', { u: { Stück: 100 }, base: 'Knödel', only: true })
+add('Burgerbrötchen', [275, 9.0, 49, 4.5, 2.5], 'G', { u: { Stück: 60 }, only: true })
 
 export const INGREDIENTS: ReadonlyMap<string, IngredientInfo> = new Map(LIST.map((i) => [i.name, i]))
 export const INGREDIENT_LIST: readonly IngredientInfo[] = LIST

@@ -219,7 +219,7 @@ const EMOJI_RULES: [RegExp, string][] = [
   [/limonade/i, '🍋'],
   [/^wasser\b/i, '💧'],
   // Gerichte
-  [/burger/i, '🍔'],
+  [/(?<!gais)burger/i, '🍔'],
   [/pizza|flammkuchen/i, '🍕'],
   [/taco/i, '🌮'],
   [/pulled chicken/i, '🥪'],
@@ -267,6 +267,9 @@ const EMOJI_RULES: [RegExp, string][] = [
   [/roulade|steak|schnitzel|rind|schwein|kasseler|lamm/i, '🥩'],
   [/gemüse-frikadelle/i, '🥕'],
   [/klopse|frikadelle|ćevap|cevap|gulasch|hack/i, '🍖'],
+  [/\bente|\bgans\b|gänse/i, '🦆'],
+  [/kalb|hirsch|\breh|wildschwein|wildgulasch|leber|spare ?ribs|kotelett|braten\b|medaillon|tafelspitz|ossobuco|saltimbocca|entrecôte|filet/i, '🥩'],
+  [/keule|drumstick|geflügel|coq au/i, '🍗'],
   [/kugeln|bällchen|riegel/i, '🍪'],
   [/trauben/i, '🍇'],
   [/falafel/i, '🧆'],
@@ -297,6 +300,7 @@ const EMOJI_RULES: [RegExp, string][] = [
   [/pesto/i, '🌿'],
   [/zwiebel/i, '🧅'],
   [/sauce|béchamel|hollandaise|vinaigrette|dressing|dip\b/i, '🫙'],
+  [/speck|schinken|bacon/i, '🥓'],
 ]
 
 function matchEmoji(text: string): string | undefined {

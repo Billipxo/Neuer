@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useParams, Navigate, Link, useNavigate } from 'react-router-dom'
-import { ChefHat, Clock, Heart, History, Hourglass, Lightbulb, Minus, Pencil, Plus, Share2, ShoppingBasket, Thermometer, Trash2, Users, CalendarPlus, Wand2 } from 'lucide-react'
+import { ChefHat, Clock, Drumstick, Heart, History, Hourglass, Lightbulb, Minus, Pencil, Plus, Share2, ShoppingBasket, Thermometer, Trash2, Users, CalendarPlus, Wand2 } from 'lucide-react'
 import { hasAirfryerVariant, isAirfryerNative, RECIPES, recipeEmoji, recipeNutrients, recipeShareText, recipeSteps, scaleIngredients, similarRecipes, TAG_LABELS } from '../lib/recipes'
-import { formatDiff, nutritionDiff } from '../lib/variants'
+import { draftFromRecipe, formatDiff, nutritionDiff } from '../lib/variants'
+import { meatIdeas } from '../lib/meatIdeas'
 import { ALLERGEN_LABELS } from '../lib/recipeNutrition'
 import { useDeleteVariant, useResolvedRecipe, useVariantRecipes } from '../hooks/variants'
 import { Spinner } from '../components/ui/EmptyState'
@@ -56,6 +57,8 @@ export function RecipeDetailPage() {
   const showAirfryerInfo = recipe.airfryer && (isAirfryerNative(recipe) || activeMethod === 'airfryer')
   const favorite = profile?.favorite_recipes?.includes(recipe.id) ?? false
   const cookedStat = cooked.get(recipe.id)
+  // Kochbuch-Rezepte (und geteilte) lassen sich mit einem Tipp mit Fleisch abwandeln
+  const meatTips = own ? [] : meatIdeas(draftFromRecipe(recipe, activeMethod), 3)
 
   async function share() {
     if (!recipe) return
@@ -216,6 +219,28 @@ export function RecipeDetailPage() {
             </span>
           </span>
         </Link>
+      )}
+      {meatTips.length > 0 && (
+        <section aria-labelledby="meat-ideas" className="mt-3 rounded-2xl bg-surface p-3 ring-1 ring-line/60">
+          <h2 id="meat-ideas" className="flex items-center gap-2 px-1 text-sm font-semibold">
+            <Drumstick className="size-4 text-brand" aria-hidden /> {recipe.diet.vegetarian ? 'Mit Fleisch abwandeln' : 'Mit anderem oder mehr Fleisch'}
+          </h2>
+          <ul className="mt-2 flex flex-wrap gap-2" aria-label="Fleisch-Ideen">
+            {meatTips.map((idea) => (
+              <li key={idea.key}>
+                <Link
+                  to={`/rezepte/${recipe.id}/abwandeln?methode=${variant ? activeMethod : 'airfryer'}&fleisch=${encodeURIComponent(idea.key)}`}
+                  className="inline-flex min-h-10 items-center rounded-full bg-surface-2 px-3 text-sm font-medium transition hover:bg-line/70 active:scale-95"
+                >
+                  {idea.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 px-1 text-xs text-muted">
+            Öffnet deine eigene Version mit angepassten Zutaten, Titel und Schritten – vor dem Speichern lässt sich alles ändern.
+          </p>
+        </section>
       )}
       {ownVariants.length > 0 && (
         <>
