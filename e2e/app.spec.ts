@@ -1001,6 +1001,8 @@ test('Sport eintragen: Verbrauch schätzen, eigene kcal, aufs Tagesziel anrechne
   await page.getByRole('dialog', { name: 'Sport eintragen' }).getByRole('button', { name: '10.000', exact: true }).click()
   await page.getByRole('dialog', { name: 'Sport eintragen' }).getByRole('button', { name: /^Eintragen · \d+ kcal$/ }).click()
   await expect(list.getByRole('button', { name: /^Schritte 10\.000 Schritte ≈ \d+ kcal/ })).toBeVisible()
+  // 10.000 Schritte an einem Tag gibt ein Abzeichen
+  await closeBadges(page)
 
   // Löschen und rückgängig machen
   await list.getByRole('button', { name: /^Joggen/ }).click()
