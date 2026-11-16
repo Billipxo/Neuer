@@ -1133,3 +1133,26 @@ test('Lieblingszutaten: Rezepte daraus finden und ein eigenes Gericht zusammenst
   await page.getByRole('button', { name: 'Speichern' }).click()
   await expect(page.getByText('Gericht angelegt')).toBeVisible()
 })
+
+test('Mit Fleisch abwandeln: Hähnchen statt Tofu mit einem Tipp, mehr Fleisch, als Variante speichern', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/rezepte/tofu-brokkoli-pfanne')
+  await expect(page.getByRole('heading', { name: 'Mit Fleisch abwandeln' })).toBeVisible()
+  await page.getByRole('list', { name: 'Fleisch-Ideen' }).getByRole('link', { name: 'Hähnchen statt Tofu' }).click()
+  // Der Editor öffnet die eigene Version schon abgewandelt: Zutat, Titel und ein zusätzlicher Schritt
+  await expect(page.getByRole('heading', { name: 'Rezept abwandeln' })).toBeVisible()
+  await expect(page.getByLabel('Titel')).toHaveValue('Hähnchen-Brokkoli-Pfanne mit Reis')
+  await expect(page.getByRole('button', { name: 'Hähnchenbrust ersetzen' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Tofu (natur) ersetzen' })).toHaveCount(0)
+  const before = Number(await page.getByLabel('Menge Hähnchenbrust').inputValue())
+  // Weitere Ideen im Editor – jetzt für ein Fleischgericht
+  await page.getByRole('list', { name: 'Fleisch-Ideen' }).getByRole('button', { name: 'Mehr Fleisch übernehmen' }).click()
+  await expect(page.getByLabel('Menge Hähnchenbrust')).toHaveValue(String(before * 1.5))
+  await page.getByRole('button', { name: 'Variante speichern' }).click()
+  await expect(page.getByRole('heading', { name: 'Hähnchen-Brokkoli-Pfanne mit Reis' })).toBeVisible()
+  await closeBadges(page)
+  await expect(page.getByText(/Deine Variante von/)).toBeVisible()
+  await expect(page.getByText(/Hähnchen statt Tofu: Die Hähnchenbrust/)).toBeVisible()
+  // Eigene Varianten bekommen keine Fleisch-Knöpfe mehr
+  await expect(page.getByRole('list', { name: 'Fleisch-Ideen' })).toHaveCount(0)
+})
