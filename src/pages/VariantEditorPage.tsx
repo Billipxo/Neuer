@@ -382,7 +382,7 @@ export function VariantEditorPage() {
                 <div className="min-w-0 flex-1 px-1">
                   <p className="text-[15px] leading-snug">{idea.label}</p>
                   <p className="text-xs text-muted tabular">
-                    {fmtSigned(idea.kcalDelta, ' kcal')} · {fmtSigned(idea.proteinDelta, ' g')} Eiweiß pro Portion · {idea.why}
+                    {fmtSigned(idea.kcalDelta, ' kcal')} pro Portion · {fmtSigned(idea.proteinDelta, ' g')} Eiweiß · {idea.why}
                   </p>
                 </div>
                 <Button size="sm" variant="secondary" onClick={() => applyMeat(idea)} aria-label={`${idea.label} übernehmen`}>

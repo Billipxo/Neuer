@@ -815,6 +815,8 @@ test('Mehreres auf einmal: Text erkennen, anpassen und mit einem Tipp eintragen'
   await expect(items).toHaveCount(3)
   await card.getByRole('button', { name: /^Brötchen, 2 Stück/ }).click()
   const sheet = page.getByRole('dialog', { name: 'Brötchen' })
+  // erst tippen, wenn die bisherige Menge im Feld steht – sonst landet die neue Zahl manchmal dahinter („21“)
+  await expect(sheet.getByLabel('Menge')).toHaveValue('2')
   await sheet.getByLabel('Menge').fill('1')
   await sheet.getByRole('button', { name: 'Menge übernehmen' }).click()
   await expect(items.nth(0)).toContainText('1 Stück · 60 g')
