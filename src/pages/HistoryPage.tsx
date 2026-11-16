@@ -5,7 +5,7 @@ import { de } from 'date-fns/locale'
 import { ChevronLeft, ChevronRight, Scale, Droplets, Pencil } from 'lucide-react'
 import type { LogEntry } from '../types'
 import { MEAL_TYPES } from '../types'
-import { useLog, useLogRange, useProfile, useWater, useWaterRange, useWeights } from '../hooks/data'
+import { useActivityRange, useLog, useLogRange, useProfile, useWater, useWaterRange, useWeights } from '../hooks/data'
 import { dailySeries, periodStats, waterSeries, weightSeries } from '../lib/stats'
 import { groupByMeal, totalsOf } from '../lib/log'
 import { MEAL_LABELS } from '../lib/meals'
@@ -143,6 +143,8 @@ function PeriodView({ view, anchor, onAnchor }: { view: 'week' | 'month'; anchor
   const to = days[days.length - 1]
   const { data: entries = [] } = useLogRange(from, to)
   const { data: water = [] } = useWaterRange(from, to)
+  // Sport (leer, solange das Datenbank-Update dafür fehlt)
+  const { data: activities = [] } = useActivityRange(from, to)
   const { data: weights = [] } = useWeights()
   if (!profile) return null
 
@@ -174,7 +176,7 @@ function PeriodView({ view, anchor, onAnchor }: { view: 'week' | 'month'; anchor
       </dl>
 
       <div className="mt-4 space-y-4">
-        {view === 'week' && <WeekReviewCard days={days} entries={entries} water={water} weights={weights} profile={profile} />}
+        {view === 'week' && <WeekReviewCard days={days} entries={entries} water={water} weights={weights} activities={activities} profile={profile} />}
         {stats.loggedDays === 0 ? (
           <EmptyState title="Noch keine Einträge in diesem Zeitraum" text="Sobald du Mahlzeiten einträgst, erscheinen hier deine Diagramme." />
         ) : (

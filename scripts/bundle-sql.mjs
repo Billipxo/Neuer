@@ -25,7 +25,7 @@ export function bundle(dir = 'supabase/migrations') {
     '-- Teller – komplette Datenbank-Einrichtung\n' +
     '-- Diese Datei wird automatisch aus supabase/migrations/ erzeugt (npm run db:bundle).\n' +
     '-- In Supabase: SQL Editor → New query → gesamten Inhalt einfügen → Run.\n' +
-    '-- Bricht das Einfügen ab („syntax error“), stattdessen setup-teil-1.sql, -2 und -3 nacheinander ausführen.\n\n'
+    '-- Bricht das Einfügen ab („syntax error“), stattdessen die Teile setup-teil-1.sql, -2 … der Reihe nach ausführen.\n\n'
   return header + migrations(dir).join('\n')
 }
 

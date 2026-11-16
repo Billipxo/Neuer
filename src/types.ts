@@ -50,6 +50,11 @@ export interface Profile {
   diet: DietPreference
   /** Unverträglichkeiten und Allergien – Rezepte mit diesen Zutaten werden bei Vorschlägen weggelassen */
   avoid: Allergen[]
+  /**
+   * Sport aufs Tagesziel anrechnen. Fehlt, solange das Datenbank-Update für Sport nicht ausgeführt ist – deshalb
+   * optional und nie in neuen Profilen vorbelegt (sonst schlüge das Speichern dort fehl).
+   */
+  activity_in_budget?: boolean
   onboarded: boolean
   created_at?: string
 }
@@ -119,6 +124,22 @@ export interface LogEntry extends Nutrients {
   dish_id: string | null
   recipe_id: string | null
   veggies: string[]
+  created_at?: string
+}
+
+/** Eine Sporteinheit bzw. Bewegung an einem Tag */
+export interface ActivityLog {
+  id: string
+  user_id?: string
+  date: string
+  /** Sportart aus dem Katalog („joggen“, „schritte“ …) oder „eigene“ */
+  kind: string
+  /** Anzeigename, z. B. „Joggen“ oder ein eigener Name */
+  name: string
+  minutes: number | null
+  steps: number | null
+  /** Geschätzter zusätzlicher Verbrauch (ohne Grundumsatz) oder selbst eingetragen */
+  kcal: number
   created_at?: string
 }
 

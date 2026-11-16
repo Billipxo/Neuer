@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Download, FileJson, Trash2, Upload } from 'lucide-react'
 import { useAuth, useStore } from '../../app/auth'
-import { ALL_TABLES } from '../../data/store'
+import { ALL_TABLES, listTolerant } from '../../data/store'
 import type { LogEntry } from '../../types'
 import { download, logToCsv } from '../../lib/export'
 import { todayISO } from '../../lib/dates'
@@ -58,7 +58,7 @@ export function DataSection() {
     const source = ownStore ?? store
     const data: Record<string, unknown> = { exportiert_am: new Date().toISOString(), profil: await source.getProfile() }
     for (const t of ALL_TABLES) {
-      const rows = await source.list<{ user_id?: string | null }>(t)
+      const rows = await listTolerant<{ user_id?: string | null }>(source, t)
       // Rezepte und Gerichte anderer Haushalts-Mitglieder gehören nicht in die eigene Sicherung
       data[t] = t === 'dishes' || t === 'recipe_variants' ? rows.filter((r) => !r.user_id || r.user_id === userId) : rows
     }

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth, useStore } from '../app/auth'
-import { ALL_TABLES, type DataStore, type TableName } from '../data/store'
+import { ALL_TABLES, OPTIONAL_TABLES, isMissingTableError, listTolerant, type DataStore, type TableName } from '../data/store'
 import { defaultId, isDuplicate } from '../data/offlineStore'
 import { chunk, planImport, type Backup, type ImportPlan, type Row } from '../lib/backup'
 import { defaultDraft } from '../components/profile/types'
@@ -27,7 +27,7 @@ export async function previewImport(store: DataStore, backup: Backup, userId: st
   requireOnline(store)
   const existing: Partial<Record<TableName, Row[]>> = {}
   for (const t of ALL_TABLES) {
-    const rows = await store.list<Row>(t)
+    const rows = await listTolerant<Row>(store, t)
     existing[t] = OWNED.includes(t) ? rows.filter((r) => !r.user_id || r.user_id === userId) : rows
   }
   return { plan: planImport(backup, existing, defaultId), accountEmpty: (existing.log_entries?.length ?? 0) === 0 }
@@ -54,7 +54,12 @@ export function useImportBackup() {
           }
           continue
         }
-        for (const part of chunk(rows)) await store.insert(table, part)
+        try {
+          for (const part of chunk(rows)) await store.insert(table, part)
+        } catch (e) {
+          // Tabelle aus einem Datenbank-Update, das hier noch fehlt (z. B. Sport): den Rest trotzdem einspielen
+          if (!(OPTIONAL_TABLES.includes(table) && isMissingTableError(e))) throw e
+        }
       }
       if (withProfile && plan.profile) {
         const current = defaultDraft(await store.getProfile())

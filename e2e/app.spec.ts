@@ -933,6 +933,81 @@ test.describe('App installieren auf dem iPhone', () => {
   })
 })
 
+test('Sport eintragen: Verbrauch schätzen, eigene kcal, aufs Tagesziel anrechnen, löschen mit Rückgängig', async ({ page }) => {
+  await startDemo(page)
+  await page.getByRole('button', { name: 'Sport', exact: true }).click()
+  const sheet = page.getByRole('dialog', { name: 'Sport eintragen' })
+  await sheet.getByRole('group', { name: 'Häufige Sportarten' }).getByRole('button', { name: 'Joggen' }).click()
+  await sheet.getByRole('button', { name: '30 Min.', exact: true }).click()
+  await expect(sheet).toContainText(/≈ \d+ kcal zusätzlich verbraucht/)
+  // Wert von der Uhr übernehmen
+  await sheet.getByRole('switch', { name: 'Eigene kcal eintragen' }).click()
+  await sheet.getByLabel('Verbrauch').fill('300')
+  await sheet.getByRole('button', { name: 'Eintragen · 300 kcal' }).click()
+  const list = page.getByRole('list', { name: 'Sport an diesem Tag' })
+  await expect(list.getByRole('button', { name: /^Joggen \(ca\. 8 km\/h\) 30 Min\. ≈ 300 kcal/ })).toBeVisible()
+  await closeBadges(page)
+  // Zunächst nicht aufs Tagesziel angerechnet
+  await expect(page.getByRole('img', { name: /^0 von 2\.000 kcal/ })).toBeVisible()
+
+  // Im Profil einschalten
+  await page.getByRole('link', { name: 'Profil und Einstellungen' }).click()
+  await page.getByRole('switch', { name: 'Sport aufs Tagesziel anrechnen' }).click()
+  await page.getByRole('button', { name: 'Änderungen speichern' }).click()
+  await expect(page.getByText('Einstellungen gespeichert')).toBeVisible()
+  await page.getByRole('link', { name: 'Heute' }).click()
+  await expect(page.getByRole('img', { name: /^0 von 2\.300 kcal/ })).toBeVisible()
+  await expect(page.getByText('Tagesziel 2.000 kcal + 300 kcal Sport')).toBeVisible()
+
+  // Schritte dazu: geschätzt
+  await page.getByRole('button', { name: 'Sport eintragen' }).click()
+  await page.getByRole('dialog', { name: 'Sport eintragen' }).getByRole('button', { name: 'Schritte' }).click()
+  await page.getByRole('dialog', { name: 'Sport eintragen' }).getByRole('button', { name: '10.000', exact: true }).click()
+  await page.getByRole('dialog', { name: 'Sport eintragen' }).getByRole('button', { name: /^Eintragen · \d+ kcal$/ }).click()
+  await expect(list.getByRole('button', { name: /^Schritte 10\.000 Schritte ≈ \d+ kcal/ })).toBeVisible()
+
+  // Löschen und rückgängig machen
+  await list.getByRole('button', { name: /^Joggen/ }).click()
+  await page.getByRole('dialog', { name: 'Sport bearbeiten' }).getByRole('button', { name: 'Löschen' }).click()
+  await expect(list.getByRole('button', { name: /^Joggen/ })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Rückgängig' }).click()
+  await expect(list.getByRole('button', { name: /^Joggen \(ca\. 8 km\/h\) 30 Min\. ≈ 300 kcal/ })).toBeVisible()
+
+  // Wochenrückblick nennt den Sport
+  await page.getByRole('link', { name: 'Verlauf' }).click()
+  await expect(page.getByText(/^Sport: 2 Einheiten an 1 Tag · 30 Min\. · ≈ [\d.]+ kcal\.$/)).toBeVisible()
+})
+
+test('Sport ohne Datenbank-Update: Hinweis statt Fehler, Rest der App läuft', async ({ page }) => {
+  test.skip(!withAccount(), 'Nur mit Konto – der Demo-Modus speichert lokal')
+  // So antwortet Supabase, solange setup-teil-4.sql noch nicht ausgeführt ist
+  await page.route('**/rest/v1/activity_logs**', (route) =>
+    route.fulfill({
+      status: 404,
+      contentType: 'application/json',
+      body: JSON.stringify({ code: 'PGRST205', details: null, hint: null, message: "Could not find the table 'public.activity_logs' in the schema cache" }),
+    }),
+  )
+  await startDemo(page)
+  await expect(page.getByText('Noch nicht eingerichtet')).toBeVisible()
+  await expect(page.getByText(/setup-teil-4\.sql/)).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Sport eintragen' })).toHaveCount(0)
+  await expect(page.getByText(/Speichern fehlgeschlagen|Bitte die SQL-Datei/)).toHaveCount(0)
+  // Essen eintragen geht wie immer
+  await page.goto('/hinzufuegen?meal=lunch')
+  await page.getByLabel('Lebensmittel suchen').fill('2 Brötchen, 1 Cappuccino')
+  await page.getByRole('button', { name: /^Alle 2 hinzufügen/ }).click()
+  await expect(page.getByText(/^2 Einträge · \d+ kcal$/)).toBeVisible()
+  // Profil: keine Sport-Einstellung, Sicherung klappt trotzdem
+  await page.goto('/profil')
+  await expect(page.getByRole('heading', { name: 'Tagesziel' })).toBeVisible()
+  await expect(page.getByRole('switch', { name: 'Sport aufs Tagesziel anrechnen' })).toHaveCount(0)
+  const download = page.waitForEvent('download')
+  await page.getByRole('button', { name: 'Alle Daten (JSON)' }).click()
+  await download
+  await expect(page.getByText('JSON exportiert')).toBeVisible()
+})
+
 test('Stöbern: Werte nach Kategorien finden, ohne zu tippen', async ({ page }) => {
   await startDemo(page)
   await page.goto('/hinzufuegen?meal=breakfast')

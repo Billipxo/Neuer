@@ -1,9 +1,13 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
-import { Droplets, Plus, Scale, UserRound } from 'lucide-react'
-import type { LogEntry, MealType, PlanItem } from '../types'
+import { Dumbbell, Droplets, Plus, Scale, UserRound } from 'lucide-react'
+import type { ActivityLog, LogEntry, MealType, PlanItem } from '../types'
 import { MEAL_TYPES } from '../types'
-import { useAddLogEntries, useDeleteLogEntry, useLog, useProfile, useWater } from '../hooks/data'
+import { useActivities, useAddLogEntries, useDeleteLogEntry, useLog, useProfile, useWater, useWeights } from '../hooks/data'
+import { isMissingTableError } from '../data/store'
+import { summarizeActivities, targetWithActivity, weightOn } from '../lib/activity'
+import { ActivitySection } from '../components/today/ActivitySection'
+import { ActivitySheet } from '../components/today/ActivitySheet'
 import { usePlanRange } from '../hooks/plan'
 import { canLogDirectly, openPlanItems, planItemEntry } from '../lib/plannedToday'
 import { detectVeggies } from '../lib/veggies'
@@ -51,11 +55,21 @@ export function TodayPage() {
   const { data: water = [] } = useWater(date)
   const [editing, setEditing] = useState<LogEntry | null>(null)
   const [waterOpen, setWaterOpen] = useState(false)
+  const activitiesQuery = useActivities(date)
+  const { data: weights = [] } = useWeights()
+  // Sport: Sheet zum Eintragen (null = zu, 'neu' = neuer Eintrag, sonst der bearbeitete Eintrag)
+  const [activitySheet, setActivitySheet] = useState<ActivityLog | 'neu' | null>(null)
   const [weightOpen, setWeightOpen] = useState(false)
 
   if (!profile) return null
   const totals = totalsOf(entries)
-  const prog = progress(totals.kcal, profile.kcal_target)
+  const activities = activitiesQuery.data ?? []
+  const activityUnavailable = !!activitiesQuery.error && isMissingTableError(activitiesQuery.error)
+  const activityKcal = summarizeActivities(activities).kcal
+  const inBudget = !!profile.activity_in_budget
+  // Sport erhöht das Tagesziel nur, wenn das im Profil so eingestellt ist
+  const target = targetWithActivity(profile.kcal_target, activityKcal, inBudget)
+  const prog = progress(totals.kcal, target)
   const goals = macroGrams(profile.kcal_target, {
     protein: profile.protein_pct,
     carbs: profile.carbs_pct,
@@ -109,7 +123,12 @@ export function TodayPage() {
       </div>
 
       <Card className="mt-2 pt-6">
-        <ProgressRing consumed={totals.kcal} target={profile.kcal_target} />
+        <ProgressRing consumed={totals.kcal} target={target} />
+        {inBudget && activityKcal > 0 && (
+          <p className="mt-2 text-center text-xs text-muted">
+            Tagesziel {fmtInt(profile.kcal_target)} kcal + {fmtInt(activityKcal)} kcal Sport
+          </p>
+        )}
         <p className="mx-auto mt-4 max-w-xs text-center text-sm text-muted" aria-live="polite">
           {motivationLine(prog, entries.length)}
         </p>
@@ -120,7 +139,7 @@ export function TodayPage() {
         </div>
       </Card>
 
-      <div className="mt-4 grid grid-cols-3 gap-2" role="group" aria-label="Schnellaktionen">
+      <div className="mt-4 grid grid-cols-4 gap-2" role="group" aria-label="Schnellaktionen">
         <QuickAction
           label="Mahlzeit"
           icon={<Plus className="size-5" aria-hidden />}
@@ -128,12 +147,20 @@ export function TodayPage() {
           primary
         />
         <QuickAction
-          label={`Wasser · ${fmt1(waterMl / 1000)} l`}
+          label="Wasser"
+          sub={`${fmt1(waterMl / 1000)} l`}
           ariaLabel={`Wasser, bisher ${fmtInt(waterMl)} Milliliter`}
           icon={<Droplets className="size-5" aria-hidden />}
           onClick={() => setWaterOpen(true)}
         />
         <QuickAction label="Gewicht" icon={<Scale className="size-5" aria-hidden />} onClick={() => setWeightOpen(true)} />
+        <QuickAction
+          label="Sport"
+          sub={activityKcal > 0 ? `${fmtInt(activityKcal)} kcal` : undefined}
+          ariaLabel={activityUnavailable ? 'Sport (noch nicht eingerichtet)' : 'Sport'}
+          icon={<Dumbbell className="size-5" aria-hidden />}
+          onClick={() => (activityUnavailable ? document.getElementById('sport')?.scrollIntoView({ behavior: 'smooth' }) : setActivitySheet('neu'))}
+        />
       </div>
 
       <WaterReminder date={date} ml={waterMl} target={profile.water_target_ml} onOpen={() => setWaterOpen(true)} />
@@ -161,7 +188,24 @@ export function TodayPage() {
         ))}
       </div>
 
+      <div id="sport" className="mt-3 scroll-mt-4">
+        <ActivitySection
+          activities={activities}
+          inBudget={inBudget}
+          unavailable={activityUnavailable}
+          onAdd={() => setActivitySheet('neu')}
+          onEdit={(a) => setActivitySheet(a)}
+        />
+      </div>
+
       <EntrySheet entry={editing} onClose={() => setEditing(null)} />
+      <ActivitySheet
+        open={activitySheet !== null}
+        date={date}
+        editing={activitySheet && activitySheet !== 'neu' ? activitySheet : null}
+        weight={weightOn(date, weights, profile.weight_kg)}
+        onClose={() => setActivitySheet(null)}
+      />
       <CopyMealSheet source={copying} onClose={() => setCopying(null)} />
       <SaveMealAsDishSheet source={savingDish} onClose={() => setSavingDish(null)} />
       <WaterSheet open={waterOpen} onClose={() => setWaterOpen(false)} date={date} target={profile.water_target_ml} />
@@ -172,12 +216,15 @@ export function TodayPage() {
 
 function QuickAction({
   label,
+  sub,
   ariaLabel,
   icon,
   onClick,
   primary,
 }: {
   label: string
+  /** Kleine zweite Zeile, z. B. die Wassermenge */
+  sub?: string
   ariaLabel?: string
   icon: React.ReactNode
   onClick: () => void
@@ -193,7 +240,10 @@ function QuickAction({
       }`}
     >
       {icon}
-      <span className="tabular">{label}</span>
+      <span className="tabular leading-tight">
+        {label}
+        {sub && <span className="block text-xs font-medium text-muted">{sub}</span>}
+      </span>
     </button>
   )
 }
