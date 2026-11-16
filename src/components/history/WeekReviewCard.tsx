@@ -1,5 +1,5 @@
 import { CalendarCheck } from 'lucide-react'
-import type { LogEntry, Profile, WaterLog, WeightLog } from '../../types'
+import type { ActivityLog, LogEntry, Profile, WaterLog, WeightLog } from '../../types'
 import { reviewLines, weekReview } from '../../lib/progress'
 import { fmtDayShort, todayISO } from '../../lib/dates'
 import { Card } from '../ui/Card'
@@ -10,12 +10,14 @@ export function WeekReviewCard({
   entries,
   water,
   weights,
+  activities,
   profile,
 }: {
   days: string[]
   entries: LogEntry[]
   water: WaterLog[]
   weights: WeightLog[]
+  activities?: ActivityLog[]
   profile: Profile
 }) {
   const review = weekReview({
@@ -23,6 +25,7 @@ export function WeekReviewCard({
     log: entries,
     water,
     weights,
+    activities,
     kcalTarget: profile.kcal_target,
     waterTarget: profile.water_target_ml,
     macros: { protein: profile.protein_pct, carbs: profile.carbs_pct, fat: profile.fat_pct },

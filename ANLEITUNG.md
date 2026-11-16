@@ -32,21 +32,21 @@ Jetzt ist alles im Zweig `main`.
    - Region: **Central EU (Frankfurt)**
 3. **Create new project** – kurz warten, bis das Projekt bereit ist (1–2 Minuten).
 
-## Schritt 3 – Datenbank einrichten (dreimal kopieren und einfügen)
+## Schritt 3 – Datenbank einrichten (viermal kopieren und einfügen)
 
-Die Einrichtung besteht aus drei kleinen Dateien. Führe sie **der Reihe nach** aus – für jede dasselbe:
+Die Einrichtung besteht aus vier kleinen Dateien. Führe sie **der Reihe nach** aus – für jede dasselbe:
 
 1. In GitHub die Datei öffnen und rechts oben über dem Text auf das Symbol **„Copy raw file“** klicken:
-   erst **`supabase/setup-teil-1.sql`**, dann **`supabase/setup-teil-2.sql`**, dann **`supabase/setup-teil-3.sql`**.
+   erst **`supabase/setup-teil-1.sql`**, dann **`-2`**, **`-3`** und zuletzt **`supabase/setup-teil-4.sql`**.
 2. In Supabase links auf **SQL Editor** → **New query**.
 3. Alles einfügen → unten rechts **Run** klicken. Fragt Supabase wegen einer „destructive operation“ nach, mit
    **Run this query** bestätigen – die Dateien räumen nur ihre eigenen Regeln auf, bevor sie sie neu anlegen.
 4. Es sollte **„Success. No rows returned“** erscheinen. Dann die nächste Datei.
 
-Nach der dritten Datei sind alle Tabellen und Schutzregeln angelegt (zur Kontrolle: links **Table Editor** zeigt 13 Tabellen).
+Nach der vierten Datei sind alle Tabellen und Schutzregeln angelegt (zur Kontrolle: links **Table Editor** zeigt 14 Tabellen).
 Jede Datei lässt sich gefahrlos wiederholen – wenn du unsicher bist, ob eine durchgelaufen ist, führe sie einfach noch einmal aus.
 
-> Warum drei Dateien? Manche Geräte schneiden lange Texte beim Einfügen nach 20.000 Zeichen ab; dann meldet Supabase
+> Warum mehrere Dateien? Manche Geräte schneiden lange Texte beim Einfügen nach 20.000 Zeichen ab; dann meldet Supabase
 > einen „syntax error“. Die komplette Einrichtung in einer Datei gibt es weiterhin als `supabase/setup.sql`.
 
 ## Schritt 4 – Anmelde-Mail (zum Start nichts zu tun)
@@ -259,11 +259,24 @@ Verschickt wird ein lesbarer Text; wer selbst deine App nutzt, übernimmt den Pl
 | „Keine Verbindung zu Open Food Facts“ | Der freie Lebensmitteldienst ist kurz nicht erreichbar – später erneut versuchen oder das Lebensmittel selbst anlegen. |
 | Barcode-Scan startet nicht | Kamera in den Handy-Einstellungen für den Browser bzw. die App erlauben. Alternativ die Nummer unter dem Barcode eintippen. |
 
+## Update: Sport (November 2026)
+
+Für das Sport-Tagebuch braucht die Datenbank eine neue Tabelle. Hast du die Datenbank schon eingerichtet (Teil 1–3),
+fehlt nur **ein** Schritt:
+
+1. In GitHub **`supabase/setup-teil-4.sql`** öffnen → **„Copy raw file“**.
+2. In Supabase **SQL Editor** → **New query** → einfügen → **Run** (eine Nachfrage zur „destructive operation“ mit
+   **Run this query** bestätigen – die Datei räumt nur ihre eigenen Regeln auf).
+3. **„Success. No rows returned“** – fertig. Die App einmal neu laden.
+
+Bis dahin zeigt die App bei „Sport & Bewegung“ den Hinweis „Noch nicht eingerichtet“; alles andere funktioniert wie
+gewohnt. Deine Daten bleiben unverändert, und die Datei lässt sich gefahrlos wiederholen.
+
 ## Später: Updates der Datenbank
 
 Wenn du die Datenbank **schon einmal** eingerichtet hast und eine neue Version der App kommt, gibt es zwei Wege:
 
-- **Am einfachsten:** die drei Dateien aus Schritt 3 noch einmal der Reihe nach ausführen. Vorhandenes bleibt, wie es ist
+- **Am einfachsten:** die Dateien aus Schritt 3 noch einmal der Reihe nach ausführen. Vorhandenes bleibt, wie es ist
   (auch deine Daten), Neues kommt dazu.
 - **Gezielt:** nur die **neuen** Dateien aus `supabase/migrations/` im SQL Editor ausführen (die Dateinamen sind nach
   Datum sortiert). Aktuell sind das:
@@ -276,8 +289,9 @@ Wenn du die Datenbank **schon einmal** eingerichtet hast und eine neue Version d
 - `20261111000010_target_weight.sql` – Optionales Zielgewicht
 - `20261113000011_household.sql` – Gemeinsamer Haushalt (geteilter Wochenplan und geteilte Einkaufsliste)
 - `20261113000012_grants.sql` – Zugriffsrechte ausdrücklich vergeben (behebt „permission denied for table …“)
+- `20261116000013_activity.sql` – Sport & Bewegung (dasselbe wie `setup-teil-4.sql`)
 
-Wer noch gar nichts eingerichtet hat, nimmt wie oben die drei Dateien aus Schritt 3 – sie enthalten alles.
+Wer noch gar nichts eingerichtet hat, nimmt wie oben die vier Dateien aus Schritt 3 – sie enthalten alles.
 
 ## Optional: Ausprobieren ohne Konto
 

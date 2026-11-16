@@ -1,7 +1,8 @@
 import { useCallback } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useAuth, useStore } from '../app/auth'
-import type { Dish, Food, LogEntry, Profile, WaterLog, WeightLog } from '../types'
+import type { ActivityLog, Dish, Food, LogEntry, Profile, WaterLog, WeightLog } from '../types'
+import { isMissingTableError } from '../data/store'
 import type { OffProduct } from '../lib/openFoodFacts'
 
 export const qk = {
@@ -13,6 +14,8 @@ export const qk = {
   water: (date: string) => ['water', date] as const,
   waterRange: (from: string, to: string) => ['water', 'range', from, to] as const,
   weights: ['weights'] as const,
+  activities: (date: string) => ['activities', date] as const,
+  activityRange: (from: string, to: string) => ['activities', 'range', from, to] as const,
 }
 
 // Profil ----------------------------------------------------------------------
@@ -255,6 +258,56 @@ export function useDeleteWater() {
   return useMutation({
     mutationFn: (id: string) => store.remove('water_logs', [id]),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['water'] }),
+  })
+}
+
+// Sport & Bewegung -----------------------------------------------------------------------------
+
+/** Fehlt die Tabelle (Datenbank-Update noch nicht ausgeführt), nicht immer wieder nachfragen */
+const activityRetry = (count: number, error: unknown) => !isMissingTableError(error) && count < 1
+
+export function useActivities(date: string) {
+  const store = useStore()
+  return useQuery({
+    queryKey: qk.activities(date),
+    queryFn: () => store.list<ActivityLog>('activity_logs', { eq: { date }, order: [{ column: 'created_at' }] }),
+    retry: activityRetry,
+  })
+}
+
+export function useActivityRange(from: string, to: string) {
+  const store = useStore()
+  return useQuery({
+    queryKey: qk.activityRange(from, to),
+    queryFn: () => store.list<ActivityLog>('activity_logs', { gte: { date: from }, lte: { date: to } }),
+    retry: activityRetry,
+  })
+}
+
+export type NewActivity = Omit<ActivityLog, 'id' | 'user_id' | 'created_at'>
+
+export function useSaveActivity() {
+  const store = useStore()
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: async (a: NewActivity & { id?: string }) => {
+      if (a.id) {
+        const { id, ...patch } = a
+        return store.update<ActivityLog>('activity_logs', id, patch)
+      }
+      const [created] = await store.insert<ActivityLog>('activity_logs', [a])
+      return created
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['activities'] }),
+  })
+}
+
+export function useDeleteActivity() {
+  const store = useStore()
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (id: string) => store.remove('activity_logs', [id]),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['activities'] }),
   })
 }
 

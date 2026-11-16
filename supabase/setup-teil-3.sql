@@ -1,4 +1,4 @@
--- Teller – Datenbank-Einrichtung, Teil 3 von 3
+-- Teller – Datenbank-Einrichtung, Teil 3 von 4
 -- Erzeugt aus supabase/migrations/ (npm run db:bundle). Die Teile der Reihe nach ausführen:
 -- In Supabase: SQL Editor → New query → gesamten Inhalt einfügen → Run. Jeder Teil lässt sich gefahrlos wiederholen.
 

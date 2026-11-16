@@ -2,7 +2,7 @@
  * Fortschritt und Wochenrückblick – bewusst neutral formuliert: Trends sind Hochrechnungen aus den eigenen
  * Einträgen, keine Versprechen und keine Bewertung.
  */
-import type { LogEntry, MacroPercents, WaterLog, WeightLog } from '../types'
+import type { ActivityLog, LogEntry, MacroPercents, WaterLog, WeightLog } from '../types'
 import { totalsByDate } from './log'
 import { isWithinTarget, macroGrams } from './nutrition'
 import { waterByDate } from './stats'
@@ -97,6 +97,8 @@ export interface WeekReviewInput {
   water: WaterLog[]
   /** Alle Gewichtseinträge (für den Vergleich mit der Vorwoche) */
   weights: WeightLog[]
+  /** Sport dieser Woche (fehlt, solange es kein Sport-Tagebuch gibt) */
+  activities?: Pick<ActivityLog, 'date' | 'minutes' | 'steps' | 'kcal'>[]
   kcalTarget: number
   waterTarget: number
   macros: MacroPercents
@@ -116,6 +118,8 @@ export interface WeekReview {
   /** Letzter Wert der Woche gegenüber dem letzten Wert davor */
   weightChange: number | null
   topRecipe: { name: string; count: number } | null
+  /** Sport der Woche: Einheiten, Tage mit Sport, Minuten, Verbrauch */
+  activity: { count: number; days: number; minutes: number; kcal: number } | null
 }
 
 export function weekReview(i: WeekReviewInput): WeekReview {
@@ -157,12 +161,36 @@ export function weekReview(i: WeekReviewInput): WeekReview {
     veggieKinds: veggies.size,
     weightChange,
     topRecipe,
+    activity: activitySummary(i.days, i.activities ?? []),
   }
+}
+
+function activitySummary(days: string[], list: NonNullable<WeekReviewInput['activities']>): WeekReview['activity'] {
+  const inWeek = list.filter((a) => days.includes(a.date))
+  if (!inWeek.length) return null
+  return {
+    count: inWeek.length,
+    days: new Set(inWeek.map((a) => a.date)).size,
+    minutes: inWeek.reduce((s, a) => s + (Number(a.minutes) || 0), 0),
+    kcal: inWeek.reduce((s, a) => s + (Number(a.kcal) || 0), 0),
+  }
+}
+
+function activityLine(r: WeekReview): string | null {
+  const a = r.activity
+  if (!a) return null
+  const parts = [`${a.count} ${a.count === 1 ? 'Einheit' : 'Einheiten'} an ${a.days} ${a.days === 1 ? 'Tag' : 'Tagen'}`]
+  if (a.minutes > 0) parts.push(`${fmtInt(a.minutes)} Min.`)
+  parts.push(`≈ ${fmtInt(a.kcal)} kcal`)
+  return `Sport: ${parts.join(' · ')}.`
 }
 
 /** Neutrale Sätze für den Wochenrückblick – Beobachtungen, keine Bewertung */
 export function reviewLines(r: WeekReview): string[] {
-  if (!r.loggedDays) return ['In dieser Woche ist noch nichts protokolliert – auch ein unvollständiger Tag zählt.']
+  if (!r.loggedDays) {
+    const sport = activityLine(r)
+    return ['In dieser Woche ist noch nichts protokolliert – auch ein unvollständiger Tag zählt.', ...(sport ? [sport] : [])]
+  }
   const out = [`An ${r.loggedDays} von ${r.days} Tagen protokolliert.`]
   if (r.avgKcal !== null) out.push(`Im Schnitt ${fmtInt(r.avgKcal)} kcal pro Tag – Ziel ${fmtInt(r.kcalTarget)}.`)
   if (r.avgProtein !== null) out.push(`Ø ${fmtInt(r.avgProtein)} g Eiweiß (Richtwert ${fmtInt(r.proteinGoal)} g).`)
@@ -171,5 +199,7 @@ export function reviewLines(r: WeekReview): string[] {
   if (r.veggieKinds > 0) out.push(`${r.veggieKinds} verschiedene Gemüsesorten.`)
   if (r.weightChange !== null) out.push(`Gewicht: ${fmtSignedKg(r.weightChange)} gegenüber der Vorwoche.`)
   if (r.topRecipe) out.push(`Meistgekocht: ${r.topRecipe.name} (${r.topRecipe.count}×).`)
+  const sport = activityLine(r)
+  if (sport) out.push(sport)
   return out
 }

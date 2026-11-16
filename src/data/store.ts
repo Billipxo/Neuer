@@ -6,6 +6,7 @@ export type TableName =
   | 'log_entries'
   | 'water_logs'
   | 'weight_logs'
+  | 'activity_logs'
   | 'plan_items'
   | 'shopping_items'
   | 'achievements'
@@ -17,11 +18,34 @@ export const ALL_TABLES: TableName[] = [
   'log_entries',
   'water_logs',
   'weight_logs',
+  'activity_logs',
   'plan_items',
   'shopping_items',
   'achievements',
   'recipe_variants',
 ]
+
+/**
+ * Tabellen aus späteren Datenbank-Updates: Fehlen sie (Update noch nicht ausgeführt), läuft die App ohne sie weiter,
+ * statt mit einem Fehler abzubrechen.
+ */
+export const OPTIONAL_TABLES: readonly TableName[] = ['activity_logs']
+
+/** Meldet die Datenbank, dass es eine Tabelle (noch) nicht gibt? (PostgREST: PGRST205, PostgreSQL: 42P01) */
+export function isMissingTableError(e: unknown): boolean {
+  const msg = e instanceof Error ? e.message : String(e ?? '')
+  return /could not find the table|schema cache|relation .* does not exist|PGRST205|42P01/i.test(msg)
+}
+
+/** Liste einer Tabelle – bei einer fehlenden optionalen Tabelle leer statt Fehler (Sicherung, Export) */
+export async function listTolerant<T>(store: Pick<DataStore, 'list'>, table: TableName): Promise<T[]> {
+  try {
+    return await store.list<T>(table)
+  } catch (e) {
+    if (OPTIONAL_TABLES.includes(table) && isMissingTableError(e)) return []
+    throw e
+  }
+}
 
 export type Primitive = string | number | boolean | null
 

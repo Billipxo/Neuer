@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Info, LogOut, Moon } from 'lucide-react'
+import { Dumbbell, Info, LogOut, Moon } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../app/auth'
 import { applyTheme, getThemePref, type ThemePref } from '../app/theme'
-import { useProfile, useSaveProfile } from '../hooks/data'
+import { useActivities, useProfile, useSaveProfile } from '../hooks/data'
+import { isMissingTableError } from '../data/store'
+import { todayISO } from '../lib/dates'
 import { sumPercents } from '../lib/nutrition'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Button } from '../components/ui/Button'
@@ -26,6 +28,9 @@ import { AchievementGrid, StreakCard } from '../components/achievements/Achievem
 export function ProfilePage() {
   const location = useLocation()
   const { data: profile } = useProfile()
+  // Sport gibt es erst nach dem Datenbank-Update – vorher keine Einstellung dafür anbieten
+  const activities = useActivities(todayISO())
+  const activityAvailable = !(activities.error && isMissingTableError(activities.error))
   // „/profil#app“ (Hinweis „So geht’s“) springt zur Installations-Anleitung, sobald die Seite steht
   const ready = !!profile
   useEffect(() => {
@@ -61,6 +66,15 @@ export function ProfilePage() {
       <Card className="space-y-5">
         <GoalPicker draft={draft} onChange={patch} />
         <KcalTargetEditor draft={draft} onChange={patch} />
+        {activityAvailable && (
+          <Switch
+            label="Sport aufs Tagesziel anrechnen"
+            description="Der geschätzte Verbrauch erhöht das Tagesziel am jeweiligen Tag. Dein Alltag (Aktivitätsniveau) steckt schon im Tagesziel – deshalb ist das zunächst aus."
+            checked={!!draft.activity_in_budget}
+            onChange={(v) => patch({ activity_in_budget: v })}
+            icon={<Dumbbell className="size-5 shrink-0 text-muted" aria-hidden />}
+          />
+        )}
       </Card>
 
       <SectionTitle>Makros</SectionTitle>
