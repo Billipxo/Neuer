@@ -1,4 +1,5 @@
-import { Plus } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Lightbulb, Plus } from 'lucide-react'
 import type { ActivityLog } from '../../types'
 import { activityDetail, activityEmoji, summarizeActivities } from '../../lib/activity'
 import { fmtInt } from '../../lib/format'
@@ -54,6 +55,14 @@ export function ActivitySection({
           <strong> setup-teil-4.sql</strong> ausführen (Anleitung: ANLEITUNG.md, „Update: Sport“).
         </p>
       )}
+      <div className="border-t border-line/70 px-2 py-1">
+        <Link
+          to="/training"
+          className="inline-flex min-h-10 items-center gap-1.5 rounded-xl px-2 text-sm font-medium text-muted transition hover:bg-surface-2 hover:text-ink"
+        >
+          <Lightbulb className="size-4" aria-hidden /> Training vorschlagen – zu Hause oder im Studio
+        </Link>
+      </div>
       {activities.length > 0 && (
         <ul className="border-t border-line/70" aria-label="Sport an diesem Tag">
           {activities.map((a) => (

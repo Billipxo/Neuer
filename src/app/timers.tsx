@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { beep, unlockAudio, vibrate } from '../lib/sound'
 
 export interface KitchenTimer {
   id: string
@@ -32,47 +33,9 @@ function load(): KitchenTimer[] {
   }
 }
 
-let audioCtx: AudioContext | null = null
-
-/** Audio muss durch eine Nutzeraktion freigeschaltet werden – beim Start eines Timers aufrufen */
-function unlockAudio() {
-  try {
-    const AC = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
-    if (!AC) return
-    audioCtx ??= new AC()
-    if (audioCtx.state === 'suspended') void audioCtx.resume()
-  } catch {
-    /* kein Ton möglich */
-  }
-}
-
-/** Drei kurze Pieptöne */
-function beep() {
-  try {
-    if (!audioCtx) return
-    const t0 = audioCtx.currentTime
-    for (let i = 0; i < 3; i++) {
-      const osc = audioCtx.createOscillator()
-      const gain = audioCtx.createGain()
-      osc.type = 'sine'
-      osc.frequency.value = 880
-      const start = t0 + i * 0.35
-      gain.gain.setValueAtTime(0.0001, start)
-      gain.gain.exponentialRampToValueAtTime(0.4, start + 0.02)
-      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.25)
-      osc.connect(gain).connect(audioCtx.destination)
-      osc.start(start)
-      osc.stop(start + 0.3)
-    }
-  } catch {
-    /* ignorieren */
-  }
-}
-
 function notify(label: string) {
   // Vibration ist nur nach einer Nutzeraktion erlaubt
-  const activated = (navigator as Navigator & { userActivation?: { hasBeenActive: boolean } }).userActivation?.hasBeenActive ?? true
-  if (activated) navigator.vibrate?.([300, 150, 300, 150, 300])
+  vibrate([300, 150, 300, 150, 300])
   beep()
   try {
     if ('Notification' in window && Notification.permission === 'granted' && document.visibilityState !== 'visible') {
