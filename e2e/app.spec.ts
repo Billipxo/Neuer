@@ -101,6 +101,27 @@ test('Woche vorschlagen und Einkaufsliste erzeugen', async ({ page }) => {
   await expect(other.getByText('Servietten')).toBeVisible()
 })
 
+test('Tagesseite: Geplantes mit einem Tipp eintragen und rückgängig machen', async ({ page }) => {
+  await startDemo(page)
+  await page.getByRole('link', { name: 'Planer' }).click()
+  await page.getByRole('button', { name: 'Woche vorschlagen' }).click()
+  await expect(page.getByText('7/7')).toBeVisible()
+  await closeBadges(page)
+  await page.getByRole('link', { name: 'Heute' }).click()
+  const plannedButton = page.getByRole('button', { name: / als gegessen eintragen$/ }).first()
+  await expect(plannedButton).toBeVisible()
+  const title = (await plannedButton.getAttribute('aria-label'))!.replace(/ als gegessen eintragen$/, '')
+  await plannedButton.click()
+  await expect(page.getByText(`${title} eingetragen`)).toBeVisible()
+  // Jetzt ein Eintrag, nicht mehr „geplant“
+  await expect(page.getByRole('button', { name: `${title} als gegessen eintragen` })).toHaveCount(0)
+  await expect(page.getByRole('img', { name: /^[1-9][\d.]* von 2\.000 kcal/ })).toBeVisible()
+  await closeBadges(page)
+  await page.getByRole('button', { name: 'Rückgängig' }).click()
+  await expect(page.getByRole('button', { name: `${title} als gegessen eintragen` })).toBeVisible()
+  await expect(page.getByRole('img', { name: /^0 von 2\.000 kcal/ })).toBeVisible()
+})
+
 test('Mahlzeit vom Vortag übernehmen', async ({ page }) => {
   await startDemo(page)
   // gestern etwas eintragen
@@ -307,6 +328,34 @@ test('Eigenes Rezept anlegen und im Kochmodus kochen', async ({ page }) => {
   await page.getByRole('button', { name: /Los geht/ }).click()
   await expect(page.getByText('Schritt 1 von 1')).toBeVisible()
   await expect(page.getByRole('button', { name: /3 Min\. Timer/ })).toBeVisible()
+})
+
+test('Rezept aus Text übernehmen: Zutatenliste und Zubereitung einfügen', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/rezepte')
+  await page.getByRole('link', { name: /Eigenes Rezept anlegen/ }).click()
+  await page.getByLabel('Titel').fill('Tomatensoße von Oma')
+  await page.getByRole('button', { name: 'Aus Text einfügen' }).click()
+  const ingredients = page.getByRole('dialog', { name: 'Zutaten aus Text' })
+  await ingredients
+    .getByLabel('Zutatenliste')
+    .fill('Zutaten:\n- 2 EL Olivenöl\n- 1 Zwiebel, fein gewürfelt\n- 2 Knoblauchzehen\n- 800 g passierte Tomaten\n- 1 Prise Zucker\n- 1 Becher Schmand')
+  await expect(ingredients.getByRole('list', { name: 'Erkannte Zutaten' }).getByRole('listitem')).toHaveCount(5)
+  await expect(ingredients).toContainText('Nicht erkannt: „1 Becher Schmand“')
+  await ingredients.getByRole('button', { name: '5 Zutaten übernehmen' }).click()
+  await expect(page.getByLabel('Menge passierte Tomaten')).toHaveValue('800')
+  await expect(page.getByLabel('Menge Zwiebel')).toHaveValue('1')
+
+  await page.getByRole('button', { name: 'Schritte aus Text' }).click()
+  const steps = page.getByRole('dialog', { name: 'Zubereitung aus Text' })
+  await steps
+    .getByLabel('Zubereitung')
+    .fill('1. Zwiebel und Knoblauch in Öl glasig dünsten.\n2. Tomaten und Zucker zugeben\nund 20 Minuten köcheln lassen.')
+  await steps.getByRole('button', { name: '2 Schritte übernehmen' }).click()
+  await expect(page.getByRole('textbox', { name: 'Schritt 2' })).toHaveValue('Tomaten und Zucker zugeben und 20 Minuten köcheln lassen.')
+  await expect(page.getByText(/\d+ kcal · .* pro Portion/)).toBeVisible()
+  await page.getByRole('button', { name: 'Rezept speichern' }).click()
+  await expect(page.getByRole('heading', { name: 'Tomatensoße von Oma' })).toBeVisible()
 })
 
 test('Barcode scannen füllt die Nährwerte einer eigenen Zutat automatisch aus', async ({ page }) => {
@@ -832,6 +881,56 @@ test('Ganzer Tag auf einmal: Mahlzeiten im Text werden jeweils dort eingetragen'
   await expect(mealCard('Mittagessen')).toContainText('Döner Kebab')
   await expect(mealCard('Mittagessen')).not.toContainText('Cappuccino')
   await expect(mealCard('Abendessen')).toContainText('Bananen')
+})
+
+test('Kochbuch-Rezepte beim Hinzufügen finden und in Portionen eintragen', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/hinzufuegen?meal=lunch')
+  await page.getByLabel('Lebensmittel suchen').fill('Dal mit roten')
+  const book = page.getByRole('list', { name: 'Rezepte aus dem Kochbuch' })
+  await book.getByRole('button', { name: /^Dal mit roten Linsen und Spinat/ }).click()
+  const sheet = page.getByRole('dialog', { name: 'Dal mit roten Linsen und Spinat' })
+  await expect(sheet).toContainText('Aus dem Kochbuch')
+  await sheet.getByRole('button', { name: '1,5', exact: true }).click()
+  await sheet.getByRole('button', { name: 'Zu Mittagessen hinzufügen' }).click()
+  await expect(page.getByText(/^1 Eintrag · \d+ kcal$/)).toBeVisible()
+
+  // Die Texterkennung kennt Kochbuch-Rezepte auch – ein „und“ im Titel trennt nicht
+  await page.getByLabel('Lebensmittel suchen').fill('Dal mit roten Linsen und Spinat und ein Glas Wasser')
+  const items = page.getByRole('region', { name: 'Erkannt für Mittagessen' }).getByRole('listitem')
+  await expect(items).toHaveCount(2)
+  await expect(items.nth(0)).toContainText('1 Portion · aus dem Kochbuch')
+  await expect(items.nth(1)).toContainText('Wasser')
+  await page.getByRole('button', { name: /^Alle 2 hinzufügen/ }).click()
+  await expect(page.getByText(/^3 Einträge · [\d.]+ kcal$/)).toBeVisible()
+  await page.getByRole('button', { name: 'Fertig' }).click()
+  await closeBadges(page)
+  await expect(page.getByRole('button', { name: /^Dal mit roten Linsen und Spinat 1,5 Portionen/ })).toBeVisible()
+})
+
+test.describe('App installieren auf dem iPhone', () => {
+  test.use({
+    userAgent:
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1',
+    viewport: { width: 390, height: 844 },
+    hasTouch: true,
+    isMobile: true,
+  })
+
+  test('Hinweis auf der Tagesseite führt zur Anleitung und lässt sich ausblenden', async ({ page }) => {
+    await startDemo(page)
+    const hint = page.getByRole('note').filter({ hasText: 'Startbildschirm' })
+    await expect(hint).toBeVisible()
+    await hint.getByRole('link', { name: 'So geht’s' }).click()
+    await expect(page.getByRole('list', { name: 'So geht’s auf dem iPhone' })).toBeVisible()
+    await expect(page.getByRole('list', { name: 'So geht’s auf dem iPhone' })).toContainText('Zum Home-Bildschirm')
+    await page.goBack()
+    await hint.getByRole('button', { name: 'Hinweis ausblenden' }).click()
+    await expect(hint).toBeHidden()
+    await page.reload()
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
+    await expect(page.getByText('Teller als App auf den Startbildschirm?')).toBeHidden()
+  })
 })
 
 test('Stöbern: Werte nach Kategorien finden, ohne zu tippen', async ({ page }) => {

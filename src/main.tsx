@@ -12,6 +12,10 @@ import { TimerProvider } from './app/timers'
 import './index.css'
 import { friendlyError } from './lib/errors'
 import { inviteCodeFromPath, PENDING_INVITE_KEY } from './lib/household'
+import { captureInstallPrompt } from './app/install'
+
+// Das Installieren-Angebot des Browsers kommt früh – gleich beim Start auffangen
+captureInstallPrompt()
 
 const queryClient = new QueryClient({
   // Fehler beim Speichern verständlich anzeigen (siehe ToastProvider)

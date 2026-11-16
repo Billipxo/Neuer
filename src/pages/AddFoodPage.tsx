@@ -40,6 +40,9 @@ import { DishAmountSheet } from '../components/add/DishAmountSheet'
 import { QuickEntrySheet } from '../components/add/QuickEntrySheet'
 import { MealTextCard, NO_EDITS, effectiveParts, mealList, type MealTextEdits } from '../components/add/MealTextCard'
 import { MealPartSwapSheet } from '../components/add/MealPartSwapSheet'
+import { RecipeServingsSheet } from '../components/add/RecipeServingsSheet'
+import { useCookbookEntries } from '../hooks/useCookbook'
+import { searchCookbook, type CookbookEntry } from '../lib/cookbookIndex'
 
 /** Merkt sich, dass der Tipp „Mehreres auf einmal“ verstanden wurde */
 const MULTI_HINT_KEY = 'teller-tipp-mehreres'
@@ -75,7 +78,8 @@ export function AddFoodPage() {
   const [tab, setTab] = useState<Tab>('recent')
   const [browseGroup, setBrowseGroup] = useState<FoodGroupId>('baeckerei')
   const browseHits = useMemo(() => (tab === 'browse' ? browseFoods(browseGroup) : []), [tab, browseGroup])
-  const [query, setQuery] = useState('')
+  // „?suche=…“ füllt das Suchfeld vor (z. B. aus einem geplanten Eintrag ohne Nährwerte)
+  const [query, setQuery] = useState(() => params.get('suche') ?? '')
   const debounced = useDebounced(query.trim(), 450)
   // Mehreres auf einmal („2 Brötchen, 1 Cappuccino und eine Banane“) – braucht keine Produktsuche im Netz
   const debouncedIsList = useMemo(() => (parseMealText(debounced)?.parts.length ?? 0) > 1, [debounced])
@@ -103,7 +107,10 @@ export function AddFoodPage() {
   // Erkannte Einträge aus dem Suchtext, mit Änderungen (entfernt, Menge geändert) – gelten nur für diesen Text
   // Gemerkte Wahl („Käse“ → Gouda) aus früheren Einträgen auf diesem Gerät
   const [memory, setMemory] = useState(loadMealMemory)
-  const mealParse = useMemo(() => parseMealText(query, foods, dishes, memory), [query, foods, dishes, memory])
+  // Kochbuch und eigene Rezepte – erst ab drei getippten Zeichen nachgeladen
+  const cookbook = useCookbookEntries(query.trim().length >= 3)
+  const [selectedRecipe, setSelectedRecipe] = useState<CookbookEntry | null>(null)
+  const mealParse = useMemo(() => parseMealText(query, foods, dishes, memory, cookbook), [query, foods, dishes, memory, cookbook])
   const [editsState, setEdits] = useState<MealTextEdits>(NO_EDITS(''))
   const mealEdits: MealTextEdits = editsState.text === query ? editsState : NO_EDITS(query)
   const [editIndex, setEditIndex] = useState<number | null>(null)
@@ -160,6 +167,9 @@ export function AddFoodPage() {
     [q, localFoodHits],
   )
 
+  // Rezepte nur, wenn nicht gerade eine Liste erkannt wurde („2 Brötchen, Kaffee“)
+  const recipeHits = useMemo(() => (q.length >= 3 && !(mealParse && mealParse.parts.length > 1) ? searchCookbook(cookbook, query, 5) : []), [q, cookbook, query, mealParse])
+
   /** Noch nicht gespeicherte Auswahl (Open Food Facts oder Grundnahrungsmittel) in die eigene Bibliothek übernehmen */
   async function persist(f: FoodLike): Promise<Food> {
     if (f.source === 'custom') {
@@ -204,6 +214,12 @@ export function AddFoodPage() {
       const used: Food[] = []
       const usedDishes: Dish[] = []
       for (const p of parts) {
+        // Rezept aus dem Kochbuch bzw. eigenes Rezept: in Portionen, wie auf der Rezeptseite
+        if (p.recipe) {
+          const servings = p.unit === 'serving' ? p.amount : p.grams / 100
+          rows.push(recipeEntry(p.recipe, servings, p.meal ?? meal))
+          continue
+        }
         // Eigenes Gericht: in Portionen, wie beim Eintragen über „Gerichte“
         if (p.dish) {
           const dish = p.dish
@@ -282,6 +298,32 @@ export function AddFoodPage() {
     } finally {
       setBulkBusy(false)
     }
+  }
+
+  /** Tagebuch-Eintrag für ein Rezept (Nährwerte je Portion × Portionen) */
+  function recipeEntry(r: CookbookEntry, servings: number, forMeal: MealType) {
+    return {
+      date,
+      meal: forMeal,
+      name: r.title,
+      amount: servings,
+      unit: 'serving' as const,
+      grams: null,
+      ...roundNutrients(scaleNutrients(r.nutrition, servings)),
+      food_id: null,
+      dish_id: null,
+      recipe_id: r.id,
+      veggies: r.veggies,
+    }
+  }
+
+  async function addRecipe(servings: number) {
+    if (!selectedRecipe) return
+    const row = recipeEntry(selectedRecipe, servings, meal)
+    await addLog.mutateAsync([row])
+    toast(`Zu ${MEAL_LABELS[meal]} hinzugefügt`, '✅')
+    setAdded((a) => [...a, { name: row.name, kcal: row.kcal }])
+    setSelectedRecipe(null)
   }
 
   /** Anderen Treffer wählen (-1 = wieder den ursprünglichen); eine geänderte Menge gilt dann nicht mehr */
@@ -561,6 +603,23 @@ export function AddFoodPage() {
               </ul>
             </>
           )}
+          {recipeHits.length > 0 && (
+            <>
+              <h2 className="px-1 pt-4 text-sm font-semibold text-muted">Aus dem Kochbuch</h2>
+              <ul className="mt-1 space-y-1" aria-label="Rezepte aus dem Kochbuch">
+                {recipeHits.map((r) => (
+                  <FoodRow
+                    key={r.id}
+                    title={r.title}
+                    subtitle={r.own ? 'Dein Rezept · 1 Portion' : '1 Portion'}
+                    kcal={r.nutrition.kcal}
+                    kcalLabel="kcal"
+                    onClick={() => setSelectedRecipe(r)}
+                  />
+                ))}
+              </ul>
+            </>
+          )}
           {!isList && <h2 className="px-1 pt-4 text-sm font-semibold text-muted">Open Food Facts</h2>}
           {!isList && off.isFetching && <Spinner label="Suche läuft …" />}
           {!isList && off.error && !off.isFetching && (
@@ -621,12 +680,26 @@ export function AddFoodPage() {
         }
       />
       <FoodAmountSheet
-        food={editingPart && !editingPart.dish ? editingPart.food : null}
+        food={editingPart && !editingPart.dish && !editingPart.recipe ? editingPart.food : null}
         initialAmount={editingPart?.amount}
         initialUnit={editingPart?.unit}
         onClose={() => setEditIndex(null)}
         onAdd={(amount, unit) => changePartAmount(amount, unit)}
         confirmLabel="Menge übernehmen"
+      />
+      <RecipeServingsSheet
+        recipe={editingPart?.recipe ?? null}
+        initialServings={editingPart?.amount}
+        onClose={() => setEditIndex(null)}
+        onConfirm={(servings) => changePartAmount(servings, 'serving')}
+        confirmLabel="Menge übernehmen"
+      />
+      <RecipeServingsSheet
+        recipe={selectedRecipe}
+        onClose={() => setSelectedRecipe(null)}
+        onConfirm={addRecipe}
+        busy={addLog.isPending}
+        confirmLabel={`Zu ${MEAL_LABELS[meal]} hinzufügen`}
       />
       <MealPartSwapSheet
         original={swapOriginal}

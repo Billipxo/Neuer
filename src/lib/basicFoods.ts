@@ -383,11 +383,20 @@ export function scoredQuickFoods(query: string, limit = 8): { hit: QuickFoodHit;
     .map((r) => ({ hit: r.entry.hit(), score: r.score }))
 }
 
+/** Vorbereitete Namen (eigene Lebensmittel, Gerichte, Rezepte) – einmal normalisiert statt bei jedem Tastendruck */
+const PREPARED_NAMES = new Map<string, Prepared>()
+
 /** Güte eines beliebigen Namens (z. B. eines eigenen Lebensmittels) für eine Suche, -1 = passt nicht */
 export function nameScore(query: string, name: string): number {
   const q = norm(query.trim())
   if (q.length < 2) return -1
-  return scoreWithStems(q, stems(q), prepare(name))
+  let p = PREPARED_NAMES.get(name)
+  if (!p) {
+    if (PREPARED_NAMES.size > 5000) PREPARED_NAMES.clear()
+    p = prepare(name)
+    PREPARED_NAMES.set(name, p)
+  }
+  return scoreWithStems(q, stems(q), p)
 }
 
 /** Füllwörter, die bei Vorschlägen nichts bedeuten („Döner beim Imbiss“ → „Döner“) */

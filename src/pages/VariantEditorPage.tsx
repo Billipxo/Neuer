@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { Check, Leaf, Plus, Trash2, Wand2, X } from 'lucide-react'
+import { Check, ClipboardPaste, Leaf, Plus, Trash2, Wand2, X } from 'lucide-react'
 import type { MealType, RecipeIngredient } from '../types'
 import { MEAL_TYPES } from '../types'
 import { CHAPTERS, type ChapterId } from '../data/chapters'
@@ -43,6 +43,7 @@ import { BarcodeScannerSheet } from '../components/add/BarcodeScannerSheet'
 import { getProductByBarcode } from '../lib/openFoodFacts'
 import { IngredientSearchSheet } from '../components/recipes/IngredientSearchSheet'
 import { CustomIngredientSheet } from '../components/recipes/CustomIngredientSheet'
+import { IngredientImportSheet, StepsImportSheet } from '../components/recipes/TextImportSheet'
 
 type Method = 'airfryer' | 'oven'
 
@@ -82,6 +83,8 @@ export function VariantEditorPage() {
   const [draft, setDraft] = useState<VariantDraft | null>(null)
   const [chapterTouched, setChapterTouched] = useState(false)
   const [sheet, setSheet] = useState<SheetState>(null)
+  // Zutatenliste bzw. Zubereitung aus kopiertem Text übernehmen
+  const [textImport, setTextImport] = useState<'ingredients' | 'steps' | null>(null)
   const [scanBusy, setScanBusy] = useState(false)
 
   // Entwurf anlegen, sobald klar ist, was bearbeitet wird
@@ -320,9 +323,14 @@ export function VariantEditorPage() {
             )
           })}
         </ul>
-        <Button variant="ghost" block icon={<Plus className="size-4" aria-hidden />} onClick={() => setSheet({ kind: 'search' })}>
-          Zutat hinzufügen
-        </Button>
+        <div className="grid grid-cols-2 gap-2">
+          <Button variant="ghost" icon={<Plus className="size-4" aria-hidden />} onClick={() => setSheet({ kind: 'search' })}>
+            Zutat hinzufügen
+          </Button>
+          <Button variant="ghost" icon={<ClipboardPaste className="size-4" aria-hidden />} onClick={() => setTextImport('ingredients')}>
+            Aus Text einfügen
+          </Button>
+        </div>
       </Card>
       {scanBusy && <Spinner label="Produkt wird gesucht …" />}
       {suggestions.length > 0 && (
@@ -396,9 +404,33 @@ export function VariantEditorPage() {
           </li>
         ))}
       </ol>
-      <Button variant="ghost" block className="mt-2" icon={<Plus className="size-4" aria-hidden />} onClick={() => patch({ steps: [...draft.steps, ''] })}>
-        Schritt hinzufügen
-      </Button>
+      <div className="mt-2 grid grid-cols-2 gap-2">
+        <Button variant="ghost" icon={<Plus className="size-4" aria-hidden />} onClick={() => patch({ steps: [...draft.steps, ''] })}>
+          Schritt hinzufügen
+        </Button>
+        <Button variant="ghost" icon={<ClipboardPaste className="size-4" aria-hidden />} onClick={() => setTextImport('steps')}>
+          Schritte aus Text
+        </Button>
+      </div>
+      <IngredientImportSheet
+        open={textImport === 'ingredients'}
+        onClose={() => setTextImport(null)}
+        onAdd={(ings) => {
+          setIngredients((l) => [...l, ...ings])
+          setTextImport(null)
+          toast(ings.length === 1 ? '1 Zutat übernommen' : `${ings.length} Zutaten übernommen`, '📋')
+        }}
+      />
+      <StepsImportSheet
+        open={textImport === 'steps'}
+        onClose={() => setTextImport(null)}
+        onAdd={(steps) => {
+          // Leere Schritte (frisch angelegt) ersetzen, sonst anhängen
+          patch({ steps: [...draft.steps.filter((x) => x.trim()), ...steps] })
+          setTextImport(null)
+          toast(steps.length === 1 ? '1 Schritt übernommen' : `${steps.length} Schritte übernommen`, '📋')
+        }}
+      />
 
       <SectionTitle>Notiz (optional)</SectionTitle>
       <TextArea

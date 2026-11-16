@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Droplets, Plus, Scale, UserRound } from 'lucide-react'
-import type { LogEntry, MealType } from '../types'
+import type { LogEntry, MealType, PlanItem } from '../types'
 import { MEAL_TYPES } from '../types'
-import { useAddLogEntries, useLog, useProfile, useWater } from '../hooks/data'
+import { useAddLogEntries, useDeleteLogEntry, useLog, useProfile, useWater } from '../hooks/data'
+import { usePlanRange } from '../hooks/plan'
+import { canLogDirectly, openPlanItems, planItemEntry } from '../lib/plannedToday'
+import { detectVeggies } from '../lib/veggies'
 import { copyEntries, groupByMeal, totalsOf } from '../lib/log'
 import { macroGrams, motivationLine, progress } from '../lib/nutrition'
 import { mealForHour } from '../lib/meals'
@@ -22,6 +25,7 @@ import { CopyMealSheet } from '../components/today/CopyMealSheet'
 import { SaveMealAsDishSheet } from '../components/today/SaveMealAsDishSheet'
 import { useToast } from '../components/ui/Toast'
 import { WeightSheet } from '../components/today/WeightSheet'
+import { InstallHint } from '../components/today/InstallHint'
 
 function greeting(hour: number) {
   if (hour < 11) return 'Guten Morgen'
@@ -39,6 +43,8 @@ export function TodayPage() {
   const { data: entries = [] } = useLog(date)
   const { data: prevEntries = [] } = useLog(shiftISO(date, -1))
   const addLog = useAddLogEntries()
+  const deleteLog = useDeleteLogEntry()
+  const { data: plan = [] } = usePlanRange(date, date)
   const toast = useToast()
   const [copying, setCopying] = useState<{ meal: MealType; date: string; entries: LogEntry[] } | null>(null)
   const [savingDish, setSavingDish] = useState<{ meal: MealType; entries: LogEntry[] } | null>(null)
@@ -57,6 +63,28 @@ export function TodayPage() {
   })
   const byMeal = groupByMeal(entries)
   const prevByMeal = groupByMeal(prevEntries)
+  const openPlan = openPlanItems(plan, entries)
+
+  /** Geplantes als gegessen eintragen – mit Rückgängig. Freien Text ohne Werte erst auf der Hinzufügen-Seite ergänzen. */
+  async function logPlanned(p: PlanItem) {
+    if (!canLogDirectly(p)) {
+      navigate(`/hinzufuegen?meal=${p.meal}&date=${date}&suche=${encodeURIComponent(p.title)}`)
+      return
+    }
+    let veggies = detectVeggies(p.title)
+    if (p.recipe_id) {
+      // Das Kochbuch erst jetzt laden – die Tagesseite soll schnell starten
+      try {
+        const { getRecipe, recipeVeggies } = await import('../lib/recipes')
+        const recipe = getRecipe(p.recipe_id)
+        if (recipe) veggies = recipeVeggies(recipe)
+      } catch {
+        // ohne Kochbuch genügt die Erkennung am Namen
+      }
+    }
+    const [row] = await addLog.mutateAsync([planItemEntry(p, veggies)])
+    toast(`${p.title} eingetragen`, '✅', row ? { label: 'Rückgängig', onClick: () => deleteLog.mutate(row.id) } : undefined)
+  }
   const waterMl = water.reduce((s, w) => s + Number(w.ml), 0)
   const hour = new Date().getHours()
 
@@ -109,6 +137,7 @@ export function TodayPage() {
       </div>
 
       <WaterReminder date={date} ml={waterMl} target={profile.water_target_ml} onOpen={() => setWaterOpen(true)} />
+      <InstallHint />
       <WeekGlance date={date} />
 
       <div className="mt-6 space-y-3">
@@ -122,6 +151,8 @@ export function TodayPage() {
             yesterday={prevByMeal[m]}
             onCopy={() => setCopying({ meal: m, date, entries: byMeal[m] })}
             onSaveAsDish={() => setSavingDish({ meal: m, entries: byMeal[m] })}
+            planned={openPlan.filter((p) => p.meal === m)}
+            onLogPlanned={logPlanned}
             onTakeYesterday={async () => {
               await addLog.mutateAsync(copyEntries(prevByMeal[m], date, m))
               toast('Vom Vortag übernommen', '📋')
