@@ -28,8 +28,20 @@ describe('Alltägliches: Werte und Mengen', () => {
   it('hat eindeutige Namen – auch gegenüber den Grundnahrungsmitteln', () => {
     const names = EVERYDAY_FOODS.map((f) => f.name.toLowerCase())
     expect(new Set(names).size).toBe(names.length)
-    const table = new Set(INGREDIENT_LIST.map((i) => i.name.toLowerCase()))
+    const table = new Set(INGREDIENT_LIST.filter((i) => !i.recipeOnly).map((i) => i.name.toLowerCase()))
     for (const n of names) expect(table.has(n), n).toBe(false)
+  })
+
+  it('führt Rezept-Zutaten, die es auch als Alltags-Eintrag gibt, nur einmal in der Suche – mit gleichen Werten', () => {
+    const recipeOnly = INGREDIENT_LIST.filter((i) => i.recipeOnly)
+    expect(recipeOnly.length).toBeGreaterThan(0)
+    for (const i of recipeOnly) {
+      const twin = EVERYDAY_FOODS.find((f) => f.name === i.name)
+      expect(twin, i.name).toBeDefined()
+      expect(twin!.kcal, i.name).toBe(i.kcal)
+      expect(searchQuickFoods(i.name)[0].name).toBe(i.name)
+      expect(searchQuickFoods(i.name).filter((h) => h.name === i.name), i.name).toHaveLength(1)
+    }
   })
 
   it('deckt den Alltag ab: von der Bäckerei bis zum Cocktail', () => {
