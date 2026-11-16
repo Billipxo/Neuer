@@ -140,7 +140,31 @@ export interface ActivityLog {
   steps: number | null
   /** Geschätzter zusätzlicher Verbrauch (ohne Grundumsatz) oder selbst eingetragen */
   kcal: number
+  /** Übungen mit Sätzen (Trainingstagebuch) – bei selbst eingetragenem oder geführtem Training */
+  details?: TrainingDetails | null
   created_at?: string
+}
+
+/** Ein Satz: Wiederholungen (mit Gewicht) oder eine Zeit */
+export interface TrainingSet {
+  reps: number | null
+  /** Zusatzgewicht in kg (Hantel, Maschine) – leer bei Übungen mit dem eigenen Körpergewicht */
+  kg: number | null
+  /** Dauer in Sekunden bei Halteübungen und Ausdauer */
+  seconds: number | null
+}
+
+export interface TrainingExercise {
+  /** Übung aus dem Katalog der App – null bei einer eigenen Übung */
+  key: string | null
+  name: string
+  sets: TrainingSet[]
+}
+
+/** Selbst eingetragenes Training: Übungen mit Sätzen und eine Notiz */
+export interface TrainingDetails {
+  exercises: TrainingExercise[]
+  note?: string | null
 }
 
 export interface WaterLog {

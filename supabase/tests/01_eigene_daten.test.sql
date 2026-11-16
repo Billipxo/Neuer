@@ -24,6 +24,13 @@ select test.fails($$insert into public.log_entries (date, meal, name, amount, un
 select test.ok(test.rows('select * from public.activity_logs') = 2, 'Anna sieht ihre Sporteinheiten');
 select test.fails($$insert into public.activity_logs (date, kind, name, minutes, kcal) values ('2026-11-13', 'joggen', 'Joggen', 30, -5)$$, '23514', 'Negativer Verbrauch wird abgelehnt');
 select test.fails($$insert into public.activity_logs (date, kind, name, minutes, kcal) values ('2026-11-13', 'joggen', 'Joggen', 0, 100)$$, '23514', 'Eine Dauer von 0 Minuten wird abgelehnt');
+insert into public.activity_logs (date, kind, name, minutes, kcal, details)
+  values ('2026-11-14', 'krafttraining', 'Oberkörper', 50, 250,
+          '{"exercises":[{"key":"bankdruecken","name":"Bankdrücken","sets":[{"reps":10,"kg":60,"seconds":null}]}],"note":"gut"}');
+select test.ok(test.rows($$select 1 from public.activity_logs where details->'exercises'->0->>'name' = 'Bankdrücken'$$) = 1,
+  'Übungen mit Sätzen lassen sich zu einer Sporteinheit speichern');
+select test.fails($$insert into public.activity_logs (date, kind, name, minutes, kcal, details) values ('2026-11-14', 'krafttraining', 'x', 30, 100, '[1, 2]')$$,
+  '23514', 'Trainingsdetails sind immer ein Objekt');
 update public.profiles set activity_in_budget = true where id = test.id('anna');
 select test.ok((select activity_in_budget from public.profiles where id = test.id('anna')), 'Sport aufs Tagesziel anrechnen lässt sich speichern');
 
