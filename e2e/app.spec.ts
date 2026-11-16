@@ -855,6 +855,34 @@ test('Mehreres auf einmal: anderen Treffer wählen – beim nächsten Mal passt 
   await expect(items.nth(0)).toContainText('Edamer')
 })
 
+test('Einblicke im Verlauf: woher die Kalorien kommen, nach Mahlzeiten und Wochentagen', async ({ page }) => {
+  await startDemo(page)
+  await page.goto('/hinzufuegen?meal=lunch')
+  await page.getByLabel('Lebensmittel suchen').fill('Frühstück: 2 Brötchen und ein Cappuccino; Mittag: Döner; abends eine Banane')
+  await page.getByRole('region', { name: 'Erkannt für Frühstück, Mittagessen und Abendessen' }).getByRole('button', { name: 'Alle 4 hinzufügen · 1.264 kcal' }).click()
+  await expect(page.getByText(/^4 Einträge · 1\.264 kcal$/)).toBeVisible()
+  await page.getByRole('button', { name: 'Fertig' }).click()
+  await closeBadges(page)
+  await page.goto('/verlauf?ansicht=week')
+  await expect(page.getByRole('heading', { name: 'Einblicke' })).toBeVisible()
+  // Der Döner bringt 753 von 1.264 kcal
+  const top = page.getByRole('list', { name: 'Lebensmittel mit den meisten kcal' }).getByRole('listitem')
+  await expect(top).toHaveCount(4)
+  await expect(top.first()).toContainText('Döner Kebab')
+  await expect(top.first()).toContainText('753 kcal · 60 %')
+  await page.getByRole('radio', { name: 'Am häufigsten' }).click()
+  await expect(page.getByRole('list', { name: 'Am häufigsten eingetragen' }).getByRole('listitem').first()).toContainText('1×')
+  const meals = page.getByRole('list', { name: 'kcal nach Mahlzeiten' }).getByRole('listitem')
+  await expect(meals).toHaveCount(4)
+  await expect(meals.nth(1)).toContainText('Mittagessen')
+  await expect(meals.nth(1)).toContainText('60 % · 753 kcal')
+  await expect(page.getByRole('list', { name: 'Energie aus Eiweiß, Kohlenhydraten und Fett' }).getByRole('listitem')).toHaveCount(3)
+  // Im Monat zusätzlich der Durchschnitt je Wochentag
+  await page.goto('/verlauf?ansicht=month')
+  const today = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'][new Date().getDay()]
+  await expect(page.getByRole('list', { name: 'Durchschnittliche kcal nach Wochentagen' }).getByRole('listitem').filter({ hasText: today })).toContainText('Ø 1.264 kcal')
+})
+
 test('Ganzer Tag auf einmal: Mahlzeiten im Text werden jeweils dort eingetragen', async ({ page }) => {
   await startDemo(page)
   await page.goto('/hinzufuegen?meal=lunch')

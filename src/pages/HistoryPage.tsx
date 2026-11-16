@@ -25,6 +25,7 @@ import { WaterSheet } from '../components/today/WaterSheet'
 import { KcalChart, MacroChart, WaterChart, WeightChart } from '../components/history/Charts'
 import { ProgressCard } from '../components/history/ProgressCard'
 import { WeekReviewCard } from '../components/history/WeekReviewCard'
+import { InsightsCard } from '../components/history/InsightsCard'
 
 type View = 'day' | 'week' | 'month'
 
@@ -183,6 +184,7 @@ function PeriodView({ view, anchor, onAnchor }: { view: 'week' | 'month'; anchor
           <>
             <KcalChart data={series} target={profile.kcal_target} />
             <MacroChart data={series} />
+            <InsightsCard entries={entries} monthly={view === 'month'} />
           </>
         )}
         <ProgressCard weights={weights} profile={profile} />
