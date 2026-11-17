@@ -9,7 +9,7 @@
 import type { ActivityLog, PlannedWorkout, TrainingDetails, TrainingPlan, TrainingPlanDetails } from '../types'
 import { activityType } from '../data/activities'
 import { estimateKcal } from './activity'
-import { mulberry32 } from './planner'
+import { mulberry32 } from './random'
 import { detailsFromWorkout, sanitizeDetails, templateFrom } from './trainingLog'
 import { DURATIONS, FOCUS_LABELS, LEVEL_LABELS, PLACE_LABELS, generateWorkout, type Focus, type Level, type Place, type Workout } from './workouts'
 

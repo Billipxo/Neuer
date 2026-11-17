@@ -1,11 +1,14 @@
 import { useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { CheckCircle2, ChevronDown, NotebookPen, Pencil, Play, Repeat, Shuffle, Trophy } from 'lucide-react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { CalendarCheck, CalendarPlus, CheckCircle2, ChevronDown, NotebookPen, Pencil, Play, Repeat, Shuffle, Trophy } from 'lucide-react'
 import { activityType } from '../data/activities'
 import { isMissingTableError } from '../data/store'
-import { useActivities, useActivityHistory, useProfile, useSaveActivity, useWeights } from '../hooks/data'
-import { estimateKcal, weightOn } from '../lib/activity'
-import { relativeDayLabel, todayISO } from '../lib/dates'
+import { useActivities, useActivityHistory, useActivityRange, useProfile, useSaveActivity, useWeights } from '../hooks/data'
+import { trainingPlansUnavailable, useTrainingPlan, useTrainingPlans } from '../hooks/trainingPlan'
+import { activityEmoji, estimateKcal, weightOn } from '../lib/activity'
+import { relativeDayLabel, shiftISO, todayISO } from '../lib/dates'
+import { matchPlans, planDetail, sanitizePlanDetails, startLink } from '../lib/trainingPlan'
+import { TrainingPlanSheet, type TrainingPlanTarget } from '../components/planner/TrainingPlanSheet'
 import { fmtInt } from '../lib/format'
 import { unlockAudio } from '../lib/sound'
 import { DURATIONS, FOCUS_LABELS, LEVEL_LABELS, PLACE_LABELS, generateWorkout, itemAmount, type Focus, type Level, type Place } from '../lib/workouts'
@@ -29,6 +32,36 @@ export function TrainingPage() {
   const workout = useMemo(() => generateWorkout({ ...settings, seed }), [settings, seed])
 
   const today = todayISO()
+  // Aus dem Wochenplan geöffnet (?plan=…): genau das eingeplante Training zeigen
+  const [params] = useSearchParams()
+  const planned = useTrainingPlan(params.get('plan')).data ?? null
+  const plannedDetails = planned ? sanitizePlanDetails(planned.details) : null
+  const [appliedPlan, setAppliedPlan] = useState<string | null>(null)
+  if (planned && appliedPlan !== planned.id) {
+    setAppliedPlan(planned.id)
+    if (plannedDetails?.source === 'vorschlag') {
+      const d = plannedDetails
+      setSettings({ place: d.place, minutes: d.duration, focus: d.focus, level: d.level })
+      setSeed(d.seed)
+    }
+  }
+  const showsPlan =
+    plannedDetails?.source === 'vorschlag' &&
+    plannedDetails.place === settings.place &&
+    plannedDetails.duration === settings.minutes &&
+    plannedDetails.focus === settings.focus &&
+    plannedDetails.level === settings.level &&
+    plannedDetails.seed === seed
+  // Die nächsten sieben Tage: Geplantes im Blick, Vorschläge lassen sich einplanen
+  const week = useMemo(() => Array.from({ length: 7 }, (_, i) => shiftISO(today, i)), [today])
+  const upcomingQuery = useTrainingPlans(week[0], week[6])
+  const canPlan = !trainingPlansUnavailable(upcomingQuery)
+  const { data: weekActivities = [] } = useActivityRange(week[0], week[6])
+  const upcoming = useMemo(() => {
+    const done = matchPlans(upcomingQuery.data ?? [], weekActivities)
+    return (upcomingQuery.data ?? []).filter((p) => !done.has(p.id))
+  }, [upcomingQuery.data, weekActivities])
+  const [planTarget, setPlanTarget] = useState<TrainingPlanTarget | null>(null)
   const { data: profile } = useProfile()
   const { data: weights = [] } = useWeights()
   const activities = useActivities(today)
@@ -138,6 +171,57 @@ export function TrainingPage() {
         )}
       </Card>
 
+      {canPlan && (
+        <Card className="mt-3">
+          <div className="flex items-start gap-3">
+            <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand">
+              <CalendarCheck className="size-5" aria-hidden />
+            </span>
+            <div className="min-w-0 flex-1">
+              <h2 className="font-semibold">Geplant</h2>
+              <p className="text-sm text-muted">
+                {upcoming.length
+                  ? 'Deine nächsten Trainings aus dem Wochenplan.'
+                  : 'Trainings lassen sich im Wochenplan einplanen – die Mahlzeiten-Vorschläge richten sich danach.'}
+              </p>
+            </div>
+          </div>
+          {upcoming.length > 0 && (
+            <ul className="mt-2 divide-y divide-line/70" aria-label="Geplante Trainings">
+              {upcoming.slice(0, 5).map((p) => {
+                const link = startLink(p, today)
+                return (
+                  <li key={p.id} className="flex min-h-12 items-center gap-3 py-2">
+                    <span aria-hidden className="text-lg">
+                      {activityEmoji(p.kind)}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-medium">{p.title}</p>
+                      <p className="text-xs text-muted">
+                        {relativeDayLabel(p.date, today)}
+                        {planDetail(p) ? ` · ${planDetail(p)}` : ''}
+                      </p>
+                    </div>
+                    {link && (
+                      <Link
+                        to={link}
+                        aria-label={`${p.title} starten`}
+                        className="inline-flex min-h-9 shrink-0 items-center gap-1 rounded-full bg-brand-soft px-3 text-sm font-semibold text-brand transition active:scale-95"
+                      >
+                        <Play className="size-4" aria-hidden /> Starten
+                      </Link>
+                    )}
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+          <Link to="/planer" className="mt-2 inline-flex min-h-10 items-center text-sm font-semibold text-brand">
+            Zum Wochenplan
+          </Link>
+        </Card>
+      )}
+
       <h2 className="mt-6 px-1 text-lg font-bold">Training vorschlagen</h2>
       <Card className="mt-2 space-y-4">
         <div>
@@ -172,6 +256,11 @@ export function TrainingPage() {
 
       <section aria-labelledby="workout-title" className="mt-4">
         <Card>
+          {showsPlan && planned && (
+            <p className="mb-2 inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-sm font-medium text-brand">
+              <CalendarCheck className="size-4" aria-hidden /> Geplant für {dayInSentence(planned.date, today)}
+            </p>
+          )}
           <h2 id="workout-title" className="text-lg font-bold">
             {workout.title}
           </h2>
@@ -250,6 +339,16 @@ export function TrainingPage() {
               Schon gemacht
             </Button>
           </div>
+          {canPlan && (
+            <Button
+              block
+              variant="ghost"
+              icon={<CalendarPlus className="size-4" aria-hidden />}
+              onClick={() => setPlanTarget({ date: today, days: week, suggestion: { settings, seed } })}
+            >
+              Für einen Tag einplanen
+            </Button>
+          )}
           {!canLog && (
             <p className="px-1 text-xs text-muted">Zum Eintragen fehlt noch das Datenbank-Update für Sport (setup-teil-4.sql, siehe Anleitung).</p>
           )}
@@ -284,6 +383,7 @@ export function TrainingPage() {
         in der Schwangerschaft oder nach längerer Pause vorher ärztlich abklären. Der Verbrauch ist ein Richtwert.
       </p>
 
+      <TrainingPlanSheet target={planTarget} onClose={() => setPlanTarget(null)} />
       {playing && <WorkoutPlayer workout={workout} canLog={canLog} onClose={() => setPlaying(false)} onFinish={(minutes) => log(minutes)} />}
     </div>
   )

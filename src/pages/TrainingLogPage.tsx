@@ -7,6 +7,8 @@ import type { Exercise } from '../data/exercises'
 import { isMissingTableError } from '../data/store'
 import { useActivity, useActivityHistory, useDeleteActivity, useProfile, useSaveActivity, useWeights } from '../hooks/data'
 import { useUndoToast } from '../hooks/undo'
+import { useTrainingPlan } from '../hooks/trainingPlan'
+import { plannedExercises } from '../lib/trainingPlan'
 import { DEFAULT_WEIGHT_KG, estimateKcal, weightOn } from '../lib/activity'
 import { todayISO } from '../lib/dates'
 import { fmtInt } from '../lib/format'
@@ -75,6 +77,9 @@ export function TrainingLogPage() {
 
   const logs = useMemo(() => history.data ?? [], [history.data])
   const templateId = params.get('vorlage')
+  // Aus dem Wochenplan (?plan=…): die eingeplanten Übungen vorausfüllen
+  const planId = params.get('plan')
+  const planned = useTrainingPlan(id ? null : planId)
   const type = activityType(kind) ?? activityType('krafttraining')!
   const unavailable = !!history.error && isMissingTableError(history.error)
 
@@ -106,9 +111,20 @@ export function TrainingLogPage() {
         setMinutes(t.minutes ?? 45)
         setTitle(t.name === defaultTrainingName(t.details, activityType(t.kind)?.name ?? '') ? '' : t.name)
       }
+    } else if (planId) {
+      if (planned.isLoading) return
+      const p = planned.data
+      if (p) {
+        const t = activityType(p.kind)
+        const ex = plannedExercises(p)
+        if (ex) setExercises(templateFrom(ex).exercises)
+        setKind(t && !t.steps ? p.kind : 'krafttraining')
+        if (p.minutes) setMinutes(p.minutes)
+        setTitle(ex && p.title === defaultTrainingName(ex, t?.name ?? '') ? '' : p.title)
+      }
     }
     setReady(true)
-  }, [ready, id, existing.isLoading, existing.data, templateId, history.isLoading, logs, weights, profile?.weight_kg])
+  }, [ready, id, existing.isLoading, existing.data, templateId, history.isLoading, logs, weights, profile?.weight_kg, planId, planned.isLoading, planned.data])
 
   const weight = weightOn(date, weights, profile?.weight_kg)
   const estimate = estimateKcal(type, { minutes }, weight.kg)

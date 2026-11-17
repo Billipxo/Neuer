@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Dumbbell, Droplets, Plus, Scale, UserRound } from 'lucide-react'
-import type { ActivityLog, LogEntry, MealType, PlanItem } from '../types'
+import type { ActivityLog, LogEntry, MealType, PlanItem, TrainingPlan } from '../types'
 import { MEAL_TYPES } from '../types'
 import { useActivities, useAddLogEntries, useDeleteLogEntry, useLog, useProfile, useWater, useWeights } from '../hooks/data'
 import { isMissingTableError } from '../data/store'
@@ -10,6 +10,9 @@ import { ActivitySection } from '../components/today/ActivitySection'
 import { StreakChip } from '../components/achievements/AchievementGrid'
 import { ActivitySheet } from '../components/today/ActivitySheet'
 import { usePlanRange } from '../hooks/plan'
+import { useCompletePlannedTraining, useTrainingPlans } from '../hooks/trainingPlan'
+import { isStrengthPlan, openPlansOn, planKcal } from '../lib/trainingPlan'
+import { TrainingPlanItemSheet } from '../components/planner/TrainingPlanItemSheet'
 import { canLogDirectly, openPlanItems, planItemEntry } from '../lib/plannedToday'
 import { detectVeggies } from '../lib/veggies'
 import { copyEntries, groupByMeal, totalsOf } from '../lib/log'
@@ -31,6 +34,12 @@ import { SaveMealAsDishSheet } from '../components/today/SaveMealAsDishSheet'
 import { useToast } from '../components/ui/Toast'
 import { WeightSheet } from '../components/today/WeightSheet'
 import { InstallHint } from '../components/today/InstallHint'
+
+// Rezeptideen passend zum Training brauchen das Kochbuch – erst laden, wenn sie gezeigt werden
+const TrainingMealIdeas = lazy(() => import('../components/today/TrainingMealIdeas'))
+
+/** Bis wann eine Hauptmahlzeit noch „vor einem liegt“ – für Rezeptideen passend zum Training */
+const MEAL_UNTIL: Partial<Record<MealType, number>> = { breakfast: 11, lunch: 15, dinner: 22 }
 
 function greeting(hour: number) {
   if (hour < 11) return 'Guten Morgen'
@@ -61,6 +70,10 @@ export function TodayPage() {
   // Sport: Sheet zum Eintragen (null = zu, 'neu' = neuer Eintrag, sonst der bearbeitete Eintrag)
   const [activitySheet, setActivitySheet] = useState<ActivityLog | 'neu' | null>(null)
   const [weightOpen, setWeightOpen] = useState(false)
+  // Geplantes Training des Tages (aus dem Wochenplan)
+  const { data: dayPlans = [] } = useTrainingPlans(date, date)
+  const [openTraining, setOpenTraining] = useState<TrainingPlan | null>(null)
+  const { complete: completeTraining } = useCompletePlannedTraining()
 
   if (!profile) return null
   const totals = totalsOf(entries)
@@ -79,6 +92,16 @@ export function TodayPage() {
   const byMeal = groupByMeal(entries)
   const prevByMeal = groupByMeal(prevEntries)
   const openPlan = openPlanItems(plan, entries)
+  const today = todayISO()
+  const openTrainings = openPlansOn(date, dayPlans, activities)
+  const plannedKcal = openTrainings.reduce((s, p) => s + planKcal(p, weightOn(date, weights, profile.weight_kg).kg), 0)
+  // An Krafttagen: proteinreiche Ideen für die nächste Hauptmahlzeit, die weder eingetragen noch geplant ist
+  const strengthDay = dayPlans.some(isStrengthPlan) || activities.some(isStrengthPlan)
+  const nowHour = new Date().getHours()
+  const freeMeals = (['breakfast', 'lunch', 'dinner'] as const).filter((m) => !byMeal[m].length && !openPlan.some((p) => p.meal === m))
+  const ideaMeal = freeMeals.find((m) => nowHour < (MEAL_UNTIL[m] ?? 24))
+  const remaining = target - totals.kcal
+  const showIdeas = date === today && strengthDay && !!ideaMeal && remaining >= 250
 
   /** Geplantes als gegessen eintragen – mit Rückgängig. Freien Text ohne Werte erst auf der Hinzufügen-Seite ergänzen. */
   async function logPlanned(p: PlanItem) {
@@ -132,6 +155,9 @@ export function TodayPage() {
           <p className="mt-2 text-center text-xs text-muted">
             Tagesziel {fmtInt(profile.kcal_target)} kcal + {fmtInt(activityKcal)} kcal Sport
           </p>
+        )}
+        {inBudget && plannedKcal > 0 && (
+          <p className="mt-1 text-center text-xs text-muted">Geplantes Training: + ≈ {fmtInt(plannedKcal)} kcal, sobald es eingetragen ist</p>
         )}
         <p className="mx-auto mt-4 max-w-xs text-center text-sm text-muted" aria-live="polite">
           {motivationLine(prog, entries.length)}
@@ -192,6 +218,14 @@ export function TodayPage() {
         ))}
       </div>
 
+      {showIdeas && ideaMeal && (
+        <div className="mt-3">
+          <Suspense fallback={null}>
+            <TrainingMealIdeas profile={profile} meal={ideaMeal} remainingKcal={remaining} openMeals={freeMeals.length} />
+          </Suspense>
+        </div>
+      )}
+
       <div id="sport" className="mt-3 scroll-mt-4">
         <ActivitySection
           date={date}
@@ -200,8 +234,27 @@ export function TodayPage() {
           unavailable={activityUnavailable}
           onAdd={() => setActivitySheet('neu')}
           onEdit={(a) => (a.details?.exercises?.length ? navigate(`/training/eintragen/${a.id}`) : setActivitySheet(a))}
+          planned={activityUnavailable ? [] : openTrainings}
+          onOpenPlan={setOpenTraining}
+          onCompletePlan={
+            date <= today
+              ? async (p) => {
+                  try {
+                    await completeTraining(p)
+                  } catch {
+                    toast('Eintragen hat nicht geklappt – bitte noch einmal versuchen')
+                  }
+                }
+              : undefined
+          }
         />
       </div>
+      <TrainingPlanItemSheet
+        plan={openTraining}
+        done={null}
+        days={Array.from({ length: 7 }, (_, i) => shiftISO(today, i))}
+        onClose={() => setOpenTraining(null)}
+      />
 
       <EntrySheet entry={editing} onClose={() => setEditing(null)} />
       <ActivitySheet
