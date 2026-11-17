@@ -145,7 +145,13 @@ test('Verlauf und Profil sind erreichbar, Konto löschen setzt zurück', async (
   await expect(page.getByRole('heading', { name: 'Verlauf' })).toBeVisible()
   await page.getByRole('link', { name: 'Heute' }).click()
   await page.getByRole('link', { name: 'Profil und Einstellungen' }).click()
-  await expect(page.getByText('von 10 Abzeichen')).toBeVisible()
+  await expect(page.getByText(/^\d+ von \d+ Abzeichen$/)).toBeVisible()
+  // Erfolge-Seite mit Serien und allen Abzeichen nach Bereichen
+  await page.getByRole('link', { name: /Alle Erfolge und Serien/ }).click()
+  await expect(page.getByRole('heading', { name: 'Erfolge' })).toBeVisible()
+  await expect(page.getByRole('list', { name: 'Deine Serien' }).getByRole('listitem')).toHaveCount(3)
+  await expect(page.getByRole('list', { name: 'Abzeichen: Sport & Training' })).toBeVisible()
+  await page.goBack()
   await page.getByRole('button', { name: 'Konto löschen' }).click()
   await page.getByLabel(/LÖSCHEN/).fill('LÖSCHEN')
   await page.getByRole('button', { name: 'Endgültig löschen' }).click()
@@ -995,6 +1001,8 @@ test('Sport eintragen: Verbrauch schätzen, eigene kcal, aufs Tagesziel anrechne
   await page.getByRole('dialog', { name: 'Sport eintragen' }).getByRole('button', { name: '10.000', exact: true }).click()
   await page.getByRole('dialog', { name: 'Sport eintragen' }).getByRole('button', { name: /^Eintragen · \d+ kcal$/ }).click()
   await expect(list.getByRole('button', { name: /^Schritte 10\.000 Schritte ≈ \d+ kcal/ })).toBeVisible()
+  // 10.000 Schritte an einem Tag gibt ein Abzeichen
+  await closeBadges(page)
 
   // Löschen und rückgängig machen
   await list.getByRole('button', { name: /^Joggen/ }).click()

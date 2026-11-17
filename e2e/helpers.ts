@@ -45,7 +45,7 @@ export async function onboard(page: Page, kcal = '2000') {
 
 /** Eventuell erscheinende Abzeichen-Dialoge schließen (sie erscheinen leicht verzögert) */
 export async function closeBadges(page: Page) {
-  const dialog = page.getByRole('dialog', { name: 'Neues Abzeichen' })
+  const dialog = page.getByRole('dialog', { name: /^Neues? Abzeichen$|^Neue Abzeichen$/ })
   await dialog.waitFor({ state: 'visible', timeout: 2000 }).catch(() => {})
   for (let i = 0; i < 10; i++) {
     if (!(await dialog.isVisible().catch(() => false))) return

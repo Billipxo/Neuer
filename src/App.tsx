@@ -30,6 +30,7 @@ const AboutPage = lazy(() => import('./pages/AboutPage').then((m) => ({ default:
 const VariantEditorPage = lazy(() => import('./pages/VariantEditorPage').then((m) => ({ default: m.VariantEditorPage })))
 const TrainingPage = lazy(() => import('./pages/TrainingPage').then((m) => ({ default: m.TrainingPage })))
 const TrainingLogPage = lazy(() => import('./pages/TrainingLogPage').then((m) => ({ default: m.TrainingLogPage })))
+const AchievementsPage = lazy(() => import('./pages/AchievementsPage').then((m) => ({ default: m.AchievementsPage })))
 
 
 /** Beim Wechsel auf eine neue Seite nach oben scrollen – beim Zurückgehen bleibt die Position erhalten */
@@ -109,6 +110,7 @@ function Authed() {
       <Route element={<AppShell items={NAV_ITEMS} />}>
         <Route index element={<TodayPage />} />
         <Route path="profil" element={<ProfilePage />} />
+        <Route path="erfolge" element={<AchievementsPage />} />
         <Route path="ueber" element={<AboutPage />} />
         <Route path="rezepte" element={<RecipesPage />} />
         <Route path="rezepte/wissen" element={<KnowledgePage />} />

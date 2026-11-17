@@ -1,20 +1,31 @@
 import { useEffect, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useAchievementInput, useAchievementRows, useSaveAchievements, newlyUnlocked } from '../../hooks/achievements'
 import type { AchievementDef } from '../../lib/achievements'
 import { Sheet } from '../ui/Sheet'
 import { Button } from '../ui/Button'
+
+/** Eine Feier: ein einzelnes Abzeichen oder mehrere auf einmal (z. B. nach einem Update mit neuen Abzeichen) */
+type Celebration = { kind: 'one'; def: AchievementDef } | { kind: 'many'; defs: AchievementDef[] }
+
+/** Ab so vielen neuen Abzeichen auf einmal gibt es eine gemeinsame Feier statt vieler einzelner */
+const BATCH_FROM = 3
 
 /** Prüft im Hintergrund, ob neue Erfolge erreicht wurden, speichert sie und zeigt eine kurze Feier. */
 export function AchievementWatcher() {
   const { input } = useAchievementInput()
   const { data: rows, isSuccess } = useAchievementRows()
   const save = useSaveAchievements()
-  const [queue, setQueue] = useState<AchievementDef[]>([])
+  const [queue, setQueue] = useState<Celebration[]>([])
   const busy = useRef(false)
   const { pathname } = useLocation()
-  // Während man Lebensmittel erfasst, nicht unterbrechen – die Feier folgt danach
-  const quiet = pathname.startsWith('/hinzufuegen') || pathname.startsWith('/gerichte') || pathname === '/rezepte/neu' || pathname.endsWith('/abwandeln')
+  // Während man etwas erfasst, nicht unterbrechen – die Feier folgt danach
+  const quiet =
+    pathname.startsWith('/hinzufuegen') ||
+    pathname.startsWith('/gerichte') ||
+    pathname === '/rezepte/neu' ||
+    pathname.endsWith('/abwandeln') ||
+    pathname.startsWith('/training/eintragen')
 
   useEffect(() => {
     if (!input || !isSuccess || !rows || busy.current) return
@@ -23,7 +34,9 @@ export function AchievementWatcher() {
     busy.current = true
     save
       .mutateAsync(fresh.map((f) => f.key))
-      .then(() => setQueue((q) => [...q, ...fresh]))
+      .then(() =>
+        setQueue((q) => [...q, ...(fresh.length >= BATCH_FROM ? [{ kind: 'many' as const, defs: fresh }] : fresh.map((def) => ({ kind: 'one' as const, def })))]),
+      )
       .catch(() => {})
       .finally(() => {
         busy.current = false
@@ -31,8 +44,10 @@ export function AchievementWatcher() {
   }, [input, rows, isSuccess, save])
 
   const current = quiet ? undefined : queue[0]
+  const next = () => setQueue((q) => q.slice(1))
+  const more = queue.length > 1
   return (
-    <Sheet open={!!current} onClose={() => setQueue((q) => q.slice(1))} title="Neues Abzeichen">
+    <Sheet open={!!current} onClose={next} title={current?.kind === 'many' ? 'Neue Abzeichen' : 'Neues Abzeichen'}>
       {current && (
         <div className="relative pb-2 text-center" role="status">
           <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 flex justify-center gap-16 text-xl">
@@ -42,17 +57,43 @@ export function AchievementWatcher() {
               </span>
             ))}
           </div>
-          <div
-            key={current.key}
-            aria-hidden
-            className="mx-auto mt-6 flex size-28 items-center justify-center rounded-full bg-brand-soft text-6xl shadow-inner animate-pop"
-          >
-            {current.emoji}
-          </div>
-          <h3 className="mt-4 text-xl font-bold">{current.title}</h3>
-          <p className="mt-1 text-muted">{current.praise}</p>
-          <Button className="mt-6" size="lg" block onClick={() => setQueue((q) => q.slice(1))}>
-            {queue.length > 1 ? 'Weiter' : 'Danke!'}
+          {current.kind === 'one' ? (
+            <>
+              <div
+                key={current.def.key}
+                aria-hidden
+                className="mx-auto mt-6 flex size-28 items-center justify-center rounded-full bg-brand-soft text-6xl shadow-inner animate-pop"
+              >
+                {current.def.emoji}
+              </div>
+              <h3 className="mt-4 text-xl font-bold">{current.def.title}</h3>
+              <p className="mt-1 text-muted">{current.def.praise}</p>
+            </>
+          ) : (
+            <>
+              <h3 className="mt-8 text-xl font-bold">{current.defs.length} neue Abzeichen</h3>
+              <p className="mt-1 text-muted">Schau mal, was du schon alles geschafft hast:</p>
+              <ul className="mt-4 space-y-2 text-left" aria-label="Neu erreicht">
+                {current.defs.slice(0, 8).map((d) => (
+                  <li key={d.key} className="flex items-center gap-3 rounded-2xl bg-brand-soft/60 px-3 py-2">
+                    <span aria-hidden className="text-2xl">
+                      {d.emoji}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold leading-tight">{d.title}</span>
+                      <span className="block text-xs text-muted">{d.description}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              {current.defs.length > 8 && <p className="mt-2 text-sm text-muted">und {current.defs.length - 8} weitere</p>}
+              <Link to="/erfolge" onClick={next} className="mt-4 inline-block text-sm font-semibold text-brand">
+                Alle Erfolge ansehen
+              </Link>
+            </>
+          )}
+          <Button className="mt-6" size="lg" block onClick={next}>
+            {more ? 'Weiter' : 'Danke!'}
           </Button>
         </div>
       )}
