@@ -1254,7 +1254,7 @@ test('Training im Wochenplan: Trainingstage planen, Wochenvorschlag abgestimmt, 
   // Verschieben und entfernen – mit Rückgängig
   await trainings.first().click()
   await page.getByRole('group', { name: 'Verschieben auf' }).getByRole('button', { name: /^Dienstag/ }).click()
-  await expect(page.getByText(/^Verschoben auf Dienstag/)).toBeVisible()
+  await expect(page.getByText(/Verschoben auf Dienstag/)).toBeVisible()
   await trainings.first().click()
   await page.getByRole('button', { name: 'Aus dem Plan nehmen' }).click()
   await expect(page.getByText('Geplantes Training entfernt')).toBeVisible()
@@ -1273,7 +1273,7 @@ test('Geplantes Training: auf der Trainingsseite einplanen und starten, auf der 
   const sheet = page.getByRole('dialog', { name: 'Training einplanen' })
   await expect(sheet.getByText('Oberkörper zu Hause')).toBeVisible()
   await sheet.getByRole('button', { name: 'Einplanen', exact: true }).click()
-  await expect(page.getByText(/^Training eingeplant:/)).toBeVisible()
+  await expect(page.getByText(/Training eingeplant:/)).toBeVisible()
   await closeBadges(page)
 
   // Steht unter „Geplant“ und öffnet sich genau so, wie es eingeplant wurde

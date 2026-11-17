@@ -184,28 +184,27 @@ function PlanForm({ target, onClose }: { target: TrainingPlanTarget; onClose: ()
 
         {mode === 'eigenes' &&
           (trainings.length ? (
-            <ul className="divide-y divide-line/70 rounded-2xl bg-surface-2/60" role="radiogroup" aria-label="Früheres Training">
+            <div className="divide-y divide-line/70 rounded-2xl bg-surface-2/60" role="radiogroup" aria-label="Früheres Training">
               {trainings.slice(0, 8).map((t) => (
-                <li key={t.id}>
-                  <button
-                    type="button"
-                    role="radio"
-                    aria-checked={t.id === templateId}
-                    onClick={() => setTemplateId(t.id)}
-                    className="flex min-h-14 w-full items-center gap-3 px-3 py-2 text-left"
-                  >
-                    <span
-                      aria-hidden
-                      className={`size-5 shrink-0 rounded-full border-2 ${t.id === templateId ? 'border-brand bg-brand shadow-[inset_0_0_0_3px_var(--c-surface)]' : 'border-line'}`}
-                    />
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate font-medium">{t.name}</span>
-                      <span className="block text-xs text-muted">{trainingSummary(t.details)}</span>
-                    </span>
-                  </button>
-                </li>
+                <button
+                  key={t.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={t.id === templateId}
+                  onClick={() => setTemplateId(t.id)}
+                  className="flex min-h-14 w-full items-center gap-3 px-3 py-2 text-left"
+                >
+                  <span
+                    aria-hidden
+                    className={`size-5 shrink-0 rounded-full border-2 ${t.id === templateId ? 'border-brand bg-brand shadow-[inset_0_0_0_3px_var(--c-surface)]' : 'border-line'}`}
+                  />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-medium">{t.name}</span>
+                    <span className="block text-xs text-muted">{trainingSummary(t.details)}</span>
+                  </span>
+                </button>
               ))}
-            </ul>
+            </div>
           ) : (
             <p className="rounded-2xl bg-surface-2 p-3 text-sm text-muted">
               Noch kein eigenes Training eingetragen. Im{' '}

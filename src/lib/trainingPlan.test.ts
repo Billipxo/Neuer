@@ -184,10 +184,10 @@ describe('Trainingstage planen', () => {
     expect(res).toEqual([all[0], all[2]])
     expect(planTrainingWeek({ ...base, dates: [] })).toEqual([])
   })
-  it('plant keine vergangenen Tage mehr ein', () => {
-    const all = planTrainingWeek({ ...base, dates: [days[0], days[2], days[4]] })
+  it('plant keine vergangenen Tage mehr ein – die Abfolge beginnt beim ersten kommenden Tag', () => {
     const res = planTrainingWeek({ ...base, dates: [days[0], days[2], days[4]], notBefore: days[1] })
-    expect(res).toEqual([all[1], all[2]])
+    expect(res).toEqual(planTrainingWeek({ ...base, dates: [days[2], days[4]] }))
+    expect(res.map((p) => p.title)).toEqual(['Ganzkörper zu Hause', 'Ausdauer zu Hause'])
   })
   it('nimmt auf Wunsch immer denselben Schwerpunkt', () => {
     const res = planTrainingWeek({ ...base, focus: 'beweglichkeit', dates: [days[1], days[3]] })

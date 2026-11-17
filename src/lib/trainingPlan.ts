@@ -95,12 +95,18 @@ export function matchPlans<A extends ActivityRef>(plans: readonly PlanRef[], act
     done.set(p.id, hit)
     used.add(hit.id)
   }
-  for (const p of ordered) take(p, free(p.date).find((a) => a.kind === p.kind))
+  // Erst dieselbe Sportart …
+  for (const p of ordered) {
+    const same = free(p.date).find((a) => a.kind === p.kind)
+    take(p, same)
+  }
+  // … dann ähnlicher Sport
   for (const p of ordered) {
     if (done.has(p.id)) continue
     const group = sportGroup(p.kind)
     if (group === 'alltag' || group === 'eigene') continue
-    take(p, free(p.date).find((a) => sportGroup(a.kind) === group))
+    const similar = free(p.date).find((a) => sportGroup(a.kind) === group)
+    take(p, similar)
   }
   return done
 }
@@ -217,15 +223,17 @@ export interface WeekTrainingOptions {
 
 /** „Trainingstage planen“: an jedem gewählten Tag ohne Training ein Vorschlag, auf Wunsch mit wechselndem Schwerpunkt */
 export function planTrainingWeek(o: WeekTrainingOptions): NewTrainingPlan[] {
-  const dates = [...new Set(o.dates)].sort()
+  // Vergangene Tage fallen ganz weg – auch aus der Abfolge der Schwerpunkte
+  const dates = [...new Set(o.dates)].filter((d) => !o.notBefore || d >= o.notBefore).sort()
   if (!dates.length) return []
+  // Tage mit schon geplantem Training zählen für die Abfolge mit, bekommen aber nichts dazu
   const taken = new Set(o.existing.map((p) => p.date))
   const rotation = ROTATION[Math.min(7, dates.length)]
   const random = mulberry32(o.seed)
   const out: NewTrainingPlan[] = []
   dates.forEach((date, i) => {
     const seed = Math.floor(random() * 1_000_000_000)
-    if (taken.has(date) || (o.notBefore && date < o.notBefore)) return
+    if (taken.has(date)) return
     const focus = o.focus === 'abwechselnd' ? rotation[i % rotation.length] : o.focus
     out.push(planFromSuggestion(date, { place: o.place, duration: o.duration, level: o.level, focus, seed }))
   })
@@ -306,7 +314,11 @@ export interface TrainingWeekSummary {
 }
 
 /** Geplant und erledigt in einem Zeitraum – ohne Wertung */
-export function trainingWeekSummary(plans: readonly TrainingPlan[], activities: readonly ActivityRef[], days: readonly string[]): TrainingWeekSummary {
+export function trainingWeekSummary(
+  plans: readonly TrainingPlan[],
+  activities: readonly ActivityRef[],
+  days: readonly string[],
+): TrainingWeekSummary {
   const inRange = plans.filter((p) => days.includes(p.date))
   const done = matchPlans(inRange, activities)
   return {
