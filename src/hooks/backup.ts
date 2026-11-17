@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth, useStore } from '../app/auth'
 import { ALL_TABLES, OPTIONAL_TABLES, isMissingTableError, listTolerant, type DataStore, type TableName } from '../data/store'
 import { isMissingDetailsColumn, sanitizeDetails } from '../lib/trainingLog'
+import { sanitizePlanDetails } from '../lib/trainingPlan'
 import { defaultId, isDuplicate } from '../data/offlineStore'
 import { chunk, planImport, type Backup, type ImportPlan, type Row } from '../lib/backup'
 import { defaultDraft } from '../components/profile/types'
@@ -55,8 +56,13 @@ export function useImportBackup() {
           }
           continue
         }
-        // Übungen aus dem Trainingstagebuch nur in sauberer Form einspielen
-        const clean = table === 'activity_logs' ? rows.map((r) => ('details' in r ? { ...r, details: sanitizeDetails(r.details) } : r)) : rows
+        // Übungen aus dem Trainingstagebuch und geplante Trainings nur in sauberer Form einspielen
+        const clean =
+          table === 'activity_logs'
+            ? rows.map((r) => ('details' in r ? { ...r, details: sanitizeDetails(r.details) } : r))
+            : table === 'training_plans'
+              ? rows.map((r) => ({ ...r, details: sanitizePlanDetails(r.details) }))
+              : rows
         try {
           for (const part of chunk(clean)) {
             try {

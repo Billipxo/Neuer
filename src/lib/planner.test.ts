@@ -86,6 +86,37 @@ describe('Wochenvorschlag mit Heißluftfritteuse', () => {
   })
 })
 
+describe('Wochenvorschlag abgestimmt auf geplantes Training', () => {
+  const base = { recipes: RECIPES, days, kcalTarget: 2000, macros, existing: [] as PlanItem[] }
+  it('plant an Trainingstagen mehr ein, wenn Sport aufs Tagesziel angerechnet wird', () => {
+    const extraKcal = { [days[0]]: 400, [days[2]]: 400 }
+    let withExtra = 0
+    let without = 0
+    for (let seed = 1; seed <= 8; seed++) {
+      const kcalOn = (items: { date: string; kcal: number }[]) => items.filter((i) => i.date === days[0] || i.date === days[2]).reduce((s, i) => s + i.kcal, 0)
+      withExtra += kcalOn(suggestWeek({ ...base, extraKcal, random: mulberry32(seed) }))
+      without += kcalOn(suggestWeek({ ...base, random: mulberry32(seed) }))
+    }
+    // im Schnitt deutlich mehr – ein Teil des Zuschlags, Portionen gehen in halben Schritten
+    expect(withExtra / 8 - without / 8).toBeGreaterThan(300)
+  })
+  it('bevorzugt an Krafttagen proteinreiche Rezepte – an den anderen Tagen bleibt alles wie bisher', () => {
+    let onStrength = 0
+    let usual = 0
+    for (let seed = 1; seed <= 10; seed++) {
+      const proteinRich = (items: { date: string; recipe_id: string | null }[]) =>
+        items.filter((i) => i.date === days[1] && getRecipe(i.recipe_id)?.tags.includes('proteinreich')).length
+      const withDays = suggestWeek({ ...base, proteinDays: [days[1]], random: mulberry32(seed) })
+      const plain = suggestWeek({ ...base, random: mulberry32(seed) })
+      onStrength += proteinRich(withDays)
+      usual += proteinRich(plain)
+      // Tage ohne Training: gleich wie ohne Trainingsplan, solange davor nichts anders gewählt wurde
+      expect(withDays.filter((i) => i.date === days[0])).toEqual(plain.filter((i) => i.date === days[0]))
+    }
+    expect(onStrength).toBeGreaterThan(usual)
+  })
+})
+
 describe('Wochenvorschlag mit Ernährungsweise und Saison', () => {
   it('nutzt nur vegetarische Rezepte, wenn so vorgefiltert', async () => {
     const { matchesDiet } = await import('./recipes')

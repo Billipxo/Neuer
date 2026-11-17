@@ -7,6 +7,7 @@ export type TableName =
   | 'water_logs'
   | 'weight_logs'
   | 'activity_logs'
+  | 'training_plans'
   | 'plan_items'
   | 'shopping_items'
   | 'achievements'
@@ -19,6 +20,7 @@ export const ALL_TABLES: TableName[] = [
   'water_logs',
   'weight_logs',
   'activity_logs',
+  'training_plans',
   'plan_items',
   'shopping_items',
   'achievements',
@@ -29,7 +31,7 @@ export const ALL_TABLES: TableName[] = [
  * Tabellen aus späteren Datenbank-Updates: Fehlen sie (Update noch nicht ausgeführt), läuft die App ohne sie weiter,
  * statt mit einem Fehler abzubrechen.
  */
-export const OPTIONAL_TABLES: readonly TableName[] = ['activity_logs']
+export const OPTIONAL_TABLES: readonly TableName[] = ['activity_logs', 'training_plans']
 
 /** Meldet die Datenbank, dass es eine Tabelle (noch) nicht gibt? (PostgREST: PGRST205, PostgreSQL: 42P01) */
 export function isMissingTableError(e: unknown): boolean {

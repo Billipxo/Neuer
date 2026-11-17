@@ -167,6 +167,42 @@ export interface TrainingDetails {
   note?: string | null
 }
 
+/** Geplant ist ein Vorschlag der App: Mit derselben Zufallszahl entsteht immer wieder dasselbe Training */
+export interface PlannedWorkout {
+  source: 'vorschlag'
+  place: import('./lib/workouts').Place
+  focus: import('./lib/workouts').Focus
+  level: import('./lib/workouts').Level
+  /** Gewünschte Dauer in Minuten (eine der Auswahlmöglichkeiten) */
+  duration: number
+  seed: number
+}
+
+/** Geplant ist ein früheres eigenes Training: dieselben Übungen und Sätze */
+export interface PlannedTemplate {
+  source: 'vorlage'
+  exercises: TrainingExercise[]
+}
+
+export type TrainingPlanDetails = PlannedWorkout | PlannedTemplate
+
+/**
+ * Geplantes Training im Wochenplan – persönlich, auch im gemeinsamen Haushalt. Erledigt ist es, sobald an dem Tag
+ * passender Sport eingetragen ist.
+ */
+export interface TrainingPlan {
+  id: string
+  user_id?: string
+  date: string
+  /** Sportart aus dem Katalog („krafttraining“, „joggen“ …) */
+  kind: string
+  title: string
+  minutes: number | null
+  /** Vorschlag der App oder Übungen einer Vorlage; leer bei einer einfachen Sportart */
+  details: TrainingPlanDetails | null
+  created_at?: string
+}
+
 export interface WaterLog {
   id: string
   user_id?: string

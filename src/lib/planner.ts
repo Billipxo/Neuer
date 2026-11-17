@@ -80,8 +80,15 @@ export interface SuggestOptions {
   month?: number
   /** Lieblingszutaten: Rezepte damit leicht bevorzugen */
   favorites?: string[]
+  /** Zusätzliche kcal je Tag, z. B. für geplantes Training (wenn Sport aufs Tagesziel angerechnet wird) */
+  extraKcal?: Record<string, number>
+  /** Tage, an denen proteinreiche Rezepte bevorzugt werden (z. B. mit geplantem Krafttraining) */
+  proteinDays?: readonly string[]
   random?: () => number
 }
+
+/** Wie stark proteinreiche Rezepte an Krafttagen bevorzugt werden – so viel wie eine deutlich bessere kcal-Passung */
+export const PROTEIN_DAY_BONUS = 0.08
 
 /** Portionen in 0,5er-Schritten zwischen 1 und 2, damit der Slot gut getroffen wird */
 export function servingsFor(slotKcal: number, recipeKcal: number): number {
@@ -115,9 +122,10 @@ export function suggestWeek(opts: SuggestOptions): NewPlanItem[] {
   const random = opts.random ?? Math.random
   const used = new Set(existing.filter((e) => e.recipe_id).map((e) => e.recipe_id as string))
   const favorites = new Set(opts.favorites ?? [])
+  const proteinDays = new Set(opts.proteinDays ?? [])
   const out: NewPlanItem[] = []
 
-  const pick = (meal: MealType, slotKcal: number): { r: Recipe; servings: number } | null => {
+  const pick = (meal: MealType, slotKcal: number, proteinDay: boolean): { r: Recipe; servings: number } | null => {
     const pool = recipes.filter((r) => r.meal.includes(meal))
     if (!pool.length || slotKcal <= 0) return null
     const fresh = pool.filter((r) => !used.has(r.id))
@@ -127,7 +135,8 @@ export function suggestWeek(opts: SuggestOptions): NewPlanItem[] {
         const airfryerBonus = opts.preferAirfryer && r.airfryer ? 0.05 : 0
         const seasonBonus = opts.month ? Math.min(3, Math.max(0, seasonScore(r, opts.month).score)) * 0.02 : 0
         const favoriteBonus = Math.min(3, favoriteCount(r, favorites)) * 0.04
-        return { r, servings, s: score(r, servings, slotKcal, macros) - airfryerBonus - seasonBonus - favoriteBonus }
+        const proteinBonus = proteinDay && r.tags.includes('proteinreich') ? PROTEIN_DAY_BONUS : 0
+        return { r, servings, s: score(r, servings, slotKcal, macros) - airfryerBonus - seasonBonus - favoriteBonus - proteinBonus }
       })
       .sort((a, b) => a.s - b.s)
       .slice(0, 4)
@@ -139,19 +148,22 @@ export function suggestWeek(opts: SuggestOptions): NewPlanItem[] {
   for (const date of days) {
     const dayItems = existing.filter((e) => e.date === date)
     const taken = new Set(dayItems.map((e) => e.meal))
+    // An Trainingstagen etwas mehr, wenn der Sport aufs Tagesziel angerechnet wird
+    const dayTarget = kcalTarget + Math.max(0, Math.round(opts.extraKcal?.[date] ?? 0))
+    const proteinDay = proteinDays.has(date)
     let planned = dayItems.reduce((s, e) => s + Number(e.kcal), 0)
     for (const meal of ['breakfast', 'lunch', 'dinner'] as const) {
       if (taken.has(meal)) continue
-      const choice = pick(meal, kcalTarget * MEAL_SHARES[meal])
+      const choice = pick(meal, dayTarget * MEAL_SHARES[meal], proteinDay)
       if (!choice) continue
       const item = recipePlanItem(choice.r, date, meal, choice.servings)
       planned += item.kcal
       out.push(item)
     }
-    const rest = kcalTarget - planned
+    const rest = dayTarget - planned
     if (includeSnacks && !taken.has('snack') && rest >= 120) {
       const snacks = recipes.filter((r) => r.meal.includes('snack') && r.nutrition.kcal <= rest * 1.1)
-      const choice = pick('snack', Math.min(rest, 400))
+      const choice = pick('snack', Math.min(rest, 400), proteinDay)
       if (choice && snacks.some((s) => s.id === choice.r.id)) {
         out.push(recipePlanItem(choice.r, date, 'snack', 1))
       }
