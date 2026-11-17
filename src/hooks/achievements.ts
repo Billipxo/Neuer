@@ -4,6 +4,7 @@ import { useStore } from '../app/auth'
 import type { AchievementRow } from '../types'
 import { useActivityRange, useLogRange, useProfile, useWaterRange } from './data'
 import { usePlanRange } from './plan'
+import { useTrainingPlans } from './trainingPlan'
 import { useVariants } from './variantList'
 import { computeStreaks, evaluate, newlyUnlocked, type AchievementInput } from '../lib/achievements'
 import { shiftISO, todayISO } from '../lib/dates'
@@ -36,7 +37,10 @@ export function useAchievementInput(): { input: AchievementInput | null; ready: 
   // Sport: Fehlt die Tabelle (Datenbank-Update) oder klappt das Laden nicht, zählt einfach kein Sport mit
   const activities = useActivityRange(from, today)
   const activitiesDone = activities.isSuccess || activities.isError
-  const ready = Boolean(profile && log.data && plan.data && water.data && variants.data && activitiesDone)
+  // Geplantes Training ebenso: ohne Datenbank-Update zählt einfach nichts mit
+  const trainingPlans = useTrainingPlans(from, shiftISO(today, 60))
+  const trainingPlansDone = trainingPlans.isSuccess || trainingPlans.isError
+  const ready = Boolean(profile && log.data && plan.data && water.data && variants.data && activitiesDone && trainingPlansDone)
   const input = useMemo(
     () =>
       ready
@@ -50,9 +54,10 @@ export function useAchievementInput(): { input: AchievementInput | null; ready: 
             water: water.data!,
             ownRecipes: variants.data!.length,
             activities: activities.data ?? [],
+            trainingPlans: trainingPlans.data ?? [],
           }
         : null,
-    [ready, today, profile, log.data, plan.data, water.data, variants.data, activities.data],
+    [ready, today, profile, log.data, plan.data, water.data, variants.data, activities.data, trainingPlans.data],
   )
   return { input, ready }
 }

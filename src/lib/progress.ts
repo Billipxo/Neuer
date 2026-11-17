@@ -2,7 +2,8 @@
  * Fortschritt und Wochenrückblick – bewusst neutral formuliert: Trends sind Hochrechnungen aus den eigenen
  * Einträgen, keine Versprechen und keine Bewertung.
  */
-import type { ActivityLog, LogEntry, MacroPercents, WaterLog, WeightLog } from '../types'
+import type { ActivityLog, LogEntry, MacroPercents, TrainingPlan, WaterLog, WeightLog } from '../types'
+import { matchPlans } from './trainingPlan'
 import { totalsByDate } from './log'
 import { isWithinTarget, macroGrams } from './nutrition'
 import { waterByDate } from './stats'
@@ -98,7 +99,9 @@ export interface WeekReviewInput {
   /** Alle Gewichtseinträge (für den Vergleich mit der Vorwoche) */
   weights: WeightLog[]
   /** Sport dieser Woche (fehlt, solange es kein Sport-Tagebuch gibt) */
-  activities?: Pick<ActivityLog, 'date' | 'minutes' | 'steps' | 'kcal'>[]
+  activities?: (Pick<ActivityLog, 'date' | 'minutes' | 'steps' | 'kcal'> & Partial<Pick<ActivityLog, 'id' | 'kind'>>)[]
+  /** Geplantes Training dieser Woche (fehlt ohne Trainingsplan) */
+  trainingPlans?: TrainingPlan[]
   kcalTarget: number
   waterTarget: number
   macros: MacroPercents
@@ -120,6 +123,8 @@ export interface WeekReview {
   topRecipe: { name: string; count: number } | null
   /** Sport der Woche: Einheiten, Tage mit Sport, Minuten, Verbrauch */
   activity: { count: number; days: number; minutes: number; kcal: number } | null
+  /** Wie viele geplante Trainings so stattgefunden haben – nur das Erledigte zählt, nichts wird angemahnt */
+  plannedDone: number
 }
 
 export function weekReview(i: WeekReviewInput): WeekReview {
@@ -162,6 +167,10 @@ export function weekReview(i: WeekReviewInput): WeekReview {
     weightChange,
     topRecipe,
     activity: activitySummary(i.days, i.activities ?? []),
+    plannedDone: matchPlans(
+      (i.trainingPlans ?? []).filter((p) => i.days.includes(p.date)),
+      (i.activities ?? []).flatMap((a) => (a.id && a.kind ? [{ id: a.id, kind: a.kind, date: a.date }] : [])),
+    ).size,
   }
 }
 
@@ -182,6 +191,7 @@ function activityLine(r: WeekReview): string | null {
   const parts = [`${a.count} ${a.count === 1 ? 'Einheit' : 'Einheiten'} an ${a.days} ${a.days === 1 ? 'Tag' : 'Tagen'}`]
   if (a.minutes > 0) parts.push(`${fmtInt(a.minutes)} Min.`)
   parts.push(`≈ ${fmtInt(a.kcal)} kcal`)
+  if (r.plannedDone > 0) parts.push(`${r.plannedDone} davon wie geplant`)
   return `Sport: ${parts.join(' · ')}.`
 }
 

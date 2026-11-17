@@ -25,6 +25,7 @@ import { WaterSheet } from '../components/today/WaterSheet'
 import { KcalChart, MacroChart, WaterChart, WeightChart } from '../components/history/Charts'
 import { ProgressCard } from '../components/history/ProgressCard'
 import { WeekReviewCard } from '../components/history/WeekReviewCard'
+import { useTrainingPlans } from '../hooks/trainingPlan'
 import { InsightsCard } from '../components/history/InsightsCard'
 
 type View = 'day' | 'week' | 'month'
@@ -146,6 +147,8 @@ function PeriodView({ view, anchor, onAnchor }: { view: 'week' | 'month'; anchor
   const { data: water = [] } = useWaterRange(from, to)
   // Sport (leer, solange das Datenbank-Update dafür fehlt)
   const { data: activities = [] } = useActivityRange(from, to)
+  // Geplantes Training (leer ohne Trainingsplan) – der Rückblick nennt, was davon wie geplant stattfand
+  const { data: trainingPlans = [] } = useTrainingPlans(from, to)
   const { data: weights = [] } = useWeights()
   if (!profile) return null
 
@@ -177,7 +180,17 @@ function PeriodView({ view, anchor, onAnchor }: { view: 'week' | 'month'; anchor
       </dl>
 
       <div className="mt-4 space-y-4">
-        {view === 'week' && <WeekReviewCard days={days} entries={entries} water={water} weights={weights} activities={activities} profile={profile} />}
+        {view === 'week' && (
+          <WeekReviewCard
+            days={days}
+            entries={entries}
+            water={water}
+            weights={weights}
+            activities={activities}
+            trainingPlans={trainingPlans}
+            profile={profile}
+          />
+        )}
         {stats.loggedDays === 0 ? (
           <EmptyState title="Noch keine Einträge in diesem Zeitraum" text="Sobald du Mahlzeiten einträgst, erscheinen hier deine Diagramme." />
         ) : (

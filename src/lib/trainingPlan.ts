@@ -82,35 +82,31 @@ const byDateThenCreated = (a: Pick<TrainingPlan, 'date' | 'created_at'>, b: Pick
  * Radfahren – beides Ausdauer). Jede Sporteinheit erfüllt höchstens ein geplantes Training. Alltagsbewegung (Schritte,
  * Garten …) und eigene Aktivitäten zählen nur bei derselben Sportart.
  */
-export function matchPlans(plans: readonly TrainingPlan[], activities: readonly ActivityLog[]): Map<string, ActivityLog> {
-  const done = new Map<string, ActivityLog>()
+type PlanRef = Pick<TrainingPlan, 'id' | 'date' | 'kind' | 'created_at'>
+type ActivityRef = Pick<ActivityLog, 'id' | 'date' | 'kind'>
+
+export function matchPlans<A extends ActivityRef>(plans: readonly PlanRef[], activities: readonly A[]): Map<string, A> {
+  const done = new Map<string, A>()
   const used = new Set<string>()
   const ordered = [...plans].sort(byDateThenCreated)
   const free = (date: string) => activities.filter((a) => a.date === date && !used.has(a.id))
-  const take = (p: TrainingPlan, hit: ActivityLog | undefined) => {
+  const take = (p: PlanRef, hit: A | undefined) => {
     if (!hit) return
     done.set(p.id, hit)
     used.add(hit.id)
   }
-  for (const p of ordered)
-    take(
-      p,
-      free(p.date).find((a) => a.kind === p.kind),
-    )
+  for (const p of ordered) take(p, free(p.date).find((a) => a.kind === p.kind))
   for (const p of ordered) {
     if (done.has(p.id)) continue
     const group = sportGroup(p.kind)
     if (group === 'alltag' || group === 'eigene') continue
-    take(
-      p,
-      free(p.date).find((a) => sportGroup(a.kind) === group),
-    )
+    take(p, free(p.date).find((a) => sportGroup(a.kind) === group))
   }
   return done
 }
 
 /** Geplante Trainings eines Tages, die noch offen sind */
-export function openPlansOn(date: string, plans: readonly TrainingPlan[], activities: readonly ActivityLog[]): TrainingPlan[] {
+export function openPlansOn(date: string, plans: readonly TrainingPlan[], activities: readonly ActivityRef[]): TrainingPlan[] {
   const done = matchPlans(plans, activities)
   return plans.filter((p) => p.date === date && !done.has(p.id)).sort(byDateThenCreated)
 }
@@ -310,11 +306,7 @@ export interface TrainingWeekSummary {
 }
 
 /** Geplant und erledigt in einem Zeitraum – ohne Wertung */
-export function trainingWeekSummary(
-  plans: readonly TrainingPlan[],
-  activities: readonly ActivityLog[],
-  days: readonly string[],
-): TrainingWeekSummary {
+export function trainingWeekSummary(plans: readonly TrainingPlan[], activities: readonly ActivityRef[], days: readonly string[]): TrainingWeekSummary {
   const inRange = plans.filter((p) => days.includes(p.date))
   const done = matchPlans(inRange, activities)
   return {

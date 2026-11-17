@@ -153,6 +153,22 @@ describe('Neue Erfolge', () => {
     expect(derive(base({ plan })).wellPlannedWeeks).toBe(1)
   })
 
+  it('zählt eingeplantes Training und Wochen, in denen Essen und Training zusammen geplant sind', () => {
+    const plan = ['2026-11-02', '2026-11-03', '2026-11-04', '2026-11-05', '2026-11-06', '2026-11-09'].map(
+      (date) => ({ id: date, date, meal: 'lunch', kind: 'text', recipe_id: null, dish_id: null, title: 'x', servings: 1, kcal: 0, protein: 0, carbs: 0, fat: 0 }) as PlanItem,
+    )
+    // Training in der gut geplanten Woche (2.–8.11.) und in der Woche danach (nur ein Tag Essensplan)
+    const trainingPlans = [{ date: '2026-11-04' }, { date: '2026-11-11' }]
+    const d = derive(base({ plan, trainingPlans }))
+    expect(d.trainingPlans).toBe(2)
+    expect(d.allInOneWeeks).toBe(1)
+    const keys = newlyUnlocked(base({ plan, trainingPlans }), []).map((x) => x.key)
+    expect(keys).toEqual(expect.arrayContaining(['first_training_plan', 'all_in_one_week']))
+    // Ohne Trainingsplan (Datenbank-Update fehlt) bleibt alles wie bisher
+    expect(derive(base({ plan })).allInOneWeeks).toBe(0)
+    expect(newlyUnlocked(base({ plan }), []).map((x) => x.key)).not.toContain('first_training_plan')
+  })
+
   it('erkennt Sport, Schritte, Trainings, bewegtes Gewicht und neue Bestwerte', () => {
     const activities = [
       activity('2026-10-20', { minutes: 300 }),
