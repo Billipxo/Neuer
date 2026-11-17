@@ -9,6 +9,7 @@ import { useAddPlanItems, useDeletePlanItems, usePlanRange } from '../hooks/plan
 import { trainingPlansUnavailable, useTrainingPlans } from '../hooks/trainingPlan'
 import { activityEmoji, weightOn } from '../lib/activity'
 import { matchPlans, mealPlanHints, planDetail, trainingWeekSummary } from '../lib/trainingPlan'
+import { MIN_SNACK_ROOM, trainingDaySnacks } from '../lib/trainingMeals'
 import { TrainingPlanSheet, type TrainingPlanTarget } from '../components/planner/TrainingPlanSheet'
 import { TrainingWeekSheet } from '../components/planner/TrainingWeekSheet'
 import { TrainingPlanItemSheet } from '../components/planner/TrainingPlanItemSheet'
@@ -79,10 +80,36 @@ export function PlannerPage() {
   const doneTrainings = matchPlans(trainingPlans, weekActivities)
   const trainingWeek = trainingWeekSummary(trainingPlans, weekActivities, days)
   const dayTarget = (d: string) => target + (hints.extraKcal[d] ?? 0)
+  // Training erst nach dem Essen eingeplant? An Trainingstagen mit Platz im Plan lässt sich ein Snack ergänzen
+  const snackRoom: Record<string, number> = {}
+  for (const d of hints.trainingDays) {
+    const room = dayTarget(d) - summary.perDay[d].kcal
+    if (d >= today && items.some((i) => i.date === d) && room >= MIN_SNACK_ROOM) snackRoom[d] = room
+  }
+  const snackDays = Object.keys(snackRoom).length
   const trainingHint = [
     hints.proteinDays.length ? 'an Krafttagen proteinreiche Rezepte' : '',
     Object.keys(hints.extraKcal).length ? 'an Trainingstagen etwas mehr kcal (Sport wird aufs Tagesziel angerechnet)' : '',
   ].filter(Boolean)
+
+  /** Snacks für Trainingstage ergänzen – nur dazu, nichts Vorhandenes ändert sich; mit Rückgängig */
+  async function addTrainingSnacks() {
+    const snacks = trainingDaySnacks({
+      recipes: [...RECIPES, ...ownRecipes].filter((r) => matchesDiet(r, profile!.diet, profile!.avoid)),
+      room: snackRoom,
+      proteinDays: hints.proteinDays,
+      existing: items,
+    })
+    if (!snacks.length) {
+      toast('Gerade kein passender Snack gefunden')
+      return
+    }
+    const added = await add.mutateAsync(snacks)
+    toast(`${snacks.length} ${snacks.length === 1 ? 'Snack' : 'Snacks'} fürs Training ergänzt`, '🥜', {
+      label: 'Rückgängig',
+      onClick: () => del.mutate(added.map((a) => a.id)),
+    })
+  }
 
   async function suggest() {
     const suggested = suggestWeek({
@@ -226,6 +253,17 @@ export function PlannerPage() {
             </div>
             {trainingHint.length > 0 && (
               <p className="mt-1 text-xs text-muted">„Woche vorschlagen“ achtet auf dein Training: {trainingHint.join(' und ')}.</p>
+            )}
+            {snackDays > 0 && (
+              <div className="mt-2 rounded-2xl bg-brand-soft/60 p-3">
+                <p className="text-sm">
+                  An {snackDays === 1 ? 'einem Trainingstag' : `${snackDays} Trainingstagen`} ist im Plan noch Platz – passend dazu ein
+                  {hints.proteinDays.some((d) => d in snackRoom) ? ' proteinreicher' : ''} Snack?
+                </p>
+                <Button size="sm" className="mt-2" disabled={add.isPending} onClick={addTrainingSnacks}>
+                  Snacks fürs Training ergänzen
+                </Button>
+              </div>
             )}
           </div>
         )}

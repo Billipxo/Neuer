@@ -12,6 +12,7 @@ import { ActivitySheet } from '../components/today/ActivitySheet'
 import { usePlanRange } from '../hooks/plan'
 import { useCompletePlannedTraining, useTrainingPlans } from '../hooks/trainingPlan'
 import { isStrengthPlan, openPlansOn, planKcal } from '../lib/trainingPlan'
+import { ideaTimeBudget, nextFreeMeal } from '../lib/mealTiming'
 import { TrainingPlanItemSheet } from '../components/planner/TrainingPlanItemSheet'
 import { canLogDirectly, openPlanItems, planItemEntry } from '../lib/plannedToday'
 import { detectVeggies } from '../lib/veggies'
@@ -37,9 +38,6 @@ import { InstallHint } from '../components/today/InstallHint'
 
 // Rezeptideen passend zum Training brauchen das Kochbuch – erst laden, wenn sie gezeigt werden
 const TrainingMealIdeas = lazy(() => import('../components/today/TrainingMealIdeas'))
-
-/** Bis wann eine Hauptmahlzeit noch „vor einem liegt“ – für Rezeptideen passend zum Training */
-const MEAL_UNTIL: Partial<Record<MealType, number>> = { breakfast: 11, lunch: 15, dinner: 22 }
 
 function greeting(hour: number) {
   if (hour < 11) return 'Guten Morgen'
@@ -97,9 +95,9 @@ export function TodayPage() {
   const plannedKcal = openTrainings.reduce((s, p) => s + planKcal(p, weightOn(date, weights, profile.weight_kg).kg), 0)
   // An Krafttagen: proteinreiche Ideen für die nächste Hauptmahlzeit, die weder eingetragen noch geplant ist
   const strengthDay = dayPlans.some(isStrengthPlan) || activities.some(isStrengthPlan)
-  const nowHour = new Date().getHours()
+  const now = new Date()
   const freeMeals = (['breakfast', 'lunch', 'dinner'] as const).filter((m) => !byMeal[m].length && !openPlan.some((p) => p.meal === m))
-  const ideaMeal = freeMeals.find((m) => nowHour < (MEAL_UNTIL[m] ?? 24))
+  const ideaMeal = nextFreeMeal(freeMeals, now.getHours())
   const remaining = target - totals.kcal
   const showIdeas = date === today && strengthDay && !!ideaMeal && remaining >= 250
 
@@ -221,7 +219,13 @@ export function TodayPage() {
       {showIdeas && ideaMeal && (
         <div className="mt-3">
           <Suspense fallback={null}>
-            <TrainingMealIdeas profile={profile} meal={ideaMeal} remainingKcal={remaining} openMeals={freeMeals.length} />
+            <TrainingMealIdeas
+              profile={profile}
+              meal={ideaMeal}
+              remainingKcal={remaining}
+              openMeals={freeMeals.length}
+              maxMinutes={ideaTimeBudget(ideaMeal, now.getHours() * 60 + now.getMinutes())}
+            />
           </Suspense>
         </div>
       )}

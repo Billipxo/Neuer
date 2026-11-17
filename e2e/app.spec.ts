@@ -1328,3 +1328,34 @@ test('Training planen ohne Datenbank-Update: Hinweis im Wochenplan, Essen planen
   await expect(page.getByRole('button', { name: 'Training starten' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Für einen Tag einplanen' })).toHaveCount(0)
 })
+
+test('Training nach dem Essen eingeplant: Snacks fürs Training ergänzen, mit Rückgängig', async ({ page }) => {
+  await startDemo(page)
+  // Sport aufs Tagesziel anrechnen – dann haben Trainingstage mehr Platz
+  await page.getByRole('link', { name: 'Profil und Einstellungen' }).click()
+  await page.getByRole('switch', { name: 'Sport aufs Tagesziel anrechnen' }).click()
+  await page.getByRole('button', { name: 'Änderungen speichern' }).click()
+  await expect(page.getByText('Einstellungen gespeichert')).toBeVisible()
+
+  // Erst das Essen der nächsten Woche planen, danach das Training
+  await page.goto('/planer')
+  await page.getByRole('button', { name: 'Nächste Woche' }).click()
+  await page.getByRole('button', { name: 'Woche vorschlagen' }).click()
+  await expect(page.getByText('7/7')).toBeVisible()
+  await closeBadges(page)
+  await expect(page.getByRole('button', { name: 'Snacks fürs Training ergänzen' })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Trainingstage planen' }).click()
+  const sheet = page.getByRole('dialog', { name: 'Trainingstage planen' })
+  await sheet.getByRole('radiogroup', { name: 'Ort' }).getByRole('radio', { name: 'Fitnessstudio' }).click()
+  await sheet.getByRole('group', { name: 'Dauer' }).getByRole('button', { name: '60 Min.' }).click()
+  await sheet.getByRole('button', { name: '3 Trainings einplanen' }).click()
+  await closeBadges(page)
+
+  // Der schon gefüllte Plan bleibt, wie er ist – Snacks kommen nur auf Wunsch dazu
+  await expect(page.getByText(/(An \d Trainingstagen|An einem Trainingstag) ist im Plan noch Platz/)).toBeVisible()
+  await page.getByRole('button', { name: 'Snacks fürs Training ergänzen' }).click()
+  await expect(page.getByText(/\d Snacks? fürs Training ergänzt/)).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Snacks fürs Training ergänzen' })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Rückgängig' }).click()
+  await expect(page.getByRole('button', { name: 'Snacks fürs Training ergänzen' })).toBeVisible()
+})
