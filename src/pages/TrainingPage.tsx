@@ -8,17 +8,8 @@ import { estimateKcal, weightOn } from '../lib/activity'
 import { relativeDayLabel, todayISO } from '../lib/dates'
 import { fmtInt } from '../lib/format'
 import { unlockAudio } from '../lib/sound'
-import {
-  DURATIONS,
-  FOCUS_LABELS,
-  LEVEL_LABELS,
-  PLACE_LABELS,
-  generateWorkout,
-  itemAmount,
-  type Focus,
-  type Level,
-  type Place,
-} from '../lib/workouts'
+import { DURATIONS, FOCUS_LABELS, LEVEL_LABELS, PLACE_LABELS, generateWorkout, itemAmount, type Focus, type Level, type Place } from '../lib/workouts'
+import { loadTrainingSettings, saveTrainingSettings, type TrainingSettings } from '../lib/trainingSettings'
 import { dayInSentence, detailsFromWorkout, exerciseStats, exerciseSummary, isMissingDetailsColumn, setLabel, trainingSummary, trainingsOf } from '../lib/trainingLog'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Card } from '../components/ui/Card'
@@ -27,38 +18,11 @@ import { Chip, Segmented } from '../components/ui/Segmented'
 import { useToast } from '../components/ui/Toast'
 import { WorkoutPlayer } from '../components/training/WorkoutPlayer'
 
-/** Zuletzt gewählte Einstellungen – nur auf diesem Gerät */
-const SETTINGS_KEY = 'teller-training'
-
-interface Settings {
-  place: Place
-  minutes: number
-  focus: Focus
-  level: Level
-}
-
-const DEFAULTS: Settings = { place: 'zuhause', minutes: 20, focus: 'ganzkoerper', level: 'einsteiger' }
-
-function loadSettings(): Settings {
-  try {
-    const raw = localStorage.getItem(SETTINGS_KEY)
-    const v = raw ? (JSON.parse(raw) as Partial<Settings>) : {}
-    return {
-      place: v.place && v.place in PLACE_LABELS ? v.place : DEFAULTS.place,
-      minutes: DURATIONS.includes(v.minutes as (typeof DURATIONS)[number]) ? (v.minutes as number) : DEFAULTS.minutes,
-      focus: v.focus && v.focus in FOCUS_LABELS ? v.focus : DEFAULTS.focus,
-      level: v.level && v.level in LEVEL_LABELS ? v.level : DEFAULTS.level,
-    }
-  } catch {
-    return DEFAULTS
-  }
-}
-
 /** Trainingsvorschläge für zu Hause und das Fitnessstudio – mit geführtem Training und Eintragen als Sport */
 export function TrainingPage() {
   const navigate = useNavigate()
   const toast = useToast()
-  const [settings, setSettings] = useState(loadSettings)
+  const [settings, setSettings] = useState(loadTrainingSettings)
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1_000_000_000))
   const [open, setOpen] = useState<string | null>(null)
   const [playing, setPlaying] = useState(false)
@@ -78,15 +42,11 @@ export function TrainingPage() {
   const type = activityType(workout.activityKind) ?? activityType('krafttraining')!
   const kcal = estimateKcal(type, { minutes: workout.minutes }, weight.kg)
 
-  function change(p: Partial<Settings>) {
+  function change(p: Partial<TrainingSettings>) {
     const next = { ...settings, ...p }
     setSettings(next)
     setOpen(null)
-    try {
-      localStorage.setItem(SETTINGS_KEY, JSON.stringify(next))
-    } catch {
-      // ohne Speicher gelten beim nächsten Mal wieder die Voreinstellungen
-    }
+    saveTrainingSettings(next)
   }
 
   async function log(minutes: number) {

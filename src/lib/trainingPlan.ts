@@ -92,12 +92,19 @@ export function matchPlans(plans: readonly TrainingPlan[], activities: readonly 
     done.set(p.id, hit)
     used.add(hit.id)
   }
-  for (const p of ordered) take(p, free(p.date).find((a) => a.kind === p.kind))
+  for (const p of ordered)
+    take(
+      p,
+      free(p.date).find((a) => a.kind === p.kind),
+    )
   for (const p of ordered) {
     if (done.has(p.id)) continue
     const group = sportGroup(p.kind)
     if (group === 'alltag' || group === 'eigene') continue
-    take(p, free(p.date).find((a) => sportGroup(a.kind) === group))
+    take(
+      p,
+      free(p.date).find((a) => sportGroup(a.kind) === group),
+    )
   }
   return done
 }
@@ -208,6 +215,8 @@ export interface WeekTrainingOptions {
   /** Schon geplante Trainings – an diesen Tagen kommt nichts dazu */
   existing: readonly Pick<TrainingPlan, 'date'>[]
   seed: number
+  /** Frühester Tag (meist heute) – vergangene Tage werden nicht mehr eingeplant */
+  notBefore?: string
 }
 
 /** „Trainingstage planen“: an jedem gewählten Tag ohne Training ein Vorschlag, auf Wunsch mit wechselndem Schwerpunkt */
@@ -220,7 +229,7 @@ export function planTrainingWeek(o: WeekTrainingOptions): NewTrainingPlan[] {
   const out: NewTrainingPlan[] = []
   dates.forEach((date, i) => {
     const seed = Math.floor(random() * 1_000_000_000)
-    if (taken.has(date)) return
+    if (taken.has(date) || (o.notBefore && date < o.notBefore)) return
     const focus = o.focus === 'abwechselnd' ? rotation[i % rotation.length] : o.focus
     out.push(planFromSuggestion(date, { place: o.place, duration: o.duration, level: o.level, focus, seed }))
   })
@@ -301,7 +310,11 @@ export interface TrainingWeekSummary {
 }
 
 /** Geplant und erledigt in einem Zeitraum – ohne Wertung */
-export function trainingWeekSummary(plans: readonly TrainingPlan[], activities: readonly ActivityLog[], days: readonly string[]): TrainingWeekSummary {
+export function trainingWeekSummary(
+  plans: readonly TrainingPlan[],
+  activities: readonly ActivityLog[],
+  days: readonly string[],
+): TrainingWeekSummary {
   const inRange = plans.filter((p) => days.includes(p.date))
   const done = matchPlans(inRange, activities)
   return {

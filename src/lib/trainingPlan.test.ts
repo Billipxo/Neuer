@@ -133,7 +133,13 @@ describe('Training einplanen', () => {
     const o = { place: 'studio' as const, duration: 45, focus: 'oberkoerper' as const, level: 'fortgeschritten' as const, seed: 4711 }
     const p = planFromSuggestion(days[0], o)
     const w = generateWorkout({ place: o.place, minutes: o.duration, focus: o.focus, level: o.level, seed: o.seed })
-    expect(p).toEqual({ date: days[0], kind: w.activityKind, title: 'Oberkörper im Studio', minutes: w.minutes, details: { source: 'vorschlag', ...o } })
+    expect(p).toEqual({
+      date: days[0],
+      kind: w.activityKind,
+      title: 'Oberkörper im Studio',
+      minutes: w.minutes,
+      details: { source: 'vorschlag', ...o },
+    })
     expect(plannedWorkout({ details: p.details })).toEqual(w)
     expect(planDetail(p)).toBe(`ca. ${w.minutes} Min. · Fortgeschritten`)
   })
@@ -148,7 +154,13 @@ describe('Training einplanen', () => {
   })
   it('plant eine Sportart mit Dauer ein', () => {
     expect(planFromSport(days[2], 'schwimmen', 40)).toEqual({ date: days[2], kind: 'schwimmen', title: 'Schwimmen', minutes: 40, details: null })
-    expect(planFromSport(days[2], 'eigene', 0, '  Tanzkurs ')).toEqual({ date: days[2], kind: 'eigene', title: 'Tanzkurs', minutes: null, details: null })
+    expect(planFromSport(days[2], 'eigene', 0, '  Tanzkurs ')).toEqual({
+      date: days[2],
+      kind: 'eigene',
+      title: 'Tanzkurs',
+      minutes: null,
+      details: null,
+    })
     expect(planFromSport(days[2], 'unbekannt', 30).kind).toBe('eigene')
   })
 })
@@ -172,6 +184,11 @@ describe('Trainingstage planen', () => {
     expect(res).toEqual([all[0], all[2]])
     expect(planTrainingWeek({ ...base, dates: [] })).toEqual([])
   })
+  it('plant keine vergangenen Tage mehr ein', () => {
+    const all = planTrainingWeek({ ...base, dates: [days[0], days[2], days[4]] })
+    const res = planTrainingWeek({ ...base, dates: [days[0], days[2], days[4]], notBefore: days[1] })
+    expect(res).toEqual([all[1], all[2]])
+  })
   it('nimmt auf Wunsch immer denselben Schwerpunkt', () => {
     const res = planTrainingWeek({ ...base, focus: 'beweglichkeit', dates: [days[1], days[3]] })
     expect(res.every((p) => p.kind === 'dehnen' && p.title === 'Beweglichkeit zu Hause')).toBe(true)
@@ -186,7 +203,9 @@ describe('Geplantes Training durchführen', () => {
     expect(sanitizePlanDetails({ ...ok, duration: 25 })).toBeNull()
     expect(sanitizePlanDetails({ ...ok, seed: -1 })).toBeNull()
     expect(sanitizePlanDetails({ ...ok, seed: 1.5 })).toBeNull()
-    expect(sanitizePlanDetails({ source: 'vorlage', exercises: [{ name: ' Kniebeuge ', key: 'kniebeuge', sets: [{ reps: 10 }] }, { name: '' }] })).toEqual({
+    expect(
+      sanitizePlanDetails({ source: 'vorlage', exercises: [{ name: ' Kniebeuge ', key: 'kniebeuge', sets: [{ reps: 10 }] }, { name: '' }] }),
+    ).toEqual({
       source: 'vorlage',
       exercises: [{ key: 'kniebeuge', name: 'Kniebeuge', sets: [{ reps: 10, kg: null, seconds: null }] }],
     })
@@ -196,7 +215,10 @@ describe('Geplantes Training durchführen', () => {
     expect(plannedWorkout({ details: null })).toBeNull()
   })
   it('„Erledigt“ trägt das Geplante als Sport ein – mit Übungen, soweit bekannt', () => {
-    const suggested = { ...planFromSuggestion(days[0], { place: 'zuhause', duration: 20, focus: 'ganzkoerper', level: 'einsteiger', seed: 3 }), id: 'x' }
+    const suggested = {
+      ...planFromSuggestion(days[0], { place: 'zuhause', duration: 20, focus: 'ganzkoerper', level: 'einsteiger', seed: 3 }),
+      id: 'x',
+    }
     const a = activityFromPlan(suggested, 70)
     expect(a.name).toBe('Training: Ganzkörper zu Hause')
     expect(a.kind).toBe('krafttraining')
@@ -212,9 +234,20 @@ describe('Geplantes Training durchführen', () => {
     expect(activityFromPlan(own, 70).details).toEqual({ exercises })
   })
   it('führt zum geführten Training oder ins Trainingstagebuch', () => {
-    const suggested = { ...planFromSuggestion(days[0], { place: 'studio', duration: 30, focus: 'ausdauer', level: 'einsteiger', seed: 1 }), id: 'abc' }
+    const suggested = {
+      ...planFromSuggestion(days[0], { place: 'studio', duration: 30, focus: 'ausdauer', level: 'einsteiger', seed: 1 }),
+      id: 'abc',
+    }
     expect(startLink(suggested, days[0])).toBe('/training?plan=abc')
-    const own = { ...planFromTraining(days[3], { kind: 'krafttraining', name: 'Beine', minutes: 40, details: { exercises: [{ key: null, name: 'Kniebeuge', sets: [] }] } }), id: 'def' }
+    const own = {
+      ...planFromTraining(days[3], {
+        kind: 'krafttraining',
+        name: 'Beine',
+        minutes: 40,
+        details: { exercises: [{ key: null, name: 'Kniebeuge', sets: [] }] },
+      }),
+      id: 'def',
+    }
     // geplant für später: eingetragen wird heute
     expect(startLink(own, days[0])).toBe(`/training/eintragen?plan=def&datum=${days[0]}`)
     expect(startLink(own, days[5])).toBe(`/training/eintragen?plan=def&datum=${days[3]}`)
