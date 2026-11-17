@@ -1223,3 +1223,108 @@ test('Eigenes Training eintragen: Übungen mit Sätzen, letztes Mal, Bestwerte, 
   await page.getByRole('button', { name: /^Training speichern/ }).click()
   await expect(page.getByRole('list', { name: 'Sport an diesem Tag' }).getByRole('button', { name: /Oberkörper/ }).first()).toContainText('1 Übung · 3 Sätze')
 })
+
+test('Training im Wochenplan: Trainingstage planen, Wochenvorschlag abgestimmt, verschieben und entfernen', async ({ page }) => {
+  await startDemo(page)
+  await page.getByRole('link', { name: 'Planer' }).click()
+  // Das Essen bleibt die Hauptsache: ohne geplantes Training keine Trainingszeile
+  await expect(page.getByText('Training (optional)')).toBeVisible()
+  // Nächste Woche – alle Tage liegen in der Zukunft
+  await page.getByRole('button', { name: 'Nächste Woche' }).click()
+  await page.getByRole('button', { name: 'Trainingstage planen' }).click()
+  const sheet = page.getByRole('dialog', { name: 'Trainingstage planen' })
+  // Voreinstellung Montag, Mittwoch, Freitag – Donnerstag kommt dazu
+  await sheet.getByRole('group', { name: 'Trainingstage' }).getByRole('button', { name: /^Donnerstag/ }).click()
+  await sheet.getByRole('radiogroup', { name: 'Ort' }).getByRole('radio', { name: 'Fitnessstudio' }).click()
+  await expect(sheet.getByRole('list', { name: 'Vorschau' }).getByRole('listitem')).toHaveCount(4)
+  await sheet.getByRole('button', { name: '4 Trainings einplanen' }).click()
+  await expect(page.getByText('4 Trainings eingeplant')).toBeVisible()
+  await closeBadges(page)
+  await expect(page.getByText('Training: 4 geplant')).toBeVisible()
+  await expect(page.getByText(/achtet auf dein Training: an Krafttagen proteinreiche Rezepte/)).toBeVisible()
+  const trainings = page.getByRole('button', { name: /im Studio, / })
+  await expect(trainings).toHaveCount(4)
+
+  // Der Wochenvorschlag richtet sich nach den Trainingstagen
+  await page.getByRole('button', { name: 'Woche vorschlagen' }).click()
+  await expect(page.getByText(/Mahlzeiten vorgeschlagen – abgestimmt auf 4 Trainingstage/)).toBeVisible()
+  await closeBadges(page)
+  await expect(page.getByText('7/7')).toBeVisible()
+
+  // Verschieben und entfernen – mit Rückgängig
+  await trainings.first().click()
+  await page.getByRole('group', { name: 'Verschieben auf' }).getByRole('button', { name: /^Dienstag/ }).click()
+  await expect(page.getByText(/Verschoben auf Dienstag/)).toBeVisible()
+  await trainings.first().click()
+  await page.getByRole('button', { name: 'Aus dem Plan nehmen' }).click()
+  await expect(page.getByText('Geplantes Training entfernt')).toBeVisible()
+  await expect(page.getByText('Training: 3 geplant')).toBeVisible()
+  await page.getByRole('button', { name: 'Rückgängig' }).click()
+  await expect(page.getByText('Training: 4 geplant')).toBeVisible()
+})
+
+test('Geplantes Training: auf der Trainingsseite einplanen und starten, auf der Tagesseite erledigt eintragen', async ({ page }) => {
+  await startDemo(page)
+  // Einen Vorschlag für heute einplanen
+  await page.goto('/training')
+  await page.getByRole('group', { name: 'Schwerpunkt' }).getByRole('button', { name: 'Oberkörper' }).click()
+  await expect(page.getByRole('heading', { name: 'Oberkörper zu Hause' })).toBeVisible()
+  await page.getByRole('button', { name: 'Für einen Tag einplanen' }).click()
+  const sheet = page.getByRole('dialog', { name: 'Training einplanen' })
+  await expect(sheet.getByText('Oberkörper zu Hause')).toBeVisible()
+  await sheet.getByRole('button', { name: 'Einplanen', exact: true }).click()
+  await expect(page.getByText(/Training eingeplant:/)).toBeVisible()
+  await closeBadges(page)
+
+  // Steht unter „Geplant“ und öffnet sich genau so, wie es eingeplant wurde
+  const planned = page.getByRole('list', { name: 'Geplante Trainings' })
+  await expect(planned).toContainText('Oberkörper zu Hause')
+  await page.getByRole('button', { name: 'Neuer Vorschlag' }).click()
+  await planned.getByRole('link', { name: 'Oberkörper zu Hause starten' }).click()
+  await expect(page.getByText('Geplant für heute')).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Oberkörper zu Hause' })).toBeVisible()
+
+  // Tagesseite: geplant im Sport-Bereich; an einem Krafttag proteinreiche Ideen für die nächste freie Mahlzeit
+  await page.goto('/')
+  await closeBadges(page)
+  const plannedToday = page.getByRole('list', { name: 'Geplantes Training' })
+  await expect(plannedToday).toContainText('Oberkörper zu Hause')
+  const hour = Number(new Intl.DateTimeFormat('de-DE', { timeZone: 'Europe/Berlin', hour: 'numeric', hour12: false }).format(new Date()))
+  if (hour < 22) await expect(page.getByRole('list', { name: 'Rezeptideen passend zum Training' }).getByRole('link')).toHaveCount(3)
+
+  // Erledigt: als Sport eingetragen – mit den Übungen des Trainings
+  await plannedToday.getByRole('button', { name: 'Oberkörper zu Hause als erledigt eintragen' }).click()
+  await expect(page.getByText('Oberkörper zu Hause als Sport eingetragen')).toBeVisible()
+  await closeBadges(page)
+  await expect(page.getByRole('list', { name: 'Sport an diesem Tag' }).getByRole('button', { name: /^Training: Oberkörper zu Hause/ })).toContainText(/\d+ Übungen/)
+  await expect(page.getByRole('list', { name: 'Geplantes Training' })).toHaveCount(0)
+
+  // Im Wochenplan als erledigt zu sehen
+  await page.getByRole('link', { name: 'Planer' }).click()
+  await expect(page.getByRole('button', { name: /^Oberkörper zu Hause, .*erledigt$/ })).toBeVisible()
+  await expect(page.getByText('Training: 1 geplant · 1 erledigt')).toBeVisible()
+})
+
+test('Training planen ohne Datenbank-Update: Hinweis im Wochenplan, Essen planen geht weiter', async ({ page }) => {
+  test.skip(!withAccount(), 'Nur mit Konto – der Demo-Modus speichert lokal')
+  // So antwortet Supabase, solange das Update in setup-teil-4.sql noch nicht ausgeführt ist
+  await page.route('**/rest/v1/training_plans**', (route) =>
+    route.fulfill({
+      status: 404,
+      contentType: 'application/json',
+      body: JSON.stringify({ code: 'PGRST205', details: null, hint: null, message: "Could not find the table 'public.training_plans' in the schema cache" }),
+    }),
+  )
+  await startDemo(page)
+  await page.getByRole('link', { name: 'Planer' }).click()
+  await expect(page.getByText(/Training einplanen: Dafür fehlt noch ein kurzes Datenbank-Update/)).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Trainingstage planen' })).toHaveCount(0)
+  await expect(page.getByRole('button', { name: /^Training am .* einplanen$/ })).toHaveCount(0)
+  await page.getByRole('button', { name: 'Woche vorschlagen' }).click()
+  await expect(page.getByText('7/7')).toBeVisible()
+  await closeBadges(page)
+  // Trainingsseite: Vorschläge wie gewohnt, nur ohne Einplanen
+  await page.goto('/training')
+  await expect(page.getByRole('button', { name: 'Training starten' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Für einen Tag einplanen' })).toHaveCount(0)
+})

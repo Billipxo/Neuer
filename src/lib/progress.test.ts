@@ -75,4 +75,19 @@ describe('Wochenrückblick', () => {
     expect(lines.join(' ')).not.toMatch(/zu viel|schlecht|leider/i)
     expect(reviewLines(weekReview({ ...base, log: [], water: [] }))[0]).toMatch(/noch nichts protokolliert/)
   })
+  it('nennt Sport und wie viel davon wie geplant war – Ausgefallenes wird nicht erwähnt', () => {
+    const activities = [
+      { id: 'a1', date: '2026-11-09', kind: 'joggen', minutes: 30, steps: null, kcal: 250 },
+      { id: 'a2', date: '2026-11-11', kind: 'yoga', minutes: 45, steps: null, kcal: 100 },
+    ]
+    const plan = (id: string, date: string, kind: string) => ({ id, date, kind, title: kind, minutes: 30, details: null })
+    const trainingPlans = [plan('p1', '2026-11-09', 'rad-zuegig'), plan('p2', '2026-11-13', 'krafttraining'), plan('p3', '2026-11-20', 'joggen')]
+    const r = weekReview({ ...base, activities, trainingPlans })
+    expect(r.plannedDone).toBe(1)
+    expect(reviewLines(r)).toContain('Sport: 2 Einheiten an 2 Tagen · 75 Min. · ≈ 350 kcal · 1 davon wie geplant.')
+    // Nichts wie geplant: kein Hinweis darauf
+    const none = reviewLines(weekReview({ ...base, activities, trainingPlans: [plan('p4', '2026-11-12', 'krafttraining')] }))
+    expect(none).toContain('Sport: 2 Einheiten an 2 Tagen · 75 Min. · ≈ 350 kcal.')
+    expect(none.join(' ')).not.toMatch(/ausgefallen|verpasst|nicht geschafft/i)
+  })
 })

@@ -4,7 +4,7 @@
  * Intervalle oder Beweglichkeits-Folge), Abkühlen. Mit gleichem „seed“ entsteht dasselbe Training.
  */
 import { EXERCISES, type Equipment, type Exercise, type Muscle } from '../data/exercises'
-import { mulberry32 } from './planner'
+import { mulberry32 } from './random'
 
 export type Place = 'zuhause' | 'hanteln' | 'studio'
 export type Focus = 'ganzkoerper' | 'beine-po' | 'oberkoerper' | 'rumpf' | 'ausdauer' | 'beweglichkeit'

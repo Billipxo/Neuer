@@ -11,6 +11,7 @@ const QUERY_KEYS: Partial<Record<TableName, string>> = {
   plan_items: 'plan',
   shopping_items: 'shopping',
   activity_logs: 'activities',
+  training_plans: 'trainingPlans',
 }
 
 /**

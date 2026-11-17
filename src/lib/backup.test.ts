@@ -137,4 +137,16 @@ describe('Sicherung einspielen', () => {
     expect(plan.profile).toBeNull()
     expect(chunk([1, 2, 3, 4, 5], 2)).toEqual([[1, 2], [3, 4], [5]])
   })
+
+  it('spielt geplante Trainings ein – ohne Doppelte', () => {
+    const plans = [
+      { id: 't1', user_id: 'u1', date: '2026-11-18', kind: 'krafttraining', title: 'Ganzkörper zu Hause', minutes: 28, details: { source: 'vorschlag' } },
+      { id: 't2', user_id: 'u1', date: '2026-11-20', kind: 'joggen', title: 'Joggen', minutes: 45, details: null },
+    ]
+    const backupWithPlans: Backup = { exportedAt: null, profile: null, tables: { training_plans: plans } }
+    expect(parseBackup(JSON.stringify({ training_plans: plans })).tables.training_plans).toHaveLength(2)
+    const plan = planImport(backupWithPlans, { training_plans: [{ ...plans[1], id: 'vorhanden' }] }, ids())
+    expect(plan.counts.training_plans).toEqual({ added: 1, skipped: 1 })
+    expect(plan.inserts).toEqual([{ table: 'training_plans', rows: [{ date: '2026-11-18', kind: 'krafttraining', title: 'Ganzkörper zu Hause', minutes: 28, details: { source: 'vorschlag' } }] }])
+  })
 })

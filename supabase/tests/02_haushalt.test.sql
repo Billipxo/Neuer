@@ -13,6 +13,7 @@ insert into public.recipe_variants (title, servings, ingredients, steps) values 
 insert into public.log_entries (date, meal, name, amount, unit, kcal) values (current_date, 'breakfast', 'Müsli', 1, 'serving', 320);
 insert into public.foods (name, kcal_100) values ('Annas Granola', 450);
 insert into public.weight_logs (date, kg) values (current_date, 70);
+insert into public.training_plans (date, kind, title, minutes) values (current_date + 1, 'joggen', 'Annas Lauf', 30);
 select test.ok(public.my_household() is null, 'Ohne Haushalt liefert my_household nichts');
 
 select test.login('ben');
@@ -73,6 +74,7 @@ select test.ok(test.affected(format('update public.plan_items set household_id =
 select test.ok(test.rows('select * from public.dishes') = 1 and test.rows('select * from public.recipe_variants') = 1, 'Ben sieht Annas Gerichte und eigene Rezepte');
 select test.ok(test.affected('update public.dishes set name = ''Umbenannt''') = 0 and test.affected('delete from public.recipe_variants') = 0, 'Ändern oder löschen kann Ben sie nicht');
 select test.ok(test.rows('select 1 from public.log_entries union all select 1 from public.foods union all select 1 from public.weight_logs') = 0, 'Protokoll, Lebensmittel und Gewicht von Anna bleiben privat');
+select test.ok(test.rows('select 1 from public.training_plans') = 0, 'Geplante Trainings bleiben auch im gemeinsamen Haushalt persönlich');
 
 select test.login('anna');
 select test.ok(test.rows(format('select * from public.plan_items where household_id = %L', :'hid')) = 3, 'Anna sieht Bens Einträge');

@@ -116,10 +116,11 @@ export function defaultTrainingName(d: TrainingDetails, fallback: string): strin
 
 const norm = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ')
 
-/** Tag mitten im Satz: „heute“, „gestern“ oder kurz „Mo. 10.11.“ */
+/** Tag mitten im Satz: „heute“, „gestern“, „morgen“ oder kurz „Mo. 10.11.“ */
 export function dayInSentence(date: string, today = todayISO()): string {
   if (date === today) return 'heute'
   if (date === shiftISO(today, -1)) return 'gestern'
+  if (date === shiftISO(today, 1)) return 'morgen'
   return fmtDayShort(date)
 }
 

@@ -285,6 +285,20 @@ Spalte. Auch wenn du `setup-teil-4.sql` schon einmal ausgeführt hast:
 Vorhandene Sport-Einträge bleiben unverändert. Bis dahin lässt sich ein Training nur ohne die Übungen speichern – die App
 sagt Bescheid und bietet das an.
 
+## Update: Training planen (November 2026)
+
+Damit sich Training im Wochenplan einplanen lässt (passend zu den Mahlzeiten), braucht die Datenbank eine kleine neue
+Tabelle. Auch wenn du `setup-teil-4.sql` schon ausgeführt hast:
+
+1. In GitHub **`supabase/setup-teil-4.sql`** öffnen → **„Copy raw file“** (die Datei enthält jetzt auch dieses Update).
+2. In Supabase **SQL Editor** → **New query** → einfügen → **Run** (eine Nachfrage zur „destructive operation“ mit
+   **Run this query** bestätigen).
+3. **„Success. No rows returned“** – fertig. Die App einmal neu laden.
+
+Bis dahin zeigt der Wochenplan unten im Wochen-Überblick einen kurzen Hinweis; Mahlzeiten planen, Wochenvorschlag und
+Einkaufsliste funktionieren wie gewohnt. Geplante Trainings sind persönlich – auch im gemeinsamen Haushalt sieht sie nur,
+wer sie eingeplant hat.
+
 ## Später: Updates der Datenbank
 
 Wenn du die Datenbank **schon einmal** eingerichtet hast und eine neue Version der App kommt, gibt es zwei Wege:
@@ -304,6 +318,7 @@ Wenn du die Datenbank **schon einmal** eingerichtet hast und eine neue Version d
 - `20261113000012_grants.sql` – Zugriffsrechte ausdrücklich vergeben (behebt „permission denied for table …“)
 - `20261116000013_activity.sql` – Sport & Bewegung (in `setup-teil-4.sql` enthalten)
 - `20261116000014_training_log.sql` – Eigenes Training: Übungen mit Sätzen (in `setup-teil-4.sql` enthalten)
+- `20261117000015_training_plan.sql` – Training im Wochenplan einplanen (in `setup-teil-4.sql` enthalten)
 
 Wer noch gar nichts eingerichtet hat, nimmt wie oben die vier Dateien aus Schritt 3 – sie enthalten alles.
 

@@ -1,4 +1,4 @@
-import type { ActivityLog, LogEntry, MacroPercents, PlanItem, TrainingSet, WaterLog } from '../types'
+import type { ActivityLog, LogEntry, MacroPercents, PlanItem, TrainingPlan, TrainingSet, WaterLog } from '../types'
 import { totalsByDate } from './log'
 import { isBalancedDay, isWithinTarget, macroGrams } from './nutrition'
 import { shiftISO, weekStartISO } from './dates'
@@ -17,6 +17,8 @@ export interface AchievementInput {
   ownRecipes?: number
   /** Sport & Bewegung (fehlt, wenn die Datenbank Sport noch nicht kennt) */
   activities?: ActivityLog[]
+  /** Geplantes Training (fehlt, solange die Datenbank den Trainingsplan nicht kennt) */
+  trainingPlans?: Pick<TrainingPlan, 'date'>[]
 }
 
 export interface AchievementProgress {
@@ -81,6 +83,10 @@ export interface Derived {
   volumeKg: number
   /** Wie oft ein Bestwert gesteigert wurde */
   personalBests: number
+  /** Eingeplante Trainings */
+  trainingPlans: number
+  /** Wochen mit mindestens 5 Tagen Essensplan und mindestens einem eingeplanten Training */
+  allInOneWeeks: number
 }
 
 /** Längste Folge aufeinanderfolgender Tage */
@@ -211,6 +217,8 @@ export function derive(input: AchievementInput): Derived {
   for (const a of activities) if (a.steps) stepsPerDay.set(a.date, (stepsPerDay.get(a.date) ?? 0) + Number(a.steps))
   const trainings = trainingsOf(activities)
 
+  const trainingWeeks = new Set((input.trainingPlans ?? []).map((p) => weekStartISO(p.date)))
+
   const waterDates = waterGoalDates(input)
   return {
     loggedDates,
@@ -237,6 +245,8 @@ export function derive(input: AchievementInput): Derived {
     longestSportWeeks: longestWeekStreak(activities.map((a) => a.date)),
     volumeKg: trainings.reduce((sum, t) => sum + trainingVolume(t.details), 0),
     personalBests: countPersonalBests(activities),
+    trainingPlans: input.trainingPlans?.length ?? 0,
+    allInOneWeeks: [...plannedPerWeek].filter(([w, s]) => s.size >= 5 && trainingWeeks.has(w)).length,
   }
 }
 
@@ -536,6 +546,15 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     group: 'kochen',
     progress: (d) => cap(d.wellPlannedWeeks, 4),
   },
+  {
+    key: 'all_in_one_week',
+    emoji: '🧩',
+    title: 'Alles im Blick',
+    description: 'Eine Woche mit Essensplan (5 Tage) und Training geplant',
+    praise: 'Essen und Training in einem Plan – deine Woche ist rundum vorbereitet.',
+    group: 'kochen',
+    progress: (d) => cap(d.allInOneWeeks, 1),
+  },
   // --- Sport & Training ---------------------------------------------------------------------------------------
   {
     key: 'first_activity',
@@ -599,6 +618,15 @@ export const ACHIEVEMENTS: AchievementDef[] = [
     praise: '10.000 Schritte an einem Tag – ganz schön viel unterwegs!',
     group: 'sport',
     progress: (d) => cap(d.maxStepsDay / 1000, 10),
+  },
+  {
+    key: 'first_training_plan',
+    emoji: '🗓️',
+    title: 'Trainingsplaner',
+    description: 'Das erste Training im Wochenplan eingeplant',
+    praise: 'Dein erstes geplantes Training – Essen und Sport greifen jetzt ineinander.',
+    group: 'sport',
+    progress: (d) => cap(d.trainingPlans, 1),
   },
   {
     key: 'first_training',

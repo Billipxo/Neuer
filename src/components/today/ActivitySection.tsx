@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
-import { Lightbulb, NotebookPen, Plus } from 'lucide-react'
-import type { ActivityLog } from '../../types'
+import { CalendarCheck, Lightbulb, NotebookPen, Plus } from 'lucide-react'
+import type { ActivityLog, TrainingPlan } from '../../types'
 import { activityDetail, activityEmoji, summarizeActivities } from '../../lib/activity'
 import { fmtInt } from '../../lib/format'
 import { trainingSummary } from '../../lib/trainingLog'
+import { planDetail } from '../../lib/trainingPlan'
 import { Card } from '../ui/Card'
 
 /** Sport & Bewegung des Tages – wie eine Mahlzeit: Kopf mit Summe, Einträge zum Antippen */
@@ -14,6 +15,9 @@ export function ActivitySection({
   unavailable,
   onAdd,
   onEdit,
+  planned = [],
+  onOpenPlan,
+  onCompletePlan,
 }: {
   date: string
   activities: ActivityLog[]
@@ -23,6 +27,11 @@ export function ActivitySection({
   unavailable: boolean
   onAdd: () => void
   onEdit: (a: ActivityLog) => void
+  /** Für den Tag geplantes Training, das noch nicht eingetragen ist */
+  planned?: TrainingPlan[]
+  onOpenPlan?: (p: TrainingPlan) => void
+  /** Geplantes als erledigt eintragen – fehlt bei Tagen in der Zukunft */
+  onCompletePlan?: (p: TrainingPlan) => void
 }) {
   const sum = summarizeActivities(activities)
   return (
@@ -38,7 +47,9 @@ export function ActivitySection({
               ? 'Noch nicht eingerichtet'
               : activities.length
                 ? `≈ ${fmtInt(sum.kcal)} kcal${inBudget ? ' · aufs Tagesziel angerechnet' : ''}`
-                : 'Noch nichts eingetragen'}
+                : planned.length
+                  ? `${planned.length === 1 ? 'Ein Training' : `${planned.length} Trainings`} geplant`
+                  : 'Noch nichts eingetragen'}
           </p>
         </div>
         {!unavailable && (
@@ -94,6 +105,35 @@ export function ActivitySection({
                 </div>
                 <span className="text-sm font-medium tabular">≈ {fmtInt(Number(a.kcal))} kcal</span>
               </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {planned.length > 0 && (
+        <ul className="border-t border-dashed border-line" aria-label="Geplantes Training">
+          {planned.map((p) => (
+            <li key={p.id} className="flex min-h-14 items-center gap-1 pr-4">
+              <button
+                type="button"
+                onClick={() => onOpenPlan?.(p)}
+                className="flex min-h-14 min-w-0 flex-1 items-center gap-3 py-2 pl-4 text-left transition hover:bg-surface-2/60"
+              >
+                <CalendarCheck className="size-4 shrink-0 text-muted" aria-hidden />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-[15px] text-muted">{p.title}</span>
+                  <span className="block text-xs text-muted">Geplant{planDetail(p) ? ` · ${planDetail(p)}` : ''}</span>
+                </span>
+              </button>
+              {onCompletePlan && (
+                <button
+                  type="button"
+                  onClick={() => onCompletePlan(p)}
+                  aria-label={`${p.title} als erledigt eintragen`}
+                  className="inline-flex min-h-9 shrink-0 items-center rounded-full bg-brand-soft px-3 text-sm font-semibold text-brand transition active:scale-95"
+                >
+                  Erledigt
+                </button>
+              )}
             </li>
           ))}
         </ul>

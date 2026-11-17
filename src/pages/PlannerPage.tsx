@@ -1,11 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { getISOWeek } from 'date-fns'
-import { ChevronLeft, ChevronRight, Plus, Share2, Sparkles, Trash2 } from 'lucide-react'
-import type { MealType, PlanItem } from '../types'
+import { CheckCircle2, ChevronLeft, ChevronRight, Dumbbell, Plus, Share2, Sparkles, Trash2 } from 'lucide-react'
+import type { MealType, PlanItem, TrainingPlan } from '../types'
 import { MEAL_TYPES } from '../types'
-import { useProfile } from '../hooks/data'
+import { useActivityRange, useProfile, useWeights } from '../hooks/data'
 import { useAddPlanItems, useDeletePlanItems, usePlanRange } from '../hooks/plan'
+import { trainingPlansUnavailable, useTrainingPlans } from '../hooks/trainingPlan'
+import { activityEmoji, weightOn } from '../lib/activity'
+import { matchPlans, mealPlanHints, planDetail, trainingWeekSummary } from '../lib/trainingPlan'
+import { TrainingPlanSheet, type TrainingPlanTarget } from '../components/planner/TrainingPlanSheet'
+import { TrainingWeekSheet } from '../components/planner/TrainingWeekSheet'
+import { TrainingPlanItemSheet } from '../components/planner/TrainingPlanItemSheet'
 import { suggestWeek, weekSummary, type NewPlanItem } from '../lib/planner'
 import { loadFavorites } from '../lib/favorites'
 import { getRecipe, matchesDiet, RECIPES } from '../lib/recipes'
@@ -39,6 +45,15 @@ export function PlannerPage() {
   const toast = useToast()
   const [slot, setSlot] = useState<{ date: string; meal: MealType } | null>(null)
   const [editing, setEditing] = useState<PlanItem | null>(null)
+  // Training – dezent neben den Mahlzeiten, persönlich auch im gemeinsamen Haushalt
+  const trainingQuery = useTrainingPlans(days[0], days[6])
+  const trainingPlans = trainingQuery.data ?? []
+  const trainingUnavailable = trainingPlansUnavailable(trainingQuery)
+  const { data: weekActivities = [] } = useActivityRange(days[0], days[6])
+  const { data: weights = [] } = useWeights()
+  const [trainingTarget, setTrainingTarget] = useState<TrainingPlanTarget | null>(null)
+  const [trainingWeekOpen, setTrainingWeekOpen] = useState(false)
+  const [editingTraining, setEditingTraining] = useState<TrainingPlan | null>(null)
 
   const { recipes: ownRecipes } = useVariantRecipes()
   const { household } = useHousehold()
@@ -58,6 +73,16 @@ export function PlannerPage() {
   const target = profile.kcal_target
   const summary = weekSummary(items, days)
   const today = todayISO()
+  const inBudget = !!profile.activity_in_budget
+  // Was das geplante Training für die Mahlzeiten heißt: mehr kcal (wenn angerechnet), an Krafttagen mehr Eiweiß
+  const hints = mealPlanHints(trainingPlans, days, { weightKg: weightOn(days[0], weights, profile.weight_kg).kg, inBudget })
+  const doneTrainings = matchPlans(trainingPlans, weekActivities)
+  const trainingWeek = trainingWeekSummary(trainingPlans, weekActivities, days)
+  const dayTarget = (d: string) => target + (hints.extraKcal[d] ?? 0)
+  const trainingHint = [
+    hints.proteinDays.length ? 'an Krafttagen proteinreiche Rezepte' : '',
+    Object.keys(hints.extraKcal).length ? 'an Trainingstagen etwas mehr kcal (Sport wird aufs Tagesziel angerechnet)' : '',
+  ].filter(Boolean)
 
   async function suggest() {
     const suggested = suggestWeek({
@@ -69,13 +94,21 @@ export function PlannerPage() {
       existing: items,
       preferAirfryer: profile!.has_airfryer ?? true,
       favorites: loadFavorites(),
+      extraKcal: hints.extraKcal,
+      proteinDays: hints.proteinDays,
     })
     if (!suggested.length) {
       toast('Alle Slots sind schon belegt')
       return
     }
     await add.mutateAsync(suggested)
-    toast(`${suggested.length} Mahlzeiten vorgeschlagen – alles bleibt änderbar`, '✨')
+    const trainingDays = hints.trainingDays.length
+    toast(
+      trainingDays
+        ? `${suggested.length} Mahlzeiten vorgeschlagen – abgestimmt auf ${trainingDays} ${trainingDays === 1 ? 'Trainingstag' : 'Trainingstage'}`
+        : `${suggested.length} Mahlzeiten vorgeschlagen – alles bleibt änderbar`,
+      '✨',
+    )
   }
 
   async function addItem(item: NewPlanItem) {
@@ -163,7 +196,7 @@ export function PlannerPage() {
             className="mt-2 text-muted"
             icon={<Trash2 className="size-4" aria-hidden />}
             onClick={async () => {
-              if (!confirm('Alle Einträge dieser Woche entfernen?')) return
+              if (!confirm(trainingPlans.length ? 'Alle Mahlzeiten dieser Woche entfernen? Geplantes Training bleibt.' : 'Alle Einträge dieser Woche entfernen?')) return
               await del.mutateAsync(items.map((i) => i.id))
               toast('Woche geleert')
             }}
@@ -171,23 +204,61 @@ export function PlannerPage() {
             Woche leeren
           </Button>
         )}
+        {trainingUnavailable ? (
+          <p className="mt-3 border-t border-line/70 pt-3 text-xs text-muted">
+            Training einplanen: Dafür fehlt noch ein kurzes Datenbank-Update – in Supabase einmal <strong>setup-teil-4.sql</strong> ausführen
+            (Anleitung: „Update: Training planen“).
+          </p>
+        ) : (
+          <div className="mt-3 border-t border-line/70 pt-2">
+            <div className="flex items-center gap-2">
+              <Dumbbell className="size-4 shrink-0 text-muted" aria-hidden />
+              <p className="min-w-0 flex-1 text-sm text-muted tabular">
+                {trainingWeek.planned
+                  ? `Training: ${trainingWeek.planned} geplant${trainingWeek.done ? ` · ${trainingWeek.done} erledigt` : ''}`
+                  : 'Training (optional)'}
+              </p>
+              {days[6] >= today && (
+                <Button variant="secondary" size="sm" onClick={() => setTrainingWeekOpen(true)}>
+                  Trainingstage planen
+                </Button>
+              )}
+            </div>
+            {trainingHint.length > 0 && (
+              <p className="mt-1 text-xs text-muted">„Woche vorschlagen“ achtet auf dein Training: {trainingHint.join(' und ')}.</p>
+            )}
+          </div>
+        )}
       </Card>
 
       <div className="mt-4 space-y-3">
         {days.map((d) => {
           const dayItems = items.filter((i) => i.date === d)
+          const dayTrainings = trainingPlans.filter((p) => p.date === d)
           const kcal = summary.perDay[d].kcal
-          const pct = target > 0 ? Math.min(100, (kcal / target) * 100) : 0
+          const goal = dayTarget(d)
+          const pct = goal > 0 ? Math.min(100, (kcal / goal) * 100) : 0
           return (
             <Card key={d} aria-current={d === today ? 'date' : undefined} className={`p-0 ${d === today ? 'ring-2 ring-brand/60' : ''}`}>
-              <div className="flex items-center justify-between px-4 pt-3">
+              <div className="flex items-center justify-between gap-2 pl-4 pr-2 pt-2">
                 <h2 className="font-semibold">
                   {fmtDayShort(d)}
                   {d === today && <span className="ml-2 rounded-full bg-brand-soft px-2 py-0.5 text-xs text-brand">Heute</span>}
                 </h2>
-                <span className="text-sm text-muted tabular">
-                  {fmtInt(kcal)} / {fmtInt(target)} kcal
-                </span>
+                <div className="flex items-center gap-1">
+                  <span className="text-sm text-muted tabular">
+                    {fmtInt(kcal)} / {fmtInt(goal)} kcal
+                  </span>
+                  {!trainingUnavailable && d >= today && (
+                    <IconButton
+                      label={`Training am ${fmtDayShort(d)} einplanen`}
+                      className="size-10 text-muted"
+                      onClick={() => setTrainingTarget({ date: d, days })}
+                    >
+                      <Dumbbell className="size-4" />
+                    </IconButton>
+                  )}
+                </div>
               </div>
               <div className="mx-4 mt-2 h-1.5 overflow-hidden rounded-full bg-surface-2" aria-hidden>
                 <div className="h-full rounded-full bg-brand transition-[width] duration-500" style={{ width: `${pct}%` }} />
@@ -237,6 +308,33 @@ export function PlannerPage() {
                     </li>
                   )
                 })}
+                {dayTrainings.length > 0 && (
+                  <li className="flex items-start gap-2 px-4 py-1.5">
+                    <span className="w-20 shrink-0 pt-2 text-xs font-medium text-muted">Training</span>
+                    <div className="min-w-0 flex-1 space-y-1">
+                      {dayTrainings.map((p) => {
+                        const done = doneTrainings.has(p.id)
+                        const detail = planDetail(p)
+                        return (
+                          <button
+                            key={p.id}
+                            type="button"
+                            onClick={() => setEditingTraining(p)}
+                            aria-label={`${p.title}${detail ? `, ${detail}` : ''}${done ? ', erledigt' : ''}`}
+                            className="flex min-h-10 w-full items-center gap-2 rounded-xl border border-line/70 px-3 text-left text-sm transition hover:bg-surface-2"
+                          >
+                            <span aria-hidden>{activityEmoji(p.kind)}</span>
+                            <span className="min-w-0 flex-1 truncate">
+                              {p.title}
+                              {p.minutes ? <span className="text-muted"> · {p.minutes} Min.</span> : null}
+                            </span>
+                            {done && <CheckCircle2 className="size-4 shrink-0 text-brand" aria-hidden />}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </li>
+                )}
               </ul>
             </Card>
           )
@@ -245,6 +343,14 @@ export function PlannerPage() {
 
       <PlanSlotSheet slot={slot} onClose={() => setSlot(null)} onAdd={addItem} />
       <PlanItemSheet item={editing} onClose={() => setEditing(null)} />
+      <TrainingPlanSheet target={trainingTarget} onClose={() => setTrainingTarget(null)} />
+      <TrainingWeekSheet open={trainingWeekOpen} days={days} existing={trainingPlans} onClose={() => setTrainingWeekOpen(false)} />
+      <TrainingPlanItemSheet
+        plan={editingTraining}
+        done={editingTraining ? (doneTrainings.get(editingTraining.id) ?? null) : null}
+        days={days}
+        onClose={() => setEditingTraining(null)}
+      />
       <SharedPlanSheet
         plan={sharedPlan}
         onClose={() => setParams({ woche: weekStart }, { replace: true })}
