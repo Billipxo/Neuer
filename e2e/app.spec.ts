@@ -16,7 +16,30 @@ test('Onboarding mit Kalorienvorschlag', async ({ page }) => {
   await page.getByRole('button', { name: 'Übernehmen' }).click()
   await page.getByRole('button', { name: 'Weiter' }).click()
   await page.getByRole('button', { name: 'Los geht’s' }).click()
+
+  // Danach einmal eine kurze Einführung: blättern, zurück, am Ende „Los geht’s“
+  const tour = page.getByRole('dialog', { name: 'Kurz erklärt' })
+  await expect(tour.getByRole('heading', { name: 'Schön, dass du da bist, Sam!' })).toBeVisible()
+  await expect(tour.getByText('1 von 5')).toBeVisible()
+  await tour.getByRole('button', { name: 'Weiter' }).click()
+  await expect(tour.getByRole('heading', { name: 'Essen eintragen' })).toBeVisible()
+  await tour.getByRole('button', { name: 'Zurück' }).click()
+  await expect(tour.getByText('1 von 5')).toBeVisible()
+  for (let i = 0; i < 4; i++) await tour.getByRole('button', { name: 'Weiter' }).click()
+  await expect(tour.getByRole('heading', { name: 'Verlauf, Sport und Erfolge' })).toBeVisible()
+  await tour.getByRole('button', { name: 'Los geht’s' }).click()
+  await expect(tour).toHaveCount(0)
   await expect(page.getByRole('img', { name: /0 von 1\.950 kcal gegessen/ })).toBeVisible()
+
+  // Nur einmal von selbst – im Profil lässt sie sich wieder öffnen
+  await page.reload()
+  await expect(page.getByRole('img', { name: /0 von 1\.950 kcal gegessen/ })).toBeVisible()
+  await expect(tour).toHaveCount(0)
+  await page.getByRole('link', { name: 'Profil und Einstellungen' }).click()
+  await page.getByRole('button', { name: 'Einführung noch einmal ansehen' }).click()
+  await expect(tour.getByText('1 von 5')).toBeVisible()
+  await tour.getByRole('button', { name: 'Überspringen' }).click()
+  await expect(tour).toHaveCount(0)
 })
 
 test('Eigenes Lebensmittel erfassen, mehrere hinzufügen und bearbeiten', async ({ page }) => {

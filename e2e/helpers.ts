@@ -1,5 +1,7 @@
 import { expect, test, type Locator, type Page } from '@playwright/test'
-import { signIn, testEmail } from './konto-helpers'
+import { closeTour, signIn, testEmail } from './konto-helpers'
+
+export { closeTour }
 
 /** Läuft der Test in der Reihe „konto“ (mit Anmeldung gegen das Test-Backend) statt im Demo-Modus? */
 export function withAccount(): boolean {
@@ -41,6 +43,7 @@ export async function onboard(page: Page, kcal = '2000') {
   await page.getByRole('button', { name: 'Weiter' }).click()
   await page.getByRole('button', { name: 'Los geht’s' }).click()
   await expect(page.getByRole('heading', { name: 'Alex' })).toBeVisible()
+  await closeTour(page)
 }
 
 /** Eventuell erscheinende Abzeichen-Dialoge schließen (sie erscheinen erst, wenn die Seite fertig geladen ist) */

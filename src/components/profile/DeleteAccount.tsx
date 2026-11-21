@@ -19,7 +19,7 @@ export function DeleteAccount() {
       <Button
         variant="ghost"
         block
-        className="text-danger"
+        className="text-danger!"
         icon={<Trash2 className="size-4" aria-hidden />}
         onClick={() => {
           setConfirmText('')

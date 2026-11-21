@@ -11,6 +11,7 @@ import { sumPercents } from '../lib/nutrition'
 import { Switch } from '../components/ui/Switch'
 import { AirfryerIcon } from '../components/recipes/AirfryerIcon'
 import { DietPicker } from '../components/profile/DietPicker'
+import { markTourPending } from '../lib/welcomeTour'
 
 const STEPS = ['Name', 'Körperdaten', 'Ziel', 'Makros'] as const
 
@@ -24,6 +25,8 @@ export function OnboardingPage({ existing }: { existing: Profile | null }) {
   const canNext = step === 0 ? draft.name.trim().length > 0 : step === 3 ? macroOk : true
 
   async function finish() {
+    // Danach einmal kurz zeigen, was die App kann
+    markTourPending()
     await save.mutateAsync({ ...draft, name: draft.name.trim(), onboarded: true })
   }
 

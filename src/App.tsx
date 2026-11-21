@@ -11,6 +11,7 @@ import { LoginPage } from './pages/LoginPage'
 import { OnboardingPage } from './pages/OnboardingPage'
 import { TodayPage } from './pages/TodayPage'
 import { AchievementWatcher } from './components/achievements/AchievementWatcher'
+import { FirstRunTour } from './components/onboarding/WelcomeTour'
 import { TimerTray } from './components/cooking/TimerTray'
 
 const AddFoodPage = lazy(() => import('./pages/AddFoodPage').then((m) => ({ default: m.AddFoodPage })))
@@ -105,6 +106,7 @@ function Authed() {
     <ScrollToTop />
     <PendingInvite />
     <AchievementWatcher />
+    <FirstRunTour />
     <TimerTray />
     <Routes>
       <Route element={<AppShell items={NAV_ITEMS} />}>
