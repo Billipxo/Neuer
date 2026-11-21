@@ -8,7 +8,7 @@ import { fmtInt } from '../../lib/format'
 import { useAddLogEntries } from '../../hooks/data'
 import { Sheet } from '../ui/Sheet'
 import { Segmented } from '../ui/Segmented'
-import { Field } from '../ui/Field'
+import { DateField } from '../ui/DateField'
 import { Button } from '../ui/Button'
 import { useToast } from '../ui/Toast'
 
@@ -61,7 +61,7 @@ export function CopyMealSheet({ source, onClose }: { source: { meal: MealType; d
             { value: 'custom', label: 'Anderer Tag' },
           ]}
         />
-        <Field label="Datum" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+        <DateField label="Datum" value={date} onChange={(v) => v && setDate(v)} />
         <div>
           <p className="mb-1.5 text-sm font-medium">Mahlzeit</p>
           <Segmented<MealType>

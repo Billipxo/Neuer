@@ -52,8 +52,11 @@ export function AchievementWatcher() {
   const [visible, setVisible] = useState(false)
   useEffect(() => {
     if (visible || !queue.length || quiet || busyLoading) return
-    const t = setTimeout(() => setVisible(true), SETTLE_MS)
-    return () => clearTimeout(t)
+    // Auch nicht über ein gerade geöffnetes Fenster legen (z. B. Eintrag bearbeiten) – dann nach dem Schließen feiern
+    const t = setInterval(() => {
+      if (!document.querySelector('[role="dialog"]')) setVisible(true)
+    }, SETTLE_MS)
+    return () => clearInterval(t)
   }, [visible, queue.length, quiet, busyLoading])
   useEffect(() => {
     if (quiet) setVisible(false)

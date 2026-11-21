@@ -630,7 +630,7 @@ export function AddFoodPage() {
           {!isList && <h2 className="px-1 pt-4 text-sm font-semibold text-muted">Open Food Facts</h2>}
           {!isList && off.isFetching && <Spinner label="Suche läuft …" />}
           {!isList && off.error && !off.isFetching && (
-            <div role="status" className="mt-1 flex items-start gap-3 rounded-2xl bg-surface-2 p-3 text-sm">
+            <div role="status" className="mt-1 flex items-start gap-3 rounded-2xl bg-surface p-3 text-sm ring-1 ring-line/60">
               <WifiOff className="mt-0.5 size-5 shrink-0 text-muted" aria-hidden />
               <div className="min-w-0 flex-1">
                 <p className="font-medium">Open Food Facts antwortet gerade nicht.</p>

@@ -16,7 +16,7 @@ import { PageHeader } from '../components/layout/PageHeader'
 import { Segmented } from '../components/ui/Segmented'
 import { Button, IconButton } from '../components/ui/Button'
 import { Card, SectionTitle } from '../components/ui/Card'
-import { Field } from '../components/ui/Field'
+import { DateField } from '../components/ui/DateField'
 import { EmptyState } from '../components/ui/EmptyState'
 import { NutrientGrid } from '../components/add/NutrientGrid'
 import { EntrySheet } from '../components/today/EntrySheet'
@@ -73,7 +73,7 @@ function DayView({ date, onDate }: { date: string; onDate: (d: string) => void }
         <IconButton label="Vorheriger Tag" onClick={() => onDate(shiftISO(date, -1))}>
           <ChevronLeft className="size-5" />
         </IconButton>
-        <Field className="flex-1" label="Datum" type="date" value={date} max={todayISO()} onChange={(e) => e.target.value && onDate(e.target.value)} />
+        <DateField className="flex-1" label="Datum" value={date} max={todayISO()} onChange={(v) => v && onDate(v)} />
         <IconButton label="Nächster Tag" onClick={() => onDate(shiftISO(date, 1))}>
           <ChevronRight className="size-5" />
         </IconButton>

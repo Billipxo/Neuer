@@ -36,6 +36,7 @@ import { Button, IconButton } from '../components/ui/Button'
 import { ConfirmDeleteButton } from '../components/ui/ConfirmDeleteButton'
 import { Card, SectionTitle } from '../components/ui/Card'
 import { Field, Select, TextArea } from '../components/ui/Field'
+import { DateField } from '../components/ui/DateField'
 import { NumberInput } from '../components/ui/NumberInput'
 import { Chip } from '../components/ui/Segmented'
 import { Switch } from '../components/ui/Switch'
@@ -212,7 +213,7 @@ export function TrainingLogPage() {
       )}
 
       <Card className="mt-2 space-y-3">
-        <Field label="Datum" type="date" value={date} max={todayISO()} onChange={(e) => setDate(e.target.value)} />
+        <DateField label="Datum" value={date} max={todayISO()} onChange={(v) => v && setDate(v)} />
         <Select label="Sportart" value={kind} onChange={(e) => setKind(e.target.value)} options={KINDS.map((t) => ({ value: t.key, label: `${t.emoji} ${t.name}` }))} />
         <Field label="Name (optional)" value={title} maxLength={80} onChange={(e) => setTitle(e.target.value)} placeholder="z. B. Oberkörper, Beine oder Push-Tag" />
       </Card>
