@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { closeBadges, enterApp, expectSignedOut, onboard, startDemo, withAccount } from './helpers'
+import { closeBadges, confirmDelete, enterApp, expectSignedOut, onboard, startDemo, withAccount } from './helpers'
 
 test('Onboarding mit Kalorienvorschlag', async ({ page }) => {
   await enterApp(page)
@@ -490,9 +490,13 @@ test('Schnell-Eintrag, Löschen mit Rückgängig und Mahlzeit als Gericht speich
   await page.getByRole('button', { name: 'Fertig' }).click()
   await closeBadges(page)
   await expect(page.getByRole('img', { name: /731 von 2\.000 kcal/ })).toBeVisible()
-  // Löschen und rückgängig machen
+  // Löschen braucht eine Bestätigung – ein einzelner Tipp löscht noch nichts – und lässt sich rückgängig machen
   await page.getByRole('button', { name: /Döner beim Imbiss/ }).click()
-  await page.getByRole('button', { name: 'Löschen' }).click()
+  await page.getByRole('button', { name: 'Löschen', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Wirklich löschen?' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Löschen', exact: true })).toBeVisible({ timeout: 6000 })
+  await expect(page.getByRole('img', { name: /731 von 2\.000 kcal/ })).toBeVisible()
+  await confirmDelete(page)
   await expect(page.getByRole('img', { name: /81 von 2\.000 kcal/ })).toBeVisible()
   await page.getByRole('button', { name: 'Rückgängig' }).click()
   await expect(page.getByRole('img', { name: /731 von 2\.000 kcal/ })).toBeVisible()
@@ -1006,7 +1010,7 @@ test('Sport eintragen: Verbrauch schätzen, eigene kcal, aufs Tagesziel anrechne
 
   // Löschen und rückgängig machen
   await list.getByRole('button', { name: /^Joggen/ }).click()
-  await page.getByRole('dialog', { name: 'Sport bearbeiten' }).getByRole('button', { name: 'Löschen' }).click()
+  await confirmDelete(page, page.getByRole('dialog', { name: 'Sport bearbeiten' }))
   await expect(list.getByRole('button', { name: /^Joggen/ })).toHaveCount(0)
   await page.getByRole('button', { name: 'Rückgängig' }).click()
   await expect(list.getByRole('button', { name: /^Joggen \(ca\. 8 km\/h\) 30 Min\. ≈ 300 kcal/ })).toBeVisible()

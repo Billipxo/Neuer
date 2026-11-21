@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { Check, Plus, Trash2, Trophy, X } from 'lucide-react'
+import { Check, Plus, Trophy, X } from 'lucide-react'
 import type { TrainingExercise, TrainingSet } from '../types'
 import { ACTIVITY_TYPES, activityType } from '../data/activities'
 import type { Exercise } from '../data/exercises'
@@ -33,6 +33,7 @@ import {
 } from '../lib/trainingLog'
 import { PageHeader } from '../components/layout/PageHeader'
 import { Button, IconButton } from '../components/ui/Button'
+import { ConfirmDeleteButton } from '../components/ui/ConfirmDeleteButton'
 import { Card, SectionTitle } from '../components/ui/Card'
 import { Field, Select, TextArea } from '../components/ui/Field'
 import { NumberInput } from '../components/ui/NumberInput'
@@ -300,9 +301,7 @@ export function TrainingLogPage() {
           )}
           <div className="flex gap-2">
             {id && (
-              <Button variant="secondary" icon={<Trash2 className="size-4" aria-hidden />} disabled={busy} onClick={remove}>
-                Löschen
-              </Button>
+              <ConfirmDeleteButton disabled={busy} onConfirm={remove} />
             )}
             <Button block size="lg" icon={<Check className="size-5" aria-hidden />} disabled={!valid || busy || unavailable} onClick={() => submit()}>
               {busy ? 'Speichern …' : `Training speichern · ${fmtInt(kcal)} kcal`}

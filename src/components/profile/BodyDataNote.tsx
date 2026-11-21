@@ -15,8 +15,8 @@ export function BodyDataNote({ draft, hasWeightLog }: { draft: ProfileDraft; has
       <Info className="mt-0.5 size-4 shrink-0 text-muted" aria-hidden />
       <div className="min-w-0 space-y-1">
         <p>
-          Körperdaten sind freiwillig. Die App nutzt sie nur für den Vorschlag fürs Tagesziel – das Gewicht auch, um den Verbrauch beim
-          Sport zu schätzen.
+          Körperdaten sind freiwillig. Die App nutzt sie nur für den Vorschlag fürs Tagesziel – das Gewicht auch, um den Verbrauch beim Sport zu
+          schätzen.
         </p>
         {missing.length > 0 ? (
           <p className="text-muted">

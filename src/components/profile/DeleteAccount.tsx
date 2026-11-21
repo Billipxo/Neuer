@@ -58,8 +58,8 @@ export function DeleteAccount() {
       >
         <div className="space-y-4">
           <p>
-            Dabei werden dein Konto und <strong>alle</strong> gespeicherten Daten dauerhaft entfernt: Profil, Protokoll, Lebensmittel,
-            Gerichte, Wochenpläne, Einkaufsliste und Erfolge. Das lässt sich nicht rückgängig machen.
+            Dabei werden dein Konto und <strong>alle</strong> gespeicherten Daten dauerhaft entfernt: Profil, Protokoll, Lebensmittel, Gerichte,
+            Wochenpläne, Einkaufsliste und Erfolge. Das lässt sich nicht rückgängig machen.
           </p>
           <p className="text-sm text-muted">Tipp: Sichere vorher deine Daten – unter „Deine Daten“ → „Alle Daten (JSON)“.</p>
           <Field label="Zur Bestätigung „LÖSCHEN“ eingeben" value={confirmText} onChange={(e) => setConfirmText(e.target.value)} autoComplete="off" />
