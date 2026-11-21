@@ -32,7 +32,8 @@ export function ValueSuggestions({ name, onPick }: { name: string; onPick: (valu
     queryFn: ({ signal }) => searchProducts(debounced, signal),
     enabled: debounced.length >= 3,
     staleTime: 1000 * 60 * 10,
-    retry: 0,
+    retry: 1,
+    retryDelay: 1500,
   })
   const products = (off.data ?? []).slice(0, 3)
   if (q.length < 2) return null

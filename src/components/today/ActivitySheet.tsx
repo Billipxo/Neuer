@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { NotebookPen, Trash2 } from 'lucide-react'
+import { NotebookPen } from 'lucide-react'
 import type { ActivityLog } from '../../types'
 import { ACTIVITY_TYPES, QUICK_ACTIVITY_KEYS, activityType } from '../../data/activities'
 import { DEFAULT_WEIGHT_KG, estimateKcal } from '../../lib/activity'
@@ -9,6 +9,7 @@ import { useDeleteActivity, useSaveActivity } from '../../hooks/data'
 import { useUndoToast } from '../../hooks/undo'
 import { Sheet } from '../ui/Sheet'
 import { Button } from '../ui/Button'
+import { ConfirmDeleteButton } from '../ui/ConfirmDeleteButton'
 import { Field, Select } from '../ui/Field'
 import { NumberInput } from '../ui/NumberInput'
 import { Chip } from '../ui/Segmented'
@@ -107,9 +108,7 @@ export function ActivitySheet({
             {busy ? 'Speichern …' : editing ? 'Speichern' : `Eintragen · ${fmtInt(kcal)} kcal`}
           </Button>
           {editing && (
-            <Button block variant="secondary" icon={<Trash2 className="size-4" aria-hidden />} disabled={busy} onClick={remove}>
-              Löschen
-            </Button>
+            <ConfirmDeleteButton block disabled={busy} onConfirm={remove} />
           )}
         </div>
       }

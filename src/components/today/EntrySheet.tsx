@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Trash2 } from 'lucide-react'
 import type { LogEntry, MealType } from '../../types'
 import { MEAL_TYPES } from '../../types'
 import { MEAL_LABELS } from '../../lib/meals'
@@ -9,6 +8,7 @@ import { UNIT_LABELS } from '../../lib/units'
 import { useDeleteLogEntry, useUpdateLogEntry } from '../../hooks/data'
 import { Sheet } from '../ui/Sheet'
 import { Button } from '../ui/Button'
+import { ConfirmDeleteButton } from '../ui/ConfirmDeleteButton'
 import { NumberInput } from '../ui/NumberInput'
 import { Segmented } from '../ui/Segmented'
 import { useToast } from '../ui/Toast'
@@ -38,17 +38,14 @@ export function EntrySheet({ entry, onClose }: { entry: LogEntry | null; onClose
       title={entry.name}
       footer={
         <div className="flex gap-3">
-          <Button
-            variant="secondary"
-            icon={<Trash2 className="size-4" aria-hidden />}
-            onClick={async () => {
+          <ConfirmDeleteButton
+            disabled={del.isPending}
+            onConfirm={async () => {
               await del.mutateAsync(entry.id)
               undo('Eintrag gelöscht', 'log_entries', [entry])
               onClose()
             }}
-          >
-            Löschen
-          </Button>
+          />
           <Button
             className="flex-1"
             disabled={!preview || update.isPending}

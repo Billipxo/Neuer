@@ -1,8 +1,9 @@
 import { expect, test } from '@playwright/test'
-import { closeBadges, enterApp, expectSignedOut, onboard, startDemo, withAccount } from './helpers'
+import { closeBadges, confirmDelete, enterApp, expectSignedOut, onboard, startDemo, withAccount } from './helpers'
 
 test('Onboarding mit Kalorienvorschlag', async ({ page }) => {
   await enterApp(page)
+  await expect(page.getByText(/Ein Spitzname reicht/)).toBeVisible()
   await page.getByLabel('Wie dürfen wir dich nennen?').fill('Sam')
   await page.getByRole('button', { name: 'Weiter' }).click()
   await page.getByRole('radio', { name: 'Männlich' }).click()
@@ -143,9 +144,14 @@ test('Verlauf und Profil sind erreichbar, Konto löschen setzt zurück', async (
   await startDemo(page)
   await page.getByRole('link', { name: 'Verlauf' }).click()
   await expect(page.getByRole('heading', { name: 'Verlauf' })).toBeVisible()
+  // Datum immer deutsch (TT.MM.JJJJ) – unabhängig von der Sprache des Browsers
+  await page.getByRole('radio', { name: 'Tag' }).click()
+  await expect(page.getByText(/^\d{2}\.\d{2}\.\d{4}$/)).toBeVisible()
   await page.getByRole('link', { name: 'Heute' }).click()
   await page.getByRole('link', { name: 'Profil und Einstellungen' }).click()
   await expect(page.getByText(/^\d+ von \d+ Abzeichen$/)).toBeVisible()
+  // Körperdaten übersprungen: Das Profil sagt, was fehlt – nichts wird still mit Standardwerten gerechnet
+  await expect(page.getByText(/Noch leer: Angabe für die Formel, Alter, Größe, Gewicht/)).toBeVisible()
   // Erfolge-Seite mit Serien und allen Abzeichen nach Bereichen
   await page.getByRole('link', { name: /Alle Erfolge und Serien/ }).click()
   await expect(page.getByRole('heading', { name: 'Erfolge' })).toBeVisible()
@@ -490,9 +496,13 @@ test('Schnell-Eintrag, Löschen mit Rückgängig und Mahlzeit als Gericht speich
   await page.getByRole('button', { name: 'Fertig' }).click()
   await closeBadges(page)
   await expect(page.getByRole('img', { name: /731 von 2\.000 kcal/ })).toBeVisible()
-  // Löschen und rückgängig machen
+  // Löschen braucht eine Bestätigung – ein einzelner Tipp löscht noch nichts – und lässt sich rückgängig machen
   await page.getByRole('button', { name: /Döner beim Imbiss/ }).click()
-  await page.getByRole('button', { name: 'Löschen' }).click()
+  await page.getByRole('button', { name: 'Löschen', exact: true }).click()
+  await expect(page.getByRole('button', { name: 'Wirklich löschen?' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Löschen', exact: true })).toBeVisible({ timeout: 6000 })
+  await expect(page.getByRole('img', { name: /731 von 2\.000 kcal/ })).toBeVisible()
+  await confirmDelete(page)
   await expect(page.getByRole('img', { name: /81 von 2\.000 kcal/ })).toBeVisible()
   await page.getByRole('button', { name: 'Rückgängig' }).click()
   await expect(page.getByRole('img', { name: /731 von 2\.000 kcal/ })).toBeVisible()
@@ -766,6 +776,10 @@ test('Werte automatisch: Alltägliches sofort finden, Vorschläge beim eigenen L
   await page.getByRole('button', { name: 'Zu Mittagessen hinzufügen' }).click()
   await expect(page.getByText(/^1 Eintrag · 75[23] kcal$/)).toBeVisible()
 
+  // Englisch geht auch: „grilled chicken breast“ findet die Hähnchenbrust
+  await page.getByLabel('Lebensmittel suchen').fill('grilled chicken breast')
+  await expect(page.getByRole('list', { name: 'Lebensmittel und Gerichte' }).getByRole('button').first()).toContainText('Hähnchenbrust')
+
   // Eigenes Lebensmittel: Werte per Vorschlag statt abtippen
   await page.getByLabel('Lebensmittel suchen').fill('Pizza vom Italiener')
   await page.getByRole('button', { name: '„Pizza vom Italiener“ selbst anlegen' }).click()
@@ -1006,7 +1020,7 @@ test('Sport eintragen: Verbrauch schätzen, eigene kcal, aufs Tagesziel anrechne
 
   // Löschen und rückgängig machen
   await list.getByRole('button', { name: /^Joggen/ }).click()
-  await page.getByRole('dialog', { name: 'Sport bearbeiten' }).getByRole('button', { name: 'Löschen' }).click()
+  await confirmDelete(page, page.getByRole('dialog', { name: 'Sport bearbeiten' }))
   await expect(list.getByRole('button', { name: /^Joggen/ })).toHaveCount(0)
   await page.getByRole('button', { name: 'Rückgängig' }).click()
   await expect(list.getByRole('button', { name: /^Joggen \(ca\. 8 km\/h\) 30 Min\. ≈ 300 kcal/ })).toBeVisible()
@@ -1358,4 +1372,23 @@ test('Training nach dem Essen eingeplant: Snacks fürs Training ergänzen, mit R
   await expect(page.getByRole('button', { name: 'Snacks fürs Training ergänzen' })).toHaveCount(0)
   await page.getByRole('button', { name: 'Rückgängig' }).click()
   await expect(page.getByRole('button', { name: 'Snacks fürs Training ergänzen' })).toBeVisible()
+})
+
+test('Open Food Facts antwortet nicht: Hinweis statt leerer Liste, erneut versuchen klappt', async ({ page }) => {
+  let down = true
+  const answer = (route: import('@playwright/test').Route, body: unknown) =>
+    down ? route.fulfill({ status: 503, body: 'nicht verfügbar' }) : route.fulfill({ json: body })
+  const product = { code: '4000000000024', product_name: 'Testmüsli Beere', brands: 'Testmarke', nutriments: { 'energy-kcal_100g': 380 } }
+  await page.route('**/search.openfoodfacts.org/search**', (route) => answer(route, { hits: [product] }))
+  await page.route('**/world.openfoodfacts.org/cgi/search.pl**', (route) => answer(route, { products: [product] }))
+  await startDemo(page)
+  await page.goto('/hinzufuegen?meal=breakfast')
+  await page.getByLabel('Lebensmittel suchen').fill('Testmüsli')
+  await expect(page.getByText('Open Food Facts antwortet gerade nicht.')).toBeVisible({ timeout: 15000 })
+  // Eingebaute Treffer und „selbst anlegen“ funktionieren weiter
+  await expect(page.getByRole('button', { name: '„Testmüsli“ selbst anlegen' })).toBeVisible()
+  down = false
+  await page.getByRole('button', { name: 'Erneut versuchen' }).click()
+  await expect(page.getByRole('button', { name: /^Testmüsli Beere/ })).toBeVisible()
+  await expect(page.getByText('Open Food Facts antwortet gerade nicht.')).toHaveCount(0)
 })

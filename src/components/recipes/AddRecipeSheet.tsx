@@ -9,7 +9,7 @@ import { fmt1 } from '../../lib/format'
 import { useAddLogEntries } from '../../hooks/data'
 import { useAddPlanItems } from '../../hooks/plan'
 import { recipePlanItem } from '../../lib/planner'
-import { Field } from '../ui/Field'
+import { DateField } from '../ui/DateField'
 import { Sheet } from '../ui/Sheet'
 import { Button } from '../ui/Button'
 import { Segmented } from '../ui/Segmented'
@@ -103,7 +103,7 @@ export function AddRecipeSheet({ recipe, open, onClose }: { recipe: Recipe; open
             />
           </div>
         ) : (
-          <Field label="Datum" type="date" value={date} min={today} onChange={(e) => setDate(e.target.value)} />
+          <DateField label="Datum" value={date} min={today} onChange={(v) => v && setDate(v)} />
         )}
         <div>
           <p className="mb-1.5 text-sm font-medium">Mahlzeit</p>

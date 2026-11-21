@@ -1,5 +1,7 @@
+import { useState } from 'react'
 import { ChevronRight, Star } from 'lucide-react'
 import { fmtInt } from '../../lib/format'
+import { thumbUrl } from '../../lib/openFoodFacts'
 
 export function FoodRow({
   title,
@@ -18,6 +20,9 @@ export function FoodRow({
   image?: string | null
   onClick: () => void
 }) {
+  // Lädt ein Bild nicht (Open Food Facts ist manchmal langsam), steht stattdessen der Anfangsbuchstabe da
+  const [broken, setBroken] = useState(false)
+  const src = broken ? null : thumbUrl(image)
   return (
     <li>
       <button
@@ -25,8 +30,18 @@ export function FoodRow({
         onClick={onClick}
         className="flex min-h-16 w-full items-center gap-3 rounded-2xl px-2 py-2 text-left transition hover:bg-surface-2 active:bg-line/60"
       >
-        {image ? (
-          <img src={image} alt="" loading="lazy" className="size-11 shrink-0 rounded-xl bg-surface-2 object-cover" />
+        {src ? (
+          <img
+            src={src}
+            alt=""
+            width={44}
+            height={44}
+            loading="lazy"
+            decoding="async"
+            referrerPolicy="no-referrer"
+            onError={() => setBroken(true)}
+            className="size-11 shrink-0 rounded-xl bg-surface-2 object-cover"
+          />
         ) : (
           <span aria-hidden className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-lg">
             {title.slice(0, 1).toUpperCase()}

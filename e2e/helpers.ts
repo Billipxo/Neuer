@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test'
+import { expect, test, type Locator, type Page } from '@playwright/test'
 import { signIn, testEmail } from './konto-helpers'
 
 /** Läuft der Test in der Reihe „konto“ (mit Anmeldung gegen das Test-Backend) statt im Demo-Modus? */
@@ -43,13 +43,25 @@ export async function onboard(page: Page, kcal = '2000') {
   await expect(page.getByRole('heading', { name: 'Alex' })).toBeVisible()
 }
 
-/** Eventuell erscheinende Abzeichen-Dialoge schließen (sie erscheinen leicht verzögert) */
+/** Eventuell erscheinende Abzeichen-Dialoge schließen (sie erscheinen erst, wenn die Seite fertig geladen ist) */
 export async function closeBadges(page: Page) {
   const dialog = page.getByRole('dialog', { name: /^Neues? Abzeichen$|^Neue Abzeichen$/ })
-  await dialog.waitFor({ state: 'visible', timeout: 2000 }).catch(() => {})
+  await dialog.waitFor({ state: 'visible', timeout: 3000 }).catch(() => {})
   for (let i = 0; i < 10; i++) {
     if (!(await dialog.isVisible().catch(() => false))) return
     await dialog.getByRole('button', { name: /Weiter|Danke/ }).click()
     await page.waitForTimeout(250)
   }
+}
+
+/**
+ * Löschen mit Bestätigung: erst „Löschen“, dann „Wirklich löschen?“. Ein schneller Doppeltipp zählt absichtlich nicht –
+ * deshalb kurz warten wie ein Mensch.
+ */
+export async function confirmDelete(page: Page, scope: Page | Locator = page) {
+  await scope.getByRole('button', { name: 'Löschen', exact: true }).click()
+  const confirmButton = scope.getByRole('button', { name: 'Wirklich löschen?' })
+  await expect(confirmButton).toBeVisible()
+  await page.waitForTimeout(500)
+  await confirmButton.click()
 }

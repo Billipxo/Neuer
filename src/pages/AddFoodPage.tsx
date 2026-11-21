@@ -135,7 +135,9 @@ export function AddFoodPage() {
     enabled: debounced.length >= 2 && !debouncedIsList,
     staleTime: 1000 * 60 * 10,
     gcTime: 1000 * 60 * 30,
-    retry: 0,
+    // Open Food Facts hakt manchmal kurz – ein zweiter Versuch nach einer Pause hilft meist
+    retry: 1,
+    retryDelay: 1500,
   })
 
   // Eigene Lebensmittel und Grundnahrungsmittel reagieren sofort, nur Open Food Facts wartet auf die Eingabepause
@@ -628,11 +630,20 @@ export function AddFoodPage() {
           {!isList && <h2 className="px-1 pt-4 text-sm font-semibold text-muted">Open Food Facts</h2>}
           {!isList && off.isFetching && <Spinner label="Suche läuft …" />}
           {!isList && off.error && !off.isFetching && (
-            <EmptyState
-              icon={<WifiOff className="size-8" />}
-              title="Suche gerade nicht möglich"
-              text="Open Food Facts ist nicht erreichbar. Du kannst ein eigenes Lebensmittel anlegen."
-            />
+            <div role="status" className="mt-1 flex items-start gap-3 rounded-2xl bg-surface p-3 text-sm ring-1 ring-line/60">
+              <WifiOff className="mt-0.5 size-5 shrink-0 text-muted" aria-hidden />
+              <div className="min-w-0 flex-1">
+                <p className="font-medium">Open Food Facts antwortet gerade nicht.</p>
+                <p className="text-muted">
+                  {off.data?.length
+                    ? 'Unten stehen die Treffer von vorhin.'
+                    : 'Die Treffer oben (Grundnahrungsmittel, Alltägliches, deine Lebensmittel) funktionieren weiter – oder leg es selbst an.'}
+                </p>
+                <Button variant="secondary" size="sm" className="mt-2" onClick={() => off.refetch()}>
+                  Erneut versuchen
+                </Button>
+              </div>
+            </div>
           )}
           {!isList && off.data && !off.isFetching && (
             <ul className="mt-1 space-y-1">

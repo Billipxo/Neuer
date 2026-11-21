@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Download, FileJson, Trash2, Upload } from 'lucide-react'
+import { Download, FileJson, Upload } from 'lucide-react'
 import { useAuth, useStore } from '../../app/auth'
 import { ALL_TABLES, listTolerant } from '../../data/store'
 import type { LogEntry } from '../../types'
@@ -7,7 +7,6 @@ import { download, logToCsv } from '../../lib/export'
 import { todayISO } from '../../lib/dates'
 import { Button } from '../ui/Button'
 import { Sheet } from '../ui/Sheet'
-import { Field } from '../ui/Field'
 import { useToast } from '../ui/Toast'
 import { Switch } from '../ui/Switch'
 import { IMPORT_ORDER, TABLE_LABELS, parseBackup, type Backup } from '../../lib/backup'
@@ -18,13 +17,9 @@ import { useHousehold } from '../../app/household'
 export function DataSection() {
   const store = useStore()
   // Für den Export der ungefilterte Speicher: im Haushalt sollen auch die privaten Plan-Einträge in die Sicherung
-  const { signOut, userId, store: ownStore } = useAuth()
+  const { userId, store: ownStore } = useAuth()
   const { household } = useHousehold()
   const toast = useToast()
-  const [deleteOpen, setDeleteOpen] = useState(false)
-  const [confirmText, setConfirmText] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
   const [restore, setRestore] = useState<{ backup: Backup; preview: ImportPreview } | null>(null)
   const [withProfile, setWithProfile] = useState(false)
@@ -92,20 +87,6 @@ export function DataSection() {
         „Alle Daten (JSON)“ ist zugleich deine Sicherung: Sie lässt sich hier wieder einspielen – auch in einem anderen Konto oder auf einem
         neuen Gerät.
       </p>
-      <Button
-        variant="ghost"
-        block
-        className="mt-2 text-danger"
-        icon={<Trash2 className="size-4" aria-hidden />}
-        onClick={() => {
-          setConfirmText('')
-          setError(null)
-          setDeleteOpen(true)
-        }}
-      >
-        Konto löschen
-      </Button>
-
       <Sheet
         open={!!restore}
         onClose={() => setRestore(null)}
@@ -175,46 +156,6 @@ export function DataSection() {
         )}
       </Sheet>
 
-      <Sheet
-        open={deleteOpen}
-        onClose={() => setDeleteOpen(false)}
-        title="Konto löschen?"
-        footer={
-          <Button
-            variant="danger"
-            block
-            size="lg"
-            disabled={confirmText.trim().toUpperCase() !== 'LÖSCHEN' || busy}
-            onClick={async () => {
-              setBusy(true)
-              setError(null)
-              try {
-                await store.deleteAccount()
-                await signOut()
-              } catch (e) {
-                setError((e as Error).message)
-                setBusy(false)
-              }
-            }}
-          >
-            {busy ? 'Wird gelöscht …' : 'Endgültig löschen'}
-          </Button>
-        }
-      >
-        <div className="space-y-4">
-          <p>
-            Dabei werden dein Konto und <strong>alle</strong> gespeicherten Daten dauerhaft entfernt: Profil, Protokoll,
-            Lebensmittel, Gerichte, Wochenpläne, Einkaufsliste und Erfolge. Das lässt sich nicht rückgängig machen.
-          </p>
-          <p className="text-sm text-muted">Tipp: Exportiere vorher deine Daten als JSON.</p>
-          <Field label="Zur Bestätigung „LÖSCHEN“ eingeben" value={confirmText} onChange={(e) => setConfirmText(e.target.value)} autoComplete="off" />
-          {error && (
-            <p role="alert" className="text-sm text-danger">
-              Löschen fehlgeschlagen: {error}
-            </p>
-          )}
-        </div>
-      </Sheet>
     </>
   )
 }

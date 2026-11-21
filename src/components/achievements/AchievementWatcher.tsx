@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { useIsFetching, useIsMutating } from '@tanstack/react-query'
 import { useAchievementInput, useAchievementRows, useSaveAchievements, newlyUnlocked } from '../../hooks/achievements'
 import type { AchievementDef } from '../../lib/achievements'
 import { Sheet } from '../ui/Sheet'
@@ -10,6 +11,9 @@ type Celebration = { kind: 'one'; def: AchievementDef } | { kind: 'many'; defs: 
 
 /** Ab so vielen neuen Abzeichen auf einmal gibt es eine gemeinsame Feier statt vieler einzelner */
 const BATCH_FROM = 3
+
+/** Kurz warten, nachdem alles geladen ist – die Seite dahinter zeigt dann schon die neuen Werte */
+const SETTLE_MS = 500
 
 /** Prüft im Hintergrund, ob neue Erfolge erreicht wurden, speichert sie und zeigt eine kurze Feier. */
 export function AchievementWatcher() {
@@ -43,8 +47,26 @@ export function AchievementWatcher() {
       })
   }, [input, rows, isSuccess, save])
 
-  const current = quiet ? undefined : queue[0]
-  const next = () => setQueue((q) => q.slice(1))
+  // Erst feiern, wenn die Seite fertig aktualisiert ist – sonst stünden dahinter noch die alten Werte (z. B. 0 kcal)
+  const busyLoading = useIsFetching() + useIsMutating() > 0
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    if (visible || !queue.length || quiet || busyLoading) return
+    // Auch nicht über ein gerade geöffnetes Fenster legen (z. B. Eintrag bearbeiten) – dann nach dem Schließen feiern
+    const t = setInterval(() => {
+      if (!document.querySelector('[role="dialog"]')) setVisible(true)
+    }, SETTLE_MS)
+    return () => clearInterval(t)
+  }, [visible, queue.length, quiet, busyLoading])
+  useEffect(() => {
+    if (quiet) setVisible(false)
+  }, [quiet])
+
+  const current = visible && !quiet ? queue[0] : undefined
+  const next = () => {
+    if (queue.length <= 1) setVisible(false)
+    setQueue((q) => q.slice(1))
+  }
   const more = queue.length > 1
   return (
     <Sheet open={!!current} onClose={next} title={current?.kind === 'many' ? 'Neue Abzeichen' : 'Neues Abzeichen'}>

@@ -64,10 +64,43 @@ export function normalizeOffProduct(p: RawProduct): OffProduct | null {
   }
 }
 
-async function getJson(url: string, signal?: AbortSignal): Promise<unknown> {
-  const res = await fetch(url, { signal, headers: { Accept: 'application/json' } })
-  if (!res.ok) throw new Error(`Open Food Facts antwortet mit ${res.status}`)
-  return res.json()
+/** So lange wartet eine Anfrage höchstens – danach kommt die Ausweich-Suche bzw. ein verständlicher Hinweis */
+export const REQUEST_TIMEOUT_MS = 8000
+
+/** Signal, das bei Abbruch von außen oder nach der Wartezeit auslöst */
+function withTimeout(signal: AbortSignal | undefined, ms: number): { signal: AbortSignal; done: () => void } {
+  const ctrl = new AbortController()
+  const timer = setTimeout(() => ctrl.abort(new DOMException('Zeitüberschreitung', 'TimeoutError')), ms)
+  const onAbort = () => ctrl.abort(signal?.reason)
+  if (signal?.aborted) ctrl.abort(signal.reason)
+  else signal?.addEventListener('abort', onAbort, { once: true })
+  return {
+    signal: ctrl.signal,
+    done: () => {
+      clearTimeout(timer)
+      signal?.removeEventListener('abort', onAbort)
+    },
+  }
+}
+
+async function getJson(url: string, signal?: AbortSignal, timeoutMs = REQUEST_TIMEOUT_MS): Promise<unknown> {
+  const t = withTimeout(signal, timeoutMs)
+  try {
+    const res = await fetch(url, { signal: t.signal, headers: { Accept: 'application/json' } })
+    if (!res.ok) throw new Error(`Open Food Facts antwortet mit ${res.status}`)
+    return await res.json()
+  } finally {
+    t.done()
+  }
+}
+
+/**
+ * Kleinere Vorschaubilder: Open Food Facts liefert jedes Bild auch mit 100 px Breite – für die Trefferliste reicht
+ * das und lädt deutlich schneller. Andere Adressen bleiben unverändert.
+ */
+export function thumbUrl(url: string | null | undefined): string | null {
+  if (!url) return null
+  return /^https:\/\/(images|static)\.openfoodfacts\.org\//.test(url) ? url.replace(/\.(200|400|full)\.jpg$/, '.100.jpg') : url
 }
 
 /** Suche nach Name. Nutzt die neue Such-API und fällt bei Fehlern auf die klassische Suche zurück. */
@@ -80,7 +113,8 @@ export async function searchProducts(query: string, signal?: AbortSignal): Promi
     const data = (await getJson(url, signal)) as { hits?: RawProduct[] }
     raw = data.hits ?? []
   } catch (e) {
-    if ((e as Error).name === 'AbortError') throw e
+    // Abbruch von außen (neue Eingabe): nicht weitersuchen. Zeitüberschreitung oder Fehler: die klassische Suche probieren.
+    if (signal?.aborted) throw e
     const url =
       `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}` +
       `&search_simple=1&action=process&json=1&lc=de&page_size=25&fields=${FIELDS}`
