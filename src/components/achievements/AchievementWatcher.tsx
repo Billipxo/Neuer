@@ -5,6 +5,7 @@ import { useAchievementInput, useAchievementRows, useSaveAchievements, newlyUnlo
 import type { AchievementDef } from '../../lib/achievements'
 import { Sheet } from '../ui/Sheet'
 import { Button } from '../ui/Button'
+import { tourPending } from '../../lib/welcomeTour'
 
 /** Eine Feier: ein einzelnes Abzeichen oder mehrere auf einmal (z. B. nach einem Update mit neuen Abzeichen) */
 type Celebration = { kind: 'one'; def: AchievementDef } | { kind: 'many'; defs: AchievementDef[] }
@@ -54,7 +55,8 @@ export function AchievementWatcher() {
     if (visible || !queue.length || quiet || busyLoading) return
     // Auch nicht über ein gerade geöffnetes Fenster legen (z. B. Eintrag bearbeiten) – dann nach dem Schließen feiern
     const t = setInterval(() => {
-      if (!document.querySelector('[role="dialog"]')) setVisible(true)
+      // auch nicht vor oder über der Einführung nach der Einrichtung
+      if (!document.querySelector('[role="dialog"]') && !tourPending()) setVisible(true)
     }, SETTLE_MS)
     return () => clearInterval(t)
   }, [visible, queue.length, quiet, busyLoading])

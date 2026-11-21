@@ -1,8 +1,9 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useProfile } from '../../hooks/data'
 import { mealForHour } from '../../lib/meals'
 import { TOUR_SLIDES, markTourSeen, tourPending } from '../../lib/welcomeTour'
+import { PENDING_INVITE_KEY } from '../../lib/household'
 import { Sheet } from '../ui/Sheet'
 import { Button } from '../ui/Button'
 
@@ -77,25 +78,47 @@ export function WelcomeTour({ open, onClose }: { open: boolean; onClose: () => v
           <h3 className="mt-4 text-xl font-bold">{index === 0 && name ? `Schön, dass du da bist, ${name}!` : slide.title}</h3>
           <p className="mx-auto mt-2 max-w-sm text-muted">{slide.text}</p>
           {slide.where && <p className="mt-3 text-xs font-medium text-brand">Unten in der Leiste: {slide.where}</p>}
-          <p className="sr-only">
-            Karte {index + 1} von {TOUR_SLIDES.length}
+          <div className="mt-5 flex justify-center gap-1.5" aria-hidden>
+            {TOUR_SLIDES.map((s, i) => (
+              <span key={s.title} className={`h-1.5 rounded-full transition-all ${i === index ? 'w-5 bg-brand' : 'w-1.5 bg-line'}`} />
+            ))}
+          </div>
+          <p className="mt-2 text-xs text-muted tabular">
+            {index + 1} von {TOUR_SLIDES.length}
           </p>
         </div>
-        <div className="mt-5 flex justify-center gap-1.5" aria-hidden>
-          {TOUR_SLIDES.map((s, i) => (
-            <span key={s.title} className={`h-1.5 rounded-full transition-all ${i === index ? 'w-5 bg-brand' : 'w-1.5 bg-line'}`} />
-          ))}
-        </div>
-        <p className="mt-2 text-xs text-muted tabular">
-          {index + 1} von {TOUR_SLIDES.length}
-        </p>
       </div>
     </Sheet>
   )
 }
 
-/** Zeigt die Einführung einmal direkt nach der Einrichtung */
+function invitePending(): boolean {
+  try {
+    return Boolean(localStorage.getItem(PENDING_INVITE_KEY))
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Zeigt die Einführung einmal direkt nach der Einrichtung – sobald kein anderes Fenster offen ist. Wer über einen
+ * Einladungslink kommt, landet gleich beim Beitritt zum Haushalt (mit eigener Begrüßung); dann entfällt sie, und im
+ * Profil lässt sie sich jederzeit öffnen.
+ */
 export function FirstRunTour() {
-  const [open, setOpen] = useState(tourPending)
+  const [open, setOpen] = useState(false)
+  useEffect(() => {
+    if (!tourPending()) return
+    if (invitePending()) {
+      markTourSeen()
+      return
+    }
+    const t = setInterval(() => {
+      if (document.querySelector('[role="dialog"]')) return
+      clearInterval(t)
+      setOpen(true)
+    }, 300)
+    return () => clearInterval(t)
+  }, [])
   return <WelcomeTour open={open} onClose={() => setOpen(false)} />
 }

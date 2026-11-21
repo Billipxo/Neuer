@@ -42,7 +42,7 @@ export async function onboard(page: Page, kcal = '2000') {
   await page.getByLabel('Dein Tagesziel').fill(kcal)
   await page.getByRole('button', { name: 'Weiter' }).click()
   await page.getByRole('button', { name: 'Los geht’s' }).click()
-  await expect(page.getByRole('heading', { name: 'Alex' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Alex', exact: true })).toBeVisible()
   await closeTour(page)
 }
 
