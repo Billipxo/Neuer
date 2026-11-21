@@ -43,7 +43,8 @@ export function IngredientPickerSheet({
     queryFn: ({ signal }) => searchProducts(debounced, signal),
     enabled: open && debounced.length >= 2,
     staleTime: 1000 * 60 * 10,
-    retry: 0,
+    retry: 1,
+    retryDelay: 1500,
   })
 
   const local = useMemo(() => {
@@ -120,7 +121,7 @@ export function IngredientPickerSheet({
         <>
           <h3 className="px-1 pt-4 text-sm font-semibold text-muted">Open Food Facts</h3>
           {off.isFetching && <Spinner />}
-          {off.error && <p className="p-2 text-sm text-muted">Suche gerade nicht erreichbar.</p>}
+          {off.error && <p className="p-2 text-sm text-muted">Open Food Facts antwortet gerade nicht – deine eigenen Lebensmittel oben funktionieren weiter.</p>}
           <ul className="mt-1 space-y-1">
             {off.data?.map((p) => (
               <FoodRow key={p.barcode ?? p.name} title={p.name} subtitle={p.brand} kcal={p.kcal_100} image={p.image_url} onClick={() => pick(p)} />

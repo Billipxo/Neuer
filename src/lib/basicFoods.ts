@@ -2,6 +2,7 @@
  * Grundnahrungsmittel beim Erfassen: Die Nährwerttabelle des Kochbuchs (Äpfel, Haferflocken, Hähnchenbrust, Öl …)
  * liefert sofort und offline Treffer – mit den passenden Maßen (Stück, Scheibe, EL, TL).
  */
+import { englishToGerman } from './englishFoods'
 import { INGREDIENT_LIST, type IngredientInfo } from '../data/ingredients'
 import { EVERYDAY_FOODS, type EverydayFood, type FoodGroupId } from '../data/everydayFoods'
 import type { Food } from '../types'
@@ -443,8 +444,17 @@ const FILLERS = new Set(['mit', 'ohne', 'und', 'oder', 'vom', 'von', 'beim', 'be
  * so findet „Pizza vom Italiener“ die Pizzen und „Döner beim Imbiss“ den Döner.
  */
 export function suggestFoods(name: string, limit = 4): QuickFoodHit[] {
-  const whole = searchQuickFoods(name, limit)
-  if (whole.length) return whole
+  const whole = scoredQuickFoods(name, limit)
+  // Englisch? „grilled chicken breast“ → „Hähnchenbrust“. Ein guter deutscher Treffer bleibt vorne.
+  const english = englishToGerman(name)
+  if (english && norm(english) !== norm(name)) {
+    const translated = suggestFoods(english, limit)
+    const germanFirst = whole.length > 0 && whole[0].score <= 2
+    const merged = germanFirst ? [...whole.map((w) => w.hit), ...translated] : [...translated, ...whole.map((w) => w.hit)]
+    const seen = new Set<string>()
+    return merged.filter((h) => !seen.has(h.key) && seen.add(h.key)).slice(0, limit)
+  }
+  if (whole.length) return whole.map((w) => w.hit)
   const words = name
     .split(/[\s,;/+&-]+/)
     .map((w) => w.trim())
