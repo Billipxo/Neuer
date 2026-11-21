@@ -38,8 +38,11 @@ test('Onboarding mit Kalorienvorschlag', async ({ page }) => {
   await page.getByRole('link', { name: 'Profil und Einstellungen' }).click()
   await page.getByRole('button', { name: 'Einführung noch einmal ansehen' }).click()
   await expect(tour.getByText('1 von 5')).toBeVisible()
-  await tour.getByRole('button', { name: 'Überspringen' }).click()
+  for (let i = 0; i < 4; i++) await tour.getByRole('button', { name: 'Weiter' }).click()
+  // Am Ende führt ein Knopf direkt zum Eintragen
+  await tour.getByRole('button', { name: 'Erste Mahlzeit eintragen' }).click()
   await expect(tour).toHaveCount(0)
+  await expect(page.getByLabel('Lebensmittel suchen')).toBeVisible()
 })
 
 test('Eigenes Lebensmittel erfassen, mehrere hinzufügen und bearbeiten', async ({ page }) => {
