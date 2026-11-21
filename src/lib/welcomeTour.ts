@@ -5,7 +5,11 @@
  */
 const KEY = 'teller-einfuehrung'
 
+/** Merkt sich „gesehen“ auch ohne Speicher (z. B. wenn der Browser-Speicher voll ist) – dann nur bis zum Neuladen */
+let seenInSession = false
+
 export function markTourPending() {
+  seenInSession = false
   try {
     localStorage.setItem(KEY, 'offen')
   } catch {
@@ -14,6 +18,7 @@ export function markTourPending() {
 }
 
 export function tourPending(): boolean {
+  if (seenInSession) return false
   try {
     return localStorage.getItem(KEY) === 'offen'
   } catch {
@@ -22,10 +27,16 @@ export function tourPending(): boolean {
 }
 
 export function markTourSeen() {
+  seenInSession = true
   try {
     localStorage.setItem(KEY, 'gesehen')
   } catch {
-    // nicht schlimm
+    // Speicher voll: Entfernen geht trotzdem – auch dann erscheint sie nicht noch einmal von selbst
+    try {
+      localStorage.removeItem(KEY)
+    } catch {
+      // nicht schlimm
+    }
   }
 }
 

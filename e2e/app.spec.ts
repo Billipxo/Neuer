@@ -104,7 +104,8 @@ test('Woche vorschlagen und Einkaufsliste erzeugen', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Obst & Gemüse' })).toBeVisible()
   await page.getByLabel('Artikel hinzufügen').fill('2 l Milch')
   await page.keyboard.press('Enter')
-  await expect(page.getByText('2 l')).toBeVisible()
+  // genau über Name und Menge – der zufällige Wochenplan kann andere Artikel mit ähnlicher Menge enthalten
+  await expect(page.getByRole('checkbox', { name: 'Milch 2 l' })).toBeVisible()
   // Mehrere auf einmal – Dezimalkomma bleibt eine Zahl
   await page.getByLabel('Artikel hinzufügen').fill('Spülmittel, 6 Kerzen; 1,5 l Apfelschorle')
   await page.keyboard.press('Enter')
@@ -113,8 +114,7 @@ test('Woche vorschlagen und Einkaufsliste erzeugen', async ({ page }) => {
   const other = page.getByRole('region', { name: 'Sonstiges' })
   await expect(other.getByText('Spülmittel')).toBeVisible()
   await expect(other.getByText('Kerzen')).toBeVisible()
-  await expect(page.getByText('Apfelschorle')).toBeVisible()
-  await expect(page.getByText('1,5 l')).toBeVisible()
+  await expect(page.getByRole('checkbox', { name: 'Apfelschorle 1,5 l' })).toBeVisible()
   // Eine kopierte Liste (eine Zeile je Artikel) wird beim Einfügen zu einer Zeile
   const input = page.getByLabel('Artikel hinzufügen')
   await input.evaluate((el, text) => {
