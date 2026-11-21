@@ -16,7 +16,33 @@ test('Onboarding mit Kalorienvorschlag', async ({ page }) => {
   await page.getByRole('button', { name: 'Übernehmen' }).click()
   await page.getByRole('button', { name: 'Weiter' }).click()
   await page.getByRole('button', { name: 'Los geht’s' }).click()
+
+  // Danach einmal eine kurze Einführung: blättern, zurück, am Ende „Los geht’s“
+  const tour = page.getByRole('dialog', { name: 'Kurz erklärt' })
+  await expect(tour.getByRole('heading', { name: 'Schön, dass du da bist, Sam!' })).toBeVisible()
+  await expect(tour.getByText('1 von 5')).toBeVisible()
+  await tour.getByRole('button', { name: 'Weiter' }).click()
+  await expect(tour.getByRole('heading', { name: 'Essen eintragen' })).toBeVisible()
+  await tour.getByRole('button', { name: 'Zurück' }).click()
+  await expect(tour.getByText('1 von 5')).toBeVisible()
+  for (let i = 0; i < 4; i++) await tour.getByRole('button', { name: 'Weiter' }).click()
+  await expect(tour.getByRole('heading', { name: 'Verlauf, Sport und Erfolge' })).toBeVisible()
+  await tour.getByRole('button', { name: 'Los geht’s' }).click()
+  await expect(tour).toHaveCount(0)
   await expect(page.getByRole('img', { name: /0 von 1\.950 kcal gegessen/ })).toBeVisible()
+
+  // Nur einmal von selbst – im Profil lässt sie sich wieder öffnen
+  await page.reload()
+  await expect(page.getByRole('img', { name: /0 von 1\.950 kcal gegessen/ })).toBeVisible()
+  await expect(tour).toHaveCount(0)
+  await page.getByRole('link', { name: 'Profil und Einstellungen' }).click()
+  await page.getByRole('button', { name: 'Einführung noch einmal ansehen' }).click()
+  await expect(tour.getByText('1 von 5')).toBeVisible()
+  for (let i = 0; i < 4; i++) await tour.getByRole('button', { name: 'Weiter' }).click()
+  // Am Ende führt ein Knopf direkt zum Eintragen
+  await tour.getByRole('button', { name: 'Erste Mahlzeit eintragen' }).click()
+  await expect(tour).toHaveCount(0)
+  await expect(page.getByLabel('Lebensmittel suchen')).toBeVisible()
 })
 
 test('Eigenes Lebensmittel erfassen, mehrere hinzufügen und bearbeiten', async ({ page }) => {
@@ -78,7 +104,8 @@ test('Woche vorschlagen und Einkaufsliste erzeugen', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Obst & Gemüse' })).toBeVisible()
   await page.getByLabel('Artikel hinzufügen').fill('2 l Milch')
   await page.keyboard.press('Enter')
-  await expect(page.getByText('2 l')).toBeVisible()
+  // genau über Name und Menge – der zufällige Wochenplan kann andere Artikel mit ähnlicher Menge enthalten
+  await expect(page.getByRole('checkbox', { name: 'Milch 2 l' })).toBeVisible()
   // Mehrere auf einmal – Dezimalkomma bleibt eine Zahl
   await page.getByLabel('Artikel hinzufügen').fill('Spülmittel, 6 Kerzen; 1,5 l Apfelschorle')
   await page.keyboard.press('Enter')
@@ -87,8 +114,7 @@ test('Woche vorschlagen und Einkaufsliste erzeugen', async ({ page }) => {
   const other = page.getByRole('region', { name: 'Sonstiges' })
   await expect(other.getByText('Spülmittel')).toBeVisible()
   await expect(other.getByText('Kerzen')).toBeVisible()
-  await expect(page.getByText('Apfelschorle')).toBeVisible()
-  await expect(page.getByText('1,5 l')).toBeVisible()
+  await expect(page.getByRole('checkbox', { name: 'Apfelschorle 1,5 l' })).toBeVisible()
   // Eine kopierte Liste (eine Zeile je Artikel) wird beim Einfügen zu einer Zeile
   const input = page.getByLabel('Artikel hinzufügen')
   await input.evaluate((el, text) => {

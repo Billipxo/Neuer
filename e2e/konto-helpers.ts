@@ -27,6 +27,7 @@ export async function signUp(page: Page, email: string, name: string, kcal = '20
   await page.getByLabel('Dein Tagesziel').fill(kcal)
   await page.getByRole('button', { name: 'Weiter' }).click()
   await page.getByRole('button', { name: 'Los geht’s' }).click()
+  await closeTour(page)
   if (landsOnToday) await expect(page.getByRole('img', { name: new RegExp(`0 von ${Number(kcal).toLocaleString('de-DE')} kcal`) })).toBeVisible()
 }
 
@@ -34,4 +35,14 @@ export async function signUp(page: Page, email: string, name: string, kcal = '20
 export async function addShoppingItem(page: Page, text: string) {
   await page.getByLabel('Artikel hinzufügen').fill(text)
   await page.keyboard.press('Enter')
+}
+
+/** Die kurze Einführung nach der Einrichtung überspringen (sie erscheint einmal, direkt danach) */
+export async function closeTour(page: Page) {
+  const tour = page.getByRole('dialog', { name: 'Kurz erklärt' })
+  await tour.waitFor({ state: 'visible', timeout: 3000 }).catch(() => {})
+  if (await tour.isVisible().catch(() => false)) {
+    await tour.getByRole('button', { name: 'Überspringen' }).click()
+    await expect(tour).toHaveCount(0)
+  }
 }

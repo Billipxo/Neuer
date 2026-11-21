@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Dumbbell, Info, LogOut, Moon } from 'lucide-react'
+import { Dumbbell, Info, LogOut, Moon, Sparkles } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../app/auth'
 import { applyTheme, getThemePref, type ThemePref } from '../app/theme'
@@ -19,6 +19,7 @@ import { defaultDraft, type ProfileDraft } from '../components/profile/types'
 import { DataSection } from '../components/profile/DataSection'
 import { DeleteAccount } from '../components/profile/DeleteAccount'
 import { BodyDataNote } from '../components/profile/BodyDataNote'
+import { WelcomeTour } from '../components/onboarding/WelcomeTour'
 import { HouseholdSection } from '../components/profile/HouseholdSection'
 import { InstallSection } from '../components/profile/InstallSection'
 import { Switch } from '../components/ui/Switch'
@@ -44,6 +45,7 @@ export function ProfilePage() {
   const toast = useToast()
   const [draft, setDraft] = useState<ProfileDraft | null>(null)
   const [theme, setTheme] = useState<ThemePref>(getThemePref)
+  const [tourOpen, setTourOpen] = useState(false)
 
   useEffect(() => {
     if (profile && !draft) setDraft(defaultDraft(profile))
@@ -154,10 +156,14 @@ export function ProfilePage() {
           {store?.kind === 'local' ? 'Demo-Modus verlassen' : 'Abmelden'}
         </Button>
         <DeleteAccount />
+        <Button variant="ghost" block className="text-brand!" icon={<Sparkles className="size-4" aria-hidden />} onClick={() => setTourOpen(true)}>
+          Einführung noch einmal ansehen
+        </Button>
         <Link to="/ueber" className="flex min-h-11 items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-brand hover:bg-surface-2">
           <Info className="size-4" aria-hidden /> Über Teller, Datenschutz & Impressum
         </Link>
       </Card>
+      <WelcomeTour open={tourOpen} onClose={() => setTourOpen(false)} />
 
       <p className="mt-6 px-1 text-center text-xs text-muted">
         Teller ersetzt keine Ernährungs- oder medizinische Beratung. Alle Werte sind Richtwerte.
