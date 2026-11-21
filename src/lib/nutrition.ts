@@ -77,6 +77,19 @@ export function isCompleteBody(b: Partial<BodyData>): b is BodyData {
   )
 }
 
+/**
+ * Welche Körperdaten fehlen noch für einen Vorschlag fürs Tagesziel? Die App rechnet nie mit erfundenen Werten – fehlt
+ * etwas, gibt es schlicht keinen Vorschlag (und Sport wird ohne Gewicht mit einem Richtwert geschätzt, mit Hinweis).
+ */
+export function missingBodyData(b: { sex?: unknown; age?: unknown; height_cm?: unknown; weight_kg?: unknown }): string[] {
+  const out: string[] = []
+  if (b.sex !== 'male' && b.sex !== 'female') out.push('Angabe für die Formel')
+  if (!isPositive(b.age)) out.push('Alter')
+  if (!isPositive(b.height_cm)) out.push('Größe')
+  if (!isPositive(b.weight_kg)) out.push('Gewicht')
+  return out
+}
+
 function isPositive(n: unknown): n is number {
   return typeof n === 'number' && Number.isFinite(n) && n > 0
 }

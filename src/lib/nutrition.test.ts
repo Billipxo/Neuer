@@ -14,6 +14,7 @@ import {
   suggestKcalTarget,
   sumNutrients,
   totalEnergyExpenditure,
+  missingBodyData,
 } from './nutrition'
 import type { Food } from '../types'
 
@@ -116,5 +117,13 @@ describe('Fortschritt und Ziele', () => {
     expect(motivationLine(progress(0, 2000), 0)).toMatch(/erste Mahlzeit/)
     expect(motivationLine(progress(2000, 2000), 3)).toMatch(/im Bereich/)
     expect(motivationLine(progress(2600, 2000), 3)).toMatch(/völlig okay/)
+  })
+})
+
+describe('Körperdaten', () => {
+  it('nennt, was für einen Vorschlag fürs Tagesziel noch fehlt – ohne erfundene Standardwerte', () => {
+    expect(missingBodyData({ sex: null, age: null, height_cm: null, weight_kg: null })).toEqual(['Angabe für die Formel', 'Alter', 'Größe', 'Gewicht'])
+    expect(missingBodyData({ sex: 'female', age: 34, height_cm: 168, weight_kg: 0 })).toEqual(['Gewicht'])
+    expect(missingBodyData({ sex: 'male', age: 30, height_cm: 180, weight_kg: 80 })).toEqual([])
   })
 })

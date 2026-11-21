@@ -3,7 +3,7 @@ import { Dumbbell, Info, LogOut, Moon } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../app/auth'
 import { applyTheme, getThemePref, type ThemePref } from '../app/theme'
-import { useActivities, useProfile, useSaveProfile } from '../hooks/data'
+import { useActivities, useProfile, useSaveProfile, useWeights } from '../hooks/data'
 import { isMissingTableError } from '../data/store'
 import { todayISO } from '../lib/dates'
 import { sumPercents } from '../lib/nutrition'
@@ -17,6 +17,8 @@ import { BodyForm } from '../components/profile/BodyForm'
 import { GoalPicker, KcalTargetEditor, MacroEditor, WaterTargetEditor } from '../components/profile/TargetEditor'
 import { defaultDraft, type ProfileDraft } from '../components/profile/types'
 import { DataSection } from '../components/profile/DataSection'
+import { DeleteAccount } from '../components/profile/DeleteAccount'
+import { BodyDataNote } from '../components/profile/BodyDataNote'
 import { HouseholdSection } from '../components/profile/HouseholdSection'
 import { InstallSection } from '../components/profile/InstallSection'
 import { Switch } from '../components/ui/Switch'
@@ -37,6 +39,7 @@ export function ProfilePage() {
     if (ready && location.hash === '#app') document.getElementById('app')?.scrollIntoView({ block: 'start' })
   }, [location.hash, ready])
   const { signOut, email, store } = useAuth()
+  const { data: weights = [] } = useWeights()
   const save = useSaveProfile()
   const toast = useToast()
   const [draft, setDraft] = useState<ProfileDraft | null>(null)
@@ -80,7 +83,13 @@ export function ProfilePage() {
 
       <SectionTitle>Über dich</SectionTitle>
       <Card className="space-y-4">
-        <Field label="Name" value={draft.name} onChange={(e) => patch({ name: e.target.value })} />
+        <Field
+          label="Name"
+          value={draft.name}
+          onChange={(e) => patch({ name: e.target.value })}
+          hint="Für die Begrüßung und als Vorschlag im gemeinsamen Haushalt – ein Spitzname reicht."
+        />
+        <BodyDataNote draft={draft} hasWeightLog={weights.length > 0} />
         <BodyForm draft={draft} onChange={patch} />
         <WaterTargetEditor draft={draft} onChange={patch} />
       </Card>
@@ -144,6 +153,7 @@ export function ProfilePage() {
         <Button variant="secondary" block icon={<LogOut className="size-4" aria-hidden />} onClick={() => signOut()}>
           {store?.kind === 'local' ? 'Demo-Modus verlassen' : 'Abmelden'}
         </Button>
+        <DeleteAccount />
         <Link to="/ueber" className="flex min-h-11 items-center justify-center gap-2 rounded-2xl text-sm font-semibold text-brand hover:bg-surface-2">
           <Info className="size-4" aria-hidden /> Über Teller, Datenschutz & Impressum
         </Link>

@@ -60,15 +60,20 @@ export function OnboardingPage({ existing }: { existing: Profile | null }) {
               autoComplete="given-name"
               value={draft.name}
               onChange={(e) => patch({ name: e.target.value })}
-              placeholder="Vorname"
+              placeholder="Vorname oder Spitzname"
+              hint="Nur für die Begrüßung – und als Vorschlag, falls du später einen gemeinsamen Haushalt nutzt. Ein Spitzname reicht."
             />
           </>
         )}
         {step === 1 && (
           <>
             <h1 className="text-2xl font-bold">Körperdaten (optional)</h1>
-            <p className="mt-1 mb-6 text-muted">
-              Damit kann die App einen Vorschlag für dein Tagesziel berechnen. Du kannst den Schritt auch überspringen.
+            <p className="mt-1 text-muted">
+              Damit kann die App einen Vorschlag für dein Tagesziel berechnen und den Verbrauch beim Sport genauer schätzen.
+            </p>
+            <p className="mt-2 mb-6 text-sm text-muted">
+              Überspringen ist in Ordnung: Die Felder bleiben leer, und die App rechnet nicht mit erfundenen Werten – dein Tagesziel legst du
+              dann selbst fest.
             </p>
             <BodyForm draft={draft} onChange={patch} showTarget={false} />
           </>
