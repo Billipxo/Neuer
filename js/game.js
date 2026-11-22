@@ -1094,6 +1094,8 @@
     return e;
   }
 
+  G._makeSummon = makeSummon; // Festungen: Söldner und Wächter-Bosse
+
   // -------------------------------------------------------------------------
   // Helden
   function makeHero(p) {

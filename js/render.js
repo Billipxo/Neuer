@@ -744,7 +744,56 @@
     ctx.strokeStyle = WOOD_D; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(x - hs * 0.24, y + hs * 0.8); ctx.lineTo(x - hs * 0.24, y + hs * 0.4); ctx.lineTo(x + hs * 0.24, y + hs * 0.4); ctx.lineTo(x + hs * 0.24, y + hs * 0.8); ctx.stroke();
     return y - hs * 1.5;
   }
-  const BODY = { goldmine: drawMine, saegewerk: drawSawmill, schatzkammer: drawVault, holzlager: drawWoodStore, unterkunft: drawCamp, kaserne: drawBarracks,
+  // Alchemistenturm: schlanker Turm mit farbig leuchtenden Fenstern, Flaschenregal und brodelndem Kessel
+  function drawAlchemy(b, p, pal, x, y, hs, L, S, flash, live) {
+    const col = MAGIC[p.race] || pal.trim, tx = x - hs * 0.4;
+    roundRect(tx - hs * 0.32, y - hs * 0.95, hs * 0.64, hs * 1.75, 6); fillO(flash ? '#fff' : pal.wall, 2.5);
+    ctx.beginPath(); ctx.rect(tx - hs * 0.4, y - hs * 1.0, hs * 0.8, hs * 0.14); fillO(flash ? '#fff' : shade(pal.wall, -0.2), 2);
+    towerRoof(p.race, tx, y - hs * 1.0, hs * 0.75, pal);
+    ctx.save(); ctx.shadowColor = col; ctx.shadowBlur = 8; ctx.fillStyle = col; roundRect(tx - 4, y - hs * 0.62, 8, 11, 4); ctx.fill(); roundRect(tx - 4, y - hs * 0.18, 8, 11, 4); ctx.fill(); ctx.restore();
+    archDoor(tx, y + hs * 0.36, hs * 0.28, y + hs * 0.8);
+    const sx = x + hs * 0.12, sy = y - hs * 0.1, fc = ['#e04a4a', '#4ab0e0', '#7ae05a', '#e0c04a', '#b05ae0'];
+    ctx.beginPath(); ctx.rect(sx, sy, hs * 0.8, 4); fillO(flash ? '#fff' : WOOD_D, 1.2);
+    for (let i = 0; i < 2 + L; i++) { const fx2 = sx + 6 + (i * (hs * 0.7)) / (1 + L); ctx.beginPath(); ctx.arc(fx2, sy - 5, 4, 0, 7); fillO(fc[i % 5], 1.2); ctx.beginPath(); ctx.rect(fx2 - 1.5, sy - 13, 3, 5); fillO('#d8d0c0', 1); }
+    const kx = x + hs * 0.46, ky = y + hs * 0.56, kr = hs * 0.34;
+    ctx.strokeStyle = WOOD_D; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(kx - kr, ky + kr * 0.9); ctx.lineTo(kx - kr * 0.6, ky); ctx.moveTo(kx + kr, ky + kr * 0.9); ctx.lineTo(kx + kr * 0.6, ky); ctx.stroke();
+    if (live) flame(kx, ky + kr * 0.95, 0.6, S.time + b.id);
+    ctx.beginPath(); ctx.moveTo(kx - kr, ky - kr * 0.25); ctx.quadraticCurveTo(kx - kr, ky + kr * 0.85, kx, ky + kr * 0.85); ctx.quadraticCurveTo(kx + kr, ky + kr * 0.85, kx + kr, ky - kr * 0.25); ctx.closePath(); fillO(flash ? '#fff' : '#2a2a2e', 2);
+    ctx.beginPath(); ctx.ellipse(kx, ky - kr * 0.25, kr, kr * 0.3, 0, 0, 7); fillO('#3a3a40', 2);
+    ctx.save(); ctx.shadowColor = col; ctx.shadowBlur = 10; ctx.fillStyle = col; ctx.beginPath(); ctx.ellipse(kx, ky - kr * 0.25, kr * 0.8, kr * 0.2, 0, 0, 7); ctx.fill();
+    if (live) for (let i = 0; i < 3; i++) { const k = (S.time * 1.2 + i / 3 + b.id * 0.1) % 1; ctx.globalAlpha = 1 - k; ctx.beginPath(); ctx.arc(kx + (i - 1) * kr * 0.45, ky - kr * 0.3 - k * 9, 2 + k * 2, 0, 7); ctx.fill(); }
+    ctx.restore();
+    if (live) smoke(kx, ky - kr * 0.6, S, b.id, 3, col);
+    return y - hs * 1.75;
+  }
+  // Taverne: zweistöckiges Gasthaus mit Fachwerk, warmen Fenstern, Schild mit Krug und Fässern
+  function barrel(bx, by) {
+    ctx.beginPath(); ctx.ellipse(bx, by, 6, 8, 0, 0, 7); fillO('#9a6a3a', 1.5);
+    ctx.strokeStyle = '#3a3a3e'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(bx - 6, by - 3); ctx.lineTo(bx + 6, by - 3); ctx.moveTo(bx - 6, by + 3); ctx.lineTo(bx + 6, by + 3); ctx.stroke();
+  }
+  function drawTavern(b, p, pal, x, y, hs, L, S, flash, live) {
+    roundRect(x + hs * 0.38, y - hs * 1.2, hs * 0.26, hs * 0.7, 2); fillO(flash ? '#fff' : shade(pal.wall, -0.3), 2);
+    if (live) smoke(x + hs * 0.51, y - hs * 1.26, S, b.id, 3);
+    roundRect(x - hs * 0.82, y - hs * 0.3, hs * 1.64, hs * 1.1, 3); fillO(flash ? '#fff' : pal.wall, 2.5);
+    roundRect(x - hs * 0.9, y - hs * 0.8, hs * 1.8, hs * 0.52, 3); fillO(flash ? '#fff' : shade(pal.wall, 0.1), 2.5);
+    ctx.strokeStyle = flash ? '#fff' : WOOD_D; ctx.lineWidth = 2.2;
+    for (const k of [-0.6, -0.2, 0.2, 0.6]) { ctx.beginPath(); ctx.moveTo(x + k * hs, y - hs * 0.8); ctx.lineTo(x + k * hs, y - hs * 0.28); ctx.stroke(); }
+    ctx.beginPath(); ctx.moveTo(x - hs * 0.6, y - hs * 0.8); ctx.lineTo(x - hs * 0.2, y - hs * 0.28); ctx.moveTo(x + hs * 0.6, y - hs * 0.8); ctx.lineTo(x + hs * 0.2, y - hs * 0.28); ctx.stroke();
+    miniRoof(p.race, x, y - hs * 0.78, hs * 2.0, hs * 0.48, flash ? '#fff' : pal.roof, pal);
+    const glow = glowOf(p, pal);
+    ctx.save(); ctx.shadowColor = glow; ctx.shadowBlur = 8; ctx.fillStyle = glow; for (const s2 of [-1, 1]) { roundRect(x + s2 * hs * 0.5 - 6, y - hs * 0.12, 12, 10, 2); ctx.fill(); } ctx.restore();
+    archDoor(x, y + hs * 0.22, hs * 0.3, y + hs * 0.8, '#3a2414');
+    ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x + hs * 0.82, y - hs * 0.22); ctx.lineTo(x + hs * 1.08, y - hs * 0.22); ctx.stroke();
+    ctx.save(); ctx.translate(x + hs * 1.02, y - hs * 0.22); ctx.rotate(live ? Math.sin(S.time * 2 + b.id) * 0.12 : 0);
+    roundRect(-9, 3, 18, 14, 2); fillO(flash ? '#fff' : '#c8a060', 1.6);
+    ctx.beginPath(); ctx.rect(-4, 7, 7, 8); fillO('#e8c040', 1); ctx.fillStyle = '#fff'; ctx.fillRect(-4, 6, 7, 2.5);
+    ctx.strokeStyle = INK; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(4, 11, 2.5, -1.5, 1.5); ctx.stroke();
+    ctx.restore();
+    for (let i = 0; i < Math.min(3, 1 + Math.floor(L / 2)); i++) barrel(x - hs * 0.72 + i * 12, y + hs * 0.72 - (i === 2 ? 9 : 0));
+    ctx.beginPath(); ctx.rect(x + hs * 0.3, y + hs * 0.7, hs * 0.5, 4); fillO(flash ? '#fff' : WOOD, 1.2);
+    return y - hs * 1.3;
+  }
+  const BODY = { alchemie: drawAlchemy, taverne: drawTavern, goldmine: drawMine, saegewerk: drawSawmill, schatzkammer: drawVault, holzlager: drawWoodStore, unterkunft: drawCamp, kaserne: drawBarracks,
     schiessstand: drawRange, sanktum: drawTemple, beschwoerung: drawSummon, horst: drawAerie, schmiede: drawForge, aussenposten: drawOutpost };
 
   // -------------------------------------------------------------------------
@@ -891,8 +940,8 @@
   function lookOf(e, p, pal) {
     const n = e.name || '';
     if (e.kind === 'unit' && (e.role === 'flieger' || e.role === 'elite') && SPECIAL_LOOK[n]) return SPECIAL_LOOK[n];
-    if (e.kind === 'creep') {
-      switch (e.ctype) {
+    if (e.kind === 'creep' || e.mercType) {
+      switch (e.ctype || e.mercType) {
         case 'wolf': return { shape: 'beast', col: '#7c7a78', dark: '#4a4846' };
         case 'bandit': return { shape: 'human', race: 'menschen', cloth: '#6a4a2a', hood: '#3e3226', weapon: 'sword' };
         case 'schuetze': return { shape: 'human', race: 'menschen', cloth: '#5a4a32', hood: '#3e3226', weapon: 'bow' };

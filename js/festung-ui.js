@@ -130,6 +130,8 @@
     const Rd = U.raid;
     const r = F.roles(st).find((x) => Rd.troops[x] > 0);
     if (r) return { kind: 'unit', role: r };
+    const m = Object.keys(F.MERCS).find((k) => Rd.mercs && Rd.mercs[k] > 0);
+    if (m) return { kind: 'merc', key: m };
     if (Rd.heroAvail && !Rd.heroOut) return { kind: 'unit', role: 'held' };
     return null;
   }
@@ -171,7 +173,7 @@
 
   // -------------------------------------------------------------------------
   // Untere Leiste: Hauptknöpfe bzw. Truppen, Held und Volksfähigkeiten beim Kampf
-  const MAIN = [['bauen', '🏗️', 'Bauen'], ['armee', '⚔️', 'Armee'], ['schmiede', '⚒️', 'Schmiede'], ['angriff', '🗺️', 'Angriff'], ['berichte', '📜', 'Berichte']];
+  const MAIN = [['bauen', '🏗️', 'Bauen'], ['armee', '⚔️', 'Armee'], ['schmiede', '⚒️', 'Schmiede'], ['angriff', '🗺️', 'Angriff'], ['berichte', '📜', 'Berichte'], ['erfolge', '🏆', 'Erfolge']];
   function renderBottom() {
     const bot = $('#bottom'), mode = U.mode === 'home' ? 'home' : U.mode;
     if (U.bottomMode !== mode) {
@@ -186,8 +188,11 @@
           h += `<button class="dcard" data-act="deploy" data-v="${role}" title="${esc(G.RACES[st.race].units[role].name)}"><canvas data-prev="unit" data-role="${role}" data-zoom="1.7"></canvas><span class="n" id="dn-${role}"></span><span class="lv">${'★'.repeat(Rd.unitLvl[role] || 1)}</span>${esc(G.RACES[st.race].units[role].name)}</button>`;
         }
         if (me.hero && Rd.heroAvail) h += `<button class="dcard" data-act="deploy" data-v="held" title="${esc(me.hero.name)}"><canvas data-prev="hero" data-zoom="1.5"></canvas><span class="n" id="dn-held"></span><span class="lv">St. ${me.hero.level}</span>Held</button>`;
+        for (const k in F.MERCS) if (Rd.mercs[k] > 0) h += `<button class="dcard ab" data-act="merc" data-v="${k}" id="mc-${k}" title="${esc(F.MERCS[k].desc)}"><span class="abi">${F.MERCS[k].icon}</span><span class="n" id="mn-${k}"></span>${esc(F.MERCS[k].name)}</button>`;
         h += '<span class="dsep"></span>';
         me.rd.abilities.forEach((ab, i) => { h += `<button class="dcard ab" data-act="ability" data-v="${i}" id="ab-${i}" title="${esc(ab.desc)}"><span class="abi">✦</span>${esc(ab.name)}</button>`; });
+        const pots = Object.keys(F.POTIONS).filter((k) => Rd.potions[k] > 0);
+        if (pots.length) h += '<span class="dsep"></span>' + pots.map((k) => `<button class="dcard ab" data-act="pot" data-v="${k}" id="pt-${k}" title="${esc(F.POTIONS[k].desc)}"><span class="abi">${F.POTIONS[k].icon}</span><span class="n" id="pn-${k}"></span>${esc(F.POTIONS[k].name)}</button>`).join('');
         bot.innerHTML = h;
         drawPreviews(bot);
       } else bot.innerHTML = '<button class="main" data-act="speed"><span>⏩</span>Tempo <b id="spd">1×</b></button><button class="main" data-act="end"><span>🏳️</span>Beenden</button>';
@@ -198,6 +203,7 @@
       badge('schmiede', st.researching ? '⏳' : '');
       badge('berichte', st.unread ? String(st.unread) : '');
       badge('bauen', F.buildersFree(st) > 0 ? String(F.buildersFree(st)) : '');
+      { const n = F.claimableCount(st); badge('erfolge', n ? String(n) : ''); }
     } else if (mode === 'raid') {
       const Rd = U.raid;
       for (const el of $('#bottom').querySelectorAll('[data-act="deploy"]')) {
@@ -206,6 +212,8 @@
         el.classList.toggle('empty', !n);
         el.classList.toggle('sel', !!(U.deploy && U.deploy.kind === 'unit' && U.deploy.role === role));
       }
+      for (const k in F.MERCS) { const el = $('#mc-' + k); if (!el) continue; const n = Rd.mercs[k] || 0; $('#mn-' + k).textContent = n; el.classList.toggle('empty', !n); el.classList.toggle('sel', !!(U.deploy && U.deploy.kind === 'merc' && U.deploy.key === k)); }
+      for (const k in F.POTIONS) { const el = $('#pt-' + k); if (!el) continue; const n = Rd.potions[k] || 0; $('#pn-' + k).textContent = n; el.classList.toggle('empty', !n); el.classList.toggle('sel', !!(U.deploy && U.deploy.kind === 'pot' && U.deploy.key === k)); }
       Rd.atk.rd.abilities.forEach((ab, i) => {
         const el = $('#ab-' + i); if (!el) return;
         const why = F.abilityCheck(Rd, i);
@@ -222,11 +230,15 @@
     if (st.tips.off) return null;
     const th = F.th(st);
     if (st.blds.some((b) => F.RATE[b.type] && b.level > 0 && b.acc >= 150)) return { t: '<b>Tipp:</b> Tippe deine Minen und Sägewerke an, um einzusammeln.', a: 'collectall' };
+    if (st.finds.length) return { t: '<b>Tipp:</b> Auf deinem Grundstück liegt ein Fundstück – tippe es an!', a: 'none' };
+    if (F.claimableCount(st)) return { t: '<b>Tipp:</b> Unter 🏆 Erfolge wartet eine Belohnung.', a: 'erfolge' };
     if (!F.count(st, 'schatzkammer')) return { t: `<b>Tipp:</b> Ein Goldlager bauen („${esc(bn('schatzkammer'))}“) – dann fasst deine Festung mehr Gold.`, a: 'bauen' };
     if (F.armyCount(st) < 8 && !st.queue.length) return { t: '<b>Tipp:</b> Bilde unter ⚔ Armee Truppen aus.', a: 'armee' };
     if (!(st.camp[0] >= 1)) return { t: `<b>Tipp:</b> Greife unter 🗺 Angriff den „${esc(F.CAMPAIGN[0].name)}“ an!`, a: 'angriff' };
     if (th === 1 && !F.thB(st).up) return { t: `<b>Tipp:</b> Das Haupthaus („${esc(bn('haupthaus'))}“) ausbauen – das schaltet neue Gebäude frei.`, a: 'th' };
     if (th >= 2 && st.walls.length < 16) return { t: `<b>Tipp:</b> Umgib ${esc(bn('haupthaus'))} und Lager mit Mauern – Feinde müssen sie erst durchbrechen.`, a: 'bauen' };
+    if (th >= 2 && !st.traps.length) return { t: '<b>Tipp:</b> Lege Fallen (unter 🏗️ Bauen) – Angreifer sehen sie nicht.', a: 'bauen' };
+    if (th >= 3 && !F.count(st, 'alchemie')) return { t: `<b>Tipp:</b> Ein ${esc(bn('alchemie'))} braut Tränke für deine Raubzüge.`, a: 'bauen' };
     if (F.buildersFree(st) > 0) return { t: '<b>Tipp:</b> Ein Baumeister ist frei – baue etwas oder baue aus.', a: 'bauen' };
     return null;
   }
@@ -240,9 +252,10 @@
   // -------------------------------------------------------------------------
   // Gewähltes Gebäude
   function entOf(rec) { return G.S ? G.S.ents.find((e) => e.rec === rec && !e.dead) || null : null; }
+  function selectTrap(t) { U.sel = t; U.selWall = false; U.selTrap = true; G.UI.selected = null; renderSel(); renderTip(); }
   function select(e) {
     U.sel = e && e.rec ? e.rec : null;
-    U.selWall = !!(e && e.type === 'mauer');
+    U.selWall = !!(e && e.type === 'mauer'); U.selTrap = false;
     G.UI.selected = e || null;
     renderSel(); renderTip();
   }
@@ -256,7 +269,14 @@
     if (!b || U.mode !== 'home' || U.place) { el.classList.add('hidden'); return; }
     const now = F.now();
     let h, btns = '';
-    if (U.selWall) {
+    if (U.selTrap) {
+      if (!st.traps.includes(b)) { U.sel = null; el.classList.add('hidden'); return; }
+      const d = F.TRAPS[b.type], why = F.trapCheck(st, b);
+      h = `<div class="head"><span class="ic">${F.ICONS[b.type]}</span><h3>${esc(d.name)}</h3><small>Stufe ${b.level}</small><button class="x" data-act="desel">✕</button></div>
+        <div class="info">${esc(d.desc)} · Schaden <b>${Math.round(d.dmg * F.trapMul(b.level))}</b> · Wirkkreis <b>${d.radius}</b> · für Angreifer unsichtbar, nach jedem Kampf wieder scharf</div>`;
+      if (b.level < 3) btns += `<button data-act="trapup" ${why ? 'disabled' : ''}>Ausbauen → St. ${b.level + 1}<small>${cost(d.cost[b.level])}${why ? ' · ' + esc(why) : ''}</small></button>`;
+      btns += '<button data-act="move">Versetzen</button><button data-act="traprm">Entfernen</button>';
+    } else if (U.selWall) {
       if (!st.walls.includes(b)) { U.sel = null; el.classList.add('hidden'); return; }
       const w = G.WALLS[b.level - 1], same = st.walls.filter((x) => x.level === b.level).length, why = F.wallCheck(st, b);
       const allCost = b.level < 3 ? { g: F.WALL_COST[b.level].g * same, w: F.WALL_COST[b.level].w * same } : null;
@@ -275,6 +295,8 @@
         case 'schatzkammer': info = `Lagert <b>${fmt(F.STORE[Lx - 1])}</b> Gold`; break;
         case 'holzlager': info = `Lagert <b>${fmt(F.STORE[Lx - 1])}</b> Holz`; break;
         case 'unterkunft': info = `<b>${F.HOUSE[Lx - 1]}</b> Truppenplätze`; break;
+        case 'alchemie': info = `<b>${F.POTION_SLOTS[Lx - 1]}</b> Trankplätze · braut: ${Object.values(F.POTIONS).filter((q) => q.lvl <= Lx).map((q) => q.name).join(', ')}`; break;
+        case 'taverne': info = `Söldner: ${Object.values(F.MERCS).filter((m) => m.lvl <= Lx).map((m) => m.name).join(', ')}${Lx < 5 ? ' · höhere Stufe = stärkere Söldner' : ''}`; break;
         case 'schmiede': info = `Forschung bis Stufe <b>${Lx}</b> · Waffen ${st.research.waffen}, Rüstung ${st.research.ruestung}, Ausbildung ${st.research.ausbildung}${roleList('schmiede') ? ' · bildet aus: ' + roleList('schmiede') : ''}`; break;
         case 'turm': case 'kanone': { const a = G.BUILDINGS[b.type].attack; info = `Schaden <b>${Math.round(a.dmg * (1 + 0.2 * (Lx - 1)))}</b> alle ${a.cd} s · Reichweite <b>${a.range}</b>${a.splash ? ' · Flächenschaden' : ''} · trifft auch Flieger`; break; }
         default: info = `Bildet aus: ${roleList(b.type) || '–'} · höhere Stufe = stärkere Krieger`;
@@ -291,6 +313,8 @@
       if (F.RATE[b.type]) btns += `<button data-act="collect" ${b.acc >= 1 ? '' : 'disabled'}>Einsammeln<small>${fmt(b.acc || 0)}</small></button>`;
       if (F.PRODUCERS.includes(b.type) && roleList(b.type) || b.type === 'unterkunft') btns += '<button data-act="sheet" data-v="armee">Ausbilden</button>';
       if (b.type === 'schmiede') btns += '<button data-act="sheet" data-v="schmiede">Forschen</button>';
+      if (b.type === 'alchemie' && L) btns += '<button data-act="sheet" data-v="armee">Tränke brauen</button>';
+      if (b.type === 'taverne' && L) btns += '<button data-act="sheet" data-v="armee">Söldner anheuern</button>';
       btns += '<button data-act="move">Versetzen</button>';
     }
     el.innerHTML = h + `<div class="btns">${btns}</div>`;
@@ -351,6 +375,7 @@
         changed();
         return;
       }
+      if (r.t) { U.place = null; changed(); selectTrap(r.t); toast(`${esc(bn(p.type))} gelegt – für Angreifer unsichtbar.`, 'good'); return; }
       U.place = null;
       changed();
       select(entOf(r.b));
@@ -360,7 +385,7 @@
       if (why) { err(why); return; }
       U.place = null;
       changed();
-      select(entOf(p.rec));
+      if (F.TRAPS[p.type]) selectTrap(p.rec); else select(entOf(p.rec));
     }
   }
   function renderPlacebar() {
@@ -388,12 +413,13 @@
   function renderSheet() {
     if (!U.sheet) return;
     const body = $('#sheet-body'), sc = body.scrollTop;
-    const f = { bauen: sheetBauen, armee: sheetArmee, schmiede: sheetSchmiede, angriff: sheetAngriff, berichte: sheetBerichte, mehr: sheetMehr }[U.sheet];
+    const f = { bauen: sheetBauen, armee: sheetArmee, schmiede: sheetSchmiede, angriff: sheetAngriff, berichte: sheetBerichte, mehr: sheetMehr, erfolge: sheetErfolge }[U.sheet];
     body.innerHTML = f();
     body.scrollTop = sc;
     drawPreviews(body);
     live();
   }
+  const descOf = (t) => F.DESC[t] || (F.TRAPS[t] ? F.TRAPS[t].desc : '');
   const head = (ic, title) => `<h2>${ic} ${title} <button class="x" data-act="close">✕</button></h2>`;
   function sheetBauen() {
     let h = head('🏗️', 'Bauen') + `<p class="note">Freie Baumeister: <b>${F.buildersFree(st)}/${F.buildersTotal(st)}</b>. Wähle ein Gebäude und dann einen freien Platz auf deinem Grundstück. Mauern brauchen keinen Baumeister.</p>`;
@@ -401,8 +427,8 @@
       h += `<h3>${cat.name}</h3><div class="cards">`;
       for (const t of cat.types) {
         const max = F.limit(st, t), have = F.count(st, t), why = F.buildCheck(st, t);
-        h += `<button class="bcard" data-act="place" data-v="${t}" ${why ? 'disabled' : ''} title="${esc(F.DESC[t])}"><span class="top"><span class="ic">${F.ICONS[t]}</span><small>${have}/${max}</small></span>`
-          + `<b>${esc(bn(t))}</b><span class="cost">${cost(F.cost(t, 1))} · ${t === 'mauer' ? 'sofort' : dur(F.time(t, 1))}</span><small>${esc(F.DESC[t])}</small>${why ? `<span class="why">${esc(why)}</span>` : ''}</button>`;
+        h += `<button class="bcard" data-act="place" data-v="${t}" ${why ? 'disabled' : ''} title="${esc(descOf(t))}"><span class="top"><span class="ic">${F.ICONS[t]}</span><small>${have}/${max}</small></span>`
+          + `<b>${esc(bn(t))}</b><span class="cost">${cost(F.cost(t, 1))} · ${t === 'mauer' ? 'sofort' : dur(F.time(t, 1))}</span><small>${esc(descOf(t))}</small>${why ? `<span class="why">${esc(why)}</span>` : ''}</button>`;
       }
       h += '</div>';
     }
@@ -430,6 +456,33 @@
         + (ri.ok ? `${cost(c)} · ${dur(F.trainTime(ub))}` : `<span class="why">${esc(ri.why)}</span>`) + `<br>Im Heer: <b>${n}</b></div><div class="act">`
         + (ri.ok ? `<button data-act="train" data-v="${role}" ${why ? 'disabled' : ''} title="${esc(why || 'Einen ausbilden')}">+1</button><button data-act="train5" data-v="${role}" ${why ? 'disabled' : ''}>+5</button>` : '')
         + (n ? `<button data-act="dismiss" data-v="${role}" title="Einen entlassen (ohne Erstattung)">−</button>` : '') + '</div></div>';
+    }
+    // Tränke
+    const AL = F.alchemyLevel(st);
+    h += `<h3>⚗️ Tränke – ${esc(bn('alchemie'))}</h3>`;
+    if (!AL) h += `<p class="note">Baue ab Haupthaus Stufe 3 einen ${esc(bn('alchemie'))}: Tränke wirken bei Raubzügen an der Stelle, die du antippst.</p>`;
+    else {
+      h += `<p>Trankplätze <b>${F.potionCount(st)}/${F.potionSlots(st)}</b>${Object.keys(st.potions).length ? ' · fertig: ' + Object.keys(st.potions).map((k) => `${st.potions[k]}× ${F.POTIONS[k].icon} ${esc(F.POTIONS[k].name)}`).join(', ') : ''}</p>`;
+      if (st.brew.length) {
+        const d0 = F.POTIONS[st.brew[0]].time * 1000;
+        h += `<div class="queue">${st.brew.map((k, i) => `<button class="${i ? '' : 'q0'}" data-act="unbrew" data-v="${i}" title="Antippen: abbrechen (volle Erstattung)">${F.POTIONS[k].icon} ${esc(F.POTIONS[k].name)} ✕</button>`).join('')}</div>`
+          + `<div class="prog"><i data-pstart="${st.brewStart}" data-pend="${st.brewStart + d0}"></i></div><p>Alle fertig in <b data-end="${now + F.brewLeft(st) * 1000}"></b> <button data-act="brewfast">Sofort fertig ${gold(F.brewSpeedPrice(st))}</button></p>`;
+      }
+      for (const k in F.POTIONS) {
+        const P = F.POTIONS[k], why = F.brewCheck(st, k), locked = AL < P.lvl;
+        h += `<div class="unitrow ${locked ? 'locked' : ''}" style="grid-template-columns:44px 1fr auto"><span style="font-size:30px;text-align:center">${P.icon}</span><div class="meta"><b>${esc(P.name)}</b><br>${esc(P.desc)}<br>`
+          + (locked ? `<span class="why">Benötigt ${esc(bn('alchemie'))} Stufe ${P.lvl}</span>` : `${cost(P.cost)} · ${dur(P.time)}`) + `</div><div class="act">${locked ? '' : `<button data-act="brew" data-v="${k}" ${why ? 'disabled' : ''} title="${esc(why || 'Brauen')}">Brauen</button>`}</div></div>`;
+      }
+    }
+    // Söldner
+    const TL = F.tavernLevel(st);
+    h += `<h3>🍺 Söldner – ${esc(bn('taverne'))}</h3>`;
+    if (!TL) h += `<p class="note">Baue ab Haupthaus Stufe 2 eine ${esc(bn('taverne'))}: Söldner sind sofort einsatzbereit, kosten nur Gold und belegen Truppenplätze.</p>`;
+    else for (const k in F.MERCS) {
+      const m = F.MERCS[k], c = G.CREEPS[m.creep], sc = (m.scale || 1) * F.mercMul(TL, m), why = F.hireCheck(st, k), locked = TL < m.lvl, n = st.mercs[k] || 0;
+      h += `<div class="unitrow ${locked ? 'locked' : ''}" style="grid-template-columns:44px 1fr auto"><span style="font-size:30px;text-align:center">${m.icon}</span><div class="meta"><b>${esc(m.name)}</b> · ${Math.round(c.hp * sc)} LP · ${Math.round(c.dmg * sc)} Schaden${c.splash ? ' · Flächenschaden' : ''}${c.range > 60 ? ' · Fernkampf' : ''} · ${m.supply} Plätze<br>${esc(m.desc)}<br>`
+        + (locked ? `<span class="why">Benötigt ${esc(bn('taverne'))} Stufe ${m.lvl}</span>` : `${gold(m.gold)} · sofort`) + `<br>Angeheuert: <b>${n}</b></div><div class="act">`
+        + (locked ? '' : `<button data-act="hire" data-v="${k}" ${why ? 'disabled' : ''} title="${esc(why || 'Anheuern')}">+1</button>`) + (n ? `<button data-act="dismissmerc" data-v="${k}" title="Einen entlassen (ohne Erstattung)">−</button>` : '') + '</div></div>';
     }
     const hd = F.heroDef(st), H = st.heroSt, ults = G.HERO_ULTS[hd.id] || [];
     const tal = G.TALENTS.flatMap((br) => br.talents).filter((t) => H.talents[t.id]).map((t) => t.name);
@@ -463,13 +516,34 @@
     if (!n) h += '<p class="warn">Bilde zuerst unter ⚔ Armee Truppen aus.</p>';
     h += `<h3>Plündern</h3><p>Suche eine fremde Siedlung in deiner Stärke. Erbeute Gold und Holz und gewinne Ruhm – scheiterst du, verlierst du Ruhm. Wer nicht fällt, kehrt heim.</p>`
       + `<button data-act="search" ${n || F.heroReady(st) ? '' : 'disabled'}>Gegner suchen ${gold(F.searchCost(F.th(st)))}</button>`;
-    h += '<h3>Feldzug der sechs Reiche</h3><p class="note">Zwölf Festungen, eine stärker als die andere. Die volle Beute gibt es beim ersten Sieg; jeder Sieg (mindestens ein Banner) öffnet die nächste.</p>';
+    h += '<h3>Feldzug der sechs Reiche</h3><p class="note">Achtzehn Festungen in zwei Kapiteln, eine stärker als die andere. Die volle Beute gibt es beim ersten Sieg; jeder Sieg (mindestens ein Banner) öffnet die nächste.</p>';
     F.CAMPAIGN.forEach((c, i) => {
+      const ch = F.CHAPTERS.find((x) => x.from === i);
+      if (ch) h += `<h3>${esc(ch.name)}</h3>`;
       const b = st.camp[i] || 0, open = F.campUnlocked(st, i), L = F.raidLoot(c.th);
       h += `<div class="stage ${open ? '' : 'locked'} ${b ? 'done' : ''}"><div class="row"><b>${i + 1}. ${esc(c.name)}</b>${flags(b)}<button data-act="camp" data-v="${i}" ${open && (n || F.heroReady(st)) ? '' : 'disabled'}>${b ? 'Erneut' : 'Angreifen'}</button></div>`
-        + `<p>${rname(c.race)} · Haupthaus ${c.th}${c.hero ? ` · Held St. ${c.hero}` : ''}${c.guard ? ` · Wachtrupp ${c.guard}` : ''}${b ? '' : ` · Beute ${cost({ g: F.round5(L.g * c.loot), w: F.round5(L.w * c.loot) })}`}</p>`
+        + `<p>${rname(c.race)} · Haupthaus ${c.th}${c.hero ? ` · Held St. ${c.hero}` : ''}${c.guard ? ` · Wachtrupp ${c.guard}` : ''}${c.boss ? ` · <b class="bad">Wächter: ${esc(G.CREEPS[c.boss.creep].name)}</b>` : ''}${b ? '' : ` · Beute ${cost({ g: F.round5(L.g * c.loot), w: F.round5(L.w * c.loot) })}`}</p>`
         + `<p>${open ? esc(c.story) : 'Erst die vorige Festung besiegen.'}</p></div>`;
     });
+    return h;
+  }
+  function sheetErfolge() {
+    let h = head('🏆', 'Erfolge');
+    const r = F.dailyReward(F.th(st)), D = F.dailyEnsure(st);
+    h += `<h3>Tagesaufträge</h3><p class="note">Drei neue Aufträge an jedem Tag. Belohnung je Auftrag: ${cost(r)} – alle drei erledigt: zusätzlich ${cost({ g: r.g * 2, w: r.w * 2 })}.</p>`;
+    F.dailyInfo(st).forEach((x, i) => {
+      h += `<div class="unitrow" style="grid-template-columns:1fr auto"><div class="meta"><b>${esc(x.d.txt)}</b><br>${fmt(x.val)} / ${fmt(x.d.n)}<div class="prog"><i style="width:${(100 * x.val) / x.d.n}%"></i></div></div>`
+        + `<div class="act">${x.t.claimed ? '<span class="good">✔</span>' : `<button data-act="claimdaily" data-v="${i}" ${x.done ? '' : 'disabled'}>Abholen</button>`}</div></div>`;
+    });
+    const all = D.tasks.every((t) => t.claimed);
+    h += `<div class="btns"><button data-act="claimbonus" ${all && !D.bonus ? '' : 'disabled'}>${D.bonus ? '✔ Tagestruhe abgeholt' : '🧰 Tagestruhe öffnen'}</button></div>`;
+    h += '<h3>Erfolge</h3><p class="note">Jeder Erfolg hat drei Stufen mit steigender Belohnung.</p>';
+    for (const a of F.ACH) {
+      const x = F.achInfo(st, a);
+      h += `<div class="unitrow" style="grid-template-columns:1fr auto"><div class="meta"><b>${esc(a.name)}</b> <span class="c-g">${'★'.repeat(x.tier)}</span><span style="opacity:.35">${'★'.repeat(3 - x.tier)}</span><br>`
+        + (x.done ? 'Alle Stufen geschafft!' : `${esc(a.txt)}: ${fmt(Math.min(x.val, x.goal))} / ${fmt(x.goal)} · Belohnung ${cost(x.reward)}<div class="prog"><i style="width:${Math.min(100, (100 * x.val) / x.goal)}%"></i></div>`)
+        + `</div><div class="act">${x.done ? '' : `<button data-act="claimach" data-v="${a.id}" ${x.claimable ? '' : 'disabled'}>Abholen</button>`}</div></div>`;
+    }
     return h;
   }
   function sheetBerichte() {
@@ -506,6 +580,9 @@
     h += `<h3>So wird gespielt</h3><div class="note" style="font-size:13px"><p>🏰 <b>Festung:</b> Minen und Sägewerke fördern in echter Zeit – auch wenn die Seite zu ist. Bauen und Ausbauen dauert, Baumeister arbeiten gleichzeitig. Höhere Haupthaus-Stufen schalten mehr frei.</p>`
       + '<p>⚔ <b>Raubzug:</b> Setze Truppen außerhalb des Festungsgrunds ab. Nach dem ersten Absetzen läuft die Uhr (3 Minuten). Gebäude mit Vorräten geben Beute, wenn sie fallen. Volksfähigkeiten wirken einmal je Kampf an der Stelle, die du antippst.</p>'
       + '<p>🏴 <b>Kriegsbanner:</b> Bresche (mindestens 50 % zerstört), Thron (Haupthaus gefallen) und Stille (alle Türme und Kanonen zerstört). Ein Banner reicht zum Sieg.</p>'
+      + '<p>🪤 <b>Fallen:</b> Sprengfalle, Speergrube, Frostrune und Luftmine sind für Angreifer unsichtbar und nach jedem Kampf wieder scharf.</p>'
+      + '<p>⚗️ <b>Tränke</b> aus dem Alchemistenturm und 🍺 <b>Söldner</b> aus der Taverne nimmst du mit in den Kampf. Wer überlebt, kehrt heim.</p>'
+      + '<p>🏆 <b>Erfolge und Tagesaufträge</b> bringen Gold und Holz; 🧰 <b>Fundstücke</b> tauchen von selbst auf dem Grundstück auf – antippen!</p>'
       + '<p>🛡 <b>Überfälle:</b> Ab Haupthaus Stufe 2 greifen Feinde an, während du fort bist. Danach schützt dich ein Schild für einige Stunden. Den Bericht findest du unter 📜.</p></div>';
     h += `<h3>Reichsfeuer</h3><div class="btns"><a href="index.html"><button>⚔ Zum Echtzeit-Spiel Reichsfeuer</button></a><button data-act="reset">Neu beginnen…</button></div>`;
     return h;
@@ -530,6 +607,9 @@
         + (r.kind === 'feldzug' ? `<div>Feldzug: ${r.campNew ? '<span class="good">neue Bestleistung!</span>' : 'Banner wie bisher'}${win && r.stage < F.CAMPAIGN.length - 1 && st.camp[r.stage + 1] === undefined ? ' – die nächste Festung ist offen.' : ''}</div>` : `<div>Ruhm: ${signed(r.ruhm)} → <b>${st.ruhm}</b> (${F.rankOf(st.ruhm)})</div>`)
         + `<div>Verluste: ${lostT || 'keine'}</div>`
         + (r.heroOut ? `<div>Held: Stufe ${r.hero.level}${r.heroDead ? ` – gefallen, erholt sich ${dur(F.heroRestLeft(st))}` : ''}</div>` : '')
+        + (r.boss ? `<div>Wächter ${esc(r.boss)}: ${r.bossDown ? '<span class="good">besiegt – Sonderbeute!</span>' : 'überlebt'}</div>` : '')
+        + (Object.keys(r.potUsed || {}).length ? `<div>Tränke: ${Object.keys(r.potUsed).map((k) => `${r.potUsed[k]}× ${F.POTIONS[k].icon} ${esc(F.POTIONS[k].name)}`).join(', ')}</div>` : '')
+        + (Object.keys(r.mercDep || {}).length ? `<div>Söldner zurück: ${Object.keys(r.mercDep).map((k) => `${(r.mercAlive || {})[k] || 0}/${r.mercDep[k]} ${esc(F.MERCS[k].name)}`).join(', ')}</div>` : '')
         + '</div>' + (r.finale ? '<p class="good">Der Feldzug der sechs Reiche ist vollendet – das Reichsfeuer brennt unter deinem Banner!</p>' : '');
     }
     showOverlay(h + '<button class="big" data-act="tohome">Zur Festung</button>');
@@ -539,7 +619,7 @@
     let h = '<h2>Während du fort warst …</h2><div class="list">';
     for (const r of reps) {
       h += `<div><b>${r.stars ? '🔥 Überfall!' : '🛡 Abgewehrt!'}</b> ${esc(r.name)} griff an (${ago(r.at)}): ${r.pct}&nbsp;% zerstört ${flags(r.stars)}<br>`
-        + `Verloren: ${r.stolen.g || r.stolen.w ? cost(r.stolen) : 'nichts'} · Ruhm ${signed(r.ruhm)}${r.shieldH ? ` · Schild für ${r.shieldH} h` : ''}${r.defHeroDead ? ' · dein Held fiel bei der Verteidigung' : ''}</div>`;
+        + `Verloren: ${r.stolen.g || r.stolen.w ? cost(r.stolen) : 'nichts'} · Ruhm ${signed(r.ruhm)}${r.shieldH ? ` · Schild für ${r.shieldH} h` : ''}${r.defHeroDead ? ' · dein Held fiel bei der Verteidigung' : ''}${r.trapsFired ? ` · ${r.trapsFired} Fallen ausgelöst` : ''}</div>`;
     }
     h += '</div><p class="note">Stelle Türme und Mauern so, dass sie Lager und Haupthaus schützen – und teste es mit einem Probeangriff (☰).</p><button class="big" data-act="closeov">Weiter</button>';
     showOverlay(h);
@@ -608,6 +688,16 @@
     changed();
     return got;
   }
+  function openFindUI(f) {
+    const d = F.FINDS[f.kind], r = F.openFind(st, f), P0 = G.S.home.P, c = F.tileCenter(P0, 'mauer', f.tx, f.ty);
+    if (!r) return;
+    const txt = r.potion ? `${F.POTIONS[r.potion].icon} ${F.POTIONS[r.potion].name}` : [r.g ? `+${fmt(r.g)} Gold` : '', r.w ? `+${fmt(r.w)} Holz` : ''].filter(Boolean).join('  ') || 'Lager voll!';
+    G.S.fx.push({ type: 'text', x: c.x, y: c.y - 24, text: txt, color: '#ffe066', t: 0, dur: 1.8, big: true });
+    G.S.fx.push({ type: 'ring', x: c.x, y: c.y, r: 26, color: '#ffd23a', t: 0, dur: 0.6 });
+    toast(`${esc(d.name)} geborgen: ${esc(txt)}`, 'gold');
+    G.sfx('kauf', 0, 0, 0.7, true);
+    changed();
+  }
   function armed(el, txt) {
     if (el.dataset.armed) return true;
     el.dataset.armed = '1'; const old = el.innerHTML; el.innerHTML = txt;
@@ -673,6 +763,24 @@
         toast(`${esc(U.raid.atk.rd.abilities[i].name)}: ${R.touch ? 'tippe' : 'klicke'} auf die Stelle, an der sie wirken soll.`, 'gold');
         return;
       }
+      case 'merc': U.deploy = { kind: 'merc', key: v }; renderBottom(); return;
+      case 'pot': {
+        const why = F.potionCheck(U.raid, v);
+        if (why) { err(why); return; }
+        U.deploy = { kind: 'pot', key: v }; renderBottom();
+        toast(`${esc(F.POTIONS[v].name)}: ${R.touch ? 'tippe' : 'klicke'} auf die Stelle, an der der Trank wirken soll.`, 'gold');
+        return;
+      }
+      case 'brew': { const why = F.brew(st, v); if (why) err(why); changed(); return; }
+      case 'unbrew': F.unbrew(st, +v); changed(); return;
+      case 'brewfast': { const why = F.brewSpeedup(st); if (why) err(why); changed(); return; }
+      case 'hire': { const why = F.hire(st, v); if (why) err(why); else G.sfx('kauf', 0, 0, 0.6, true); changed(true); return; }
+      case 'dismissmerc': F.dismissMerc(st, v); changed(true); return;
+      case 'trapup': { const why = F.upgradeTrap(st, sel); if (why) err(why); changed(); return; }
+      case 'traprm': F.removeTrap(st, sel); U.sel = null; U.selTrap = false; changed(); return;
+      case 'claimach': { const g = F.claimAch(st, v); if (g) { toast(`Erfolg abgeholt: +${cost(g)}`, 'gold'); G.sfx('level', 0, 0, 0.7, true); } changed(); return; }
+      case 'claimdaily': { const g = F.claimDaily(st, +v); if (g) { toast(`Auftrag erfüllt: +${cost(g)}`, 'gold'); G.sfx('kauf', 0, 0, 0.7, true); } changed(); return; }
+      case 'claimbonus': { const g = F.claimDailyBonus(st); if (g) { toast(`Tagestruhe: +${cost(g)}`, 'gold'); G.sfx('level', 0, 0, 0.7, true); } changed(); return; }
       case 'tohome': hideOverlay(); enterHome(true); return;
       case 'closeov': hideOverlay(); renderAll(); return;
       case 'probe': startProbe(v); return;
@@ -699,6 +807,7 @@
         const t = $('#tip').dataset.a;
         if (t === 'collectall') act('collectall');
         else if (t === 'th') { const e = entOf(F.thB(st)); select(e); }
+        else if (t === 'none') { /* nur Hinweis */ }
         else openSheet(t);
         return;
       }
@@ -747,7 +856,7 @@
         return;
       }
       drag = { sx: ev.clientX, sy: ev.clientY, cx: R.cam.x, cy: R.cam.y, moved: false, type: ev.pointerType };
-      if (U.mode === 'raid' && U.deploy && U.deploy.kind === 'unit' && U.deploy.role !== 'held') {
+      if (U.mode === 'raid' && U.deploy && ((U.deploy.kind === 'unit' && U.deploy.role !== 'held') || U.deploy.kind === 'merc')) {
         hold = { active: false, t: 0, timer: setTimeout(() => { if (hold && drag && !drag.moved) { hold.active = true; hold.t = 0; } }, 320) };
       }
     });
@@ -810,6 +919,11 @@
   function tap(wx, wy, type) {
     if (U.mode === 'home') {
       if (U.place) { ghostTo(wx, wy); if (type === 'mouse') confirmPlace(); return; }
+      const P0 = G.S.home.P, ttx = Math.floor((wx - P0.x) / T), tty = Math.floor((wy - P0.y) / T);
+      const fnd = st.finds.find((f) => f.tx === ttx && f.ty === tty);
+      if (fnd) { openFindUI(fnd); return; }
+      const trp = st.traps.find((t) => t.tx === ttx && t.ty === tty);
+      if (trp) { selectTrap(trp); return; }
       const e = pickAt(wx, wy);
       if (e && F.RATE[e.rec.type] && (e.rec.acc || 0) >= 1 && U.sel !== e.rec) collectRec(e.rec);
       if (!e) { const h = G.S.players[0].hero; if (h && !h.dead && G.S.ents.includes(h) && Math.hypot(h.x - wx, h.y - wy) < 28) { openSheet('armee'); return; } }
@@ -825,6 +939,19 @@
       renderBottom();
       return;
     }
+    if (U.deploy.kind === 'pot') {
+      const why = F.castPotion(Rd, U.deploy.key, wx, wy);
+      if (why) err(why); else U.deploy = nextTroop();
+      renderBottom(); renderTop();
+      return;
+    }
+    if (U.deploy.kind === 'merc') {
+      const k = U.deploy.key, why = F.deployMerc(Rd, k, wx, wy);
+      if (why) { if (!quiet || why !== lastErrTxt) err(why); return; }
+      if (!(Rd.mercs[k] > 0)) { U.deploy = nextTroop(); cancelHold(); }
+      renderBottom(); renderTop();
+      return;
+    }
     const role = U.deploy.role, why = F.deploy(Rd, role, wx, wy);
     if (why) { if (!quiet || why !== lastErrTxt) err(why); return; }
     if (role === 'held' || !(Rd.troops[role] > 0)) { U.deploy = nextTroop(); cancelHold(); }
@@ -833,7 +960,66 @@
 
   // -------------------------------------------------------------------------
   // Zusätzliche Kartenebene: Vorrat über Minen, Restzeit über Baustellen, Bauvorschau, Bannkreis beim Raubzug
+  // Fallen: Pulverfass, Speergrube, Frostrune, Ballonmine (mit Stufenpunkten)
+  function drawTrap(ctx, k, type, x, y, L, S, sel, live) {
+    ctx.save();
+    if (sel) { ctx.strokeStyle = '#7aff7a'; ctx.lineWidth = 2; ctx.setLineDash([4, 3]); ctx.strokeRect(x - 19, y - 19, 38, 38); ctx.setLineDash([]); }
+    const t = S.time, ink = k.INK;
+    switch (type) {
+      case 'sprengfalle':
+        ctx.fillStyle = 'rgba(70,50,30,0.7)'; ctx.beginPath(); ctx.ellipse(x, y + 5, 14, 6, 0, 0, 7); ctx.fill();
+        ctx.fillStyle = '#2a2a2e'; ctx.beginPath(); ctx.arc(x, y - 1, 9, 0, 7); ctx.fill(); ctx.strokeStyle = ink; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.beginPath(); ctx.arc(x - 3, y - 4, 3, 0, 7); ctx.fill();
+        ctx.strokeStyle = '#c8a060'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x + 5, y - 8); ctx.quadraticCurveTo(x + 9, y - 15, x + 13, y - 12); ctx.stroke();
+        if (live || Math.sin(t * 7 + x) > 0.3) { ctx.fillStyle = '#ffd25a'; ctx.beginPath(); ctx.arc(x + 13, y - 12, 2.2, 0, 7); ctx.fill(); }
+        break;
+      case 'speergrube':
+        ctx.fillStyle = '#2a1e16'; ctx.fillRect(x - 13, y - 9, 26, 18); ctx.strokeStyle = '#6e4a26'; ctx.lineWidth = 2.5; ctx.strokeRect(x - 13, y - 9, 26, 18);
+        ctx.fillStyle = '#e8e0d0'; for (let i = 0; i < 5; i++) { const sx = x - 10 + i * 5; ctx.beginPath(); ctx.moveTo(sx - 2, y + 7); ctx.lineTo(sx, y - 6 - (i % 2) * 3); ctx.lineTo(sx + 2, y + 7); ctx.fill(); }
+        break;
+      case 'frostrune':
+        ctx.save(); ctx.globalAlpha *= 0.55 + 0.3 * Math.sin(t * 2 + x); ctx.shadowColor = '#9ad8ff'; ctx.shadowBlur = 10; ctx.strokeStyle = '#9ad8ff'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(x, y, 12, 0, 7); ctx.stroke();
+        for (let i = 0; i < 3; i++) { const a = (i * Math.PI) / 3; ctx.beginPath(); ctx.moveTo(x + Math.cos(a) * 9, y + Math.sin(a) * 9); ctx.lineTo(x - Math.cos(a) * 9, y - Math.sin(a) * 9); ctx.stroke(); }
+        ctx.restore();
+        break;
+      case 'luftmine': {
+        const by = y - 16 + Math.sin(t * 2 + x) * 2;
+        ctx.strokeStyle = '#6e4a26'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, y + 6); ctx.lineTo(x, by + 7); ctx.stroke();
+        ctx.fillStyle = '#5a5e66'; ctx.fillRect(x - 3, y + 3, 6, 4);
+        ctx.fillStyle = '#c83a2a'; ctx.beginPath(); for (let i = 0; i < 16; i++) { const a = (i / 16) * Math.PI * 2, r = i % 2 ? 7 : 10; ctx.lineTo(x + Math.cos(a) * r, by + Math.sin(a) * r); } ctx.closePath(); ctx.fill(); ctx.strokeStyle = ink; ctx.lineWidth = 1.5; ctx.stroke();
+        break;
+      }
+    }
+    ctx.fillStyle = '#ffd23a'; for (let i = 0; i < L; i++) { ctx.beginPath(); ctx.arc(x - (L - 1) * 3 + i * 6, y + 15, 1.8, 0, 7); ctx.fill(); }
+    ctx.restore();
+  }
+  // Fundstücke: Truhe, Erzbrocken, umgestürzter Baum, magischer Kristall – mit hüpfendem Hinweis
+  function drawFind(ctx, k, kind, x, y, S) {
+    ctx.save();
+    const t = S.time, ink = k.INK;
+    ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.ellipse(x + 2, y + 9, 15, 5, 0, 0, 7); ctx.fill();
+    ctx.lineWidth = 2; ctx.strokeStyle = ink;
+    if (kind === 'truhe') {
+      ctx.fillStyle = '#8a5a2a'; ctx.fillRect(x - 12, y - 4, 24, 13); ctx.strokeRect(x - 12, y - 4, 24, 13);
+      ctx.beginPath(); ctx.moveTo(x - 12, y - 4); ctx.quadraticCurveTo(x, y - 14, x + 12, y - 4); ctx.closePath(); ctx.fillStyle = '#a8743a'; ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#ffd23a'; ctx.fillRect(x - 2, y - 6, 4, 7); ctx.strokeRect(x - 2, y - 6, 4, 7);
+    } else if (kind === 'erz') {
+      ctx.fillStyle = '#7a7470'; ctx.beginPath(); ctx.moveTo(x - 14, y + 8); ctx.lineTo(x - 9, y - 6); ctx.lineTo(x + 2, y - 11); ctx.lineTo(x + 12, y - 3); ctx.lineTo(x + 14, y + 8); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#ffd23a'; for (const [dx, dy] of [[-5, -2], [3, -5], [6, 3], [-1, 4]]) { ctx.beginPath(); ctx.arc(x + dx, y + dy, 1.8, 0, 7); ctx.fill(); }
+    } else if (kind === 'baum') {
+      ctx.fillStyle = '#8a5a30'; ctx.save(); ctx.translate(x, y + 2); ctx.rotate(-0.25); ctx.fillRect(-15, -4, 30, 8); ctx.strokeRect(-15, -4, 30, 8); ctx.restore();
+      ctx.fillStyle = '#4f7d33'; for (const [dx, dy, r] of [[10, -8, 7], [15, -2, 6], [6, -12, 5]]) { ctx.beginPath(); ctx.arc(x + dx, y + dy, r, 0, 7); ctx.fill(); ctx.stroke(); }
+    } else {
+      ctx.save(); ctx.shadowColor = '#c070ff'; ctx.shadowBlur = 12; ctx.fillStyle = '#b070f0';
+      ctx.beginPath(); ctx.moveTo(x, y - 16); ctx.lineTo(x + 7, y - 3); ctx.lineTo(x + 3, y + 8); ctx.lineTo(x - 4, y + 8); ctx.lineTo(x - 7, y - 3); ctx.closePath(); ctx.fill(); ctx.restore(); ctx.stroke();
+    }
+    const by = y - 26 + Math.abs(Math.sin(t * 3 + x)) * -5;
+    k.label('!', x, by, '#ffe066', 14);
+    ctx.restore();
+  }
   R.overlay = function (ctx, S, k) {
+    if (S.traps && S.festung !== 'home') for (const tr of S.traps) if (!tr.done && tr.visible) drawTrap(ctx, k, tr.type, tr.x, tr.y, tr.level, S, false, tr.fuse > 0);
     if (S.festung === 'home' && st) {
       const now = F.now();
       for (const e of S.ents) {
@@ -850,6 +1036,8 @@
         }
         if (b.up) k.label('⏳ ' + clock((b.up.end - now) / 1000), e.x, e.y + e.r + 26, '#ffe9a8', 11);
       }
+      for (const t of st.traps) { const c = F.tileCenter(S.home.P, 'mauer', t.tx, t.ty); drawTrap(ctx, k, t.type, c.x, c.y, t.level, S, U.sel === t, false); }
+      for (const f of st.finds) { const c = F.tileCenter(S.home.P, 'mauer', f.tx, f.ty); drawFind(ctx, k, f.kind, c.x, c.y, S); }
       if (U.place) {
         const p = U.place, s = F.size(p.type), P = S.home.P, ok = placeOk();
         const x0 = P.x + p.tx * T, y0 = P.y + p.ty * T;
@@ -857,10 +1045,11 @@
         ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.setLineDash([6, 6]); ctx.lineWidth = 2; ctx.strokeRect(P.x, P.y, P.w, P.h); ctx.setLineDash([]);
         ctx.fillStyle = ok ? 'rgba(80,255,80,0.32)' : 'rgba(255,60,60,0.35)'; ctx.fillRect(x0, y0, s * T, s * T);
         ctx.strokeStyle = ok ? '#7f7' : '#f66'; ctx.lineWidth = 2.5; ctx.strokeRect(x0, y0, s * T, s * T);
-        const atk = p.type !== 'mauer' && G.BUILDINGS[p.type].attack;
+        const atk = (G.BUILDINGS[p.type] && G.BUILDINGS[p.type].attack) || (F.TRAPS[p.type] && { range: F.TRAPS[p.type].radius });
         if (atk) { ctx.strokeStyle = 'rgba(255,220,120,0.6)'; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.arc(x0 + (s * T) / 2, y0 + (s * T) / 2, atk.range, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
         ctx.restore();
         if (p.type === 'mauer') { ctx.fillStyle = '#9a8a70'; ctx.fillRect(x0 + 4, y0 + 12, T - 8, T - 22); ctx.strokeStyle = k.INK; ctx.lineWidth = 2; ctx.strokeRect(x0 + 4, y0 + 12, T - 8, T - 22); }
+        else if (F.TRAPS[p.type]) drawTrap(ctx, k, p.type, x0 + T / 2, y0 + T / 2, 1, S, false, true);
         else R.buildingIcon(p.type, x0 + (s * T) / 2, y0 + (s * T) / 2, 1.6, '#fff');
       }
     } else if (S.festung === 'raid' && U.raid) {
@@ -871,8 +1060,8 @@
       ctx.fillRect(P.x - m, P.y - m, P.w + 2 * m, P.h + 2 * m);
       ctx.strokeStyle = active ? 'rgba(255,90,60,0.75)' : 'rgba(255,90,60,0.35)'; ctx.setLineDash([12, 8]); ctx.lineWidth = 2.5;
       ctx.strokeRect(P.x - m, P.y - m, P.w + 2 * m, P.h + 2 * m); ctx.setLineDash([]);
-      if (U.deploy && U.deploy.kind === 'ab' && R.mouse.inside) {
-        const ab = Rd.atk.rd.abilities[U.deploy.i], r = ab.radius || 120;
+      if (U.deploy && (U.deploy.kind === 'ab' || U.deploy.kind === 'pot') && R.mouse.inside) {
+        const ab = U.deploy.kind === 'pot' ? { ...F.POTIONS[U.deploy.key], shells: 1 } : Rd.atk.rd.abilities[U.deploy.i], r = ab.radius || 120;
         ctx.fillStyle = 'rgba(255,170,60,0.2)'; ctx.strokeStyle = '#ffb040'; ctx.lineWidth = 2.5;
         ctx.beginPath(); ctx.arc(R.mouse.wx, R.mouse.wy, ab.type === 'strike' && ab.shells > 1 ? r + 85 : r, 0, 7); ctx.fill(); ctx.stroke();
       }
@@ -899,6 +1088,8 @@
     for (const e of ev) {
       if (e.kind === 'bau') { toast(`${esc(bn(e.b.type))} ${e.isNew ? 'fertiggestellt' : 'auf Stufe ' + e.b.level + ' ausgebaut'}.`, 'good'); G.sfx('fertig', 0, 0, 0.7, true); }
       if (e.kind === 'truppen') { army = true; if (!U.sheet) toast(`${e.n} ${e.n === 1 ? 'Krieger ist' : 'Krieger sind'} ausgebildet.`, 'good'); }
+      if (e.kind === 'traenke') toast(`${e.n} ${e.n === 1 ? 'Trank ist' : 'Tränke sind'} fertig gebraut.`, 'good');
+      if (e.kind === 'fund') toast('Ein Fundstück ist auf deinem Grundstück aufgetaucht – tippe es an!', 'gold');
       if (e.kind === 'forschung') toast(`Forschung abgeschlossen: ${G.RESEARCH[e.line].name} Stufe ${st.research[e.line]}.`, 'gold');
     }
     if (U.mode !== 'home') { if (ev.length) F.save(st); return; }

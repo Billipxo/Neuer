@@ -181,8 +181,20 @@ erreichbar über das Hauptmenü („🏰 Festungen“) oder direkt über `festun
   Die drei Volksfähigkeiten wirken je einmal an der angetippten Stelle. Wer überlebt, kehrt heim.
 - **Kriegsbanner:** Bresche (≥ 50 % zerstört), Thron (Haupthaus gefallen), Stille (alle Türme und Kanonen zerstört).
   Ein Banner reicht zum Sieg; Siege bringen **Ruhm** (Ränge von Knappe bis Legende), Niederlagen kosten ihn.
-- **Feldzug der sechs Reiche:** zwölf feste Festungen mit Geschichte, steigender Stufe, Helden und Wachtrupps;
-  volle Beute beim ersten Sieg, jeder Sieg öffnet die nächste.
+- **Feldzug in zwei Kapiteln (18 Festungen):** „Der Zug der sechs Reiche“ und „Die Wächter des Feuers“ – feste
+  Festungen mit Geschichte, steigender Stufe, Helden und Wachtrupps; im zweiten Kapitel bewachen **Wächter-Bosse**
+  (Ogerkönig, Koloss, Lindwurm, Drachen, Sternengolem) die Festungen und lassen Sonderbeute fallen. Volle Beute beim
+  ersten Sieg, jeder Sieg öffnet die nächste.
+- **Fallen** (unsichtbar für Angreifer, nach jedem Kampf wieder scharf, drei Stufen): Sprengfalle (Flächenschaden),
+  Speergrube (gewaltiger Einzelschaden), Frostrune (verlangsamt), Luftmine (gegen Flieger).
+- **Alchemistenturm** (ab Haupthaus 3): braut Tränke auch offline – Heiltrank-Wolke, Gewitterflasche, Kampfrausch,
+  Frosthauch (lässt Türme erstarren) und Mauerbrecher. Im Kampf an der angetippten Stelle einsetzbar.
+- **Taverne** (ab Haupthaus 2): Söldner aus den Wildlanden sofort gegen Gold – Bandit, Wegelagerer, Bergtroll,
+  Trollhexer, Steingolem und Jungdrache. Sie belegen Truppenplätze und kehren heim, wenn sie überleben.
+- **Erfolge und Tagesaufträge:** 14 Erfolge mit je drei Stufen (Plünderer, Bollwerk, Fallensteller, Bezwinger der
+  Wächter …) und jeden Tag drei neue Aufträge mit Tagestruhe – Belohnungen in Gold und Holz.
+- **Fundstücke:** Alle paar Stunden erscheinen Schatztruhen, Erzbrocken, umgestürzte Bäume oder magische Kristalle
+  (geben einen Trank) auf dem Grundstück – antippen zum Bergen.
 - **Überfälle:** Ab Haupthaus Stufe 2 greifen KI-Heere an, während man fort ist – nachgespielt mit der echten
   Kampfberechnung beim Wiederkommen (Bericht mit Zerstörung, Verlusten, Ruhm). Danach schützt ein Schild für
   6–10 Stunden. Der eigene Held verteidigt mit, wenn er bereit ist. Mit dem **Probeangriff** lässt sich die Verteidigung

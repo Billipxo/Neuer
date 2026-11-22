@@ -10,7 +10,7 @@
   const rnd = (a, b) => a + Math.random() * (b - a);
   const pick = (a) => a[Math.floor(Math.random() * a.length)];
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const bname = (race, type) => (type === 'mauer' ? 'Mauer' : G.bname(race, type));
+  const bname = (race, type) => (type === 'mauer' ? 'Mauer' : F.TRAPS[type] ? F.TRAPS[type].name : G.bname(race, type));
   F.bname = bname;
 
   // -------------------------------------------------------------------------
@@ -25,18 +25,19 @@
       heroSt: { level: 1, xp: 0, ult: -1, ranks: [], talents: {}, talentPoints: 0, restUntil: 0, pref: Math.random() < 0.5 ? 0 : 1 },
       ruhm: 0, bestRuhm: 0, camp: {}, reports: [], shieldUntil: 0,
       stats: { raids: 0, wins: 0, defenses: 0, held: 0, lootG: 0, lootW: 0, built: 0 },
+      traps: [], potions: {}, brew: [], brewStart: 0, mercs: {}, ach: {}, daily: null, finds: [], findNext: 0,
       settings: { music: 0.5, sfx: 0.7, muted: false }, tips: {},
     };
     const add = (type, tx, ty) => st.blds.push({ id: st.nextId++, type, level: 1, tx, ty, up: null, acc: 0, accT: now });
     add('haupthaus', 13, 13); add('goldmine', 8, 9); add('saegewerk', 20, 9); add('unterkunft', 8, 19); add('kaserne', 20, 19); add('turm', 17, 14);
-    return st;
+    return F.migrate(st);
   };
   F.load = function () {
     try {
       const s = store(), d = s && s.getItem(KEY);
       if (!d) return null;
       const st = JSON.parse(d);
-      return st && st.v === 1 && st.blds ? st : null;
+      return st && st.v === 1 && st.blds ? F.migrate(st) : null;
     } catch (e) { return null; }
   };
   F.save = function (st) {
@@ -49,14 +50,14 @@
   F.importText = function (txt) {
     const st = JSON.parse(txt);
     if (!st || st.v !== 1 || !Array.isArray(st.blds) || !G.RACES[st.race]) throw new Error('Kein Spielstand von Reichsfeuer: Festungen');
-    return st;
+    return F.migrate(st);
   };
 
   // -------------------------------------------------------------------------
   // Abgeleitete Werte
   F.thB = (st) => st.blds.find((b) => b.type === 'haupthaus');
   F.th = (st) => Math.max(1, F.thB(st).level);
-  F.count = (st, type) => (type === 'mauer' ? st.walls.length : st.blds.filter((b) => b.type === type).length);
+  F.count = (st, type) => (type === 'mauer' ? st.walls.length : F.TRAPS[type] ? st.traps.filter((t) => t.type === type).length : st.blds.filter((b) => b.type === type).length);
   F.limit = (st, type) => F.LIMITS[type][F.th(st) - 1];
   F.cap = function (st) {
     const th = F.th(st);
@@ -74,6 +75,7 @@
     let n = 0;
     for (const r in st.army) n += st.army[r] * F.supplyOf(st, r);
     for (const r of st.queue) n += F.supplyOf(st, r);
+    for (const m in st.mercs || {}) n += st.mercs[m] * F.MERCS[m].supply;
     return n;
   };
   F.armyCount = (st) => Object.values(st.army).reduce((a, b) => a + b, 0);
@@ -140,7 +142,19 @@
       st.trainStart += dur; trained++;
     }
     if (!st.queue.length) st.trainStart = 0;
-    if (trained) ev.push({ kind: 'truppen', n: trained });
+    if (trained) { ev.push({ kind: 'truppen', n: trained }); st.stats.trained = (st.stats.trained || 0) + trained; }
+    // Tränke brauen (auch offline)
+    let brewed = 0;
+    while (st.brew && st.brew.length) {
+      const type = st.brew[0], dur = F.POTIONS[type].time * 1000;
+      if (!st.brewStart) st.brewStart = now;
+      if (now - st.brewStart < dur) break;
+      st.brew.shift(); st.potions[type] = (st.potions[type] || 0) + 1; st.brewStart += dur; brewed++;
+    }
+    if (st.brew && !st.brew.length) st.brewStart = 0;
+    if (brewed) ev.push({ kind: 'traenke', n: brewed });
+    const found = st.finds ? F.spawnFinds(st, now) : 0;
+    if (found) ev.push({ kind: 'fund', n: found });
     if (st.researching && now >= st.researching.end) {
       const line = st.researching.line;
       st.research[line]++; st.researching = null;
@@ -160,6 +174,8 @@
       if (tx < b.tx + z && tx + s > b.tx && ty < b.ty + z && ty + s > b.ty) return false;
     }
     for (const w of st.walls) if (w !== ignore && w.tx >= tx && w.tx < tx + s && w.ty >= ty && w.ty < ty + s) return false;
+    for (const t of st.traps || []) if (t !== ignore && t.tx >= tx && t.tx < tx + s && t.ty >= ty && t.ty < ty + s) return false;
+    for (const f of st.finds || []) if (f !== ignore && f.tx >= tx && f.tx < tx + s && f.ty >= ty && f.ty < ty + s) return false;
     return true;
   };
   F.firstTH = (type) => F.LIMITS[type].findIndex((x) => x > 0) + 1;
@@ -168,7 +184,7 @@
     const max = F.limit(st, type), have = F.count(st, type);
     if (!max) return `Ab Haupthaus Stufe ${F.firstTH(type)}`;
     if (have >= max) return `Limit erreicht (${have}/${max}) – Haupthaus ausbauen`;
-    if (type !== 'mauer' && F.buildersFree(st) <= 0) return 'Alle Baumeister sind beschäftigt';
+    if (type !== 'mauer' && !F.TRAPS[type] && F.buildersFree(st) <= 0) return 'Alle Baumeister sind beschäftigt';
     if (!F.afford(st, F.cost(type, 1))) return 'Nicht genug Rohstoffe';
     return null;
   };
@@ -179,6 +195,7 @@
     pay(st, F.cost(type, 1));
     const now = F.now();
     if (type === 'mauer') { const w = { tx, ty, level: 1 }; st.walls.push(w); return { w }; }
+    if (F.TRAPS[type]) { const t = { tx, ty, type, level: 1 }; st.traps.push(t); return { t }; }
     const b = { id: st.nextId++, type, level: 0, tx, ty, up: { to: 1, start: now, end: now + F.time(type, 1) * 1000 }, acc: 0, accT: now };
     st.blds.push(b);
     return { b };
@@ -230,6 +247,7 @@
     mineAcc(b, now || F.now());
     const res = b.type === 'goldmine' ? 'g' : 'w', got = F.gain(st, res === 'g' ? Math.floor(b.acc) : 0, res === 'w' ? Math.floor(b.acc) : 0);
     b.acc -= got[res];
+    st.stats.collected = (st.stats.collected || 0) + got[res];
     return got[res];
   };
   F.collectAll = function (st) {
@@ -435,7 +453,7 @@
   F.campUnlocked = (st, i) => i === 0 || (st.camp[i - 1] || 0) >= 1;
   F.campaignTarget = function (st, i) {
     const c = F.CAMPAIGN[i], first = !(st.camp[i] >= 1);
-    const tgt = F.genSettlement({ th: c.th, seed: c.seed, race: c.race, lootMul: first ? c.loot : 0.25, hero: c.hero || 0, guard: c.guard || 0, name: c.name });
+    const tgt = F.genSettlement({ th: c.th, seed: c.seed, race: c.race, lootMul: first ? c.loot : 0.25, hero: c.hero || 0, guard: c.guard || 0, name: c.name, boss: c.boss || null });
     tgt.kind = 'feldzug'; tgt.stage = i; tgt.ruhm = st.ruhm;
     return tgt;
   };
@@ -461,8 +479,11 @@
     me.talentPref = st.heroSt.pref || 0;
     foe.dir = { x: 0, y: 0 };
     addGuard(foe, tgt.guard, thC);
+    if (tgt.boss) addBoss(foe, tgt.boss, thC, tgt.th);
+    setTraps(S, tgt.traps, P, false);
     const R = startRaid(S, { kind: tgt.kind, tgt, atk: me, def: foe, P, W });
     R.troops = { ...st.army };
+    R.potions = { ...(st.potions || {}) }; R.mercs = { ...(st.mercs || {}) }; R.alchL = F.alchemyLevel(st); R.tavL = F.tavernLevel(st);
     R.heroAvail = F.heroReady(st) && !!me.hero;
     R.unitLvl = {};
     for (const r of F.roles(st)) { const ri = F.roleInfo(st, r); R.unitLvl[r] = ri.ok ? ri.level : 1; }
@@ -502,6 +523,7 @@
     if (me.hero && ready) { me.hero.x = thC.x; me.hero.y = thC.y + 2.6 * T; }
     const R = startRaid(S, { kind, tgt: atk, atk: foe, def: me, P, W });
     R.plan = aiPlan(atk, P, W);
+    setTraps(S, st.traps, P, true);
     R.troops = {};
     R.heroAvail = true;
     R.ai = true; R.aiT = 0;
@@ -573,14 +595,22 @@
     const R = {
       ...o, S, started: false, startT: 0, limit: F.RAID_TIME, over: false, result: null, deployed: {}, heroOut: false, used: [false, false, false],
       total: blds.length, destroyed: 0, thDown: false, defTotal: blds.filter((b) => b.type === 'turm' || b.type === 'kanone').length, defDown: 0,
-      loot: { g: 0, w: 0 }, lootMax: { g: 0, w: 0 }, lootBy: [], emptyT: 0,
+      loot: { g: 0, w: 0 }, lootMax: { g: 0, w: 0 }, lootBy: [], emptyT: 0, potions: {}, mercs: {}, potUsed: {}, mercDep: {}, trapsFired: 0, abilUsed: 0, bossDown: 0,
     };
     for (const b of blds) if (b.loot) { R.lootMax.g += b.loot.g; R.lootMax.w += b.loot.w; }
+    for (const e of S.ents) if (e.isBoss && e.bossLoot) { R.lootMax.g += e.bossLoot.g; R.lootMax.w += e.bossLoot.w; }
     F.raid = R;
     return R;
   }
   G.onKill = function (t) {
     const R = F.raid;
+    if (R && R.S === G.S && !R.over && t.isBoss && t.team === R.def.team) { // Wächter-Boss besiegt: Sonderbeute
+      R.bossDown++;
+      const bl = t.bossLoot || { g: 0, w: 0 };
+      R.loot.g += bl.g; R.loot.w += bl.w; R.lootBy.push({ fid: -1, g: bl.g, w: bl.w });
+      G.S.fx.push({ type: 'text', x: t.x, y: t.y - 40, text: `${t.name} besiegt! +${bl.g} Gold`, color: '#ffd23a', t: 0, dur: 2.6, big: true });
+      return;
+    }
     if (!R || R.S !== G.S || R.over || t.kind !== 'building' || t.type === 'mauer' || t.team !== R.def.team) return;
     R.destroyed++;
     if (t.type === 'haupthaus') R.thDown = true;
@@ -597,12 +627,13 @@
     if (!R || R.S !== S || R.over) return;
     dt = dt || 1 / 30;
     if (R.ai) aiStep(R, dt);
+    trapStep(R, dt);
     if (!R.started && S.time > 60) { R.started = true; R.startT = S.time; } // spätestens nach einer Minute läuft die Uhr
     if (R.destroyed >= R.total) return F.endRaid(R, 'alles');
     if (R.started && S.time - R.startT >= R.limit) return F.endRaid(R, 'zeit');
     if (R.started) {
       const alive = S.ents.some((e) => !e.dead && e.team === R.atk.team && (e.kind === 'unit' || e.kind === 'hero'));
-      const left = Object.values(R.troops).some((n) => n > 0) || (R.heroAvail && !R.heroOut) || (R.plan && R.plan.length);
+      const left = Object.values(R.troops).some((n) => n > 0) || Object.values(R.mercs).some((n) => n > 0) || (R.heroAvail && !R.heroOut) || (R.plan && R.plan.length);
       R.emptyT = alive || left ? 0 : R.emptyT + dt;
       if (R.emptyT > 1.5) return F.endRaid(R, 'aufgerieben');
     }
@@ -672,6 +703,7 @@
       if (!ok) return 'Gerade nicht möglich';
     }
     p.abCd[i] = 1e9; R.used[i] = true;
+    if (!R.ai) R.abilUsed++;
     if (!R.started) { R.started = true; R.startT = S.time; }
     S.fx.push({ type: 'text', x, y: y - 40, text: ab.name, color: R.ai ? '#ff8080' : '#ffe9a8', t: 0, dur: 1.6, big: true });
     return null;
@@ -729,8 +761,11 @@
     for (const e of S.ents) if (!e.dead && e.kind === 'unit' && e.team === R.atk.team && !e.summoned && !e.merc && F.ROLE_ORDER.includes(e.role)) alive[e.role] = (alive[e.role] || 0) + 1;
     const lost = {};
     for (const r in R.deployed) if (r !== 'held') { const l = R.deployed[r] - (alive[r] || 0); if (l > 0) lost[r] = l; }
+    const mercAlive = {};
+    for (const e of S.ents) if (!e.dead && e.mercKey && e.team === R.atk.team) mercAlive[e.mercKey] = (mercAlive[e.mercKey] || 0) + 1;
     const h = R.atk.hero, dh = R.def.hero;
     R.result = {
+      potUsed: { ...R.potUsed }, mercDep: { ...R.mercDep }, mercAlive, trapsFired: R.trapsFired, abilUsed: R.abilUsed, bossDown: R.bossDown, destroyedN: R.destroyed, boss: R.tgt.boss ? G.CREEPS[R.tgt.boss.creep].name : null,
       kind: R.kind, why, pct: F.pct(R), banners, stars, loot: { ...R.loot }, lootBy: R.lootBy.slice(), lootMax: { ...R.lootMax }, alive, lost, deployed: { ...R.deployed },
       heroOut: R.heroOut, heroDead: !!(R.heroOut && h && h.dead), hero: h ? heroSnap(R.atk) : null, defHero: dh && !R.ai ? null : dh ? heroSnap(R.def) : null,
       defHeroDead: !!(dh && dh.dead), name: R.tgt.name, race: R.tgt.race, th: R.tgt.th, stage: R.tgt.stage, ruhmOpp: R.tgt.ruhm || 0, time: Math.round(S.time - R.startT),
@@ -746,7 +781,7 @@
   // Ergebnis anwenden: Beute, heimkehrende Truppen, Held, Ruhm, Feldzug und Bericht
   F.applyResult = function (st, res) {
     const now = F.now();
-    if (res.kind === 'probe') return res;
+    if (res.kind === 'probe') { st.stats.probes = (st.stats.probes || 0) + 1; return res; }
     if (res.kind === 'abwehr') {
       // aus Lagern und Haupthaus geht der Vorrat verloren, aus Minen die ungesammelte Förderung
       let g = 0, w = 0, mg = 0, mw = 0;
@@ -761,6 +796,7 @@
       res.ruhm = res.stars ? -Math.round(base * [0, 0.5, 0.8, 1][res.stars]) : Math.round(base * 0.4);
       st.ruhm = Math.max(0, st.ruhm + res.ruhm);
       st.stats.defenses++; if (!res.stars) st.stats.held++;
+      st.stats.traps = (st.stats.traps || 0) + (res.trapsFired || 0);
       if (res.defHero) saveHero(st, res.defHero, res.defHeroDead, now);
       const shieldH = res.pct >= 70 ? 10 : res.pct >= 30 ? 6 : 0;
       if (shieldH) st.shieldUntil = Math.max(st.shieldUntil, (res.at || now) + shieldH * 3600e3);
@@ -775,6 +811,12 @@
     res.got = F.gain(st, res.loot.g, res.loot.w);
     st.stats.raids++; st.stats.lootG += res.got.g; st.stats.lootW += res.got.w;
     if (res.stars) st.stats.wins++;
+    const SX = st.stats;
+    SX.destroyed = (SX.destroyed || 0) + (res.destroyedN || 0); SX.abilities = (SX.abilities || 0) + (res.abilUsed || 0); SX.bosses = (SX.bosses || 0) + (res.bossDown || 0);
+    for (const k in res.potUsed || {}) { st.potions[k] = Math.max(0, (st.potions[k] || 0) - res.potUsed[k]); SX.potions = (SX.potions || 0) + res.potUsed[k]; }
+    for (const k in res.mercDep || {}) st.mercs[k] = Math.max(0, (st.mercs[k] || 0) - res.mercDep[k] + ((res.mercAlive || {})[k] || 0));
+    for (const k in st.mercs) if (!st.mercs[k]) delete st.mercs[k];
+    for (const k in st.potions) if (!st.potions[k]) delete st.potions[k];
     if (res.hero && res.heroOut) saveHero(st, res.hero, res.heroDead, now);
     if (res.kind === 'feldzug') {
       const i = res.stage, before = st.camp[i] || 0;
@@ -830,5 +872,250 @@
     }
     F.tick(st, now);
     return out;
+  };
+  // -------------------------------------------------------------------------
+  // Neue Inhalte: alte Spielstände ergänzen, Tränke, Söldner, Fallen, Fundstücke, Erfolge und Tagesaufträge
+  F.migrate = function (st) {
+    st.traps = st.traps || []; st.potions = st.potions || {}; st.brew = st.brew || []; st.brewStart = st.brewStart || 0;
+    st.mercs = st.mercs || {}; st.ach = st.ach || {}; st.finds = st.finds || []; st.findNext = st.findNext || 0;
+    st.stats = { destroyed: 0, collected: 0, trained: 0, potions: 0, traps: 0, mercs: 0, bosses: 0, finds: 0, probes: 0, abilities: 0, ...st.stats };
+    return st;
+  };
+  const levelOf = (st, type) => Math.max(0, ...st.blds.filter((b) => b.type === type).map((b) => b.level));
+  // Alchemistenturm
+  F.alchemyLevel = (st) => levelOf(st, 'alchemie');
+  F.potionSlots = (st) => { const L = F.alchemyLevel(st); return L ? F.POTION_SLOTS[L - 1] : 0; };
+  F.potionCount = (st) => Object.values(st.potions).reduce((a, b) => a + b, 0) + st.brew.length;
+  F.brewCheck = function (st, type) {
+    const P = F.POTIONS[type], L = F.alchemyLevel(st);
+    if (!L) return `Benötigt ${bname(st.race, 'alchemie')}`;
+    if (L < P.lvl) return `Benötigt ${bname(st.race, 'alchemie')} Stufe ${P.lvl}`;
+    if (F.potionCount(st) >= F.potionSlots(st)) return 'Alle Trankplätze belegt';
+    if (!F.afford(st, P.cost)) return 'Nicht genug Rohstoffe';
+    return null;
+  };
+  F.brew = function (st, type) {
+    const why = F.brewCheck(st, type);
+    if (why) return why;
+    pay(st, F.POTIONS[type].cost);
+    if (!st.brew.length) st.brewStart = F.now();
+    st.brew.push(type);
+    return null;
+  };
+  F.unbrew = function (st, idx) {
+    const t = st.brew[idx]; if (!t) return;
+    st.brew.splice(idx, 1);
+    const c = F.POTIONS[t].cost; F.gain(st, c.g, c.w);
+    if (idx === 0) st.brewStart = st.brew.length ? F.now() : 0;
+  };
+  F.brewLeft = (st) => { let s = 0; st.brew.forEach((t, i) => { const d = F.POTIONS[t].time; s += i === 0 ? Math.max(0, d - (F.now() - st.brewStart) / 1000) : d; }); return s; };
+  F.brewSpeedPrice = (st) => F.speedCost(F.brewLeft(st));
+  F.brewSpeedup = function (st) {
+    if (!st.brew.length) return 'Es wird nichts gebraut';
+    const c = F.brewSpeedPrice(st);
+    if (st.gold < c) return 'Nicht genug Gold';
+    st.gold -= c;
+    for (const t of st.brew) st.potions[t] = (st.potions[t] || 0) + 1;
+    st.brew = []; st.brewStart = 0;
+    return null;
+  };
+  // Taverne
+  F.tavernLevel = (st) => levelOf(st, 'taverne');
+  F.hireCheck = function (st, type) {
+    const m = F.MERCS[type], L = F.tavernLevel(st);
+    if (!L) return `Benötigt ${bname(st.race, 'taverne')}`;
+    if (L < m.lvl) return `Benötigt ${bname(st.race, 'taverne')} Stufe ${m.lvl}`;
+    if (F.armyUsed(st) + m.supply > F.housing(st)) return 'Keine Truppenplätze frei';
+    if (st.gold < m.gold) return 'Nicht genug Gold';
+    return null;
+  };
+  F.hire = function (st, type) {
+    const why = F.hireCheck(st, type);
+    if (why) return why;
+    st.gold -= F.MERCS[type].gold;
+    st.mercs[type] = (st.mercs[type] || 0) + 1;
+    st.stats.mercs = (st.stats.mercs || 0) + 1;
+    return null;
+  };
+  F.dismissMerc = function (st, type) { if (st.mercs[type] > 0) st.mercs[type]--; if (!st.mercs[type]) delete st.mercs[type]; };
+  // Fallen
+  F.trapMax = (st) => F.TRAP_MAX[F.th(st) - 1];
+  F.trapCheck = function (st, t) {
+    if (t.level >= 3) return 'Höchste Stufe erreicht';
+    if (t.level >= F.trapMax(st)) return `Benötigt ${bname(st.race, 'haupthaus')} Stufe ${F.TRAP_MAX.indexOf(t.level + 1) + 1}`;
+    if (!F.afford(st, F.TRAPS[t.type].cost[t.level])) return 'Nicht genug Rohstoffe';
+    return null;
+  };
+  F.upgradeTrap = function (st, t) { const why = F.trapCheck(st, t); if (why) return why; pay(st, F.TRAPS[t.type].cost[t.level]); t.level++; return null; };
+  F.removeTrap = function (st, t) { const i = st.traps.indexOf(t); if (i >= 0) st.traps.splice(i, 1); };
+  // Fundstücke: tauchen alle paar Stunden auf freien Feldern auf (höchstens drei gleichzeitig)
+  F.spawnFinds = function (st, now) {
+    if (!st.findNext) { st.findNext = now + rnd(0.3, 1) * 3600e3; return 0; }
+    let n = 0;
+    for (let guard = 0; now >= st.findNext && guard < 500; guard++) {
+      if (st.finds.length < F.FIND_MAX) {
+        const kinds = Object.keys(F.FINDS), kind = kinds[Math.floor(Math.random() * kinds.length)];
+        for (let k = 0; k < 80; k++) {
+          const tx = Math.floor(Math.random() * F.HOME_TILES), ty = Math.floor(Math.random() * F.HOME_TILES);
+          if (F.fits(st, 'mauer', tx, ty)) { st.finds.push({ tx, ty, kind, at: st.findNext }); n++; break; }
+        }
+      }
+      st.findNext += rnd(F.FIND_EVERY[0], F.FIND_EVERY[1]);
+    }
+    return n;
+  };
+  F.openFind = function (st, f) {
+    const i = st.finds.indexOf(f);
+    if (i < 0) return null;
+    st.finds.splice(i, 1);
+    st.stats.finds = (st.stats.finds || 0) + 1;
+    const d = F.FINDS[f.kind], L = F.alchemyLevel(st);
+    if (d.potion && L && F.potionCount(st) < F.potionSlots(st)) {
+      const avail = Object.keys(F.POTIONS).filter((k) => F.POTIONS[k].lvl <= L), k = avail[Math.floor(Math.random() * avail.length)];
+      st.potions[k] = (st.potions[k] || 0) + 1;
+      return { potion: k, g: 0, w: 0 };
+    }
+    const r = d.reward(F.th(st));
+    return F.gain(st, r.g, r.w);
+  };
+  // Erfolge und Tagesaufträge
+  F.statValue = function (st, stat) {
+    if (stat === '$banners') return Object.values(st.camp).reduce((a, b) => a + b, 0);
+    if (stat === '$hero') return st.heroSt.level;
+    if (stat === '$ruhm') return Math.max(st.bestRuhm || 0, st.ruhm);
+    return st.stats[stat] || 0;
+  };
+  F.achInfo = function (st, a) {
+    const tier = st.ach[a.id] || 0, val = F.statValue(st, a.stat), goal = a.goals[Math.min(tier, 2)];
+    return { tier, val, goal, done: tier >= 3, claimable: tier < 3 && val >= goal, reward: F.ACH_REWARD[Math.min(tier, 2)] };
+  };
+  F.claimAch = function (st, id) {
+    const a = F.ACH.find((x) => x.id === id), inf = a && F.achInfo(st, a);
+    if (!inf || !inf.claimable) return null;
+    st.ach[id] = inf.tier + 1;
+    return F.gain(st, inf.reward.g, inf.reward.w);
+  };
+  const dayKey = (t) => { const d = new Date(t); return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`; };
+  F.dailyEnsure = function (st, now) {
+    const key = dayKey(now || F.now());
+    if (st.daily && st.daily.day === key) return st.daily;
+    const pool = F.DAILY.filter((d) => !d.need || st.blds.some((b) => b.type === d.need && b.level > 0)).sort(() => Math.random() - 0.5).slice(0, 3);
+    st.daily = { day: key, tasks: pool.map((d) => ({ id: d.id, base: F.statValue(st, d.stat), claimed: false })), bonus: false };
+    return st.daily;
+  };
+  F.dailyInfo = function (st) {
+    return F.dailyEnsure(st).tasks.map((t) => {
+      const d = F.DAILY.find((x) => x.id === t.id), val = Math.max(0, F.statValue(st, d.stat) - t.base);
+      return { t, d, val: Math.min(val, d.n), done: val >= d.n };
+    });
+  };
+  F.claimDaily = function (st, i) {
+    const x = F.dailyInfo(st)[i];
+    if (!x || !x.done || x.t.claimed) return null;
+    x.t.claimed = true;
+    const r = F.dailyReward(F.th(st));
+    return F.gain(st, r.g, r.w);
+  };
+  F.claimDailyBonus = function (st) {
+    const D = F.dailyEnsure(st);
+    if (D.bonus || !D.tasks.every((t) => t.claimed)) return null;
+    D.bonus = true;
+    const r = F.dailyReward(F.th(st));
+    return F.gain(st, r.g * 2, r.w * 2);
+  };
+  F.claimableCount = function (st) {
+    let n = 0;
+    for (const a of F.ACH) if (F.achInfo(st, a).claimable) n++;
+    for (const x of F.dailyInfo(st)) if (x.done && !x.t.claimed) n++;
+    if (!st.daily.bonus && st.daily.tasks.every((t) => t.claimed)) n++;
+    return n;
+  };
+
+  // -------------------------------------------------------------------------
+  // Kampf: Fallen, Wächter-Bosse, Tränke und Söldner
+  function setTraps(S, list, P, visible) {
+    S.traps = (list || []).map((t) => { const c = F.tileCenter(P, 'mauer', t.tx, t.ty); return { x: c.x, y: c.y, type: t.type, level: t.level, fuse: 0, done: false, visible }; });
+  }
+  function trapStep(R, dt) {
+    for (const tr of R.S.traps || []) {
+      if (tr.done) continue;
+      const d = F.TRAPS[tr.type];
+      if (tr.fuse > 0) { tr.fuse -= dt; if (tr.fuse <= 0) fireTrap(R, tr, d); continue; }
+      let hit = false;
+      G.query(tr.x, tr.y, d.trigger, (o) => { if (!hit && !o.dead && o.team === R.atk.team && (o.kind === 'unit' || o.kind === 'hero') && (o.fly ? d.air : d.ground)) hit = true; });
+      if (hit) { tr.fuse = Math.max(0.01, d.fuse); tr.visible = true; R.S.fx.push({ type: 'ring', x: tr.x, y: tr.y, r: 14, color: d.color, t: 0, dur: d.fuse + 0.2 }); }
+    }
+  }
+  function fireTrap(R, tr, d) {
+    const S = R.S, mul = F.trapMul(tr.level), th = R.def.th;
+    const src = th && !th.dummy && !th.dead ? th : { owner: R.def.id, team: R.def.team, x: tr.x, y: tr.y };
+    tr.done = true; R.trapsFired++;
+    let foes = [];
+    G.query(tr.x, tr.y, d.radius, (o) => { if (!o.dead && o.team === R.atk.team && (o.kind === 'unit' || o.kind === 'hero') && (o.fly ? d.air : d.ground)) foes.push(o); });
+    if (d.single) foes = foes.sort((a, b) => (a.x - tr.x) ** 2 + (a.y - tr.y) ** 2 - (b.x - tr.x) ** 2 - (b.y - tr.y) ** 2).slice(0, 1);
+    for (const o of foes) { G.dealDamage(src, o, d.dmg * mul); if (d.slow && !o.dead) o.buffs.push({ t: d.slow, mods: { speed: -0.45, atkspd: -0.3 } }); }
+    if (d.slow) S.fx.push({ type: 'blast', x: tr.x, y: tr.y, r: d.radius, color: d.color, t: 0, dur: 1.0 });
+    else { G.fx({ type: 'explo', x: tr.x, y: tr.y, r: d.radius * 0.8, color: d.color, dur: 0.7, seed: Math.random(), big: !d.single }); G.shake(tr.x, tr.y, d.single ? 2 : 5); }
+    G.sfx(d.slow ? 'zauber' : 'explosion', tr.x, tr.y, 0.8);
+    S.fx.push({ type: 'text', x: tr.x, y: tr.y - 26, text: d.name + '!', color: d.color, t: 0, dur: 1.4, big: true });
+  }
+  function addBoss(p, boss, at, th) {
+    const c = G.CREEPS[boss.creep];
+    const e = G._makeSummon(p, { ...c, name: c.name, merc: true }, at.x + 3.4 * T, at.y + 0.6 * T, undefined, boss.scale || 1, null, false);
+    const L = F.raidLoot(th);
+    e.mercType = boss.creep; e.isBoss = true; e.boss = true; e.home = { x: e.x, y: e.y };
+    e.bossLoot = { g: F.round5(L.g * 0.2), w: F.round5(L.w * 0.2) };
+    return e;
+  }
+  F.potionCheck = function (R, type) {
+    if (R.over) return 'Der Kampf ist vorbei';
+    if (!(R.potions[type] > 0)) return 'Kein Trank dieser Art mehr';
+    return null;
+  };
+  F.castPotion = function (R, type, x, y) {
+    const why = F.potionCheck(R, type);
+    if (why) return why;
+    const P = F.POTIONS[type], p = R.atk, S = R.S, mul = F.potMul(R.alchL || 1), rad = P.radius;
+    const own = (fn) => G.query(x, y, rad, (o) => { if (!o.dead && o.team === p.team && (o.kind === 'unit' || o.kind === 'hero')) fn(o); });
+    switch (type) {
+      case 'heiltrank': own((o) => { o.hp = Math.min(o.maxHp, o.hp + o.maxHp * P.heal * mul); o.buffs.push({ t: 6, mods: { regen: 18 * mul } }); }); break;
+      case 'wuttrank': own((o) => o.buffs.push({ t: P.dur * mul, mods: P.mods })); break;
+      case 'blitztrank':
+        for (let k = 0; k < P.bolts; k++) {
+          const bx = x + rnd(-40, 40), by = y + rnd(-40, 40);
+          G.fx({ type: 'explo', x: bx, y: by, r: P.radius, color: P.color, dur: 0.6, seed: Math.random() });
+          S.fx.push({ type: 'pillar', x: bx, y: by, r: 16, color: P.color, t: 0, dur: 0.5 });
+          G.query(bx, by, P.radius, (o) => { if (!o.dead && o.team !== p.team && o.type !== 'mauer') G.dealDamage(p.th, o, P.dmg * mul); });
+        }
+        G.sfx('explosion', x, y, 0.8);
+        break;
+      case 'frosttrank':
+        G.query(x, y, rad, (o) => { if (o.dead || o.team === p.team) return; if (o.kind === 'building') o.atkT = Math.max(o.atkT || 0, P.dur * mul); else o.stun = Math.max(o.stun || 0, P.dur * mul); });
+        break;
+      case 'brechtrank':
+        G.fx({ type: 'explo', x, y, r: rad, color: P.color, dur: 0.7, seed: Math.random(), big: true }); G.shake(x, y, 6);
+        G.query(x, y, rad, (o) => { if (!o.dead && o.team !== p.team && o.type === 'mauer') G.dealDamage(p.th, o, P.dmg * mul); });
+        G.sfx('explosion', x, y, 1);
+        break;
+    }
+    if (type !== 'blitztrank' && type !== 'brechtrank') S.fx.push({ type: 'blast', x, y, r: rad, color: P.color, t: 0, dur: 1.1 });
+    R.potions[type]--; R.potUsed[type] = (R.potUsed[type] || 0) + 1;
+    if (!R.started) { R.started = true; R.startT = S.time; }
+    S.fx.push({ type: 'text', x, y: y - 40, text: P.name, color: '#ffe9a8', t: 0, dur: 1.4, big: true });
+    G.sfx('zauber', x, y, 0.8, true);
+    return null;
+  };
+  F.deployMerc = function (R, type, x, y) {
+    if (R.over) return 'Der Kampf ist vorbei';
+    if (!F.canDeploy(R, x, y)) return 'Nur außerhalb des Festungsgrunds absetzen';
+    if (!(R.mercs[type] > 0)) return 'Keine Söldner dieser Art mehr';
+    const m = F.MERCS[type], c = G.CREEPS[m.creep], S = R.S;
+    const e = G._makeSummon(R.atk, { ...c, name: m.name, merc: true }, x, y, undefined, (m.scale || 1) * F.mercMul(R.tavL || 1, m), null, true);
+    e.mercType = m.creep; e.mercKey = type; e.px = x; e.py = y;
+    e.face = Math.atan2(R.P.y + R.P.h / 2 - y, R.P.x + R.P.w / 2 - x);
+    R.mercs[type]--; R.mercDep[type] = (R.mercDep[type] || 0) + 1;
+    if (!R.started) { R.started = true; R.startT = S.time; }
+    G.sfx('bau', x, y, 0.5);
+    return null;
   };
 })();

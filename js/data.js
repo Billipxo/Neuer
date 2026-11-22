@@ -653,6 +653,13 @@ G.BUILDINGS.holzlager = { name: 'Holzlager', size: 2, hp: 1300, cost: { g: 120, 
     orks: ['Beutehort', 'Holzhaufen'], zwerge: ['Goldgewölbe', 'Balkenlager'], daemonen: ['Seelentresor', 'Aschenholzlager'] };
   for (const r in names) { G.RACES[r].bnames.schatzkammer = names[r][0]; G.RACES[r].bnames.holzlager = names[r][1]; }
 })();
+G.BUILDINGS.alchemie = { name: 'Alchemistenturm', size: 2, hp: 1100, cost: { g: 260, w: 200 }, time: 24, festung: true, desc: 'Braut Tränke, die du bei Raubzügen einsetzt.' };
+G.BUILDINGS.taverne = { name: 'Taverne', size: 2, hp: 1100, cost: { g: 220, w: 160 }, time: 22, festung: true, desc: 'Hier heuerst du Söldner aus den Wildlanden an – Banditen, Trolle, Golems und sogar Drachen.' };
+(function () {
+  const names = { menschen: ['Alchemistenturm', 'Taverne'], elfen: ['Kräuterlaube', 'Mondschenke'], untote: ['Giftküche', 'Krypta der Verlorenen'],
+    orks: ['Hexenkessel', 'Grog-Höhle'], zwerge: ['Runenlabor', 'Bierkeller'], daemonen: ['Schwefelkessel', 'Pakthalle'] };
+  for (const r in names) { G.RACES[r].bnames.alchemie = names[r][0]; G.RACES[r].bnames.taverne = names[r][1]; }
+})();
 G.PRODUCTION.horst = { flieger: 1 };
 G.BUILD_ORDER.splice(G.BUILD_ORDER.indexOf('beschwoerung') + 1, 0, 'horst');
 (function () {
