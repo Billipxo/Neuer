@@ -88,8 +88,14 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
   Nahkampfhelden sind zäher und geben der ganzen Armee Boni, Zwergen-Bombardements sind abgeschwächt.
 
 **Basis & Wirtschaft**
-- 13 Gebäudetypen bis Stufe 5, Maximalstufe in knapp 30 Minuten. Jede Stufe ist sichtbar: Fenster (2), Seitenturm (3),
-  Zierleiste und Feuerschalen (4), zweiter Turm und leuchtende Turmspitze (5); Gebäude wachsen mit.
+- 13 Gebäudetypen bis Stufe 5, Maximalstufe in knapp 30 Minuten. **Jeder Gebäudetyp hat seine eigene Gestalt** – in den
+  Farben, Dachformen und Lichtern des jeweiligen Volkes: Mine im Felshügel mit Lore und Goldadern, Sägewerk mit drehender
+  Kreissäge, Unterkunft als Zeltlager um ein Lagerfeuer (Zwerge: Steinhütten), Kaserne mit Fallgittertor und Übungspuppen,
+  Schießstand mit Zielscheiben, Sanktum als Säulentempel mit schwebendem Kristall, Beschwörungskreis aus Monolithen mit
+  leuchtendem Bannzeichen, Horst als Felsnadel mit Nest, Schmiede mit glühender Esse und Amboss, Wachturm, Kanonenbastion,
+  Außenposten mit Palisade, Schatzkammer und Holzlager (Festungen). Jede Stufe ist sichtbar: das Haupthaus bekommt Fenster,
+  Zierleiste, Feuerschalen und Turmspitze, die übrigen Gebäude mehr Zelte, Stämme, Zielscheiben, Säulen, Monolithen,
+  Goldhaufen oder einen zweiten Schornstein; ab Stufe 5 schwebt ein leuchtendes Juwel darüber. Gebäude wachsen mit.
 - **Mauer-Upgrade** (Holzpalisade → Steinmauer → Festungsmauer): Ring um die ganze Basis, eigene Truppen gehen hindurch.
 - **Goldadern** auf der Karte: Außenposten dort bringen Bonus-Einkommen und sind umkämpft.
 - Sichtbare **Arbeiter**, die Gold schürfen und Holz schlagen.
