@@ -155,6 +155,106 @@
     return S;
   };
 
+  // -------------------------------------------------------------------------
+  // Szenen für „Reichsfeuer: Festungen“: eine Festung auf einem Grundstück (plot), ohne die KI des Echtzeitmodus.
+  // def: { w, h, theme, plot:{x,y,w,h}, raid, limit, players:[{ race, hero, team, human, base:{x,y}, withHero, heroState, research }],
+  //        blds:[{ owner, type, level, x, y, fid, loot, ang }] } – Positionen in Pixeln (Mitte des Gebäudes)
+  G.newScene = function (def) {
+    S = G.S = {
+      time: 0, tick: 0, ents: [], proj: [], fx: [], timers: [], players: [], camps: [], shops: [], decor: [], sites: [],
+      critters: [], parts: [], decals: [], corpses: [], terrain: [], roads: [], shrines: [],
+      w: def.w, h: def.h, theme: def.theme, mode: 'szene', over: null, msgs: [],
+      layout: { name: 'Festung', w: def.w, h: def.h, teams: def.players.map((d) => d.team), bases: [], camps: [], shops: [], sites: [], shrines: [] },
+      speed: 1, paused: false, nextId: 1, grid: new Map(), bonusT: 0, victoryT: 0, navDirty: true,
+      cfg: { mode: 'szene', difficulty: def.difficulty || 'mittel', events: false, fog: false, duration: 0 },
+      limit: def.limit || 0, endphase: false, objective: 'szene', dragonSlainBy: null, alarmT: 1e9,
+      gid: Date.now().toString(36) + Math.floor(Math.random() * 1e6).toString(36),
+      scene: true, raid: def.raid || null, plot: def.plot || null, bldHpMul: def.bldHp || 1, towerMul: def.towerDmg || 1,
+    };
+    def.players.forEach((d, i) => {
+      const rd = G.RACES[d.race], hd = rd.heroes.find((h) => h.id === d.hero) || rd.heroes[0];
+      const p = makePlayer(i, d.race, hd, d.team, !!d.human, S.cfg, d.base.x, d.base.y, { noTH: true, noHero: !d.withHero, thLevel: d.thLevel || 1 });
+      p.auto = { build: false, produce: false, hero: true, ability: !!d.autoAbility, talents: true };
+      p.gold = 0; p.wood = 0; p.abCd = [0, 0, 0];
+      if (d.research) p.research = { ...p.research, ...d.research };
+      if (d.talents) { p.talents = { ...d.talents }; p.talentPoints = d.talentPoints || 0; }
+      if (p.hero && d.heroState) applyHeroState(p.hero, d.heroState);
+      if (p.hero && !d.heroInField) { p.hero.dead = true; p.heroRespawn = Infinity; S.ents = S.ents.filter((e) => e !== p.hero); } // erst beim Absetzen
+      if (p.hero && d.heroMode) p.hero.mode = d.heroMode;
+    });
+    updateBonusCaches();
+    for (const b of def.blds || []) {
+      const p = S.players[b.owner];
+      const e = b.type === 'mauer' ? makeWallPiece(p, b.x, b.y, b.level, b.ang || 0) : makeBuilding(p, b.type, b.x, b.y, b.level);
+      e.fid = b.fid; e.loot = b.loot || null;
+      if (e.type !== 'mauer') { p.blds.push(e); if (e.type === 'haupthaus') p.th = e; }
+    }
+    if (S.plot) { genDecor(); genCritters(); }
+    fogInit(false);
+    return S;
+  };
+  function applyHeroState(h, st) {
+    h.level = Math.max(1, Math.min(G.HERO_MAX, st.level || 1)); h.xp = st.xp || 0;
+    h.pending = [];
+    const p = S.players[h.owner], ults = G.HERO_ULTS[h.def.id];
+    if (h.level >= G.HERO_ULT_LVL && ults && st.ult >= 0 && ults[st.ult]) { h.pending.push('ult'); G.heroChooseUlt(p, st.ult); }
+    (st.ranks || []).forEach((r, i) => { if (h.abilities[i] && !h.abilities[i].ult) h.abilities[i].rank = r; });
+    const u = h.abilities.find((a) => a.ult); if (u && h.level >= G.HERO_MAX) u.rank = 1;
+    recalcHero(h); h.hp = h.maxHp;
+  }
+  function makeWallPiece(p, x, y, level, ang) {
+    const w = G.WALLS[Math.max(1, Math.min(G.WALLS.length, level)) - 1], hpMul = 1 + (p.bonus.buildings ? p.bonus.buildings.hp : 0);
+    const s = {
+      id: S.nextId++, kind: 'building', type: 'mauer', def: WALL_DEFS[G.WALLS.indexOf(w)], name: w.name, owner: p.id, team: p.team, x, y, ang, size: 1, r: 18,
+      level: G.WALLS.indexOf(w) + 1, upgrading: null, prod: null, queue: [], armor: w.armor, hp: w.hp * hpMul, maxHp: w.hp * hpMul, m: zeroMods(), buffs: [], atkT: 0,
+    };
+    S.ents.push(s); S.navDirty = true;
+    return s;
+  }
+  G._makeBuilding = (p, type, x, y, level) => { const b = makeBuilding(p, type, x, y, level); p.blds.push(b); return b; };
+  G._makeWall = makeWallPiece;
+  G._bldMaxHp = (p, type, lvl) => bldMaxHp(p, type, lvl);
+  G._recalcHero = (h) => recalcHero(h);
+  // ruhende Festung: nur Zeit, Tiere und Effekte laufen weiter (keine Kampfberechnung)
+  G.sceneIdle = function (dt) {
+    if (!S) return;
+    S.time += dt;
+    buildGrid(); // Tiere fliehen vor Einheiten und Gebäuden
+    updateCritters(dt);
+    for (const f of S.fx) f.t += dt;
+    S.fx = S.fx.filter((f) => f.t < f.dur);
+  };
+  // Szene: Spieler ohne Wirtschaft, Bau- und Armee-KI – nur Abklingzeiten, Stärkungen und der Schwerpunkt der Truppen
+  function scenePlayer(p, dt) {
+    if (!p.alive) return;
+    p.blds = p.blds.filter((b) => !b.dead);
+    for (let i = 0; i < p.abCd.length; i++) if (p.abCd[i] > 0) p.abCd[i] -= dt;
+    for (const b of p.buffs) b.t -= dt;
+    p.buffs = p.buffs.filter((b) => b.t > 0);
+    p.armyT -= dt;
+    if (p.armyT <= 0) {
+      p.armyT = 0.5;
+      const units = S.ents.filter((e) => !e.dead && e.kind === 'unit' && e.owner === p.id);
+      p.attackCentroid = p.armyCentroid = centroid(units);
+      p.poolCentroid = null; p.committedCount = units.length; p.poolSupply = 0;
+      p.attackSlots = Math.max(12, Math.round(units.length * 1.3));
+      p.attackPoint = p.armyCentroid || p.base; p.armyPoint = p.attackPoint;
+    }
+  }
+  // Raubzug: Angreifer ziehen zum nächsten Gebäude (Flieger bevorzugen Türme); Mauern nur, wenn sie den Weg versperren
+  function sceneTarget(e) {
+    if (e.rt && !e.rt.dead && S.time < e.rtT) return e.rt;
+    let best = null, bd = Infinity;
+    for (const b of S.ents) {
+      if (b.dead || b.kind !== 'building' || b.team === e.team || b.type === 'mauer') continue;
+      let d = d2(b.x, b.y, e.x, e.y);
+      if (e.fly && b.def.attack) d *= 0.45;
+      if (d < bd) { bd = d; best = b; }
+    }
+    e.rt = best; e.rtT = S.time + 2;
+    return best;
+  }
+
   // Armee-Vorlagen: zuerst die des eigenen Volkes (passend zum Spielstil), dann die allgemeinen
   G.presetsFor = function (p) {
     const st = styleOf(p);
@@ -196,7 +296,7 @@
     if (S && S.players.includes(p)) { autoTalents(p); autoHeroChoices(p); }
   };
 
-  function makePlayer(i, race, heroDef, team, isHuman, cfg, bx, by) {
+  function makePlayer(i, race, heroDef, team, isHuman, cfg, bx, by, opt) {
     const rd = G.RACES[race];
     const diff = G.DIFFICULTY[cfg.difficulty] || G.DIFFICULTY.mittel;
     const thPos = G.snap('haupthaus', bx, by);
@@ -230,10 +330,9 @@
     p.armyPoint = { ...p.rally };
     applyStyle(p, !isHuman);
     S.players.push(p);
-    const th = makeBuilding(p, 'haupthaus', thPos.x, thPos.y, 1);
-    p.th = th;
-    p.blds.push(th);
-    p.hero = makeHero(p);
+    if (opt && opt.noTH) p.th = { level: opt.thLevel || 1, hp: 1, maxHp: 1, owner: p.id, team: p.team, x: thPos.x, y: thPos.y, dummy: true };
+    else { const th = makeBuilding(p, 'haupthaus', thPos.x, thPos.y, 1); p.th = th; p.blds.push(th); }
+    p.hero = opt && opt.noHero ? null : makeHero(p);
     return p;
   }
 
@@ -404,6 +503,7 @@
   }
 
   function freeOfStuff(x, y, baseM, campM, shopM) {
+    if (S.plot) { const P = S.plot, m = Math.min(baseM, 60); return !(x > P.x - m && x < P.x + P.w + m && y > P.y - m && y < P.y + P.h + m); }
     for (const p of S.players) if (d2(x, y, p.base.x, p.base.y) < (G.BASE_RADIUS + baseM) ** 2) return false;
     for (const c of S.camps) if (d2(x, y, c.x, c.y) < campM ** 2) return false;
     for (const s of S.shops) if (d2(x, y, s.x, s.y) < shopM ** 2) return false;
@@ -704,7 +804,7 @@
     return true;
   };
   function bldMaxHp(p, type, lvl) {
-    return G.BUILDINGS[type].hp * (1 + 0.25 * (Math.max(1, lvl) - 1)) * (1 + (p.bonus.buildings ? p.bonus.buildings.hp : 0));
+    return G.BUILDINGS[type].hp * (1 + 0.25 * (Math.max(1, lvl) - 1)) * (1 + (p.bonus.buildings ? p.bonus.buildings.hp : 0)) * ((S && S.bldHpMul) || 1);
   }
   function makeBuilding(p, type, x, y, level) {
     const def = G.BUILDINGS[type];
@@ -848,7 +948,7 @@
         });
         if (best) {
           const def = (p.bonus.defense ? p.bonus.defense.dmg : 0);
-          const dmg = atk.dmg * (1 + 0.2 * (b.level - 1)) * (1 + def);
+          const dmg = atk.dmg * (1 + 0.2 * (b.level - 1)) * (1 + def) * (S.towerMul || 1);
           b.lastAng = Math.atan2(best.y - b.y, best.x - b.x);
           S.proj.push({ x: b.x, y: b.y - b.size * 12, t: best, src: b, dmg, splash: atk.splash || 0, kind: atk.splash ? 'kanone' : 'pfeil', speed: 480, team: b.team, owner: b.owner, tx: best.x, ty: best.y, z1: best.fly ? G.FLY_ALT : 0 });
           G.sfx(atk.splash ? 'kanone' : 'pfeil', b.x, b.y, 0.6);
@@ -1326,7 +1426,7 @@
       return;
     }
     h.hold = null;
-    if (h.hp < h.maxHp * 0.25) h.retreat = true;
+    if (h.hp < h.maxHp * 0.25 && !S.scene) h.retreat = true;
     if (h.retreat) {
       if (h.hp > h.maxHp * 0.85) h.retreat = false;
       else { h.order = { type: 'move', x: p.base.x + p.dir.x * 60, y: p.base.y + p.dir.y * 60, auto: true }; return; }
@@ -1335,7 +1435,7 @@
     // Einkaufen beim Händler, wenn gerade Ruhe herrscht
     if (!h.shopping && p.armyState !== 'verteidigen' && !h.target && h.items.length < 6) {
       const want = nextWish(p);
-      if (want && p.gold >= G.ITEMS[want].price + (p.human ? 0 : 150)) h.shopping = S.shops.reduce((a, b) => (dist(b, h) < dist(a, h) ? b : a));
+      if (want && S.shops.length && p.gold >= G.ITEMS[want].price + (p.human ? 0 : 150)) h.shopping = S.shops.reduce((a, b) => (dist(b, h) < dist(a, h) ? b : a));
     }
     if (h.shopping) {
       if (p.armyState === 'verteidigen') h.shopping = null;
@@ -1346,6 +1446,8 @@
         h.shopping = null;
       } else { h.goal = h.shopping; return; }
     }
+    // Raubzug: der Held stürmt selbst das nächste Gebäude (Verteidiger bleiben am Haupthaus)
+    if (S.scene && h.mode !== 'basis') { h.goal = sceneTarget(h) || p.base; return; }
     // Verhalten: Armee folgen, Basis verteidigen oder auf eigene Faust Monster jagen
     if (h.mode === 'basis') { h.goal = { x: p.base.x + p.dir.x * 150, y: p.base.y + p.dir.y * 150 }; return; }
     if (h.mode === 'jagen') {
@@ -1521,6 +1623,7 @@
   function killEnt(t, src, silent) {
     if (t.dead) return;
     t.dead = true;
+    if (G.onKill) G.onKill(t, src);
     if (t.kind === 'building') {
       fx({ type: t.type === 'mauer' ? 'dust' : 'collapse', x: t.x, y: t.y, r: t.r, dur: t.type === 'mauer' ? 0.7 : 1.4, seed: Math.random() });
       if (t.type !== 'mauer') G.shake(t.x, t.y, t.type === 'haupthaus' ? 9 : 4);
@@ -1549,7 +1652,7 @@
     if (t.kind === 'creep') creepKilled(t, killer);
     if (t.kind === 'building' && t.type !== 'mauer') {
       const p = S.players[t.owner];
-      if (t.type === 'haupthaus') eliminate(p);
+      if (t.type === 'haupthaus' && !S.scene) eliminate(p);
       else if (p.human) G.msg(`${t.name} wurde zerstört!`, 'bad');
     }
     if (silent || killer < 0) return;
@@ -1648,7 +1751,7 @@
       }
       let s = Math.sqrt(d2(o.x, o.y, e.x, e.y)) - o.r;
       if (o.kind === 'building') {
-        if (o.type === 'mauer') s += 40;
+        if (o.type === 'mauer') { if (S.scene && !e.wallMode) return; s += S.scene ? -30 : 40; }
         else {
           s += 260;
           const op = S.players[o.owner];
@@ -1659,6 +1762,7 @@
       if (focus && (o.role === 'heiler' || o.role === 'magier')) s -= 70;
       if (s < bs) { bs = s; best = o; }
     });
+    if (S.scene && e.wallMode && best && best.type === 'mauer') e.wallMode = false; // genau ein Mauerstück aufbrechen, dann wieder den Weg suchen
     return best;
   }
   function findHealTarget(e) {
@@ -1853,6 +1957,7 @@
     if (e.kind === 'creep') return e.boss ? bossGoal(e) : e.home;
     const p = S.players[e.owner];
     if (e.kind === 'hero') return e.goal || p.armyPoint;
+    if (S.scene) return e.home || sceneTarget(e) || p.base;
     let ap = (e.committed ? p.attackPoint : p.armyPoint) || p.rally;
     if (e.fly && e.committed && p.attackCentroid) { // Flieger eilen nicht voraus, sie kreisen kurz vor der Spitze des Heeres
       const c = p.attackCentroid, d = Math.hypot(ap.x - c.x, ap.y - c.y);
@@ -1987,12 +2092,25 @@
     else if (t) {
       const range = e.range * (1 + e.m.range);
       const dd = Math.sqrt(d2(e.x, e.y, t.x, t.y)) - t.r - e.r;
-      if (dd <= range) { attack(e, t); e.moving = false; }
-      else navMove(e, t.x, t.y, dt, 0, t);
+      if (dd <= range) { attack(e, t); e.moving = false; e.progD = undefined; }
+      else { navMove(e, t.x, t.y, dt, 0, t); if (S.scene && t.kind === 'building' && t.type !== 'mauer') sceneStuck(e, t, dt); }
     } else {
       const g = unitGoal(e);
-      if (g) navMove(e, g.x, g.y, dt, 6);
+      if (g) {
+        const bld = g.kind === 'building';
+        navMove(e, g.x, g.y, dt, bld ? g.r : 6, bld ? g : undefined);
+        if (S.scene && bld) sceneStuck(e, g, dt);
+      }
     }
+  }
+  // Szene: Wer seinem Ziel 1,5 s lang nicht näher kommt, greift die nächste Mauer an
+  function sceneStuck(e, g, dt) {
+    e.progT = (e.progT || 0) + dt;
+    if (e.progT < 1.5) return;
+    const d = Math.hypot(g.x - e.x, g.y - e.y);
+    const stuck = e.progD !== undefined && e.progD - d < 14 && d > g.r + e.r + e.range * 0.9;
+    if (stuck !== !!e.wallMode) { e.wallMode = stuck; e.retargetT = 0; }
+    e.progD = d; e.progT = 0;
   }
 
   function updateProjectiles(dt) {
@@ -2735,6 +2853,7 @@
   // -------------------------------------------------------------------------
   // Hauptschleife
   function updatePlayer(p, dt) {
+    if (S.scene) return scenePlayer(p, dt);
     if (!p.alive) return;
     p.blds = p.blds.filter((b) => !b.dead);
     p.walls = p.walls.filter((b) => !b.dead);
@@ -2831,6 +2950,7 @@
     S.fx = S.fx.filter((f) => f.t < f.dur);
     if (S.fog.on) { S.fog.t -= dt; if (S.fog.t <= 0) { S.fog.t = 0.2; updateFog(); } }
     S.ents = S.ents.filter((e) => !e.dead);
+    if (S.scene) { if (G.onSceneCheck) G.onSceneCheck(S, dt); return; } // Szenen prüfen ihr Ende selbst (jeden Schritt)
     S.victoryT -= dt;
     if (S.victoryT <= 0) { S.victoryT = 1; checkVictory(); }
   }
@@ -2850,6 +2970,7 @@
 
   function checkVictory() {
     if (S.over) return;
+    if (S.scene) return;
     const me = human();
     if (!me.alive) { S.over = { win: false, time: S.time }; return; }
     const teams = new Set(S.players.filter((p) => p.alive).map((p) => p.team));

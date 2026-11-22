@@ -114,8 +114,16 @@
     }
     g.globalAlpha = 1;
     R.L.bakeFeatures(g, S, sc); // Ufer, Lavaränder, Blumenwiesen, Schneewehen, Felsfüße …
-    // Basisplätze (gepflastert)
-    for (const p of S.players) {
+    // Grundstück der Festung (gepflastert, mit Bauraster) bzw. Basisplätze im Echtzeitmodus
+    if (S.plot) {
+      const P = S.plot, x0 = P.x * sc, y0 = P.y * sc, w = P.w * sc, h = P.h * sc;
+      g.fillStyle = shade(th.road, -0.12); g.globalAlpha = 0.42; g.fillRect(x0, y0, w, h);
+      g.globalAlpha = 0.14; g.strokeStyle = INK; g.lineWidth = 0.6;
+      for (let gx = 0; gx <= w + 0.1; gx += T * sc) { g.beginPath(); g.moveTo(x0 + gx, y0); g.lineTo(x0 + gx, y0 + h); g.stroke(); }
+      for (let gy = 0; gy <= h + 0.1; gy += T * sc) { g.beginPath(); g.moveTo(x0, y0 + gy); g.lineTo(x0 + w, y0 + gy); g.stroke(); }
+      g.globalAlpha = 0.55; g.strokeStyle = shade(th.road, -0.45); g.lineWidth = 3; g.strokeRect(x0, y0, w, h);
+    }
+    for (const p of S.plot ? [] : S.players) {
       const x = p.base.x * sc, y = p.base.y * sc, r = G.BASE_RADIUS * sc;
       g.fillStyle = shade(th.road, -0.1); g.globalAlpha = 0.5;
       g.beginPath(); g.arc(x, y, r, 0, 7); g.fill();
@@ -178,6 +186,8 @@
       case 'sanktum': for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * Math.PI * 0.4; ctx.lineTo(Math.cos(a) * 9, Math.sin(a) * 9); const b = a + Math.PI * 0.2; ctx.lineTo(Math.cos(b) * 4, Math.sin(b) * 4); } ctx.closePath(); ctx.fill(); ctx.stroke(); break;
       case 'beschwoerung': ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.arc(0, 0, 9, 0, 7); ctx.stroke(); ctx.beginPath(); for (let i = 0; i < 5; i++) { const a = -Math.PI / 2 + i * Math.PI * 0.8; ctx.lineTo(Math.cos(a) * 9, Math.sin(a) * 9); } ctx.closePath(); ctx.stroke(); break;
       case 'horst': for (const s2 of [-1, 1]) { ctx.moveTo(0, 2); ctx.quadraticCurveTo(s2 * 6, -9, s2 * 11, -5); ctx.quadraticCurveTo(s2 * 8, -1, s2 * 9, 2); ctx.quadraticCurveTo(s2 * 5, 1, s2 * 5, 5); ctx.quadraticCurveTo(s2 * 2, 3, 0, 6); } ctx.fill(); ctx.stroke(); break;
+      case 'schatzkammer': ctx.rect(-8, -4, 16, 10); ctx.fillStyle = '#8a5a2a'; ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-8, -4); ctx.quadraticCurveTo(0, -11, 8, -4); ctx.closePath(); ctx.fillStyle = '#a8743a'; ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.arc(0, 1, 2.6, 0, 7); ctx.fillStyle = '#ffd23a'; ctx.fill(); ctx.stroke(); break;
+      case 'holzlager': for (const [a, b] of [[-5, 3], [5, 3], [0, -4]]) { ctx.moveTo(a + 5, b); ctx.ellipse(a, b, 5, 3.6, 0, 0, 7); } ctx.fillStyle = '#c8935a'; ctx.fill(); ctx.stroke(); ctx.beginPath(); for (const [a, b] of [[-5, 3], [5, 3], [0, -4]]) { ctx.moveTo(a + 1.6, b); ctx.arc(a, b, 1.6, 0, 7); } ctx.fillStyle = '#7a5530'; ctx.fill(); break;
       case 'schmiede': ctx.moveTo(-9, -3); ctx.lineTo(8, -3); ctx.lineTo(5, 1); ctx.lineTo(2, 1); ctx.lineTo(4, 6); ctx.lineTo(-4, 6); ctx.lineTo(-2, 1); ctx.lineTo(-6, 1); ctx.closePath(); ctx.fillStyle = '#3a3a3e'; ctx.fill(); ctx.stroke(); break;
       default: ctx.arc(0, 0, 4, 0, 7); ctx.fill(); ctx.stroke();
     }
@@ -1141,7 +1151,7 @@
   R._drawMobile = (e) => drawMobile(e); // für Figuren-Vorschau und Tests
 
   // Kleine Szene fürs Menü: Volk (Held mit Gefolge) oder einzelner Held vor der Heimatkarte
-  R.drawPreview = function (cv, race, mode, heroId, skin) {
+  R.drawPreview = function (cv, race, mode, heroId, skin, zoom) {
     const w = cv.clientWidth, h = cv.clientHeight;
     if (!w || !h) return;
     const d2r = Math.min(2, window.devicePixelRatio || 1);
@@ -1175,9 +1185,9 @@
       const hd = rd.heroes.find((x) => x.id === heroId) || rd.heroes[0];
       const hero = { kind: 'hero', def: hd, name: hd.name, r: 16, face: 1.35, range: hd.ranged ? 165 : 28, speed: 80 };
       const unit = (role) => { const ub = G.unitBase({ rd }, role), u = rd.units[role]; return { kind: 'unit', role, name: u.name, r: ub.r, face: 1.35, range: ub.range, speed: 60, fly: role === 'flieger', spec: u.spec }; };
-      const s0 = h / 120;
-      if (mode === 'hero') fig(hero, w / 2, h * 0.66, s0 * 1.9, 0.3);
-      else if (mode === 'unit' && rd.units[heroId]) { const big = heroId === 'elite' || heroId === 'flieger'; fig(unit(heroId), w / 2, h * (heroId === 'flieger' ? 0.74 : 0.68), s0 * (big ? 1.55 : 1.9), 0.5); }
+      const s0 = (h / 120) * (zoom || 1), zy = 0.12 * ((zoom || 1) - 1); // vergrößert: Figur tiefer setzen, damit der Kopf im Bild bleibt
+      if (mode === 'hero') fig(hero, w / 2, h * (0.66 + zy), s0 * 1.9, 0.3);
+      else if (mode === 'unit' && rd.units[heroId]) { const big = heroId === 'elite' || heroId === 'flieger'; fig(unit(heroId), w / 2, h * ((heroId === 'flieger' ? 0.74 : 0.68) + zy), s0 * (big ? 1.55 : 1.9), 0.5); }
       else if (mode === 'unit' && heroId && heroId.startsWith('summon:')) fig({ kind: 'unit', role: 'summon', summoned: true, name: heroId.slice(7), r: 11, face: 1.35, range: 30, speed: 60 }, w / 2, h * 0.7, s0 * 1.75, 0.5);
       else if (mode === 'haendler') { const sc = Math.min(s0 * 0.85, w / 110); c2.save(); c2.translate(w / 2, h * 0.62); c2.scale(sc, sc); drawShop({ x: 0, y: 0 }); c2.restore(); }
       else {
@@ -1735,7 +1745,7 @@
     }
     // Sammelpunkt / Armeeziel des Spielers
     const me = S.players[0];
-    if (me.alive && me.armyPoint) {
+    if (me.alive && me.armyPoint && !S.scene) {
       const ap = me.armyPoint;
       ctx.strokeStyle = me.color; ctx.lineWidth = 2; ctx.globalAlpha = 0.7;
       ctx.beginPath(); ctx.moveTo(ap.x, ap.y + 8); ctx.lineTo(ap.x, ap.y - 18); ctx.stroke();
@@ -1794,6 +1804,8 @@
       ctx.drawImage(fogCv, 0, 0, S.fog.FW * S.fog.cell, S.fog.FH * S.fog.cell);
     }
 
+    // Zusätzliche Ebene der Festung (Bauvorschau, Auswahl, Bannkreis beim Raubzug) in Weltkoordinaten
+    if (R.overlay) R.overlay(ctx, S, { circ, label, outline, bar, roundRect, INK, shade });
     // Bauvorschau
     const UI = G.UI;
     if (UI && UI.placing) {

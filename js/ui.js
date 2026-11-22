@@ -122,6 +122,16 @@
     }).join('')}</div>`;
   }
 
+  // Verweis auf das zweite Spiel „Reichsfeuer: Festungen“ (eigene Seite, eigener Spielstand)
+  function festungCard() {
+    let f = null;
+    try { f = JSON.parse(window.localStorage.getItem('reichsfeuer.festung.v1') || 'null'); } catch (e) { f = null; }
+    const th = f && f.blds ? (f.blds.find((b) => b.type === 'haupthaus') || {}).level : 0;
+    const info = f && f.name && G.RACES[f.race] ? `Deine Festung „${f.name.replace(/[<>&"]/g, '')}“ · ${G.RACES[f.race].name} · Haupthaus ${th || 1} · Ruhm ${f.ruhm || 0}`
+      : 'Neu: Baue eine Festung, die auch ohne dich weiterwächst, plündere Siedlungen und ziehe in den Feldzug der sechs Reiche.';
+    return `<div class="continue framed">${f && G.RACES[f.race] ? emblem(f.race) : ''}<div class="ct-info"><b>Reichsfeuer: Festungen</b><small>${info}</small></div>
+      <a href="festung.html" class="fst-go"><button class="big" tabindex="-1">🏰 ${f ? 'Zur Festung' : 'Festungen'}</button></a></div>`;
+  }
   function renderMenu() {
     const c = UI.cfg;
     const tabs = [['frei', 'Freies Spiel'], ['kampagne', 'Kampagne'], ['chronik', 'Chronik'], ['spielstaende', 'Spielstände'], ['voelker', 'Völker & Skins'], ['hilfe', 'Anleitung'], ['optionen', 'Einstellungen']];
@@ -130,6 +140,7 @@
     let body = note ? `<div class="menunote ${note.cls}">${note.text}</div>` : '';
     if (last) body += `<div class="continue framed">${emblem(last.meta.race)}<div class="ct-info"><b>Weiterspielen</b><small>${saveSummary(last.meta)}</small></div>
       <button class="big" data-act="sv-load" data-v="${last.slot}">▶ Fortsetzen</button></div>`;
+    body += festungCard();
     body += `<nav class="menutabs">${tabs.map(([k, n]) => `<button class="${UI.menuTab === k ? 'sel' : ''}" data-act="m-tab" data-v="${k}">${n}</button>`).join('')}</nav>`;
     if (UI.menuTab === 'frei') {
       const maps = [['heimat', 'Heimatkarte', 'Karte deines Volkes'], ['zufall', 'Zufall', '']].concat(Object.keys(G.THEMES).map((k) => [k, G.THEMES[k].name, '']));
@@ -470,7 +481,7 @@
     return '';
   }
   function tabBauen(p) {
-    const types = [...G.DEFAULT_ORDER, ...Object.keys(G.BUILDINGS)].filter((t, i, a) => G.BUILDINGS[t] && t !== 'haupthaus' && a.indexOf(t) === i);
+    const types = [...G.DEFAULT_ORDER, ...Object.keys(G.BUILDINGS)].filter((t, i, a) => G.BUILDINGS[t] && !G.BUILDINGS[t].festung && t !== 'haupthaus' && a.indexOf(t) === i);
     let h = `<div class="box">${toggle('auto.build', 'Bau-Autopilot', p.auto.build, 'Der Computer baut, erforscht und befestigt für dich nach einer optimierten Reihenfolge.')}
       <div class="hint">Baumeister: ${G.buildersBusy(p)}/${G.builders(p)} · ${G.bname(p.race, 'haupthaus')} Stufe ${p.th.level} bestimmt Limits und Höchststufen.</div></div>`;
     h += wallBox(p);

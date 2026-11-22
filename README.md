@@ -1,8 +1,8 @@
 # Reichsfeuer (Arbeitstitel)
 
 Fantasy-Strategiespiel im Browser – eine Mischung aus **Autobattler** und **Warcraft-3-artigem Basisbau**.
-Baue eine Festung im Stil von Clash of Clans, lass deine Truppen automatisch kämpfen und führe einen Helden
-(automatisch oder manuell) gegen Computergegner.
+Baue deine Basis, lass deine Truppen automatisch kämpfen und führe einen Helden (automatisch oder manuell) gegen
+Computergegner. Dazu gibt es mit **Reichsfeuer: Festungen** ein zweites Spiel: Aufbau in Echtzeit, Raubzüge und Feldzug.
 
 ## Starten
 
@@ -155,6 +155,35 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - **Blut** (abschaltbar): Spritzer, Lachen, Leichen; Trümmer zerstörter Gebäude.
 - **Tiere passend zur Karte** (Hasen, Rehe, Krähen, Kröten, Geier, Füchse, Glühwürmchen, Fledermäuse …), die vor Truppen fliehen.
 
+## Reichsfeuer: Festungen (zweites Spiel, `festung.html`)
+
+Ein eigenständiges Aufbau- und Plünderspiel mit Grafik, Völkern, Helden und Kampf-KI von Reichsfeuer –
+erreichbar über das Hauptmenü („🏰 Festungen“) oder direkt über `festung.html`. Eigener Spielstand im Browser.
+
+- **Festung in Echtzeit:** Minen und Sägewerke fördern weiter, auch wenn die Seite geschlossen ist (bis zu 4 Stunden
+  Vorrat je Mine – antippen zum Einsammeln). Bauen und Ausbauen dauert echte Zeit (10 s bis 30 min), mehrere
+  Baumeister arbeiten gleichzeitig; „Sofort fertig“ kostet Gold. Das Haupthaus (Stufe 1–5) bestimmt Anzahl und
+  Höchststufe aller Gebäude. Schatzkammer und Holzlager erhöhen das Lager, Unterkünfte die Truppenplätze.
+- **Frei bauen:** Gebäude auf einem 30×30-Raster platzieren und jederzeit versetzen, Mauern Feld für Feld setzen
+  (drei Stufen: Holzpalisade, Steinmauer, Festungsmauer; alle einer Stufe auf einmal ausbaubar).
+- **Armee:** Truppen in einer Warteschlange ausbilden (auch offline); höhere Kasernen-/Gebäudestufen bilden stärkere
+  Krieger aus (★). Die Schmiede erforscht Waffen, Rüstung und Ausbildung. Der Held sammelt Erfahrung, wählt Talente,
+  Meisterungen und ultimative Fähigkeit selbst und muss sich nach einer Niederlage erholen.
+- **Raubzüge:** Fremde Siedlungen werden passend zur eigenen Stufe erzeugt (Haupthaus in der Mitte, Lager und Türme
+  hinter Mauerringen, Minen außen, teils mit Held und Wachtrupp). Truppen außerhalb des roten Festungsgrunds absetzen
+  (tippen = einer, halten = mehrere); ab dem ersten Absetzen laufen 3 Minuten. Fallende Gebäude geben ihre Beute frei.
+  Die drei Volksfähigkeiten wirken je einmal an der angetippten Stelle. Wer überlebt, kehrt heim.
+- **Kriegsbanner:** Bresche (≥ 50 % zerstört), Thron (Haupthaus gefallen), Stille (alle Türme und Kanonen zerstört).
+  Ein Banner reicht zum Sieg; Siege bringen **Ruhm** (Ränge von Knappe bis Legende), Niederlagen kosten ihn.
+- **Feldzug der sechs Reiche:** zwölf feste Festungen mit Geschichte, steigender Stufe, Helden und Wachtrupps;
+  volle Beute beim ersten Sieg, jeder Sieg öffnet die nächste.
+- **Überfälle:** Ab Haupthaus Stufe 2 greifen KI-Heere an, während man fort ist – nachgespielt mit der echten
+  Kampfberechnung beim Wiederkommen (Bericht mit Zerstörung, Verlusten, Ruhm). Danach schützt ein Schild für
+  6–10 Stunden. Der eigene Held verteidigt mit, wenn er bereit ist. Mit dem **Probeangriff** lässt sich die Verteidigung
+  gefahrlos live testen.
+- Musik/Geräusche, Spielstand als Datei oder Code sichern und laden, Ratgeber-Tipps, Handy- und PC-Bedienung
+  (ziehen = Karte, zwei Finger/Mausrad = Zoom, tippen = wählen/bauen/absetzen, WASD/Pfeiltasten, Esc).
+
 ## Steuerung
 
 | Eingabe | Aktion |
@@ -189,6 +218,12 @@ js/render.js      Canvas-Darstellung (Comic-Stil), Heimatkarten, Minikarte
 js/landschaft.js  Landschaft: Pflanzen, Geländemerkmale, belebte Luftschicht
 js/ui.js          Menü, HUD, Seitenleiste, Eingabe
 js/main.js        Spielschleife
+
+festung.html          Reichsfeuer: Festungen (zweites Spiel, nutzt data/game/audio/render/landschaft mit)
+css/festung.css       Oberfläche der Festungen
+js/festung-data.js    Festungen: Kosten, Bauzeiten, Lager, Feldzug, Siedlungs-Generator
+js/festung.js         Festungen: Spielstand, Echtzeit-Wirtschaft, Raubzüge, Überfälle (ohne Seitenaufbau, testbar)
+js/festung-ui.js      Festungen: Startbildschirm, Leisten, Fenster, Steuerung, Spielschleife
 ```
 
 Balancing-Werte stehen gesammelt in `js/data.js` und lassen sich dort leicht anpassen.

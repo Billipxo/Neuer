@@ -645,6 +645,14 @@ G.UNIT_BASE.elite = { hp: 900, dmg: 40, range: 28, cd: 1.2, speed: 70, armor: 5,
 G.BUILDINGS.horst = { name: 'Horst', size: 2, hp: 1000, cost: { g: 200, w: 160 }, time: 26,
   desc: 'Bildet Flieger aus. Flieger überfliegen Mauern und Gelände – Nahkämpfer erreichen sie nicht.' };
 G.LIMITS.horst = [0, 0, 1, 1, 2];
+// Nur in „Reichsfeuer: Festungen“: Lager für Gold und Holz
+G.BUILDINGS.schatzkammer = { name: 'Schatzkammer', size: 2, hp: 1300, cost: { g: 140, w: 90 }, time: 18, festung: true, desc: 'Lagert Gold. Wird sie zerstört, erbeutet der Angreifer einen Teil davon.' };
+G.BUILDINGS.holzlager = { name: 'Holzlager', size: 2, hp: 1300, cost: { g: 120, w: 60 }, time: 18, festung: true, desc: 'Lagert Holz. Wird es zerstört, erbeutet der Angreifer einen Teil davon.' };
+(function () {
+  const names = { menschen: ['Schatzkammer', 'Holzlager'], elfen: ['Mondschatz', 'Rindenspeicher'], untote: ['Grabkammer', 'Sargholzlager'],
+    orks: ['Beutehort', 'Holzhaufen'], zwerge: ['Goldgewölbe', 'Balkenlager'], daemonen: ['Seelentresor', 'Aschenholzlager'] };
+  for (const r in names) { G.RACES[r].bnames.schatzkammer = names[r][0]; G.RACES[r].bnames.holzlager = names[r][1]; }
+})();
 G.PRODUCTION.horst = { flieger: 1 };
 G.BUILD_ORDER.splice(G.BUILD_ORDER.indexOf('beschwoerung') + 1, 0, 'horst');
 (function () {
