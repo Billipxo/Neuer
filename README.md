@@ -158,7 +158,13 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
   Druckwelle/Feuer/Rauch, einstürzende Gebäude mit Trümmern, Kamerawackeln, Lichtsäulen (Stufenaufstieg, Beschwörung),
   Heilkreuze, Runenkreise, brennende beschädigte Gebäude, Wetter je Karte (Schnee, Blätter, Pollen, Nebel, Staub, Asche)
   und Wolkenschatten. Aufwendige Effekte lassen sich in den Einstellungen abschalten.
-- **Blut** (abschaltbar): Spritzer, Lachen, Leichen; Trümmer zerstörter Gebäude.
+- **Blut** (abschaltbar): Spritzer, Lachen, Leichen; zerstörte Gebäude hinterlassen rauchende Ruinen mit Glut und
+  verkohlten Balken.
+- **Tag und Nacht:** Ein Lichtsystem legt Dämmerung und Nacht über die Welt; Fenster, Lagerfeuer, Essen, Magie,
+  Feuerbälle, Explosionen und der Held werfen weiche, farbige Lichtkegel. Im Echtzeit-Spiel dauert ein Tag 12 Minuten
+  (in den Einstellungen abschaltbar), in den Festungen folgt das Licht der echten Uhrzeit (oder immer Tag/Nacht).
+- **Feinschliff:** weiche Vignette an den Bildrändern, goldene Strahlen und Funken beim Ausbau, Lichtring beim Absetzen
+  von Truppen.
 - **Tiere passend zur Karte** (Hasen, Rehe, Krähen, Kröten, Geier, Füchse, Glühwürmchen, Fledermäuse …), die vor Truppen fliehen.
 
 ## Reichsfeuer: Festungen (zweites Spiel, `festung.html`)
@@ -199,6 +205,9 @@ erreichbar über das Hauptmenü („🏰 Festungen“) oder direkt über `festun
   Kampfberechnung beim Wiederkommen (Bericht mit Zerstörung, Verlusten, Ruhm). Danach schützt ein Schild für
   6–10 Stunden. Der eigene Held verteidigt mit, wenn er bereit ist. Mit dem **Probeangriff** lässt sich die Verteidigung
   gefahrlos live testen.
+- **Grafik der Festungen:** gepflegter Rasen mit Steinkante, gepflasterte Wege vom Haupthaus zu jedem Gebäude, Raster
+  nur beim Bauen; Münzen und Stämme fliegen beim Einsammeln in die Rohstoffanzeige; „Zum Angriff!“-Einblendung,
+  eroberte Kriegsbanner fallen ins Bild, Konfetti beim Sieg; glänzende Knöpfe und Rohstoff-Symbole.
 - Musik/Geräusche, Spielstand als Datei oder Code sichern und laden, Ratgeber-Tipps, Handy- und PC-Bedienung
   (ziehen = Karte, zwei Finger/Mausrad = Zoom, tippen = wählen/bauen/absetzen, WASD/Pfeiltasten, Esc).
 

@@ -29,6 +29,8 @@
   const flags = (n) => `<span class="flags">${[0, 1, 2].map((i) => `<i class="flag ${(Array.isArray(n) ? n[i] : i < n) ? 'on' : ''}"></i>`).join('')}</span>`;
   const signed = (n) => (n > 0 ? '+' : '') + n;
   const cv = () => $('#view');
+  const ICON_G = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#f0c24a" stroke="#6a4a0a" stroke-width="2"/><circle cx="12" cy="12" r="6.4" fill="none" stroke="#c8961e" stroke-width="1.6"/><path d="M7.6 8a6 6 0 0 1 5.2-2.4" stroke="#fff6c0" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>';
+  const ICON_W = '<svg viewBox="0 0 24 24"><rect x="2" y="7" width="16" height="10" rx="3" fill="#b9824e" stroke="#4a2e16" stroke-width="2"/><path d="M5 10h9M6 14h7" stroke="#8a5a30" stroke-width="1.3"/><ellipse cx="18" cy="12" rx="4" ry="5" fill="#e6b47c" stroke="#4a2e16" stroke-width="2"/><ellipse cx="18" cy="12" rx="1.8" ry="2.4" fill="none" stroke="#a8743a" stroke-width="1.2"/></svg>';
 
   function toast(text, cls) {
     const box = $('#toasts'), d = document.createElement('div');
@@ -68,6 +70,69 @@
   }
 
   // -------------------------------------------------------------------------
+  // Tageszeit: Licht und Schatten nach der echten Uhrzeit (Einstellung: echt, immer Tag, immer Nacht)
+  const lightFor = (h) => R.lightFor(h, 0.6);
+  function updateLight() {
+    const mode = (st && st.settings.tod) || 'echt', d = new Date();
+    R.light = !st || U.mode === 'start' ? null : lightFor(mode === 'tag' ? 12 : mode === 'nacht' ? 23 : d.getHours() + d.getMinutes() / 60);
+  }
+  // Wege vom Haupthaus zu allen Gebäuden (werden in den Boden gezeichnet)
+  R.groundHook = function (g, S, sc) {
+    if (!S.festung) return;
+    const th = S.ents.find((e) => e.kind === 'building' && e.type === 'haupthaus' && !e.dead);
+    if (!th) return;
+    const road = G.THEMES[S.theme].road, list = S.ents.filter((e) => e.kind === 'building' && e.type !== 'mauer' && e !== th && !e.dead);
+    const path = (b) => { g.beginPath(); g.moveTo(th.x * sc, th.y * sc); g.lineTo(b.x * sc, th.y * sc); g.lineTo(b.x * sc, b.y * sc); };
+    g.save(); g.lineCap = 'round'; g.lineJoin = 'round';
+    g.globalAlpha = 0.5; g.strokeStyle = R.shade(road, -0.38); g.lineWidth = 22 * sc; for (const b of list) { path(b); g.stroke(); }
+    g.globalAlpha = 0.92; g.strokeStyle = R.shade(road, 0.04); g.lineWidth = 16 * sc; for (const b of list) { path(b); g.stroke(); }
+    g.globalAlpha = 0.5; g.fillStyle = R.shade(road, -0.2);
+    const stones = (x0, y0, x1, y1) => {
+      const len = Math.hypot(x1 - x0, y1 - y0), n = Math.floor(len / 11), hor = Math.abs(x1 - x0) > Math.abs(y1 - y0);
+      for (let i = 0; i < n; i++) { const t = (i + 0.5) / n, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t, o = i % 2 ? 3.5 : -3.5; g.fillRect((x + (hor ? 0 : o) - 3) * sc, (y + (hor ? o : 0) - 2.5) * sc, 6 * sc, 5 * sc); }
+    };
+    for (const b of list) { stones(th.x, th.y, b.x, th.y); stones(b.x, th.y, b.x, b.y); }
+    g.restore();
+  };
+  const layoutSig = () => st.blds.map((b) => `${b.id}:${b.tx},${b.ty}`).join('|');
+  // Fliegende Münzen und Stämme zur Rohstoffanzeige
+  function flyRes(kind, wx, wy, n) {
+    const tgt = document.querySelector('#ftop .res.' + kind);
+    if (!tgt || !n) return;
+    const r = tgt.getBoundingClientRect(), tx = r.left + 16, ty = r.top + r.height / 2 - 6;
+    const sx = (wx - R.cam.x) * R.cam.z, sy = (wy - R.cam.y) * R.cam.z;
+    for (let i = 0; i < Math.min(12, n); i++) {
+      const el = document.createElement('div'), ox = (Math.random() - 0.5) * 56, oy = (Math.random() - 0.5) * 34, delay = i * 45;
+      el.className = 'flyc'; el.innerHTML = kind === 'g' ? ICON_G : ICON_W;
+      el.style.left = sx + ox + 'px'; el.style.top = sy + oy + 'px';
+      document.body.appendChild(el);
+      setTimeout(() => { el.style.transform = `translate(${tx - sx - ox}px, ${ty - sy - oy}px) scale(0.55)`; el.style.opacity = '0.35'; }, 40 + delay);
+      setTimeout(() => { el.remove(); tgt.classList.add('bump'); setTimeout(() => tgt.classList.remove('bump'), 160); }, 720 + delay);
+    }
+  }
+  // Große Einblendungen: „Zum Angriff!“, eroberte Banner, Konfetti beim Sieg
+  function bigCall(text, cls) {
+    const el = document.createElement('div'); el.className = 'bigcall ' + (cls || ''); el.textContent = text;
+    document.body.appendChild(el); setTimeout(() => el.remove(), 1900);
+  }
+  function bannerPop(text, bad) {
+    const el = document.createElement('div'); el.className = 'bannerpop' + (bad ? ' bad' : '');
+    el.innerHTML = `<i class="flag on"></i><span>${esc(text)}</span>`;
+    document.body.appendChild(el); setTimeout(() => el.remove(), 2600);
+    G.sfx(bad ? 'alarm' : 'horn', 0, 0, 0.8, true);
+  }
+  function confetti(box) {
+    const cols = ['#ffd23a', '#ff6a3a', '#7ac8ff', '#7aff9a', '#ff7ad0', '#ffffff'];
+    for (let i = 0; i < 70; i++) {
+      const c = document.createElement('i'); c.className = 'confetti';
+      c.style.left = Math.random() * 100 + '%'; c.style.background = cols[i % cols.length];
+      c.style.animationDelay = Math.random() * 0.8 + 's'; c.style.animationDuration = 2 + Math.random() * 1.6 + 's';
+      c.style.setProperty('--dx', (Math.random() - 0.5) * 160 + 'px'); c.style.setProperty('--rot', Math.random() * 900 + 'deg');
+      box.appendChild(c);
+    }
+  }
+
+  // -------------------------------------------------------------------------
   // Szenen wechseln
   function setCam(S, kind, cam) {
     const c = cv();
@@ -90,7 +155,8 @@
   function enterHome(keepCam) {
     U.mode = 'home'; U.raid = null; U.deploy = null; U.place = null; F.raid = null; hold = null;
     const S = F.homeScene(st);
-    R.buildGround(S);
+    R.buildGround(S); U.groundSig = layoutSig();
+    updateLight();
     document.body.dataset.race = st.race;
     showHud(true);
     setCam(S, 'home', keepCam ? U.homeCam : null);
@@ -153,7 +219,7 @@
     let h;
     if (mode === 'home') {
       const cap = F.cap(st), b = F.buildersTotal(st), used = F.armyUsed(st), house = F.housing(st), now = F.now();
-      const res = (k, v, c, label) => `<div class="res ${k} ${v >= c ? 'full' : ''}" title="${label}"><b>${k === 'g' ? '●' : '▮'} ${fmt(v)}</b><small>/ ${fmt(c)}</small><span class="bar"><i style="width:${Math.min(100, (100 * v) / c)}%"></i></span></div>`;
+      const res = (k, v, c, label) => `<div class="res ${k} ${v >= c ? 'full' : ''}" title="${label}"><b><i class="ri">${k === 'g' ? ICON_G : ICON_W}</i>${fmt(v)}</b><small>/ ${fmt(c)}</small><span class="bar"><i style="width:${Math.min(100, (100 * v) / c)}%"></i></span></div>`;
       h = res('g', st.gold, cap.g, 'Gold') + res('w', st.wood, cap.w, 'Holz')
         + `<div class="pill" title="Freie Baumeister">🔨 ${b - F.busy(st)}/${b}</div><div class="pill" title="Truppenplätze">⚔ ${used}/${house}</div>`
         + `<div class="pill ruhm" title="Ruhm – steigt mit gewonnenen Raubzügen">🏆 <b>${st.ruhm}</b> ${F.rankOf(st.ruhm)}</div>`
@@ -570,6 +636,8 @@
     let h = head('☰', 'Mehr');
     h += `<h3>Probeangriff</h3><p>Ein KI-Heer deiner Stufe greift deine Festung an – ganz ohne Verluste. So prüfst du, ob Türme und Mauern richtig stehen.</p><div class="btns">`
       + G.RACE_KEYS.map((r) => `<button data-act="probe" data-v="${r}">${rname(r)}</button>`).join('') + '<button data-act="probe" data-v="">🎲 Zufall</button></div>';
+    const tod = s.tod || 'echt';
+    h += `<h3>Tageszeit</h3><p class="note">Licht und Schatten folgen der echten Uhrzeit – nachts leuchten Fenster, Feuer und Magie.</p><div class="btns">${[['echt', '🕰 Echte Uhrzeit'], ['tag', '☀️ Immer Tag'], ['nacht', '🌙 Immer Nacht']].map(([k, n]) => `<button data-act="tod" data-v="${k}" class="${tod === k ? 'sel' : ''}">${n}</button>`).join('')}</div>`;
     h += `<h3>Ton</h3><label class="row">Musik <input type="range" min="0" max="1" step="0.05" value="${s.music}" data-set="music"></label>`
       + `<label class="row">Geräusche <input type="range" min="0" max="1" step="0.05" value="${s.sfx}" data-set="sfx"></label>`
       + `<label class="row"><input type="checkbox" data-set="muted" ${s.muted ? 'checked' : ''}> Ton aus</label>`;
@@ -613,6 +681,7 @@
         + '</div>' + (r.finale ? '<p class="good">Der Feldzug der sechs Reiche ist vollendet – das Reichsfeuer brennt unter deinem Banner!</p>' : '');
     }
     showOverlay(h + '<button class="big" data-act="tohome">Zur Festung</button>');
+    if (r.kind === 'probe' ? !r.stars : r.stars > 0) confetti($('#overlay-body'));
   }
   function showAway(reps) {
     st.unread = (st.unread || 0) + reps.length;
@@ -649,7 +718,8 @@
     document.body.dataset.race = r;
     if (!rd.heroes.some((x) => x.id === U.pick.hero)) U.pick.hero = rd.heroes[0].id;
     const heroes = rd.heroes.slice(0, 3);
-    $('#start').innerHTML = `<div class="inner"><h1>Reichsfeuer: Festungen</h1>`
+    $('#start').innerHTML = '<div class="embers" aria-hidden="true">' + Array.from({ length: 14 }, (_, i) => `<span style="left:${(i * 7.3 + 3) % 100}%;animation-duration:${9 + (i % 5) * 1.6}s;animation-delay:${(i * 1.3) % 8}s"></span>`).join('') + '</div>'
+      + `<div class="inner"><h1>Reichsfeuer: Festungen</h1>`
       + '<p class="lead">Gründe eine Festung, die weiterwächst, auch wenn du nicht spielst. Plündere fremde Siedlungen, ziehe in den Feldzug durch die sechs Reiche und halte deine Mauern gegen Überfälle.</p>'
       + `<h3>Wähle dein Volk</h3><div class="races">${G.RACE_KEYS.map((k) => `<button data-act="pickrace" data-v="${k}" class="${k === r ? 'sel' : ''}"><b>${G.RACES[k].name}</b><small>${G.RACES[k].style.tag}</small></button>`).join('')}</div>`
       + `<div class="racedesc framed"><p><b>${rd.name}:</b> ${esc(rd.desc)}</p><p><b>${esc(rd.passive.name)}:</b> ${esc(rd.passive.desc)}</p><p><b>${esc(rd.style.name)}:</b> ${esc(rd.style.desc)}</p>`
@@ -673,7 +743,11 @@
   // -------------------------------------------------------------------------
   // Aktionen
   function changed(armyToo) {
-    if (U.mode === 'home' && G.S && G.S.festung === 'home') F.syncHome(st, G.S, armyToo);
+    if (U.mode === 'home' && G.S && G.S.festung === 'home') {
+      F.syncHome(st, G.S, armyToo);
+      const sig = layoutSig();
+      if (sig !== U.groundSig) { U.groundSig = sig; R.buildGround(G.S); }
+    }
     if (U.sel) G.UI.selected = entOf(U.sel);
     F.save(st);
     renderAll();
@@ -682,6 +756,7 @@
     const res = rec.type === 'goldmine' ? 'Gold' : 'Holz', got = F.collect(st, rec);
     const e = entOf(rec);
     if (got > 0) {
+      if (e) flyRes(res === 'Gold' ? 'g' : 'w', e.x, e.y - 20, 3 + Math.round(got / 120));
       if (e) G.S.fx.push({ type: 'text', x: e.x, y: e.y - 30, text: `+${fmt(got)} ${res}`, color: res === 'Gold' ? '#ffd23a' : '#e0a060', t: 0, dur: 1.4, big: true });
       G.sfx('kauf', 0, 0, 0.6, true);
     } else if ((rec.acc || 0) >= 1) err(`${res}-Lager ist voll – baue ${res === 'Gold' ? bn('schatzkammer') : bn('holzlager')} aus.`);
@@ -694,6 +769,7 @@
     const txt = r.potion ? `${F.POTIONS[r.potion].icon} ${F.POTIONS[r.potion].name}` : [r.g ? `+${fmt(r.g)} Gold` : '', r.w ? `+${fmt(r.w)} Holz` : ''].filter(Boolean).join('  ') || 'Lager voll!';
     G.S.fx.push({ type: 'text', x: c.x, y: c.y - 24, text: txt, color: '#ffe066', t: 0, dur: 1.8, big: true });
     G.S.fx.push({ type: 'ring', x: c.x, y: c.y, r: 26, color: '#ffd23a', t: 0, dur: 0.6 });
+    if (r.g) flyRes('g', c.x, c.y, 4 + Math.round(r.g / 150)); if (r.w) flyRes('w', c.x, c.y, 4 + Math.round(r.w / 150));
     toast(`${esc(d.name)} geborgen: ${esc(txt)}`, 'gold');
     G.sfx('kauf', 0, 0, 0.7, true);
     changed();
@@ -781,6 +857,7 @@
       case 'claimach': { const g = F.claimAch(st, v); if (g) { toast(`Erfolg abgeholt: +${cost(g)}`, 'gold'); G.sfx('level', 0, 0, 0.7, true); } changed(); return; }
       case 'claimdaily': { const g = F.claimDaily(st, +v); if (g) { toast(`Auftrag erfüllt: +${cost(g)}`, 'gold'); G.sfx('kauf', 0, 0, 0.7, true); } changed(); return; }
       case 'claimbonus': { const g = F.claimDailyBonus(st); if (g) { toast(`Tagestruhe: +${cost(g)}`, 'gold'); G.sfx('level', 0, 0, 0.7, true); } changed(); return; }
+      case 'tod': st.settings.tod = v; updateLight(); F.save(st); renderSheet(); return;
       case 'tohome': hideOverlay(); enterHome(true); return;
       case 'closeov': hideOverlay(); renderAll(); return;
       case 'probe': startProbe(v); return;
@@ -1043,6 +1120,9 @@
         const x0 = P.x + p.tx * T, y0 = P.y + p.ty * T;
         ctx.save();
         ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.setLineDash([6, 6]); ctx.lineWidth = 2; ctx.strokeRect(P.x, P.y, P.w, P.h); ctx.setLineDash([]);
+        ctx.strokeStyle = 'rgba(255,255,255,0.13)'; ctx.lineWidth = 1; ctx.beginPath();
+        for (let i = 1; i < F.HOME_TILES; i++) { ctx.moveTo(P.x + i * T, P.y); ctx.lineTo(P.x + i * T, P.y + P.h); ctx.moveTo(P.x, P.y + i * T); ctx.lineTo(P.x + P.w, P.y + i * T); }
+        ctx.stroke();
         ctx.fillStyle = ok ? 'rgba(80,255,80,0.32)' : 'rgba(255,60,60,0.35)'; ctx.fillRect(x0, y0, s * T, s * T);
         ctx.strokeStyle = ok ? '#7f7' : '#f66'; ctx.lineWidth = 2.5; ctx.strokeRect(x0, y0, s * T, s * T);
         const atk = (G.BUILDINGS[p.type] && G.BUILDINGS[p.type].attack) || (F.TRAPS[p.type] && { range: F.TRAPS[p.type].radius });
@@ -1086,7 +1166,7 @@
     const ev = F.tick(st);
     let army = false;
     for (const e of ev) {
-      if (e.kind === 'bau') { toast(`${esc(bn(e.b.type))} ${e.isNew ? 'fertiggestellt' : 'auf Stufe ' + e.b.level + ' ausgebaut'}.`, 'good'); G.sfx('fertig', 0, 0, 0.7, true); }
+      if (e.kind === 'bau') { const en = entOf(e.b); if (en && G.S.festung === 'home') G.S.fx.push({ type: 'levelup', x: en.x, y: en.y, r: en.r, t: 0, dur: 1.8, seed: Math.random() }); toast(`${esc(bn(e.b.type))} ${e.isNew ? 'fertiggestellt' : 'auf Stufe ' + e.b.level + ' ausgebaut'}.`, 'good'); G.sfx('fertig', 0, 0, 0.7, true); }
       if (e.kind === 'truppen') { army = true; if (!U.sheet) toast(`${e.n} ${e.n === 1 ? 'Krieger ist' : 'Krieger sind'} ausgebildet.`, 'good'); }
       if (e.kind === 'traenke') toast(`${e.n} ${e.n === 1 ? 'Trank ist' : 'Tränke sind'} fertig gebraut.`, 'good');
       if (e.kind === 'fund') toast('Ein Fundstück ist auf deinem Grundstück aufgetaucht – tippe es an!', 'gold');
@@ -1102,6 +1182,9 @@
   let heroWasReady = null;
   function raidTick() {
     const Rd = U.raid; if (!Rd) return;
+    if (Rd.started && !Rd.called) { Rd.called = true; if (U.mode === 'watch') bigCall('Angriff auf deine Festung!', 'bad'); else bigCall('Zum Angriff!'); G.sfx('horn', 0, 0, 0.8, true); }
+    Rd.bShown = Rd.bShown || [false, false, false];
+    F.bannersOf(Rd).forEach((on, i) => { if (on && !Rd.bShown[i] && !Rd.over) { Rd.bShown[i] = true; bannerPop((U.mode === 'watch' ? 'Der Feind erobert: ' : '') + F.BANNERS[i].name, U.mode === 'watch'); } });
     for (const m of Rd.S.msgs) if (!m.shown) { m.shown = true; if (U.mode === 'watch' || m.cls === 'gold') toast(esc(m.text), m.cls); }
     if (Rd.over && !U.resultShown) {
       U.resultShown = true;
@@ -1111,7 +1194,7 @@
       setTimeout(() => { if (U.raid === Rd) showResult(Rd); }, 1100);
     }
   }
-  let last = performance.now(), hudT = 0, tickT = 0, saveT = 10;
+  let last = performance.now(), hudT = 0, tickT = 0, saveT = 10, lightT = 0;
   function frame(now) {
     const dt = Math.min(0.1, (now - last) / 1000);
     last = now;
@@ -1127,6 +1210,7 @@
         R.draw();
       }
       if (st && U.mode !== 'start') {
+        lightT -= dt; if (lightT <= 0) { lightT = 2; updateLight(); }
         tickT -= dt; if (tickT <= 0) { tickT = 0.5; homeTick(false); }
         hudT -= dt; if (hudT <= 0) { hudT = 0.25; renderTop(); renderBottom(); renderTip(); live(); }
         saveT -= dt; if (saveT <= 0) { saveT = 10; F.save(st); }

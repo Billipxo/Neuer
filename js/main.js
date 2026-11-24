@@ -8,6 +8,7 @@
     if (!G.S) G.UI.menuTick(dt);
     if (G.S && G.R.ready()) {
       G.update(dt);
+      G.R.light = G.settings.daynight !== false ? G.R.lightFor((8 + (G.S.time / 720) * 24) % 24, 0.45) : null;
       G.UI.updateCamera(dt);
       G.R.draw();
       G.UI.tick(dt);

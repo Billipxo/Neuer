@@ -930,6 +930,7 @@
         if (p.human) {
           G.msg(`${b.name} ${wasNew ? 'fertiggestellt' : 'auf Stufe ' + b.level + ' ausgebaut'}.`, 'good');
           fx({ type: 'dust', x: b.x, y: b.y + b.r * 0.5, r: b.r * 1.2, dur: 0.9, seed: Math.random(), gold: true });
+          fx({ type: 'levelup', x: b.x, y: b.y, r: b.r, dur: 1.7, seed: Math.random() });
           if (b.type === 'haupthaus') G.msg(`${b.name} Stufe ${b.level}! Neue Gebäude und Stufen${b.level === 3 || b.level === 5 ? ' sowie eine Volksfähigkeit' : ''} freigeschaltet.`, 'gold');
           G.sfx('fertig', b.x, b.y);
         }
@@ -1561,7 +1562,7 @@
     }
   }
   function addDecal(x, y, r, col, kind) {
-    if (!G.settings.blood && kind !== 'truemmer') return;
+    if (!G.settings.blood && kind !== 'truemmer' && kind !== 'ruine') return;
     S.decals.push({ x, y, r, col, kind: kind || 'blut', t: 0, seed: Math.random() * 1000 });
     if (S.decals.length > 260) S.decals.shift();
   }
@@ -1572,7 +1573,7 @@
     }
     S.parts = S.parts.filter((q) => !q.dead);
     for (const d of S.decals) d.t += dt;
-    S.decals = S.decals.filter((d) => d.t < (d.kind === 'truemmer' ? 120 : 60));
+    S.decals = S.decals.filter((d) => d.t < (d.kind === 'ruine' ? 300 : d.kind === 'truemmer' ? 120 : 60));
     for (const c of S.corpses) c.t += dt;
     S.corpses = S.corpses.filter((c) => c.t < 9);
   }
@@ -1629,7 +1630,7 @@
     if (t.kind === 'building') {
       fx({ type: t.type === 'mauer' ? 'dust' : 'collapse', x: t.x, y: t.y, r: t.r, dur: t.type === 'mauer' ? 0.7 : 1.4, seed: Math.random() });
       if (t.type !== 'mauer') G.shake(t.x, t.y, t.type === 'haupthaus' ? 9 : 4);
-      addDecal(t.x, t.y, t.r * 1.2, '#3a3430', 'truemmer');
+      addDecal(t.x, t.y, t.r * 1.2, '#3a3430', t.type === 'mauer' ? 'truemmer' : 'ruine');
       G.sfx(t.type === 'mauer' ? 'treffer' : 'einsturz', t.x, t.y);
       if (t.site) t.site.b = null;
       S.navDirty = true;

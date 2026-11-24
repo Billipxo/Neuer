@@ -220,6 +220,7 @@
         <label class="tgl"><input type="checkbox" data-act="m-set" data-key="muted" ${s.muted ? 'checked' : ''}><span></span>Ton aus</label>
         <label class="tgl"><input type="checkbox" data-act="m-set" data-key="blood" ${s.blood ? 'checked' : ''}><span></span>Blut und Gefallene anzeigen</label>
         <label class="tgl"><input type="checkbox" data-act="m-set" data-key="effects" ${s.effects !== false ? 'checked' : ''}><span></span>Aufwendige Effekte (Wetter, Kamerawackeln, Geschossspuren) – auf schwachen Handys ausschalten</label>
+        <label class="tgl"><input type="checkbox" data-act="m-set" data-key="daynight" ${s.daynight !== false ? 'checked' : ''}><span></span>Tag und Nacht: Ein Tag dauert 12 Minuten – nachts leuchten Fenster, Feuer, Zauber und Explosionen</label>
         <button data-act="m-testsound">Klangprobe</button>
         <button data-act="m-tutorial" ${Prof().data.tutorialDone ? '' : 'disabled'}>${Prof().data.tutorialDone ? 'Einführung im nächsten Spiel erneut zeigen' : 'Einführung wird im nächsten Spiel gezeigt'}</button>
         <p class="note">Profil und Fortschritt werden in diesem Browser gespeichert.</p>

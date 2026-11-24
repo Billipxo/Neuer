@@ -656,6 +656,7 @@
       h.dead = false; h.x = x; h.y = y; h.px = x; h.py = y; h.hp = h.maxHp; h.target = null; h.goal = null;
       S.ents.push(h); R.heroOut = true;
       S.fx.push({ type: 'pillar', x, y, r: 30, color: '#ffd23a', t: 0, dur: 1.0 });
+      G.fx({ type: 'spawn', x, y, r: 26, dur: 0.8, seed: Math.random(), color: '#ffd23a' });
     } else {
       if (!(R.troops[role] > 0)) return 'Keine Truppen dieser Art mehr';
       R.troops[role]--;
@@ -665,6 +666,7 @@
     }
     R.deployed[role] = (R.deployed[role] || 0) + 1;
     if (!R.started) { R.started = true; R.startT = S.time; }
+    G.fx({ type: 'spawn', x, y, r: 16, dur: 0.6, seed: Math.random() });
     G.sfx('bau', x, y, 0.5);
     return null;
   };
@@ -1115,6 +1117,7 @@
     e.face = Math.atan2(R.P.y + R.P.h / 2 - y, R.P.x + R.P.w / 2 - x);
     R.mercs[type]--; R.mercDep[type] = (R.mercDep[type] || 0) + 1;
     if (!R.started) { R.started = true; R.startT = S.time; }
+    G.fx({ type: 'spawn', x, y, r: 16, dur: 0.6, seed: Math.random() });
     G.sfx('bau', x, y, 0.5);
     return null;
   };
