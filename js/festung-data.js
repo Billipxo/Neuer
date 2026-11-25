@@ -140,15 +140,15 @@
   F.trapMul = (L) => 1 + 0.5 * (L - 1);
   // Tränke aus dem Alchemistenturm: einmal einsetzbar, wirken an der angetippten Stelle
   F.POTIONS = {
-    heiltrank: { name: 'Heiltrank-Wolke', icon: '💚', lvl: 1, time: 60, cost: { g: 250, w: 150 }, radius: 130, heal: 0.35, color: '#7aff9a',
+    heiltrank: { name: 'Heiltrank-Wolke', short: 'Heilt deine Truppen', icon: '💚', lvl: 1, time: 60, cost: { g: 250, w: 150 }, radius: 130, heal: 0.35, color: '#7aff9a',
       desc: 'Heilt eigene Truppen im Umkreis sofort um 35 % und lässt sie 6 s lang schnell regenerieren.' },
-    blitztrank: { name: 'Gewitterflasche', icon: '⚡', lvl: 1, time: 75, cost: { g: 300, w: 180 }, radius: 70, dmg: 240, bolts: 3, color: '#bfe8ff',
+    blitztrank: { name: 'Gewitterflasche', short: 'Drei Blitze auf Gebäude', icon: '⚡', lvl: 1, time: 75, cost: { g: 300, w: 180 }, radius: 70, dmg: 240, bolts: 3, color: '#bfe8ff',
       desc: 'Drei Blitze schlagen ein: Schaden an Gebäuden und Verteidigern.' },
-    wuttrank: { name: 'Kampfrausch', icon: '🔥', lvl: 2, time: 90, cost: { g: 350, w: 200 }, radius: 130, dur: 10, mods: { dmg: 0.4, speed: 0.25, atkspd: 0.25 }, color: '#ff8a3a',
+    wuttrank: { name: 'Kampfrausch', short: 'Mehr Schaden und Tempo', icon: '🔥', lvl: 2, time: 90, cost: { g: 350, w: 200 }, radius: 130, dur: 10, mods: { dmg: 0.4, speed: 0.25, atkspd: 0.25 }, color: '#ff8a3a',
       desc: 'Eigene Truppen im Umkreis: 10 s lang +40 % Schaden, +25 % Tempo und Angriffstempo.' },
-    frosttrank: { name: 'Frosthauch', icon: '🧊', lvl: 3, time: 120, cost: { g: 450, w: 300 }, radius: 115, dur: 4.5, color: '#9ad8ff',
+    frosttrank: { name: 'Frosthauch', short: 'Türme erstarren', icon: '🧊', lvl: 3, time: 120, cost: { g: 450, w: 300 }, radius: 115, dur: 4.5, color: '#9ad8ff',
       desc: 'Türme und Verteidiger im Umkreis erstarren 4,5 s lang.' },
-    brechtrank: { name: 'Mauerbrecher', icon: '🧨', lvl: 4, time: 100, cost: { g: 400, w: 250 }, radius: 95, dmg: 1400, color: '#ffb040',
+    brechtrank: { name: 'Mauerbrecher', short: 'Sprengt Mauern', icon: '🧨', lvl: 4, time: 100, cost: { g: 400, w: 250 }, radius: 95, dmg: 1400, color: '#ffb040',
       desc: 'Sprengt Mauern im Umkreis (hoher Schaden nur an Mauern).' },
   };
   F.POTION_SLOTS = [2, 3, 4, 5, 6]; // Plätze je Stufe des Alchemistenturms

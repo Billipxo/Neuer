@@ -196,7 +196,9 @@ erreichbar über das Hauptmenü („🏰 Festungen“) oder direkt über `festun
 - **Fallen** (unsichtbar für Angreifer, nach jedem Kampf wieder scharf, drei Stufen): Sprengfalle (Flächenschaden),
   Speergrube (gewaltiger Einzelschaden), Frostrune (verlangsamt), Luftmine (gegen Flieger).
 - **Alchemistenturm** (ab Haupthaus 3): braut Tränke auch offline – Heiltrank-Wolke, Gewitterflasche, Kampfrausch,
-  Frosthauch (lässt Türme erstarren) und Mauerbrecher. Im Kampf an der angetippten Stelle einsetzbar.
+  Frosthauch (lässt Türme erstarren) und Mauerbrecher. Im Kampf an der angetippten Stelle einsetzbar. Eigenes
+  Brau-Fenster (Alchemistenturm antippen): oben das Trankregal mit Flaschen (brodelnde mit Fortschrittsring), darunter
+  große Trank-Karten – ein Tipp braut. Das Regal merkt sich seine Belegung und braut nach Raubzügen automatisch nach.
 - **Taverne** (ab Haupthaus 2): Söldner aus den Wildlanden sofort gegen Gold – Bandit, Wegelagerer, Bergtroll,
   Trollhexer, Steingolem und Jungdrache. Sie belegen Truppenplätze und kehren heim, wenn sie überleben.
 - **Erfolge und Tagesaufträge:** 14 Erfolge mit je drei Stufen (Plünderer, Bollwerk, Fallensteller, Bezwinger der

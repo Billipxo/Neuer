@@ -153,6 +153,7 @@
     }
     if (st.brew && !st.brew.length) st.brewStart = 0;
     if (brewed) ev.push({ kind: 'traenke', n: brewed });
+    if (st.brewPlan && st.brew.length < 6) { const nb = F.autoBrew(st); if (nb) ev.push({ kind: 'nachbrauen', n: nb }); } // fehlende Tränke nachbrauen
     const found = st.finds ? F.spawnFinds(st, now) : 0;
     if (found) ev.push({ kind: 'fund', n: found });
     if (st.researching && now >= st.researching.end) {
@@ -897,19 +898,33 @@
     if (!F.afford(st, P.cost)) return 'Nicht genug Rohstoffe';
     return null;
   };
-  F.brew = function (st, type) {
+  F.brew = function (st, type, auto) {
     const why = F.brewCheck(st, type);
     if (why) return why;
     pay(st, F.POTIONS[type].cost);
     if (!st.brew.length) st.brewStart = F.now();
     st.brew.push(type);
+    if (!auto) F.setBrewPlan(st);
     return null;
   };
+  // Regal: fertige Tränke (in fester Reihenfolge) und die gewünschte Belegung zum automatischen Nachbrauen
+  F.potionList = (st) => { const out = []; for (const k of Object.keys(F.POTIONS)) for (let i = 0; i < (st.potions[k] || 0); i++) out.push(k); return out; };
+  F.setBrewPlan = (st) => { st.brewPlan = F.potionList(st).concat(st.brew); };
+  F.autoBrew = function (st) {
+    if ((st.settings && st.settings.brewAuto === false) || !st.brewPlan || !st.brewPlan.length) return 0;
+    const have = {};
+    for (const k of F.potionList(st).concat(st.brew)) have[k] = (have[k] || 0) + 1;
+    let n = 0;
+    for (const k of st.brewPlan) { if (have[k] > 0) { have[k]--; continue; } if (!F.brewCheck(st, k)) { F.brew(st, k, true); n++; } }
+    return n;
+  };
+  F.discardPotion = function (st, type) { if (st.potions[type] > 0) { st.potions[type]--; if (!st.potions[type]) delete st.potions[type]; F.setBrewPlan(st); } };
   F.unbrew = function (st, idx) {
     const t = st.brew[idx]; if (!t) return;
     st.brew.splice(idx, 1);
     const c = F.POTIONS[t].cost; F.gain(st, c.g, c.w);
     if (idx === 0) st.brewStart = st.brew.length ? F.now() : 0;
+    F.setBrewPlan(st);
   };
   F.brewLeft = (st) => { let s = 0; st.brew.forEach((t, i) => { const d = F.POTIONS[t].time; s += i === 0 ? Math.max(0, d - (F.now() - st.brewStart) / 1000) : d; }); return s; };
   F.brewSpeedPrice = (st) => F.speedCost(F.brewLeft(st));

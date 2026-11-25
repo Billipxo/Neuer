@@ -234,3 +234,30 @@ a { color: var(--accent2); }
 .btns button small.nx { color: #b8f0a8; }
 .collectbtn { padding: 5px 10px; border-radius: 8px; font-size: 13px; animation: glowpulse 1.2s ease-in-out infinite alternate; }
 @keyframes glowpulse { from { box-shadow: 0 0 0 rgba(255,210,90,0); } to { box-shadow: 0 0 12px rgba(255,210,90,.7); } }
+
+/* Brau-Fenster: Trankregal und Trank-Karten */
+.shelf { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; padding: 12px 10px 16px; margin: 8px 0; border-radius: 12px; border: 2px solid var(--ink);
+  background: linear-gradient(180deg, rgba(74,50,28,.95), rgba(36,24,14,.95)); box-shadow: inset 0 -7px 0 rgba(0,0,0,.35), 0 4px 12px rgba(0,0,0,.4); }
+.shelf.mini { padding: 6px 8px 9px; gap: 5px; margin: 0; justify-content: flex-start; }
+.slot { width: 54px; height: 54px; border-radius: 50%; padding: 0; display: inline-flex; align-items: center; justify-content: center; font-size: 27px; position: relative;
+  background: rgba(255,255,255,.05); border: 2px dashed rgba(255,255,255,.2); box-shadow: none; }
+.shelf.mini .slot { width: 34px; height: 34px; font-size: 17px; }
+.slot.full { border: 2px solid var(--frame); background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.3), rgba(255,255,255,.04) 60%); box-shadow: 0 0 12px var(--glow); }
+.slot.brewing { border: 0; background: conic-gradient(var(--accent2) calc(var(--p, 0) * 1%), rgba(255,255,255,.12) 0); box-shadow: 0 0 10px var(--glow); }
+.slot.brewing > span, .slot.waiting > span { width: calc(100% - 8px); height: calc(100% - 8px); border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--panel); }
+.slot.brewing > span { animation: bubble 1.2s ease-in-out infinite alternate; }
+.slot.waiting { border: 2px solid rgba(255,255,255,.25); opacity: .6; }
+.slot.new { animation: popin .35s cubic-bezier(.2,1.6,.4,1); }
+@keyframes bubble { from { transform: translateY(1px) scale(.97); } to { transform: translateY(-1px) scale(1.03); } }
+@keyframes popin { from { transform: scale(.3); opacity: 0; } }
+.brewline { text-align: center; }
+.potgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 8px; margin: 6px 0 10px; }
+.potcard { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 8px; text-align: center; border-radius: 12px; transition: transform .1s; }
+.potcard .pi { font-size: 36px; line-height: 1.15; filter: drop-shadow(0 2px 3px rgba(0,0,0,.5)); }
+.potcard b { font-size: 14px; }
+.potcard small { font-size: 12px; color: var(--muted); }
+.potcard .cost { font-size: 12px; }
+.potcard .why { color: var(--bad); font-size: 11px; }
+.potcard:active:not(:disabled) { transform: scale(.95); }
+.potcard.locked { opacity: .45; }
+.potmini { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }

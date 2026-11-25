@@ -399,7 +399,7 @@
       if (F.RATE[b.type]) btns += `<button data-act="collect" ${b.acc >= 1 ? '' : 'disabled'}>Einsammeln<small>${fmt(b.acc || 0)}</small></button>`;
       if (F.PRODUCERS.includes(b.type) && roleList(b.type) || b.type === 'unterkunft') btns += '<button data-act="sheet" data-v="armee">Ausbilden</button>';
       if (b.type === 'schmiede') btns += '<button data-act="sheet" data-v="schmiede">Forschen</button>';
-      if (b.type === 'alchemie' && L) btns += '<button data-act="sheet" data-v="armee">Tränke brauen</button>';
+      if (b.type === 'alchemie' && L) btns += '<button data-act="sheet" data-v="alchemie">⚗️ Tränke brauen</button>';
       if (b.type === 'taverne' && L) btns += '<button data-act="sheet" data-v="armee">Söldner anheuern</button>';
       btns += '<button data-act="move">Versetzen</button>';
     }
@@ -501,7 +501,7 @@
   function renderSheet() {
     if (!U.sheet) return;
     const body = $('#sheet-body'), sc = body.scrollTop;
-    const f = { bauen: sheetBauen, armee: sheetArmee, schmiede: sheetSchmiede, angriff: sheetAngriff, berichte: sheetBerichte, mehr: sheetMehr, erfolge: sheetErfolge }[U.sheet];
+    const f = { bauen: sheetBauen, armee: sheetArmee, schmiede: sheetSchmiede, angriff: sheetAngriff, berichte: sheetBerichte, mehr: sheetMehr, erfolge: sheetErfolge, alchemie: sheetAlchemie }[U.sheet];
     body.innerHTML = f();
     body.scrollTop = sc;
     drawPreviews(body);
@@ -545,23 +545,11 @@
         + (ri.ok ? `<button data-act="train" data-v="${role}" ${why ? 'disabled' : ''} title="${esc(why || 'Einen ausbilden')}">+1</button><button data-act="train5" data-v="${role}" ${why ? 'disabled' : ''}>+5</button>` : '')
         + (n ? `<button data-act="dismiss" data-v="${role}" title="Einen entlassen (ohne Erstattung)">−</button>` : '') + '</div></div>';
     }
-    // Tränke
+    // Tränke: kurze Übersicht, gebraut wird im eigenen Fenster
     const AL = F.alchemyLevel(st);
-    h += `<h3>⚗️ Tränke – ${esc(bn('alchemie'))}</h3>`;
-    if (!AL) h += `<p class="note">Baue ab Haupthaus Stufe 3 einen ${esc(bn('alchemie'))}: Tränke wirken bei Raubzügen an der Stelle, die du antippst.</p>`;
-    else {
-      h += `<p>Trankplätze <b>${F.potionCount(st)}/${F.potionSlots(st)}</b>${Object.keys(st.potions).length ? ' · fertig: ' + Object.keys(st.potions).map((k) => `${st.potions[k]}× ${F.POTIONS[k].icon} ${esc(F.POTIONS[k].name)}`).join(', ') : ''}</p>`;
-      if (st.brew.length) {
-        const d0 = F.POTIONS[st.brew[0]].time * 1000;
-        h += `<div class="queue">${st.brew.map((k, i) => `<button class="${i ? '' : 'q0'}" data-act="unbrew" data-v="${i}" title="Antippen: abbrechen (volle Erstattung)">${F.POTIONS[k].icon} ${esc(F.POTIONS[k].name)} ✕</button>`).join('')}</div>`
-          + `<div class="prog"><i data-pstart="${st.brewStart}" data-pend="${st.brewStart + d0}"></i></div><p>Alle fertig in <b data-end="${now + F.brewLeft(st) * 1000}"></b> <button data-act="brewfast">Sofort fertig ${gold(F.brewSpeedPrice(st))}</button></p>`;
-      }
-      for (const k in F.POTIONS) {
-        const P = F.POTIONS[k], why = F.brewCheck(st, k), locked = AL < P.lvl;
-        h += `<div class="unitrow ${locked ? 'locked' : ''}" style="grid-template-columns:44px 1fr auto"><span style="font-size:30px;text-align:center">${P.icon}</span><div class="meta"><b>${esc(P.name)}</b><br>${esc(P.desc)}<br>`
-          + (locked ? `<span class="why">Benötigt ${esc(bn('alchemie'))} Stufe ${P.lvl}</span>` : `${cost(P.cost)} · ${dur(P.time)}`) + `</div><div class="act">${locked ? '' : `<button data-act="brew" data-v="${k}" ${why ? 'disabled' : ''} title="${esc(why || 'Brauen')}">Brauen</button>`}</div></div>`;
-      }
-    }
+    h += `<h3>⚗️ Tränke</h3>`;
+    if (!AL) h += `<p class="note">Baue ab Haupthaus Stufe 3 einen ${esc(bn('alchemie'))} – dort braust du Tränke für deine Raubzüge.</p>`;
+    else h += `<div class="potmini">${shelfHtml(true)}<button data-act="sheet" data-v="alchemie">⚗️ Tränke brauen</button></div>`;
     // Söldner
     const TL = F.tavernLevel(st);
     h += `<h3>🍺 Söldner – ${esc(bn('taverne'))}</h3>`;
@@ -613,6 +601,38 @@
         + `<p>${rname(c.race)} · Haupthaus ${c.th}${c.hero ? ` · Held St. ${c.hero}` : ''}${c.guard ? ` · Wachtrupp ${c.guard}` : ''}${c.boss ? ` · <b class="bad">Wächter: ${esc(G.CREEPS[c.boss.creep].name)}</b>` : ''}${b ? '' : ` · Beute ${cost({ g: F.round5(L.g * c.loot), w: F.round5(L.w * c.loot) })}`}</p>`
         + `<p>${open ? esc(c.story) : 'Erst die vorige Festung besiegen.'}</p></div>`;
     });
+    return h;
+  }
+  // Trankregal: fertige Flaschen leuchten, die brodelnde zeigt einen Fortschrittsring, freie Plätze sind gestrichelt
+  function shelfHtml(mini) {
+    const slots = F.potionSlots(st), ready = F.potionList(st), out = [];
+    ready.forEach((k) => out.push(`<button class="slot full" ${mini ? 'tabindex="-1"' : `data-act="potslot" data-v="${k}"`} title="${esc(F.POTIONS[k].name)} – bereit${mini ? '' : ' (antippen zum Verwerfen)'}">${F.POTIONS[k].icon}</button>`));
+    st.brew.forEach((k, i) => {
+      const run = i === 0, d = F.POTIONS[k].time * 1000;
+      out.push(`<button class="slot ${run ? 'brewing' : 'waiting'} ${!mini && U.newSlot === i ? 'new' : ''}" ${mini ? 'tabindex="-1"' : `data-act="unbrew" data-v="${i}"`} title="${esc(F.POTIONS[k].name)} – ${run ? 'wird gebraut' : 'wartet'}${mini ? '' : ' (antippen: abbrechen, volle Erstattung)'}"`
+        + (run ? ` data-rstart="${st.brewStart}" data-rend="${st.brewStart + d}"` : '') + `><span>${F.POTIONS[k].icon}</span></button>`);
+    });
+    for (let i = out.length; i < slots; i++) out.push('<span class="slot empty"></span>');
+    U.newSlot = null;
+    return `<div class="shelf ${mini ? 'mini' : ''}">${out.join('')}</div>`;
+  }
+  function sheetAlchemie() {
+    const AL = F.alchemyLevel(st), now = F.now();
+    let h = head('⚗️', esc(bn('alchemie')) + (AL ? ` <small>Stufe ${AL}</small>` : ''));
+    if (!AL) return h + `<p class="warn">Baue ab Haupthaus Stufe 3 einen ${esc(bn('alchemie'))}.</p>`;
+    const used = F.potionCount(st), slots = F.potionSlots(st);
+    h += shelfHtml(false);
+    h += `<p class="brewline">${used}/${slots} Plätze belegt`
+      + (st.brew.length ? ` · Kessel brodelt: noch <b data-end="${now + F.brewLeft(st) * 1000}"></b> <button data-act="brewfast">Sofort fertig ${gold(F.brewSpeedPrice(st))}</button>` : used >= slots ? ' · <span class="good">Regal voll – bereit für den Kampf!</span>' : '')
+      + '</p>';
+    h += '<p class="note">Tippe einen Trank an, um ihn zu brauen. Eine Flasche im Regal antippen: brodelnde abbrechen (volle Erstattung), fertige verwerfen.</p><div class="potgrid">';
+    for (const k in F.POTIONS) {
+      const P = F.POTIONS[k], locked = AL < P.lvl, why = F.brewCheck(st, k);
+      h += `<button class="potcard ${locked ? 'locked' : ''}" data-act="brew" data-v="${k}" ${why ? 'disabled' : ''} title="${esc(P.desc)}"><span class="pi">${P.icon}</span><b>${esc(P.name)}</b><small>${esc(P.short || '')}</small>`
+        + (locked ? `<span class="why">ab Stufe ${P.lvl}</span>` : `<span class="cost">${cost(P.cost)} · ${dur(P.time)}</span>${why && why !== 'Alle Trankplätze belegt' ? `<span class="why">${esc(why)}</span>` : ''}`) + '</button>';
+    }
+    h += '</div>';
+    h += `<label class="row"><input type="checkbox" data-set="brewAuto" ${st.settings.brewAuto === false ? '' : 'checked'}> Nach Raubzügen automatisch nachbrauen <small>(füllt das Regal wieder so auf, wie du es eingerichtet hast)</small></label>`;
     return h;
   }
   function sheetErfolge() {
@@ -881,7 +901,8 @@
         toast(`${esc(F.POTIONS[v].name)}: ${R.touch ? 'tippe' : 'klicke'} auf die Stelle, an der der Trank wirken soll.`, 'gold');
         return;
       }
-      case 'brew': { const why = F.brew(st, v); if (why) err(why); changed(); return; }
+      case 'brew': { const why = F.brew(st, v); if (why) err(why); else { U.newSlot = st.brew.length - 1; G.sfx('blubb', 0, 0, 0.9, true); buzz(8); } changed(); return; }
+      case 'potslot': if (!armed(el, '✕')) return; F.discardPotion(st, v); changed(); return;
       case 'unbrew': F.unbrew(st, +v); changed(); return;
       case 'brewfast': { const why = F.brewSpeedup(st); if (why) err(why); changed(); return; }
       case 'hire': { const why = F.hire(st, v); if (why) err(why); else G.sfx('kauf', 0, 0, 0.6, true); changed(true); return; }
@@ -1253,6 +1274,7 @@
   function live() {
     const now = F.now();
     for (const el of document.querySelectorAll('[data-end]')) el.textContent = dur((+el.dataset.end - now) / 1000);
+    for (const el of document.querySelectorAll('[data-rend]')) { const a = +el.dataset.rstart, b = +el.dataset.rend; el.style.setProperty('--p', clamp((100 * (now - a)) / Math.max(1, b - a), 0, 100).toFixed(1)); }
     for (const el of document.querySelectorAll('[data-pend]')) { const a = +el.dataset.pstart, b = +el.dataset.pend; el.style.width = clamp((100 * (now - a)) / Math.max(1, b - a), 0, 100) + '%'; }
   }
   function renderAll() {
@@ -1267,6 +1289,7 @@
     for (const e of ev) {
       if (e.kind === 'bau') { const en = entOf(e.b); if (en && G.S.festung === 'home') en.popT = G.S.time + 0.15; if (en && G.S.festung === 'home') G.S.fx.push({ type: 'levelup', x: en.x, y: en.y, r: en.r, t: 0, dur: 1.8, seed: Math.random() }); toast(`${esc(bn(e.b.type))} ${e.isNew ? 'fertiggestellt' : 'auf Stufe ' + e.b.level + ' ausgebaut'}.`, 'good'); G.sfx('fertig', 0, 0, 0.7, true); }
       if (e.kind === 'truppen') { army = true; if (!U.sheet) toast(`${e.n} ${e.n === 1 ? 'Krieger ist' : 'Krieger sind'} ausgebildet.`, 'good'); }
+      if (e.kind === 'nachbrauen' && U.mode === 'home') toast(`⚗️ ${e.n} ${e.n === 1 ? 'Trank wird' : 'Tränke werden'} nachgebraut.`, 'good');
       if (e.kind === 'traenke') toast(`${e.n} ${e.n === 1 ? 'Trank ist' : 'Tränke sind'} fertig gebraut.`, 'good');
       if (e.kind === 'fund') toast('Ein Fundstück ist auf deinem Grundstück aufgetaucht – tippe es an!', 'gold');
       if (e.kind === 'forschung') toast(`Forschung abgeschlossen: ${G.RESEARCH[e.line].name} Stufe ${st.research[e.line]}.`, 'gold');
