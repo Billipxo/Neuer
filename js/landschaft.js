@@ -981,7 +981,9 @@
     A.birdT -= dt; A.frogT -= dt;
     if (A.birdT <= 0) {
       A.birdT = 5 + Math.random() * 7;
-      if (S.theme === 'auen' || S.theme === 'silberwald') for (let i = 0; i < 12; i++) { const d = S.decor[Math.floor(Math.random() * S.decor.length)]; if (d && (d.k === 'eiche' || d.k === 'birke' || d.k === 'hochbaum') && inView(d.x, d.y, 0)) { sound('zwitschern', d.x, d.y, 0.3); break; } }
+      const night = G.R.light && G.R.light.dark > 0.3; // nachts zirpen Grillen statt Vogelgezwitscher
+      if (night && S.theme !== 'frost' && S.theme !== 'asche') { const d = S.decor[Math.floor(Math.random() * S.decor.length)]; if (d && inView(d.x, d.y, 0)) sound('zirpen', d.x, d.y, 0.35); }
+      else if (S.theme === 'auen' || S.theme === 'silberwald') for (let i = 0; i < 12; i++) { const d = S.decor[Math.floor(Math.random() * S.decor.length)]; if (d && (d.k === 'eiche' || d.k === 'birke' || d.k === 'hochbaum') && inView(d.x, d.y, 0)) { sound('zwitschern', d.x, d.y, 0.3); break; } }
     }
     if (A.frogT <= 0) { A.frogT = 4 + Math.random() * 6; const m = vis.find((f) => f.kind === 'moor' || f.kind === 'teich'); if (m) sound('quaken', m.x, m.y, 0.3); }
     if (!R.fxHigh) return;

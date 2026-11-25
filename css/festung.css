@@ -229,3 +229,8 @@ a { color: var(--accent2); }
 #overlay-body .flags.big .flag.on { animation: flagshine 1.6s ease-in-out infinite alternate; }
 @keyframes flagshine { from { filter: brightness(1); } to { filter: brightness(1.35) drop-shadow(0 0 8px rgba(255,210,90,.9)); } }
 @media (prefers-reduced-motion: reduce) { .bigcall, .bannerpop, .confetti { animation-duration: .01s !important; } .flyc { transition: none; } }
+
+/* Ausbau-Vorschau, Einsammeln-Knopf */
+.btns button small.nx { color: #b8f0a8; }
+.collectbtn { padding: 5px 10px; border-radius: 8px; font-size: 13px; animation: glowpulse 1.2s ease-in-out infinite alternate; }
+@keyframes glowpulse { from { box-shadow: 0 0 0 rgba(255,210,90,0); } to { box-shadow: 0 0 12px rgba(255,210,90,.7); } }

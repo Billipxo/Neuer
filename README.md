@@ -164,7 +164,9 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
   Feuerbälle, Explosionen und der Held werfen weiche, farbige Lichtkegel. Im Echtzeit-Spiel dauert ein Tag 12 Minuten
   (in den Einstellungen abschaltbar), in den Festungen folgt das Licht der echten Uhrzeit (oder immer Tag/Nacht).
 - **Feinschliff:** weiche Vignette an den Bildrändern, goldene Strahlen und Funken beim Ausbau, Lichtring beim Absetzen
-  von Truppen.
+  von Truppen; Gebäude federn beim Antippen und Fertigstellen nach, leuchtender Auswahlring mit Eckwinkeln, auf
+  Baustellen hämmert ein Baumeister mit Helm; die Karte gleitet nach dem Wischen aus; nachts zirpen Grillen statt
+  Vogelgezwitscher.
 - **Tiere passend zur Karte** (Hasen, Rehe, Krähen, Kröten, Geier, Füchse, Glühwürmchen, Fledermäuse …), die vor Truppen fliehen.
 
 ## Reichsfeuer: Festungen (zweites Spiel, `festung.html`)
@@ -205,6 +207,10 @@ erreichbar über das Hauptmenü („🏰 Festungen“) oder direkt über `festun
   Kampfberechnung beim Wiederkommen (Bericht mit Zerstörung, Verlusten, Ruhm). Danach schützt ein Schild für
   6–10 Stunden. Der eigene Held verteidigt mit, wenn er bereit ist. Mit dem **Probeangriff** lässt sich die Verteidigung
   gefahrlos live testen.
+- **Lebendige Festung:** Krieger und Held schlendern umher, nachts schwirren Glühwürmchen; Ausbau-Karte zeigt, was die
+  nächste Stufe bringt (z. B. „Lager 10.000 → 15.000“); „Alles einsammeln“, sobald mehrere Minen voll sind;
+  Namensschild beim Überfahren mit der Maus; Beutezahlen zählen im Ergebnis hoch; Einblendung bei neuem Ruhm-Rang;
+  weicher Zoom ohne schwarze Ränder, leises Klicken bei Knöpfen und kurze Vibration am Handy.
 - **Grafik der Festungen:** gepflegter Rasen mit Steinkante, gepflasterte Wege vom Haupthaus zu jedem Gebäude, Raster
   nur beim Bauen; Münzen und Stämme fliegen beim Einsammeln in die Rohstoffanzeige; „Zum Angriff!“-Einblendung,
   eroberte Kriegsbanner fallen ins Bild, Konfetti beim Sieg; glänzende Knöpfe und Rohstoff-Symbole.

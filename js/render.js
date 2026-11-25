@@ -822,8 +822,9 @@
     if (constructing) ctx.globalAlpha = 0.55 + 0.4 * (b.upgrading ? b.upgrading.t / b.upgrading.total : 0);
     const L = b.level;
     shadow(x + 6, y + hs * 0.55, hs * (1.0 + L * 0.03), hs * 0.5);
+    const pt = b.popT !== undefined ? S.time - b.popT : 9, pop = pt >= 0 && pt < 0.75 ? 0.12 * Math.sin(pt * 19) * Math.exp(-pt * 6) : 0; // kurzes Nachfedern
     const grow = 0.94 + Math.max(1, L) * 0.025; // Stufe 1: 0,965 … Stufe 5: 1,065
-    ctx.translate(x, y + hs * 0.6); ctx.scale(grow, grow); ctx.translate(-x, -(y + hs * 0.6));
+    ctx.translate(x, y + hs * 0.6); ctx.scale(grow * (1 - pop * 0.6), grow * (1 + pop)); ctx.translate(-x, -(y + hs * 0.6));
     const flash = b.hitT > 0;
     let top = null;
     if (b.type === 'kanone') drawCannon(b, p, pal, x, y, hs, Math.max(1, L), S, flash);
@@ -894,11 +895,18 @@
         ctx.globalAlpha = 1;
       }
     }
-    if (b.upgrading) { // Hämmernde Baumeister
-      const k = Math.abs(Math.sin(S.time * 8 + b.id));
-      ctx.save(); ctx.translate(x - hs + 6, y + hs * 0.2); ctx.rotate(-0.8 + k * 0.9);
-      ctx.strokeStyle = INK; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -12); ctx.stroke();
-      ctx.fillStyle = '#9a9aa0'; ctx.fillRect(-4, -15, 8, 5); ctx.restore();
+    if (b.upgrading) { // Baumeister mit Helm hämmert am Gebäude, bei jedem Schlag stieben Funken
+      const k = Math.abs(Math.sin(S.time * 7 + b.id)), wx = x - hs - 3, wy = y + hs * 0.62;
+      shadow(wx, wy + 2, 7, 3);
+      ctx.fillStyle = '#5a6a8a'; roundRect(wx - 4, wy - 12, 8, 12, 3); ctx.fill(); outline(1.4);
+      ctx.fillStyle = '#c87a3a'; ctx.fillRect(wx - 4, wy - 6, 8, 2.5);
+      circ(wx, wy - 15, 4.2, '#f0c8a0', 1.4);
+      ctx.fillStyle = '#f0c040'; ctx.beginPath(); ctx.arc(wx, wy - 16, 4.8, Math.PI, 0); ctx.closePath(); ctx.fill(); outline(1.2);
+      ctx.save(); ctx.translate(wx + 3, wy - 9); ctx.rotate(-1.4 + k * 1.6);
+      ctx.strokeStyle = INK; ctx.lineWidth = 2.2; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(10, 0); ctx.stroke();
+      ctx.fillStyle = '#9a9aa0'; ctx.fillRect(9, -3.5, 5, 7); ctx.lineWidth = 1.2; ctx.strokeRect(9, -3.5, 5, 7);
+      ctx.restore();
+      if (k > 0.93 && R.fxHigh) { ctx.fillStyle = '#ffd25a'; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(wx + 14 + i * 2, wy - 6 - i * 3, 1.4, 0, 7); ctx.fill(); } }
     }
     // Stufen-Abzeichen
     if (b.level > 0) {
@@ -2370,9 +2378,16 @@
       ctx.strokeStyle = 'rgba(255,220,120,0.5)'; ctx.setLineDash([5, 5]); ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.arc(b.x, b.y, b.def.attack.range, 0, 7); ctx.stroke(); ctx.setLineDash([]);
     }
+    if (UI && UI.selected !== R._lastSel) { R._lastSel = UI.selected; if (UI.selected && UI.selected.kind === 'building') UI.selected.popT = S.time; }
     if (UI && UI.selected && UI.selected.kind === 'building' && !UI.selected.dead) {
-      const b = UI.selected, hs = b.size * T / 2;
-      ctx.strokeStyle = '#7aff7a'; ctx.lineWidth = 2; ctx.setLineDash([5, 4]); ctx.lineDashOffset = -S.time * 12; ctx.strokeRect(b.x - hs - 3, b.y - hs - 3, hs * 2 + 6, hs * 2 + 6); ctx.setLineDash([]); ctx.lineDashOffset = 0;
+      const b = UI.selected, hs = b.size * T / 2, pulse = 0.5 + 0.5 * Math.sin(S.time * 5);
+      ctx.save();
+      ctx.shadowColor = '#9aff9a'; ctx.shadowBlur = 12; ctx.strokeStyle = `rgba(170,255,170,${0.6 + 0.35 * pulse})`; ctx.lineWidth = 3;
+      ctx.beginPath(); ctx.ellipse(b.x, b.y + hs * 0.55, hs * 1.15 + 3 * pulse, hs * 0.5 + 1.5 * pulse, 0, 0, 7); ctx.stroke();
+      ctx.shadowBlur = 0; ctx.strokeStyle = '#e0ffd8'; ctx.lineWidth = 2.5;
+      const e = hs + 6 + 2 * pulse, l = Math.min(12, hs * 0.5);
+      for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { ctx.beginPath(); ctx.moveTo(b.x + sx * e, b.y + sy * e - sy * l); ctx.lineTo(b.x + sx * e, b.y + sy * e); ctx.lineTo(b.x + sx * e - sx * l, b.y + sy * e); ctx.stroke(); }
+      ctx.restore();
     }
     if (R.fxHigh) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawWeather(rdt, canvas.clientWidth, canvas.clientHeight); }
     for (let i = 0; i < moved.length; i += 3) { moved[i].x = moved[i + 1]; moved[i].y = moved[i + 2]; }

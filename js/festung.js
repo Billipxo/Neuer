@@ -429,6 +429,7 @@
       if (ready && !S.ents.includes(h)) S.ents.push(h);
       if (!ready) S.ents = S.ents.filter((e) => e !== h);
       h.dead = !ready; h.x = p.th.x + 2.3 * T; h.y = p.th.y + 1.3 * T; h.face = 2.4; h.hp = h.maxHp;
+      h.home = { x: h.x, y: h.y }; h.wTo = null; h.wWait = 1;
     }
   };
 

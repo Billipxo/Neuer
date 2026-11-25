@@ -931,6 +931,7 @@
           G.msg(`${b.name} ${wasNew ? 'fertiggestellt' : 'auf Stufe ' + b.level + ' ausgebaut'}.`, 'good');
           fx({ type: 'dust', x: b.x, y: b.y + b.r * 0.5, r: b.r * 1.2, dur: 0.9, seed: Math.random(), gold: true });
           fx({ type: 'levelup', x: b.x, y: b.y, r: b.r, dur: 1.7, seed: Math.random() });
+          b.popT = S.time;
           if (b.type === 'haupthaus') G.msg(`${b.name} Stufe ${b.level}! Neue Gebäude und Stufen${b.level === 3 || b.level === 5 ? ' sowie eine Volksfähigkeit' : ''} freigeschaltet.`, 'gold');
           G.sfx('fertig', b.x, b.y);
         }

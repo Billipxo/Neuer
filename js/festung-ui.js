@@ -121,6 +121,7 @@
     document.body.appendChild(el); setTimeout(() => el.remove(), 2600);
     G.sfx(bad ? 'alarm' : 'horn', 0, 0, 0.8, true);
   }
+  function buzz(ms) { try { if (R.touch && navigator.vibrate) navigator.vibrate(ms); } catch (e) { /* egal */ } }
   function confetti(box) {
     const cols = ['#ffd23a', '#ff6a3a', '#7ac8ff', '#7aff9a', '#ff7ad0', '#ffffff'];
     for (let i = 0; i < 70; i++) {
@@ -223,6 +224,7 @@
       h = res('g', st.gold, cap.g, 'Gold') + res('w', st.wood, cap.w, 'Holz')
         + `<div class="pill" title="Freie Baumeister">🔨 ${b - F.busy(st)}/${b}</div><div class="pill" title="Truppenplätze">⚔ ${used}/${house}</div>`
         + `<div class="pill ruhm" title="Ruhm – steigt mit gewonnenen Raubzügen">🏆 <b>${st.ruhm}</b> ${F.rankOf(st.ruhm)}</div>`
+        + (st.blds.filter((b) => F.RATE[b.type] && (b.acc || 0) >= 25).length >= 2 ? '<button class="collectbtn" data-act="collectall" title="Alle Minen und Sägewerke leeren">⛏ Alles einsammeln</button>' : '')
         + (F.th(st) < 2 ? '<div class="pill shield" title="Bis Haupthaus Stufe 2 greift dich niemand an">🛡 Anfängerschutz</div>'
           : st.shieldUntil > now ? `<div class="pill shield" title="Solange der Schild hält, greift dich niemand an">🛡 ${dur((st.shieldUntil - now) / 1000)}</div>` : '');
     } else {
@@ -330,6 +332,24 @@
     for (const r of F.roles(st)) { const src = F.roleSource(rd, r); if (src && src[0] === type) out.push(`${esc(rd.units[r].name)} (St. ${src[1]})`); }
     return out.join(', ');
   }
+  // Was der nächste Ausbau bringt
+  function nextTxt(b) {
+    const L = Math.max(1, b.level), N = L + 1;
+    switch (b.type) {
+      case 'goldmine': case 'saegewerk': return `▲ ${fmt(F.mineRate(st, { type: b.type, level: L }))} → ${fmt(F.mineRate(st, { type: b.type, level: N }))} je Minute`;
+      case 'schatzkammer': case 'holzlager': return `▲ Lager ${fmt(F.STORE[L - 1])} → ${fmt(F.STORE[N - 1])}`;
+      case 'unterkunft': return `▲ Plätze ${F.HOUSE[L - 1]} → ${F.HOUSE[N - 1]}`;
+      case 'turm': case 'kanone': { const a = G.BUILDINGS[b.type].attack; return `▲ Schaden ${Math.round(a.dmg * (1 + 0.2 * (L - 1)))} → ${Math.round(a.dmg * (1 + 0.2 * (N - 1)))}`; }
+      case 'alchemie': return `▲ Trankplätze ${F.POTION_SLOTS[L - 1]} → ${F.POTION_SLOTS[N - 1]}${Object.values(F.POTIONS).some((q) => q.lvl === N) ? ' · neuer Trank' : ''}`;
+      case 'taverne': return Object.values(F.MERCS).some((m) => m.lvl === N) ? `▲ neuer Söldner: ${Object.values(F.MERCS).find((m) => m.lvl === N).name}` : '▲ stärkere Söldner';
+      case 'schmiede': return `▲ Forschung bis Stufe ${N}`;
+      case 'haupthaus': {
+        const neu = Object.keys(F.LIMITS).filter((t) => t !== 'haupthaus' && F.LIMITS[t][N - 1] > F.LIMITS[t][L - 1]).map((t) => bn(t));
+        return `▲ Lager ${fmt(F.STORE_TH[L - 1])} → ${fmt(F.STORE_TH[N - 1])}${neu.length ? ' · mehr: ' + neu.slice(0, 4).join(', ') + (neu.length > 4 ? ' …' : '') : ''}`;
+      }
+      default: return roleList(b.type) ? '▲ stärkere Krieger' + (Object.values(G.PRODUCTION[b.type] || {}).includes(N) ? ' und eine neue Truppe' : '') : '';
+    }
+  }
   function renderSel() {
     const el = $('#sel'), b = U.sel;
     if (!b || U.mode !== 'home' || U.place) { el.classList.add('hidden'); return; }
@@ -374,7 +394,7 @@
         btns += `<button data-act="fast">Sofort fertig<small>${gold(F.speedPrice(b))}</small></button><button data-act="cancel">Abbrechen<small>Hälfte zurück</small></button>`;
       } else if (L < F.MAX_TH) {
         const why = F.upgradeCheck(st, b), c = F.cost(b.type, L + 1);
-        btns += `<button data-act="upgrade" ${why ? 'disabled' : ''}>Ausbauen → St. ${L + 1}<small>${cost(c)} · ${dur(F.time(b.type, L + 1))}${why ? ' · ' + esc(why) : ''}</small></button>`;
+        btns += `<button data-act="upgrade" ${why ? 'disabled' : ''}>Ausbauen → St. ${L + 1}<small>${cost(c)} · ${dur(F.time(b.type, L + 1))}${why ? ' · ' + esc(why) : ''}</small><small class="nx">${esc(nextTxt(b))}</small></button>`;
       }
       if (F.RATE[b.type]) btns += `<button data-act="collect" ${b.acc >= 1 ? '' : 'disabled'}>Einsammeln<small>${fmt(b.acc || 0)}</small></button>`;
       if (F.PRODUCERS.includes(b.type) && roleList(b.type) || b.type === 'unterkunft') btns += '<button data-act="sheet" data-v="armee">Ausbilden</button>';
@@ -444,6 +464,8 @@
       if (r.t) { U.place = null; changed(); selectTrap(r.t); toast(`${esc(bn(p.type))} gelegt – für Angreifer unsichtbar.`, 'good'); return; }
       U.place = null;
       changed();
+      { const en = entOf(r.b); if (en) { en.popT = G.S.time; G.fx({ type: 'dust', x: en.x, y: en.y + en.r * 0.5, r: en.r * 1.3, dur: 0.8, seed: Math.random() }); } }
+      buzz(12);
       select(entOf(r.b));
       toast(`${esc(bn(p.type))} wird gebaut (${dur(F.time(p.type, 1))}).`, 'good');
     } else {
@@ -671,7 +693,7 @@
     } else {
       const win = r.stars > 0, lostT = unitsTxt(r.lost);
       h = `<h2>${win ? 'Sieg!' : 'Niederlage'}</h2><div class="sub">${esc(r.name)} · ${rname(r.race)} · Haupthaus ${r.th}</div>${bigFlags(r.banners)}<div class="big">${r.pct}&nbsp;% zerstört</div><div class="list">`
-        + `<div>Beute: ${r.got.g || r.got.w ? '+' + cost(r.got) : 'keine'}${r.got.g < r.loot.g || r.got.w < r.loot.w ? ' <span class="bad">(Lager voll – der Rest blieb liegen)</span>' : ''}</div>`
+        + `<div>Beute: ${r.got.g || r.got.w ? `+<span class="c-g" data-n="${r.got.g}">0</span> <span class="c-w" data-n="${r.got.w}">0</span>` : 'keine'}${r.got.g < r.loot.g || r.got.w < r.loot.w ? ' <span class="bad">(Lager voll – der Rest blieb liegen)</span>' : ''}</div>`
         + (r.kind === 'feldzug' ? `<div>Feldzug: ${r.campNew ? '<span class="good">neue Bestleistung!</span>' : 'Banner wie bisher'}${win && r.stage < F.CAMPAIGN.length - 1 && st.camp[r.stage + 1] === undefined ? ' – die nächste Festung ist offen.' : ''}</div>` : `<div>Ruhm: ${signed(r.ruhm)} → <b>${st.ruhm}</b> (${F.rankOf(st.ruhm)})</div>`)
         + `<div>Verluste: ${lostT || 'keine'}</div>`
         + (r.heroOut ? `<div>Held: Stufe ${r.hero.level}${r.heroDead ? ` – gefallen, erholt sich ${dur(F.heroRestLeft(st))}` : ''}</div>` : '')
@@ -682,6 +704,9 @@
     }
     showOverlay(h + '<button class="big" data-act="tohome">Zur Festung</button>');
     if (r.kind === 'probe' ? !r.stars : r.stars > 0) confetti($('#overlay-body'));
+    const els = [...$('#overlay-body').querySelectorAll('[data-n]')], t0 = performance.now();
+    const step = () => { const k = Math.min(1, (performance.now() - t0) / 1100), e = 1 - Math.pow(1 - k, 3); for (const el of els) el.textContent = fmt(+el.dataset.n * e); if (k < 1) requestAnimationFrame(step); };
+    if (els.length) requestAnimationFrame(step);
   }
   function showAway(reps) {
     st.unread = (st.unread || 0) + reps.length;
@@ -804,7 +829,16 @@
       case 'cancel': { F.cancel(st, sel); if (!st.blds.includes(sel)) select(null); changed(); return; }
       case 'fast': { const why = F.speedup(st, sel); if (why) err(why); else { homeTick(true); } changed(); return; }
       case 'collect': collectRec(sel); return;
-      case 'collectall': { const s = F.collectAll(st); if (s.g || s.w) toast('Eingesammelt: +' + cost(s), 'good'); else err('Die Lager sind voll.'); changed(); return; }
+      case 'collectall': {
+        const sum = { g: 0, w: 0 };
+        for (const b of st.blds) if (F.RATE[b.type] && (b.acc || 0) >= 1) {
+          const got = F.collect(st, b), k = b.type === 'goldmine' ? 'g' : 'w', e = entOf(b);
+          sum[k] += got;
+          if (got && e) { flyRes(k, e.x, e.y - 20, 2 + Math.round(got / 200)); e.popT = G.S.time; }
+        }
+        if (sum.g || sum.w) { toast('Eingesammelt: +' + cost(sum), 'good'); G.sfx('kauf', 0, 0, 0.6, true); } else err('Die Lager sind voll.');
+        changed(); return;
+      }
       case 'move': startMove(); return;
       case 'wallup': { const why = F.upgradeWall(st, sel); if (why) err(why); changed(); return; }
       case 'wallall': { const n = F.upgradeWalls(st, sel.level); toast(`${n} Mauerstücke ausgebaut.`, 'good'); changed(); return; }
@@ -894,6 +928,7 @@
     const el = ev.target.closest('[data-act]');
     if (!el || el.disabled) return;
     ensureAudio();
+    if (el.tagName === 'BUTTON') G.sfx('klick', 0, 0, 0.7, true);
     act(el.dataset.act, el.dataset.v, el);
   });
   document.addEventListener('input', (ev) => {
@@ -916,8 +951,43 @@
   }
   function zoomAt(f, mx, my) {
     const w = R.toWorld(mx, my);
-    R.cam.z = clamp(R.cam.z * f, 0.3, 2);
-    R.cam.x = w.x - mx / R.cam.z; R.cam.y = w.y - my / R.cam.z; R.clampCam();
+    R.cam.z = clamp(R.cam.z * f, minZoom(), 2);
+    R.cam.x = w.x - mx / R.cam.z; R.cam.y = w.y - my / R.cam.z; clampView();
+  }
+  function clampView() {
+    R.clampCam();
+    const S = G.S; if (!S) return;
+    const vw = R.viewW(), vh = R.viewH();
+    R.cam.x = vw >= S.w ? (S.w - vw) / 2 : clamp(R.cam.x, 0, S.w - vw);
+    R.cam.y = vh >= S.h ? (S.h - vh) / 2 : clamp(R.cam.y, 0, S.h - vh);
+  }
+  // nie so weit herauszoomen, dass neben der Karte Schwarz zu sehen ist
+  function minZoom() { const S = G.S, c = cv(); return S ? Math.max(0.3, c.clientWidth / S.w, c.clientHeight / S.h) : 0.3; }
+  function zoomSmooth(f, mx, my) { const base = U.zoomGoal ? U.zoomGoal.z : R.cam.z; U.zoomGoal = { z: clamp(base * f, minZoom(), 2), mx, my }; }
+  function camMotion(dt) {
+    if (U.zoomGoal) {
+      const g = U.zoomGoal, nz = R.cam.z + (g.z - R.cam.z) * (1 - Math.exp(-dt * 14));
+      zoomAt(nz / R.cam.z, g.mx, g.my);
+      if (Math.abs(g.z - R.cam.z) < 0.002) U.zoomGoal = null;
+    }
+    if (U.camV && !drag) {
+      R.cam.x += U.camV.x * dt; R.cam.y += U.camV.y * dt;
+      const f = Math.exp(-dt * 4.5); U.camV.x *= f; U.camV.y *= f;
+      clampView();
+      if (Math.hypot(U.camV.x, U.camV.y) < 12) U.camV = null;
+    }
+  }
+  // Leben in der Festung: Krieger und Held schlendern um ihren Platz
+  function wander(dt) {
+    for (const e of G.S.ents) {
+      if (e.dead || !e.home || (e.kind !== 'unit' && e.kind !== 'hero')) continue;
+      if (e.wWait > 0) { e.wWait -= dt; e.moving = false; continue; }
+      if (!e.wTo) { const a = Math.random() * 6.28, r = 10 + Math.random() * (e.kind === 'hero' ? 70 : 42); e.wTo = { x: e.home.x + Math.cos(a) * r, y: e.home.y + Math.sin(a) * r * 0.6 }; }
+      const dx = e.wTo.x - e.x, dy = e.wTo.y - e.y, d = Math.hypot(dx, dy);
+      if (d < 2) { e.wTo = null; e.wWait = 1.5 + Math.random() * 4; e.moving = false; continue; }
+      const v = Math.min(d, (e.kind === 'hero' ? 30 : 22) * dt);
+      e.x += (dx / d) * v; e.y += (dy / d) * v; e.moving = true; e.walkT = (e.walkT || 0) + dt * 9; e.face = Math.atan2(dy, dx);
+    }
   }
   function cancelHold() { if (hold && hold.timer) clearTimeout(hold.timer); hold = null; }
   function bindInput() {
@@ -932,7 +1002,8 @@
         pinch = { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, z: R.cam.z }; drag = null; cancelHold();
         return;
       }
-      drag = { sx: ev.clientX, sy: ev.clientY, cx: R.cam.x, cy: R.cam.y, moved: false, type: ev.pointerType };
+      drag = { sx: ev.clientX, sy: ev.clientY, cx: R.cam.x, cy: R.cam.y, moved: false, type: ev.pointerType, vx: 0, vy: 0, lt: performance.now() };
+      U.camV = null; U.zoomGoal = null;
       if (U.mode === 'raid' && U.deploy && ((U.deploy.kind === 'unit' && U.deploy.role !== 'held') || U.deploy.kind === 'merc')) {
         hold = { active: false, t: 0, timer: setTimeout(() => { if (hold && drag && !drag.moved) { hold.active = true; hold.t = 0; } }, 320) };
       }
@@ -948,7 +1019,11 @@
       if (drag && !(hold && hold.active)) {
         const dx = ev.clientX - drag.sx, dy = ev.clientY - drag.sy;
         if (!drag.moved && Math.hypot(dx, dy) > 9) { drag.moved = true; cancelHold(); }
-        if (drag.moved) { R.cam.x = drag.cx - dx / R.cam.z; R.cam.y = drag.cy - dy / R.cam.z; R.clampCam(); }
+        if (drag.moved) {
+          const ox = R.cam.x, oy = R.cam.y, now = performance.now(), dtm = Math.max(8, now - drag.lt);
+          R.cam.x = drag.cx - dx / R.cam.z; R.cam.y = drag.cy - dy / R.cam.z; clampView();
+          drag.vx = drag.vx * 0.4 + (((R.cam.x - ox) / dtm) * 1000) * 0.6; drag.vy = drag.vy * 0.4 + (((R.cam.y - oy) / dtm) * 1000) * 0.6; drag.lt = now;
+        }
       }
       if (!drag && U.place && ev.pointerType === 'mouse') ghostTo(R.mouse.wx, R.mouse.wy);
     });
@@ -958,12 +1033,13 @@
       const wasHold = hold && hold.active;
       cancelHold();
       if (drag && !drag.moved && !wasHold && ev.type === 'pointerup') tap(R.mouse.wx, R.mouse.wy, drag.type);
+      if (drag && drag.moved && performance.now() - drag.lt < 90 && Math.hypot(drag.vx, drag.vy) > 60) U.camV = { x: drag.vx, y: drag.vy };
       drag = null;
     };
     c.addEventListener('pointerup', up);
     c.addEventListener('pointercancel', up);
     c.addEventListener('pointerleave', () => { R.mouse.inside = false; });
-    c.addEventListener('wheel', (ev) => { ev.preventDefault(); mouseTo(ev); zoomAt(ev.deltaY < 0 ? 1.12 : 1 / 1.12, R.mouse.x, R.mouse.y); }, { passive: false });
+    c.addEventListener('wheel', (ev) => { ev.preventDefault(); mouseTo(ev); zoomSmooth(ev.deltaY < 0 ? 1.18 : 1 / 1.18, R.mouse.x, R.mouse.y); }, { passive: false });
     window.addEventListener('keydown', (ev) => {
       if (/INPUT|TEXTAREA/.test(ev.target.tagName)) return;
       keys.add(ev.key.toLowerCase());
@@ -982,7 +1058,7 @@
     if (keys.has('d') || keys.has('arrowright')) R.cam.x += sp;
     if (keys.has('w') || keys.has('arrowup')) R.cam.y -= sp;
     if (keys.has('s') || keys.has('arrowdown')) R.cam.y += sp;
-    R.clampCam();
+    clampView();
   }
   function pickAt(wx, wy) {
     let best = null;
@@ -1003,7 +1079,7 @@
       if (trp) { selectTrap(trp); return; }
       const e = pickAt(wx, wy);
       if (e && F.RATE[e.rec.type] && (e.rec.acc || 0) >= 1 && U.sel !== e.rec) collectRec(e.rec);
-      if (!e) { const h = G.S.players[0].hero; if (h && !h.dead && G.S.ents.includes(h) && Math.hypot(h.x - wx, h.y - wy) < 28) { openSheet('armee'); return; } }
+      if (!e) { const h = G.S.players[0].hero; if (h && !h.dead && G.S.ents.includes(h) && Math.hypot(h.x - wx, h.y - wy) < 28) { openSheet('armee'); return; } G.S.fx.push({ type: 'ring', x: wx, y: wy, r: 14, color: '#ffffff', t: 0, dur: 0.35 }); }
       select(e);
     } else if (U.mode === 'raid') deployAt(wx, wy, false);
   }
@@ -1031,6 +1107,7 @@
     }
     const role = U.deploy.role, why = F.deploy(Rd, role, wx, wy);
     if (why) { if (!quiet || why !== lastErrTxt) err(why); return; }
+    buzz(8);
     if (role === 'held' || !(Rd.troops[role] > 0)) { U.deploy = nextTroop(); cancelHold(); }
     renderBottom(); renderTop();
   }
@@ -1096,6 +1173,28 @@
     ctx.restore();
   }
   R.overlay = function (ctx, S, k) {
+    if (S.festung === 'home' && !R.touch && R.mouse.inside && !U.place && st && !drag) {
+      const he = pickAt(R.mouse.wx, R.mouse.wy);
+      if (he && he !== G.UI.selected && he.rec) k.label(he.type === 'mauer' ? G.WALLS[he.level - 1].name : `${bn(he.type)} · St. ${he.level}`, he.x, he.y - (he.type === 'mauer' ? 22 : he.r + 30), '#fff4d8', 12);
+    }
+    if (S.festung === 'home' && R.light && R.light.dark > 0.25 && S.home) {
+      const P = S.home.P, a0 = Math.min(1, (R.light.dark - 0.25) * 3);
+      ctx.save(); ctx.fillStyle = '#eaff8a'; ctx.shadowColor = '#d8ff6a'; ctx.shadowBlur = 8;
+      for (let i = 0; i < 28; i++) {
+        const t = S.time * (0.1 + (i % 5) * 0.025) + i * 1.7;
+        const fx2 = P.x - 90 + (Math.sin(t * 1.3 + i) * 0.5 + 0.5) * (P.w + 180), fy2 = P.y - 90 + (Math.cos(t * 0.9 + i * 2.1) * 0.5 + 0.5) * (P.h + 180);
+        ctx.globalAlpha = a0 * (0.3 + 0.7 * Math.max(0, Math.sin(S.time * 2.3 + i * 1.9)));
+        ctx.beginPath(); ctx.arc(fx2, fy2, 1.9, 0, 7); ctx.fill();
+      }
+      ctx.restore();
+    }
+    if (S.festung === 'raid' && U.raid && !U.raid.over && !R.touch && R.mouse.inside && U.deploy && (U.deploy.kind === 'unit' || U.deploy.kind === 'merc')) {
+      const ok = F.canDeploy(U.raid, R.mouse.wx, R.mouse.wy);
+      ctx.save(); ctx.strokeStyle = ok ? 'rgba(150,255,150,0.95)' : 'rgba(255,90,70,0.95)'; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.ellipse(R.mouse.wx, R.mouse.wy + 6, 15, 6.5, 0, 0, 7); ctx.stroke();
+      if (!ok) { ctx.beginPath(); ctx.moveTo(R.mouse.wx - 6, R.mouse.wy); ctx.lineTo(R.mouse.wx + 6, R.mouse.wy + 12); ctx.moveTo(R.mouse.wx + 6, R.mouse.wy); ctx.lineTo(R.mouse.wx - 6, R.mouse.wy + 12); ctx.stroke(); }
+      ctx.restore();
+    }
     if (S.traps && S.festung !== 'home') for (const tr of S.traps) if (!tr.done && tr.visible) drawTrap(ctx, k, tr.type, tr.x, tr.y, tr.level, S, false, tr.fuse > 0);
     if (S.festung === 'home' && st) {
       const now = F.now();
@@ -1166,7 +1265,7 @@
     const ev = F.tick(st);
     let army = false;
     for (const e of ev) {
-      if (e.kind === 'bau') { const en = entOf(e.b); if (en && G.S.festung === 'home') G.S.fx.push({ type: 'levelup', x: en.x, y: en.y, r: en.r, t: 0, dur: 1.8, seed: Math.random() }); toast(`${esc(bn(e.b.type))} ${e.isNew ? 'fertiggestellt' : 'auf Stufe ' + e.b.level + ' ausgebaut'}.`, 'good'); G.sfx('fertig', 0, 0, 0.7, true); }
+      if (e.kind === 'bau') { const en = entOf(e.b); if (en && G.S.festung === 'home') en.popT = G.S.time + 0.15; if (en && G.S.festung === 'home') G.S.fx.push({ type: 'levelup', x: en.x, y: en.y, r: en.r, t: 0, dur: 1.8, seed: Math.random() }); toast(`${esc(bn(e.b.type))} ${e.isNew ? 'fertiggestellt' : 'auf Stufe ' + e.b.level + ' ausgebaut'}.`, 'good'); G.sfx('fertig', 0, 0, 0.7, true); }
       if (e.kind === 'truppen') { army = true; if (!U.sheet) toast(`${e.n} ${e.n === 1 ? 'Krieger ist' : 'Krieger sind'} ausgebildet.`, 'good'); }
       if (e.kind === 'traenke') toast(`${e.n} ${e.n === 1 ? 'Trank ist' : 'Tränke sind'} fertig gebraut.`, 'good');
       if (e.kind === 'fund') toast('Ein Fundstück ist auf deinem Grundstück aufgetaucht – tippe es an!', 'gold');
@@ -1188,7 +1287,10 @@
     for (const m of Rd.S.msgs) if (!m.shown) { m.shown = true; if (U.mode === 'watch' || m.cls === 'gold') toast(esc(m.text), m.cls); }
     if (Rd.over && !U.resultShown) {
       U.resultShown = true;
+      const rk0 = F.rankOf(st.ruhm);
       if (Rd.kind !== 'probe') F.applyResult(st, Rd.result);
+      const rk1 = F.rankOf(st.ruhm);
+      if (rk1 !== rk0 && Rd.result.ruhm > 0) setTimeout(() => bigCall(`Neuer Rang: ${rk1}!`), 2300);
       F.save(st);
       U.deploy = null; cancelHold();
       setTimeout(() => { if (U.raid === Rd) showResult(Rd); }, 1100);
@@ -1200,13 +1302,13 @@
     last = now;
     try {
       if (G.S && R.ready() && U.mode !== 'start') {
-        if (U.mode === 'home') G.sceneIdle(dt);
+        if (U.mode === 'home') { G.sceneIdle(dt); wander(dt); }
         else {
           G.update(dt);
           raidTick();
           if (hold && hold.active && U.deploy) { hold.t -= dt; if (hold.t <= 0) { hold.t = 0.14; deployAt(R.mouse.wx, R.mouse.wy, true); } }
         }
-        keysCam(dt);
+        keysCam(dt); camMotion(dt);
         R.draw();
       }
       if (st && U.mode !== 'start') {

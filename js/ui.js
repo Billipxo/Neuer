@@ -1158,7 +1158,12 @@
       if (drag) {
         const dx = ev.clientX - drag.sx, dy = ev.clientY - drag.sy;
         if (Math.abs(dx) + Math.abs(dy) > (ev.pointerType === 'mouse' ? 6 : 12)) { drag.moved = true; clearTimeout(longT); }
-        if (drag.moved) { UI.follow = false; G.R.cam.x = drag.cx - dx / G.R.cam.z; G.R.cam.y = drag.cy - dy / G.R.cam.z; G.R.clampCam(); }
+        if (drag.moved) {
+          UI.follow = false;
+          const ox = G.R.cam.x, oy = G.R.cam.y, now = performance.now(), dtm = Math.max(8, now - drag.lt);
+          G.R.cam.x = drag.cx - dx / G.R.cam.z; G.R.cam.y = drag.cy - dy / G.R.cam.z; G.R.clampCam();
+          drag.vx = drag.vx * 0.4 + (((G.R.cam.x - ox) / dtm) * 1000) * 0.6; drag.vy = drag.vy * 0.4 + (((G.R.cam.y - oy) / dtm) * 1000) * 0.6; drag.lt = now; // für das Ausgleiten
+        }
       }
     });
     cv.addEventListener('pointerleave', () => { G.R.mouse.inside = false; });
@@ -1176,7 +1181,8 @@
         }
       }
       if (ev.button === 0 || ev.button === 1) {
-        drag = { sx: ev.clientX, sy: ev.clientY, cx: G.R.cam.x, cy: G.R.cam.y, moved: false, button: ev.button, shift: ev.shiftKey, long: false };
+        drag = { sx: ev.clientX, sy: ev.clientY, cx: G.R.cam.x, cy: G.R.cam.y, moved: false, button: ev.button, shift: ev.shiftKey, long: false, vx: 0, vy: 0, lt: performance.now() };
+        UI.camV = null;
         try { cv.setPointerCapture(ev.pointerId); } catch (e) { /* egal */ }
         if (ev.pointerType !== 'mouse') {
           clearTimeout(longT);
@@ -1191,6 +1197,7 @@
       clearTimeout(longT);
       if (!drag) return;
       const d = drag; drag = null;
+      if (d.moved && performance.now() - d.lt < 90 && Math.hypot(d.vx, d.vy) > 60) UI.camV = { x: d.vx, y: d.vy }; // Karte gleitet nach dem Wischen aus
       if (d.moved || d.long || d.button !== 0) return;
       leftClick(d.shift);
     };
@@ -1278,6 +1285,11 @@
 
   UI.updateCamera = function (dt) {
     const R = G.R, sp = 900 * dt / R.cam.z;
+    if (UI.camV && !drag) {
+      R.cam.x += UI.camV.x * dt; R.cam.y += UI.camV.y * dt; R.clampCam();
+      const f = Math.exp(-dt * 4.5); UI.camV.x *= f; UI.camV.y *= f;
+      if (Math.hypot(UI.camV.x, UI.camV.y) < 12 || UI.follow) UI.camV = null;
+    }
     if (UI.follow && G.S) {
       const h = me().hero;
       if (!h.dead) { const tx = h.x - R.viewW() / 2, ty = h.y - R.viewH() / 2; R.cam.x += (tx - R.cam.x) * Math.min(1, dt * 4); R.cam.y += (ty - R.cam.y) * Math.min(1, dt * 4); R.clampCam(); }

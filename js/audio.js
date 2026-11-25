@@ -94,12 +94,14 @@
     platsch(t, v, pan) { noise(sfxBus, t, 0.22, 0.14 * v, 'bandpass', 1400, 1.5, { pan, sweep: 500 }); tone(sfxBus, 320, t, 0.08, 'sine', 0.05 * v, { pan, slide: 0.5 }); },
     zwitschern(t, v, pan) { const b = 2600 + Math.random() * 1400; for (let i = 0; i < 2 + Math.floor(Math.random() * 3); i++) tone(sfxBus, b * (1 + (i % 2) * 0.18), t + i * 0.11, 0.07, 'sine', 0.045 * v, { pan, slide: 1.35 }); },
     quaken(t, v, pan) { for (let i = 0; i < 2; i++) tone(sfxBus, 105 + Math.random() * 25, t + i * 0.2, 0.13, 'sawtooth', 0.07 * v, { pan, lp: 650, slide: 1.25 }); },
+    zirpen(t, v, pan) { const f = 4100 + Math.random() * 700; for (let g = 0; g < 3; g++) for (let i = 0; i < 5; i++) tone(sfxBus, f, t + g * 0.3 + i * 0.034, 0.022, 'sine', 0.028 * v, { pan }); },
+    klick(t, v, pan) { tone(sfxBus, 1250, t, 0.035, 'triangle', 0.045 * v, { pan, slide: 0.7 }); noise(sfxBus, t, 0.02, 0.04 * v, 'highpass', 3000, 0.7, { pan }); },
     zischen(t, v, pan) { noise(sfxBus, t, 0.9, 0.11 * v, 'highpass', 2800, 0.8, { pan, sweep: 5000, a: 0.08 }); },
     // Gyrokopter-Büchse und Schattensprung
     schuss(t, v, pan) { noise(sfxBus, t, 0.07, 0.26 * v, 'highpass', 1800, 0.8, { pan }); tone(sfxBus, 170, t, 0.06, 'square', 0.04 * v, { pan, slide: 0.5, lp: 1200 }); },
     sprung(t, v, pan) { noise(sfxBus, t, 0.3, 0.14 * v, 'bandpass', 900, 2, { pan, sweep: 2600, a: 0.02 }); tone(sfxBus, 900, t, 0.22, 'sine', 0.05 * v, { pan, slide: 0.4 }); },
   };
-  const MIN_GAP = { schwert: 0.05, treffer: 0.08, pfeil: 0.06, zauber: 0.08, feuer: 0.15, kanone: 0.1, explosion: 0.08, tod: 0.07, einsturz: 0.3, bau: 0.3, blubb: 0.35, platsch: 1, zwitschern: 1.5, quaken: 2, zischen: 1.5, schuss: 0.05, sprung: 0.1 };
+  const MIN_GAP = { schwert: 0.05, treffer: 0.08, pfeil: 0.06, zauber: 0.08, feuer: 0.15, kanone: 0.1, explosion: 0.08, tod: 0.07, einsturz: 0.3, bau: 0.3, blubb: 0.35, platsch: 1, zwitschern: 1.5, zirpen: 1.2, klick: 0.05, quaken: 2, zischen: 1.5, schuss: 0.05, sprung: 0.1 };
 
   // Positionsbezogen: nur hörbar, wenn im Bild; Lautstärke nach Entfernung zur Kameramitte
   G.sfx = function (name, x, y, vol, global) {
