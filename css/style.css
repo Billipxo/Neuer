@@ -297,6 +297,7 @@ input[type=range] { width: 100%; accent-color: var(--accent2); }
 .hc-modes { display: flex; gap: 3px; margin-top: 5px; }
 .hc-modes .chip { flex: 1; padding: 2px 0; font-size: 11px; min-height: 26px; }
 .hc-hint { font-size: 11px; color: #a8e8a8; margin-top: 3px; text-align: center; }
+.hc-status { color: #e8d9a8; }
 /* Abklingzeit als Kreissegment über Fähigkeitsknöpfen */
 .cd { position: relative; }
 .cd::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: conic-gradient(rgba(0,0,0,.62) calc(var(--cd, 0) * 360deg), transparent 0); }

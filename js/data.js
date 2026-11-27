@@ -629,7 +629,7 @@ G.ARMY_PRESETS = [
 G.HERO_MODES = [
   { id: 'armee', name: 'Folgt Armee', desc: 'Kämpft an der Seite deiner Truppen.' },
   { id: 'basis', name: 'Verteidigt Basis', desc: 'Bleibt in der Basis und wehrt Angriffe ab.' },
-  { id: 'jagen', name: 'Jagt Monster', desc: 'Säubert allein passende Monsterlager für Erfahrung und Beute.' },
+  { id: 'jagen', name: 'Jagt Monster', desc: 'Säubert allein passende Monsterlager für Erfahrung und Beute. Meidet gegnerische Basen und Übermacht, heilt sich zwischendurch daheim und hilft bei Angriffen auf die Basis.' },
   { id: 'manuell', name: 'Manuell', desc: 'Du steuerst: Held antippen, dann Ziel antippen.' },
 ];
 

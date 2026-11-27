@@ -1423,6 +1423,7 @@
     const manual = p.human && h.manual;
     h.castT -= dt;
     if (!manual && h.castT <= 0) { h.castT = 0.4; autoCast(h); }
+    h.hunting = !manual && h.mode === 'jagen' && !S.scene; // eigene Regeln für Zielwahl und Verfolgung (findTarget, validTarget)
     if (manual) {
       if (!h.hold) h.hold = { x: h.x, y: h.y };
       if (h.order && h.order.type === 'move') h.hold = { x: h.order.x, y: h.order.y };
@@ -1431,13 +1432,15 @@
     }
     h.hold = null;
     if (h.hp < h.maxHp * 0.25 && !S.scene) h.retreat = true;
-    if (h.retreat) {
-      if (h.hp > h.maxHp * 0.85) h.retreat = false;
-      else { h.order = { type: 'move', x: p.base.x + p.dir.x * 60, y: p.base.y + p.dir.y * 60, auto: true }; return; }
+    if (h.retreat) { // befohlener Rückzug endet erst daheim, auch mit vollen Lebenspunkten
+      const rx = p.base.x + p.dir.x * 60, ry = p.base.y + p.dir.y * 60;
+      if (h.hp > h.maxHp * 0.85 && (!h.retreatCmd || d2(h.x, h.y, rx, ry) < 120 * 120)) { h.retreat = false; h.retreatCmd = false; }
+      else { h.order = { type: 'move', x: rx, y: ry, auto: true }; return; }
     }
     if (h.order && h.order.auto) h.order = null;
+    if (h.hunting && huntDanger(h, p, dt)) return; // Jäger: Gefahr erkennen und ausweichen, bevor es zu spät ist
     // Einkaufen beim Händler, wenn gerade Ruhe herrscht
-    if (!h.shopping && p.armyState !== 'verteidigen' && !h.target && h.items.length < 6) {
+    if (!h.shopping && p.armyState !== 'verteidigen' && !h.target && h.items.length < 6 && !(h.shopAvoidT > S.time)) {
       const want = nextWish(p);
       if (want && S.shops.length && p.gold >= G.ITEMS[want].price + (p.human ? 0 : 150)) h.shopping = S.shops.reduce((a, b) => (dist(b, h) < dist(a, h) ? b : a));
     }
@@ -1454,32 +1457,134 @@
     if (S.scene && h.mode !== 'basis') { h.goal = sceneTarget(h) || p.base; return; }
     // Verhalten: Armee folgen, Basis verteidigen oder auf eigene Faust Monster jagen
     if (h.mode === 'basis') { h.goal = { x: p.base.x + p.dir.x * 150, y: p.base.y + p.dir.y * 150 }; return; }
-    if (h.mode === 'jagen') {
-      if (!h.huntCamp || h.huntCamp.left <= 0 || (h.huntCamp.avoidHero || 0) > S.time) h.huntCamp = pickHuntCamp(h);
-      if (h.huntCamp) {
-        if (h.hp < h.maxHp * 0.4 && h.huntCamp.active) { h.huntCamp.avoidHero = S.time + 60; h.huntCamp = null; h.retreat = true; return; }
-        h.goal = { x: h.huntCamp.x, y: h.huntCamp.y }; return;
-      }
-    }
+    if (h.hunting) { huntGoal(h, p, dt); return; }
     const c = p.armyCentroid;
     h.goal = c ? { x: c.x - p.dir.x * 20, y: c.y - p.dir.y * 20 } : p.armyPoint;
   }
-  function pickHuntCamp(h) {
-    const mine = strength([h]) * (1 + h.level * 0.15);
-    let best = null, bd = Infinity;
+
+  // Jagd-Modus: Der Held säubert allein Monsterlager. Er meidet gegnerische Basen und Türme, folgt niemandem hinein,
+  // weicht einer Übermacht aus, solange er noch bei Kräften ist, heilt sich zwischen den Lagern daheim
+  // und kehrt zurück, wenn die eigene Basis angegriffen wird. Ohne passendes Lager begleitet er die eigene Armee
+  // beim Säubern von Lagern und an Schreinen (nie zu Angriffen auf Gegnerbasen) oder wartet daheim.
+  const HUNT_CAMP_PAD = 500; // Lager näher als Basisradius + 500 an einer Gegnerbasis sind tabu (dort stehen Armee, Held und Türme)
+  const HUNT_ZONE_PAD = 260; // in diesen Bereich um eine Gegnerbasis folgt der jagende Held niemandem
+  function nearFoeBase(p, x, y, pad) {
+    for (const o of S.players) if (o.alive && o.team !== p.team && d2(x, y, o.base.x, o.base.y) < (G.BASE_RADIUS + pad) ** 2) return true;
+    return false;
+  }
+  // Im Nebel zählt für den Spieler nur, was er sieht (bzw. an Gebäuden schon gesehen hat)
+  const knownTo = (p, o) => !p.human || G.canSee(o) || (o.kind === 'building' && !!S.fog && S.fog.ghosts.has(o.id));
+  function towerCovering(p, x, y, pad) { // gegnerischer Turm, Außenposten oder Haupthaus, dessen Reichweite den Punkt (plus Rand) abdeckt
+    let hit = null;
+    G.queryFoes(x, y, 270 + pad, p.team, (o) => {
+      if (hit || o.dead || o.kind !== 'building' || !o.def.attack || o.level < 1) return;
+      if (d2(x, y, o.x, o.y) < (o.def.attack.range + pad) ** 2 && knownTo(p, o)) hit = o;
+    });
+    return hit;
+  }
+  function power(list) { // Kampfkraft wie bei der Lagerwahl; Helden zählen mit ihren Fähigkeiten mehr
+    let k = 1;
+    for (const e of list) if (e.kind === 'hero') k += 0.15 * e.level;
+    return strength(list) * k;
+  }
+  function foePower(p, x, y, r) { // bekannte gegnerische Truppen und Helden im Umkreis (ohne Monster und Gebäude)
+    const foes = [];
+    G.queryFoes(x, y, r, p.team, (o) => { if (!o.dead && o.kind !== 'building' && o.kind !== 'creep' && knownTo(p, o)) foes.push(o); });
+    return foes.length ? power(foes) : 0;
+  }
+  const avoidCamp = (c, p, sec) => { (c.huntAvoid || (c.huntAvoid = {}))[p.id] = S.time + sec; };
+  function huntDanger(h, p, dt) {
+    h.dangerT = (h.dangerT || 0) - dt;
+    if (h.dangerT <= 0) {
+      h.dangerT = 0.3;
+      let why = null;
+      if (d2(h.x, h.y, p.base.x, p.base.y) > (G.BASE_RADIUS + 150) ** 2) { // daheim kämpft er mit Türmen und Truppen im Rücken
+        if (nearFoeBase(p, h.x, h.y, HUNT_ZONE_PAD) || towerCovering(p, h.x, h.y, 40)) why = 'basis';
+        else {
+          const foes = foePower(p, h.x, h.y, 430);
+          if (foes) {
+            const mates = [h];
+            G.queryTeam(h.x, h.y, 300, h.team, (o) => { if (!o.dead && o !== h && o.kind !== 'building') mates.push(o); });
+            if (foes > power(mates) * (h.fleeUntil > S.time ? 0.45 : 0.7)) why = 'feinde';
+          }
+        }
+      }
+      if (why) {
+        if (p.human && !(h.fleeUntil > S.time) && S.time > (h.fleeMsgT || 0)) {
+          h.fleeMsgT = S.time + 25;
+          G.msg(`${h.name} weicht ${why === 'feinde' ? 'einer Übermacht' : 'der gegnerischen Verteidigung'} aus.`, '');
+        }
+        h.fleeUntil = S.time + 2.5; h.fleeWhy = why;
+        if (h.huntCamp) avoidCamp(h.huntCamp, p, why === 'feinde' ? 45 : 120);
+        if (h.shopping) h.shopAvoidT = S.time + 30;
+        h.huntCamp = null; h.shopping = null; h.target = null;
+      }
+    }
+    if (!(h.fleeUntil > S.time)) return false;
+    h.order = { type: 'move', x: p.base.x + p.dir.x * 60, y: p.base.y + p.dir.y * 60, auto: true };
+    return true;
+  }
+  function huntGoal(h, p, dt) {
+    const th = p.armyState === 'verteidigen' ? p.armyPoint : null;
+    if (th && th.n >= 3) { // Basis angegriffen: heimkehren und im Schutz der Türme helfen
+      const dx = th.x - p.base.x, dy = th.y - p.base.y, d = Math.hypot(dx, dy), k = d > G.BASE_RADIUS ? G.BASE_RADIUS / d : 1;
+      h.huntCamp = null; h.goal = { x: p.base.x + dx * k, y: p.base.y + dy * k };
+      return;
+    }
+    let c = h.huntCamp;
+    const fighting = !!c && c.active && c.left > 0 && d2(h.x, h.y, c.x, c.y) < 330 * 330;
+    if (fighting && h.hp < h.maxHp * 0.4) { avoidCamp(c, p, 60); h.huntCamp = null; h.retreat = true; return; } // Lager zu zäh
+    if (!fighting && h.hp < h.maxHp * 0.5) { h.huntCamp = null; h.retreat = true; return; } // erst daheim heilen, dann weiter
+    h.campT = (h.campT || 0) - dt;
+    if (!fighting && (!c || c.left <= 0 || c.done || h.campT <= 0)) { h.campT = 1; h.huntCamp = c = pickHuntCamp(h, p); }
+    if (c) { h.goal = { x: c.x, y: c.y }; return; }
+    // Nichts Passendes frei: die eigene Armee beim Säubern eines Lagers oder an einem Schrein begleiten, sonst daheim warten
+    const pc = huntEscort(p);
+    h.goal = pc ? { x: pc.x - p.dir.x * 20, y: pc.y - p.dir.y * 20 } : { x: p.base.x + p.dir.x * 150, y: p.base.y + p.dir.y * 150 };
+  }
+  const huntEscort = (p) => ((p.armyState === 'camps' || p.armyState === 'schrein') && p.poolCentroid && p.armyPoint &&
+    !nearFoeBase(p, p.armyPoint.x, p.armyPoint.y, HUNT_CAMP_PAD) ? p.poolCentroid : null);
+  function pickHuntCamp(h, p) {
+    const mine = power([h]);
+    let best = null, bs = Infinity;
     for (const c of S.camps) {
-      if (c.left <= 0 || (c.avoidHero || 0) > S.time) continue;
+      if (c.left <= 0 || c.done || (c.huntAvoid && c.huntAvoid[p.id] > S.time)) continue;
+      if (nearFoeBase(p, c.x, c.y, HUNT_CAMP_PAD) || towerCovering(p, c.x, c.y, 160)) continue; // vor der Gegnerbasis oder im Schussfeld
       if (strength(c.creeps.filter((e) => !e.dead)) > mine) continue;
-      const dd = dist(c, h);
-      if (dd < bd) { bd = dd; best = c; }
+      if (foePower(p, c.x, c.y, 450) > mine * 0.5) continue; // gegnerische Truppen am Lager
+      const sc = dist(c, h) + 0.5 * dist(c, p.base); // nahe Lager zuerst, im Zweifel die auf der eigenen Seite
+      if (sc < bs) { bs = sc; best = c; }
     }
     return best;
   }
+  // Kurzbeschreibung für das Heldenfenster (selbstständige Modi)
+  G.heroStatus = function (p) {
+    const h = p.hero;
+    if (!h || h.dead || h.manual || S.scene) return '';
+    if (h.retreat) return h.retreatCmd && d2(h.x, h.y, p.base.x + p.dir.x * 60, p.base.y + p.dir.y * 60) > 120 * 120 ? 'Zieht sich zur Basis zurück' : 'Heilt sich in der Basis';
+    if (h.fleeUntil > S.time) return h.fleeWhy === 'feinde' ? 'Weicht einer Übermacht aus' : 'Meidet die gegnerische Verteidigung';
+    if (h.shopping) return 'Kauft beim Händler ein';
+    if (h.mode !== 'jagen') return '';
+    if (p.armyState === 'verteidigen' && p.armyPoint && p.armyPoint.n >= 3) return 'Verteidigt die Basis';
+    if (h.huntCamp) return `Jagt: ${h.huntCamp.name}`;
+    if (huntEscort(p)) return p.armyState === 'camps' && p.campTarget ? `Hilft der Armee: ${p.campTarget.name}` : 'Hilft der Armee am Schrein';
+    // Wann kehrt das nächste Lager zurück, das er sich zutraut (volle Stärke des Lagers)?
+    const mine = power([h]);
+    let next = Infinity;
+    for (const c of S.camps) {
+      if (c.event || c.left > 0 || nearFoeBase(p, c.x, c.y, HUNT_CAMP_PAD)) continue;
+      if (strength(c.def.units.map((u) => G.CREEPS[u])) <= mine) next = Math.min(next, c.respawnT);
+    }
+    if (next > 600) return 'Kein passendes Lager frei – wartet daheim';
+    const s = Math.max(1, Math.ceil(next));
+    return `Wartet daheim – nächstes Lager in ${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  };
   G.heroRetreat = function (p) {
     const h = p.hero; if (!h || h.dead) return;
     h.target = null; h.shopping = null;
     if (h.manual) h.order = { type: 'move', x: p.base.x + p.dir.x * 60, y: p.base.y + p.dir.y * 60 };
-    else h.retreat = true;
+    else { h.retreat = true; h.retreatCmd = true; }
+    if (h.huntCamp) { avoidCamp(h.huntCamp, p, 90); h.huntCamp = null; } // zurückgerufen: dieses Lager vorerst meiden
     if (p.human) G.msg(`${h.name} zieht sich zur Basis zurück.`, '');
   };
   G.heroPotion = function (p) {
@@ -1491,7 +1596,8 @@
     const h = p.hero;
     h.manual = mode === 'manuell';
     if (!h.manual) h.mode = mode;
-    h.order = null; h.hold = null; h.huntCamp = null;
+    h.order = null; h.hold = null; h.huntCamp = null; h.fleeUntil = 0;
+    if (h.retreatCmd) { h.retreat = false; h.retreatCmd = false; } // ein neuer Befehl ersetzt den befohlenen Rückzug
   };
   function nextWish(p) {
     for (const id of G.HERO_WISHLIST) if (!p.hero.items.includes(id)) return id;
@@ -1733,6 +1839,8 @@
     if (!t || t.dead) return false;
     if (t.fly && !hitsAir(e)) return false;
     if (e.kind === 'creep') return dist(t, e.home) < 420;
+    if (e.hunting && t.kind !== 'creep') // Jäger: nur kurze Verfolgung, nie in eine Gegnerbasis hinein
+      return t.kind !== 'building' && d2(t.x, t.y, e.x, e.y) < 380 * 380 && !nearFoeBase(S.players[e.owner], t.x, t.y, HUNT_ZONE_PAD);
     const leash = e.kind === 'hero' ? 520 : 460;
     return d2(t.x, t.y, e.x, e.y) < leash * leash;
   }
@@ -1752,7 +1860,7 @@
         if (dist(o, e.home) > 420) return;
       } else if (o.kind === 'creep') {
         if (!o.camp.active && p.campTarget !== o.camp && !(e.kind === 'hero' && e.huntCamp === o.camp) && d2(o.x, o.y, e.x, e.y) > 90 * 90) return;
-      }
+      } else if (e.hunting && (o.kind === 'building' || nearFoeBase(p, o.x, o.y, HUNT_ZONE_PAD))) return; // Jäger: keine Gebäude, nichts in Gegnerbasen
       let s = Math.sqrt(d2(o.x, o.y, e.x, e.y)) - o.r;
       if (o.kind === 'building') {
         if (o.type === 'mauer') { if (S.scene && !e.wallMode) return; s += S.scene ? -30 : 40; }

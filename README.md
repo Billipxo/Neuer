@@ -112,6 +112,17 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - **Heldenfenster** (immer sichtbar): Lebenspunkte, Erfahrung, Fähigkeiten mit Abklingzeit, Heiltrank, Rückzug,
   Kamera folgt dem Helden, Verhalten „Folgt Armee“ / „Verteidigt Basis“ / „Jagt Monster“ / „Manuell“.
   Steuern: Held auswählen, dann Ziel anklicken bzw. antippen. Beim Zielen zeigen Kreise Reichweite und Wirkungsbereich.
+  Eine Statuszeile zeigt, was der Held gerade tut (z. B. „Jagt: Trollhöhle“, „Heilt sich in der Basis“).
+- **Jagt Monster:** Der Held säubert allein Lager, die er sich zutraut – nahe zuerst, die eigene Kartenseite bevorzugt.
+  Lager direkt vor gegnerischen Basen oder im Schussfeld gegnerischer Türme lässt er aus, greift beim Jagen keine Gebäude
+  an und verfolgt niemanden in eine Gegnerbasis. Taucht eine Übermacht auf (gegnerische Armee, Held), weicht er aus,
+  solange er noch bei Kräften ist, und meidet das Lager eine Weile. Unter halben Lebenspunkten heilt er sich daheim,
+  bei einem Angriff auf die Basis kehrt er zur Verteidigung zurück. Ist kein passendes Lager frei, hilft er der eigenen
+  Armee beim Säubern von Lagern oder an Schreinen – zu Angriffen auf Gegnerbasen zieht er nicht mit – oder wartet daheim
+  (mit Anzeige, wann das nächste Lager zurückkehrt). In Simulationen starb der jagende Held unterwegs gar nicht mehr
+  (vorher rund jeder zweite Heldentod) und erreichte trotzdem schneller hohe Stufen.
+- **Rückzug** (Heldenfenster): Der Held kehrt auch mit vollen Lebenspunkten wirklich bis in die Basis zurück und macht
+  danach im gewählten Verhalten weiter; ein gejagtes Lager meidet er nach dem Rückruf eine Weile.
 - **Einfache Produktion:** Armee-Vorlagen (Volksstil ★, Ausgewogen, Schildwall, Sturmangriff, Fernkampf, Arkane Macht, Luftflotte),
   Rekrutieren per Einheitenkarte ohne Gebäudeauswahl, Übersicht der laufenden Ausbildung; Regler unter „Feineinstellung“.
 - Neutrale Monster mit Beute und Extra-Belohnungen, Händler, Endphase mit Punktewertung.

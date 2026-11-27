@@ -713,7 +713,11 @@
         <button class="util ${UI.follow ? 'sel' : ''}" data-act="follow" title="Kamera folgt dem Helden">🎥<small>${UI.follow ? 'folgt' : 'Kamera'}</small></button></div>
       ${h.pending && h.pending.length && !p.auto.talents ? heroChoiceHtml(p, false) : ''}
       <div class="hc-modes">${G.HERO_MODES.map((m) => `<button class="chip ${mode === m.id ? 'sel' : ''}" data-act="heromode" data-v="${m.id}" title="${esc(m.desc)}">${MODE_SHORT[m.id]}</button>`).join('')}</div>
-      ${mode === 'manuell' ? `<div class="hc-hint">${sel ? (G.R.touch ? 'Ziel antippen: laufen / angreifen' : 'Linksklick aufs Ziel: laufen / angreifen') : 'Held antippen, dann Ziel antippen'}</div>` : ''}`;
+      ${mode === 'manuell' ? `<div class="hc-hint">${sel ? (G.R.touch ? 'Ziel antippen: laufen / angreifen' : 'Linksklick aufs Ziel: laufen / angreifen') : 'Held antippen, dann Ziel antippen'}</div>` : statusHtml(p)}`;
+  }
+  function statusHtml(p) { // was der Held gerade selbstständig tut
+    const st = G.heroStatus ? G.heroStatus(p) : '';
+    return st ? `<div class="hc-hint hc-status">${escHtml(st)}</div>` : '';
   }
   const isMobile = () => window.matchMedia('(max-width: 900px), (max-height: 560px)').matches;
   function renderQuick(p) {
