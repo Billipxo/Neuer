@@ -307,7 +307,7 @@
     if (s.hp < s.maxHp) bar(s.x - 16, s.y - 26, 32, 3, s.hp / s.maxHp, hpCol(s));
   }
 
-  function drawSite(s) {
+  function drawSite(s, under) { // under: liegt unter einem Außenposten (dann ohne Beschriftung)
     if (s.guard && s.guard.left > 0) return drawPostRuin(s);
     const x = s.x, y = s.y, S = G.S;
     shadow(x + 4, y + 10, 42, 14);
@@ -320,7 +320,7 @@
     const k = (S.time * 0.8) % 1;
     ctx.globalAlpha = 1 - k; ctx.beginPath(); ctx.arc(x - 6 + k * 4, y - 14 - k * 10, 1.6, 0, 7); ctx.fill();
     ctx.restore();
-    label('Goldader', x, y + 34, '#ffe066', 10);
+    if (!under) label('Goldader', x, y + 34, '#ffe066', 10);
   }
   // Eroberbarer Außenposten, solange Monster ihn besetzen: verwitterte Palisade mit Lücken, verfallener Wachturm,
   // Banner der Besetzer und darunter das Glitzern der Goldader
@@ -845,7 +845,7 @@
     const S = G.S, p = S.players[b.owner], pal = R.palOf(p);
     const hs = b.size * T / 2, x = b.x, y = b.y;
     const constructing = b.level === 0;
-    if (b.site) drawSite(b.site);
+    if (b.site) drawSite(b.site, true);
     ctx.save();
     if (constructing) ctx.globalAlpha = 0.55 + 0.4 * (b.upgrading ? b.upgrading.t / b.upgrading.total : 0);
     const L = b.level;
