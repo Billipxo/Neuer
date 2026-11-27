@@ -16,7 +16,7 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 **Spielmodi & Fortschritt**
 - **Freies Spiel:** 1 gegen 1, 2 gegen 2 (mit KI-Verbündetem), Jeder gegen jeden (4) – KI einfach/mittel/schwer,
   Gegner-Völker werden jede Runde ausgelost. Spieldauer 20/30/45 Minuten oder unbegrenzt, Nebel des Krieges oder offene Karte,
-  Schreine & Ereignisse an oder aus. Die KI baut je nach Stufe gemächlich (Einfach), in ruhigem Tempo (Mittel) oder zügig
+  Schreine & Ereignisse an oder aus, Kartengröße Normal/Groß/Riesig. Die KI baut je nach Stufe gemächlich (Einfach), in ruhigem Tempo (Mittel) oder zügig
   (Schwer): Zwischen zwei Bauaufträgen legt sie eine kurze Pause ein, dazu kommt ein anderes Einkommen (`G.DIFFICULTY` in `js/data.js`).
 - **Spielstände:** 💾 im Spiel speichert auf drei Plätze und lädt jeden Stand (das Spiel pausiert dabei). Zusätzlich
   sichert das Spiel automatisch jede Spielminute, beim Beenden und beim Wechsel in eine andere App; „Weiterspielen“ im
@@ -126,6 +126,18 @@ Alternativ lokal ausliefern, z. B. mit `python3 -m http.server` und dann `http:/
 - **Einfache Produktion:** Armee-Vorlagen (Volksstil ★, Ausgewogen, Schildwall, Sturmangriff, Fernkampf, Arkane Macht, Luftflotte),
   Rekrutieren per Einheitenkarte ohne Gebäudeauswahl, Übersicht der laufenden Ausbildung; Regler unter „Feineinstellung“.
 - Neutrale Monster mit Beute und Extra-Belohnungen, Händler, Endphase mit Punktewertung.
+- **Kartengrößen** (freies Spiel, Standard „Groß“; die Kampagne spielt auf „Normal“): Groß streckt die Karte um 35 %,
+  Riesig um 65 % je Seite. Der neue Raum füllt sich mit zusätzlichen Monsterlagern in drei Ringen (nahe den Basen schwache,
+  weiter draußen starke, auf Riesig auch weitere Drachenhorte), mehr Goldadern und – auf Riesig – weiteren Händlern und
+  Schreinen. Alles liegt punkt- bzw. spiegelsymmetrisch, sodass jeder Startplatz (im 2 gegen 2 auch der Verbündete) gleich
+  viel in Reichweite hat; die genaue Lage wird jede Partie neu ausgelost. 1 gegen 1: 10 / 18 / 26 Lager,
+  2 gegen 2: 11 / 23 / 31, Jeder gegen jeden: 13 / 25 / 37 (Normal / Groß / Riesig, jeweils inklusive Außenposten).
+- **Eroberbare Außenposten:** Auf großen Karten haben sich Monster in verlassenen Außenposten auf Goldadern eingenistet
+  (Banditenfeste nahe den Basen, Trollschanze weiter draußen). Wer die Wächter besiegt – Armee, Held im Jagd-Modus oder
+  die KI –, dem gehört der Außenposten sofort (Stufe 1, +3 Gold/s und +1 Holz/s je Stufe, schießt selbst, ausbaubar) und
+  zählt nicht gegen das Baulimit. Fällt er, wird die Goldader frei; wer sie nicht selbst bebaut, findet nach drei Minuten
+  wieder Wächter darin. Besetzte Festen erscheinen als verfallene Palisade mit dem Banner der Besetzer und auf der
+  Minikarte als rostroter Turm.
 - **Schreine:** 2–4 eroberbare Schreine je Karte (Krieg +10% Schaden, Leben +3 LP/s, Wohlstand +4 Gold/s, Eile +10% Tempo).
   Wer 8 Sekunden allein am Schrein steht, erobert ihn; der Bonus gilt für das ganze Team. Bereite Truppen und die KI nehmen
   Schreine auf ihrer Kartenhälfte ein (abschaltbar im Armee-Tab).

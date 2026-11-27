@@ -425,11 +425,15 @@ G.CAMPS = {
   troll:    { name: 'Trollhöhle', units: ['troll', 'troll', 'hexer'], minTH: 2, gold: 320, wood: 150, item: 0.5, extra: 'soeldner', extraDesc: '2 Trolle schließen sich dir als Söldner an' },
   golem:    { name: 'Golem-Steinbruch', units: ['golem', 'golem'], minTH: 2, gold: 420, wood: 260, item: 0.7, extra: 'segen', extraDesc: 'Steinhaut: 90 s lang +3 Rüstung für die Armee' },
   drache:   { name: 'Drachenhort', units: ['drache'], minTH: 3, gold: 1000, wood: 450, item: 1.0, rareItem: true, extra: 'drachenblut', extraDesc: 'Drachenblut: 180 s lang +15% Schaden für die Armee' },
+  // Eroberbare Außenposten (nur auf großen Karten): Wer die Wächter besiegt, dem gehört die Feste samt Goldader
+  feste:    { name: 'Banditenfeste', units: ['bandit', 'bandit', 'schuetze', 'schuetze'], minTH: 1, gold: 150, wood: 60, item: 0.25, post: true, extraDesc: 'Der Außenposten gehört jetzt dir: +3 Gold/s und +1 Holz/s, er verteidigt sich selbst' },
+  schanze:  { name: 'Trollschanze', units: ['troll', 'troll', 'hexer'], minTH: 2, gold: 260, wood: 120, item: 0.45, post: true, extraDesc: 'Der Außenposten gehört jetzt dir: +3 Gold/s und +1 Holz/s, er verteidigt sich selbst' },
   // Ereignisse: ziehen über die Karte und kehren nicht wieder
   boss:     { name: 'Wandernder Boss', units: [], minTH: 3, gold: 900, wood: 400, item: 1.0, rareItem: true, extra: 'siegesbanner', extraDesc: 'Siegesbanner: 180 s lang +15% Schaden und +3 Rüstung für die Armee' },
   karawane: { name: 'Händlerkarawane', units: ['wagen', 'wache', 'wache', 'armbrust'], minTH: 1, gold: 450, wood: 150, item: 0.5, extra: null },
 };
 G.CAMP_RESPAWN = 150;
+G.POST_RESPAWN = 180; // so lange nach dem Fall eines eroberten Außenpostens, bis wieder Wächter einziehen
 G.BOSS_TYPES = ['ogerkoenig', 'koloss', 'lindwurm'];
 // Karten-Ereignisse (abschaltbar im Freien Spiel): erster Boss nach ~9 min, dann alle 10–13 min; Karawanen alle 7–9 min
 G.EVENTS = { bossFirst: 540, bossEvery: [600, 780], bossLife: 420, caravanFirst: 330, caravanEvery: [420, 540] };

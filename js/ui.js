@@ -42,7 +42,7 @@
 
   // -------------------------------------------------------------------------
   // Hauptmenü
-  UI.cfg = { race: 'menschen', hero: null, mode: '1v1', difficulty: 'mittel', map: 'heimat', duration: 30, fog: true, events: true, autopilot: false };
+  UI.cfg = { race: 'menschen', hero: null, mode: '1v1', difficulty: 'mittel', map: 'heimat', size: 'gross', duration: 30, fog: true, events: true, autopilot: false };
 
   UI.showMenu = function () {
     $('#menu').classList.remove('hidden');
@@ -144,13 +144,18 @@
     body += `<nav class="menutabs">${tabs.map(([k, n]) => `<button class="${UI.menuTab === k ? 'sel' : ''}" data-act="m-tab" data-v="${k}">${n}</button>`).join('')}</nav>`;
     if (UI.menuTab === 'frei') {
       const maps = [['heimat', 'Heimatkarte', 'Karte deines Volkes'], ['zufall', 'Zufall', '']].concat(Object.keys(G.THEMES).map((k) => [k, G.THEMES[k].name, '']));
+      const sizes = ['normal', 'gross', 'riesig'].map((k) => { // Anzahl der Lager und Außenposten im gewählten Modus
+        const n = G.mapCounts(c.mode, k);
+        return [k, G.MAP_SIZES[k].name, `${n.camps} Monsterlager${n.posts ? `, davon ${n.posts} eroberbare Außenposten` : ''} · ${n.sites} Goldadern`];
+      });
       body += `
       <section><h2>1. Wähle dein Volk</h2><div class="grid races">${raceCards(c)}</div>${skinRow(c)}</section>
       <section><h2>2. Wähle deinen Helden</h2><div class="grid heroes">${heroCards(c)}</div></section>
       <section class="row3">
         <div><h2>3. Spielmodus</h2>${opt('m-mode', c.mode, [['1v1', '1 gegen 1', 'Du gegen einen Computer'], ['2v2', '2 gegen 2', 'Du + KI-Verbündeter gegen 2 KI'], ['ffa', '1 vs 1 vs 1 vs 1', 'Jeder gegen jeden']])}</div>
         <div><h2>4. Schwierigkeit</h2>${opt('m-diff', c.difficulty, [['einfach', 'Einfach', 'Gemächlicher Aufbau, deutlich weniger Einkommen'], ['mittel', 'Mittel', 'Ausgeglichen – die KI baut in ruhigem Tempo'], ['schwer', 'Schwer', 'Zügiger Aufbau, Bonus-Einkommen, fokussiert Heiler']])}</div>
-        <div><h2>5. Karte</h2><div class="maps">${opt('m-map', c.map, maps)}</div></div>
+        <div><h2>5. Karte</h2><div class="maps">${opt('m-map', c.map, maps)}</div>
+          <h2 class="sub2">Kartengröße</h2>${opt('m-size', c.size || 'normal', sizes)}</div>
         <div><h2>6. Spieldauer</h2>${opt('m-dur', String(c.duration), G.DURATIONS.map(([v, n]) => [String(v), n, v ? 'Danach entscheidet die Punktzahl' : 'Bis ein Team besiegt ist']))}</div>
         <div><h2>7. Sicht</h2>${opt('m-fog', c.fog === false ? 'aus' : 'an', [['an', 'Nebel des Krieges', 'Du siehst nur, was deine Truppen und Gebäude sehen'], ['aus', 'Offene Karte', 'Die ganze Karte ist aufgedeckt']])}</div>
         <div><h2>8. Ereignisse</h2>${opt('m-events', c.events === false ? 'aus' : 'an', [['an', 'Schreine & Ereignisse', 'Eroberbare Schreine, wandernde Bosse und Händlerkarawanen'], ['aus', 'Klassisch', 'Nur Basen, Lager und Händler']])}</div>
@@ -198,7 +203,7 @@
         <div class="hgrid">
         <div><h3>Ziel</h3><p>Zerstöre das Haupthaus aller gegnerischen Völker. Fällt dein eigenes, ist die Partie verloren. In der Endphase (letzte 5 Minuten) greifen alle an, danach entscheidet die Punktzahl.</p></div>
         <div><h3>Basisbau</h3><p>Baue innerhalb des gestrichelten Rings. Das Haupthaus bestimmt, wie viele Gebäude du bauen und wie hoch du sie ausbauen kannst. Baumeister begrenzen, wie viel gleichzeitig entsteht. Die Mauer kaufst du im Bauen-Tab; sie umschließt die ganze Basis. Deine Truppen gehen durch eigene Gebäude und Mauern hindurch, Gegner müssen außen herum oder sie einreißen.</p></div>
-        <div><h3>Wirtschaft</h3><p>Arbeiter entstehen automatisch und sammeln Gold und Holz. Minen und Sägewerke erhöhen das Einkommen. Außenposten auf Goldadern bringen viel Gold, stehen aber ungeschützt auf der Karte.</p></div>
+        <div><h3>Wirtschaft</h3><p>Arbeiter entstehen automatisch und sammeln Gold und Holz. Minen und Sägewerke erhöhen das Einkommen. Außenposten auf Goldadern bringen viel Gold, stehen aber ungeschützt auf der Karte. Auf großen Karten haben sich Monster in verlassenen Außenposten eingenistet (Banditenfeste, Trollschanze): Wer die Wächter besiegt, dem gehört der Außenposten – zusätzlich zum Baulimit. Fällt er, ziehen nach drei Minuten wieder Wächter ein.</p></div>
         <div><h3>Armee</h3><p>Truppengebäude bilden automatisch Einheiten nach der gewählten Armee-Vorlage aus; über die Einheitenkarten im Armee-Tab rekrutierst du zusätzlich gezielt. Höhere Gebäudestufen schalten Rollen frei (Tank, Magier, Support …). Im Armee-Tab wählst du: Sammeln &amp; Angreifen, Wellen oder Nur verteidigen. Losgeschickte Einheiten kämpfen bis zum Tod.</p></div>
         <div><h3>Held</h3><p>Dein Held gibt der ganzen Armee einen Commander-Bonus, steigt bis Stufe 10 auf und bringt pro Stufe einen Talentpunkt. Im Heldenfenster wählst du sein Verhalten (Armee folgen, Basis verteidigen, Monster jagen oder manuell), nutzt Fähigkeiten, Tränke und den Rückzug.</p></div>
         <div><h3>Volk</h3><p>Jedes Volk hat ein Passiv und drei Volksfähigkeiten (ab Haupthaus-Stufe 1, 3 und 5). Im Tab „Volk“ verteilst du Talente in Krieg, Bollwerk und Wohlstand.</p></div>
@@ -489,9 +494,10 @@
     h += '<div class="blist">';
     for (const t of types) {
       const d = G.BUILDINGS[t], n = G.countOf(p, t), max = G.maxCount(p, t);
+      const won = d.outpost ? p.blds.filter((b) => b.type === t && b.captured).length : 0; // eroberte zählen nicht gegen das Limit
       const why = G.buildingCheck(p, t);
       h += `<div class="bitem ${UI.placing === t ? 'sel' : ''}">
-        <div class="bname"><b>${G.bname(p.race, t)}</b> <span class="cnt">${n}/${max}</span></div>
+        <div class="bname"><b>${G.bname(p.race, t)}</b> <span class="cnt">${n}/${max}${won ? ` +${won} erobert` : ''}</span></div>
         <div class="bdesc">${d.desc}${prodNote(p, t)}</div>
         <div class="brow">${costHtml(G.costOf(t, 1, p))} · ${fmtTime(G.timeOf(t, 1))}
         ${btn('build', UI.placing === t ? 'Abbrechen' : 'Bauen', UI.placing === t ? null : why, `data-type="${t}"`)}</div></div>`;
@@ -943,7 +949,7 @@
   function startMission(race, i) {
     const m = G.CAMPAIGNS[race].missions[i];
     UI.mission = i; UI.cfg.race = race;
-    UI.startGame({ ...m.cfg, race, map: m.cfg.map || 'heimat', mission: m.id });
+    UI.startGame({ ...m.cfg, race, map: m.cfg.map || 'heimat', size: 'normal', mission: m.id }); // Kampagne: immer normale Kartengröße
   }
   function act(el) {
     const a = el.dataset.act, v = el.dataset.v;
@@ -956,6 +962,7 @@
       case 'm-mode': UI.cfg.mode = v; renderMenu(); return;
       case 'm-diff': UI.cfg.difficulty = v; renderMenu(); return;
       case 'm-map': UI.cfg.map = v; renderMenu(); return;
+      case 'm-size': UI.cfg.size = v; renderMenu(); return;
       case 'm-dur': UI.cfg.duration = +v; renderMenu(); return;
       case 'm-fog': UI.cfg.fog = v === 'an'; renderMenu(); return;
       case 'm-events': UI.cfg.events = v === 'an'; renderMenu(); return;

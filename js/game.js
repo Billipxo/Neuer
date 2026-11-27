@@ -47,6 +47,86 @@
   };
 
   // -------------------------------------------------------------------------
+  // Kartengrößen (freies Spiel; die Kampagne spielt immer auf „Normal“). Groß und Riesig strecken die Karte und füllen
+  // den neuen Raum mit zusätzlichen Lagern, Goldadern und eroberbaren Außenposten (von Monstern besetzte Festen),
+  // auf Riesig auch mit weiteren Händlern und Schreinen. Alles liegt punkt- bzw. drehsymmetrisch, damit jeder
+  // Startplatz gleich viel in Reichweite hat; die genaue Lage wird je Partie neu ausgelost.
+  G.MAP_SIZES = {
+    normal: { name: 'Normal', k: 1, lvl: 0 },
+    gross: { name: 'Groß', k: 1.35, lvl: 1 },
+    riesig: { name: 'Riesig', k: 1.65, lvl: 2 },
+  };
+  // Zusätzliche Inhalte je Größenstufe als Anzahl Symmetrie-Gruppen (1v1: Paare; 2v2 und Jeder gegen jeden: Vierer,
+  // so hat jeder Startplatz – auch der Verbündete – dieselben Lager in der Nähe; Händler und Schreine im 2v2 als Paare).
+  // Lager-Ringe: nah (schwache Lager), mittel, fern (starke Lager); posts = bewachte Außenposten.
+  const MAP_EXTRA = {
+    '1v1': [null, { near: 1, mid: 2, far: 0, posts: 1, sites: 1 }, { near: 2, mid: 2, far: 2, posts: 2, sites: 2, shops: 1, shrines: 1 }],
+    '2v2': [null, { near: 1, mid: 1, far: 0, posts: 1, sites: 1 }, { near: 1, mid: 2, far: 1, posts: 1, sites: 2, shops: 1, shrines: 1 }],
+    'ffa': [null, { near: 1, mid: 1, far: 0, posts: 1, sites: 1 }, { near: 1, mid: 2, far: 1, posts: 2, sites: 2, shrines: 1 }],
+  };
+  const RING = { near: [860, 1300], mid: [1250, 1900], far: [1750, 1e9], posts: [900, 1600], sites: [760, 1400], shops: [1100, 1800], shrines: [1300, 1e9] };
+  const RING_MODE = { '2v2': { far: [1450, 1e9], shrines: [1100, 1e9] } }; // im 2v2 laufen Diagonalwege durch die Mitte
+  const RING_GAP = { near: 440, mid: 460, far: 520, posts: 480, sites: 400, shops: 520, shrines: 520 };
+  const RING_CAMPS = { near: ['wolf', 'banditen'], mid: ['banditen', 'troll', 'golem'], far: ['troll', 'golem', 'golem', 'drache'] };
+  G.layoutFor = function (mode, size) {
+    const L = G.LAYOUTS[mode], sz = G.MAP_SIZES[size] || G.MAP_SIZES.normal;
+    if (!sz.lvl) return L;
+    const w = Math.round(L.w * sz.k / 40) * 40, h = Math.round(L.h * sz.k / 40) * 40;
+    const out = { ...L, w, h, size, name: `${L.name} · ${sz.name}`, camps: L.camps.slice(), sites: L.sites.slice(), shops: L.shops.slice(), shrines: L.shrines.slice(), posts: [], fails: [] };
+    const X = MAP_EXTRA[mode][sz.lvl];
+    const pair = [(x, y) => [x, y], (x, y) => [w - x, h - y]];
+    const symFor = (kind) => (mode === 'ffa' ? [(x, y) => [x, y], (x, y) => [w - y, x], (x, y) => [w - x, h - y], (x, y) => [y, h - x]]
+      : mode === '2v2' && kind !== 'shops' && kind !== 'shrines' ? [(x, y) => [x, y], (x, y) => [w - x, y], (x, y) => [x, h - y], (x, y) => [w - x, h - y]] : pair);
+    const bases = L.bases.map(([fx, fy], i) => ({ x: fx * w, y: fy * h, team: L.teams[i] }));
+    const taken = [...L.camps, ...L.sites, ...L.shops, ...L.shrines].map(([fx, fy]) => ({ x: fx * w, y: fy * h }));
+    const lanes = []; // Wege zwischen gegnerischen Basen bleiben frei von Lagern
+    for (let i = 0; i < bases.length; i++) for (let j = i + 1; j < bases.length; j++) if (bases[i].team !== bases[j].team) lanes.push([bases[i], bases[j]]);
+    const nearest = (x, y) => Math.min(...bases.map((b) => Math.hypot(b.x - x, b.y - y)));
+    const fits = (x, y, kind, gap, rk) => {
+      if (x < 170 || y < 170 || x > w - 170 || y > h - 170) return false;
+      const dn = nearest(x, y), [r0, r1] = (RING_MODE[mode] && RING_MODE[mode][kind]) || RING[kind];
+      if (dn < r0 * rk || dn > r1 || dn < G.BASE_RADIUS + 380) return false;
+      if (kind !== 'sites' && kind !== 'shops' && lanes.some(([a, b]) => segDist(x, y, a.x, a.y, b.x, b.y) < 260)) return false;
+      return taken.every((t) => Math.hypot(t.x - x, t.y - y) >= gap);
+    };
+    const place = (kind, list, make) => {
+      const syms = symFor(kind);
+      for (const [gapK, rk] of [[1, 1], [0.9, 1], [0.8, 1], [0.8, 0.85]]) { // erst lockerer packen, zuletzt etwas näher an die Basen
+        const gap = RING_GAP[kind] * gapK;
+        for (let t = 0; t < 500; t++) {
+          const x = rand(170, w - 170), y = rand(170, h - 170);
+          const pts = syms.map((f) => f(x, y));
+          if (!pts.every(([px, py]) => fits(px, py, kind, gap, rk))) continue;
+          if (pts.some((a, i) => pts.some((b, j) => j > i && Math.hypot(a[0] - b[0], a[1] - b[1]) < gap))) continue;
+          const extra = make(nearest(x, y));
+          for (const [px, py] of pts) { taken.push({ x: px, y: py }); list.push([px / w, py / h, extra]); }
+          return true;
+        }
+      }
+      out.fails.push(kind); // kein Platz mehr frei (selten): dann eben eine Gruppe weniger
+      return false;
+    };
+    // Außenposten zuerst, dann Lager vom fernen (wenig Platz) zum nahen Ring, dann Goldadern, Händler, Schreine
+    for (let i = 0; i < (X.posts || 0); i++) place('posts', out.posts, (dn) => (dn < 1250 ? 'feste' : 'schanze'));
+    for (const ring of ['far', 'mid', 'near']) {
+      for (let i = 0; i < (X[ring] || 0); i++) place(ring, out.camps, () => pick(RING_CAMPS[ring].filter((k) => k !== 'drache' || sz.lvl >= 2)));
+    }
+    for (let i = 0; i < (X.sites || 0); i++) place('sites', out.sites, () => undefined);
+    for (let i = 0; i < (X.shops || 0); i++) place('shops', out.shops, () => undefined);
+    for (let i = 0; i < (X.shrines || 0); i++) place('shrines', out.shrines, () => undefined);
+    return out;
+  };
+  // Erwartete Anzahl je Größe (fürs Menü, ohne eine Karte auszulosen)
+  G.mapCounts = function (mode, size) {
+    const L = G.LAYOUTS[mode], sz = G.MAP_SIZES[size] || G.MAP_SIZES.normal, X = sz.lvl ? MAP_EXTRA[mode][sz.lvl] : {};
+    const g = (kind) => (X[kind] || 0) * (mode === '1v1' || ((kind === 'shops' || kind === 'shrines') && mode === '2v2') ? 2 : 4);
+    const posts = g('posts');
+    return { camps: L.camps.length + g('near') + g('mid') + g('far') + posts, posts, sites: L.sites.length + g('sites') + posts };
+  };
+  // Name für Spielstände und Anzeigen (auch nach dem Laden, wenn nur Modus und Größe bekannt sind)
+  G.layoutName = (mode, size) => { const L = G.LAYOUTS[mode], sz = G.MAP_SIZES[size]; return sz && sz.lvl ? `${L.name} · ${sz.name}` : L.name; };
+
+  // -------------------------------------------------------------------------
   // Kosten und Stufen
   const round5 = (v) => Math.round(v / 5) * 5;
   const styleOf = (p) => (p && p.rd && p.rd.style) || {};
@@ -86,7 +166,7 @@
     const n = G.LIMITS[type][p.th.level - 1], ex = styleOf(p).extraLimit;
     return n > 0 && ex && ex[type] ? n + ex[type] : n;
   };
-  G.countOf = (p, type) => p.blds.filter((b) => b.type === type).length;
+  G.countOf = (p, type) => p.blds.filter((b) => b.type === type && !b.captured).length; // eroberte Außenposten zählen nicht gegen das Limit
   G.canAfford = (p, c) => p.gold >= c.g && p.wood >= c.w;
   function canSpend(p, c, ignoreReserve) {
     if (p.gold < c.g || p.wood < c.w) return false;
@@ -110,7 +190,7 @@
     const heroes = G.RACES[race].heroes;
     const allowed = heroes.filter((h) => !h.unlock || !G.Profile || G.Profile.heroUnlocked(race, h));
     const heroDef = allowed.find((h) => h.id === cfg.hero) || pick(allowed);
-    const layout = G.LAYOUTS[cfg.mode];
+    const layout = G.layoutFor(cfg.mode, cfg.size);
     // Völker je Startplatz: Kampagnen-Gegner gehen auf die gegnerischen Plätze, der Rest wird ausgelost
     const fixed = (cfg.enemies || []).filter((r) => r !== race && G.RACES[r]);
     const pool = shuffle(G.RACE_KEYS.filter((r) => r !== race && !fixed.includes(r)));
@@ -133,6 +213,7 @@
     layout.shops.forEach((s) => S.shops.push({ x: s[0] * layout.w, y: s[1] * layout.h, r: 40 }));
     layout.sites.forEach((s) => { const pos = G.snap('aussenposten', s[0] * layout.w, s[1] * layout.h); S.sites.push({ x: pos.x, y: pos.y, b: null }); });
     layout.camps.forEach((c) => makeCamp(c[2], c[0] * layout.w, c[1] * layout.h));
+    (layout.posts || []).forEach((c) => makePost(c[2], c[0] * layout.w, c[1] * layout.h));
     if (cfg.events !== false) { // Schreine und Ereignisse (wandernder Boss, Karawane)
       const types = shuffle(Object.keys(G.SHRINES));
       layout.shrines.forEach((s, i) => S.shrines.push({ x: s[0] * layout.w, y: s[1] * layout.h, type: types[i % types.length], owner: -1, cap: 0, capTeam: null }));
@@ -341,6 +422,27 @@
     const camp = { type, def, name: def.name, x, y, left: 0, respawnT: 0, active: false, activeT: 0, creeps: [] };
     S.camps.push(camp);
     spawnCamp(camp);
+    return camp;
+  }
+  // Eroberbarer Außenposten: eine Goldader mit verlassener Feste, in der sich Monster eingenistet haben.
+  // Wer die Wächter besiegt, dem gehört der Außenposten (siehe capturePost); fällt er, ziehen später wieder Wächter ein.
+  function makePost(type, x, y) {
+    const pos = G.snap('aussenposten', x, y);
+    const site = { x: pos.x, y: pos.y, b: null };
+    S.sites.push(site);
+    const camp = makeCamp(type, pos.x, pos.y);
+    camp.post = true; camp.site = site; site.guard = camp;
+  }
+  const siteGuarded = (s) => !!(s.guard && s.guard.left > 0);
+  G.siteFree = (s) => (!s.b || s.b.dead) && !siteGuarded(s);
+  function capturePost(camp, p) {
+    const s = camp.site;
+    if (!s || (s.b && !s.b.dead) || !p.alive) return false;
+    const b = makeBuilding(p, 'aussenposten', s.x, s.y, 1);
+    b.captured = true; b.site = s; s.b = b; b.popT = S.time;
+    p.blds.push(b);
+    fx({ type: 'levelup', x: b.x, y: b.y, r: b.r, dur: 1.7, seed: Math.random() });
+    return true;
   }
   function makeCreep(camp, u, x, y, scale) {
     const cd = G.CREEPS[u], k = scale || 1;
@@ -783,7 +885,7 @@
   };
   G.freeSiteNear = function (x, y, r) {
     let best = null, bd = (r || 140) ** 2;
-    for (const s of S.sites) { if (s.b && !s.b.dead) continue; const dd = d2(s.x, s.y, x, y); if (dd < bd) { bd = dd; best = s; } }
+    for (const s of S.sites) { if (!G.siteFree(s)) continue; const dd = d2(s.x, s.y, x, y); if (dd < bd) { bd = dd; best = s; } }
     return best;
   };
   G.canPlace = function (p, type, x, y, gap = 0) {
@@ -1572,7 +1674,7 @@
     const mine = power([h]);
     let next = Infinity;
     for (const c of S.camps) {
-      if (c.event || c.left > 0 || nearFoeBase(p, c.x, c.y, HUNT_CAMP_PAD)) continue;
+      if (c.event || c.left > 0 || (c.post && c.site.b && !c.site.b.dead) || nearFoeBase(p, c.x, c.y, HUNT_CAMP_PAD)) continue;
       if (strength(c.def.units.map((u) => G.CREEPS[u])) <= mine) next = Math.min(next, c.respawnT);
     }
     if (next > 600) return 'Kein passendes Lager frei – wartet daheim';
@@ -1815,8 +1917,10 @@
     } else if (def.extra === 'segen') p.buffs.push({ t: 90, mods: { armor: 3 }, name: 'Steinhaut' });
     else if (def.extra === 'drachenblut') p.buffs.push({ t: 180, mods: { dmg: 0.15 }, name: 'Drachenblut' });
     else if (def.extra === 'siegesbanner') p.buffs.push({ t: 180, mods: { dmg: 0.15, armor: 3 }, name: 'Siegesbanner' });
-    const done = camp.event === 'boss' ? `${camp.name} erschlagen!` : camp.event === 'karawane' ? 'Händlerkarawane geplündert!' : `${def.name} gesäubert!`;
-    if (p.human) { G.msg(`${done} +${def.gold} Gold, +${def.wood} Holz.${lootTxt}${def.extraDesc ? ' ' + def.extraDesc + '!' : ''}`, 'gold'); G.sfx('kauf', camp.x, camp.y); }
+    const won = camp.post && capturePost(camp, p);
+    const done = camp.event === 'boss' ? `${camp.name} erschlagen!` : camp.event === 'karawane' ? 'Händlerkarawane geplündert!' : won ? `${def.name} erobert!` : `${def.name} gesäubert!`;
+    if (p.human) { G.msg(`${done} +${def.gold} Gold, +${def.wood} Holz.${lootTxt}${def.extraDesc && (won || !camp.post) ? ' ' + def.extraDesc + '!' : ''}`, 'gold'); G.sfx('kauf', camp.x, camp.y); }
+    else if (won) G.msg(`${p.name} hat die ${def.name} erobert – ein neuer Außenposten des Gegners.`, S.players[0].team === p.team ? 'ally' : 'enemy');
   }
 
   function eliminate(p) {
@@ -2526,7 +2630,7 @@
       let best = null, bd = Infinity;
       const foes = S.players.filter((o) => o.alive && o.team !== p.team);
       for (const s of S.sites) {
-        if (s.b && !s.b.dead) continue;
+        if (!G.siteFree(s)) continue;
         const own = dist(s, p.base);
         const foe = foes.length ? Math.min(...foes.map((o) => dist(s, o.base))) : Infinity;
         if (own > foe * 1.05) continue;
@@ -3050,6 +3154,7 @@
     for (const c of S.camps) {
       if (c.activeT > 0) { c.activeT -= dt; if (c.activeT <= 0) c.active = false; }
       if (c.left <= 0 && !c.event) {
+        if (c.post && c.site.b && !c.site.b.dead) { c.respawnT = G.POST_RESPAWN; continue; } // Außenposten steht: keine Wächter
         c.respawnT -= dt;
         if (c.respawnT <= 0) {
           let blocked = false;
@@ -3232,7 +3337,7 @@
     const DS = { ...D.S };
     for (const k of PACKED) if (DS[k] && DS[k].rows) DS[k] = unpack(DS[k]);
     const s = fill({}, DS);
-    Object.assign(s, { players, camps, sites, shops, ents: D.ents.map((id) => E.get(id)).filter(Boolean), fx: [], parts: [], grid: new Map(), layout: G.LAYOUTS[s.mode], acc: 0, paused: false, navDirty: true, terrain: s.terrain || [], shrines: s.shrines || [] });
+    Object.assign(s, { players, camps, sites, shops, ents: D.ents.map((id) => E.get(id)).filter(Boolean), fx: [], parts: [], grid: new Map(), layout: { ...G.LAYOUTS[s.mode], name: G.layoutName(s.mode, s.cfg && s.cfg.size), w: s.w, h: s.h }, acc: 0, paused: false, navDirty: true, terrain: s.terrain || [], shrines: s.shrines || [] });
     for (const p of players) {
       if (!G.RACES[p.race]) throw new Error('Unbekanntes Volk');
       p.rd = G.RACES[p.race]; p.diff = G.DIFFICULTY[s.cfg.difficulty] || G.DIFFICULTY.mittel; p.bonus = {}; p.teco = {};

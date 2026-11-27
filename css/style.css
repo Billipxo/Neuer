@@ -85,6 +85,7 @@ button.armed { background: linear-gradient(#a02a1a, #6a140c) !important; border-
 section { margin: 20px 0; }
 section h2 { font-size: 20px; color: var(--head); margin-bottom: 10px; padding-bottom: 6px; display: flex; align-items: center; gap: 10px; }
 section h2::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--frame), transparent); opacity: .7; }
+section h2.sub2 { font-size: 16px; margin-top: 14px; }
 .grid { display: grid; gap: 12px; }
 .grid.races { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
 .grid.heroes { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }

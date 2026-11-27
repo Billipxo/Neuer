@@ -50,6 +50,7 @@
   // Boden vorrendern
   R.buildGround = function (S) {
     const th = G.THEMES[S.theme];
+    groundScale = S.w * S.h > 2e7 ? 0.42 : 0.5; // riesige Karten: etwas gröberer Boden, damit Handys genug Speicher haben
     const W = Math.ceil(S.w * groundScale), H = Math.ceil(S.h * groundScale);
     ground = document.createElement('canvas');
     ground.width = W; ground.height = H;
@@ -307,6 +308,7 @@
   }
 
   function drawSite(s) {
+    if (s.guard && s.guard.left > 0) return drawPostRuin(s);
     const x = s.x, y = s.y, S = G.S;
     shadow(x + 4, y + 10, 42, 14);
     for (const [dx, dy, r, c] of [[-22, 4, 14, '#6a6058'], [16, 8, 12, '#7a7068'], [0, -8, 16, '#5a524a'], [24, -6, 9, '#6a6058']]) {
@@ -319,6 +321,32 @@
     ctx.globalAlpha = 1 - k; ctx.beginPath(); ctx.arc(x - 6 + k * 4, y - 14 - k * 10, 1.6, 0, 7); ctx.fill();
     ctx.restore();
     label('Goldader', x, y + 34, '#ffe066', 10);
+  }
+  // Eroberbarer Außenposten, solange Monster ihn besetzen: verwitterte Palisade mit Lücken, verfallener Wachturm,
+  // Banner der Besetzer und darunter das Glitzern der Goldader
+  const POST_LOOK = { feste: { cloth: '#8a2a22', mark: '#e8d8b0' }, schanze: { cloth: '#2a6a6a', mark: '#d8e8d0' } };
+  function drawPostRuin(s) {
+    const S = G.S, c = s.guard, x = s.x, y = s.y, hs = 40, look = POST_LOOK[c.type] || POST_LOOK.feste;
+    shadow(x + 6, y + hs * 0.55, hs * 1.05, hs * 0.5);
+    const stake = (sx, sy, tilt, h) => { ctx.save(); ctx.translate(sx, sy); ctx.rotate(tilt); poly([-3, 0, -3, -h + 5, 0, -h, 3, -h + 5, 3, 0]); fillO('#7a6650', 1.3); ctx.restore(); };
+    for (let i = 0; i <= 12; i++) if (i !== 3 && i !== 4 && i !== 9) stake(x - hs * 0.86 + (i * hs * 1.72) / 12, y - hs * 0.42, (((i * 37) % 7) - 3) * 0.04, 12 + ((i * 13) % 6));
+    for (let i = 1; i < 6; i++) {
+      if (i !== 2) stake(x - hs * 0.86, y - hs * 0.42 + (i * hs * 1.2) / 6, -0.08, 14);
+      if (i !== 4) stake(x + hs * 0.86, y - hs * 0.42 + (i * hs * 1.2) / 6, 0.1, 13);
+    }
+    roundRect(x - hs * 0.22, y - hs * 0.95, hs * 0.44, hs * 1.3, 3); fillO('#6a5a4a', 2.2);
+    ctx.strokeStyle = 'rgba(27,20,16,0.55)'; ctx.lineWidth = 1.5; // Risse im Holz
+    ctx.beginPath(); ctx.moveTo(x - hs * 0.1, y - hs * 0.7); ctx.lineTo(x - hs * 0.02, y - hs * 0.45); ctx.lineTo(x - hs * 0.12, y - hs * 0.2); ctx.stroke();
+    ctx.beginPath(); ctx.rect(x - hs * 0.34, y - hs * 0.98, hs * 0.68, hs * 0.14); fillO('#5a4632', 1.8);
+    poly([x - hs * 0.38, y - hs * 0.98, x - hs * 0.05, y - hs * 1.45, x + hs * 0.12, y - hs * 1.28, x + hs * 0.38, y - hs * 0.98]); fillO('#4a3a2c', 2); // eingesacktes Dach
+    const sway = Math.sin(S.time * 2.4 + x * 0.01) * 3, bx = x + hs * 0.3;
+    ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(bx, y - hs * 0.9); ctx.lineTo(bx, y - hs * 1.75); ctx.stroke();
+    poly([bx, y - hs * 1.72, bx + 20 + sway, y - hs * 1.62, bx + 14 + sway * 0.6, y - hs * 1.5, bx + 18 + sway, y - hs * 1.38, bx, y - hs * 1.42]); fillO(look.cloth, 1.5);
+    ctx.fillStyle = look.mark; ctx.beginPath(); ctx.arc(bx + 8 + sway * 0.5, y - hs * 1.56, 3, 0, 7); ctx.fill();
+    for (let i = 0; i <= 12; i++) { const sx = x - hs * 0.86 + (i * hs * 1.72) / 12; if (Math.abs(sx - x) > hs * 0.24 && i !== 10) stake(sx, y + hs * 0.8, (((i * 53) % 5) - 2) * 0.05, 12 + ((i * 7) % 5)); }
+    ctx.save(); ctx.shadowColor = '#ffd23a'; ctx.shadowBlur = 8; ctx.fillStyle = '#ffd23a';
+    for (const [dx, dy] of [[-28, 30], [26, 26], [-8, 37]]) { ctx.beginPath(); ctx.arc(x + dx, y + dy, 2.2, 0, 7); ctx.fill(); }
+    ctx.restore();
   }
 
 
@@ -2276,8 +2304,11 @@
     // Lager-Beschriftungen
     for (const c of S.camps) {
       if (c.done || c.event === 'boss' || !inView(c.x, c.y, 120) || !known(c.x, c.y) || (c.event && !seen(c.x, c.y))) continue; // Boss trägt seinen Namen selbst
-      const txt = c.left > 0 ? c.name : `${c.name} – kehrt in ${Math.ceil(c.respawnT)} s zurück`;
-      ctx.globalAlpha = 0.85; label(txt, c.x, c.y + 62, c.left > 0 ? '#ffcf8a' : '#aaa', 11); ctx.globalAlpha = 1;
+      if (c.post && c.site.b && !c.site.b.dead) continue; // erobert: der Außenposten steht für sich
+      const txt = c.left > 0 ? c.name : c.post ? `${c.name} – Wächter kehren in ${Math.ceil(c.respawnT)} s zurück` : `${c.name} – kehrt in ${Math.ceil(c.respawnT)} s zurück`;
+      ctx.globalAlpha = 0.85; label(txt, c.x, c.y + 62, c.left > 0 ? '#ffcf8a' : '#aaa', 11);
+      if (c.post && c.left > 0) label('Außenposten · Wächter besiegen zum Erobern', c.x, c.y + 76, '#e8d9a8', 9);
+      ctx.globalAlpha = 1;
     }
     // Sammelpunkt / Armeeziel des Spielers
     const me = S.players[0];
@@ -2349,7 +2380,7 @@
     if (UI && UI.placing) {
       const type = UI.placing;
       let pos = G.snap(type, R.mouse.wx, R.mouse.wy);
-      if (G.BUILDINGS[type].outpost) { const st = G.freeSiteNear(R.mouse.wx, R.mouse.wy, 140); if (st) pos = { x: st.x, y: st.y }; for (const s2 of S.sites) if ((!s2.b || s2.b.dead) && known(s2.x, s2.y)) { ctx.strokeStyle = '#ffe066'; ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.arc(s2.x, s2.y, 60, 0, 7); ctx.stroke(); ctx.setLineDash([]); } }
+      if (G.BUILDINGS[type].outpost) { const st = G.freeSiteNear(R.mouse.wx, R.mouse.wy, 140); if (st) pos = { x: st.x, y: st.y }; for (const s2 of S.sites) if (G.siteFree(s2) && known(s2.x, s2.y)) { ctx.strokeStyle = '#ffe066'; ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.arc(s2.x, s2.y, 60, 0, 7); ctx.stroke(); ctx.setLineDash([]); } }
       const ok = G.canPlace(me, type, pos.x, pos.y) && !G.buildingCheck(me, type);
       const hs = G.BUILDINGS[type].size * T / 2;
       ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.setLineDash([8, 6]); ctx.lineWidth = 2;
@@ -2411,7 +2442,15 @@
         else { m.fillStyle = '#ffe066'; m.fillRect(c.x * sx - 3, c.y * sy - 2, 6, 4); m.strokeStyle = '#5a3a1e'; m.lineWidth = 1; m.strokeRect(c.x * sx - 3, c.y * sy - 2, 6, 4); }
         continue;
       }
-      if (!known(c.x, c.y)) continue; m.fillStyle = c.left > 0 ? '#e0a030' : '#555'; m.beginPath(); m.arc(c.x * sx, c.y * sy, 3, 0, 7); m.fill();
+      if (!known(c.x, c.y)) continue;
+      if (c.post) { // besetzter Außenposten: kleiner Turm in Rostrot (erobert: zeigt das Gebäude die Farbe des Besitzers)
+        if (c.left <= 0) continue;
+        const X = c.x * sx, Y = c.y * sy;
+        m.beginPath(); m.moveTo(X - 3.5, Y + 3); m.lineTo(X - 3.5, Y - 1.5); m.lineTo(X, Y - 5); m.lineTo(X + 3.5, Y - 1.5); m.lineTo(X + 3.5, Y + 3); m.closePath();
+        m.fillStyle = '#c8642a'; m.fill(); m.strokeStyle = '#1b1410'; m.lineWidth = 1; m.stroke();
+        continue;
+      }
+      m.fillStyle = c.left > 0 ? '#e0a030' : '#555'; m.beginPath(); m.arc(c.x * sx, c.y * sy, 3, 0, 7); m.fill();
     }
     for (const sh of S.shrines || []) {
       if (!known(sh.x, sh.y)) continue;
@@ -2420,7 +2459,7 @@
       m.fillStyle = sh.owner >= 0 ? teamColor(S, sh.owner) : '#e8e8e8'; m.fill(); m.strokeStyle = G.SHRINES[sh.type].color; m.lineWidth = 1.5; m.stroke();
     }
     for (const s of S.shops) { if (!known(s.x, s.y)) continue; m.fillStyle = '#ffe066'; m.fillRect(s.x * sx - 3, s.y * sy - 3, 6, 6); }
-    for (const s of S.sites) { if (!known(s.x, s.y)) continue; m.strokeStyle = '#ffd23a'; m.lineWidth = 1.5; m.beginPath(); m.arc(s.x * sx, s.y * sy, 4, 0, 7); m.stroke(); }
+    for (const s of S.sites) { if (!known(s.x, s.y) || (s.guard && s.guard.left > 0)) continue; m.strokeStyle = '#ffd23a'; m.lineWidth = 1.5; m.beginPath(); m.arc(s.x * sx, s.y * sy, 4, 0, 7); m.stroke(); }
     const bld = (e, p) => { const q = e.type === 'mauer' ? 1 : 2.5; m.fillStyle = p.color; m.fillRect(e.x * sx - q, e.y * sy - q, q * 2, q * 2); };
     if (fogOn) { // zuletzt gesehene gegnerische Gebäude
       m.globalAlpha = 0.6;
